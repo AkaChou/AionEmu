@@ -20,14 +20,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Advance Corridor Return（@AIName "advance_corridor_return"），继承 NpcAI2。
  * Panesterra zone NPC AI: Advance Corridor Return (@AIName "advance_corridor_return"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("advance_corridor_return")
-public class Advance_Corridor_ReturnAI2 extends NpcAI2
-{
+public class Advance_Corridor_ReturnAI2 extends NpcAI2 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	private final int CANCEL_DIALOG_METERS = 10;
 
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -64,8 +63,9 @@ public class Advance_Corridor_ReturnAI2 extends NpcAI2
 		if (player.getLevel() >= 65) {
 			// 你离开了进阶走廊战斗区。 / You left the Advance Corridor Battle Zone.
 			// 你将返回前进通道入口区域。 / You will return to the Advance Corridor entrance area.
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_CONFIRM_SVS_DIRECT_PORTAL_OUT, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_CONFIRM_SVS_DIRECT_PORTAL_OUT, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
@@ -73,21 +73,22 @@ public class Advance_Corridor_ReturnAI2 extends NpcAI2
 							case 730961: //Panesterra To Kaisinel Academy.
 							case 730963: //Panesterra To Kaisinel Academy.
 								TeleportService2.teleportTo(responder, 110070000, 503.6976f, 376.76648f, 126.78958f, (byte) 32);
-							break;
+								break;
 							case 730962: //Panesterra To Marchutan Priory.
 							case 730964: //Panesterra To Marchutan Priory.
 								TeleportService2.teleportTo(responder, 120080000, 428.67438f, 250.68222f, 93.129425f, (byte) 59);
-							break;
+								break;
 							case 730965: //Panesterra To Sanctum.
 								TeleportService2.teleportTo(responder, 110010000, 1542.8284f, 1529.326f, 565.9319f, (byte) 105);
-							break;
+								break;
 							case 730966: //Panesterra To Pandaemonium.
 								TeleportService2.teleportTo(responder, 120010000, 1222.1316f, 1360.4116f, 208.125f, (byte) 55);
-							break;
+								break;
 						}
 						decisionTaken = true;
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;

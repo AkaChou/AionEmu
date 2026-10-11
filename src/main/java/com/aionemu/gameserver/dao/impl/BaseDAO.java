@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,138 +20,151 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 基地位置（Base Location）DAO 的 MySQL 8 实现。
  * MySQL 8 implementation of BaseDAO using JdbcClient.
+ *
  * @author Updated for MySQL 8
  */
 @Slf4j
 @Repository
 public class BaseDAO extends com.aionemu.gameserver.dao.BaseDAO {
 
-    /** 查询全部基地位置 / Select all base locations */
-    private static final String SELECT_QUERY = "SELECT `id`, `race` FROM `base_location` ORDER BY `id`";
-    /** 更新基地所属阵营 / Update base race ownership */
-    private static final String UPDATE_QUERY = "UPDATE `base_location` SET `race` = ? WHERE `id` = ?";
-    /** 插入基地位置 / Insert a base location */
-    private static final String INSERT_QUERY = "INSERT INTO `base_location` (`id`, `race`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `race` = VALUES(`race`)";
-    /** 按阵营查询基地位置 / Select base locations by race */
-    private static final String SELECT_BY_RACE_QUERY = "SELECT `id`, `race` FROM `base_location` WHERE `race` = ?";
+	/**
+	 * 查询全部基地位置 / Select all base locations
+	 */
+	private static final String SELECT_QUERY = "SELECT `id`, `race` FROM `base_location` ORDER BY `id`";
+	/**
+	 * 更新基地所属阵营 / Update base race ownership
+	 */
+	private static final String UPDATE_QUERY = "UPDATE `base_location` SET `race` = ? WHERE `id` = ?";
+	/**
+	 * 插入基地位置 / Insert a base location
+	 */
+	private static final String INSERT_QUERY = "INSERT INTO `base_location` (`id`, `race`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `race` = VALUES(`race`)";
+	/**
+	 * 按阵营查询基地位置 / Select base locations by race
+	 */
+	private static final String SELECT_BY_RACE_QUERY = "SELECT `id`, `race` FROM `base_location` WHERE `race` = ?";
 
-    private final JdbcClient jdbcClient;
+	private final JdbcClient jdbcClient;
 
-    public BaseDAO() {
-        this(DatabaseFactory.getJdbcClient());
-    }
+	public BaseDAO() {
+		this(DatabaseFactory.getJdbcClient());
+	}
 
-    @Autowired
+	@Autowired
 
-    public BaseDAO(JdbcClient jdbcClient) {
-        this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
-    }
+	public BaseDAO(JdbcClient jdbcClient) {
+		this.jdbcClient = Objects.requireNonNull(jdbcClient, "jdbcClient must not be null");
+	}
 
-    /**
-     * 加载基地位置数据到给定映射；缺失记录会自动插入默认 NPC 阵营。
-     * Loads base location data into the given map; missing records are auto-inserted with default NPC race.
-     * @param locations 基地位置映射 / base location map
-     * @return 是否成功 / whether successful
-     */
-    @Override
-    public void loadBaseLocations(Map<Integer, BaseLocation> locations) {
+	/**
+	 * 加载基地位置数据到给定映射；缺失记录会自动插入默认 NPC 阵营。
+	 * Loads base location data into the given map; missing records are auto-inserted with default NPC race.
+	 *
+	 * @param locations 基地位置映射 / base location map
+	 * @return 是否成功 / whether successful
+	 */
+	@Override
+	public void loadBaseLocations(Map<Integer, BaseLocation> locations) {
 
-        try {
-            Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
+		try {
+			Map<Integer, Boolean> loadedIds = new ConcurrentHashMap<>();
 
-            jdbcClient.sql(SELECT_QUERY)
-                .query((rs, _) -> {
-                    int id = rs.getInt("id");
-                    BaseLocation loc = locations.get(id);
-                    if (loc != null) {
-                        loc.setRace(Race.valueOf(rs.getString("race")));
-                        loadedIds.put(id, true);
-                    }
-                    return null;
-                })
-                .list();
+			jdbcClient.sql(SELECT_QUERY)
+				.query((rs, _) -> {
+					int id = rs.getInt("id");
+					BaseLocation loc = locations.get(id);
+					if (loc != null) {
+						loc.setRace(Race.valueOf(rs.getString("race")));
+						loadedIds.put(id, true);
+					}
+					return null;
+				})
+				.list();
 
-            for (Map.Entry<Integer, BaseLocation> entry : locations.entrySet()) {
-                if (!loadedIds.containsKey(entry.getKey())) {
-                    insertBaseLocation(entry.getValue());
-                }
-            }
+			for (Map.Entry<Integer, BaseLocation> entry : locations.entrySet()) {
+				if (!loadedIds.containsKey(entry.getKey())) {
+					insertBaseLocation(entry.getValue());
+				}
+			}
 
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.e6377177b72f"), e);
-        }
+		} catch (DataAccessException e) {
+			log.error(I18n.get("log.e6377177b72f"), e);
+		}
 
-    }
+	}
 
-    /**
-     * 更新单个基地位置的所属阵营。
-     * Updates the race ownership of a single base location.
-     * @param location 基地位置 / base location
-     * @return 是否成功 / whether successful
-     */
-    @Override
-    public boolean updateBaseLocation(BaseLocation location) {
-        try {
-            int updated = jdbcClient.sql(UPDATE_QUERY)
-                .param(location.getRace().toString())
-                .param(location.getId())
-                .update();
-            return updated > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.00e03bf592f1", location.getId()), e);
-            return false;
-        }
-    }
+	/**
+	 * 更新单个基地位置的所属阵营。
+	 * Updates the race ownership of a single base location.
+	 *
+	 * @param location 基地位置 / base location
+	 * @return 是否成功 / whether successful
+	 */
+	@Override
+	public boolean updateBaseLocation(BaseLocation location) {
+		try {
+			int updated = jdbcClient.sql(UPDATE_QUERY)
+				.param(location.getRace().toString())
+				.param(location.getId())
+				.update();
+			return updated > 0;
+		} catch (DataAccessException e) {
+			log.error(I18n.get("log.00e03bf592f1", location.getId()), e);
+			return false;
+		}
+	}
 
-    /**
-     * 插入基地位置（默认 NPC 阵营）。
-     * Inserts a base location with default NPC race.
-     * @param location 基地位置 / base location
-     * @return 是否成功 / whether successful
-     */
-    private boolean insertBaseLocation(BaseLocation location) {
-        try {
-            int inserted = jdbcClient.sql(INSERT_QUERY)
-                .param(location.getId())
-                .param(Race.NPC.toString())
-                .update();
-            return inserted > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.31d1da1209bd", location.getId()), e);
-            return false;
-        }
-    }
+	/**
+	 * 插入基地位置（默认 NPC 阵营）。
+	 * Inserts a base location with default NPC race.
+	 *
+	 * @param location 基地位置 / base location
+	 * @return 是否成功 / whether successful
+	 */
+	private void insertBaseLocation(BaseLocation location) {
+		try {
+			int inserted = jdbcClient.sql(INSERT_QUERY)
+				.param(location.getId())
+				.param(Race.NPC.toString())
+				.update();
+return;
+		} catch (DataAccessException e) {
+			log.error(I18n.get("log.31d1da1209bd", location.getId()), e);
+return;
+		}
+	}
 
-    /**
-     * 批量更新多个基地位置的所属阵营。
-     * Batch-updates race ownership for multiple base locations.
-     * @param locations 基地位置映射 / base location map
-     * @return 是否成功 / whether successful
-     */
-    
-    /**
-     * 按阵营加载基地位置。
-     * Loads base locations filtered by race.
-     * @param race 阵营 / race
-     * @return 基地位置映射 / base location map
-     */
-    
-    /**
-     * 将全部基地位置重置为 NPC 阵营。
-     * Resets all base locations to NPC race ownership.
-     * @return 是否成功 / whether successful
-     */
-    
-    /**
-     * 判断当前数据库是否受本 DAO 支持。
-     * Checks whether the given database is supported by this DAO.
-     * @param databaseName 数据库名 / database name
-     * @param majorVersion 主版本 / major version
-     * @param minorVersion 次版本 / minor version
-     * @return 是否支持 / whether supported
-     */
-    @Override
-    public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-        return DAOUtils.supports(databaseName, majorVersion, minorVersion);
-    }
+	/**
+	 * 批量更新多个基地位置的所属阵营。
+	 * Batch-updates race ownership for multiple base locations.
+	 * @param locations 基地位置映射 / base location map
+	 * @return 是否成功 / whether successful
+	 */
+
+	/**
+	 * 按阵营加载基地位置。
+	 * Loads base locations filtered by race.
+	 * @param race 阵营 / race
+	 * @return 基地位置映射 / base location map
+	 */
+
+	/**
+	 * 将全部基地位置重置为 NPC 阵营。
+	 * Resets all base locations to NPC race ownership.
+	 * @return 是否成功 / whether successful
+	 */
+
+	/**
+	 * 判断当前数据库是否受本 DAO 支持。
+	 * Checks whether the given database is supported by this DAO.
+	 *
+	 * @param databaseName 数据库名 / database name
+	 * @param majorVersion 主版本 / major version
+	 * @param minorVersion 次版本 / minor version
+	 * @return 是否支持 / whether supported
+	 */
+	@Override
+	public boolean supports(String databaseName, int majorVersion, int minorVersion) {
+		return DAOUtils.supports(databaseName, majorVersion, minorVersion);
+	}
 }

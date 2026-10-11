@@ -36,43 +36,70 @@ import java.util.concurrent.Future;
 /**
  * 石矛高地副本事件处理器。
  * Instance event handler for Stonespear Reach.
+ *
  * @author Encom
  */
 
 @InstanceID(301500000)
 public class StonespearReachInstance extends GeneralInstanceHandler {
-	/** 排名 / rank */
+	/**
+	 * 排名 / rank
+	 */
 	private int rank;
-	/** 刷怪种族 / spawn race */
+	/**
+	 * 刷怪种族 / spawn race
+	 */
 	private Race spawnRace;
-	/** 开始时间 / start time */
+	/**
+	 * 开始时间 / start time
+	 */
 	private long startTime;
-		/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-		/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** 副本是否已销毁 / whether the instance is destroyed */
+	/**
+	 * 准备计时器 / timer prepare
+	 */
+	private Future<?> timerPrepare;
+	/**
+	 * 副本计时器 / timer instance
+	 */
+	private Future<?> timerInstance;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
 	private boolean isInstanceDestroyed;
 
 	// 准备时间。 / Preparation Time.
-		/** 准备计时秒数 / prepare timer seconds */
-		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+	/**
+	 * 准备计时秒数 / prepare timer seconds
+	 */
+	private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-		/** 副本计时秒数 / instance timer seconds */
-		private final int instanceTimerSeconds = 1800000; //...30Min
-	/** 副本奖励对象 / instance reward object */
+	/**
+	 * 副本奖励对象 / instance reward object
+	 */
 	private StonespearReachReward instanceReward;
-		/** stonespear task1 / stonespear task1 */
-		private final List<Future<?>> stonespearTask1 = new ArrayList<>();
-		/** stonespear task2 / stonespear task2 */
-		private final List<Future<?>> stonespearTask2 = new ArrayList<>();
-		/** stonespear task3 / stonespear task3 */
-		private final List<Future<?>> stonespearTask3 = new ArrayList<>();
-		/** stonespear task4 / stonespear task4 */
-		private final List<Future<?>> stonespearTask4 = new ArrayList<>();
-		/** stonespear task5 / stonespear task5 */
-		private final List<Future<?>> stonespearTask5 = new ArrayList<>();
-	/** spawn positions / spawn positions */
+	/**
+	 * stonespear task1 / stonespear task1
+	 */
+	private final List<Future<?>> stonespearTask1 = new ArrayList<>();
+	/**
+	 * stonespear task2 / stonespear task2
+	 */
+	private final List<Future<?>> stonespearTask2 = new ArrayList<>();
+	/**
+	 * stonespear task3 / stonespear task3
+	 */
+	private final List<Future<?>> stonespearTask3 = new ArrayList<>();
+	/**
+	 * stonespear task4 / stonespear task4
+	 */
+	private final List<Future<?>> stonespearTask4 = new ArrayList<>();
+	/**
+	 * stonespear task5 / stonespear task5
+	 */
+	private final List<Future<?>> stonespearTask5 = new ArrayList<>();
+	/**
+	 * spawn positions / spawn positions
+	 */
 
 	private static final float[][] SPAWN_POSITIONS = {
 		{211.05080f, 264.03802f, 96.53291f, 0},
@@ -84,7 +111,9 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		{230.97932f, 285.57825f, 96.418526f, 89},
 		{217.75461f, 277.61115f, 96.02431f, 104}
 	};
-	/** kebabit positions / kebabit positions */
+	/**
+	 * kebabit positions / kebabit positions
+	 */
 
 	private static final float[][] KEBABIT_POSITIONS = {
 		{208.48062f, 256.79190f, 96.25000f, 5},
@@ -92,7 +121,9 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		{223.37283f, 286.79090f, 96.25000f, 96},
 		{236.64775f, 241.84962f, 95.93428f, 30}
 	};
-	/** blaststone positions / blaststone positions */
+	/**
+	 * blaststone positions / blaststone positions
+	 */
 
 	private static final float[][] BLASTSTONE_POSITIONS = {
 		{251.47273f, 264.46713f, 96.30522f, 61},
@@ -107,28 +138,31 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		ROUND_2(new int[]{855788, 855789, 855790}, new int[]{855791, 855792, 855793}, new int[]{855794, 855795, 855796}),
 		ROUND_3(new int[]{855811, 855812, 855813}, new int[]{855814, 855815, 855816}, new int[]{855817, 855818, 855819}),
 		ROUND_4(new int[]{855834, 855835, 855836}, new int[]{855837, 855838, 855839}, new int[]{855840, 855841, 855842});
-		/** first wave / first wave
+		/**
+		 * first wave / first wave
 		 * -- GETTER --
-		 *  返回 first wave。
-		 *  Return the first wave.
+		 * 返回 first wave。
+		 * Return the first wave.
 		 * 结果 / result
 		 */
 
 		private final int[] firstWave;
-				/** second wave / second wave
-				 * -- GETTER --
-				 *  返回 second wave。
-				 *  Return the second wave.
-				 * 结果 / result
-				 */
-				private final int[] secondWave;
-				/** third wave / third wave
-				 * -- GETTER --
-				 *  返回 third wave。
-				 *  Return the third wave.
-				 * 结果 / result
-				 */
-				private final int[] thirdWave;
+		/**
+		 * second wave / second wave
+		 * -- GETTER --
+		 * 返回 second wave。
+		 * Return the second wave.
+		 * 结果 / result
+		 */
+		private final int[] secondWave;
+		/**
+		 * third wave / third wave
+		 * -- GETTER --
+		 * 返回 third wave。
+		 * Return the third wave.
+		 * 结果 / result
+		 */
+		private final int[] thirdWave;
 
 		RaidType(int[] firstWave, int[] secondWave, int[] thirdWave) {
 			this.firstWave = firstWave;
@@ -136,9 +170,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			this.thirdWave = thirdWave;
 		}
 	}
+
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
+	 *
 	 * @param object 可见对象 / visible object
 	 * @return 结果 / result
 	 */
@@ -150,6 +186,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -164,15 +201,18 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
+	 *
 	 * @return 结果 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -184,12 +224,12 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	private void spawnTerritoryManager() {
 		final int territoryManager = spawnRace == Race.ASMODIANS ? 833489 : 833488; //Legion Territory Manager.
 		spawn(territoryManager, 165.91524f, 264.50375f, 97.454155f, (byte) 0);
-    }
+	}
 
 	private void spawnGuardianStone() {
 		final int guardianStone = spawnRace == Race.ASMODIANS ? 856466 : 855763; //Guardian Stone.
 		spawn(guardianStone, 231.26677f, 264.4961f, 95.7781f, (byte) 60);
-    }
+	}
 
 	private void spawnKebabit() {
 		for (float[] pos : KEBABIT_POSITIONS) {
@@ -212,7 +252,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				for (float[] pos : SPAWN_POSITIONS) {
-					stoneSpearRaid((Npc)spawn(npcId, pos[0], pos[1], pos[2], (byte) pos[3]));
+					stoneSpearRaid((Npc) spawn(npcId, pos[0], pos[1], pos[2], (byte) pos[3]));
 				}
 			}
 		}, delay));
@@ -228,6 +268,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -238,11 +279,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 856303: //Agitated Kebbit.
-			    points = 1500;
-			    break;
+				points = 1500;
+				break;
 			case 856305: //Macadamic Jester.
-			    points = 12000;
-			    break;
+				points = 12000;
+				break;
 
 			//** ROUND 1  / ROUND 1 * *//
 			case 855765:
@@ -254,15 +295,15 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			case 855771:
 			case 855772:
 			case 855773:
-			    points = 100;
-			    break;
+				points = 100;
+				break;
 			case 855764: //Aetheric Field Blaststone.
-			    points = 500;
-			    break;
+				points = 500;
+				break;
 			case 855774:
 			case 855775:
 			case 855776:
-			    points = 12000;
+				points = 12000;
 				stopInstanceTask1();
 				// 第二场战斗将在 2 分钟后开始。 / The second battle will begin in 2 minutes.
 				sendMsgByRace(1402868, Race.PC_ALL, 2000);
@@ -288,15 +329,15 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			case 855794:
 			case 855795:
 			case 855796:
-			    points = 200;
-			    break;
+				points = 200;
+				break;
 			case 855787: //Aetheric Field Blaststone.
-			    points = 1000;
-			    break;
+				points = 1000;
+				break;
 			case 855797:
 			case 855798:
 			case 855799:
-			    points = 21000;
+				points = 21000;
 				stopInstanceTask2();
 				// 第三场战斗将在 3 分钟后开始。 / The third battle will begin in 3 minutes.
 				sendMsgByRace(1402869, Race.PC_ALL, 2000);
@@ -322,15 +363,15 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			case 855817:
 			case 855818:
 			case 855819:
-			    points = 300;
-			    break;
+				points = 300;
+				break;
 			case 855810: //Aetheric Field Blaststone.
-			    points = 1500;
-			    break;
+				points = 1500;
+				break;
 			case 855820:
 			case 855821:
 			case 855822:
-			    points = 30000;
+				points = 30000;
 				stopInstanceTask3();
 				// 第四场战斗将在 4 分钟后开始。 / The fourth battle will begin in 4 minutes.
 				sendMsgByRace(1402870, Race.PC_ALL, 2000);
@@ -356,13 +397,13 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			case 855840:
 			case 855841:
 			case 855842:
-			    points = 400;
-			    break;
+				points = 400;
+				break;
 			case 855833: //Aetheric Field Blaststone.
-			    points = 2000;
-			    break;
+				points = 2000;
+				break;
 			case 855843: //Vision Of Guardian General.
-			    points = 42000;
+				points = 42000;
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -399,13 +440,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	private void scheduleNextRound(long delay, Runnable task) {
 		GameThreadPoolServices.threadPoolManager().schedule(task, delay);
 	}
+
 	/**
 	 * 处理 startInstanceTask1。
 	 * Handle startInstanceTask1.
 	 */
 
 	protected void startInstanceTask1() {
-	stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -428,7 +470,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 
 				startRaidRound(RaidType.ROUND_1, 0);
 			}
-        }, 60000)); //…1 分钟 / ...1Min
+		}, 60000)); //…1 分钟 / ...1Min
 
 		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -445,7 +487,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				startRaidRound(RaidType.ROUND_1, 1);
 				spawnKebabit();
 			}
-        }, 120000)); //...2Min
+		}, 120000)); //...2Min
 
 		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -469,7 +511,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawnBlaststones(855764);
 				spawnKebabit();
 			}
-        }, 240000)); //...4Min
+		}, 240000)); //...4Min
 
 		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -483,15 +525,16 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				// 守护石及其攻击者均已消失！ / The Guardian Stone and its attackers have all disappeared!
 				sendMsgByRace(1402901, Race.PC_ALL, 0);
 			}
-        }, 300000)); //...5Min
+		}, 300000)); //...5Min
 	}
+
 	/**
 	 * 处理 startInstanceTask2。
 	 * Handle startInstanceTask2.
 	 */
 
 	protected void startInstanceTask2() {
-	stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -504,7 +547,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawn(856305, 206.64789f, 263.70578f, 96.25f, (byte) 94); //Macadamic Jester.
 				startRaidRound(RaidType.ROUND_2, 0);
 			}
-        }, 60000)); //…1 分钟 / ...1Min
+		}, 60000)); //…1 分钟 / ...1Min
 
 		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -520,7 +563,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				startRaidRound(RaidType.ROUND_2, 1);
 				spawnKebabit();
 			}
-        }, 120000)); //...2Min
+		}, 120000)); //...2Min
 
 		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -544,7 +587,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawnBlaststones(855787);
 				spawnKebabit();
 			}
-        }, 240000)); //...4Min
+		}, 240000)); //...4Min
 
 		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -558,15 +601,16 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				// 守护石及其攻击者均已消失！ / The Guardian Stone and its attackers have all disappeared!
 				sendMsgByRace(1402901, Race.PC_ALL, 0);
 			}
-        }, 300000)); //...5Min
+		}, 300000)); //...5Min
 	}
+
 	/**
 	 * 处理 startInstanceTask3。
 	 * Handle startInstanceTask3.
 	 */
 
 	protected void startInstanceTask3() {
-	stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -579,7 +623,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawn(856305, 206.64789f, 263.70578f, 96.25f, (byte) 94); //Macadamic Jester.
 				startRaidRound(RaidType.ROUND_3, 0);
 			}
-        }, 60000)); //…1 分钟 / ...1Min
+		}, 60000)); //…1 分钟 / ...1Min
 
 		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -595,7 +639,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				startRaidRound(RaidType.ROUND_3, 1);
 				spawnKebabit();
 			}
-        }, 120000)); //...2Min
+		}, 120000)); //...2Min
 
 		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -619,7 +663,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawnBlaststones(855810);
 				spawnKebabit();
 			}
-        }, 240000)); //...4Min
+		}, 240000)); //...4Min
 
 		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -633,15 +677,16 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				// 守护石及其攻击者均已消失！ / The Guardian Stone and its attackers have all disappeared!
 				sendMsgByRace(1402901, Race.PC_ALL, 0);
 			}
-        }, 300000)); //...5Min
+		}, 300000)); //...5Min
 	}
+
 	/**
 	 * 处理 startInstanceTask4。
 	 * Handle startInstanceTask4.
 	 */
 
 	protected void startInstanceTask4() {
-	stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -654,7 +699,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawn(856305, 206.64789f, 263.70578f, 96.25f, (byte) 94); //Macadamic Jester.
 				startRaidRound(RaidType.ROUND_4, 0);
 			}
-        }, 60000)); //…1 分钟 / ...1Min
+		}, 60000)); //…1 分钟 / ...1Min
 
 		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -670,7 +715,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				startRaidRound(RaidType.ROUND_4, 1);
 				spawnKebabit();
 			}
-        }, 120000)); //...2Min
+		}, 120000)); //...2Min
 
 		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -694,7 +739,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				spawnBlaststones(855833);
 				spawnKebabit();
 			}
-        }, 240000)); //...4Min
+		}, 240000)); //...4Min
 
 		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
@@ -708,7 +753,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402901, Race.PC_ALL, 0);
 				spawn(855843, 231.35631f, 264.5710f, 95.77810f, (byte) 58); //Vision Of Guardian General.
 			}
-        }, 300000)); //...5Min
+		}, 300000)); //...5Min
 	}
 
 	private void startRaidRound(RaidType round, int waveIndex) {
@@ -746,6 +791,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		int bossId = bossIds[Rnd.get(0, bossIds.length - 1)];
 		spawn(bossId, 231.35631f, 264.5710f, 95.77810f, (byte) 58);
 	}
+
 	/**
 	 * 处理 startCountDown。
 	 * Handle startCountDown.
@@ -771,8 +817,8 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 					}
 				});
 			}
-        }, 1800000));
-    }
+		}, 1800000));
+	}
 
 	private void stoneSpearRaid(final Npc npc) {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -783,7 +829,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
-					for (Player player: instance.getPlayersInside()) {
+					for (Player player : instance.getPlayersInside()) {
 						npc.setTarget(player);
 						((AbstractAI) npc.getAi2()).setStateIfNot(AIState.WALKING);
 						npc.setState(1);
@@ -797,7 +843,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
+		return 1800000 - (int) result;
 	}
 
 	private void sendPacket(final int nameId, final int point) {
@@ -837,6 +883,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -890,9 +937,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
+	 *
 	 * @param player 玩家 / player
 	 */
 
@@ -910,6 +959,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -920,15 +970,15 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			int reachRank = instanceReward.getRank();
 			switch (reachRank) {
 				case 1: //Rank S
-				break;
+					break;
 				case 2: //Rank A
-				break;
+					break;
 				case 3: //Rank B
-				break;
+					break;
 				case 4: //Rank C
-				break;
+					break;
 				case 5: //Rank D
-				break;
+					break;
 			}
 		}
 	}
@@ -936,13 +986,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
 	public void onExitInstance(Player player) {
 		if (player.isInGroup2()) {
-            PlayerGroupService.removePlayer(player);
-        }
+			PlayerGroupService.removePlayer(player);
+		}
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
@@ -991,6 +1042,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -1031,7 +1083,8 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 * @param msg 消息 / message
+	 *
+	 * @param msg  消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
@@ -1064,6 +1117,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
+	 *
 	 * @param player 玩家 / player
 	 * @return 结果 / result
 	 */

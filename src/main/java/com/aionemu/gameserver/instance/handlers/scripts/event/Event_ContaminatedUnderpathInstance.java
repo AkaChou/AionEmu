@@ -35,53 +35,87 @@ import java.util.concurrent.Future;
 /**
  * 活动·污染暗道副本事件处理器。
  * Instance event handler for Event Contaminated Underpath.
+ *
  * @author Encom
  */
 
 @InstanceID(301631000)
-public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
-{
-	/** 军阶 / rank */
-		private int rank;
-	/** 开始时间 / start time */
+public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler {
+	/**
+	 * 军阶 / rank
+	 */
+	private int rank;
+	/**
+	 * 开始时间 / start time
+	 */
 	private long startTime;
-	/** 技能种族 / skill race */
-		private Race skillRace;
-	/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-	/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** underpath 任务 A1 / underpath task a1 */
-		private Future<?> underpathTaskA1;
-	/** underpath 任务 A2 / underpath task a2 */
-		private Future<?> underpathTaskA2;
-	/** underpath 任务 A3 / underpath task a3 */
-		private Future<?> underpathTaskA3;
-	/** underpath 任务 A4 / underpath task a4 */
-		private Future<?> underpathTaskA4;
-	/** 副本是否已销毁 / whether the instance is destroyed */
+	/**
+	 * 技能种族 / skill race
+	 */
+	private Race skillRace;
+	/**
+	 * 准备计时器 / timer prepare
+	 */
+	private Future<?> timerPrepare;
+	/**
+	 * 副本计时器 / timer instance
+	 */
+	private Future<?> timerInstance;
+	/**
+	 * underpath 任务 A1 / underpath task a1
+	 */
+	private Future<?> underpathTaskA1;
+	/**
+	 * underpath 任务 A2 / underpath task a2
+	 */
+	private Future<?> underpathTaskA2;
+	/**
+	 * underpath 任务 A3 / underpath task a3
+	 */
+	private Future<?> underpathTaskA3;
+	/**
+	 * underpath 任务 A4 / underpath task a4
+	 */
+	private Future<?> underpathTaskA4;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
 	private boolean isInstanceDestroyed;
-	/** idevent def zombie vampire1 / idevent def zombie vampire1 */
-		private int IDEventDefZombieVampire1;
-	/** idevent def zombie vampire2 / idevent def zombie vampire2 */
-		private int IDEventDefZombieVampire2;
-	/** idevent def zombie vampire3 / idevent def zombie vampire3 */
-		private int IDEventDefZombieVampire3;
-	/** 门映射 / door map */
+	/**
+	 * idevent def zombie vampire1 / idevent def zombie vampire1
+	 */
+	private int IDEventDefZombieVampire1;
+	/**
+	 * idevent def zombie vampire2 / idevent def zombie vampire2
+	 */
+	private int IDEventDefZombieVampire2;
+	/**
+	 * idevent def zombie vampire3 / idevent def zombie vampire3
+	 */
+	private int IDEventDefZombieVampire3;
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
 	// 准备时间。 / Preparation Time.
-	/** 准备计时秒数 / prepare timer seconds */
-		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+	/**
+	 * 准备计时秒数 / prepare timer seconds
+	 */
+	private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-	/** 副本计时秒数 / instance timer seconds */
-		private final int instanceTimerSeconds = 1200000; //...20Min
-	/** 副本奖励对象 / instance reward object */
+	/**
+	 * 副本奖励对象 / instance reward object
+	 */
 	private IDEventDefReward instanceReward;
-	/** ideventdef 任务 / idevent def task */
-		private final List<Future<?>> IDEventDefTask = new ArrayList<>();
+	/**
+	 * ideventdef 任务 / idevent def task
+	 */
+	private final List<Future<?>> IDEventDefTask = new ArrayList<>();
+
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
+	 *
 	 * @param object 玩家对象 ID / player object id
 	 * @return 玩家奖励记录 / player reward record
 	 */
@@ -93,6 +127,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -107,6 +142,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
+	 *
 	 * @return 副本奖励对象 / instance reward object
 	 */
 	@Override
@@ -123,59 +159,61 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
+	 *
 	 * @param player 玩家 / player
-	 * @param npc 目标 NPC / target NPC
+	 * @param npc    目标 NPC / target NPC
 	 */
 	@Override
-    public void handleUseItemFinish(Player player, Npc npc) {
+	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
-		    case 703473: //IDEVENT_SWSwitch_01a.
+			case 703473: //IDEVENT_SWSwitch_01a.
 				despawnNpc(npc);
 				spawnPrototype();
 				startContaminedUnderPath1();
 				sendMsg("[START]: Wave <1/4>");
 				// 第 1 波。 / Wave 1.
 				sendMsgByRace(1404504, Race.PC_ALL, 0);
-			break;
+				break;
 			case 703474: //IDEVENT_SWSwitch_02a.
-			    despawnNpc(npc);
-			    startContaminedUnderPath2();
+				despawnNpc(npc);
+				startContaminedUnderPath2();
 				underpathTaskA1.cancel(true);
 				sendMsg("[START]: Wave <2/4>");
 				// 2     ?.
 				sendMsgByRace(1404505, Race.PC_ALL, 0);
-			break;
+				break;
 			case 703475: //IDEVENT_SWSwitch_03a.
-			    despawnNpc(npc);
-			    startContaminedUnderPath3();
+				despawnNpc(npc);
+				startContaminedUnderPath3();
 				underpathTaskA2.cancel(true);
 				sendMsg("[START]: Wave <3/4>");
 				// 3     ?.
 				sendMsgByRace(1404506, Race.PC_ALL, 0);
-			break;
+				break;
 			// 5. 击杀最终 Boss：共有多级控制单元。 / 5. Kill The Final Boss Monster: multiple control-unit stages appear.
 			case 703476: //IDEVENT_SWSwitch_04a.
-			    despawnNpc(npc);
-			    startContaminedUnderPath4();
+				despawnNpc(npc);
+				startContaminedUnderPath4();
 				underpathTaskA3.cancel(true);
 				sendMsg("[START]: Wave <4/4>");
 				// ？？？ III / ??? III
 				sendMsgByRace(1404507, Race.PC_ALL, 0);
-			break;
+				break;
 			case 836149: //IDEvent_Def_In_Door.
 				if (player.getInventory().decreaseByItemId(186000495, 1)) {
 					killNpc(getNpcs(836149));
-			    } else {
+				} else {
 					// 需要钥匙才能开门。 / A key is required to open the door.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404524));
 				}
-            break;
-        }
-    }
+				break;
+		}
+	}
 
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc 死亡的 NPC / dead NPC
 	 */
 	@Override
@@ -185,8 +223,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 248502: //IDEvent_Def_ZombieVampireD_65_1st.
-			    points = 600;
-			    IDEventDefZombieVampire1++;
+				points = 600;
+				IDEventDefZombieVampire1++;
 				if (IDEventDefZombieVampire1 == 4) {
 					deleteNpc(703473);
 					underpathTaskA1.cancel(true);
@@ -195,10 +233,10 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					sendMsgByRace(1404508, Race.PC_ALL, 0);
 					spawn(703474, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
-			break;
+				break;
 			case 248512: //IDEvent_Def_ZombieVampireD_65_2nd.
-			    points = 600;
-			    IDEventDefZombieVampire2++;
+				points = 600;
+				IDEventDefZombieVampire2++;
 				if (IDEventDefZombieVampire2 == 4) {
 					deleteNpc(703474);
 					underpathTaskA2.cancel(true);
@@ -207,10 +245,10 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					sendMsgByRace(1404509, Race.PC_ALL, 0);
 					spawn(703475, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
-			break;
+				break;
 			case 248522: //IDEvent_Def_ZombieVampireD_65_3rd.
-			    points = 600;
-			    IDEventDefZombieVampire3++;
+				points = 600;
+				IDEventDefZombieVampire3++;
 				if (IDEventDefZombieVampire3 == 4) {
 					deleteNpc(703475);
 					underpathTaskA3.cancel(true);
@@ -219,7 +257,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					sendMsgByRace(1404510, Race.PC_ALL, 0);
 					spawn(703476, 230.04181f, 206.23842f, 160.28148f, (byte) 30);
 				}
-			break;
+				break;
 			case 248495:
 			case 248496:
 			case 248497:
@@ -247,15 +285,15 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			case 248521:
 			case 248523:
 			case 248524:
-			    points = 600;
-			break;
+				points = 600;
+				break;
 			case 248923: //IDEvent_Def_MutantBeast_65.
 				// 无玩家归属时跳过玩家奖励，不影响波次推进与实例计分。
 				// Without a player attribution the reward is skipped; wave progression and instance scoring are unaffected.
 				if (player != null) {
-				    ItemService.addItem(player, 186000470, 50); //战争点数。 / War Points.
+					ItemService.addItem(player, 186000470, 50); //战争点数。 / War Points.
 				}
-			break;
+				break;
 			case 248525:
 				points = 500000;
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -265,7 +303,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -279,13 +317,14 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 						});
 					}
 				}, 5000);
-			break;
+				break;
 			case 246352:
 				if (player != null) {
-				    player.getCommonData().addExp(50000, RewardType.QUEST);
+					player.getCommonData().addExp(50000, RewardType.QUEST);
 				}
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
+				break;
+		}
+		if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addNpcKill();
 			instanceReward.addPoints(points);
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
@@ -541,7 +580,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
+		return 1200000 - (int) result;
 	}
 
 	private void sendPacket(final int nameId, final int point) {
@@ -594,6 +633,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		sp(836050, 231.61705f, 247.26353f, 159.90181f, (byte) 22, 8000, 0, null);
 		sp(836050, 236.08197f, 247.40280f, 159.90181f, (byte) 30, 8500, 0, null);
 	}
+
 	/**
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
@@ -601,12 +641,12 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
 				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
@@ -619,13 +659,14 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 						stopInstance(player);
 					}
 				});
-            }
-        }, 1200000)); //...20Min
-    }
+			}
+		}, 1200000)); //...20Min
+	}
 
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
+	 *
 	 * @param player 玩家 / player
 	 * @param doorId 门 ID / door id
 	 */
@@ -651,6 +692,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -704,15 +746,17 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
+	 *
 	 * @param player 玩家 / player
 	 */
 
 	protected void stopInstance(Player player) {
 		stopInstanceTask();
-        instanceReward.setRank(6);
+		instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
@@ -732,20 +776,20 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			int IDEventDefRank = instanceReward.getRank();
 			switch (IDEventDefRank) {
 				case 1: //Rank S
-				    playerReward.setScoreAP(25000);
+					playerReward.setScoreAP(25000);
 					playerReward.setWrapCashIDEventDefLiveSRank(1);
 					ItemService.addItem(player, 188058265, 1); // S 级宝箱 / S-rank box.
-				break;
+					break;
 				case 2: //Rank A
-				    playerReward.setScoreAP(15000);
+					playerReward.setScoreAP(15000);
 					playerReward.setWrapCashIDEventDefLiveARank(1);
 					ItemService.addItem(player, 188058266, 1); // A 级宝箱 / A-rank box.
-				break;
+					break;
 				case 3: //Rank B
-				    playerReward.setScoreAP(10000);
+					playerReward.setScoreAP(10000);
 					playerReward.setWrapCashIDEventDefLiveBRank(1);
 					ItemService.addItem(player, 188058267, 1); // B 级宝箱 / B-rank box.
-				break;
+					break;
 			}
 			AbyssPointsService.addAp(player, playerReward.getScoreAP());
 		}
@@ -754,6 +798,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -772,7 +817,8 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
 			timerInstance.cancel(false);
-		} if (timerPrepare != null) {
+		}
+		if (timerPrepare != null) {
 			timerPrepare.cancel(false);
 		}
 		stopInstanceTask();
@@ -782,132 +828,146 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 
 	private void stopInstanceTask() {
-        for (Future<?> task : IDEventDefTask) {
+		for (Future<?> task : IDEventDefTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
+
 	/**
 	 * 延迟刷出 NPC。
 	 * Delayed NPC spawn.
+	 *
 	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒 / delay millis
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  延迟毫秒 / delay millis
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
+		sp(npcId, x, y, z, h, 0, time, 0, null);
+	}
+
 	/**
 	 * 延迟刷出 NPC 并广播消息。
 	 * Delayed NPC spawn with a broadcast message.
+	 *
 	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒 / delay millis
-	 * @param msg 消息 ID / message id
-	 * @param race 目标阵营 / target race
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  延迟毫秒 / delay millis
+	 * @param msg   消息 ID / message id
+	 * @param race  目标阵营 / target race
 	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
+		sp(npcId, x, y, z, h, 0, time, msg, race);
+	}
+
 	/**
 	 * 延迟刷出带实体 ID 的 NPC 并广播消息。
 	 * Delayed NPC spawn with entity id and a broadcast message.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
+	 *
+	 * @param npcId    NPC ID / NPC id
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
 	 * @param entityId 实体 ID / entity id
-	 * @param time 延迟毫秒 / delay millis
-	 * @param msg 消息 ID / message id
-	 * @param race 目标阵营 / target race
+	 * @param time     延迟毫秒 / delay millis
+	 * @param msg      消息 ID / message id
+	 * @param race     目标阵营 / target race
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
+		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					spawn(npcId, x, y, z, h, entityId);
+					if (msg > 0) {
+						sendMsgByRace(msg, race, 0);
+					}
+				}
+			}
+		}, time));
+	}
+
 	/**
 	 * 延迟刷出带巡路线 NPC。
 	 * Delayed NPC spawn with a walker route.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒 / delay millis
+	 *
+	 * @param npcId    NPC ID / NPC id
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param time     延迟毫秒 / delay millis
 	 * @param walkerId 巡路线 ID / walker id
 	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
+		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					Npc npc = (Npc) spawn(npcId, x, y, z, h);
+					npc.getSpawn().setWalkerId(walkerId);
+					WalkManager.startWalking((NpcAI2) npc.getAi2());
+				}
+			}
+		}, time));
+	}
+
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
+	 *
 	 * @param npc 目标 NPC / target NPC
 	 */
 
 	protected void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
 
 	private void deleteNpc(int npcId) {
 		if (getNpc(npcId) != null) {
 			getNpc(npcId).getController().onDelete();
 		}
 	}
+
 	/**
 	 * 处理 killNpc。
 	 * Handle killNpc.
+	 *
 	 * @param npcs NPC 列表 / NPC list
 	 */
 
 	protected void killNpc(List<Npc> npcs) {
-        for (Npc npc: npcs) {
-            npc.getController().die();
-        }
-    }
+		for (Npc npc : npcs) {
+			npc.getController().die();
+		}
+	}
+
 	/**
 	 * 返回指定 ID 的 NPC 列表。
 	 * Return the NPC list for the given id.
+	 *
 	 * @param npcId NPC ID / NPC id
 	 * @return NPC 列表 / NPC list
 	 */
@@ -922,6 +982,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -933,6 +994,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -968,10 +1030,12 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			}
 		});
 	}
+
 	/**
 	 * 按阵营广播系统消息。
 	 * Broadcasts a system message by race.
-	 * @param msg 消息 ID / message id
+	 *
+	 * @param msg  消息 ID / message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒 / delay millis
 	 */

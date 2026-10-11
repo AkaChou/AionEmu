@@ -21,18 +21,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 幻影之门 AI：处理队伍请求与传送相关交互。
  * Illusion Gate AI that handles party requests and teleport-related interaction.
+ *
  * @author Encom
  */
 @AIName("Illusion_Gate")
-public class Illusion_GateAI2 extends NpcAI2
-{
+public class Illusion_GateAI2 extends NpcAI2 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	private final int CANCEL_DIALOG_METERS = 10;
 
 	/**
 	 * 玩家开始与本 NPC 对话/交互。
 	 * Player starts dialog/interaction with this NPC.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -43,6 +43,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	/**
 	 * 开始使用交互物（进度条）。
 	 * Start using the action item (progress bar).
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void handleUseItemStart(final Player player) {
@@ -74,6 +75,7 @@ public class Illusion_GateAI2 extends NpcAI2
 	/**
 	 * 使用交互物完成时的逻辑。
 	 * Logic when action-item use finishes.
+	 *
 	 * @param player 玩家 / player
 	 */
 	protected void handleUseItemFinish(Player player) {
@@ -83,9 +85,11 @@ public class Illusion_GateAI2 extends NpcAI2
 			isMember = true;
 		} else if (player.isInGroup2()) {
 			isMember = player.getPlayerGroup2().hasMember(creatorId);
-		} if (isMember && player.getLevel() >= 10) {
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_GROUP_GATE_DO_YOU_ACCEPT_MOVE, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+		}
+		if (isMember && player.getLevel() >= 10) {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_GROUP_GATE_DO_YOU_ACCEPT_MOVE, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
@@ -93,14 +97,15 @@ public class Illusion_GateAI2 extends NpcAI2
 							//4.8
 							case 833208: //Illusion Gate (Illusion Gate I)
 								TeleportService2.teleportTo(responder, 110010000, 1444.9f, 1577.2f, 572.9f, (byte) 0);
-							break;
+								break;
 							case 833207: //Illusion Gate (Illusion Gate I)
 								TeleportService2.teleportTo(responder, 120010000, 1657.5f, 1398.7f, 194.7f, (byte) 0);
-							break;
+								break;
 						}
 						decisionTaken = true;
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;

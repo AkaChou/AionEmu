@@ -22,14 +22,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * RvR 相关 NPC AI：F6 Raid INVADE Direct Portal（@AIName "F6_Raid_INVADE_Direct_Portal"），继承 NpcAI2。
  * RvR-related NPC AI: F6 Raid INVADE Direct Portal (@AIName "F6_Raid_INVADE_Direct_Portal"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("F6_Raid_INVADE_Direct_Portal")
-public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
-{
+public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	private final int CANCEL_DIALOG_METERS = 10;
 
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -65,26 +64,28 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 66) {
 			// 是否要通过军团裂隙旅行？ / Do you want to travel through the Legion Rift ?
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_RVR_DIRECT_PORTAL, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_RVR_DIRECT_PORTAL, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
-			            switch (getNpcId()) {
+						switch (getNpcId()) {
 							case 835522: //F6_Raid_INVADE_DirectPortal_Start_D.
 								if (responder.getCommonData().getRace() == Race.ASMODIANS) {
 									transferInvasion2(responder);
 								}
-							break;
+								break;
 							case 835523: //F6_Raid_INVADE_DirectPortal_Start_L.
 								if (responder.getCommonData().getRace() == Race.ELYOS) {
-								    transferInvasion1(responder);
+									transferInvasion1(responder);
 								}
-							break;
+								break;
 						}
 						decisionTaken = true;
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;
@@ -104,19 +105,19 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 		return false;
 	}
 
-   /**
+	/**
 	 * @param responder 天族 / Elyos
 	 */
 	private void transferInvasion1(Player responder) {
-        TeleportService2.teleportTo(responder, 220110000, 2406.4836f, 1819.9683f, 226.93954f, (byte) 116);
-    }
+		TeleportService2.teleportTo(responder, 220110000, 2406.4836f, 1819.9683f, 226.93954f, (byte) 116);
+	}
 
-   /**
+	/**
 	 * @param responder 魔族 / Asmodians
 	 */
 	private void transferInvasion2(Player responder) {
-        TeleportService2.teleportTo(responder, 210100000, 2672.5808f, 1438.1235f, 226.1613f, (byte) 118);
-    }
+		TeleportService2.teleportTo(responder, 210100000, 2672.5808f, 1438.1235f, 226.1613f, (byte) 118);
+	}
 
 	@Override
 	protected void handleSpawned() {
@@ -125,8 +126,8 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2
 			case 835522: //F6_Raid_INVADE_DirectPortal_Start_D.
 			case 835523: //F6_Raid_INVADE_DirectPortal_Start_L.
 				startLifeTask();
-			break;
-        }
+				break;
+		}
 	}
 
 	private void startLifeTask() {

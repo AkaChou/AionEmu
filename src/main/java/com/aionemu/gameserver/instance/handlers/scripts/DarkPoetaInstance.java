@@ -30,42 +30,64 @@ import java.util.concurrent.Future;
 /**
  * 黑暗波埃塔副本事件处理器。
  * Instance event handler for Dark Poeta.
+ *
  * @author Encom
  */
 
 @InstanceID(300040000)
-public class DarkPoetaInstance extends GeneralInstanceHandler
-{
+public class DarkPoetaInstance extends GeneralInstanceHandler {
 	//** NPC 4.9 / NPC 4.9 *//
-	/** 刷怪种族 / spawn race */
+	/**
+	 * 刷怪种族 / spawn race
+	 */
 	private Race spawnRace;
-	/** 开始时间 / start time */
+	/**
+	 * 开始时间 / start time
+	 */
 	private long startTime;
-		/** 能量发生器 / power generator */
-		private int powerGenerator;
-		/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-		/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** 副本是否已销毁 / whether the instance is destroyed */
+	/**
+	 * 能量发生器 / power generator
+	 */
+	private int powerGenerator;
+	/**
+	 * 准备计时器 / timer prepare
+	 */
+	private Future<?> timerPrepare;
+	/**
+	 * 副本计时器 / timer instance
+	 */
+	private Future<?> timerInstance;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
 	private boolean isInstanceDestroyed;
-	/** 门映射 / door map */
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-	/** 副本奖励对象 / instance reward object */
+	/**
+	 * 副本奖励对象 / instance reward object
+	 */
 	private DarkPoetaReward instanceReward;
 	// 准备时间。 / Preparation Time.
-		/** 准备计时秒数 / prepare timer seconds */
-		private final int prepareTimerSeconds = 120000; //...2Min
+	/**
+	 * 准备计时秒数 / prepare timer seconds
+	 */
+	private final int prepareTimerSeconds = 120000; //...2Min
 	// 副本持续计时。 / Duration Instance Time.
-		/** 副本计时秒数 / instance timer seconds */
-		private final int instanceTimerSeconds = 14400000; //...4Hrs
-	/** 已播放动画集合 / played-movie set */
+	/**
+	 * 已播放动画集合 / played-movie set
+	 */
 	private final List<Integer> movies = new ArrayList<>();
-		/** darkpoeta 任务 / dark poeta task */
-		private final List<Future<?>> darkPoetaTask = new ArrayList<>();
+	/**
+	 * darkpoeta 任务 / dark poeta task
+	 */
+	private final List<Future<?>> darkPoetaTask = new ArrayList<>();
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -75,143 +97,144 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 215281: //Calindi Flamelord.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-				    }
+					}
 				}
-			break;
+				break;
 			case 215282: //Vanuka Infernus.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053290, 1)); //Vanuka's Fabled Accessory Box.
-				    }
+					}
 				}
-			break;
+				break;
 			case 215283: //Asaratu Bloodshade.
 			case 215284: //Chramati Firetail.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-				    }
+					}
 				}
-			break;
+				break;
 			case 214864: //Noah's Furious Shade.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 122001039, 1)); //Noah's Tears.
-				    }
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 122001039, 1)); //Noah's Tears.
+					}
 				}
-			break;
+				break;
 			case 214904: //Brigade General Anuhart.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 						switch (Rnd.get(1, 2)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000929, 1)); //Brigade General Anuhart's Leather Belt.
-				            break;
+							case 1:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000929, 1)); //Brigade General Anuhart's Leather Belt.
+								break;
 							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000930, 1)); //Brigade General Anuhart's Sash.
-							break;
-						}
-				    }
-				}
-			break;
-			case 215389: //Spaller Dhatra.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    switch (Rnd.get(1, 2)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053287, 1)); //Dhatra's Fabled Earrings Box.
-				            break;
-							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053292, 1)); //Dhatra's Earrings Box.
-							break;
-						}
-				    }
-				}
-			break;
-			case 214849: //Marabata Of Strength.
-            case 214850: //Marabata Of Aether.
-            case 214851: //Marabata Of Poisoning.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    switch (Rnd.get(1, 2)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053286, 1)); //Marabata's Fabled Ring Box.
-				            break;
-							case 2:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053291, 1)); //Marabata's Ring Box.
-							break;
-						}
-				    }
-				}
-			break;
-			case 215280: //Tahabata Pyrelord.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490001, 1)); //[Souvenir] Tahabata Statue.
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020175, 1)); //Tahabata Egg.
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						switch (Rnd.get(1, 6)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051398, 1)); //Tahabata's Eternal Weapon Chest.
-				            break;
-							case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053276, 1)); //Anuhart's Fabled Pants Box.
-				            break;
-							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053277, 1)); //Anuhart's Fabled Shoes Box.
-							break;
-							case 4:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053278, 1)); //Anuhart's Fabled Gloves Box.
-							break;
-							case 5:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053279, 1)); //Anuhart's Fabled Chest Box.
-							break;
-							case 6:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053280, 1)); //Anuhart's Fabled Shoulders Box.
-							break;
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000930, 1)); //Brigade General Anuhart's Sash.
+								break;
 						}
 					}
 				}
-			break;
+				break;
+			case 215389: //Spaller Dhatra.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						switch (Rnd.get(1, 2)) {
+							case 1:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053287, 1)); //Dhatra's Fabled Earrings Box.
+								break;
+							case 2:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053292, 1)); //Dhatra's Earrings Box.
+								break;
+						}
+					}
+				}
+				break;
+			case 214849: //Marabata Of Strength.
+			case 214850: //Marabata Of Aether.
+			case 214851: //Marabata Of Poisoning.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						switch (Rnd.get(1, 2)) {
+							case 1:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053286, 1)); //Marabata's Fabled Ring Box.
+								break;
+							case 2:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053291, 1)); //Marabata's Ring Box.
+								break;
+						}
+					}
+				}
+				break;
+			case 215280: //Tahabata Pyrelord.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490001, 1)); //[Souvenir] Tahabata Statue.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020175, 1)); //Tahabata Egg.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						switch (Rnd.get(1, 6)) {
+							case 1:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051398, 1)); //Tahabata's Eternal Weapon Chest.
+								break;
+							case 2:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053276, 1)); //Anuhart's Fabled Pants Box.
+								break;
+							case 3:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053277, 1)); //Anuhart's Fabled Shoes Box.
+								break;
+							case 4:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053278, 1)); //Anuhart's Fabled Gloves Box.
+								break;
+							case 5:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053279, 1)); //Anuhart's Fabled Chest Box.
+								break;
+							case 6:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053280, 1)); //Anuhart's Fabled Shoulders Box.
+								break;
+						}
+					}
+				}
+				break;
 			case 237372: //Enraged Inferno Demon.
 			case 237373: //Inferno Demon.
-			    for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						switch (Rnd.get(1, 3)) {
-				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054178, 1)); //Master Tahabata's Weapon Box.
-				            break;
+							case 1:
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054178, 1)); //Master Tahabata's Weapon Box.
+								break;
 							case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054179, 1)); //Master Anuhart Elite's Weapon Box.
-				            break;
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054179, 1)); //Master Anuhart Elite's Weapon Box.
+								break;
 							case 3:
-							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054183, 1)); //Master Armor Treasure Box.
-							break;
+								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054183, 1)); //Master Armor Treasure Box.
+								break;
 						}
 					}
 				}
-			break;
+				break;
 			case 702658: //修道院箱子。 / Abbey Box.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
-		    break;
+				break;
 			case 702659: //高级修道院箱子。 / Noble Abbey Box.
 				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
-		    break;
+				break;
 		}
 	}
 
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -222,7 +245,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 701869: //Camouflaging Stone Wall.
 				despawnNpc(npc);
-			break;
+				break;
 			case 281088: //Light Generator Core.
 			case 281089: //Wave Generator Core.
 			case 281090: //Torpidity Generator Core.
@@ -231,11 +254,11 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 281095: //Aquar.
 			case 281096: //Pura.
 			case 281097: //Hydros.
-			    despawnNpc(npc);
-			break;
+				despawnNpc(npc);
+				break;
 			case 214885: //Mutated Fungie.
-			    points = 21;
-			break;
+				points = 21;
+				break;
 			case 214827: //Anuhart Legionary.
 			case 214828: //Anuhart Trooper.
 			case 214829: //Anuhart Sentinel.
@@ -320,80 +343,81 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 215275: //Anuhart Seneschal.
 			case 215276: //Anuhart Transporter.
 			case 215452: //Anuhart Proconsul.
-			    points = 142;
-			break;
+				points = 142;
+				break;
 			case 700517: //Balaur Barricade.
 			case 700520: //Drana.
 			case 700556: //Balaur Barricade.
 			case 700558: //Balaur Barricade.
 				points = 157;
 				despawnNpc(npc);
-			break;
+				break;
 			case 215431: //Vengeful Spirit Of Elyos Combat Captain.
 			case 215432: //Spectral Arcanist Captain.
-			    points = 164;
-			break;
+				points = 164;
+				break;
 			case 214877: //Thrall Digger.
 			case 214878: //Thrall Vigilante.
 			case 214887: //Brainwashed Sentinel.
 			case 215433: //Thrall Digger Leader.
 			case 215434: //Thrall Vigilante Leader.
-			    points = 173;
-			break;
+				points = 173;
+				break;
 			case 214841: //Anuhart Tearlach.
 			case 214842: //Anuhart Kurinark.
 			case 215428: //Anuhart Mage Captain.
-			    points = 190;
-			break;
+				points = 190;
+				break;
 			case 215429: //Anuhart Scalewatch Captain.
-			    points = 208;
-			break;
+				points = 208;
+				break;
 			case 214849: //Marabata Of Strength.
-            case 214850: //Marabata Of Aether.
-            case 214851: //Marabata Of Poisoning.
-			    points = 319;
-			break;
+			case 214850: //Marabata Of Aether.
+			case 214851: //Marabata Of Poisoning.
+				points = 319;
+				break;
 			case 215430: //Anuhart Drakeblade Captain.
-			    points = 357;
-			break;
+				points = 357;
+				break;
 			case 214895: //Main Power Generator.
-			    points = 377;
+				points = 377;
 				deleteNpc(214898);
-			    deleteNpc(214899);
-			break;
+				deleteNpc(214899);
+				break;
 			case 214896: //Auxiliary Power Generator.
-			    points = 377;
+				points = 377;
 				deleteNpc(214900);
-			    deleteNpc(214901);
-			break;
-            case 214897: //Emergency Generator.
-			    points = 377;
-			    deleteNpc(214902);
-			    deleteNpc(214903);
-			break;
+				deleteNpc(214901);
+				break;
+			case 214897: //Emergency Generator.
+				points = 377;
+				deleteNpc(214902);
+				deleteNpc(214903);
+				break;
 			case 214871: //Wounded Scar.
 			case 215386: //Professor Hewahewa.
-			    points = 409;
-			break;
+				points = 409;
+				break;
 			case 214843: //Spiritmaster Atmach.
-			    points = 456;
-			break;
+				points = 456;
+				break;
 			case 214864: //Noah's Furious Shade.
 			case 214880: //Spaller Echtra.
 			case 215387: //Spectral Elim Elder.
 			case 215388: //Spaller Rakanatra.
-            case 215389: //Spaller Dhatra.
-			    points = 789;
-			break;
+			case 215389: //Spaller Dhatra.
+				points = 789;
+				break;
 			case 214894: //Telepathy Controller.
-			    sendMovie(player, 426);
+				sendMovie(player, 426);
 				deleteNpc(281121); //Controller Protection Device.
 				points = 789;
-			break;
+				break;
 			case 214904: //Brigade General Anuhart.
-			    points = 954;
-			break;
-		} switch (npc.getNpcId()) {
+				points = 954;
+				break;
+		}
+		switch (npc.getNpcId()) {
 			case 700439: //Marabata Attack Booster.
 			case 700440: //Marabata Defense Booster.
 			case 700441: //Marabata Property Controller.
@@ -401,61 +425,63 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 700443: //Marabata Defense Booster.
 			case 700444: //Marabata Property Controller.
 			case 700445: //Marabata Attack Booster.
-            case 700446: //Marabata Defense Booster.
-            case 700447: //Marabata Property Controller.
+			case 700446: //Marabata Defense Booster.
+			case 700447: //Marabata Property Controller.
 				toScheduleMarbataController(npcId);
-			return;
+				return;
 			case 214849: //Marabata Of Strength.
-			    deleteNpc(700439); //Marabata Attack Booster.
+				deleteNpc(700439); //Marabata Attack Booster.
 				deleteNpc(700440); //Marabata Defense Booster.
 				deleteNpc(700441); //Marabata Property Controller.
-			break;
-            case 214850: //Marabata Of Aether.
-			    deleteNpc(700442); //Marabata Attack Booster.
+				break;
+			case 214850: //Marabata Of Aether.
+				deleteNpc(700442); //Marabata Attack Booster.
 				deleteNpc(700443); //Marabata Defense Booster.
 				deleteNpc(700444); //Marabata Property Controller.
-			break;
-            case 214851: //Marabata Of Poisoning.
-			    deleteNpc(700445); //Marabata Attack Booster.
+				break;
+			case 214851: //Marabata Of Poisoning.
+				deleteNpc(700445); //Marabata Attack Booster.
 				deleteNpc(700446); //Marabata Defense Booster.
 				deleteNpc(700447); //Marabata Property Controller.
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
+				break;
+		}
+		if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addNpcKill();
 			instanceReward.addPoints(points);
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
-		} switch (npcId) {
+		}
+		switch (npcId) {
 			case 214895: //Main Power Generator.
 			case 214896: //Auxiliary Power Generator.
-            case 214897: //Emergency Generator.
-			    powerGenerator++;
+			case 214897: //Emergency Generator.
+				powerGenerator++;
 				if (powerGenerator == 3) {
-				    sendMovie(player, 427);
+					sendMovie(player, 427);
 					spawn(214904, 275.34537f, 323.02072f, 130.9302f, (byte) 52); //Brigade General Anuhart.
 				}
-			break;
+				break;
 			//** [Ver.] 4.9 / [Ver.] 4.9* *//
 			case 857435: //Tahabata's Heart.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				spawn(237372, 1176f, 1227f, 145f, (byte) 14); //Enraged Inferno Demon.
-			break;
+				break;
 			case 857434: //Calindi's Heart.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				spawn(237373, 1176f, 1227f, 145f, (byte) 14); //Inferno Demon.
-			break;
+				break;
 			case 215280: //Tahabata Pyrelord.
 				spawn(857435, 1176.877f, 1230.9423f, 144.3876f, (byte) 19); //Tahabata's Heart.
-                spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
-			break;
+				spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
+				break;
 			case 215281: //Calindi Flamelord.
 				spawn(857434, 1176.877f, 1230.9423f, 144.3876f, (byte) 19); //Calindi's Heart.
-			    spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
-			break;
+				spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
+				break;
 			case 215282: //Vanuka Infernus.
 			case 215283: //Asaratu Bloodshade.
 			case 215284: //Chramati Firetail.
-			    spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
-			break;
+				spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
+				break;
 			case 214904: //Brigade General Anuhart.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
@@ -464,7 +490,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -477,13 +503,13 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 						});
 					}
 				}, 5000);
-			break;
+				break;
 		}
 	}
 
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
+		return 14400000 - (int) result;
 	}
 
 	private void sendPacket(final int nameId, final int point) {
@@ -536,6 +562,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		spawn(700478, 297.40482f, 316.69537f, 133.12941f, (byte) 56); //Tahabata Abyss Gate.
 		return rank;
 	}
+
 	/**
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
@@ -543,12 +570,12 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		darkPoetaTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
 				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
@@ -560,13 +587,14 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 						stopInstance(player);
 					}
 				});
-            }
-        }, 14400000));
-    }
+			}
+		}, 14400000));
+	}
 
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
+	 *
 	 * @param player 玩家 / player
 	 * @param doorId 门 ID / doorId
 	 */
@@ -588,6 +616,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -637,49 +666,55 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
+	 *
 	 * @param player 玩家 / player
 	 */
 
 	protected void stopInstance(Player player) {
-        stopInstanceTask();
-        instanceReward.setRank(6);
+		stopInstanceTask();
+		instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		sendPacket(0, 0);
 	}
+
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
+	 *
 	 * @param npc NPC / npc
 	 */
 
 	protected void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
+
 	/**
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
+	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
 
 	protected void despawnNpcs(List<Npc> npcs) {
-        for (Npc npc: npcs) {
-            npc.getController().onDelete();
-        }
-    }
+		for (Npc npc : npcs) {
+			npc.getController().onDelete();
+		}
+	}
 
 	private void stopInstanceTask() {
-        for (Future<?> task : darkPoetaTask) {
+		for (Future<?> task : darkPoetaTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
 	/**
 	 * 副本销毁时清理资源。
@@ -689,7 +724,8 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
 			timerInstance.cancel(false);
-		} if (timerPrepare != null) {
+		}
+		if (timerPrepare != null) {
 			timerPrepare.cancel(false);
 		}
 		stopInstanceTask();
@@ -701,6 +737,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -712,24 +749,26 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		switch (Rnd.get(1, 2)) {
 			case 1:
 				spawn(215429, 565.488f, 256.224f, 108.999f, (byte) 52); //Anuhart Scalewatch Captain.
-			break;
+				break;
 			case 2:
 				spawn(215429, 660.261f, 224.124f, 103.751f, (byte) 20); //Anuhart Scalewatch Captain.
-			break;
-		} switch (Rnd.get(1, 2)) {
+				break;
+		}
+		switch (Rnd.get(1, 2)) {
 			case 1:
 				spawn(215430, 610.018f, 213.538f, 103.249f, (byte) 108); //Anuhart Drakeblade Captain.
-			break;
+				break;
 			case 2:
 				spawn(215430, 470.792f, 378.285f, 118.125f, (byte) 117); //Anuhart Drakeblade Captain.
-			break;
+				break;
 		}
 	}
 
 	/**
 	 * 玩家采集完成时处理。
 	 * Handle player gathering completion.
-	 * @param player 玩家 / player
+	 *
+	 * @param player     玩家 / player
 	 * @param gatherable 可采集物 / gatherable
 	 */
 	@Override
@@ -755,49 +794,49 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			@Override
 			public void run() {
 				Npc boss = switch (npcId) { //Marabata Attack Booster.
-                    //Marabata Defense Booster.
-                    case 700439, 700440, 700441 -> //Marabata Property Controller.
-                            getNpc(214850); //Marabata Of Strength.
-                    //Marabata Attack Booster.
-                    //Marabata Defense Booster.
-                    case 700442, 700443, 700444 -> //Marabata Property Controller.
-                            getNpc(214851); //Marabata Of Aether.
-                    //Marabata Attack Booster.
-                    //Marabata Defense Booster.
-                    case 700445, 700446, 700447 -> //Marabata Property Controller.
-                            getNpc(214849); //Marabata Of Poisoning.
-                    default -> null;
-                };
-                if (!isInstanceDestroyed && boss != null && !boss.getLifeStats().isAlreadyDead()) {
+					//Marabata Defense Booster.
+					case 700439, 700440, 700441 -> //Marabata Property Controller.
+						getNpc(214850); //Marabata Of Strength.
+					//Marabata Attack Booster.
+					//Marabata Defense Booster.
+					case 700442, 700443, 700444 -> //Marabata Property Controller.
+						getNpc(214851); //Marabata Of Aether.
+					//Marabata Attack Booster.
+					//Marabata Defense Booster.
+					case 700445, 700446, 700447 -> //Marabata Property Controller.
+						getNpc(214849); //Marabata Of Poisoning.
+					default -> null;
+				};
+				if (!isInstanceDestroyed && boss != null && !boss.getLifeStats().isAlreadyDead()) {
 					switch (npcId) {
-                        case 700439: //Marabata Attack Booster.
-                            spawn(npcId, 665.37400f, 372.75100f, 99.375000f, (byte) 90);
-                        break;
+						case 700439: //Marabata Attack Booster.
+							spawn(npcId, 665.37400f, 372.75100f, 99.375000f, (byte) 90);
+							break;
 						case 700440: //Marabata Defense Booster.
-                            spawn(npcId, 681.851013f, 408.625000f, 100.472000f, (byte) 13);
-                        break;
+							spawn(npcId, 681.851013f, 408.625000f, 100.472000f, (byte) 13);
+							break;
 						case 700441: //Marabata Property Controller.
-                            spawn(npcId, 646.549988f, 406.088013f, 99.375000f, (byte) 49);
-                        break;
+							spawn(npcId, 646.549988f, 406.088013f, 99.375000f, (byte) 49);
+							break;
 						case 700442: //Marabata Attack Booster.
-                            spawn(npcId, 636.117981f, 325.536987f, 99.375000f, (byte) 49);
-                        break;
+							spawn(npcId, 636.117981f, 325.536987f, 99.375000f, (byte) 49);
+							break;
 						case 700443: //Marabata Defense Booster.
-                            spawn(npcId, 676.257019f, 319.649994f, 99.375000f, (byte) 4);
-                        break;
-                        case 700444: //Marabata Property Controller.
-                            spawn(npcId, 655.851013f, 292.710999f, 99.375000f, (byte) 90);
-                        break;
-                        case 700445: //Marabata Attack Booster.
-                            spawn(npcId, 605.625000f, 380.479004f, 99.375000f, (byte) 14);
-                        break;
-                        case 700446: //Marabata Defense Booster.
-                            spawn(npcId, 598.706000f, 345.978000f, 99.375000f, (byte) 98);
-                        break;
-                        case 700447: //Marabata Property Controller.
-                            spawn(npcId, 567.775024f, 366.207001f, 99.375000f, (byte) 59);
-                        break;
-                    }
+							spawn(npcId, 676.257019f, 319.649994f, 99.375000f, (byte) 4);
+							break;
+						case 700444: //Marabata Property Controller.
+							spawn(npcId, 655.851013f, 292.710999f, 99.375000f, (byte) 90);
+							break;
+						case 700445: //Marabata Attack Booster.
+							spawn(npcId, 605.625000f, 380.479004f, 99.375000f, (byte) 14);
+							break;
+						case 700446: //Marabata Defense Booster.
+							spawn(npcId, 598.706000f, 345.978000f, 99.375000f, (byte) 98);
+							break;
+						case 700447: //Marabata Property Controller.
+							spawn(npcId, 567.775024f, 366.207001f, 99.375000f, (byte) 59);
+							break;
+					}
 				}
 			}
 		}, 30000);
@@ -812,6 +851,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -819,13 +859,14 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		if (player.isInGroup2()) {
-            PlayerGroupService.removePlayer(player);
-        }
+			PlayerGroupService.removePlayer(player);
+		}
 	}
 
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -840,16 +881,17 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 		if (player == null) {
 			return;
 		}
-        if (!movies.contains(movie)) {
-             movies.add(movie);
-             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-        }
-    }
+		if (!movies.contains(movie)) {
+			movies.add(movie);
+			PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
+		}
+	}
 
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 * @param msg 消息 / message
+	 *
+	 * @param msg  消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */

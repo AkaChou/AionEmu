@@ -19,106 +19,133 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * 六角通道副本事件处理器。
  * Instance event handler for The Hexway.
+ *
  * @author Encom
  */
 
 @InstanceID(300700000)
-public class TheHexwayInstance extends GeneralInstanceHandler
-{
-		/**
-		 * whether timer1 started
-		 */
-		private boolean isStartTimer1 = false;
-		/** 是否启动计时器2 / is start timer2 */
-		private boolean isStartTimer2 = false;
-		/** 是否启动计时器3 / is start timer3 */
-		private boolean isStartTimer3 = false;
-		/** 是否启动计时器4 / is start timer4 */
-		private boolean isStartTimer4 = false;
-		/** 是否启动计时器5 / is start timer5 */
-		private boolean isStartTimer5 = false;
-		/** 是否启动计时器6 / is start timer6 */
-		private boolean isStartTimer6 = false;
-		/** 是否启动计时器7 / is start timer7 */
-		private boolean isStartTimer7 = false;
-		/** 是否启动计时器8 / is start timer8 */
-		private boolean isStartTimer8 = false;
-		/** 是否启动计时器9 / is start timer9 */
-		private boolean isStartTimer9 = false;
-		/** 是否启动计时器10 / is start timer10 */
-		private boolean isStartTimer10 = false;
-		/** 是否启动计时器11 / is start timer11 */
-		private boolean isStartTimer11 = false;
-		/** 是否启动计时器12 / is start timer12 */
-		private boolean isStartTimer12 = false;
-		/** chesthexway 任务 / chest the hexway task */
-	/** 门映射 / door map */
+public class TheHexwayInstance extends GeneralInstanceHandler {
+	/**
+	 * whether timer1 started
+	 */
+	private boolean isStartTimer1 = false;
+	/**
+	 * 是否启动计时器2 / is start timer2
+	 */
+	private boolean isStartTimer2 = false;
+	/**
+	 * 是否启动计时器3 / is start timer3
+	 */
+	private boolean isStartTimer3 = false;
+	/**
+	 * 是否启动计时器4 / is start timer4
+	 */
+	private boolean isStartTimer4 = false;
+	/**
+	 * 是否启动计时器5 / is start timer5
+	 */
+	private boolean isStartTimer5 = false;
+	/**
+	 * 是否启动计时器6 / is start timer6
+	 */
+	private boolean isStartTimer6 = false;
+	/**
+	 * 是否启动计时器7 / is start timer7
+	 */
+	private boolean isStartTimer7 = false;
+	/**
+	 * 是否启动计时器8 / is start timer8
+	 */
+	private boolean isStartTimer8 = false;
+	/**
+	 * 是否启动计时器9 / is start timer9
+	 */
+	private boolean isStartTimer9 = false;
+	/**
+	 * 是否启动计时器10 / is start timer10
+	 */
+	private boolean isStartTimer10 = false;
+	/**
+	 * 是否启动计时器11 / is start timer11
+	 */
+	private boolean isStartTimer11 = false;
+	/**
+	 * 是否启动计时器12 / is start timer12
+	 */
+	private boolean isStartTimer12 = false;
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-		/** the hexway treasure box / the hexway treasure box */
-		private final List<Npc> theHexwayTreasureBox = new ArrayList<>();
+	/**
+	 * the hexway treasure box / the hexway treasure box
+	 */
+	private final List<Npc> theHexwayTreasureBox = new ArrayList<>();
 
-    /**
-     * 副本创建时初始化逻辑。
-     * Initialize logic when the instance is created.
-     * @param instance 世界地图实例 / world-map instance
-     */
-    @Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        doors = instance.getDoors();
-    }
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		doors = instance.getDoors();
+	}
 
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+	public void onDropRegistered(Npc npc) {
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-        switch (npcId) {
+		switch (npcId) {
 			case 219609: //Captain Jarka.
 				switch (Rnd.get(1, 6)) {
-				    case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000130, 1)); //Balaur Warehouse No.1 Key.
-					break;
+					case 1:
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000130, 1)); //Balaur Warehouse No.1 Key.
+						break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000131, 1)); //Balaur Warehouse No.2 Key.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000131, 1)); //Balaur Warehouse No.2 Key.
+						break;
 					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000132, 1)); //Balaur Warehouse No.3 Key.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000132, 1)); //Balaur Warehouse No.3 Key.
+						break;
 					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000133, 1)); //Balaur Warehouse No.4 Key.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000133, 1)); //Balaur Warehouse No.4 Key.
+						break;
 					case 5:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000134, 1)); //Balaur Warehouse No.5 Key.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000134, 1)); //Balaur Warehouse No.5 Key.
+						break;
 					case 6:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000135, 1)); //Balaur Warehouse No.6 Key.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000135, 1)); //Balaur Warehouse No.6 Key.
+						break;
 				}
-			break;
-        }
-    }
+				break;
+		}
+	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param npc NPC / npc
-     */
-    @Override
-    public void onDie(Npc npc) {
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param npc NPC / npc
+	 */
+	@Override
+	public void onDie(Npc npc) {
 		switch (npc.getObjectTemplate().getTemplateId()) {
-            case 219617: //Balaur Barricade.
-			    despawnNpc(npc);
-			break;
+			case 219617: //Balaur Barricade.
+				despawnNpc(npc);
+				break;
 			case 219609: //Captain Jarka.
 				// 成功逃脱消息（注释掉的调试输出）。 / sendMsg("[SUCCES]: You have finished <The Hexway>");
 				if (!isStartTimer1) {
@@ -162,12 +189,12 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 						}
 					}, 300000);
 				}
-			break;
-        }
-    }
+				break;
+		}
+	}
 
 	private void StartTimer2() {
-        if (!isStartTimer2) {
+		if (!isStartTimer2) {
 			isStartTimer2 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -199,7 +226,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer3() {
-	    if (!isStartTimer3) {
+		if (!isStartTimer3) {
 			isStartTimer3 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -231,7 +258,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer4() {
-	    if (!isStartTimer4) {
+		if (!isStartTimer4) {
 			isStartTimer4 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -263,7 +290,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer5() {
-	    if (!isStartTimer5) {
+		if (!isStartTimer5) {
 			isStartTimer5 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -295,7 +322,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer6() {
-	    if (!isStartTimer6) {
+		if (!isStartTimer6) {
 			isStartTimer6 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -327,7 +354,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer7() {
-	    if (!isStartTimer7) {
+		if (!isStartTimer7) {
 			isStartTimer7 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -359,7 +386,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer8() {
-	    if (!isStartTimer8) {
+		if (!isStartTimer8) {
 			isStartTimer8 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -391,7 +418,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer9() {
-	    if (!isStartTimer9) {
+		if (!isStartTimer9) {
 			isStartTimer9 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -423,7 +450,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer10() {
-	    if (!isStartTimer10) {
+		if (!isStartTimer10) {
 			isStartTimer10 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -455,7 +482,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer11() {
-	    if (!isStartTimer11) {
+		if (!isStartTimer11) {
 			isStartTimer11 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -487,7 +514,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 	}
 
 	private void StartTimer12() {
-	    if (!isStartTimer12) {
+		if (!isStartTimer12) {
 			isStartTimer12 = true;
 			System.currentTimeMillis();
 			instance.doOnAllPlayers(new Visitor<>() {
@@ -518,19 +545,18 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 		}
 	}
 
-
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
 			npc.getController().onDelete();
 		}
 	}
 
-    /**
-     * 副本销毁时清理资源。
-     * Clean up resources when the instance is destroyed.
-     */
-    @Override
-    public void onInstanceDestroy() {
-        doors.clear();
-    }
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
+	@Override
+	public void onInstanceDestroy() {
+		doors.clear();
+	}
 }

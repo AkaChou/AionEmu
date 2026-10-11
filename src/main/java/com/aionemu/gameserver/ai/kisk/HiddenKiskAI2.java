@@ -23,12 +23,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * KISK 复活点 AI：Hidden Kisk（@AIName "hidden_kisk"），继承 NpcAI2。
  * KISK resurrection-point AI: Hidden Kisk (@AIName "hidden_kisk"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("hidden_kisk")
-public class HiddenKiskAI2 extends NpcAI2
-{
-    private final int CANCEL_DIALOG_METERS = 9;
+public class HiddenKiskAI2 extends NpcAI2 {
 
 	@Override
 	public Kisk getOwner() {
@@ -36,22 +35,22 @@ public class HiddenKiskAI2 extends NpcAI2
 	}
 
 	@Override
-    public void handleSpawned() {
-        if (!isAlreadyDead()) {
-		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+	public void handleSpawned() {
+		if (!isAlreadyDead()) {
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				getOwner().getEffectController().setAbnormal(AbnormalState.HIDE.getId());
 				getOwner().setVisualState(CreatureVisualState.HIDE1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));
 			}, 180000); // 3 分钟后进入半隐形状态 / 3 Min after become half-invisible.
-        }
+		}
 		super.handleSpawned();
-    }
+	}
 
 	@Override
 	protected void handleAttack(Creature creature) {
 		if (getLifeStats().isFullyRestoredHp()) {
-		    for (Player member: getOwner().getCurrentMemberList()) {
-		       PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_BINDSTONE_IS_ATTACKED);
+			for (Player member : getOwner().getCurrentMemberList()) {
+				PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_BINDSTONE_IS_ATTACKED);
 			}
 		}
 	}
@@ -79,23 +78,26 @@ public class HiddenKiskAI2 extends NpcAI2
 		if (player.getKisk() == getOwner()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_BINDSTONE_ALREADY_REGISTERED);
 			return;
-		} if (getOwner().canBind(player)) {
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_REGISTER_BINDSTONE, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
-                private boolean decisionTaken = false;
+		}
+		if (getOwner().canBind(player)) {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_REGISTER_BINDSTONE, getOwner().getObjectId(), 9, new AI2Request() {
+				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
-                    if (!decisionTaken) {
-                        if (!getOwner().canBind(responder)) {
-                            PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY);
-                            return;
-                        }
-                        GameFeatureServices.kiskService().onBind(getOwner(), responder);
-                    }
-                }
-                @Override
-                public void denyRequest(Creature requester, Player responder) {
-                    decisionTaken = true;
-                }
+					if (!decisionTaken) {
+						if (!getOwner().canBind(responder)) {
+							PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY);
+							return;
+						}
+						GameFeatureServices.kiskService().onBind(getOwner(), responder);
+					}
+				}
+
+				@Override
+				public void denyRequest(Creature requester, Player responder) {
+					decisionTaken = true;
+				}
 			});
 		} else if (getOwner().getCurrentMemberCount() >= getOwner().getMaxMembers()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_FULL);

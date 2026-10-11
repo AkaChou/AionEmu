@@ -39,24 +39,34 @@ import org.junit.jupiter.api.Test;
  */
 class GetMostPlayerDamageNullGateTest {
 
-	/** 项目主源码根目录 / Project main source root. */
+	/**
+	 * 项目主源码根目录 / Project main source root.
+	 */
 	private static final Path MAIN_SOURCES = Path.of("src/main/java");
 
-	/** 消费点匹配：必须带 {@code .} 前缀，方法声明本身不会被匹配。 / Call sites: the leading dot excludes the method declaration itself. */
+	/**
+	 * 消费点匹配：必须带 {@code .} 前缀，方法声明本身不会被匹配。 / Call sites: the leading dot excludes the method declaration itself.
+	 */
 	private static final Pattern CALL_SITE = Pattern.compile("\\.(getMostPlayerDamage|getMostPlayerDamageOfMembers)\\s*\\(");
 
-	/** 赋值形态：{@code Player/Creature/var x = ...getMostPlayerDamage...}。 / Assignment form. */
+	/**
+	 * 赋值形态：{@code Player/Creature/var x = ...getMostPlayerDamage...}。 / Assignment form.
+	 */
 	private static final Pattern ASSIGNMENT = Pattern.compile(
-			"(?:final\\s+)?(?:Player|Creature|var)\\s+(\\w+)\\s*=\\s*[^;]{0,200}?\\.(?:getMostPlayerDamage|getMostPlayerDamageOfMembers)\\s*\\(");
+		"(?:final\\s+)?(?:Player|Creature|var)\\s+(\\w+)\\s*=\\s*[^;]{0,200}?\\.(?:getMostPlayerDamage|getMostPlayerDamageOfMembers)\\s*\\(");
 
-	/** 成对的 null 容忍方法：即使玩家为 null 也安全。 / Paired null-tolerant methods: safe when the player is null. */
+	/**
+	 * 成对的 null 容忍方法：即使玩家为 null 也安全。 / Paired null-tolerant methods: safe when the player is null.
+	 */
 	private static final List<String> NULL_TOLERANT_CALLEES = List.of("sendMovie", "sendPacket", "sendMessage", "broadcastPacket");
 
 	/**
-	 * 至少应扫描到的消费点数量，防止路径或正则失效后闸门空转；2026-09-15 清理未使用消费点后实际为 90 处，故保留余量。
-	 * Minimum scanned call sites so the gate cannot silently degrade; 90 remain after the 2026-09-15 cleanup.
+	 * 至少应扫描到的消费点数量，防止路径或正则失效后闸门空转；2026-09-15 清理后实际 90 处，
+	 * 2026-10-11 死赋值清理（bc12be93c 移除 9 处未使用的局部读取）后实际 81 处，余量相应下调。
+	 * Minimum scanned call sites so the gate cannot silently degrade; 90 after the 2026-09-15 cleanup,
+	 * 81 after the 2026-10-11 dead-assignment cleanup (bc12be93c removed 9 unused local reads).
 	 */
-	private static final int MIN_CALL_SITES = 85;
+	private static final int MIN_CALL_SITES = 80;
 
 	/**
 	 * 闸门落地时的既有未判空站点基线：文件 → 允许的违规数。
@@ -74,6 +84,7 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 校验所有消费点，并输出违规清单。
 	 * Verifies every consumer and fails with the offending list.
+	 *
 	 * @throws IOException 读取源码失败 / when the sources cannot be read
 	 */
 	@Test
@@ -102,7 +113,7 @@ class GetMostPlayerDamageNullGateTest {
 		}
 
 		assertTrue(callSites >= MIN_CALL_SITES, "仅扫描到 " + callSites + " 个 getMostPlayerDamage 消费点（期望 >= " + MIN_CALL_SITES
-				+ "）；路径或正则可能已失效。 / Scanned only " + callSites + " call sites; the gate may have stopped matching.");
+			+ "）；路径或正则可能已失效。 / Scanned only " + callSites + " call sites; the gate may have stopped matching.");
 
 		List<String> unbaselined = new ArrayList<>();
 		for (String violation : violations) {
@@ -115,17 +126,18 @@ class GetMostPlayerDamageNullGateTest {
 		}
 
 		assertTrue(unbaselined.isEmpty(),
-				"以下消费点在首次使用前缺少判空（AggroList#getMostPlayerDamage 可能返回 null）：\n"
-						+ String.join("\n", unbaselined));
+			"以下消费点在首次使用前缺少判空（AggroList#getMostPlayerDamage 可能返回 null）：\n"
+				+ String.join("\n", unbaselined));
 	}
 
 	/**
 	 * 检查单个消费点是否满足判空契约。
 	 * Checks whether a single call site satisfies the null-guard contract.
-	 * @param code 去注释源码 / comment-free source
-	 * @param file 相对路径 / relative path
+	 *
+	 * @param code  去注释源码 / comment-free source
+	 * @param file  相对路径 / relative path
 	 * @param start 消费点起点 / call site start
-	 * @param end 消费点终点 / call site end
+	 * @param end   消费点终点 / call site end
 	 * @return 违规描述或 null / violation description or null
 	 */
 	private static String inspect(String code, String file, int start, int end) {
@@ -138,7 +150,7 @@ class GetMostPlayerDamageNullGateTest {
 		if (!assignment.find()) {
 			boolean comparedWithNull = statement.contains("== null") || statement.contains("!= null");
 			boolean tolerantCall = NULL_TOLERANT_CALLEES.stream()
-					.anyMatch(name -> Pattern.compile("\\b" + name + "\\s*\\(").matcher(statement).find());
+				.anyMatch(name -> Pattern.compile("\\b" + name + "\\s*\\(").matcher(statement).find());
 			boolean allowlisted = file.endsWith("ai/RetailPatternAI2.java");
 			return comparedWithNull || tolerantCall || allowlisted ? null : file + ":" + line + " 内联使用未判空";
 		}
@@ -150,7 +162,7 @@ class GetMostPlayerDamageNullGateTest {
 		}
 		String scan = code.substring(end, blockEnd);
 		Matcher shadow = Pattern.compile("(?:\\b(?:Player|Creature|var)\\s+" + Pattern.quote(variable) + "\\b|\\b"
-				+ Pattern.quote(variable) + "\\s*=[^=])").matcher(scan);
+			+ Pattern.quote(variable) + "\\s*=[^=])").matcher(scan);
 		if (shadow.find()) {
 			scan = scan.substring(0, shadow.start());
 		}
@@ -168,7 +180,8 @@ class GetMostPlayerDamageNullGateTest {
 	 * Locates the first real use of the variable: a dereference, or an argument passed to a method that is not null-tolerant.
 	 * <p>判空比较自身、同名形参声明、以及成对的 null 容忍方法实参都不算使用。
 	 * A null comparison itself, a declaration, and arguments of paired null-tolerant methods do not count as uses.</p>
-	 * @param scan 待扫描片段 / the fragment to scan
+	 *
+	 * @param scan     待扫描片段 / the fragment to scan
 	 * @param variable 变量名 / variable name
 	 * @return 首次使用下标，没有使用返回 -1 / index of the first use, or -1
 	 */
@@ -197,8 +210,9 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 判断下标处是不是针对该变量的 null 比较（{@code x == null} / {@code null != x}）。
 	 * Checks whether the index starts a null comparison involving the variable.
-	 * @param scan 待扫描片段 / the fragment to scan
-	 * @param index 变量起始下标 / variable start index
+	 *
+	 * @param scan     待扫描片段 / the fragment to scan
+	 * @param index    变量起始下标 / variable start index
 	 * @param variable 变量名 / variable name
 	 * @return 是判空比较返回 true / true when it is a null comparison
 	 */
@@ -206,14 +220,15 @@ class GetMostPlayerDamageNullGateTest {
 		int from = Math.max(0, index - "null ".length() - 4);
 		String window = scan.substring(from, Math.min(scan.length(), index + variable.length() + 16));
 		return Pattern.compile("(" + Pattern.quote(variable) + "\\s*[!=]=\\s*null|null\\s*[!=]=\\s*" + Pattern.quote(variable) + ")")
-				.matcher(window)
-				.find();
+			.matcher(window)
+			.find();
 	}
 
 	/**
 	 * 定位变量最近的判空位置。
 	 * Locates the nearest null check for the variable.
-	 * @param scan 待扫描片段 / the fragment to scan
+	 *
+	 * @param scan     待扫描片段 / the fragment to scan
 	 * @param variable 变量名 / variable name
 	 * @return 判空下标，没有返回 -1 / index of the null check, or -1
 	 */
@@ -225,7 +240,8 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 返回包含指定位置的代码块结束下标（大括号配对）。
 	 * Returns the end index of the block enclosing the position (brace matching).
-	 * @param code 去注释源码 / comment-free source
+	 *
+	 * @param code     去注释源码 / comment-free source
 	 * @param position 位置 / position
 	 * @return 配对大括号下标，无法定位返回 -1 / matching brace index, or -1
 	 */
@@ -260,6 +276,7 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 去掉注释与字符串/字符字面量，保留原始换行位置。
 	 * Strips comments and string/char literals while preserving line positions.
+	 *
 	 * @param source 源码 / the source
 	 * @return 仅含代码的文本 / code-only text
 	 */
@@ -314,10 +331,11 @@ class GetMostPlayerDamageNullGateTest {
 	/**
 	 * 用空格替换片段中非换行字符，保持行列位置不变。
 	 * Replaces non-newline characters with spaces so line and column positions stay stable.
-	 * @param out 输出缓冲 / output buffer
+	 *
+	 * @param out    输出缓冲 / output buffer
 	 * @param source 源文本 / source text
-	 * @param from 起始下标 / start index
-	 * @param to 结束下标 / end index
+	 * @param from   起始下标 / start index
+	 * @param to     结束下标 / end index
 	 */
 	private static void appendBlanked(StringBuilder out, String source, int from, int to) {
 		for (int i = from; i < to; i++) {

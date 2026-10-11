@@ -24,6 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class GrowthEnergy {
+	private boolean dailyGenerated = true;
     /**
      * -- SETTER --
      *  设置实例提供者（Spring 注入）。
@@ -31,7 +32,6 @@ public class GrowthEnergy {
      */
     @Setter
     private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
-	private boolean dailyGenerated = true;
 
 	/**
 	 * 初始化。

@@ -28,66 +28,66 @@ import java.util.List;
 public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
 
-    private static final int TREASURE_CHEST_ID = 701481; // 宝箱 ID / Chest ID
-    private static final int NUMBER_OF_CHESTS = 6; // 宝箱数量 / Number of chests
-    private static final Set<Integer> SPAWN_CHEST_IDS;
+	private static final int TREASURE_CHEST_ID = 701481; // 宝箱 ID / Chest ID
+	private static final int NUMBER_OF_CHESTS = 6; // 宝箱数量 / Number of chests
+	private static final Set<Integer> SPAWN_CHEST_IDS;
 
-    static {
-        SPAWN_CHEST_IDS = new HashSet<>();
-        SPAWN_CHEST_IDS.add(263001);
-        SPAWN_CHEST_IDS.add(263006);
-        SPAWN_CHEST_IDS.add(263011);
-        SPAWN_CHEST_IDS.add(263301);
-        SPAWN_CHEST_IDS.add(263306);
-        SPAWN_CHEST_IDS.add(263311);
-        SPAWN_CHEST_IDS.add(264501);
-        SPAWN_CHEST_IDS.add(264506);
-        SPAWN_CHEST_IDS.add(264511);
-    }
+	static {
+		SPAWN_CHEST_IDS = new HashSet<>();
+		SPAWN_CHEST_IDS.add(263001);
+		SPAWN_CHEST_IDS.add(263006);
+		SPAWN_CHEST_IDS.add(263011);
+		SPAWN_CHEST_IDS.add(263301);
+		SPAWN_CHEST_IDS.add(263306);
+		SPAWN_CHEST_IDS.add(263311);
+		SPAWN_CHEST_IDS.add(264501);
+		SPAWN_CHEST_IDS.add(264506);
+		SPAWN_CHEST_IDS.add(264511);
+	}
 
-    @Override
-    protected void handleDied() {
-        if (SPAWN_CHEST_IDS.contains(getNpcId())) {
-            treasureChest();
-            GameThreadPoolServices.threadPoolManager().schedule(this::spawnTreasureChestTask, 10000);
-        }
-        super.handleDied();
-    }
+	@Override
+	protected void handleDied() {
+		if (SPAWN_CHEST_IDS.contains(getNpcId())) {
+			treasureChest();
+			GameThreadPoolServices.threadPoolManager().schedule(this::spawnTreasureChestTask, 10000);
+		}
+		super.handleDied();
+	}
 
-    private void spawnTreasureChestTask() {
-        spawnTreasureChest(TREASURE_CHEST_ID);
-    }
+	private void spawnTreasureChestTask() {
+		spawnTreasureChest(TREASURE_CHEST_ID);
+	}
 
-    private void treasureChest() {
-        getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn));
-    }
+	private void treasureChest() {
+		getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDAbRe_Core_NmdC_BoxSpawn));
+	}
 
-    private void spawnTreasureChest(int npcId) {
-        for (int i = 0; i < NUMBER_OF_CHESTS; i++) {
-            rndSpawnInRange(npcId);
-        }
-    }
+	private void spawnTreasureChest(int npcId) {
+		for (int i = 0; i < NUMBER_OF_CHESTS; i++) {
+			rndSpawnInRange(npcId);
+		}
+	}
 
-    private Npc rndSpawnInRange(int npcId) {
-        float distance = Rnd.get(1,4);
-        float direction = Rnd.get(0, 199) / 100f;
-        float x1 = (float) (Math.cos(Math.PI * direction) * distance);
-        float y1 = (float) (Math.sin(Math.PI * direction) * distance);
+	private Npc rndSpawnInRange(int npcId) {
+		float distance = Rnd.get(1, 4);
+		float direction = Rnd.get(0, 199) / 100f;
+		float x1 = (float) (Math.cos(Math.PI * direction) * distance);
+		float y1 = (float) (Math.sin(Math.PI * direction) * distance);
 
-        float x = getPosition().getX() + x1;
-        float y = getPosition().getY() + y1;
-        float z = getPosition().getZ();
-        byte heading = (byte) 0;
+		float x = getPosition().getX() + x1;
+		float y = getPosition().getY() + y1;
+		float z = getPosition().getZ();
+		byte heading = (byte) 0;
 
-        try {
-            Npc chest = (Npc) spawn(TREASURE_CHEST_ID, x, y, z, heading);
-            onDropRegistered(chest);
-            return chest;
-        } catch (Exception e) {
-            log.error(I18n.get("log.a2aee0eb2e44"), e);
-            return null;
-        }
-    }
+		try {
+			Npc chest = (Npc) spawn(TREASURE_CHEST_ID, x, y, z, heading);
+			onDropRegistered(chest);
+			return chest;
+		} catch (Exception e) {
+			log.error(I18n.get("log.a2aee0eb2e44"), e);
+			return null;
+		}
+	}
 
 	public void onDropRegistered(Npc npc) {
 		int npcId = TREASURE_CHEST_ID;

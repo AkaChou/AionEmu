@@ -35,39 +35,59 @@ import java.util.concurrent.Future;
 /**
  * 闷燃火焰神殿副本事件处理器。
  * Instance event handler for Smoldering Fire Temple.
+ *
  * @author Encom
  */
 
 @InstanceID(302000000)
-public class SmolderingFireTempleInstance extends GeneralInstanceHandler
-{
-		/** 军阶 / rank */
-		private int rank;
-	/** 开始时间 / start time */
+public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
+	/**
+	 * 军阶 / rank
+	 */
+	private int rank;
+	/**
+	 * 开始时间 / start time
+	 */
 	private long startTime;
-		/** vengeful obscura / vengeful obscura */
-		private int vengefulObscura;
-		/** 准备计时器 / timer prepare */
-		private Future<?> timerPrepare;
-		/** 副本计时器 / timer instance */
-		private Future<?> timerInstance;
-	/** 副本是否已销毁 / whether the instance is destroyed */
+	/**
+	 * vengeful obscura / vengeful obscura
+	 */
+	private int vengefulObscura;
+	/**
+	 * 准备计时器 / timer prepare
+	 */
+	private Future<?> timerPrepare;
+	/**
+	 * 副本计时器 / timer instance
+	 */
+	private Future<?> timerInstance;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
 	private boolean isInstanceDestroyed;
-	/** 门映射 / door map */
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-	/** 副本奖励对象 / instance reward object */
+	/**
+	 * 副本奖励对象 / instance reward object
+	 */
 	private SmolderingReward instanceReward;
 	// 准备时间。 / Preparation Time.
-		/** 准备计时秒数 / prepare timer seconds */
-		private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
+	/**
+	 * 准备计时秒数 / prepare timer seconds
+	 */
+	private final int prepareTimerSeconds = 60000; //…1 分钟 / ...1Min
 	// 副本持续计时。 / Duration Instance Time.
-		/** 副本计时秒数 / instance timer seconds */
-		private final int instanceTimerSeconds = 600000; //...10Min
-		/** smoldering 任务 / smoldering task */
-		private final List<Future<?>> smolderingTask = new ArrayList<>();
+	/**
+	 * smoldering 任务 / smoldering task
+	 */
+	private final List<Future<?>> smolderingTask = new ArrayList<>();
+
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
+	 *
 	 * @param object 可见对象 / visible object
 	 * @return 结果 / result
 	 */
@@ -79,6 +99,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理 addPlayerReward。
 	 * Handle addPlayerReward.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@SuppressWarnings("unchecked")
@@ -93,15 +114,18 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
+	 *
 	 * @return 结果 / result
 	 */
 	@Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
 	}
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 
@@ -111,9 +135,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 244435: //Potion Chest.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GM’s Secret Remedy Of DP Recovery.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
@@ -121,26 +145,26 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
 					}
 				}
-			break;
+				break;
 			case 834058: //Smoldering Fire Temple Treasure Chest.
 			case 834059: //Smoldering Fire Temple Premium Treasure Chest.
 			case 834060: //Smoldering Fire Temple Treasure Chest.
 			case 834061: //Smoldering Fire Temple Quality Treasure Chest.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
-				    break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
+						break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
-				    break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
+						break;
 					case 3:
-					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
+						break;
 					case 4:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
-					break;
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
+						break;
 				}
-			break;
+				break;
 		}
 	}
 
@@ -158,6 +182,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -171,17 +196,17 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			case 244091: //Flame Spirit.
 				points = 180;
 				despawnNpc(npc);
-			break;
+				break;
 			case 244086: //Kalgolem.
 			case 244092: //Fire Spirit.
 				points = 160;
 				despawnNpc(npc);
-			break;
+				break;
 			case 244087: //Enhanced Kalgolem.
 			case 244088: //Vengeful Obscura.
 				points = 250;
 				despawnNpc(npc);
-			break;
+				break;
 			case 244093: //Vengeful Obscura.
 				points = 250;
 				despawnNpc(npc);
@@ -189,41 +214,41 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				if (vengefulObscura == 12) {
 					spawn(244097, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Temple Guardian.
 				}
-			break;
+				break;
 			case 244089: //Vengeful Obscura.
 				points = 660;
 				despawnNpc(npc);
-			break;
+				break;
 			case 244094: //Enhanced Orange Crystal Molgat.
 				points = 1740;
 				despawnNpc(npc);
-			break;
+				break;
 			case 244095: //Enhanced Silver Blade Rotan.
 				points = 2040;
 				despawnNpc(npc);
 				doors.get(8).setOpen(true);
-			break;
+				break;
 			case 244096: //Enhanced Tough Sipus.
 				points = 12000;
 				despawnNpc(npc);
 				spawn(834067, 292.34671f, 166.54131f, 119.53692f, (byte) 0, 40);
-			break;
+				break;
 			case 244097: //Temple Guardian.
 				points = 14400;
 				despawnNpc(npc);
 				spawn(834066, 169.24069f, 417.35110f, 140.77321f, (byte) 0, 3);
 				spawn(244098, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Lady Angerr.
-			break;
+				break;
 			case 244098: //Enraged Lady Angerr.
 				points = 48000;
 				despawnNpc(npc);
 				spawn(244099, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Judge Kaliga.
-			break;
+				break;
 			case 244099: //Enraged Judge Kaliga.
 				points = 272000;
 				despawnNpc(npc);
 				spawn(244100, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Enraged Kromede.
-			break;
+				break;
 			case 244100: //Enraged Kromede.
 				points = 500000;
 				despawnNpc(npc);
@@ -235,7 +260,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 					 */
 					@Override
 					public void run() {
-					    instance.doOnAllPlayers(new Visitor<>() {
+						instance.doOnAllPlayers(new Visitor<>() {
 							/**
 							 * 处理 visit。
 							 * Handle visit.
@@ -248,8 +273,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 						});
 					}
 				}, 3000);
-			break;
-		} if (instanceReward.getInstanceScoreType().isStartProgress()) {
+				break;
+		}
+		if (instanceReward.getInstanceScoreType().isStartProgress()) {
 			instanceReward.addNpcKill();
 			instanceReward.addPoints(points);
 			sendPacket(npc.getObjectTemplate().getNameId(), points);
@@ -259,8 +285,9 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家对 NPC 使用物品完成时处理。
 	 * Handle item-use finish on an NPC.
+	 *
 	 * @param player 玩家 / player
-	 * @param npc NPC / npc
+	 * @param npc    NPC / npc
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
@@ -268,37 +295,37 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 834055: //GM Stomper.
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21376);
-				    effectController.removeEffect(21377);
-				    GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
+					effectController.removeEffect(21376);
+					effectController.removeEffect(21377);
+					GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21379);
-				    effectController.removeEffect(21380);
-				    GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
+					effectController.removeEffect(21380);
+					GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
 				}
-			break;
+				break;
 			case 834056: //GM Shine.
-			    if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21375);
-				    effectController.removeEffect(21377);
-				    GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
+				if (player.getCommonData().getRace() == Race.ELYOS) {
+					effectController.removeEffect(21375);
+					effectController.removeEffect(21377);
+					GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				    effectController.removeEffect(21378);
-				    effectController.removeEffect(21380);
-				    GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
+					effectController.removeEffect(21378);
+					effectController.removeEffect(21380);
+					GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
 				}
-			break;
+				break;
 			case 834057: //GM Iris.
-			    if (player.getCommonData().getRace() == Race.ELYOS) {
-				    effectController.removeEffect(21375);
-				    effectController.removeEffect(21376);
-				    GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
+				if (player.getCommonData().getRace() == Race.ELYOS) {
+					effectController.removeEffect(21375);
+					effectController.removeEffect(21376);
+					GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				    effectController.removeEffect(21378);
-				    effectController.removeEffect(21379);
-				    GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
+					effectController.removeEffect(21378);
+					effectController.removeEffect(21379);
+					GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
 				}
-			break;
+				break;
 		}
 	}
 
@@ -315,6 +342,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -328,6 +356,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -338,7 +367,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 
 	private int getTime() {
 		long result = (int) (System.currentTimeMillis() - startTime);
-		return instanceTimerSeconds - (int) result;
+		return 600000 - (int) result;
 	}
 
 	private void sendPacket(final int nameId, final int point) {
@@ -374,6 +403,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		}
 		return rank;
 	}
+
 	/**
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
@@ -381,12 +411,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
 		smolderingTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
 				instance.doOnAllPlayers(new Visitor<>() {
 					/**
 					 * 处理 visit。
@@ -398,13 +428,14 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 						stopInstance(player);
 					}
 				});
-            }
-        }, 600000));
-    }
+			}
+		}, 600000));
+	}
 
 	/**
 	 * 玩家打开门时处理。
 	 * Handle a player opening a door.
+	 *
 	 * @param player 玩家 / player
 	 * @param doorId 门 ID / doorId
 	 */
@@ -426,6 +457,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -474,15 +506,17 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 		sendPacket(0, 0);
 	}
+
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
+	 *
 	 * @param player 玩家 / player
 	 */
 
 	protected void stopInstance(Player player) {
-        stopInstanceTask();
-        instanceReward.setRank(6);
+		stopInstanceTask();
+		instanceReward.setRank(6);
 		instanceReward.setRank(checkRank(instanceReward.getPoints()));
 		instanceReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
 		doReward(player);
@@ -492,6 +526,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -505,22 +540,22 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 					playerReward.setSmolderingKey(6);
 					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 6);
-				break;
+					break;
 				case 2: //Rank A
 					playerReward.setSmolderingKey(4);
 					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 4);
-				break;
+					break;
 				case 3: //Rank B
 					playerReward.setSmolderingKey(3);
 					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 3);
-				break;
+					break;
 				case 4: //Rank C
 					playerReward.setSmolderingKey(2);
 					// 闷燃火神殿宝箱钥匙。 / Smoldering Fire Temple Treasure Key.
 					ItemService.addItem(player, 185000270, 2);
-				break;
+					break;
 			}
 		}
 	}
@@ -528,6 +563,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -539,12 +575,12 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 
 	private void stopInstanceTask() {
-        for (Future<?> task : smolderingTask) {
+		for (Future<?> task : smolderingTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
 	/**
 	 * 副本销毁时清理资源。
@@ -554,7 +590,8 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	public void onInstanceDestroy() {
 		if (timerInstance != null) {
 			timerInstance.cancel(false);
-		} if (timerPrepare != null) {
+		}
+		if (timerPrepare != null) {
 			timerPrepare.cancel(false);
 		}
 		stopInstanceTask();
@@ -562,22 +599,25 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 		instanceReward.clear();
 		doors.clear();
 	}
+
 	/**
 	 * 移除指定 NPC。
 	 * Despawn the given NPC.
+	 *
 	 * @param npc NPC / npc
 	 */
 
 	protected void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
 
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 * @param msg 消息 / message
+	 *
+	 * @param msg  消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */

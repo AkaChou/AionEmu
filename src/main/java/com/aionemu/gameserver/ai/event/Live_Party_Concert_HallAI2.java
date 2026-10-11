@@ -17,18 +17,18 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 /**
  * 活动事件 NPC AI：Live Party Concert Hall（@AIName "lpch"），继承 NpcAI2。
  * Event NPC AI: Live Party Concert Hall (@AIName "lpch"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("lpch")
-public class Live_Party_Concert_HallAI2 extends NpcAI2
-{
-	private final int CANCEL_DIALOG_METERS = 10;
+public class Live_Party_Concert_HallAI2 extends NpcAI2 {
 
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 10) {
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_EVENT_DIRECT_PORTAL, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_EVENT_DIRECT_PORTAL, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
@@ -37,11 +37,12 @@ public class Live_Party_Concert_HallAI2 extends NpcAI2
 								WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(600080000);
 								InstanceService.registerPlayerWithInstance(newInstance, responder);
 								TeleportService2.teleportTo(responder, 600080000, newInstance.getInstanceId(), 1507.4276f, 1484.457f, 565.8799f, (byte) 16, TeleportAnimation.BEAM_ANIMATION);
-							break;
+								break;
 						}
 						decisionTaken = true;
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;

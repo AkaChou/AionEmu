@@ -47,35 +47,60 @@ import java.util.function.BiConsumer;
 /**
  * 铁壁前线副本事件处理器。
  * Instance event handler for Iron Wall Warfront.
+ *
  * @author Encom
  */
 
 @InstanceID(301220000)
 public class IronWallWarfrontInstance extends GeneralInstanceHandler {
-    /** 铁壁基地 / iron wall base */
-    private int ironWallBase;
-        /** 副本时间戳 / instance timestamp */
-        private long instanceTime;
-    /** 门映射 / door map */
-    private Map<Integer, StaticDoor> doors;
-        /** 种族 killedcommander / race killed commander */
-        private Race RaceKilledCommander = null;
-        /** iron wall warfront reward / iron wall warfront reward */
-        protected IronWallWarfrontReward ironWallWarfrontReward;
-        /** 败方倍率 / losing-group multiplier */
-        private float loosingGroupMultiplier = 1;
-    /** 副本是否已销毁 / whether the instance is destroyed */
-    private boolean isInstanceDestroyed = false;
-        /** 副本是否已开始 / whether the instance started */
-        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-        /** ironwall 任务 / iron wall task */
-        private final List<Future<?>> ironWallTask = new ArrayList<>();
-        /** 种族 killedcommanderstatic / race killed commander static */
-        private static Race RaceKilledCommanderStatic = null;
-        /** iron wall base static / iron wall base static */
-        private static int ironWallBaseStatic = 0;
-        /** 实例 / instance static */
-        private static IronWallWarfrontInstance instanceStatic = null;
+	/**
+	 * 铁壁基地 / iron wall base
+	 */
+	private int ironWallBase;
+	/**
+	 * 副本时间戳 / instance timestamp
+	 */
+	private long instanceTime;
+	/**
+	 * 门映射 / door map
+	 */
+	private Map<Integer, StaticDoor> doors;
+	/**
+	 * 种族 killedcommander / race killed commander
+	 */
+	private Race RaceKilledCommander = null;
+	/**
+	 * iron wall warfront reward / iron wall warfront reward
+	 */
+	protected IronWallWarfrontReward ironWallWarfrontReward;
+	/**
+	 * 败方倍率 / losing-group multiplier
+	 */
+	private float loosingGroupMultiplier = 1;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
+	private boolean isInstanceDestroyed = false;
+	/**
+	 * 副本是否已开始 / whether the instance started
+	 */
+	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+	/**
+	 * ironwall 任务 / iron wall task
+	 */
+	private final List<Future<?>> ironWallTask = new ArrayList<>();
+	/**
+	 * 种族 killedcommanderstatic / race killed commander static
+	 */
+	private static Race RaceKilledCommanderStatic = null;
+	/**
+	 * iron wall base static / iron wall base static
+	 */
+	private static int ironWallBaseStatic = 0;
+	/**
+	 * 实例 / instance static
+	 */
+	private static IronWallWarfrontInstance instanceStatic = null;
 
 	private record SpawnData(int npcId, float x, float y, float z, byte h) {
 	}
@@ -103,274 +128,290 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 			return this;
 		}
 	}
-    /** 处理器集合 / handlers */
-    private static final Map<Integer, NpcHandler> HANDLERS = new HashMap<>();
 
-    static {
-        HANDLERS.put(233497, new NpcHandler(0));
-        HANDLERS.put(233508, new NpcHandler(0));
-        HANDLERS.put(233517, new NpcHandler(0));
-        HANDLERS.put(233528, new NpcHandler(0));
-        HANDLERS.put(233543, new NpcHandler(0));
-        HANDLERS.put(233549, new NpcHandler(0));
-        HANDLERS.put(233561, new NpcHandler(0));
+	/**
+	 * 处理器集合 / handlers
+	 */
+	private static final Map<Integer, NpcHandler> HANDLERS = new HashMap<>();
 
-        HANDLERS.put(233547, new NpcHandler(100));
-        HANDLERS.put(233548, new NpcHandler(100));
-        HANDLERS.put(233537, new NpcHandler(250));
+	static {
+		HANDLERS.put(233497, new NpcHandler(0));
+		HANDLERS.put(233508, new NpcHandler(0));
+		HANDLERS.put(233517, new NpcHandler(0));
+		HANDLERS.put(233528, new NpcHandler(0));
+		HANDLERS.put(233543, new NpcHandler(0));
+		HANDLERS.put(233549, new NpcHandler(0));
+		HANDLERS.put(233561, new NpcHandler(0));
 
-        int[][] cannons = {
-            {233741, 726565, 328077, 254216, 48, 701596, 801960, 701610, 801961},
-            {233742, 761632, 381781, 240922, 84, 701596, 801960, 701610, 801961},
-            {233743, 710055, 410757, 241013, 32, 701596, 801960, 701610, 801961},
-            {233744, 625838, 339615, 235741, 54, 701596, 801960, 701610, 801961},
-            {233745, 644943, 302792, 235742, 114, 701596, 801960, 701610, 801961},
-            {233746, 618395, 361984, 224943, 42, 701596, 801960, 701610, 801961},
-            {233747, 685211, 427900, 229821, 33, 701596, 801960, 701610, 801961},
-            {233748, 670069, 560677, 229349, 113, 701596, 801960, 701610, 801961},
-            {233749, 518424, 230842, 231920, 0, 701596, 801960, 701610, 801961}
-        };
+		HANDLERS.put(233547, new NpcHandler(100));
+		HANDLERS.put(233548, new NpcHandler(100));
+		HANDLERS.put(233537, new NpcHandler(250));
 
-        for (int[] c : cannons) {
-            HANDLERS.put(c[0], new NpcHandler(250).addSpawn(Race.ELYOS, new SpawnData(c[5], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4]), new SpawnData(c[6], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4])).addSpawn(Race.ASMODIANS, new SpawnData(c[7], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4]), new SpawnData(c[8], c[1]/1000f, c[2]/1000f, c[3]/1000f, (byte)c[4])));
-        }
+		int[][] cannons = {
+			{233741, 726565, 328077, 254216, 48, 701596, 801960, 701610, 801961},
+			{233742, 761632, 381781, 240922, 84, 701596, 801960, 701610, 801961},
+			{233743, 710055, 410757, 241013, 32, 701596, 801960, 701610, 801961},
+			{233744, 625838, 339615, 235741, 54, 701596, 801960, 701610, 801961},
+			{233745, 644943, 302792, 235742, 114, 701596, 801960, 701610, 801961},
+			{233746, 618395, 361984, 224943, 42, 701596, 801960, 701610, 801961},
+			{233747, 685211, 427900, 229821, 33, 701596, 801960, 701610, 801961},
+			{233748, 670069, 560677, 229349, 113, 701596, 801960, 701610, 801961},
+			{233749, 518424, 230842, 231920, 0, 701596, 801960, 701610, 801961}
+		};
 
-        int[] walls = {233564, 233565, 233566, 233567, 233568, 233569};
-        for (int wall : walls) {
-            HANDLERS.put(wall, new NpcHandler(2000, (n, p) -> sendMsgByRaceStatic(1402207, Race.PC_ALL)));
-        }
+		for (int[] c : cannons) {
+			HANDLERS.put(c[0], new NpcHandler(250).addSpawn(Race.ELYOS, new SpawnData(c[5], c[1] / 1000f, c[2] / 1000f, c[3] / 1000f, (byte) c[4]), new SpawnData(c[6], c[1] / 1000f, c[2] / 1000f, c[3] / 1000f, (byte) c[4])).addSpawn(Race.ASMODIANS, new SpawnData(c[7], c[1] / 1000f, c[2] / 1000f, c[3] / 1000f, (byte) c[4]), new SpawnData(c[8], c[1] / 1000f, c[2] / 1000f, c[3] / 1000f, (byte) c[4])));
+		}
 
-        int[] supplies = {233510, 233511, 233512, 233530, 233531, 233532};
-        for (int s : supplies) {
-            HANDLERS.put(s, new NpcHandler(400));
-        }
+		int[] walls = {233564, 233565, 233566, 233567, 233568, 233569};
+		for (int wall : walls) {
+			HANDLERS.put(wall, new NpcHandler(2000, (n, p) -> sendMsgByRaceStatic(1402207, Race.PC_ALL)));
+		}
 
-        HANDLERS.put(233544, new NpcHandler(200000, (n, p) -> RaceKilledCommanderStatic = p.getRace()));
+		int[] supplies = {233510, 233511, 233512, 233530, 233531, 233532};
+		for (int s : supplies) {
+			HANDLERS.put(s, new NpcHandler(400));
+		}
 
-        int[][] baseOfficers = {
-            {233518, 1, 831875, 233517, 233528, 831885, 233498, 233497, 233508},
-            {233519, 2, 831876, 233517, 233528, 831886, 233499, 233497, 233508},
-            {233520, 3, 831877, 233517, 233528, 831887, 233500, 233497, 233508},
-            {233521, 4, 831878, 233517, 233528, 831888, 233501, 233497, 233508},
-            {233522, 5, 831879, 233517, 233528, 831889, 233502, 233497, 233508},
-            {233523, 6, 831880, 233517, 233528, 831890, 233503, 233497, 233508},
-            {233524, 7, 831881, 233517, 233528, 831891, 233504, 233497, 233508},
-            {233525, 8, 831882, 233517, 233528, 831892, 233505, 233497, 233508},
-            {233526, 9, 831883, 233517, 233528, 831893, 233506, 233497, 233508},
-            {233527, 10, 831884, 233517, 233528, 831894, 233507, 233497, 233508},
-            {233498, 1, 831885, 233497, 233508, 831875, 233518, 233517, 233528},
-            {233499, 2, 831886, 233497, 233508, 831876, 233519, 233517, 233528},
-            {233500, 3, 831887, 233497, 233508, 831877, 233520, 233517, 233528},
-            {233501, 4, 831888, 233497, 233508, 831878, 233521, 233517, 233528},
-            {233502, 5, 831889, 233497, 233508, 831879, 233522, 233517, 233528},
-            {233503, 6, 831890, 233497, 233508, 831880, 233523, 233517, 233528},
-            {233504, 7, 831891, 233497, 233508, 831881, 233524, 233517, 233528},
-            {233505, 8, 831892, 233497, 233508, 831882, 233525, 233517, 233528},
-            {233506, 9, 831893, 233497, 233508, 831883, 233526, 233517, 233528},
-            {233507, 10, 831894, 233497, 233508, 831884, 233527, 233517, 233528},
-            {233550, 1, 831895, 233543, 233547, 831875, 233518, 233517, 233528},
-            {233551, 2, 831896, 233543, 233547, 831876, 233519, 233517, 233528},
-            {233552, 3, 831897, 233543, 233547, 831877, 233520, 233517, 233528},
-            {233553, 4, 831898, 233543, 233547, 831878, 233521, 233517, 233528},
-            {233554, 5, 831899, 233543, 233547, 831879, 233522, 233517, 233528},
-            {233555, 6, 831900, 233543, 233547, 831880, 233523, 233517, 233528},
-            {233556, 7, 831901, 233543, 233547, 831881, 233524, 233517, 233528},
-            {233557, 8, 831902, 233543, 233547, 831882, 233525, 233517, 233528},
-            {233558, 9, 831903, 233543, 233547, 831883, 233526, 233517, 233528},
-            {233559, 10, 831904, 233543, 233547, 831884, 233527, 233517, 233528}
-        };
+		HANDLERS.put(233544, new NpcHandler(200000, (n, p) -> RaceKilledCommanderStatic = p.getRace()));
 
-        for (int[] o : baseOfficers) {
-            HANDLERS.put(o[0], new NpcHandler(400, (n, p) -> {
-                if (ironWallBaseStatic == o[1]) {
-                    if (p.getRace() == Race.ELYOS) {
-                        deleteNpcStatic(o[2]);
-                        deleteNpcStatic(o[3]);
-                        deleteNpcStatic(o[4]);
-                    } else {
-                        deleteNpcStatic(o[5]);
-                        deleteNpcStatic(o[6]);
-                        deleteNpcStatic(o[7]);
-                        deleteNpcStatic(o[8]);
-                    }
-                }
-            }));
-        }
-    }
+		int[][] baseOfficers = {
+			{233518, 1, 831875, 233517, 233528, 831885, 233498, 233497, 233508},
+			{233519, 2, 831876, 233517, 233528, 831886, 233499, 233497, 233508},
+			{233520, 3, 831877, 233517, 233528, 831887, 233500, 233497, 233508},
+			{233521, 4, 831878, 233517, 233528, 831888, 233501, 233497, 233508},
+			{233522, 5, 831879, 233517, 233528, 831889, 233502, 233497, 233508},
+			{233523, 6, 831880, 233517, 233528, 831890, 233503, 233497, 233508},
+			{233524, 7, 831881, 233517, 233528, 831891, 233504, 233497, 233508},
+			{233525, 8, 831882, 233517, 233528, 831892, 233505, 233497, 233508},
+			{233526, 9, 831883, 233517, 233528, 831893, 233506, 233497, 233508},
+			{233527, 10, 831884, 233517, 233528, 831894, 233507, 233497, 233508},
+			{233498, 1, 831885, 233497, 233508, 831875, 233518, 233517, 233528},
+			{233499, 2, 831886, 233497, 233508, 831876, 233519, 233517, 233528},
+			{233500, 3, 831887, 233497, 233508, 831877, 233520, 233517, 233528},
+			{233501, 4, 831888, 233497, 233508, 831878, 233521, 233517, 233528},
+			{233502, 5, 831889, 233497, 233508, 831879, 233522, 233517, 233528},
+			{233503, 6, 831890, 233497, 233508, 831880, 233523, 233517, 233528},
+			{233504, 7, 831891, 233497, 233508, 831881, 233524, 233517, 233528},
+			{233505, 8, 831892, 233497, 233508, 831882, 233525, 233517, 233528},
+			{233506, 9, 831893, 233497, 233508, 831883, 233526, 233517, 233528},
+			{233507, 10, 831894, 233497, 233508, 831884, 233527, 233517, 233528},
+			{233550, 1, 831895, 233543, 233547, 831875, 233518, 233517, 233528},
+			{233551, 2, 831896, 233543, 233547, 831876, 233519, 233517, 233528},
+			{233552, 3, 831897, 233543, 233547, 831877, 233520, 233517, 233528},
+			{233553, 4, 831898, 233543, 233547, 831878, 233521, 233517, 233528},
+			{233554, 5, 831899, 233543, 233547, 831879, 233522, 233517, 233528},
+			{233555, 6, 831900, 233543, 233547, 831880, 233523, 233517, 233528},
+			{233556, 7, 831901, 233543, 233547, 831881, 233524, 233517, 233528},
+			{233557, 8, 831902, 233543, 233547, 831882, 233525, 233517, 233528},
+			{233558, 9, 831903, 233543, 233547, 831883, 233526, 233517, 233528},
+			{233559, 10, 831904, 233543, 233547, 831884, 233527, 233517, 233528}
+		};
 
-    private static void sendMsgByRaceStatic(int msg, Race race) {
-        if (instanceStatic != null) {
-            instanceStatic.sendMsgByRace(msg, race, 0);
-        }
-    }
+		for (int[] o : baseOfficers) {
+			HANDLERS.put(o[0], new NpcHandler(400, (n, p) -> {
+				if (ironWallBaseStatic == o[1]) {
+					if (p.getRace() == Race.ELYOS) {
+						deleteNpcStatic(o[2]);
+						deleteNpcStatic(o[3]);
+						deleteNpcStatic(o[4]);
+					} else {
+						deleteNpcStatic(o[5]);
+						deleteNpcStatic(o[6]);
+						deleteNpcStatic(o[7]);
+						deleteNpcStatic(o[8]);
+					}
+				}
+			}));
+		}
+	}
 
-    private static void deleteNpcStatic(int npcId) {
-        if (instanceStatic != null) {
-            instanceStatic.deleteNpc(npcId);
-        }
-    }
-    /**
-     * 返回玩家奖励记录。
-     * Return the player's reward record.
-     * @param player 玩家 / player
-     * @return 结果 / result
-     */
+	private static void sendMsgByRaceStatic(int msg, Race race) {
+		if (instanceStatic != null) {
+			instanceStatic.sendMsgByRace(msg, race, 0);
+		}
+	}
 
-    protected IronWallWarfrontPlayerReward getPlayerReward(Player player) {
-        ironWallWarfrontReward.regPlayerReward(player);
-        return ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-    }
+	private static void deleteNpcStatic(int npcId) {
+		if (instanceStatic != null) {
+			instanceStatic.deleteNpc(npcId);
+		}
+	}
 
-    private boolean containPlayer(Integer object) {
-        return ironWallWarfrontReward.containPlayer(object);
-    }
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * @param player 玩家 / player
+	 * @return 结果 / result
+	 */
 
-    /**
-     * NPC 掉落表注册时处理。
-     * Handle NPC drop-table registration.
-     * @param npc NPC / npc
-     */
-    @Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
-        int npcId = npc.getNpcId();
-        switch (npcId) {
-            case 233510: case 233511: case 233512: case 233530: case 233531: case 233532:
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000287, 5));
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000288, 5));
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000286, 5));
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000285, 5));
-                break;
-            case 831328: case 831329:
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10));
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10));
-                break;
-            case 831330:
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1));
-                break;
-        }
-    }
-    /**
-     * 启动副本计时/任务。
-     * Start instance timer/tasks.
-     */
+	protected IronWallWarfrontPlayerReward getPlayerReward(Player player) {
+		ironWallWarfrontReward.regPlayerReward(player);
+		return ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+	}
 
-    protected void startInstanceTask() {
-        instanceTime = System.currentTimeMillis();
-        ironWallWarfrontReward.setInstanceStartTime();
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!ironWallWarfrontReward.isRewarded()) {
-                    openFirstDoors();
-                    sendMsgByRace(1401181, Race.PC_ALL, 5000);
-                    ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-                    startInstancePacket();
-                    ironWallWarfrontReward.sendPacket(4, null);
-                }
-            }
-        }, 90000));
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                ironWallWarfrontReward.sendPacket(4, null);
-                sendMsgByRace(1402210, Race.PC_ALL, 0);
-                sendMsgByRace(1402228, Race.PC_ALL, 10000);
-                sendMsgByRace(1402229, Race.PC_ALL, 20000);
-                sp(701624, 422.98706f, 641.44116f, 214.52452f, (byte) 92, 0);
-                sp(702589, 426.4476f, 617.95264f, 214.52452f, (byte) 32, 0);
-            }
-        }, 600000));
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                ironWallWarfrontReward.sendPacket(4, null);
-                sendMsgByRace(1402206, Race.PC_ALL, 0);
-                sp(233510, 298.95648f, 399.21204f, 227.56165f, (byte) 17, 0);
-                sp(233511, 304.02267f, 396.9381f, 227.68314f, (byte) 26, 0);
-                sp(233512, 309.49344f, 395.97568f, 227.2273f, (byte) 28, 0);
-                sp(831979, 298.95648f, 399.21204f, 227.56165f, (byte) 17, 0);
-                sp(831979, 304.02267f, 396.9381f, 227.68314f, (byte) 26, 0);
-                sp(831979, 309.49344f, 395.97568f, 227.2273f, (byte) 28, 0);
-                sp(233530, 707.57275f, 648.9977f, 203.91081f, (byte) 10, 0);
-                sp(233531, 706.97595f, 644.1978f, 203.07692f, (byte) 113, 0);
-                sp(233532, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
-                sp(831978, 707.57275f, 648.9977f, 203.91081f, (byte) 10, 0);
-                sp(831978, 706.97595f, 644.1978f, 203.07692f, (byte) 113, 0);
-                sp(831978, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
-            }
-        }, 900000));
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                ironWallWarfrontReward.sendPacket(4, null);
-                sendMsgByRace(1401819, Race.PC_ALL, 0);
-                spawn(233544, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
-                spawn(801956, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
-            }
-        }, 1800000));
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!ironWallWarfrontReward.isRewarded()) {
-                    Race winnerRace = ironWallWarfrontReward.getWinnerRaceByScore();
-                    stopInstance(winnerRace);
-                }
-            }
-        }, 2400000));
-    }
-    /**
-     * 停止副本并结算。
-     * Stop the instance and settle.
-     * @param race 阵营 / race
-     */
+	private boolean containPlayer(Integer object) {
+		return ironWallWarfrontReward.containPlayer(object);
+	}
 
-    protected void stopInstance(Race race) {
-        stopInstanceTask();
-        ironWallWarfrontReward.setWinnerRace(race);
-        ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-        reward();
-        ironWallWarfrontReward.sendPacket(5, null);
-    }
+	/**
+	 * NPC 掉落表注册时处理。
+	 * Handle NPC drop-table registration.
+	 *
+	 * @param npc NPC / npc
+	 */
+	@Override
+	public void onDropRegistered(Npc npc) {
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		int npcId = npc.getNpcId();
+		switch (npcId) {
+			case 233510:
+			case 233511:
+			case 233512:
+			case 233530:
+			case 233531:
+			case 233532:
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000287, 5));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000288, 5));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000286, 5));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000285, 5));
+				break;
+			case 831328:
+			case 831329:
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10));
+				break;
+			case 831330:
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1));
+				break;
+		}
+	}
 
-    /**
-     * 玩家进入副本时处理。
-     * Handle a player entering the instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onEnterInstance(final Player player) {
-        if (!containPlayer(player.getObjectId())) {
-            ironWallWarfrontReward.regPlayerReward(player);
-        }
-        sendEnterPacket(player);
-    }
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
 
-    private void sendEnterPacket(final Player player) {
-        instance.doOnAllPlayers(new Visitor<>() {
+	protected void startInstanceTask() {
+		instanceTime = System.currentTimeMillis();
+		ironWallWarfrontReward.setInstanceStartTime();
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!ironWallWarfrontReward.isRewarded()) {
+					openFirstDoors();
+					sendMsgByRace(1401181, Race.PC_ALL, 5000);
+					ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+					startInstancePacket();
+					ironWallWarfrontReward.sendPacket(4, null);
+				}
+			}
+		}, 90000));
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				ironWallWarfrontReward.sendPacket(4, null);
+				sendMsgByRace(1402210, Race.PC_ALL, 0);
+				sendMsgByRace(1402228, Race.PC_ALL, 10000);
+				sendMsgByRace(1402229, Race.PC_ALL, 20000);
+				sp(701624, 422.98706f, 641.44116f, 214.52452f, (byte) 92, 0);
+				sp(702589, 426.4476f, 617.95264f, 214.52452f, (byte) 32, 0);
+			}
+		}, 600000));
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				ironWallWarfrontReward.sendPacket(4, null);
+				sendMsgByRace(1402206, Race.PC_ALL, 0);
+				sp(233510, 298.95648f, 399.21204f, 227.56165f, (byte) 17, 0);
+				sp(233511, 304.02267f, 396.9381f, 227.68314f, (byte) 26, 0);
+				sp(233512, 309.49344f, 395.97568f, 227.2273f, (byte) 28, 0);
+				sp(831979, 298.95648f, 399.21204f, 227.56165f, (byte) 17, 0);
+				sp(831979, 304.02267f, 396.9381f, 227.68314f, (byte) 26, 0);
+				sp(831979, 309.49344f, 395.97568f, 227.2273f, (byte) 28, 0);
+				sp(233530, 707.57275f, 648.9977f, 203.91081f, (byte) 10, 0);
+				sp(233531, 706.97595f, 644.1978f, 203.07692f, (byte) 113, 0);
+				sp(233532, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
+				sp(831978, 707.57275f, 648.9977f, 203.91081f, (byte) 10, 0);
+				sp(831978, 706.97595f, 644.1978f, 203.07692f, (byte) 113, 0);
+				sp(831978, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
+			}
+		}, 900000));
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				ironWallWarfrontReward.sendPacket(4, null);
+				sendMsgByRace(1401819, Race.PC_ALL, 0);
+				spawn(233544, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
+				spawn(801956, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
+			}
+		}, 1800000));
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!ironWallWarfrontReward.isRewarded()) {
+					Race winnerRace = ironWallWarfrontReward.getWinnerRaceByScore();
+					stopInstance(winnerRace);
+				}
+			}
+		}, 2400000));
+	}
+
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param race 阵营 / race
+	 */
+
+	protected void stopInstance(Race race) {
+		stopInstanceTask();
+		ironWallWarfrontReward.setWinnerRace(race);
+		ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		reward();
+		ironWallWarfrontReward.sendPacket(5, null);
+	}
+
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onEnterInstance(final Player player) {
+		if (!containPlayer(player.getObjectId())) {
+			ironWallWarfrontReward.regPlayerReward(player);
+		}
+		sendEnterPacket(player);
+	}
+
+	private void sendEnterPacket(final Player player) {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -390,13 +431,13 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				}
 			}
 		});
-        sendPacket(true);
-        sendPacket(false);
-        PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-    }
+		sendPacket(true);
+		sendPacket(false);
+		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
+	}
 
-    private void startInstancePacket() {
-        instance.doOnAllPlayers(new Visitor<>() {
+	private void startInstancePacket() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -410,11 +451,11 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
 			}
 		});
-    }
+	}
 
-    private void sendPacket(boolean isObjects) {
-        if (isObjects) {
-            instance.doOnAllPlayers(new Visitor<>() {
+	private void sendPacket(boolean isObjects) {
+		if (isObjects) {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -425,8 +466,8 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), ironWallWarfrontReward, instance.getPlayersInside(), true));
 				}
 			});
-        } else {
-            instance.doOnAllPlayers(new Visitor<>() {
+		} else {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -437,568 +478,602 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), ironWallWarfrontReward, instance.getPlayersInside(), true));
 				}
 			});
-        }
-    }
+		}
+	}
 
-    /**
-     * 副本创建时初始化逻辑。
-     * Initialize logic when the instance is created.
-     * @param instance 世界地图实例 / world-map instance
-     */
-    @Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        ironWallWarfrontReward = new IronWallWarfrontReward(mapId, instanceId, instance);
-        ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-        doors = instance.getDoors();
-        instanceStatic = this;
-        startInstanceTask();
-    }
-    /**
-     * 处理 reward。
-     * Handle reward.
-     */
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		ironWallWarfrontReward = new IronWallWarfrontReward(mapId, instanceId, instance);
+		ironWallWarfrontReward.setInstanceScoreType(InstanceScoreType.PREPARING);
+		doors = instance.getDoors();
+		instanceStatic = this;
+		startInstanceTask();
+	}
 
-    protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
-        for (Player player : instance.getPlayersInside()) {
-            if (PlayerActions.isAlreadyDead(player)) {
-                PlayerReviveService.duelRevive(player);
-            }
-            IronWallWarfrontPlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-            int abyssPoint = 3163;
-            int gloryPoint = 300;
-            int expPoint = 10000;
-            playerReward.setRewardAp(abyssPoint);
-            playerReward.setRewardGp(gloryPoint);
-            playerReward.setRewardExp(expPoint);
-            if (player.getRace().equals(ironWallWarfrontReward.getWinnerRace())) {
-                abyssPoint += ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace()));
-                gloryPoint += ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace()));
-                expPoint += ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace()));
-                playerReward.setBonusAp(ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBonusGp(ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBonusExp(ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace())));
-                playerReward.setBrokenSpinel(188100391);
-                playerReward.setBonusReward(186000243);
-            } else {
-                abyssPoint += ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace()));
-                gloryPoint += ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace()));
-                expPoint += ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace()));
-                playerReward.setRewardAp(ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setRewardGp(ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setRewardExp(ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace())));
-                playerReward.setBrokenSpinel(188100391);
-                playerReward.setBonusReward(186000243);
-            }
-            if (RaceKilledCommander == player.getRace()) {
-                playerReward.setMedalBundle(188052938);
-                ItemService.addItem(player, 188052938, 1);
-            }
-            ItemService.addItem(player, 188100391, 750);
-            ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, abyssPoint);
-            AbyssPointsService.addGp(player, gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
-        }
-        for (Npc npc : instance.getNpcs()) {
-            npc.getController().onDelete();
-        }
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    for (Player player : instance.getPlayersInside()) {
-                        onExitInstance(player);
-                    }
-                    GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
-                }
-            }
-        }, 60000);
-    }
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
 
-    private int getTime() {
-        long result = System.currentTimeMillis() - instanceTime;
-        if (result < 90000) {
-            return (int) (90000 - result);
-        } else if (result < 2400000) {
-            return (int) (2400000 - (result - 90000));
-        }
-        return 0;
-    }
+	protected void reward() {
+		int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
+		int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
+		int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
+		int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		for (Player player : instance.getPlayersInside()) {
+			if (PlayerActions.isAlreadyDead(player)) {
+				PlayerReviveService.duelRevive(player);
+			}
+			IronWallWarfrontPlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+			int abyssPoint = 3163;
+			int gloryPoint = 300;
+			int expPoint = 10000;
+			playerReward.setRewardAp(abyssPoint);
+			playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardExp(expPoint);
+			if (player.getRace().equals(ironWallWarfrontReward.getWinnerRace())) {
+				abyssPoint += ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace()));
+				gloryPoint += ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace()));
+				expPoint += ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace()));
+				playerReward.setBonusAp(ironWallWarfrontReward.AbyssReward(true, isCommanderKilled(player.getRace())));
+				playerReward.setBonusGp(ironWallWarfrontReward.GloryReward(true, isCommanderKilled(player.getRace())));
+				playerReward.setBonusExp(ironWallWarfrontReward.ExpReward(true, isCommanderKilled(player.getRace())));
+				playerReward.setBrokenSpinel(188100391);
+				playerReward.setBonusReward(186000243);
+			} else {
+				abyssPoint += ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace()));
+				gloryPoint += ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace()));
+				expPoint += ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace()));
+				playerReward.setRewardAp(ironWallWarfrontReward.AbyssReward(false, isCommanderKilled(player.getRace())));
+				playerReward.setRewardGp(ironWallWarfrontReward.GloryReward(false, isCommanderKilled(player.getRace())));
+				playerReward.setRewardExp(ironWallWarfrontReward.ExpReward(false, isCommanderKilled(player.getRace())));
+				playerReward.setBrokenSpinel(188100391);
+				playerReward.setBonusReward(186000243);
+			}
+			if (RaceKilledCommander == player.getRace()) {
+				playerReward.setMedalBundle(188052938);
+				ItemService.addItem(player, 188052938, 1);
+			}
+			ItemService.addItem(player, 188100391, 750);
+			ItemService.addItem(player, 186000243, 1);
+			AbyssPointsService.addAp(player, abyssPoint);
+			AbyssPointsService.addGp(player, gloryPoint);
+			player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+		}
+		for (Npc npc : instance.getNpcs()) {
+			npc.getController().onDelete();
+		}
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					for (Player player : instance.getPlayersInside()) {
+						onExitInstance(player);
+					}
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+				}
+			}
+		}, 60000);
+	}
 
-    /**
-     * 处理玩家复活事件。
-     * Handle a player revive event.
-     * @param player 玩家 / player
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onReviveEvent(Player player) {
-        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
-        PlayerReviveService.revive(player, 100, 100, false, 0);
-        player.getGameStats().updateStatsAndSpeedVisually();
-        ironWallWarfrontReward.portToPosition(player);
-        return true;
-    }
+	private int getTime() {
+		long result = System.currentTimeMillis() - instanceTime;
+		if (result < 90000) {
+			return (int) (90000 - result);
+		} else if (result < 2400000) {
+			return (int) (2400000 - (result - 90000));
+		}
+		return 0;
+	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param player 玩家 / player
-     * @param lastAttacker 最后攻击者 / last attacker
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onDie(Player player, Creature lastAttacker) {
-        IronWallWarfrontPlayerReward ownerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-        ownerReward.endBoostMoraleEffect(player);
-        ownerReward.applyBoostMoraleEffect(player);
-        int points = 60;
-        if (lastAttacker instanceof Player) {
-            if (lastAttacker.getRace() != player.getRace()) {
-                InstancePlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-                if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
-                    points *= loosingGroupMultiplier;
-                } else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
-                    points = 0;
-                }
-                updateScore((Player) lastAttacker, player, points, true);
-            }
-        }
-        updateScore(player, player, -points, false);
-        return true;
-    }
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * @param player 玩家 / player
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onReviveEvent(Player player) {
+		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
+		PlayerReviveService.revive(player, 100, 100, false, 0);
+		player.getGameStats().updateStatsAndSpeedVisually();
+		ironWallWarfrontReward.portToPosition(player);
+		return true;
+	}
 
-    private boolean isCommanderKilled(Race PlayerRace) {
-        return PlayerRace == RaceKilledCommander;
-    }
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param player       玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onDie(Player player, Creature lastAttacker) {
+		IronWallWarfrontPlayerReward ownerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+		ownerReward.endBoostMoraleEffect(player);
+		ownerReward.applyBoostMoraleEffect(player);
+		int points = 60;
+		if (lastAttacker instanceof Player) {
+			if (lastAttacker.getRace() != player.getRace()) {
+				InstancePlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+				if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
+					points = (int) (points * loosingGroupMultiplier);
+				} else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
+					points = 0;
+				}
+				updateScore((Player) lastAttacker, player, points, true);
+			}
+		}
+		updateScore(player, player, -points, false);
+		return true;
+	}
 
-    private MutableInt getPvpKillsByRace(Race race) {
-        return ironWallWarfrontReward.getPvpKillsByRace(race);
-    }
+	private boolean isCommanderKilled(Race PlayerRace) {
+		return PlayerRace == RaceKilledCommander;
+	}
 
-    private MutableInt getPointsByRace(Race race) {
-        return ironWallWarfrontReward.getPointsByRace(race);
-    }
+	private MutableInt getPvpKillsByRace(Race race) {
+		return ironWallWarfrontReward.getPvpKillsByRace(race);
+	}
 
-    private void addPointsByRace(Race race, int points) {
-        ironWallWarfrontReward.addPointsByRace(race, points);
-    }
+	private MutableInt getPointsByRace(Race race) {
+		return ironWallWarfrontReward.getPointsByRace(race);
+	}
 
-    private void addPvpKillsByRace(Race race, int points) {
-        ironWallWarfrontReward.addPvpKillsByRace(race, points);
-    }
+	private void addPointsByRace(Race race, int points) {
+		ironWallWarfrontReward.addPointsByRace(race, points);
+	}
 
-    private void addPointToPlayer(Player player, int points) {
-        ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPoints(points);
-    }
+	private void addPvpKillsByRace(Race race, int points) {
+		ironWallWarfrontReward.addPvpKillsByRace(race, points);
+	}
 
-    private void addPvPKillToPlayer(Player player) {
-        ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
-    }
-    /**
-     * 处理 updateScore。
-     * Handle updateScore.
-     * @param player 玩家 / player
-     * @param target 目标 / target
-     * @param points 分数 / points
-     * @param pvpKill PVP 击杀 / pvpKill
-     */
+	private void addPointToPlayer(Player player, int points) {
+		ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPoints(points);
+	}
 
-    protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-        if (points == 0) {
-            return;
-        }
-        addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<>();
-        if (target != null && player.isInGroup2()) {
-            for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-                if (member.getLifeStats().isAlreadyDead()) {
-                    continue;
-                }
-                if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
-                    playersToGainScore.add(member);
-                }
-            }
-        } else {
-            playersToGainScore.add(player);
-        }
-        for (Player playerToGainScore : playersToGainScore) {
-            addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
-            if (target instanceof Npc) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
-            } else if (target instanceof Player) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
-            }
-        }
-        int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
-        if (pointDifference < 0) {
-            pointDifference *= -1;
-        }
-        if (pointDifference >= 3000) {
-            loosingGroupMultiplier = 10;
-        } else if (pointDifference >= 1000) {
-            loosingGroupMultiplier = 1.5f;
-        } else {
-            loosingGroupMultiplier = 1;
-        }
-        if (pvpKill && points > 0) {
-            addPvpKillsByRace(player.getRace(), 1);
-            addPvPKillToPlayer(player);
-        }
-        ironWallWarfrontReward.sendPacket(11, player.getObjectId());
-        if (ironWallWarfrontReward.hasCapPoints()) {
-            stopInstance(ironWallWarfrontReward.getWinnerRaceByScore());
-        }
-    }
+	private void addPvPKillToPlayer(Player player) {
+		ironWallWarfrontReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
+	}
 
-    /**
-     * 玩家进入区域时处理。
-     * Handle a player entering a zone.
-     * @param player 玩家 / player
-     * @param zone 区域 / zone
-     */
-    @Override
-    public void onEnterZone(Player player, ZoneInstance zone) {
-        if (zone.getAreaTemplate().getZoneName() == ZoneName.get("PERIPHERAL_SUPPLY_BASE_301220000")) {
-            ironWallBase = 1;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MILITARY_SUPPLY_BASE_301220000")) {
-            ironWallBase = 2;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CENTRAL_SUPPLY_BASE_301220000")) {
-            ironWallBase = 3;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ARTILLERY_COMMAND_CENTER_301220000")) {
-            ironWallBase = 4;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("AXIAL_SENTRY_POST_301220000")) {
-            ironWallBase = 5;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ANCILLARY_SENTRY_POST_301220000")) {
-            ironWallBase = 6;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HOLY_GROUND_OF_RESURRECTION_301220000")) {
-            ironWallBase = 7;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ASSAULT_COMMAND_CENTER_301220000")) {
-            ironWallBase = 8;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HEADQUARTERS_301220000")) {
-            ironWallBase = 9;
-        } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HEADQUARTERS_ANNEX_301220000")) {
-            ironWallBase = 10;
-        }
-        ironWallBaseStatic = ironWallBase;
-    }
+	/**
+	 * 处理 updateScore。
+	 * Handle updateScore.
+	 *
+	 * @param player  玩家 / player
+	 * @param target  目标 / target
+	 * @param points  分数 / points
+	 * @param pvpKill PVP 击杀 / pvpKill
+	 */
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param npc NPC / npc
-     */
-    @Override
-    public void onDie(Npc npc) {
-        Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
-        if (mostPlayerDamage == null) {
-            return;
-        }
+	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
+		if (points == 0) {
+			return;
+		}
+		addPointsByRace(player.getRace(), points);
+		List<Player> playersToGainScore = new ArrayList<>();
+		if (target != null && player.isInGroup2()) {
+			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
+				if (member.getLifeStats().isAlreadyDead()) {
+					continue;
+				}
+				if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
+					playersToGainScore.add(member);
+				}
+			}
+		} else {
+			playersToGainScore.add(player);
+		}
+		for (Player playerToGainScore : playersToGainScore) {
+			addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
+			if (target instanceof Npc) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
+			} else if (target instanceof Player) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
+			}
+		}
+		int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
+		if (pointDifference < 0) {
+			pointDifference *= -1;
+		}
+		if (pointDifference >= 3000) {
+			loosingGroupMultiplier = 10;
+		} else if (pointDifference >= 1000) {
+			loosingGroupMultiplier = 1.5f;
+		} else {
+			loosingGroupMultiplier = 1;
+		}
+		if (pvpKill && points > 0) {
+			addPvpKillsByRace(player.getRace(), 1);
+			addPvPKillToPlayer(player);
+		}
+		ironWallWarfrontReward.sendPacket(11, player.getObjectId());
+		if (ironWallWarfrontReward.hasCapPoints()) {
+			stopInstance(ironWallWarfrontReward.getWinnerRaceByScore());
+		}
+	}
 
-        RaceKilledCommanderStatic = RaceKilledCommander;
-        NpcHandler handler = HANDLERS.get(npc.getNpcId());
+	/**
+	 * 玩家进入区域时处理。
+	 * Handle a player entering a zone.
+	 *
+	 * @param player 玩家 / player
+	 * @param zone   区域 / zone
+	 */
+	@Override
+	public void onEnterZone(Player player, ZoneInstance zone) {
+		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("PERIPHERAL_SUPPLY_BASE_301220000")) {
+			ironWallBase = 1;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("MILITARY_SUPPLY_BASE_301220000")) {
+			ironWallBase = 2;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("CENTRAL_SUPPLY_BASE_301220000")) {
+			ironWallBase = 3;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ARTILLERY_COMMAND_CENTER_301220000")) {
+			ironWallBase = 4;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("AXIAL_SENTRY_POST_301220000")) {
+			ironWallBase = 5;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ANCILLARY_SENTRY_POST_301220000")) {
+			ironWallBase = 6;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HOLY_GROUND_OF_RESURRECTION_301220000")) {
+			ironWallBase = 7;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("ASSAULT_COMMAND_CENTER_301220000")) {
+			ironWallBase = 8;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HEADQUARTERS_301220000")) {
+			ironWallBase = 9;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("HEADQUARTERS_ANNEX_301220000")) {
+			ironWallBase = 10;
+		}
+		ironWallBaseStatic = ironWallBase;
+	}
 
-        if (handler != null) {
-            if (handler.onDeath != null) {
-                handler.onDeath.accept(npc, mostPlayerDamage);
-            }
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param npc NPC / npc
+	 */
+	@Override
+	public void onDie(Npc npc) {
+		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
+		if (mostPlayerDamage == null) {
+			return;
+		}
 
-            Race killerRace = mostPlayerDamage.getRace();
-            List<SpawnData> spawns = handler.spawns.get(killerRace);
-            if (spawns != null) {
-                for (SpawnData s : spawns) {
-                    spawn(s.npcId, s.x, s.y, s.z, s.h, 0);
-                }
-            }
+		RaceKilledCommanderStatic = RaceKilledCommander;
+		NpcHandler handler = HANDLERS.get(npc.getNpcId());
 
-            if (handler.despawn) {
-                despawnNpc(npc);
-            }
+		if (handler != null) {
+			if (handler.onDeath != null) {
+				handler.onDeath.accept(npc, mostPlayerDamage);
+			}
 
-            updateScore(mostPlayerDamage, npc, handler.points, false);
-        }
+			Race killerRace = mostPlayerDamage.getRace();
+			List<SpawnData> spawns = handler.spawns.get(killerRace);
+			if (spawns != null) {
+				for (SpawnData s : spawns) {
+					spawn(s.npcId, s.x, s.y, s.z, s.h, 0);
+				}
+			}
 
-        RaceKilledCommander = RaceKilledCommanderStatic;
-    }
+			if (handler.despawn) {
+				despawnNpc(npc);
+			}
 
-    /**
-     * 玩家对 NPC 使用物品完成时处理。
-     * Handle item-use finish on an NPC.
-     * @param player 玩家 / player
-     * @param npc NPC / npc
-     */
-    @Override
-    public void handleUseItemFinish(Player player, Npc npc) {
-        switch (npc.getNpcId()) {
-            case 831909: case 831910: case 831914: case 831915:
-                despawnNpc(npc);
-                sendMsgByRace(1402109, Race.PC_ALL, 0);
-                sp(855240, 440.48346f, 648.9064f, 213.875f, (byte) 82, 5000);
-                sp(855240, 435.1033f, 637.4064f, 214.52452f, (byte) 81, 5500);
-                sp(855240, 426.12326f, 628.37146f, 214.52452f, (byte) 62, 6000);
-                sp(855240, 410.35355f, 626.63544f, 214.52452f, (byte) 62, 6500);
-                sp(855240, 394.76648f, 640.9771f, 214.52452f, (byte) 44, 7000);
-                sp(855240, 398.99435f, 611.30725f, 214.52452f, (byte) 83, 7500);
-                break;
-            case 831911: case 831912: case 831913: case 831916: case 831917: case 831918:
-                despawnNpc(npc);
-                sendMsgByRace(1402110, Race.PC_ALL, 0);
-                sp(855240, 612.48193f, 246.57852f, 227.24548f, (byte) 33, 5000);
-                sp(855240, 607.7852f, 273.68695f, 226.78299f, (byte) 33, 5500);
-                sp(855240, 609.47485f, 295.29547f, 226.25f, (byte) 28, 6000);
-                sp(855240, 611.2592f, 316.33997f, 226.25f, (byte) 22, 6500);
-                sp(855240, 619.06146f, 338.56107f, 225.94135f, (byte) 22, 7000);
-                sp(855240, 623.8632f, 352.7094f, 225.85753f, (byte) 14, 7500);
-                sp(855240, 637.295f, 366.08438f, 228.58621f, (byte) 15, 8000);
-                sp(855240, 649.25397f, 381.53574f, 228.625f, (byte) 14, 8500);
-                sp(855240, 638.361f, 393.87704f, 226.625f, (byte) 44, 9000);
-                sp(855240, 624.7944f, 409.59f, 226.625f, (byte) 44, 9500);
-                sp(855240, 619.216f, 426.68207f, 226.61574f, (byte) 30, 10000);
-                sp(855240, 640.5313f, 435.39978f, 226.62898f, (byte) 6, 10500);
-                sp(855240, 653.0702f, 420.92535f, 226.99039f, (byte) 103, 11000);
-                sp(855240, 667.27106f, 404.47855f, 228.23833f, (byte) 103, 11500);
-                sp(855240, 681.4431f, 404.91577f, 229.27058f, (byte) 7, 12000);
-                sp(855240, 699.13165f, 412.75574f, 230.8985f, (byte) 6, 12500);
-                sp(855240, 713.01105f, 416.59003f, 231.0f, (byte) 3, 13000);
-                sp(855240, 730.56836f, 415.3179f, 230.96448f, (byte) 118, 13500);
-                break;
-        }
-    }
+			updateScore(mostPlayerDamage, npc, handler.points, false);
+		}
 
-    private void removeItems(Player player) {
-        Storage storage = player.getInventory();
-        storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137));
-        storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996));
-        storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997));
-    }
+		RaceKilledCommander = RaceKilledCommanderStatic;
+	}
 
-    private void despawnNpc(Npc npc) {
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * @param player 玩家 / player
+	 * @param npc    NPC / npc
+	 */
+	@Override
+	public void handleUseItemFinish(Player player, Npc npc) {
+		switch (npc.getNpcId()) {
+			case 831909:
+			case 831910:
+			case 831914:
+			case 831915:
+				despawnNpc(npc);
+				sendMsgByRace(1402109, Race.PC_ALL, 0);
+				sp(855240, 440.48346f, 648.9064f, 213.875f, (byte) 82, 5000);
+				sp(855240, 435.1033f, 637.4064f, 214.52452f, (byte) 81, 5500);
+				sp(855240, 426.12326f, 628.37146f, 214.52452f, (byte) 62, 6000);
+				sp(855240, 410.35355f, 626.63544f, 214.52452f, (byte) 62, 6500);
+				sp(855240, 394.76648f, 640.9771f, 214.52452f, (byte) 44, 7000);
+				sp(855240, 398.99435f, 611.30725f, 214.52452f, (byte) 83, 7500);
+				break;
+			case 831911:
+			case 831912:
+			case 831913:
+			case 831916:
+			case 831917:
+			case 831918:
+				despawnNpc(npc);
+				sendMsgByRace(1402110, Race.PC_ALL, 0);
+				sp(855240, 612.48193f, 246.57852f, 227.24548f, (byte) 33, 5000);
+				sp(855240, 607.7852f, 273.68695f, 226.78299f, (byte) 33, 5500);
+				sp(855240, 609.47485f, 295.29547f, 226.25f, (byte) 28, 6000);
+				sp(855240, 611.2592f, 316.33997f, 226.25f, (byte) 22, 6500);
+				sp(855240, 619.06146f, 338.56107f, 225.94135f, (byte) 22, 7000);
+				sp(855240, 623.8632f, 352.7094f, 225.85753f, (byte) 14, 7500);
+				sp(855240, 637.295f, 366.08438f, 228.58621f, (byte) 15, 8000);
+				sp(855240, 649.25397f, 381.53574f, 228.625f, (byte) 14, 8500);
+				sp(855240, 638.361f, 393.87704f, 226.625f, (byte) 44, 9000);
+				sp(855240, 624.7944f, 409.59f, 226.625f, (byte) 44, 9500);
+				sp(855240, 619.216f, 426.68207f, 226.61574f, (byte) 30, 10000);
+				sp(855240, 640.5313f, 435.39978f, 226.62898f, (byte) 6, 10500);
+				sp(855240, 653.0702f, 420.92535f, 226.99039f, (byte) 103, 11000);
+				sp(855240, 667.27106f, 404.47855f, 228.23833f, (byte) 103, 11500);
+				sp(855240, 681.4431f, 404.91577f, 229.27058f, (byte) 7, 12000);
+				sp(855240, 699.13165f, 412.75574f, 230.8985f, (byte) 6, 12500);
+				sp(855240, 713.01105f, 416.59003f, 231.0f, (byte) 3, 13000);
+				sp(855240, 730.56836f, 415.3179f, 230.96448f, (byte) 118, 13500);
+				break;
+		}
+	}
 
-    private void deleteNpc(int npcId) {
-        Npc npc = getNpc(npcId);
-        if (npc != null) {
-            npc.getController().onDelete();
-        }
-    }
+	private void removeItems(Player player) {
+		Storage storage = player.getInventory();
+		storage.decreaseByItemId(185000137, storage.getItemCountByItemId(185000137));
+		storage.decreaseByItemId(182006996, storage.getItemCountByItemId(182006996));
+		storage.decreaseByItemId(182006997, storage.getItemCountByItemId(182006997));
+	}
 
-    /**
-     * 副本销毁时清理资源。
-     * Clean up resources when the instance is destroyed.
-     */
-    @Override
-    public void onInstanceDestroy() {
-        ironWallWarfrontReward.clear();
-        isInstanceDestroyed = true;
-        stopInstanceTask();
-        doors.clear();
-        instanceStatic = null;
-    }
-    /**
-     * 处理 openFirstDoors。
-     * Handle openFirstDoors.
-     */
+	private void despawnNpc(Npc npc) {
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
 
-    protected void openFirstDoors() {
-        openDoor(2);
-        openDoor(17);
-        openDoor(26);
-        openDoor(35);
-    }
-    /**
-     * 打开指定门。
-     * Open the given door.
-     * @param doorId 门 ID / doorId
-     */
+	private void deleteNpc(int npcId) {
+		Npc npc = getNpc(npcId);
+		if (npc != null) {
+			npc.getController().onDelete();
+		}
+	}
 
-    protected void openDoor(int doorId) {
-        StaticDoor door = doors.get(doorId);
-        if (door != null) {
-            door.setOpen(true);
-        }
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     */
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
+	@Override
+	public void onInstanceDestroy() {
+		ironWallWarfrontReward.clear();
+		isInstanceDestroyed = true;
+		stopInstanceTask();
+		doors.clear();
+		instanceStatic = null;
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     */
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param entityId 实体 ID / entity id
-     * @param time 时间 / time
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     */
+	protected void openFirstDoors() {
+		openDoor(2);
+		openDoor(17);
+		openDoor(26);
+		openDoor(35);
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     * @param walkerId 寻路器 ID / walkerId
-     */
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 *
+	 * @param doorId 门 ID / doorId
+	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
-    /**
-     * 处理 sendMsgByRace。
-     * Handle sendMsgByRace.
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     * @param time 时间 / time
-     */
+	protected void openDoor(int doorId) {
+		StaticDoor door = doors.get(doorId);
+		if (door != null) {
+			door.setOpen(true);
+		}
+	}
 
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
-    }
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId NPC / NPC
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  时间 / time
+	 */
 
-    private void stopInstanceTask() {
-        for (Future<?> task : ironWallTask) {
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
+		sp(npcId, x, y, z, h, 0, time, 0, null);
+	}
+
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId NPC / NPC
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  时间 / time
+	 * @param msg   消息 / message
+	 * @param race  阵营 / race
+	 */
+
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
+		sp(npcId, x, y, z, h, 0, time, msg, race);
+	}
+
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId    NPC / NPC
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param entityId 实体 ID / entity id
+	 * @param time     时间 / time
+	 * @param msg      消息 / message
+	 * @param race     阵营 / race
+	 */
+
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					spawn(npcId, x, y, z, h, entityId);
+					if (msg > 0) {
+						sendMsgByRace(msg, race, 0);
+					}
+				}
+			}
+		}, time));
+	}
+
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId    NPC / NPC
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param time     时间 / time
+	 * @param walkerId 寻路器 ID / walkerId
+	 */
+
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					Npc npc = (Npc) spawn(npcId, x, y, z, h);
+					npc.getSpawn().setWalkerId(walkerId);
+					WalkManager.startWalking((NpcAI2) npc.getAi2());
+				}
+			}
+		}, time));
+	}
+
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * @param msg  消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
+	 */
+
+	protected void sendMsgByRace(final int msg, final Race race, int time) {
+		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+						}
+					}
+				});
+			}
+		}, time));
+	}
+
+	private void stopInstanceTask() {
+		for (Future<?> task : ironWallTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
-    /**
-     * 返回本副本奖励对象。
-     * Return this instance's reward object.
-     * @return 结果 / result
-     */
-    @Override
-    public InstanceReward<?> getInstanceReward() {
-        return ironWallWarfrontReward;
-    }
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * @return 结果 / result
+	 */
+	@Override
+	public InstanceReward<?> getInstanceReward() {
+		return ironWallWarfrontReward;
+	}
 
-    /**
-     * 玩家请求退出副本时处理。
-     * Handle a player exit request.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onExitInstance(Player player) {
+		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+	}
 
-    /**
-     * 玩家离开副本时处理。
-     * Handle a player leaving the instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onLeaveInstance(Player player) {
-        PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
-        IronWallWarfrontPlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
-        playerReward.endBoostMoraleEffect(player);
-        removeItems(player);
-    }
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onLeaveInstance(Player player) {
+		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
+		IronWallWarfrontPlayerReward playerReward = ironWallWarfrontReward.getPlayerReward(player.getObjectId());
+		playerReward.endBoostMoraleEffect(player);
+		removeItems(player);
+	}
 
-    /**
-     * 玩家登录到该副本时处理。
-     * Handle a player logging into this instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onPlayerLogin(Player player) {
-        ironWallWarfrontReward.sendPacket(10, player.getObjectId());
-    }
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onPlayerLogin(Player player) {
+		ironWallWarfrontReward.sendPacket(10, player.getObjectId());
+	}
 }

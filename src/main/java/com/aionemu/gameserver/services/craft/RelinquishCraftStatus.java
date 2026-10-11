@@ -29,54 +29,65 @@ public class RelinquishCraftStatus {
 
 	/**
 	 * -- SETTER --
-	 *  注入 Spring ObjectProvider，用于容器管理的实例解析。
-	 *  Inject Spring ObjectProvider for container-managed instance resolution.
+	 * 注入 Spring ObjectProvider，用于容器管理的实例解析。
+	 * Inject Spring ObjectProvider for container-managed instance resolution.
 	 * 实例提供者 / Instance provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<RelinquishCraftStatus> instanceProvider;
 
-	/** 专家最低等级 / Expert minimum skill level
+	/**
+	 * 专家最低等级 / Expert minimum skill level
 	 * -- GETTER --
-	 *  获取专家最低等级。
-	 *  Get expert minimum skill level.
+	 * 获取专家最低等级。
+	 * Get expert minimum skill level.
 	 */
 	@Getter
 	private static final int expertMinValue = 399;
-	/** 专家最高等级 / Expert maximum skill level
+	/**
+	 * 专家最高等级 / Expert maximum skill level
 	 * -- GETTER --
-	 *  获取专家最高等级。
-	 *  Get expert maximum skill level.
+	 * 获取专家最高等级。
+	 * Get expert maximum skill level.
 	 */
 	@Getter
 	private static final int expertMaxValue = 499;
-	/** 大师最低等级 / Master minimum skill level
+	/**
+	 * 大师最低等级 / Master minimum skill level
 	 * -- GETTER --
-	 *  获取大师最低等级。
-	 *  Get master minimum skill level.
+	 * 获取大师最低等级。
+	 * Get master minimum skill level.
 	 */
 	@Getter
 	private static final int masterMinValue = 499;
-	/** 大师最高等级 / Master maximum skill level
+	/**
+	 * 大师最高等级 / Master maximum skill level
 	 * -- GETTER --
-	 *  获取大师最高等级。
-	 *  Get master maximum skill level.
+	 * 获取大师最高等级。
+	 * Get master maximum skill level.
 	 */
 	@Getter
 	private static final int masterMaxValue = 549;
-	/** 放弃专家费用（基价） / Expert relinquish base price */
+	/**
+	 * 放弃专家费用（基价） / Expert relinquish base price
+	 */
 	private static final int expertPrice = 120895;
-	/** 放弃大师费用（基价） / Master relinquish base price */
+	/**
+	 * 放弃大师费用（基价） / Master relinquish base price
+	 */
 	private static final int masterPrice = 3497448;
-	/** 基纳不足系统消息 ID / Not-enough-kinah system message id */
+	/**
+	 * 基纳不足系统消息 ID / Not-enough-kinah system message id
+	 */
 	private static final int systemMessageId = 1300388;
-	/** 技能变更消息 ID / Skill-change message id
-     * -- GETTER --
-     *  获取技能变更消息 ID。
-     *  Get skill-change message id.
-     */
+	/**
+	 * 技能变更消息 ID / Skill-change message id
+	 * -- GETTER --
+	 * 获取技能变更消息 ID。
+	 * Get skill-change message id.
+	 */
 	@Getter
-    private static final int skillMessageId = 1401127;
+	private static final int skillMessageId = 1401127;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -84,11 +95,12 @@ public class RelinquishCraftStatus {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final RelinquishCraftStatus getInstance() {
+	public static RelinquishCraftStatus getInstance() {
 		ObjectProvider<RelinquishCraftStatus> provider = instanceProvider;
 		RelinquishCraftStatus provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -102,8 +114,9 @@ public class RelinquishCraftStatus {
 	/**
 	 * 放弃专家制作头衔：扣费、降级至专家下限，并清理配方与任务。
 	 * Relinquish expert craft status: charge fee, demote to expert min level, clean recipes and quests.
+	 *
 	 * @param player 玩家 / Player
-	 * @param npc 相关 NPC / Related NPC
+	 * @param npc    相关 NPC / Related NPC
 	 */
 	public static void relinquishExpertStatus(Player player, Npc npc) {
 		CraftLearnTemplate craftLearnTemplate = CraftSkillUpdateService.npcBySkill.get(npc.getNpcId());
@@ -124,8 +137,9 @@ public class RelinquishCraftStatus {
 	/**
 	 * 放弃大师制作头衔：扣费、降级至大师下限，并清理配方与任务。
 	 * Relinquish master craft status: charge fee, demote to master min level, clean recipes and quests.
+	 *
 	 * @param player 玩家 / Player
-	 * @param npc 相关 NPC / Related NPC
+	 * @param npc    相关 NPC / Related NPC
 	 */
 	public static void relinquishMasterStatus(Player player, Npc npc) {
 		CraftLearnTemplate craftLearnTemplate = CraftSkillUpdateService.npcBySkill.get(npc.getNpcId());
@@ -146,15 +160,16 @@ public class RelinquishCraftStatus {
 	/**
 	 * 校验是否可放弃指定区间内的制作头衔。
 	 * Validate whether the craft status in the given level range can be relinquished.
-	 * @param player 玩家 / Player
-	 * @param skill 技能条目 / Skill entry
+	 *
+	 * @param player             玩家 / Player
+	 * @param skill              技能条目 / Skill entry
 	 * @param craftLearnTemplate 制作学习模板 / Craft learn template
-	 * @param minValue 最低等级 / Minimum level
-	 * @param maxValue 最高等级 / Maximum level
+	 * @param minValue           最低等级 / Minimum level
+	 * @param maxValue           最高等级 / Maximum level
 	 * @return 是否允许放弃 / Whether relinquish is allowed
 	 */
 	private static boolean canRelinquishCraftStatus(Player player, PlayerSkillEntry skill,
-			CraftLearnTemplate craftLearnTemplate, int minValue, int maxValue) {
+													CraftLearnTemplate craftLearnTemplate, int minValue, int maxValue) {
 		if (craftLearnTemplate == null || !craftLearnTemplate.isCraftSkill()) {
 			return false;
 		}
@@ -164,7 +179,8 @@ public class RelinquishCraftStatus {
 	/**
 	 * 按势力价格服务扣减基纳，失败时提示消息。
 	 * Decrease kinah using race-aware price service; notify on failure.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player    玩家 / Player
 	 * @param basePrice 基础价格 / Base price
 	 * @return 是否扣费成功 / Whether decrease succeeded
 	 */
@@ -179,9 +195,10 @@ public class RelinquishCraftStatus {
 	/**
 	 * 删除指定技能在给定等级及以上的全部配方。
 	 * Remove all recipes for the skill at or above the given skill point level.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param skillId 技能 ID / Skill id
-	 * @param level 技能点阈值 / Skill-point threshold
+	 * @param level   技能点阈值 / Skill-point threshold
 	 */
 	public static void removeRecipesAbove(Player player, int skillId, int level) {
 		for (RecipeTemplate recipe : DataManager.RECIPE_DATA.getRecipeTemplates().values()) {
@@ -195,8 +212,9 @@ public class RelinquishCraftStatus {
 	/**
 	 * 删除制作头衔相关任务状态，并刷新任务列表。
 	 * Delete craft-status related quest states and refresh the quest list.
-	 * @param skillId 技能 ID / Skill id
-	 * @param player 玩家 / Player
+	 *
+	 * @param skillId  技能 ID / Skill id
+	 * @param player   玩家 / Player
 	 * @param isExpert 是否同时清理专家任务 / Whether to also clear expert quests
 	 */
 	public static void deleteCraftStatusQuests(int skillId, Player player, boolean isExpert) {
@@ -221,7 +239,7 @@ public class RelinquishCraftStatus {
 			}
 		}
 		PacketSendUtility.sendPacket(player,
-				new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
+			new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 	}
@@ -229,7 +247,8 @@ public class RelinquishCraftStatus {
 	/**
 	 * 当玩家专家/大师数量超出配置上限时，强制降级多余技能。
 	 * Force-demote excess expert/master craft skills when over configured limits.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player   玩家 / Player
 	 * @param isExpert 是否处理专家（false 为大师，并会递归处理专家） / Process expert (false for master, then recurse to expert)
 	 */
 	public static void removeExcessCraftStatus(Player player, boolean isExpert) {
@@ -241,14 +260,14 @@ public class RelinquishCraftStatus {
 		int countCraftStatus;
 		for (PlayerSkillEntry skill : player.getSkillList().getBasicSkills()) {
 			countCraftStatus = isExpert
-					? CraftSkillUpdateService.getTotalMasterCraftingSkills(player)
-							+ CraftSkillUpdateService.getTotalExpertCraftingSkills(player)
-					: CraftSkillUpdateService.getTotalMasterCraftingSkills(player);
+				? CraftSkillUpdateService.getTotalMasterCraftingSkills(player)
+				+ CraftSkillUpdateService.getTotalExpertCraftingSkills(player)
+				: CraftSkillUpdateService.getTotalMasterCraftingSkills(player);
 			if (countCraftStatus > maxCraftStatus) {
 				skillId = skill.getSkillId();
 				skillLevel = skill.getSkillLevel();
 				if (CraftSkillUpdateService.isCraftingSkill(skillId) && skillLevel > minValue
-						&& skillLevel <= maxValue) {
+					&& skillLevel <= maxValue) {
 					skill.setSkillLvl(minValue);
 					PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(skill, skillMessageId, false));
 					removeRecipesAbove(player, skillId, minValue);

@@ -3,6 +3,7 @@ package com.aionemu.gameserver.model.siege;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.Iterator;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.Race;
@@ -26,22 +27,6 @@ public class Influence {
 	private float kaldor_e = 0;
 	private float kaldor_a = 0;
 	private float kaldor_b = 0;
-	// 贝卢斯 / BELUS
-	private final float belus_e = 0;
-	private final float belus_a = 0;
-	private final float belus_b = 0;
-	// 阿斯皮达 / ASPIDA
-	private final float aspida_e = 0;
-	private final float aspida_a = 0;
-	private final float aspida_b = 0;
-	// 阿塔纳托斯 / ATANATOS
-	private final float atanatos_e = 0;
-	private final float atanatos_a = 0;
-	private final float atanatos_b = 0;
-	// 迪西隆 / DISILLON
-	private final float disillon_e = 0;
-	private final float disillon_a = 0;
-	private final float disillon_b = 0;
 	// 全局 / GLOBAL
 	private float global_e = 0;
 	private float global_a = 0;
@@ -51,15 +36,16 @@ public class Influence {
 		calculateInfluence();
 	}
 
-    /**
+	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
 	 * Returns the instance, which must be supplied by Spring.
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static Influence getInstance() {
 		ObjectProvider<Influence> provider = instanceProvider;
@@ -72,12 +58,16 @@ public class Influence {
 		return provided;
 	}
 
-	/** 设置实例提供者。 / Sets the instance provider. */
+	/**
+	 * 设置实例提供者。 / Sets the instance provider.
+	 */
 	public static void setInstanceProvider(ObjectProvider<Influence> instanceProvider) {
 		Influence.instanceProvider = instanceProvider;
 	}
 
-	/** 重算影响力。 / Recalculates influence. */
+	/**
+	 * 重算影响力。 / Recalculates influence.
+	 */
 	public void recalculateInfluence() {
 		calculateInfluence();
 	}
@@ -97,38 +87,38 @@ public class Influence {
 		float t_kaldor = 0f;
 		for (SiegeLocation sLoc : GameFeatureServices.siegeService().getSiegeLocations().values()) {
 			switch (sLoc.getWorldId()) {
-			// 欧比斯 / ABYSS
-			case 400010000:
-				t_abyss += sLoc.getInfluenceValue();
-				switch (sLoc.getRace()) {
-				case ELYOS:
-					e_abyss += sLoc.getInfluenceValue();
-					break;
-				case ASMODIANS:
-					a_abyss += sLoc.getInfluenceValue();
-					break;
-				case BALAUR:
-					b_abyss += sLoc.getInfluenceValue();
-					break;
-				}
-				break;
-			// 卡尔多 / KALDOR
-			case 600090000:
-				if (sLoc instanceof FortressLocation) {
-					t_kaldor += sLoc.getInfluenceValue();
+				// 欧比斯 / ABYSS
+				case 400010000:
+					t_abyss += sLoc.getInfluenceValue();
 					switch (sLoc.getRace()) {
-					case ELYOS:
-						e_kaldor += sLoc.getInfluenceValue();
-						break;
-					case ASMODIANS:
-						a_kaldor += sLoc.getInfluenceValue();
-						break;
-					case BALAUR:
-						b_kaldor += sLoc.getInfluenceValue();
-						break;
+						case ELYOS:
+							e_abyss += sLoc.getInfluenceValue();
+							break;
+						case ASMODIANS:
+							a_abyss += sLoc.getInfluenceValue();
+							break;
+						case BALAUR:
+							b_abyss += sLoc.getInfluenceValue();
+							break;
 					}
-				}
-				break;
+					break;
+				// 卡尔多 / KALDOR
+				case 600090000:
+					if (sLoc instanceof FortressLocation) {
+						t_kaldor += sLoc.getInfluenceValue();
+						switch (sLoc.getRace()) {
+							case ELYOS:
+								e_kaldor += sLoc.getInfluenceValue();
+								break;
+							case ASMODIANS:
+								a_kaldor += sLoc.getInfluenceValue();
+								break;
+							case BALAUR:
+								b_kaldor += sLoc.getInfluenceValue();
+								break;
+						}
+					}
+					break;
 			}
 		}
 		// 欧比斯 / ABYSS
@@ -156,87 +146,123 @@ public class Influence {
 	}
 
 	// 全局影响力 / Global influence
-	/** 返回天族全局影响力 / Returns the global elyos influence */
+
+	/**
+	 * 返回天族全局影响力 / Returns the global elyos influence
+	 */
 	public float getGlobalElyosInfluence() {
 		return global_e;
 	}
 
-	/** 返回魔族全局影响力 / Returns the global asmodians influence */
+	/**
+	 * 返回魔族全局影响力 / Returns the global asmodians influence
+	 */
 	public float getGlobalAsmodiansInfluence() {
 		return global_a;
 	}
 
-	/** 返回龙族全局影响力 / Returns the global balaurs influence */
+	/**
+	 * 返回龙族全局影响力 / Returns the global balaurs influence
+	 */
 	public float getGlobalBalaursInfluence() {
 		return global_b;
 	}
 
 	// 欧比斯影响力 / Abyss influence
-	/** 返回欧比斯天族影响力 / Returns the abyss elyos influence*/
+
+	/**
+	 * 返回欧比斯天族影响力 / Returns the abyss elyos influence
+	 */
 	public float getAbyssElyosInfluence() {
 		return abyss_e;
 	}
 
-	/** 返回欧比斯魔族影响力 / Returns the abyss asmodians influence*/
+	/**
+	 * 返回欧比斯魔族影响力 / Returns the abyss asmodians influence
+	 */
 	public float getAbyssAsmodiansInfluence() {
 		return abyss_a;
 	}
 
-	/** 返回欧比斯龙族影响力 / Returns the abyss balaurs influence */
+	/**
+	 * 返回欧比斯龙族影响力 / Returns the abyss balaurs influence
+	 */
 	public float getAbyssBalaursInfluence() {
 		return abyss_b;
 	}
 
 	// 卡尔多影响力 / Kaldor influence
-	/** 返回卡尔多天族影响力 / Returns the kaldor elyos influence */
+
+	/**
+	 * 返回卡尔多天族影响力 / Returns the kaldor elyos influence
+	 */
 	public float getKaldorElyosInfluence() {
 		return kaldor_e;
 	}
 
-	/** 返回卡尔多魔族影响力 / Returns the kaldor asmodians influence */
+	/**
+	 * 返回卡尔多魔族影响力 / Returns the kaldor asmodians influence
+	 */
 	public float getKaldorAsmodiansInfluence() {
 		return kaldor_a;
 	}
 
-	/** 返回卡尔多龙族影响力 / Returns the kaldor balaurs influence */
+	/**
+	 * 返回卡尔多龙族影响力 / Returns the kaldor balaurs influence
+	 */
 	public float getKaldorBalaursInfluence() {
 		return kaldor_b;
 	}
 
 	// 帕内斯特拉影响力 / Panesterra influence
-	/** 返回贝卢斯天族影响力 / Returns the belus elyos influence */
+
+	/**
+	 * 返回贝卢斯天族影响力 / Returns the belus elyos influence
+	 */
 	public float getBelusElyosInfluence() {
-		return belus_e;
+		return 0;
 	}
 
-	/** 返回贝卢斯魔族影响力 / Returns the belus asmodians influence */
+	/**
+	 * 返回贝卢斯魔族影响力 / Returns the belus asmodians influence
+	 */
 	public float getBelusAsmodiansInfluence() {
-		return belus_a;
+		return 0;
 	}
 
-	/** 返回贝卢斯龙族影响力 / Returns the belus balaurs influence */
+	/**
+	 * 返回贝卢斯龙族影响力 / Returns the belus balaurs influence
+	 */
 	public float getBelusBalaursInfluence() {
-		return belus_b;
+		return 0;
 	}
 
-	/** 返回阿斯皮达天族影响力 / Returns the aspida elyos influence */
+	/**
+	 * 返回阿斯皮达天族影响力 / Returns the aspida elyos influence
+	 */
 	public float getAspidaElyosInfluence() {
-		return aspida_e;
+		return 0;
 	}
 
-	/** 返回阿斯皮达魔族影响力 / Returns the aspida asmodians influence */
+	/**
+	 * 返回阿斯皮达魔族影响力 / Returns the aspida asmodians influence
+	 */
 	public float getAspidaAsmodiansInfluence() {
-		return aspida_a;
+		return 0;
 	}
 
-	/** 返回阿斯皮达龙族影响力 / Returns the aspida balaurs influence */
+	/**
+	 * 返回阿斯皮达龙族影响力 / Returns the aspida balaurs influence
+	 */
 	public float getAspidaBalaursInfluence() {
-		return aspida_b;
+		return 0;
 	}
 
-	/** 返回阿塔纳托斯天族影响力 / Returns the atanatos elyos influence */
+	/**
+	 * 返回阿塔纳托斯天族影响力 / Returns the atanatos elyos influence
+	 */
 	public float getAtanatosElyosInfluence() {
-		return atanatos_e;
+		return 0;
 	}
 
 	/**
@@ -244,17 +270,21 @@ public class Influence {
 	 * Returns the atanatos asmodians influence.
 	 */
 	public float getAtanatosAsmodiansInfluence() {
-		return atanatos_a;
+		return 0;
 	}
 
-	/** 返回阿塔纳托斯龙族影响力 / Returns the atanatos balaurs influence */
+	/**
+	 * 返回阿塔纳托斯龙族影响力 / Returns the atanatos balaurs influence
+	 */
 	public float getAtanatosBalaursInfluence() {
-		return atanatos_b;
+		return 0;
 	}
 
-	/** 返回迪西隆天族影响力 / Returns the disillon elyos influence */
+	/**
+	 * 返回迪西隆天族影响力 / Returns the disillon elyos influence
+	 */
 	public float getDisillonElyosInfluence() {
-		return disillon_e;
+		return 0;
 	}
 
 	/**
@@ -262,40 +292,44 @@ public class Influence {
 	 * Returns the disillon asmodians influence.
 	 */
 	public float getDisillonAsmodiansInfluence() {
-		return disillon_a;
+		return 0;
 	}
 
-	/** 返回迪西隆龙族影响力 / Returns the disillon balaurs influence */
+	/**
+	 * 返回迪西隆龙族影响力 / Returns the disillon balaurs influence
+	 */
 	public float getDisillonBalaursInfluence() {
-		return disillon_b;
+		return 0;
 	}
 
-	/** 返回 PVP 种族加成 / Returns the pvp race bonus */
+	/**
+	 * 返回 PVP 种族加成 / Returns the pvp race bonus
+	 */
 	public float getPvpRaceBonus(Race attRace) {
 		float bonus = 1;
 		float elyos = getGlobalElyosInfluence();
 		float asmo = getGlobalAsmodiansInfluence();
 		switch (attRace) {
-		case ASMODIANS:
-			if (elyos >= 0.81f && asmo <= 0.10f) {
-				bonus = 1.2f;
-			} else if (elyos >= 0.81f || (elyos >= 0.71f && asmo <= 0.10f)) {
-				bonus = 1.15f;
-			} else if (elyos >= 0.71f) {
-				bonus = 1.1f;
-			}
-			break;
-		case ELYOS:
-			if (asmo >= 0.81f && elyos <= 0.10f) {
-				bonus = 1.2f;
-			} else if (asmo >= 0.81f || (asmo >= 0.71f && elyos <= 0.10f)) {
-				bonus = 1.15f;
-			} else if (asmo >= 0.71f) {
-				bonus = 1.1f;
-			}
-			break;
-		default:
-			break;
+			case ASMODIANS:
+				if (elyos >= 0.81f && asmo <= 0.10f) {
+					bonus = 1.2f;
+				} else if (elyos >= 0.81f || (elyos >= 0.71f && asmo <= 0.10f)) {
+					bonus = 1.15f;
+				} else if (elyos >= 0.71f) {
+					bonus = 1.1f;
+				}
+				break;
+			case ELYOS:
+				if (asmo >= 0.81f && elyos <= 0.10f) {
+					bonus = 1.2f;
+				} else if (asmo >= 0.81f || (asmo >= 0.71f && elyos <= 0.10f)) {
+					bonus = 1.15f;
+				} else if (asmo >= 0.71f) {
+					bonus = 1.1f;
+				}
+				break;
+			default:
+				break;
 		}
 		return bonus;
 	}

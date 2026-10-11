@@ -51,73 +51,90 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 奥菲丹战径副本事件处理器。
  * Instance event handler for Ophidan Warpath.
+ *
  * @author Encom
  */
 
 @InstanceID(301670000)
-public class OphidanWarpathInstance extends GeneralInstanceHandler
-{
-	/** 副本时间戳 / instance timestamp */
+public class OphidanWarpathInstance extends GeneralInstanceHandler {
+	/**
+	 * 副本时间戳 / instance timestamp
+	 */
 	private long instanceTime;
-		/** 能量发生器 / power generator */
-		private int powerGenerator;
-	/** 门映射 / door map */
+	/**
+	 * 能量发生器 / power generator
+	 */
+	private int powerGenerator;
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-        /** engulfed ophidan bridge reward / engulfed ophidan bridge reward */
-        protected EngulfedOphidanBridgeReward engulfedOphidanBridgeReward;
-        /** 败方倍率 / losing-group multiplier */
-        private float loosingGroupMultiplier = 1;
-    /** 副本是否已销毁 / whether the instance is destroyed */
-    private boolean isInstanceDestroyed = false;
-        /** 副本是否已开始 / whether the instance started */
-        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-        /** warpath 任务 / warpath task */
-        private final List<Future<?>> warpathTask = new ArrayList<>();
+	/**
+	 * engulfed ophidan bridge reward / engulfed ophidan bridge reward
+	 */
+	protected EngulfedOphidanBridgeReward engulfedOphidanBridgeReward;
+	/**
+	 * 败方倍率 / losing-group multiplier
+	 */
+	private float loosingGroupMultiplier = 1;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
+	private boolean isInstanceDestroyed = false;
+	/**
+	 * 副本是否已开始 / whether the instance started
+	 */
+	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+	/**
+	 * warpath 任务 / warpath task
+	 */
+	private final List<Future<?>> warpathTask = new ArrayList<>();
 
-    protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
-        engulfedOphidanBridgeReward.regPlayerReward(player);
-        return engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
-    }
+	protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
+		engulfedOphidanBridgeReward.regPlayerReward(player);
+		return engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
+	}
 
-    private boolean containPlayer(Integer object) {
-        return engulfedOphidanBridgeReward.containPlayer(object);
-    }
+	private boolean containPlayer(Integer object) {
+		return engulfedOphidanBridgeReward.containPlayer(object);
+	}
 
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
-    public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+	public void onDropRegistered(Npc npc) {
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-    }
+	}
 
 	private void removeItems(Player player) {
 		Storage storage = player.getInventory();
 		storage.decreaseByItemId(0, storage.getItemCountByItemId(0));
 	}
 
-    protected void startInstanceTask() {
-    	instanceTime = System.currentTimeMillis();
-        engulfedOphidanBridgeReward.setInstanceStartTime();
+	protected void startInstanceTask() {
+		instanceTime = System.currentTimeMillis();
+		engulfedOphidanBridgeReward.setInstanceStartTime();
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!engulfedOphidanBridgeReward.isRewarded()) {
-				    openFirstDoors();
-				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!engulfedOphidanBridgeReward.isRewarded()) {
+					openFirstDoors();
+					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
+					sendMsgByRace(1401181, Race.PC_ALL, 5000);
 					// 贝里特拉能量发生器几乎充满。 / The Beritra Power Generator is almost completely charged.
-				    sendMsgByRace(1403624, Race.PC_ALL, 20000);
-                    engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-                    startInstancePacket();
-                    engulfedOphidanBridgeReward.sendPacket(4, null);
+					sendMsgByRace(1403624, Race.PC_ALL, 20000);
+					engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+					startInstancePacket();
+					engulfedOphidanBridgeReward.sendPacket(4, null);
 					sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Idle Power Generator.
 					sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Idle Power Generator.
 					sp(833935, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //Beritra Army Power Generator.
@@ -127,298 +144,298 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 					sp(806274, 586.42255f, 477.52847f, 620.75189f, (byte) 0, 155); //Cave Teleport Statue.
 					sp(806275, 617.93579f, 508.27386f, 592.09863f, (byte) 0, 156); //Cave Teleport Statue.
 				}
-            }
-        }, 90000)); //...1 Minutes 30s
+			}
+		}, 90000)); //...1 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 150000)); //...2 Minutes 30s
+			}
+		}, 150000)); //...2 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 210000)); //...3 Minutes 30s
+			}
+		}, 210000)); //...3 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 270000)); //...4 Minutes 30s
+			}
+		}, 270000)); //...4 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 330000)); //...5 Minutes 30s
+			}
+		}, 330000)); //...5 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 390000)); //...6 Minutes 30s
+			}
+		}, 390000)); //...6 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 450000)); //...7 Minutes 30s
+			}
+		}, 450000)); //...7 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 510000)); //...8 Minutes 30s
+			}
+		}, 510000)); //...8 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 570000)); //...9 Minutes 30s
+			}
+		}, 570000)); //...9 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 630000)); //...10 Minutes 30s
+			}
+		}, 630000)); //...10 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 690000)); //...11 Minutes 30s
+			}
+		}, 690000)); //...11 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 750000)); //...12 Minutes 30s
+			}
+		}, 750000)); //...12 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 810000)); //...13 Minutes 30s
+			}
+		}, 810000)); //...13 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 870000)); //...14 Minutes 30s
+			}
+		}, 870000)); //...14 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 930000)); //...15 Minutes 30s
+			}
+		}, 930000)); //...15 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 990000)); //...16 Minutes 30s
+			}
+		}, 990000)); //...16 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 1050000)); //...17 Minutes 30s
+			}
+		}, 1050000)); //...17 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 天族现已拥有封印的雷安遗物。 / The Elyos now own the Sealed Reian Relic.
 				sendMsgByRace(1403561, Race.PC_ALL, 0);
 				spawnChestPartElyos();
 				spawnMechanicalElyos();
-            }
-        }, 1110000)); //...18 Minutes 30s
+			}
+		}, 1110000)); //...18 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                engulfedOphidanBridgeReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				engulfedOphidanBridgeReward.sendPacket(4, null);
 				// 魔族现已控制封印的雷安遗物。 / The Asmodians now control the Sealed Reian Relic.
 				sendMsgByRace(1403560, Race.PC_ALL, 0);
 				spawnChestPartAsmodians();
 				spawnMechanicalAsmodians();
-            }
-        }, 1170000)); //...19 Minutes 30s
+			}
+		}, 1170000)); //...19 Minutes 30s
 		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!engulfedOphidanBridgeReward.isRewarded()) {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!engulfedOphidanBridgeReward.isRewarded()) {
 					Race winnerRace = engulfedOphidanBridgeReward.getWinnerRaceByScore();
 					stopInstance(winnerRace);
 				}
-            }
-        }, 1200000));
-    }
+			}
+		}, 1200000));
+	}
 
 	/**
 	 * 天族 / Elyos
 	 */
 	private void spawnMechanicalElyos() {
-	    spawn(833950, 600.0f, 423.0f, 609.1875f, (byte) 68);
+		spawn(833950, 600.0f, 423.0f, 609.1875f, (byte) 68);
 		spawn(833950, 677.0f, 485.0f, 599.625f, (byte) 7);
 		spawn(833950, 549.0f, 461.0f, 615.9375f, (byte) 40);
 		spawn(833950, 634.0f, 539.0f, 589.1875f, (byte) 3);
@@ -443,8 +460,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833950, 628.0f, 430.0f, 607.125f, (byte) 72);
 		spawn(833950, 597.0f, 395.0f, 609.25104f, (byte) 14);
 	}
+
 	private void spawnChestPartElyos() {
-	    spawn(833951, 614.75696f, 508.87222f, 592.0906f, (byte) 32);
+		spawn(833951, 614.75696f, 508.87222f, 592.0906f, (byte) 32);
 		spawn(833951, 626.0f, 519.0f, 592.29364f, (byte) 67);
 		spawn(833951, 570.29816f, 425.61432f, 611.41455f, (byte) 99);
 		spawn(833951, 618.9085f, 522.03625f, 591.74426f, (byte) 71);
@@ -497,7 +515,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	 * 魔族 / Asmodians
 	 */
 	private void spawnMechanicalAsmodians() {
-	    spawn(833960, 600.0f, 423.0f, 609.1875f, (byte) 68);
+		spawn(833960, 600.0f, 423.0f, 609.1875f, (byte) 68);
 		spawn(833960, 677.0f, 485.0f, 599.625f, (byte) 7);
 		spawn(833960, 549.0f, 461.0f, 615.9375f, (byte) 40);
 		spawn(833960, 634.0f, 539.0f, 589.1875f, (byte) 3);
@@ -522,8 +540,9 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833960, 628.0f, 430.0f, 607.125f, (byte) 72);
 		spawn(833960, 597.0f, 395.0f, 609.25104f, (byte) 14);
 	}
+
 	private void spawnChestPartAsmodians() {
-	    spawn(833961, 614.75696f, 508.87222f, 592.0906f, (byte) 32);
+		spawn(833961, 614.75696f, 508.87222f, 592.0906f, (byte) 32);
 		spawn(833961, 626.0f, 519.0f, 592.29364f, (byte) 67);
 		spawn(833961, 570.29816f, 425.61432f, 611.41455f, (byte) 99);
 		spawn(833961, 618.9085f, 522.03625f, 591.74426f, (byte) 71);
@@ -572,29 +591,30 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		spawn(833961, 582.88556f, 481.7509f, 620.74567f, (byte) 84);
 	}
 
-    protected void stopInstance(Race race) {
-        stopInstanceTask();
-        engulfedOphidanBridgeReward.setWinnerRace(race);
-        engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-        reward();
-        engulfedOphidanBridgeReward.sendPacket(5, null);
-    }
+	protected void stopInstance(Race race) {
+		stopInstanceTask();
+		engulfedOphidanBridgeReward.setWinnerRace(race);
+		engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		reward();
+		engulfedOphidanBridgeReward.sendPacket(5, null);
+	}
 
-    /**
-     * 玩家进入副本时处理。
-     * Handle a player entering the instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onEnterInstance(final Player player) {
-        if (!containPlayer(player.getObjectId())) {
-            engulfedOphidanBridgeReward.regPlayerReward(player);
-        }
-        sendEnterPacket(player);
-    }
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onEnterInstance(final Player player) {
+		if (!containPlayer(player.getObjectId())) {
+			engulfedOphidanBridgeReward.regPlayerReward(player);
+		}
+		sendEnterPacket(player);
+	}
 
-    private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<>() {
+	private void sendEnterPacket(final Player player) {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -614,13 +634,13 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				}
 			}
 		});
-    	sendPacket(true);
-    	sendPacket(false);
-        PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
-    }
+		sendPacket(true);
+		sendPacket(false);
+		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime2(), getInstanceReward(), player.getObjectId(), 20, 0));
+	}
 
-    private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<>() {
+	private void startInstancePacket() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -634,11 +654,11 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime2(), getInstanceReward(), player.getObjectId()));
 			}
 		});
-    }
+	}
 
-    private void sendPacket(boolean isObjects) {
-    	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<>() {
+	private void sendPacket(boolean isObjects) {
+		if (isObjects) {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -649,8 +669,8 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
 				}
 			});
-    	} else {
-    		instance.doOnAllPlayers(new Visitor<>() {
+		} else {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -661,30 +681,31 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime2(), engulfedOphidanBridgeReward, instance.getPlayersInside(), true));
 				}
 			});
-    	}
-    }
+		}
+	}
 
-    /**
-     * 副本创建时初始化逻辑。
-     * Initialize logic when the instance is created.
-     * @param instance 世界地图实例 / world-map instance
-     */
-    @Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        engulfedOphidanBridgeReward = new EngulfedOphidanBridgeReward(mapId, instanceId, instance);
-        engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-        doors = instance.getDoors();
-        startInstanceTask();
-    }
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		engulfedOphidanBridgeReward = new EngulfedOphidanBridgeReward(mapId, instanceId, instance);
+		engulfedOphidanBridgeReward.setInstanceScoreType(InstanceScoreType.PREPARING);
+		doors = instance.getDoors();
+		startInstanceTask();
+	}
 
 	protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
-        for (Player player : instance.getPlayersInside()) {
-            if (PlayerActions.isAlreadyDead(player)) {
+		int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
+		int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
+		int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
+		int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		for (Player player : instance.getPlayersInside()) {
+			if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
 			EngulfedOphidanBridgePlayerReward playerReward = engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
@@ -692,39 +713,39 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 			int gloryPoint = 150;
 			int expPoint = 10000;
 			playerReward.setRewardAp(abyssPoint);
-            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardGp(gloryPoint);
 			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(engulfedOphidanBridgeReward.getWinnerRace())) {
-                abyssPoint += engulfedOphidanBridgeReward.AbyssReward(true, true);
-                gloryPoint += engulfedOphidanBridgeReward.GloryReward(true, true);
+				abyssPoint += engulfedOphidanBridgeReward.AbyssReward(true, true);
+				gloryPoint += engulfedOphidanBridgeReward.GloryReward(true, true);
 				expPoint += engulfedOphidanBridgeReward.ExpReward(true, true);
-                playerReward.setBonusAp(engulfedOphidanBridgeReward.AbyssReward(true, true));
-                playerReward.setBonusGp(engulfedOphidanBridgeReward.GloryReward(true, true));
+				playerReward.setBonusAp(engulfedOphidanBridgeReward.AbyssReward(true, true));
+				playerReward.setBonusGp(engulfedOphidanBridgeReward.GloryReward(true, true));
 				playerReward.setBonusExp(engulfedOphidanBridgeReward.ExpReward(true, true));
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
 				playerReward.setAdditionalReward(188055394);
 			} else {
-                abyssPoint += engulfedOphidanBridgeReward.AbyssReward(false, false);
-                gloryPoint += engulfedOphidanBridgeReward.GloryReward(false, false);
+				abyssPoint += engulfedOphidanBridgeReward.AbyssReward(false, false);
+				gloryPoint += engulfedOphidanBridgeReward.GloryReward(false, false);
 				expPoint += engulfedOphidanBridgeReward.ExpReward(false, false);
 				playerReward.setRewardAp(engulfedOphidanBridgeReward.AbyssReward(false, false));
-                playerReward.setRewardGp(engulfedOphidanBridgeReward.GloryReward(false, false));
+				playerReward.setRewardGp(engulfedOphidanBridgeReward.GloryReward(false, false));
 				playerReward.setRewardExp(engulfedOphidanBridgeReward.ExpReward(false, false));
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
-            }
+			}
 			ItemService.addItem(player, 188055394, 1);
-            ItemService.addItem(player, 188100391, 750); //5.5
+			ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, abyssPoint);
-            AbyssPointsService.addGp(player, gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
-        }
-        for (Npc npc : instance.getNpcs()) {
+			AbyssPointsService.addAp(player, abyssPoint);
+			AbyssPointsService.addGp(player, gloryPoint);
+			player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+		}
+		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -739,128 +760,133 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				}
 			}
 		}, 60000);
-    }
+	}
 
-    private int getTime2() {
-        long result = System.currentTimeMillis() - instanceTime;
-        if (result < 90000) {
-            return (int) (90000 - result);
-        } else if (result < 1200000) { //20-Mins
-            return (int) (1200000 - (result - 90000));
-        }
-        return 0;
-    }
+	private int getTime2() {
+		long result = System.currentTimeMillis() - instanceTime;
+		if (result < 90000) {
+			return (int) (90000 - result);
+		} else if (result < 1200000) { //20-Mins
+			return (int) (1200000 - (result - 90000));
+		}
+		return 0;
+	}
 
-    /**
-     * 处理玩家复活事件。
-     * Handle a player revive event.
-     * @param player 玩家 / player
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onReviveEvent(Player player) {
-        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
-        PlayerReviveService.revive(player, 100, 100, false, 0);
-        player.getGameStats().updateStatsAndSpeedVisually();
-        engulfedOphidanBridgeReward.portToPosition(player);
-        return true;
-    }
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * @param player 玩家 / player
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onReviveEvent(Player player) {
+		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
+		PlayerReviveService.revive(player, 100, 100, false, 0);
+		player.getGameStats().updateStatsAndSpeedVisually();
+		engulfedOphidanBridgeReward.portToPosition(player);
+		return true;
+	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param player 玩家 / player
-     * @param lastAttacker 最后攻击者 / last attacker
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onDie(Player player, Creature lastAttacker) {
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param player       玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onDie(Player player, Creature lastAttacker) {
 		EngulfedOphidanBridgePlayerReward ownerReward = engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
 		ownerReward.endBoostMoraleEffect(player);
 		ownerReward.applyBoostMoraleEffect(player);
-        int points = 60;
-        if (lastAttacker instanceof Player) {
-            if (lastAttacker.getRace() != player.getRace()) {
-                InstancePlayerReward playerReward = engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
+		int points = 60;
+		if (lastAttacker instanceof Player) {
+			if (lastAttacker.getRace() != player.getRace()) {
+				InstancePlayerReward playerReward = engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
 				if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
-                    points *= loosingGroupMultiplier;
-                } else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
-                    points = 0;
-                }
-                updateScore((Player) lastAttacker, player, points, true);
-            }
-        }
-        updateScore(player, player, -points, false);
-        return true;
-    }
+					points = (int) (points * loosingGroupMultiplier);
+				} else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
+					points = 0;
+				}
+				updateScore((Player) lastAttacker, player, points, true);
+			}
+		}
+		updateScore(player, player, -points, false);
+		return true;
+	}
 
 	private MutableInt getPvpKillsByRace(Race race) {
-        return engulfedOphidanBridgeReward.getPvpKillsByRace(race);
-    }
+		return engulfedOphidanBridgeReward.getPvpKillsByRace(race);
+	}
 
-    private MutableInt getPointsByRace(Race race) {
-        return engulfedOphidanBridgeReward.getPointsByRace(race);
-    }
+	private MutableInt getPointsByRace(Race race) {
+		return engulfedOphidanBridgeReward.getPointsByRace(race);
+	}
 
-    private void addPointsByRace(Race race, int points) {
-        engulfedOphidanBridgeReward.addPointsByRace(race, points);
-    }
+	private void addPointsByRace(Race race, int points) {
+		engulfedOphidanBridgeReward.addPointsByRace(race, points);
+	}
 
-    private void addPvpKillsByRace(Race race, int points) {
-        engulfedOphidanBridgeReward.addPvpKillsByRace(race, points);
-    }
+	private void addPvpKillsByRace(Race race, int points) {
+		engulfedOphidanBridgeReward.addPvpKillsByRace(race, points);
+	}
 
-    private void addPointToPlayer(Player player, int points) {
-        engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPoints(points);
-    }
+	private void addPointToPlayer(Player player, int points) {
+		engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPoints(points);
+	}
 
-    private void addPvPKillToPlayer(Player player) {
-        engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
-    }
+	private void addPvPKillToPlayer(Player player) {
+		engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
+	}
 
-    protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-        if (points == 0) {
-            return;
-        }
-        addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<>();
-        if (target != null && player.isInGroup2()) {
-            for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-                if (member.getLifeStats().isAlreadyDead()) {
-                    continue;
-                } if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
-                    playersToGainScore.add(member);
-                }
-            }
-        } else {
-            playersToGainScore.add(player);
-        }
-        for (Player playerToGainScore : playersToGainScore) {
-            addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
-            if (target instanceof Npc) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
-            } else if (target instanceof Player) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
-            }
-        }
-        int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
-        if (pointDifference < 0) {
-            pointDifference *= -1;
-        } if (pointDifference >= 3000) {
-            loosingGroupMultiplier = 10;
-        } else if (pointDifference >= 1000) {
-            loosingGroupMultiplier = 1.5f;
-        } else {
-            loosingGroupMultiplier = 1;
-        } if (pvpKill && points > 0) {
-            addPvpKillsByRace(player.getRace(), 1);
-            addPvPKillToPlayer(player);
-        }
-        engulfedOphidanBridgeReward.sendPacket(11, player.getObjectId());
-        if (engulfedOphidanBridgeReward.hasCapPoints()) {
-            stopInstance(engulfedOphidanBridgeReward.getWinnerRaceByScore());
-        }
-    }
+	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
+		if (points == 0) {
+			return;
+		}
+		addPointsByRace(player.getRace(), points);
+		List<Player> playersToGainScore = new ArrayList<>();
+		if (target != null && player.isInGroup2()) {
+			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
+				if (member.getLifeStats().isAlreadyDead()) {
+					continue;
+				}
+				if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
+					playersToGainScore.add(member);
+				}
+			}
+		} else {
+			playersToGainScore.add(player);
+		}
+		for (Player playerToGainScore : playersToGainScore) {
+			addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
+			if (target instanceof Npc) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
+			} else if (target instanceof Player) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
+			}
+		}
+		int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
+		if (pointDifference < 0) {
+			pointDifference *= -1;
+		}
+		if (pointDifference >= 3000) {
+			loosingGroupMultiplier = 10;
+		} else if (pointDifference >= 1000) {
+			loosingGroupMultiplier = 1.5f;
+		} else {
+			loosingGroupMultiplier = 1;
+		}
+		if (pvpKill && points > 0) {
+			addPvpKillsByRace(player.getRace(), 1);
+			addPvPKillToPlayer(player);
+		}
+		engulfedOphidanBridgeReward.sendPacket(11, player.getObjectId());
+		if (engulfedOphidanBridgeReward.hasCapPoints()) {
+			stopInstance(engulfedOphidanBridgeReward.getWinnerRaceByScore());
+		}
+	}
 
 	@Override
 	public boolean supportsRetailNpcScore(int npcId) {
@@ -879,60 +905,63 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入区域时处理。
 	 * Handle a player entering a zone.
+	 *
 	 * @param player 玩家 / player
-	 * @param zone 区域 / zone
+	 * @param zone   区域 / zone
 	 */
 	@Override
-    public void onEnterZone(Player player, ZoneInstance zone) {
+	public void onEnterZone(Player player, ZoneInstance zone) {
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("NORTH_POST_301670000")) {
-            powerGenerator = 1;
-	    } else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("SOUTH_POST_301670000")) {
+			powerGenerator = 1;
+		} else if (zone.getAreaTemplate().getZoneName() == ZoneName.get("SOUTH_POST_301670000")) {
 			powerGenerator = 2;
 		}
-    }
+	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param npc NPC / npc
-     */
-    @Override
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param npc NPC / npc
+	 */
+	@Override
 	public void onDie(Npc npc) {
-        int point = 0;
+		int point = 0;
 		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
-        if (mostPlayerDamage == null) {
-            return;
-        }
+		if (mostPlayerDamage == null) {
+			return;
+		}
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 243962: //  .
 			case 243963: //  ?.
 			case 243964: //?   ?.
-			    point = 25;
+				point = 25;
 				despawnNpc(npc);
-            break;
-        }
-        updateScore(mostPlayerDamage, npc, point, false);
-    }
+				break;
+		}
+		updateScore(mostPlayerDamage, npc, point, false);
+	}
 
-    /**
-     * 玩家对 NPC 使用物品完成时处理。
-     * Handle item-use finish on an NPC.
-     * @param player 玩家 / player
-     * @param npc NPC / npc
-     */
-    @Override
-    public void handleUseItemFinish(Player player, Npc npc) {
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * @param player 玩家 / player
+	 * @param npc    NPC / npc
+	 */
+	@Override
+	public void handleUseItemFinish(Player player, Npc npc) {
 		int point = 0;
 		switch (npc.getNpcId()) {
 			case 701947: // 可以搭乘的天族大炮 / Elyos Field Gun.
 			case 701949: // 可以搭乘的天族大炮 / Elyos Field Gun.
-                GameEngineServices.skillEngine().getSkill(npc, 21065, 1, player).useNoAnimationSkill();
-            break;
+				GameEngineServices.skillEngine().getSkill(npc, 21065, 1, player).useNoAnimationSkill();
+				break;
 			case 701948: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
 			case 701950: // 可以搭乘的魔族大炮 / Asmodians Field Gun.
-                GameEngineServices.skillEngine().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
-            break;
+				GameEngineServices.skillEngine().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
+				break;
 			case 833935: //? ? .
 				point = 1000;
 				despawnNpc(npc);
@@ -941,25 +970,25 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				if (powerGenerator == 1) {
 					switch (player.getRace()) {
 						case ELYOS:
-						    // 天族已激活贝里特拉能量发生器。 / The Elyos have activated the Beritra Power Generator.
+							// 天族已激活贝里特拉能量发生器。 / The Elyos have activated the Beritra Power Generator.
 							sendMsgByRace(1403449, Race.PC_ALL, 0);
-						    sp(802036, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
+							sp(802036, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
 							sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Power Generator.
 							GameEngineServices.skillEngine().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
-						break;
-					    case ASMODIANS:
-						    // 魔族已激活贝里特拉能量发生器。 / The Asmodians have activated the Beritra Power Generator.
+							break;
+						case ASMODIANS:
+							// 魔族已激活贝里特拉能量发生器。 / The Asmodians have activated the Beritra Power Generator.
 							sendMsgByRace(1403450, Race.PC_ALL, 0);
-						    sp(802037, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
-						    sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Power Generator.
+							sp(802037, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
+							sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Power Generator.
 							GameEngineServices.skillEngine().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
-						break;
+							break;
 					}
 				}
 				// 贝里特拉能量发生器已充满，可以使用。 / The Beritra Power Generator is completely charged and can be used.
 				// 装置即将过载，无法再充能。 / The device is close to being overloaded and cannot be charged anymore.
 				sendMsgByRace(1403453, Race.PC_ALL, 5000);
-			break;
+				break;
 			case 833936: //? ? .
 				point = 1000;
 				despawnNpc(npc);
@@ -968,40 +997,40 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				if (powerGenerator == 2) {
 					switch (player.getRace()) {
 						case ELYOS:
-						    // 天族已激活贝里特拉能量发生器。 / The Elyos have activated the Beritra Power Generator.
+							// 天族已激活贝里特拉能量发生器。 / The Elyos have activated the Beritra Power Generator.
 							sendMsgByRace(1403449, Race.PC_ALL, 0);
-						    sp(802039, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
-						    sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Power Generator.
+							sp(802039, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
+							sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Power Generator.
 							GameEngineServices.skillEngine().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
-						break;
-					    case ASMODIANS:
-						    // 魔族已激活贝里特拉能量发生器。 / The Asmodians have activated the Beritra Power Generator.
+							break;
+						case ASMODIANS:
+							// 魔族已激活贝里特拉能量发生器。 / The Asmodians have activated the Beritra Power Generator.
 							sendMsgByRace(1403450, Race.PC_ALL, 0);
-						    sp(802040, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
-						    sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Idle Power Generator.
+							sp(802040, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
+							sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Idle Power Generator.
 							GameEngineServices.skillEngine().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
-						break;
+							break;
 					}
 				}
 				// 贝里特拉能量发生器已充满，可以使用。 / The Beritra Power Generator is completely charged and can be used.
 				// 装置即将过载，无法再充能。 / The device is close to being overloaded and cannot be charged anymore.
 				sendMsgByRace(1403453, Race.PC_ALL, 5000);
-			break;
+				break;
 			case 833950: //Mechanical Weapon Test Part.
 			case 833960: //Mechanical Weapon Test Part.
-                point = 200;
+				point = 200;
 				despawnNpc(npc);
 				// 你已从奇异奥菲丹进阶路线取回机械武器试验部件。 / Youve retrieved the Mechanical Weapon Test Parts from the Odd Ophidan Advanced Route.
 				sendMsgByRace(1403555, Race.PC_ALL, 0);
-            break;
+				break;
 			case 833951: //Mechanical Weapon Test Part Box.
 			case 833961: //Mechanical Weapon Test Part Box.
-                point = 2000;
+				point = 2000;
 				despawnNpc(npc);
-            break;
-        }
+				break;
+		}
 		updateScore(player, npc, point, false);
-    }
+	}
 
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {
@@ -1015,143 +1044,147 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		}
 	}
 
-    /**
-     * 副本销毁时清理资源。
-     * Clean up resources when the instance is destroyed.
-     */
-    @Override
-    public void onInstanceDestroy() {
-        engulfedOphidanBridgeReward.clear();
-        isInstanceDestroyed = true;
-        stopInstanceTask();
-        doors.clear();
-    }
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
+	@Override
+	public void onInstanceDestroy() {
+		engulfedOphidanBridgeReward.clear();
+		isInstanceDestroyed = true;
+		stopInstanceTask();
+		doors.clear();
+	}
 
-    protected void openFirstDoors() {
-        openDoor(176);
+	protected void openFirstDoors() {
+		openDoor(176);
 		openDoor(177);
-    }
+	}
 
-    protected void openDoor(int doorId) {
-        StaticDoor door = doors.get(doorId);
-        if (door != null) {
-            door.setOpen(true);
-        }
-    }
+	protected void openDoor(int doorId) {
+		StaticDoor door = doors.get(doorId);
+		if (door != null) {
+			door.setOpen(true);
+		}
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
+		sp(npcId, x, y, z, h, 0, time, 0, null);
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
+		sp(npcId, x, y, z, h, 0, time, msg, race);
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					spawn(npcId, x, y, z, h, entityId);
+					if (msg > 0) {
+						sendMsgByRace(msg, race, 0);
+					}
+				}
+			}
+		}, time));
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					Npc npc = (Npc) spawn(npcId, x, y, z, h);
+					npc.getSpawn().setWalkerId(walkerId);
+					WalkManager.startWalking((NpcAI2) npc.getAi2());
+				}
+			}
+		}, time));
+	}
 
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<>() {
-                    /**
-                     * 处理 visit。
-                     * Handle visit.
-                     * @param player 玩家 / player
-                     */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
-    }
+	protected void sendMsgByRace(final int msg, final Race race, int time) {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
+					 * 处理 visit。
+					 * Handle visit.
+					 * @param player 玩家 / player
+					 */
+					@Override
+					public void visit(Player player) {
+						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+						}
+					}
+				});
+			}
+		}, time));
+	}
 
-    private void stopInstanceTask() {
-        for (Future<?> task : warpathTask) {
+	private void stopInstanceTask() {
+		for (Future<?> task : warpathTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
-    /**
-     * 返回本副本奖励对象。
-     * Return this instance's reward object.
-     * @return 结果 / result
-     */
-    @Override
-    public InstanceReward<?> getInstanceReward() {
-        return engulfedOphidanBridgeReward;
-    }
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * @return 结果 / result
+	 */
+	@Override
+	public InstanceReward<?> getInstanceReward() {
+		return engulfedOphidanBridgeReward;
+	}
 
-    /**
-     * 玩家请求退出副本时处理。
-     * Handle a player exit request.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onExitInstance(Player player) {
+		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+	}
 
-    /**
-     * 玩家离开副本时处理。
-     * Handle a player leaving the instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onLeaveInstance(Player player) {
+	/**
+	 * 玩家离开副本时处理。
+	 * Handle a player leaving the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onLeaveInstance(Player player) {
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
 		EngulfedOphidanBridgePlayerReward playerReward = engulfedOphidanBridgeReward.getPlayerReward(player.getObjectId());
 		playerReward.endBoostMoraleEffect(player);
 		removeItems(player);
-    }
+	}
 
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -1159,13 +1192,14 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		removeItems(player);
 	}
 
-    /**
-     * 玩家登录到该副本时处理。
-     * Handle a player logging into this instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onPlayerLogin(Player player) {
-        engulfedOphidanBridgeReward.sendPacket(10, player.getObjectId());
-    }
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onPlayerLogin(Player player) {
+		engulfedOphidanBridgeReward.sendPacket(10, player.getObjectId());
+	}
 }

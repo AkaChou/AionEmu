@@ -46,78 +46,97 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 卡玛尔战场副本事件处理器。
  * Instance event handler for Kamar Battlefield.
+ *
  * @author Encom
  */
 
 @InstanceID(301120000)
-public class KamarBattlefieldInstance extends GeneralInstanceHandler
-{
-		/** 副本时间戳 / instance timestamp */
-		private long instanceTime;
-		/** 种族 killedvarga / race killed varga */
-		private Race RaceKilledVarga = null;
-	/** 门映射 / door map */
+public class KamarBattlefieldInstance extends GeneralInstanceHandler {
+	/**
+	 * 副本时间戳 / instance timestamp
+	 */
+	private long instanceTime;
+	/**
+	 * 种族 killedvarga / race killed varga
+	 */
+	private Race RaceKilledVarga = null;
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-        /** 败方倍率 / losing-group multiplier */
-        private float loosingGroupMultiplier = 1;
-    /** 副本是否已销毁 / whether the instance is destroyed */
-    private boolean isInstanceDestroyed = false;
-		/** kamar battlefield reward / kamar battlefield reward */
-		protected KamarBattlefieldReward kamarBattlefieldReward;
-        /** 副本是否已开始 / whether the instance started */
-        protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-        /** kamar 任务 / kamar task */
-        private final List<Future<?>> kamarTask = new ArrayList<>();
-    /**
-     * 返回玩家奖励记录。
-     * Return the player's reward record.
-     * @param player 玩家 / player
-     * @return 结果 / result
-     */
+	/**
+	 * 败方倍率 / losing-group multiplier
+	 */
+	private float loosingGroupMultiplier = 1;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
+	private boolean isInstanceDestroyed = false;
+	/**
+	 * kamar battlefield reward / kamar battlefield reward
+	 */
+	protected KamarBattlefieldReward kamarBattlefieldReward;
+	/**
+	 * 副本是否已开始 / whether the instance started
+	 */
+	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+	/**
+	 * kamar 任务 / kamar task
+	 */
+	private final List<Future<?>> kamarTask = new ArrayList<>();
 
-    protected KamarBattlefieldPlayerReward getPlayerReward(Player player) {
-        kamarBattlefieldReward.regPlayerReward(player);
-        return kamarBattlefieldReward.getPlayerReward(player.getObjectId());
-    }
+	/**
+	 * 返回玩家奖励记录。
+	 * Return the player's reward record.
+	 *
+	 * @param player 玩家 / player
+	 * @return 结果 / result
+	 */
 
-    private boolean containPlayer(Integer object) {
-        return kamarBattlefieldReward.containPlayer(object);
-    }
-    /**
-     * 启动副本计时/任务。
-     * Start instance timer/tasks.
-     */
+	protected KamarBattlefieldPlayerReward getPlayerReward(Player player) {
+		kamarBattlefieldReward.regPlayerReward(player);
+		return kamarBattlefieldReward.getPlayerReward(player.getObjectId());
+	}
 
-    protected void startInstanceTask() {
-    	instanceTime = System.currentTimeMillis();
-        kamarBattlefieldReward.setInstanceStartTime();
+	private boolean containPlayer(Integer object) {
+		return kamarBattlefieldReward.containPlayer(object);
+	}
+
+	/**
+	 * 启动副本计时/任务。
+	 * Start instance timer/tasks.
+	 */
+
+	protected void startInstanceTask() {
+		instanceTime = System.currentTimeMillis();
+		kamarBattlefieldReward.setInstanceStartTime();
 		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!kamarBattlefieldReward.isRewarded()) {
-				    openFirstDoors();
-				    // 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
-				    sendMsgByRace(1401181, Race.PC_ALL, 5000);
-                    kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-                    startInstancePacket();
-                    kamarBattlefieldReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!kamarBattlefieldReward.isRewarded()) {
+					openFirstDoors();
+					// 成员招募窗口已过，无法再招募成员。 / The member recruitment window has passed. You cannot recruit any more members.
+					sendMsgByRace(1401181, Race.PC_ALL, 5000);
+					kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+					startInstancePacket();
+					kamarBattlefieldReward.sendPacket(4, null);
 				}
-            }
-        }, 90000));
+			}
+		}, 90000));
 		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                kamarBattlefieldReward.sendPacket(4, null);
-                // 一门加农已到达和平广场。 / A Cannon has arrived in Peace Square.
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				kamarBattlefieldReward.sendPacket(4, null);
+				// 一门加农已到达和平广场。 / A Cannon has arrived in Peace Square.
 				sendMsgByRace(1401841, Race.PC_ALL, 0);
 				// 卡玛尔加农。 / Kamar Cannon.
 				sp(701806, 1364.5979f, 1467.5867f, 599.7256f, (byte) 104, 0);
@@ -125,33 +144,33 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				// 卡玛尔加农旗帜。 / Kamar Cannon Flag.
 				sp(801960, 1364.5979f, 1467.5867f, 599.7256f, (byte) 104, 0);
 				sp(801961, 1262.3992f, 1609.1414f, 585.90643f, (byte) 53, 0);
-            }
-        }, 110000));
+			}
+		}, 110000));
 		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                sendPacket(false);
-                kamarBattlefieldReward.sendPacket(4, null);
-                // 雷安部族补给已存放在和平广场。 / Reian Tribe supplies have been deposited in Peace Square.
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				kamarBattlefieldReward.sendPacket(4, null);
+				// 雷安部族补给已存放在和平广场。 / Reian Tribe supplies have been deposited in Peace Square.
 				sendMsgByRace(1401840, Race.PC_ALL, 0);
 				sp(701906, 1371.4758f, 1549.8353f, 595.35071f, (byte) 0, 65); //Reian Supply Items.
 				sp(701907, 1356.1837f, 1479.2998f, 593.80170f, (byte) 0, 66); //Reian Supply Items.
 				sp(701908, 1353.0874f, 1413.4635f, 598.66101f, (byte) 0, 68); //Reian Supply Items.
-            }
-        }, 220000));
-        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-            	sendPacket(false);
-                kamarBattlefieldReward.sendPacket(4, null);
+			}
+		}, 220000));
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				kamarBattlefieldReward.sendPacket(4, null);
 				// 卡玛尔入口与登船点出现了传送雕像。 / Teleport Statues have appeared at the entrance to Kamar and the boarding site.
 				sendMsgByRace(1401913, Race.PC_ALL, 0);
 				// 卡梅纳开发区传送雕像。 / Kamena Development Zone Teleport Statue.
@@ -167,25 +186,25 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(802018, 1213.4902f, 1363.4617f, 612.36188f, (byte) 0, 225);
 				// 哈布罗克登船点传送雕像。 / Habrok Boarding Site Teleport Statue.
 				sp(802019, 1527.2150f, 1561.5153f, 611.90063f, (byte) 0, 224);
-            }
-        }, 300000));
+			}
+		}, 300000));
 		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-            	sendPacket(false);
-                kamarBattlefieldReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				kamarBattlefieldReward.sendPacket(4, null);
 				// 天族与魔族的增援已抵达。 / Reinforcements for the Elyos and Asmodians have arrived.
 				sendMsgByRace(1401847, Race.PC_ALL, 0);
 				// 天族： / ELYOS:
-                sp(233327, 1239.0406f, 1681.4218f, 585.3441f, (byte) 98, 0); //Commander Crispin.
+				sp(233327, 1239.0406f, 1681.4218f, 585.3441f, (byte) 98, 0); //Commander Crispin.
 				sp(801957, 1239.0406f, 1681.4218f, 585.3441f, (byte) 98, 0); //Commander Crispin Flag.
 				// 寂刃军团百夫长。 / Hushblade Legion Centurion.
 				sp(232855, 1234.2550f, 1679.0476f, 585.3441f, (byte) 107, 0);
-                sp(232855, 1243.7524f, 1683.6012f, 585.3441f, (byte) 88, 0);
+				sp(232855, 1243.7524f, 1683.6012f, 585.3441f, (byte) 88, 0);
 				// 寂刃军团士兵。 / Hushblade Legion Soldier.
 				sp(232859, 1236.6757f, 1680.2411f, 585.3441f, (byte) 98, 0);
 				sp(232859, 1241.3967f, 1682.3877f, 585.3441f, (byte) 98, 0);
@@ -196,7 +215,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(701909, 1247.8014f, 1675.1746f, 585.3441f, (byte) 85, 0);
 				sp(701909, 1233.4625f, 1675.0083f, 585.3441f, (byte) 109, 0);
 				// 魔族： / ASMODIANS:
-                sp(233328, 1390.0427f, 1432.7201f, 599.3814f, (byte) 42, 0); //Commander Tepes.
+				sp(233328, 1390.0427f, 1432.7201f, 599.3814f, (byte) 42, 0); //Commander Tepes.
 				sp(801958, 1390.0427f, 1432.7201f, 599.3814f, (byte) 42, 0); //Commander Tepes Flag.
 				// 寂刃军团百夫长。 / Hushblade Legion Centurion.
 				sp(232856, 1394.0671f, 1432.0436f, 599.3814f, (byte) 42, 0);
@@ -210,17 +229,17 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				// 魔族加农。 / Asmodian Cannon.
 				sp(701910, 1383.4238f, 1427.6360f, 599.3814f, (byte) 41, 0);
 				sp(701910, 1396.8196f, 1437.6923f, 599.3814f, (byte) 42, 0);
-            }
-        }, 600000));
+			}
+		}, 600000));
 		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-            	sendPacket(false);
-                kamarBattlefieldReward.sendPacket(4, null);
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				sendPacket(false);
+				kamarBattlefieldReward.sendPacket(4, null);
 				// 战舰已出现。 / The Dredgion has appeared.
 				sendMsgByRace(1401842, Race.PC_ALL, 0);
 				// 战舰正在吐出大量部队。 / The Dredgion is disgorging a massive number of troops.
@@ -228,72 +247,72 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				// 瓦尔加指挥官及其副手已抵达战场。 / Commander Varga and his Deputy have arrived at the battle.
 				sendMsgByRace(1401844, Race.PC_ALL, 10000);
 				// 瓦尔加袭击者战斗兵。 / Varga Raider Combatant.
-			    sp(232841, 1361.5312f, 1250.5146f, 593.6543f, (byte) 44, 0);
-			    sp(232841, 1463.3358f, 1539.1375f, 607.2500f, (byte) 70, 0);
-			    sp(232841, 1393.8972f, 1352.4136f, 598.5798f, (byte) 14, 0);
-			    sp(232841, 1317.9489f, 1433.2888f, 596.8750f, (byte) 119, 0);
-			    sp(232841, 1176.4159f, 1597.9760f, 598.6250f, (byte) 12, 0);
+				sp(232841, 1361.5312f, 1250.5146f, 593.6543f, (byte) 44, 0);
+				sp(232841, 1463.3358f, 1539.1375f, 607.2500f, (byte) 70, 0);
+				sp(232841, 1393.8972f, 1352.4136f, 598.5798f, (byte) 14, 0);
+				sp(232841, 1317.9489f, 1433.2888f, 596.8750f, (byte) 119, 0);
+				sp(232841, 1176.4159f, 1597.9760f, 598.6250f, (byte) 12, 0);
 				// 瓦尔加袭击者狂暴兵。 / Varga Raider Rampager.
-			    sp(232842, 1321.8229f, 1289.4341f, 593.7500f, (byte) 69, 0);
-			    sp(232842, 1269.6096f, 1396.1768f, 607.2500f, (byte) 5, 0);
-			    sp(232842, 1433.1157f, 1460.2609f, 598.8750f, (byte) 39, 0);
-			    sp(232842, 1292.4585f, 1625.5336f, 585.0573f, (byte) 55, 0);
+				sp(232842, 1321.8229f, 1289.4341f, 593.7500f, (byte) 69, 0);
+				sp(232842, 1269.6096f, 1396.1768f, 607.2500f, (byte) 5, 0);
+				sp(232842, 1433.1157f, 1460.2609f, 598.8750f, (byte) 39, 0);
+				sp(232842, 1292.4585f, 1625.5336f, 585.0573f, (byte) 55, 0);
 				// 瓦尔加袭击者枪手。 / Varga Raider Gunner.
-			    sp(232843, 1278.3225f, 1484.0183f, 595.5000f, (byte) 1, 0);
-			    sp(232843, 1360.4989f, 1302.1730f, 593.7500f, (byte) 76, 0);
-			    sp(232843, 1527.0472f, 1422.2007f, 596.6250f, (byte) 45, 0);
-			    sp(232843, 1281.6669f, 1656.0289f, 585.2898f, (byte) 77, 0);
-			    sp(232843, 1410.5096f, 1499.3961f, 597.0000f, (byte) 42, 0);
-			    sp(232843, 1408.7632f, 1564.4656f, 595.7288f, (byte) 73, 0);
-			    sp(232843, 1350.0609f, 1724.6587f, 598.4339f, (byte) 67, 0);
+				sp(232843, 1278.3225f, 1484.0183f, 595.5000f, (byte) 1, 0);
+				sp(232843, 1360.4989f, 1302.1730f, 593.7500f, (byte) 76, 0);
+				sp(232843, 1527.0472f, 1422.2007f, 596.6250f, (byte) 45, 0);
+				sp(232843, 1281.6669f, 1656.0289f, 585.2898f, (byte) 77, 0);
+				sp(232843, 1410.5096f, 1499.3961f, 597.0000f, (byte) 42, 0);
+				sp(232843, 1408.7632f, 1564.4656f, 595.7288f, (byte) 73, 0);
+				sp(232843, 1350.0609f, 1724.6587f, 598.4339f, (byte) 67, 0);
 				// 瓦尔加袭击者鼓手。 / Varga Raider Drummer.
-			    sp(232844, 1532.7183f, 1427.9136f, 596.6250f, (byte) 45, 0);
+				sp(232844, 1532.7183f, 1427.9136f, 596.6250f, (byte) 45, 0);
 				// 瓦尔加袭击者突击兵。 / Varga Raider Assaulter.
-			    sp(232845, 1526.7577f, 1428.3492f, 596.6250f, (byte) 45, 0);
+				sp(232845, 1526.7577f, 1428.3492f, 596.6250f, (byte) 45, 0);
 				// 瓦尔加袭击者士兵。 / Varga Raider Trooper.
-			    sp(232846, 1568.0400f, 1394.5700f, 599.2800f, (byte) 0, 0);
-			    sp(232846, 1304.4400f, 1735.3000f, 602.8500f, (byte) 0, 0);
-			    sp(232846, 1333.0600f, 1235.8100f, 596.0600f, (byte) 0, 0);
-			    sp(232846, 1554.8800f, 1459.8900f, 599.3000f, (byte) 0, 0);
-			    sp(232846, 1274.7120f, 1480.9132f, 595.4195f, (byte) 3, 0);
+				sp(232846, 1568.0400f, 1394.5700f, 599.2800f, (byte) 0, 0);
+				sp(232846, 1304.4400f, 1735.3000f, 602.8500f, (byte) 0, 0);
+				sp(232846, 1333.0600f, 1235.8100f, 596.0600f, (byte) 0, 0);
+				sp(232846, 1554.8800f, 1459.8900f, 599.3000f, (byte) 0, 0);
+				sp(232846, 1274.7120f, 1480.9132f, 595.4195f, (byte) 3, 0);
 				// 瓦尔加攻城战斗兵。 / Varga Siege Combatant.
-			    sp(232847, 1221.2823f, 1563.3386f, 585.2862f, (byte) 46, 0);
-			    sp(232847, 1347.5002f, 1278.5581f, 593.7500f, (byte) 108, 0);
-			    sp(232847, 1421.0199f, 1503.5842f, 597.0000f, (byte) 15, 0);
-			    sp(232847, 1312.6735f, 1426.6943f, 596.9184f, (byte) 89, 0);
+				sp(232847, 1221.2823f, 1563.3386f, 585.2862f, (byte) 46, 0);
+				sp(232847, 1347.5002f, 1278.5581f, 593.7500f, (byte) 108, 0);
+				sp(232847, 1421.0199f, 1503.5842f, 597.0000f, (byte) 15, 0);
+				sp(232847, 1312.6735f, 1426.6943f, 596.9184f, (byte) 89, 0);
 				// 瓦尔加攻城狂暴兵。 / Varga Siege Rampager.
-			    sp(232848, 1225.7692f, 1566.2585f, 585.2356f, (byte) 43, 0);
-			    sp(232848, 1352.3522f, 1281.2621f, 593.7500f, (byte) 42, 0);
-			    sp(232848, 1414.6003f, 1506.1622f, 597.0000f, (byte) 36, 0);
-			    sp(232848, 1318.0239f, 1422.9805f, 597.1882f, (byte) 76, 0);
+				sp(232848, 1225.7692f, 1566.2585f, 585.2356f, (byte) 43, 0);
+				sp(232848, 1352.3522f, 1281.2621f, 593.7500f, (byte) 42, 0);
+				sp(232848, 1414.6003f, 1506.1622f, 597.0000f, (byte) 36, 0);
+				sp(232848, 1318.0239f, 1422.9805f, 597.1882f, (byte) 76, 0);
 				// 瓦尔加攻城枪手。 / Varga Siege Gunner.
-			    sp(232849, 1169.1985f, 1606.7758f, 598.6751f, (byte) 10, 0);
-			    sp(232849, 1316.5342f, 1526.3812f, 594.4299f, (byte) 101, 0);
-			    sp(232849, 1328.7570f, 1667.6415f, 598.7500f, (byte) 27, 0);
+				sp(232849, 1169.1985f, 1606.7758f, 598.6751f, (byte) 10, 0);
+				sp(232849, 1316.5342f, 1526.3812f, 594.4299f, (byte) 101, 0);
+				sp(232849, 1328.7570f, 1667.6415f, 598.7500f, (byte) 27, 0);
 				// 瓦尔加攻城鼓手。 / Varga Siege Drummer.
-			    sp(232850, 1143.3275f, 1509.2849f, 584.8750f, (byte) 19, 0);
-			    sp(232850, 1321.9279f, 1531.0947f, 594.4299f, (byte) 102, 0);
-			    sp(232850, 1529.7832f, 1401.8977f, 597.5000f, (byte) 24, 0);
+				sp(232850, 1143.3275f, 1509.2849f, 584.8750f, (byte) 19, 0);
+				sp(232850, 1321.9279f, 1531.0947f, 594.4299f, (byte) 102, 0);
+				sp(232850, 1529.7832f, 1401.8977f, 597.5000f, (byte) 24, 0);
 				// 瓦尔加攻城突击兵。 / Varga Siege Assaulter.
-			    sp(232851, 1140.7899f, 1515.0626f, 584.8750f, (byte) 17, 0);
-			    sp(232851, 1321.6233f, 1524.8984f, 594.4299f, (byte) 102, 0);
-			    sp(232851, 1517.1721f, 1452.5256f, 596.6250f, (byte) 73, 0);
+				sp(232851, 1140.7899f, 1515.0626f, 584.8750f, (byte) 17, 0);
+				sp(232851, 1321.6233f, 1524.8984f, 594.4299f, (byte) 102, 0);
+				sp(232851, 1517.1721f, 1452.5256f, 596.6250f, (byte) 73, 0);
 				// 瓦尔加袭击者队长。 / Varga Raider Captain.
-			    sp(232852, 1392.9757f, 1302.1552f, 594.4855f, (byte) 72, 0);
-			    sp(232852, 1570.4008f, 1392.6764f, 597.0357f, (byte) 48, 0);
-			    sp(232852, 1327.0779f, 1240.8492f, 594.3967f, (byte) 119, 0);
-			    sp(232852, 1251.1787f, 1434.8181f, 603.8999f, (byte) 100, 0);
-			    sp(232852, 1552.2457f, 1469.2051f, 596.8368f, (byte) 90, 0);
-			    sp(232852, 1283.5894f, 1640.3702f, 584.8750f, (byte) 61, 0);
-			    sp(232852, 1333.4872f, 1549.9369f, 595.3750f, (byte) 84, 0);
+				sp(232852, 1392.9757f, 1302.1552f, 594.4855f, (byte) 72, 0);
+				sp(232852, 1570.4008f, 1392.6764f, 597.0357f, (byte) 48, 0);
+				sp(232852, 1327.0779f, 1240.8492f, 594.3967f, (byte) 119, 0);
+				sp(232852, 1251.1787f, 1434.8181f, 603.8999f, (byte) 100, 0);
+				sp(232852, 1552.2457f, 1469.2051f, 596.8368f, (byte) 90, 0);
+				sp(232852, 1283.5894f, 1640.3702f, 584.8750f, (byte) 61, 0);
+				sp(232852, 1333.4872f, 1549.9369f, 595.3750f, (byte) 84, 0);
 				// 瓦尔加袭击者伏击兵。 / Varga Raider Ambusher.
-			    sp(233260, 1346.9354f, 1321.8308f, 596.4888f, (byte) 94, 0);
-			    sp(233260, 1312.3492f, 1541.2653f, 594.4299f, (byte) 101, 0);
-			    sp(233260, 1256.0000f, 1639.0000f, 584.8750f, (byte) 100, 0);
-			    sp(233260, 1400.1780f, 1418.8113f, 600.3041f, (byte) 45, 0);
+				sp(233260, 1346.9354f, 1321.8308f, 596.4888f, (byte) 94, 0);
+				sp(233260, 1312.3492f, 1541.2653f, 594.4299f, (byte) 101, 0);
+				sp(233260, 1256.0000f, 1639.0000f, 584.8750f, (byte) 100, 0);
+				sp(233260, 1400.1780f, 1418.8113f, 600.3041f, (byte) 45, 0);
 				// 瓦尔加攻城伏击兵。 / Varga Siege Ambusher.
-			    sp(233261, 1357.4308f, 1434.3282f, 598.8750f, (byte) 81, 0);
-			    sp(233261, 1376.6877f, 1534.1947f, 595.3750f, (byte) 6, 0);
+				sp(233261, 1357.4308f, 1434.3282f, 598.8750f, (byte) 81, 0);
+				sp(233261, 1376.6877f, 1534.1947f, 595.3750f, (byte) 6, 0);
 				// 贝里特拉铁栅。 / Beritra Iron Fence.
 				sp(801771, 1342.2397f, 1316.3031f, 596.4888f, (byte) 95, 0);
 				sp(801771, 1493.4126f, 1446.4717f, 596.6250f, (byte) 113, 0);
@@ -301,68 +320,71 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(801771, 1231.4780f, 1609.9248f, 585.0265f, (byte) 100, 0);
 				sp(801771, 1279.5404f, 1654.7169f, 585.0931f, (byte) 68, 0);
 				sp(801771, 1393.1170f, 1428.1901f, 599.3814f, (byte) 42, 0);
-                switch (Rnd.get(1, 3)) {
-                    case 1:
-                        sp(233321, 1453.465f, 1347.8022f, 606.12854f, (byte) 42, 0); //General Varga.
+				switch (Rnd.get(1, 3)) {
+					case 1:
+						sp(233321, 1453.465f, 1347.8022f, 606.12854f, (byte) 42, 0); //General Varga.
 						sp(801956, 1453.465f, 1347.8022f, 606.12854f, (byte) 42, 0); //General Varga Flag.
 						sp(233324, 1437.8099f, 1368.8099f, 600.8967f, (byte) 41, 0); //Varga Assault Commander.
-                    break;
-                    case 2:
-                        sp(233322, 1432.4172f, 1620.6938f, 599.9493f, (byte) 73, 0); //General Varga.
+						break;
+					case 2:
+						sp(233322, 1432.4172f, 1620.6938f, 599.9493f, (byte) 73, 0); //General Varga.
 						sp(801956, 1432.4172f, 1620.6938f, 599.9493f, (byte) 73, 0); //General Varga Flag.
 						sp(233325, 1418.108f, 1610.5255f, 599.9493f, (byte) 71, 0); //Varga Assault Commander.
-                    break;
-                    case 3:
-                        sp(233323, 1181.3792f, 1428.9828f, 586.5563f, (byte) 40, 0); //General Varga.
+						break;
+					case 3:
+						sp(233323, 1181.3792f, 1428.9828f, 586.5563f, (byte) 40, 0); //General Varga.
 						sp(801956, 1181.3792f, 1428.9828f, 586.5563f, (byte) 40, 0); //General Varga Flag.
 						sp(233326, 1169.3397f, 1459.3201f, 586.5563f, (byte) 42, 0); //Varga Assault Commander.
-                    break;
-                }
-            }
-        }, 900000));
-        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!kamarBattlefieldReward.isRewarded()) {
+						break;
+				}
+			}
+		}, 900000));
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!kamarBattlefieldReward.isRewarded()) {
 					Race winnerRace = kamarBattlefieldReward.getWinnerRaceByScore();
 					stopInstance(winnerRace);
 				}
-            }
-        }, 1800000));
-    }
-    /**
-     * 停止副本并结算。
-     * Stop the instance and settle.
-     * @param race 阵营 / race
-     */
+			}
+		}, 1800000));
+	}
 
-    protected void stopInstance(Race race) {
-        stopInstanceTask();
-        kamarBattlefieldReward.setWinnerRace(race);
-        kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
-        reward();
-        kamarBattlefieldReward.sendPacket(5, null);
-    }
+	/**
+	 * 停止副本并结算。
+	 * Stop the instance and settle.
+	 *
+	 * @param race 阵营 / race
+	 */
 
-    /**
-     * 玩家进入副本时处理。
-     * Handle a player entering the instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onEnterInstance(final Player player) {
-        if (!containPlayer(player.getObjectId())) {
-            kamarBattlefieldReward.regPlayerReward(player);
-        }
-        sendEnterPacket(player);
-    }
+	protected void stopInstance(Race race) {
+		stopInstanceTask();
+		kamarBattlefieldReward.setWinnerRace(race);
+		kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.END_PROGRESS);
+		reward();
+		kamarBattlefieldReward.sendPacket(5, null);
+	}
 
-    private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<>() {
+	/**
+	 * 玩家进入副本时处理。
+	 * Handle a player entering the instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onEnterInstance(final Player player) {
+		if (!containPlayer(player.getObjectId())) {
+			kamarBattlefieldReward.regPlayerReward(player);
+		}
+		sendEnterPacket(player);
+	}
+
+	private void sendEnterPacket(final Player player) {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -382,13 +404,13 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				}
 			}
 		});
-    	sendPacket(true);
-    	sendPacket(false);
-        PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
-    }
+		sendPacket(true);
+		sendPacket(false);
+		PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, getTime(), getInstanceReward(), player.getObjectId(), 20, 0));
+	}
 
-    private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<>() {
+	private void startInstancePacket() {
+		instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.
@@ -402,11 +424,11 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, getTime(), getInstanceReward(), player.getObjectId()));
 			}
 		});
-    }
+	}
 
-    private void sendPacket(boolean isObjects) {
-    	if (isObjects) {
-    		instance.doOnAllPlayers(new Visitor<>() {
+	private void sendPacket(boolean isObjects) {
+		if (isObjects) {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -417,8 +439,8 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(6, getTime(), kamarBattlefieldReward, instance.getPlayersInside(), true));
 				}
 			});
-    	} else {
-    		instance.doOnAllPlayers(new Visitor<>() {
+		} else {
+			instance.doOnAllPlayers(new Visitor<>() {
 				/**
 				 * 处理 visit。
 				 * Handle visit.
@@ -429,57 +451,59 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 					PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), kamarBattlefieldReward, instance.getPlayersInside(), true));
 				}
 			});
-    	}
-    }
+		}
+	}
 
-    /**
-     * 副本创建时初始化逻辑。
-     * Initialize logic when the instance is created.
-     * @param instance 世界地图实例 / world-map instance
-     */
-    @Override
-    public void onInstanceCreate(WorldMapInstance instance) {
-        super.onInstanceCreate(instance);
-        kamarBattlefieldReward = new KamarBattlefieldReward(mapId, instanceId, instance);
-        kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.PREPARING);
-        doors = instance.getDoors();
-        startInstanceTask();
+	/**
+	 * 副本创建时初始化逻辑。
+	 * Initialize logic when the instance is created.
+	 *
+	 * @param instance 世界地图实例 / world-map instance
+	 */
+	@Override
+	public void onInstanceCreate(WorldMapInstance instance) {
+		super.onInstanceCreate(instance);
+		kamarBattlefieldReward = new KamarBattlefieldReward(mapId, instanceId, instance);
+		kamarBattlefieldReward.setInstanceScoreType(InstanceScoreType.PREPARING);
+		doors = instance.getDoors();
+		startInstanceTask();
 		switch (Rnd.get(1, 7)) {
 			case 1:
 				spawn(801903, 1184.5172f, 1408.1493f, 586.6199f, (byte) 5);
-			break;
+				break;
 			case 2:
 				spawn(801903, 1539.1635f, 1404.6685f, 596.6355f, (byte) 41);
-			break;
+				break;
 			case 3:
 				spawn(801903, 1138.9729f, 1619.5848f, 598.43506f, (byte) 53);
-			break;
+				break;
 			case 4:
 				spawn(801903, 1270.4344f, 1455.3026f, 595.29205f, (byte) 21);
-			break;
+				break;
 			case 5:
 				spawn(801903, 1347.4727f, 1717.1498f, 598.43396f, (byte) 21);
-			break;
+				break;
 			case 6:
 				spawn(801903, 1393.9829f, 1358.7335f, 598.6061f, (byte) 117);
-			break;
+				break;
 			case 7:
 				spawn(801903, 1324.5284f, 1554.0479f, 595.5f, (byte) 95);
-			break;
+				break;
 		}
-    }
-    /**
-     * 处理 reward。
-     * Handle reward.
-     */
+	}
 
-    protected void reward() {
-        int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
-        int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
-        int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
-        int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
-        for (Player player : instance.getPlayersInside()) {
-            if (PlayerActions.isAlreadyDead(player)) {
+	/**
+	 * 处理 reward。
+	 * Handle reward.
+	 */
+
+	protected void reward() {
+		int ElyosPvPKills = getPvpKillsByRace(Race.ELYOS).intValue();
+		int ElyosPoints = getPointsByRace(Race.ELYOS).intValue();
+		int AsmoPvPKills = getPvpKillsByRace(Race.ASMODIANS).intValue();
+		int AsmoPoints = getPointsByRace(Race.ASMODIANS).intValue();
+		for (Player player : instance.getPlayersInside()) {
+			if (PlayerActions.isAlreadyDead(player)) {
 				PlayerReviveService.duelRevive(player);
 			}
 			KamarBattlefieldPlayerReward playerReward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
@@ -487,42 +511,43 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			int gloryPoint = 150;
 			int expPoint = 10000;
 			playerReward.setRewardAp(abyssPoint);
-            playerReward.setRewardGp(gloryPoint);
+			playerReward.setRewardGp(gloryPoint);
 			playerReward.setRewardExp(expPoint);
 			if (player.getRace().equals(kamarBattlefieldReward.getWinnerRace())) {
-                abyssPoint += kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace()));
-                gloryPoint += kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace()));
+				abyssPoint += kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace()));
+				gloryPoint += kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace()));
 				expPoint += kamarBattlefieldReward.ExpReward(true, isVargaKilled(player.getRace()));
-                playerReward.setBonusAp(kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace())));
-                playerReward.setBonusGp(kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace())));
+				playerReward.setBonusAp(kamarBattlefieldReward.AbyssReward(true, isVargaKilled(player.getRace())));
+				playerReward.setBonusGp(kamarBattlefieldReward.GloryReward(true, isVargaKilled(player.getRace())));
 				playerReward.setBonusExp(kamarBattlefieldReward.ExpReward(true, isVargaKilled(player.getRace())));
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
 				playerReward.setKamarRewardBox(188052660);
 			} else {
-                abyssPoint += kamarBattlefieldReward.AbyssReward(false, isVargaKilled(player.getRace()));
-                gloryPoint += kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace()));
+				abyssPoint += kamarBattlefieldReward.AbyssReward(false, isVargaKilled(player.getRace()));
+				gloryPoint += kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace()));
 				expPoint += kamarBattlefieldReward.ExpReward(false, isVargaKilled(player.getRace()));
 				playerReward.setRewardAp(kamarBattlefieldReward.AbyssReward(false, isVargaKilled(player.getRace())));
-                playerReward.setRewardGp(kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace())));
+				playerReward.setRewardGp(kamarBattlefieldReward.GloryReward(false, isVargaKilled(player.getRace())));
 				playerReward.setRewardExp(kamarBattlefieldReward.ExpReward(false, isVargaKilled(player.getRace())));
 				playerReward.setBrokenSpinel(188100391);
 				playerReward.setBonusReward(186000243);
-            } if (RaceKilledVarga == player.getRace()) {
-			    playerReward.setAdditionalReward(188052670);
+			}
+			if (RaceKilledVarga == player.getRace()) {
+				playerReward.setAdditionalReward(188052670);
 				ItemService.addItem(player, 188052670, 1);
 			}
 			ItemService.addItem(player, 188052660, 1);
-            ItemService.addItem(player, 188100391, 750); //5.5
+			ItemService.addItem(player, 188100391, 750); //5.5
 			ItemService.addItem(player, 186000243, 1);
-            AbyssPointsService.addAp(player, abyssPoint);
-            AbyssPointsService.addGp(player, gloryPoint);
-            player.getCommonData().addExp(expPoint, RewardType.HUNTING);
-        }
-        for (Npc npc : instance.getNpcs()) {
+			AbyssPointsService.addAp(player, abyssPoint);
+			AbyssPointsService.addGp(player, gloryPoint);
+			player.getCommonData().addExp(expPoint, RewardType.HUNTING);
+		}
+		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -537,147 +562,154 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				}
 			}
 		}, 60000);
-    }
+	}
 
-    private int getTime() {
-        long result = System.currentTimeMillis() - instanceTime;
-        if (result < 90000) {
-            return (int) (90000 - result);
-        } else if (result < 1800000) { //30-Mins
-            return (int) (1800000 - (result - 90000));
-        }
-        return 0;
-    }
+	private int getTime() {
+		long result = System.currentTimeMillis() - instanceTime;
+		if (result < 90000) {
+			return (int) (90000 - result);
+		} else if (result < 1800000) { //30-Mins
+			return (int) (1800000 - (result - 90000));
+		}
+		return 0;
+	}
 
-    /**
-     * 处理玩家复活事件。
-     * Handle a player revive event.
-     * @param player 玩家 / player
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onReviveEvent(Player player) {
-        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
-        PlayerReviveService.revive(player, 100, 100, false, 0);
-        player.getGameStats().updateStatsAndSpeedVisually();
-        kamarBattlefieldReward.portToPosition(player);
-        return true;
-    }
+	/**
+	 * 处理玩家复活事件。
+	 * Handle a player revive event.
+	 *
+	 * @param player 玩家 / player
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onReviveEvent(Player player) {
+		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
+		PlayerReviveService.revive(player, 100, 100, false, 0);
+		player.getGameStats().updateStatsAndSpeedVisually();
+		kamarBattlefieldReward.portToPosition(player);
+		return true;
+	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param player 玩家 / player
-     * @param lastAttacker 最后攻击者 / last attacker
-     * @return 结果 / result
-     */
-    @Override
-    public boolean onDie(Player player, Creature lastAttacker) {
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param player       玩家 / player
+	 * @param lastAttacker 最后攻击者 / last attacker
+	 * @return 结果 / result
+	 */
+	@Override
+	public boolean onDie(Player player, Creature lastAttacker) {
 		KamarBattlefieldPlayerReward ownerReward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
 		ownerReward.endBoostMoraleEffect(player);
 		ownerReward.applyBoostMoraleEffect(player);
-        int points = 60;
-        if (lastAttacker instanceof Player) {
-            if (lastAttacker.getRace() != player.getRace()) {
-                InstancePlayerReward playerReward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
+		int points = 60;
+		if (lastAttacker instanceof Player) {
+			if (lastAttacker.getRace() != player.getRace()) {
+				InstancePlayerReward playerReward = kamarBattlefieldReward.getPlayerReward(player.getObjectId());
 				if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
-                    points *= loosingGroupMultiplier;
-                } else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
-                    points = 0;
-                }
-                updateScore((Player) lastAttacker, player, points, true);
-            }
-        }
-        updateScore(player, player, -points, false);
-        return true;
-    }
+					points = (int) (points * loosingGroupMultiplier);
+				} else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
+					points = 0;
+				}
+				updateScore((Player) lastAttacker, player, points, true);
+			}
+		}
+		updateScore(player, player, -points, false);
+		return true;
+	}
 
 	private boolean isVargaKilled(Race PlayerRace) {
 		return PlayerRace == RaceKilledVarga;
 	}
 
 	private MutableInt getPvpKillsByRace(Race race) {
-        return kamarBattlefieldReward.getPvpKillsByRace(race);
-    }
+		return kamarBattlefieldReward.getPvpKillsByRace(race);
+	}
 
-    private MutableInt getPointsByRace(Race race) {
-        return kamarBattlefieldReward.getPointsByRace(race);
-    }
+	private MutableInt getPointsByRace(Race race) {
+		return kamarBattlefieldReward.getPointsByRace(race);
+	}
 
-    private void addPointsByRace(Race race, int points) {
-        kamarBattlefieldReward.addPointsByRace(race, points);
-    }
+	private void addPointsByRace(Race race, int points) {
+		kamarBattlefieldReward.addPointsByRace(race, points);
+	}
 
-    private void addPvpKillsByRace(Race race, int points) {
-        kamarBattlefieldReward.addPvpKillsByRace(race, points);
-    }
+	private void addPvpKillsByRace(Race race, int points) {
+		kamarBattlefieldReward.addPvpKillsByRace(race, points);
+	}
 
-    private void addPointToPlayer(Player player, int points) {
-        kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPoints(points);
-    }
+	private void addPointToPlayer(Player player, int points) {
+		kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPoints(points);
+	}
 
-    private void addPvPKillToPlayer(Player player) {
-        kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
-    }
-    /**
-     * 处理 updateScore。
-     * Handle updateScore.
-     * @param player 玩家 / player
-     * @param target 目标 / target
-     * @param points 分数 / points
-     * @param pvpKill PVP 击杀 / pvpKill
-     */
+	private void addPvPKillToPlayer(Player player) {
+		kamarBattlefieldReward.getPlayerReward(player.getObjectId()).addPvPKillToPlayer();
+	}
 
-    protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-        if (points == 0) {
-            return;
-        }
-        addPointsByRace(player.getRace(), points);
-        List<Player> playersToGainScore = new ArrayList<>();
-        if (target != null && player.isInGroup2()) {
-            for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
-                if (member.getLifeStats().isAlreadyDead()) {
-                    continue;
-                } if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
-                    playersToGainScore.add(member);
-                }
-            }
-        } else {
-            playersToGainScore.add(player);
-        }
-        for (Player playerToGainScore : playersToGainScore) {
-            addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
-            if (target instanceof Npc) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
-            } else if (target instanceof Player) {
-                PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
-            }
-        }
-        int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
-        if (pointDifference < 0) {
-            pointDifference *= -1;
-        } if (pointDifference >= 3000) {
-            loosingGroupMultiplier = 10;
-        } else if (pointDifference >= 1000) {
-            loosingGroupMultiplier = 1.5f;
-        } else {
-            loosingGroupMultiplier = 1;
-        } if (pvpKill && points > 0) {
-            addPvpKillsByRace(player.getRace(), 1);
-            addPvPKillToPlayer(player);
-        }
-        kamarBattlefieldReward.sendPacket(11, player.getObjectId());
-        if (kamarBattlefieldReward.hasCapPoints()) {
-            stopInstance(kamarBattlefieldReward.getWinnerRaceByScore());
-        }
-    }
+	/**
+	 * 处理 updateScore。
+	 * Handle updateScore.
+	 *
+	 * @param player  玩家 / player
+	 * @param target  目标 / target
+	 * @param points  分数 / points
+	 * @param pvpKill PVP 击杀 / pvpKill
+	 */
+
+	protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
+		if (points == 0) {
+			return;
+		}
+		addPointsByRace(player.getRace(), points);
+		List<Player> playersToGainScore = new ArrayList<>();
+		if (target != null && player.isInGroup2()) {
+			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
+				if (member.getLifeStats().isAlreadyDead()) {
+					continue;
+				}
+				if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
+					playersToGainScore.add(member);
+				}
+			}
+		} else {
+			playersToGainScore.add(player);
+		}
+		for (Player playerToGainScore : playersToGainScore) {
+			addPointToPlayer(playerToGainScore, points / playersToGainScore.size());
+			if (target instanceof Npc) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, new DescriptionId(((Npc) target).getObjectTemplate().getNameId() * 2 + 1), points));
+			} else if (target instanceof Player) {
+				PacketSendUtility.sendPacket(playerToGainScore, new SM_SYSTEM_MESSAGE(1400237, target.getName(), points));
+			}
+		}
+		int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
+		if (pointDifference < 0) {
+			pointDifference *= -1;
+		}
+		if (pointDifference >= 3000) {
+			loosingGroupMultiplier = 10;
+		} else if (pointDifference >= 1000) {
+			loosingGroupMultiplier = 1.5f;
+		} else {
+			loosingGroupMultiplier = 1;
+		}
+		if (pvpKill && points > 0) {
+			addPvpKillsByRace(player.getRace(), 1);
+			addPvPKillToPlayer(player);
+		}
+		kamarBattlefieldReward.sendPacket(11, player.getObjectId());
+		if (kamarBattlefieldReward.hasCapPoints()) {
+			stopInstance(kamarBattlefieldReward.getWinnerRaceByScore());
+		}
+	}
 
 	@Override
 	public boolean supportsRetailNpcScore(int npcId) {
-        return switch (npcId) {
-            case 232855, 232856, 730878, 730879, 730880, 801766, 801767, 801818, 801819, 801820, 801821, 801903 -> true;
-            default -> false;
-        };
+		return switch (npcId) {
+			case 232855, 232856, 730878, 730879, 730880, 801766, 801767, 801818, 801819, 801820, 801821, 801903 -> true;
+			default -> false;
+		};
 	}
 
 	@Override
@@ -689,20 +721,21 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 		return true;
 	}
 
-    /**
-     * 处理死亡事件。
-     * Handle a death event.
-     * @param npc NPC / npc
-     */
-    @Override
+	/**
+	 * 处理死亡事件。
+	 * Handle a death event.
+	 *
+	 * @param npc NPC / npc
+	 */
+	@Override
 	public void onDie(Npc npc) {
-        int point = 0;
+		int point = 0;
 		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
-        if (mostPlayerDamage == null) {
-            return;
-        }
+		if (mostPlayerDamage == null) {
+			return;
+		}
 		Race race = mostPlayerDamage.getRace();
-        switch (npc.getNpcId()) {
+		switch (npc.getNpcId()) {
 			case 232841: //Varga Raider Combatant.
 			case 232842: //Varga Raider Rampager.
 			case 232843: //Varga Raider Gunner.
@@ -711,60 +744,60 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			case 232846: //Varga Raider Trooper.
 			case 233260: //Varga Raider Ambusher.
 			case 233261: //Varga Siege Ambusher.
-			    point = 50;
+				point = 50;
 				despawnNpc(npc);
-            break;
+				break;
 			case 801771: //Beritra Iron Fence.
-                point = 75;
+				point = 75;
 				despawnNpc(npc);
-            break;
+				break;
 			case 232847: //Varga Siege Combatant.
-            case 232848: //Varga Siege Rampager.
-            case 232849: //Varga Siege Gunner.
-            case 232850: //Varga Siege Drummer.
-            case 232851: //Varga Siege Assaulter.
-                point = 140;
+			case 232848: //Varga Siege Rampager.
+			case 232849: //Varga Siege Gunner.
+			case 232850: //Varga Siege Drummer.
+			case 232851: //Varga Siege Assaulter.
+				point = 140;
 				despawnNpc(npc);
-            break;
+				break;
 			case 701909: // 天族陷阱型加农炮 / Elyos Cannon.
-                point = 225;
+				point = 225;
 				despawnNpc(npc);
-            break;
+				break;
 			case 701910: // 魔族陷阱型加农炮 / Asmodian Cannon.
-                point = 225;
+				point = 225;
 				despawnNpc(npc);
-            break;
+				break;
 			case 232859: //Hushblade Legion Soldier.
-            case 232860: //Fatebound Legion Soldier.
-                point = 500;
+			case 232860: //Fatebound Legion Soldier.
+				point = 500;
 				despawnNpc(npc);
-            break;
+				break;
 			case 232852: //Varga Raider Captain.
-            case 232855: //Hushblade Legion Centurion.
+			case 232855: //Hushblade Legion Centurion.
 			case 232856: //Fatebound Legion Centurion.
-                point = 1250;
+				point = 1250;
 				despawnNpc(npc);
-            break;
-            case 233324: //Varga Assault Commander [Starting Point 1]
+				break;
+			case 233324: //Varga Assault Commander [Starting Point 1]
 			case 233325: //Varga Assault Commander [Starting Point 2]
 			case 233326: //Varga Assault Commander [Starting Point 3]
-                point = 2100;
+				point = 2100;
 				despawnNpc(npc);
-            break;
+				break;
 			case 233321: //General Varga [Starting Point 1]
 			case 233322: //General Varga [Starting Point 2]
 			case 233323: //General Varga [Starting Point 3]
-                point = 3500;
+				point = 3500;
 				despawnNpc(npc);
-                // 瓦尔加指挥官已死亡。 / Commander Varga has died.
-                sendMsgByRace(1401846, Race.PC_ALL, 0);
+				// 瓦尔加指挥官已死亡。 / Commander Varga has died.
+				sendMsgByRace(1401846, Race.PC_ALL, 0);
 				RaceKilledVarga = mostPlayerDamage.getRace();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				    /**
-				     * 处理 run。
-				     * Handle run.
-				     */
-				    @Override
+					/**
+					 * 处理 run。
+					 * Handle run.
+					 */
+					@Override
 					public void run() {
 						if (!kamarBattlefieldReward.isRewarded()) {
 							Race winnerRace = kamarBattlefieldReward.getWinnerRaceByScore();
@@ -772,47 +805,48 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 						}
 					}
 				}, 30000);
-            break;
-            case 233327: //Acting Commander Cripsin [Starting Point 1]
+				break;
+			case 233327: //Acting Commander Cripsin [Starting Point 1]
 			case 233329: //Acting Commander Cripsin [Starting Point 2]
 				point = 4500;
 				despawnNpc(npc);
 				// 代理指挥官克里斯平已死亡。 / Acting Commander Crispin has died.
 				sendMsgByRace(1401849, Race.PC_ALL, 0);
-            break;
-            case 233328: //Acting Commander Tepes [Starting Point 1]
+				break;
+			case 233328: //Acting Commander Tepes [Starting Point 1]
 			case 233330: //Acting Commander Tepes [Starting Point 2]
-			    point = 4500;
-                despawnNpc(npc);
+				point = 4500;
+				despawnNpc(npc);
 				// 代理指挥官特佩斯已死亡。 / Acting Commander Tepes has died.
 				sendMsgByRace(1401851, Race.PC_ALL, 0);
-            break;
-        }
-        updateScore(mostPlayerDamage, npc, point, false);
-    }
+				break;
+		}
+		updateScore(mostPlayerDamage, npc, point, false);
+	}
 
-    /**
-     * 玩家对 NPC 使用物品完成时处理。
-     * Handle item-use finish on an NPC.
-     * @param player 玩家 / player
-     * @param npc NPC / npc
-     */
-    @Override
-    public void handleUseItemFinish(Player player, Npc npc) {
-        int point = 0;
+	/**
+	 * 玩家对 NPC 使用物品完成时处理。
+	 * Handle item-use finish on an NPC.
+	 *
+	 * @param player 玩家 / player
+	 * @param npc    NPC / npc
+	 */
+	@Override
+	public void handleUseItemFinish(Player player, Npc npc) {
+		int point = 0;
 		switch (npc.getNpcId()) {
 			case 801773: //Fuel Barrel.
-			    point = 75;
+				point = 75;
 				if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
 				}
 				ItemService.addItem(player, 164000262, 1); //Siege's Power.
-            break;
+				break;
 			case 730878: //Reian Guardian Statue.
-            case 730879: //Reian Guardian Statue.
-            case 730880: //Reian Guardian Statue.
-                point = 200;
-            break;
+			case 730879: //Reian Guardian Statue.
+			case 730880: //Reian Guardian Statue.
+				point = 200;
+				break;
 			case 801766: // 鸢族俘虏 / Reian Prisoner.
 			case 801767: // 鸢族俘虏 / Reian Prisoner.
 			case 801768: // 鸢族俘虏 / Reian Prisoner.
@@ -820,71 +854,73 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			case 801819: // 鸢族俘虏 / Reian Prisoner.
 			case 801820: // 鸢族俘虏 / Reian Prisoner.
 			case 801821: // 鸢族俘虏 / Reian Prisoner.
-                point = 225;
-            break;
+				point = 225;
+				break;
 			case 801903: // 加尔南 / Garnon.
-                point = 1500;
-            break;
+				point = 1500;
+				break;
 			case 701906: //Reian Supply Items.
-            case 701907: //Reian Supply Items.
-            case 701908: //Reian Supply Items.
-                point = 525;
+			case 701907: //Reian Supply Items.
+			case 701908: //Reian Supply Items.
+				point = 525;
 				if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
-				} switch (Rnd.get(1, 4)) {
-				    case 1:
-				        ItemService.addItem(player, 164000261, 1); //Handmade Explosive.
-					break;
-					case 2:
-				        ItemService.addItem(player, 162000133, 5); //Kamar Herbal Remedy.
-					break;
-					case 3:
-				        ItemService.addItem(player, 186000258, 1); //Kamar Siege Cannonball.
-					break;
-					case 4:
-				        ItemService.addItem(player, 164000262, 1); //Siege's Power.
-					break;
 				}
-            break;
+				switch (Rnd.get(1, 4)) {
+					case 1:
+						ItemService.addItem(player, 164000261, 1); //Handmade Explosive.
+						break;
+					case 2:
+						ItemService.addItem(player, 162000133, 5); //Kamar Herbal Remedy.
+						break;
+					case 3:
+						ItemService.addItem(player, 186000258, 1); //Kamar Siege Cannonball.
+						break;
+					case 4:
+						ItemService.addItem(player, 164000262, 1); //Siege's Power.
+						break;
+				}
+				break;
 			case 801777: //Rack.
 				despawnNpc(npc);
 				if (player.getInventory().isFull()) {
 					sendMsgByRace(1390149, Race.PC_ALL, 0);
-				} switch (Rnd.get(1, 3)) {
-				    case 1:
-				        ItemService.addItem(player, 162000135, 5); //Kamar Concoction.
-					break;
-					case 2:
-				        ItemService.addItem(player, 162000133, 5); //Kamar Herbal Remedy.
-					break;
-					case 3:
-				        ItemService.addItem(player, 162000134, 5); //The Kamar Special.
-					break;
 				}
-            break;
+				switch (Rnd.get(1, 3)) {
+					case 1:
+						ItemService.addItem(player, 162000135, 5); //Kamar Concoction.
+						break;
+					case 2:
+						ItemService.addItem(player, 162000133, 5); //Kamar Herbal Remedy.
+						break;
+					case 3:
+						ItemService.addItem(player, 162000134, 5); //The Kamar Special.
+						break;
+				}
+				break;
 			case 801778: //Wine Glass.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				player.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 10000);
 				player.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 10000);
-			break;
+				break;
 			case 701909: //Kamar Tank Elyos.
 			case 701912: //Kamar Tank Elyos.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
-			break;
+				break;
 			case 701910: //Kamar Tank Asmodians.
 			case 701911: //Kamar Tank Asmodians.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
-			break;
+				break;
 			case 701806: //Kamar Cannon.
-            case 701902: //Kamar Cannon.
-                despawnNpc(npc);
+			case 701902: //Kamar Cannon.
+				despawnNpc(npc);
 				GameEngineServices.skillEngine().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
-            break;
-        }
-        updateScore(player, npc, point, false);
-    }
+				break;
+		}
+		updateScore(player, npc, point, false);
+	}
 
 	private void removeEffects(Player player) {
 		PlayerEffectController effectController = player.getEffectController();
@@ -896,6 +932,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -910,6 +947,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -923,199 +961,215 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 		}
 	}
 
-    /**
-     * 副本销毁时清理资源。
-     * Clean up resources when the instance is destroyed.
-     */
-    @Override
-    public void onInstanceDestroy() {
-        kamarBattlefieldReward.clear();
-        isInstanceDestroyed = true;
-        stopInstanceTask();
-        doors.clear();
-    }
-    /**
-     * 处理 openFirstDoors。
-     * Handle openFirstDoors.
-     */
+	/**
+	 * 副本销毁时清理资源。
+	 * Clean up resources when the instance is destroyed.
+	 */
+	@Override
+	public void onInstanceDestroy() {
+		kamarBattlefieldReward.clear();
+		isInstanceDestroyed = true;
+		stopInstanceTask();
+		doors.clear();
+	}
 
-    protected void openFirstDoors() {
-        openDoor(4);
+	/**
+	 * 处理 openFirstDoors。
+	 * Handle openFirstDoors.
+	 */
+
+	protected void openFirstDoors() {
+		openDoor(4);
 		openDoor(5);
-        openDoor(8);
-        openDoor(10);
-        openDoor(11);
+		openDoor(8);
+		openDoor(10);
+		openDoor(11);
 		openDoor(144);
-    }
-    /**
-     * 打开指定门。
-     * Open the given door.
-     * @param doorId 门 ID / doorId
-     */
+	}
 
-    protected void openDoor(int doorId) {
-        StaticDoor door = doors.get(doorId);
-        if (door != null) {
-            door.setOpen(true);
-        }
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     */
+	/**
+	 * 打开指定门。
+	 * Open the given door.
+	 *
+	 * @param doorId 门 ID / doorId
+	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     */
+	protected void openDoor(int doorId) {
+		StaticDoor door = doors.get(doorId);
+		if (door != null) {
+			door.setOpen(true);
+		}
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param entityId 实体 ID / entity id
-     * @param time 时间 / time
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     */
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId NPC / NPC
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  时间 / time
+	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    spawn(npcId, x, y, z, h, entityId);
-                    if (msg > 0) {
-                        sendMsgByRace(msg, race, 0);
-                    }
-                }
-            }
-        }, time));
-    }
-    /**
-     * 处理 sp。
-     * Handle sp.
-     * @param npcId NPC / NPC
-     * @param x X 坐标 / X
-     * @param y Y 坐标 / Y
-     * @param z Z 坐标 / Z
-     * @param h 朝向 / h
-     * @param time 时间 / time
-     * @param walkerId 寻路器 ID / walkerId
-     */
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
+		sp(npcId, x, y, z, h, 0, time, 0, null);
+	}
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                if (!isInstanceDestroyed) {
-                    Npc npc = (Npc) spawn(npcId, x, y, z, h);
-                    npc.getSpawn().setWalkerId(walkerId);
-                    WalkManager.startWalking((NpcAI2) npc.getAi2());
-                }
-            }
-        }, time));
-    }
-    /**
-     * 处理 sendMsgByRace。
-     * Handle sendMsgByRace.
-     * @param msg 消息 / message
-     * @param race 阵营 / race
-     * @param time 时间 / time
-     */
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId NPC / NPC
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  时间 / time
+	 * @param msg   消息 / message
+	 * @param race  阵营 / race
+	 */
 
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-            /**
-             * 处理 run。
-             * Handle run.
-             */
-            @Override
-            public void run() {
-                instance.doOnAllPlayers(new Visitor<>() {
-                    /**
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
+		sp(npcId, x, y, z, h, 0, time, msg, race);
+	}
+
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId    NPC / NPC
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param entityId 实体 ID / entity id
+	 * @param time     时间 / time
+	 * @param msg      消息 / message
+	 * @param race     阵营 / race
+	 */
+
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					spawn(npcId, x, y, z, h, entityId);
+					if (msg > 0) {
+						sendMsgByRace(msg, race, 0);
+					}
+				}
+			}
+		}, time));
+	}
+
+	/**
+	 * 处理 sp。
+	 * Handle sp.
+	 *
+	 * @param npcId    NPC / NPC
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param time     时间 / time
+	 * @param walkerId 寻路器 ID / walkerId
+	 */
+
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				if (!isInstanceDestroyed) {
+					Npc npc = (Npc) spawn(npcId, x, y, z, h);
+					npc.getSpawn().setWalkerId(walkerId);
+					WalkManager.startWalking((NpcAI2) npc.getAi2());
+				}
+			}
+		}, time));
+	}
+
+	/**
+	 * 处理 sendMsgByRace。
+	 * Handle sendMsgByRace.
+	 *
+	 * @param msg  消息 / message
+	 * @param race 阵营 / race
+	 * @param time 时间 / time
+	 */
+
+	protected void sendMsgByRace(final int msg, final Race race, int time) {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			/**
+			 * 处理 run。
+			 * Handle run.
+			 */
+			@Override
+			public void run() {
+				instance.doOnAllPlayers(new Visitor<>() {
+					/**
 					 * 处理 visit。
 					 * Handle visit.
 					 * @param player 玩家 / player
 					 */
-                    @Override
-                    public void visit(Player player) {
-                        if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                            PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                        }
-                    }
-                });
-            }
-        }, time));
-    }
+					@Override
+					public void visit(Player player) {
+						if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+						}
+					}
+				});
+			}
+		}, time));
+	}
 
-    private void stopInstanceTask() {
-        for (Future<?> task : kamarTask) {
+	private void stopInstanceTask() {
+		for (Future<?> task : kamarTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
-    /**
-     * 返回本副本奖励对象。
-     * Return this instance's reward object.
-     * @return 结果 / result
-     */
-    @Override
-    public InstanceReward<?> getInstanceReward() {
-        return kamarBattlefieldReward;
-    }
+	/**
+	 * 返回本副本奖励对象。
+	 * Return this instance's reward object.
+	 *
+	 * @return 结果 / result
+	 */
+	@Override
+	public InstanceReward<?> getInstanceReward() {
+		return kamarBattlefieldReward;
+	}
 
-    /**
-     * 玩家请求退出副本时处理。
-     * Handle a player exit request.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
+	/**
+	 * 玩家请求退出副本时处理。
+	 * Handle a player exit request.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onExitInstance(Player player) {
+		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+	}
 
-    /**
-     * 玩家登录到该副本时处理。
-     * Handle a player logging into this instance.
-     * @param player 玩家 / player
-     */
-    @Override
-    public void onPlayerLogin(Player player) {
-        kamarBattlefieldReward.sendPacket(10, player.getObjectId());
-    }
+	/**
+	 * 玩家登录到该副本时处理。
+	 * Handle a player logging into this instance.
+	 *
+	 * @param player 玩家 / player
+	 */
+	@Override
+	public void onPlayerLogin(Player player) {
+		kamarBattlefieldReward.sendPacket(10, player.getObjectId());
+	}
 }

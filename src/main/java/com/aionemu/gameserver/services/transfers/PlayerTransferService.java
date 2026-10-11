@@ -35,6 +35,7 @@ import java.util.Map;
  * 玩家跨服转移服务，协调源服校验、角色数据下发、目标服克隆以及成功/失败回执。
  * Player cross-server transfer service coordinating source validation, character payload delivery,
  * target-side cloning and success/error callbacks.
+ *
  * @author KID
  */
 @Slf4j
@@ -55,9 +56,10 @@ public class PlayerTransferService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static PlayerTransferService getInstance() {
 		ObjectProvider<PlayerTransferService> provider = instanceProvider;
@@ -73,15 +75,20 @@ public class PlayerTransferService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Inject the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / Instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerTransferService> instanceProvider) {
 		PlayerTransferService.instanceProvider = instanceProvider;
 	}
 
-	/** 玩家 DAO / Player DAO */
+	/**
+	 * 玩家 DAO / Player DAO
+	 */
 	private final PlayerDAO dao;
-	/** 军团成员 DAO / Legion member DAO */
+	/**
+	 * 军团成员 DAO / Legion member DAO
+	 */
 	private final LegionMemberDAO legionMemberDAO;
 	private final Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private volatile List<Integer> rsList = List.of();
@@ -90,7 +97,7 @@ public class PlayerTransferService {
 	 * 使用指定 DAO 依赖构造玩家跨服转移服务。
 	 * Constructs the player transfer service with given DAO dependencies.
 	 *
-	 * @param playerDAO 玩家 DAO / Player DAO
+	 * @param playerDAO       玩家 DAO / Player DAO
 	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
 	 */
 	public PlayerTransferService(@NonNull PlayerDAO playerDAO, @NonNull LegionMemberDAO legionMemberDAO) {
@@ -105,11 +112,11 @@ public class PlayerTransferService {
 	 */
 	public PlayerTransferService() {
 		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
+			safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -134,23 +141,23 @@ public class PlayerTransferService {
 		log.info(I18n.get("log.195bf15115b2", rsList.size()));
 	}
 
-	private final String ptsnameitem = "ptsnameitem";
 
 	/**
 	 * 玩家进入世界时处理转移后缀名与改名道具发放。
 	 * Handle transfer name-suffix messaging and rename-item grant when a player enters the world.
+	 *
 	 * @param player 进入世界的玩家 / Player entering the world
 	 */
 	public void onEnterWorld(Player player) {
 		if (player.getName().endsWith(PlayerTransferConfig.NAME_PREFIX)) {
 			PacketSendUtility.sendMessage(player, "You can add your oldnickname-friend to your friendlist!");
-			if (!player.hasVar(ptsnameitem)) {
+			if (!player.hasVar("ptsnameitem")) {
 				long count = ItemService.addItem(player, 169670001, 1);
 				if (count == 1) {
 					PacketSendUtility.sendMessage(player,
-							"Please empty your inventory and relogin again. After that you'll be able to receive item that allows you to change your name.");
+						"Please empty your inventory and relogin again. After that you'll be able to receive item that allows you to change your name.");
 				} else {
-					player.setVar(ptsnameitem, 1, true);
+					player.setVar("ptsnameitem", 1, true);
 				}
 			}
 		}
@@ -160,11 +167,12 @@ public class PlayerTransferService {
 	 * 在源服发起角色转移：校验账户归属、军团、在线状态、冷却与资产限制后打包角色数据。
 	 * Start transfer on the source server: validate account ownership, legion, online state, cooldown and asset
 	 * limits, then package character data.
-	 * @param accountId 源账号 ID / Source account ID
+	 *
+	 * @param accountId       源账号 ID / Source account ID
 	 * @param targetAccountId 目标账号 ID / Target account ID
-	 * @param playerId 角色 ID / Character ID
-	 * @param targetServerId 目标服务器 ID / Target server ID
-	 * @param taskId 任务 ID / Task ID
+	 * @param playerId        角色 ID / Character ID
+	 * @param targetServerId  目标服务器 ID / Target server ID
+	 * @param taskId          任务 ID / Task ID
 	 */
 	public void startTransfer(int accountId, int targetAccountId, int playerId, byte targetServerId, int taskId) {
 		boolean exist = false;
@@ -177,14 +185,14 @@ public class PlayerTransferService {
 		if (!exist) {
 			log.warn(I18n.get("log.526992334997", taskId, playerId, accountId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"player " + playerId + " is not present on account " + accountId));
+				"player " + playerId + " is not present on account " + accountId));
 			return;
 		}
 
 		if (legionMemberDAO.isIdUsed(playerId)) {
 			log.warn(I18n.get("log.1cf8692ae407", taskId, playerId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"cannot transfer player with existing legion " + playerId));
+				"cannot transfer player with existing legion " + playerId));
 			return;
 		}
 
@@ -192,15 +200,15 @@ public class PlayerTransferService {
 		if (common.isOnline()) {
 			log.warn(I18n.get("log.9e938080f552", taskId, playerId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"cannot transfer online players " + playerId));
+				"cannot transfer online players " + playerId));
 			return;
 		}
 
 		if (PlayerTransferConfig.REUSE_HOURS > 0 && common.getLastTransferTime()
-				+ PlayerTransferConfig.REUSE_HOURS * 3600000L > System.currentTimeMillis()) {
+			+ PlayerTransferConfig.REUSE_HOURS * 3600000L > System.currentTimeMillis()) {
 			log.warn(I18n.get("log.9a7c79463061", taskId, playerId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"cannot transfer that player so often " + playerId));
+				"cannot transfer that player so often " + playerId));
 			return;
 		}
 
@@ -209,14 +217,14 @@ public class PlayerTransferService {
 		if (PlayerTransferConfig.MAX_KINAH > 0 && kinah >= PlayerTransferConfig.MAX_KINAH) {
 			log.warn(I18n.get("log.e461e83eac61", taskId, kinah));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"cannot transfer players with " + kinah + " kinah in inventory/wh."));
+				"cannot transfer players with " + kinah + " kinah in inventory/wh."));
 			return;
 		}
 
 		if (GameRuntimeServices.brokerService().hasRegisteredItems(player)) {
 			log.warn(I18n.get("log.be9da2c1bc33", taskId));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
-					"cannot transfer player while he own some items in broker."));
+				"cannot transfer player while he own some items in broker."));
 			return;
 		}
 
@@ -235,17 +243,18 @@ public class PlayerTransferService {
 	/**
 	 * 在目标服根据源服下发的角色二进制数据克隆角色。
 	 * Clone a character on the target server from the binary payload delivered by the source server.
-	 * @param taskId 任务 ID / Task ID
+	 *
+	 * @param taskId          任务 ID / Task ID
 	 * @param targetAccountId 目标账号 ID / Target account ID
-	 * @param name 角色名 / Character name
-	 * @param account 账号名 / Account name
-	 * @param db 角色二进制数据 / Character binary payload
+	 * @param name            角色名 / Character name
+	 * @param account         账号名 / Account name
+	 * @param db              角色二进制数据 / Character binary payload
 	 */
 	public void cloneCharacter(int taskId, int targetAccountId, String name, String account, byte[] db) {
 		if (!PlayerService.isFreeName(name)) {
 			if (PlayerTransferConfig.BLOCK_SAMENAME) {
 				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(
-						new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "Name is already in use"));
+					new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "Name is already in use"));
 				return;
 			}
 
@@ -261,7 +270,7 @@ public class PlayerTransferService {
 		}
 		if (AccountService.loadAccount(targetAccountId).size() >= GSConfig.CHARACTER_LIMIT_COUNT) {
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(
-					new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "No free character slots"));
+				new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "No free character slots"));
 			return;
 		}
 
@@ -272,7 +281,7 @@ public class PlayerTransferService {
 		if (cha == null) { // something went wrong!
 			log.error(I18n.get("log.1be80ec82e92", taskId, name));
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
-					"unexpected sql error while creating a clone"));
+				"unexpected sql error while creating a clone"));
 		} else {
 			dao.setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
@@ -284,6 +293,7 @@ public class PlayerTransferService {
 	/**
 	 * 目标服确认成功后，在源服删除原角色。
 	 * After target-server confirmation, delete the original character on the source server.
+	 *
 	 * @param taskId 任务 ID / Task ID
 	 */
 	public void onOk(int taskId) {
@@ -295,6 +305,7 @@ public class PlayerTransferService {
 	/**
 	 * 目标服返回错误时清理源服转移任务。
 	 * Clean up the source-side transfer task when the target server reports an error.
+	 *
 	 * @param taskId 任务 ID / Task ID
 	 * @param reason 失败原因 / Failure reason
 	 */

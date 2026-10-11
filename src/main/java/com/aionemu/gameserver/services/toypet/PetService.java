@@ -48,15 +48,14 @@ public class PetService {
 
 	/**
 	 * -- SETTER --
-	 *  注入 Spring 实例提供者。
-	 *  Inject Spring instance provider.
-	 *  Provider
+	 * 注入 Spring 实例提供者。
+	 * Inject Spring instance provider.
+	 * Provider
 	 */
 	@Setter
 	private static volatile ObjectProvider<PetService> instanceProvider;
 
 	private PetBuff PetBuff;
-	private final boolean autoSeel = false;
 	private boolean autoBuff = false;
 
 	/**
@@ -65,11 +64,12 @@ public class PetService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
-	public static final PetService getInstance() {
+	public static PetService getInstance() {
 		ObjectProvider<PetService> provider = instanceProvider;
 		PetService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -80,7 +80,9 @@ public class PetService {
 		return provided;
 	}
 
-	/** 玩家宠物 DAO / Player pets DAO */
+	/**
+	 * 玩家宠物 DAO / Player pets DAO
+	 */
 	private final PlayerPetsDAO playerPetsDAO;
 
 	/**
@@ -102,7 +104,7 @@ public class PetService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -140,6 +142,7 @@ public class PetService {
 	/**
 	 * 玩家登录时同步宠物列表到客户端。
 	 * Sync pet list to client on player login.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onPlayerLogin(Player player) {
@@ -153,9 +156,10 @@ public class PetService {
 	 * 开始用物品喂养宠物。
 	 * Start feeding the pet with an inventory item.
 	 * Item object id
+	 *
 	 * @param count 喂养数量 / Feed count
-	 * Action type
-	 * 玩家 / Player
+	 *              Action type
+	 *              玩家 / Player
 	 */
 	public void removeObject(int objectId, int count, int action, Player player) {
 		Item item = player.getInventory().getItemByObjId(objectId);
@@ -166,7 +170,7 @@ public class PetService {
 		pet.getCommonData().setCancelFeed(false);
 		PacketSendUtility.sendPacket(player, new SM_PET(1, action, item.getObjectId(), count, pet));
 		PacketSendUtility.sendPacket(player,
-				new SM_EMOTION(player, EmotionType.START_FEEDING, 0, player.getObjectId()));
+			new SM_EMOTION(player, EmotionType.START_FEEDING, 0, player.getObjectId()));
 		schedule(pet, player, item, count, action);
 	}
 
@@ -200,7 +204,7 @@ public class PetService {
 			if (foodType != null) {
 				player.getInventory().decreaseItemCount(item, 1, ItemUpdateType.DEC_PET_FOOD);
 				reward = flavour.processFeedResult(progress, foodType, item.getItemTemplate().getLevel(),
-						player.getCommonData().getLevel(), player.getRates().getPetFeedingRate());
+					player.getCommonData().getLevel(), player.getRates().getPetFeedingRate());
 				if (progress.getHungryLevel() == PetHungryLevel.FULL && reward != null) {
 					PacketSendUtility.sendPacket(player, new SM_PET(2, action, item.getObjectId(), 0, pet));
 				} else {
@@ -209,16 +213,16 @@ public class PetService {
 			} else {
 				PacketSendUtility.sendPacket(player, new SM_PET(5, action, 0, 0, pet));
 				PacketSendUtility.sendPacket(player,
-						new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
+					new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE
-						.STR_MSG_TOYPET_FEED_FOOD_NOT_LOVEFLAVOR(pet.getName(), item.getItemTemplate().getNameId()));
+					.STR_MSG_TOYPET_FEED_FOOD_NOT_LOVEFLAVOR(pet.getName(), item.getItemTemplate().getNameId()));
 				return;
 			}
 			if (progress.getHungryLevel() == PetHungryLevel.FULL && reward != null) {
 				PacketSendUtility.sendPacket(player, new SM_PET(6, action, reward.getItem(), 0, pet));
 				PacketSendUtility.sendPacket(player, new SM_PET(5, action, 0, 0, pet));
 				PacketSendUtility.sendPacket(player,
-						new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
+					new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
 				PacketSendUtility.sendPacket(player, new SM_PET(7, action, 0, 0, pet));
 				ItemService.addItem(player, reward.getItem(), 1);
 				commonData.setReFoodTime(flavour.getCooldDown() * 60000L);
@@ -230,7 +234,7 @@ public class PetService {
 			} else {
 				PacketSendUtility.sendPacket(player, new SM_PET(5, action, 0, 0, pet));
 				PacketSendUtility.sendPacket(player,
-						new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
+					new SM_EMOTION(player, EmotionType.END_FEEDING, 0, player.getObjectId()));
 			}
 		}
 	}
@@ -361,10 +365,10 @@ public class PetService {
 		Pet pet = player.getPet();
 		PetTemplate petTemp = DataManager.PET_DATA.getPetTemplate(pet.getPetId());
 		PetBonusAttr petBuff = DataManager.PET_BUFF_DATA
-				.getPetBonusattr(petTemp.getPetFunction(PetFunctionType.CHEER).getId());
+			.getPetBonusattr(petTemp.getPetFunction(PetFunctionType.CHEER).getId());
 
 		if (activate && player.getInventory().getItemCountByItemId(182007162) < petBuff.getFoodCount()) {// 奥德 / Aether
-																											// 樱桃 / Cherry
+			// 樱桃 / Cherry
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_BUFF_PET_USE_STOP_MESSAGE_03);
 			return;
 		}
@@ -397,13 +401,14 @@ public class PetService {
 	/**
 	 * 玩家登出时关闭自动增益与自动出售。
 	 * Disable auto buff and auto sell on player logout.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void onPlayerLogout(Player player) {
 		if (autoBuff) {
 			activateBuff(player, false);
 		}
-		if (autoSeel) {
+		if (false) {
 			activeAutoSell(player, false);
 		}
 	}
@@ -411,6 +416,7 @@ public class PetService {
 	/**
 	 * 强制关闭当前宠物欢呼增益。
 	 * Force-switch off the current pet cheer buff.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public void switchOffBuff(final Player player) {

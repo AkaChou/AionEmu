@@ -21,14 +21,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Advance Corridor（@AIName "advance_corridor"），继承 NpcAI2。
  * Panesterra zone NPC AI: Advance Corridor (@AIName "advance_corridor"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("advance_corridor")
-public class Advance_CorridorAI2 extends NpcAI2
-{
+public class Advance_CorridorAI2 extends NpcAI2 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	private final int CANCEL_DIALOG_METERS = 10;
 
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -63,8 +62,9 @@ public class Advance_CorridorAI2 extends NpcAI2
 
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 65) {
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_SVS_DIRECT_PORTAL, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_SVS_DIRECT_PORTAL, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
@@ -72,23 +72,24 @@ public class Advance_CorridorAI2 extends NpcAI2
 							case 730946: //Sanctum To Belus.
 							case 730950: //Pandaemonium To Belus.
 								TeleportService2.teleportTo(responder, 400020000, 573.00757f, 1475.0839f, 1483.2329f, (byte) 105); //[Highland Temple]
-							break;
+								break;
 							case 730947: //Sanctum To Aspida.
 							case 730951: //Pandaemonium To Aspida.
 								TeleportService2.teleportTo(responder, 400040000, 573.00757f, 1475.0839f, 1483.2329f, (byte) 105); //[Borealis Temple]
-							break;
+								break;
 							case 730948: //Sanctum To Atanatos.
 							case 730952: //Pandaemonium To Atanatos.
 								TeleportService2.teleportTo(responder, 400050000, 573.00757f, 1475.0839f, 1483.2329f, (byte) 105); //[Sybilline Temple]
-							break;
+								break;
 							case 730949: //Sanctum To Disillon.
 							case 730953: //Pandaemonium To Disillon.
 								TeleportService2.teleportTo(responder, 400060000, 573.00757f, 1475.0839f, 1483.2329f, (byte) 105); //[Esmeraudus Temple]
-							break;
+								break;
 						}
 						decisionTaken = true;
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;

@@ -8,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 /**
  * AI 信息模板（静态数据/XML）。
  * XML template.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -18,16 +19,18 @@ public class AiInfo {
 
 	@XmlAttribute(name = "chase_target")
 	private int chaseTarget = 50;
-	@XmlAttribute(name = "chase_home")
-	private int chaseHome = 200;
 
-	/** 返回追击目标距离 / Returns the chase target */
+	/**
+	 * 返回追击目标距离 / Returns the chase target
+	 */
 	public final int getChaseTarget() {
 		return chaseTarget;
 	}
 
-	/** 返回回归距离 / Returns the chase home */
+	/**
+	 * 返回回归距离 / Returns the chase home
+	 */
 	public final int getChaseHome() {
-		return chaseHome;
+		return 200;
 	}
 }

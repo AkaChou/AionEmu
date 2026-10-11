@@ -37,6 +37,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class EventService {
+	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
+	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
 	/**
 	 * -- SETTER --
@@ -48,7 +50,6 @@ public class EventService {
 	private static volatile ObjectProvider<EventService> instanceProvider;
 
 	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
-	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
 	/** 服务是否已启动。 / Whether the service is started.
      * -- GETTER --

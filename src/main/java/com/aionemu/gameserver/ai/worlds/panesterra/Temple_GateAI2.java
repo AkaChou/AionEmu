@@ -19,14 +19,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * Panesterra 区域 NPC AI：Temple Gate（@AIName "Temple_Gate"），继承 NpcAI2。
  * Panesterra zone NPC AI: Temple Gate (@AIName "Temple_Gate"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("Temple_Gate")
-public class Temple_GateAI2 extends NpcAI2
-{
+public class Temple_GateAI2 extends NpcAI2 {
 	protected int startBarAnimation = 1;
 	protected int cancelBarAnimation = 2;
-	private final int CANCEL_DIALOG_METERS = 10;
 
 	@Override
 	protected void handleDialogStart(Player player) {
@@ -62,15 +61,17 @@ public class Temple_GateAI2 extends NpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (player.getLevel() >= 65) {
 			// 是否要通过城门？ / Do you want to pass through the castle gate ?
-			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_GATE, getOwner().getObjectId(), CANCEL_DIALOG_METERS, new AI2Request() {
+			AI2Actions.addRequest(this, player, SM_QUESTION_WINDOW.STR_ASK_PASS_BY_GATE, getOwner().getObjectId(), 10, new AI2Request() {
 				private boolean decisionTaken = false;
+
 				@Override
 				public void acceptRequest(Creature requester, Player responder) {
 					if (!decisionTaken) {
-			            decisionTaken = true;
+						decisionTaken = true;
 						moveToAcrossTempleGate(responder);
 					}
 				}
+
 				@Override
 				public void denyRequest(Creature requester, Player responder) {
 					decisionTaken = true;
@@ -87,7 +88,7 @@ public class Temple_GateAI2 extends NpcAI2
 		float x = (float) (Math.cos(radian) * 18.0D); //Move Forward 18M.
 		float y = (float) (Math.sin(radian) * 18.0D); //Move Forward 18M.
 		responder.getEffectController().updatePlayerEffectIcons();
-        PacketSendUtility.sendPacket(responder, new SM_TARGET_UPDATE(responder));
+		PacketSendUtility.sendPacket(responder, new SM_TARGET_UPDATE(responder));
 		PacketSendUtility.broadcastPacketAndReceive(responder, new SM_TRANSFORM(responder, true));
 		PacketSendUtility.broadcastPacketAndReceive(responder, new SM_TRANSFORM(responder, responder.getTransformedModelId(), true, responder.getTransformedItemId()));
 		TeleportService2.teleportTo(responder, worldId, responder.getX() + x, responder.getY() + y, responder.getZ(), (byte) 0);

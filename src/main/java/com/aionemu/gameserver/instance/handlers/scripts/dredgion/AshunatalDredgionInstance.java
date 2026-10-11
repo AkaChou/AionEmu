@@ -50,36 +50,58 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 阿舒纳塔尔无渊号副本事件处理器。
  * Instance event handler for Ashunatal Dredgion.
+ *
  * @author Encom
  * @author MATTY
  */
 
 @InstanceID(301650000)
-public class AshunatalDredgionInstance extends GeneralInstanceHandler
-{
-	/** 隔板 / bulkhead */
-		private int bulkhead;
-	/** 秘密缓存 / secret cache */
-		private int secretCache;
-	/** 苏卡纳击杀 / surkana kills */
-		private int surkanaKills;
-	/** 副本时间戳 / instance timestamp */
-		private long instanceTime;
-	/** 门映射 / door map */
+public class AshunatalDredgionInstance extends GeneralInstanceHandler {
+	/**
+	 * 隔板 / bulkhead
+	 */
+	private int bulkhead;
+	/**
+	 * 秘密缓存 / secret cache
+	 */
+	private int secretCache;
+	/**
+	 * 苏卡纳击杀 / surkana kills
+	 */
+	private int surkanaKills;
+	/**
+	 * 副本时间戳 / instance timestamp
+	 */
+	private long instanceTime;
+	/**
+	 * 门映射 / door map
+	 */
 	private Map<Integer, StaticDoor> doors;
-	/** 无畏舰奖励 / dredgion reward */
-		protected DredgionReward dredgionReward;
-	/** 败方倍率 / losing-group multiplier */
-		private float loosingGroupMultiplier = 1;
-	/** 副本是否已销毁 / whether the instance is destroyed */
+	/**
+	 * 无畏舰奖励 / dredgion reward
+	 */
+	protected DredgionReward dredgionReward;
+	/**
+	 * 败方倍率 / losing-group multiplier
+	 */
+	private float loosingGroupMultiplier = 1;
+	/**
+	 * 副本是否已销毁 / whether the instance is destroyed
+	 */
 	private boolean isInstanceDestroyed = false;
-	/** 副本是否已开始 / whether the instance started */
-		protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	/** asyunatar 任务 / asyunatar task */
-		private final List<Future<?>> asyunatarTask = new ArrayList<>();
+	/**
+	 * 副本是否已开始 / whether the instance started
+	 */
+	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
+	/**
+	 * asyunatar 任务 / asyunatar task
+	 */
+	private final List<Future<?>> asyunatarTask = new ArrayList<>();
+
 	/**
 	 * 返回玩家奖励记录。
 	 * Return the player's reward record.
+	 *
 	 * @param player 玩家 / player
 	 * @return 玩家奖励记录 / player reward record
 	 */
@@ -91,10 +113,12 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		}
 		return (DredgionPlayerReward) dredgionReward.getPlayerReward(object);
 	}
+
 	/**
 	 * 使指定房间被给定阵营占领。
 	 * Have the given room captured by the given race.
-	 * @param race 占领阵营 / capturing race
+	 *
+	 * @param race   占领阵营 / capturing race
 	 * @param roomId 房间 ID / room id
 	 */
 
@@ -109,9 +133,11 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	private boolean containPlayer(Integer object) {
 		return dredgionReward.containPlayer(object);
 	}
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc 掉落 NPC / dropper NPC
 	 */
 
@@ -121,14 +147,14 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 243816: //Frigate Commander Ashunatal.
-				for (Player player: instance.getPlayersInside()) {
+				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
-			break;
+				break;
 			case 243807: //Supervisor Gayaba.
 			case 243808: //Chief Navigator Yatri.
 			case 243809: //Assistant Navigator Magoyart.
@@ -143,49 +169,51 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243820: //Supply Vice Captain Aketaton.
 			case 243822: //Large Bagitara.
 			case 243852: //Auditor Agwe.
-				for (Player player: instance.getPlayersInside()) {
-				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
-					}
-				}
-			break;
-			case 243818: //Raima The Cruel.
-			case 243823: //Lieutenant Renuka.
-				for (Player player: instance.getPlayersInside()) {
+				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
-			break;
+				break;
+			case 243818: //Raima The Cruel.
+			case 243823: //Lieutenant Renuka.
+				for (Player player : instance.getPlayersInside()) {
+					if (player.isOnline()) {
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+					}
+				}
+				break;
 			case 243821: //Gatekeeper Menes.
-				for (Player player: instance.getPlayersInside()) {
+				for (Player player : instance.getPlayersInside()) {
 					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
-			break;
+				break;
 		}
 	}
 
 	private void onDieSurkan(Npc npc, Player mostPlayerDamage, int points) {
 		Race race = mostPlayerDamage.getRace();
 		captureRoom(race, npc.getNpcId() + 14 - 801987); //Basic Systems Surkana.
-		for (Player player: instance.getPlayersInside()) {
+		for (Player player : instance.getPlayersInside()) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400199, new DescriptionId(race.equals(Race.ASMODIANS) ? 1800483 : 1800481), new DescriptionId(npc.getObjectTemplate().getNameId() * 2 + 1)));
-		} if (++surkanaKills == 5) {
-            // 护卫舰指挥官阿舒纳塔尔现已在船长室。 / Frigate Commander Ashunatal is now in the Captain's Cabin.
+		}
+		if (++surkanaKills == 5) {
+			// 护卫舰指挥官阿舒纳塔尔现已在船长室。 / Frigate Commander Ashunatal is now in the Captain's Cabin.
 			PacketSendUtility.sendSys3Message(mostPlayerDamage,
-			"\uE050", "<Frigate Commander Ashunatal> is now in the Captain's Cabin");
+				"\uE050", "<Frigate Commander Ashunatal> is now in the Captain's Cabin");
 			spawn(243816, 485.47916f, 812.4957f, 416.68475f, (byte) 31); //Frigate Commander Ashunatal.
-        }
+		}
 		getPlayerReward(mostPlayerDamage).captureZone();
 		updateScore(mostPlayerDamage, npc, points, false);
 		npc.getController().onDelete();
 	}
+
 	/**
 	 * 启动副本计时/任务。
 	 * Start instance timer/tasks.
@@ -204,17 +232,18 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			switch (Rnd.get(1, 2)) {
 				case 1:
 					spawn(243807, 415.2769f, 282.0216f, 409.7311f, (byte) 118); //Supervisor Gayaba.
-				break;
+					break;
 				case 2:
 					spawn(243807, 556.53534f, 279.2918f, 409.7311f, (byte) 33); //Supervisor Gayaba.
-				break;
-			} switch (Rnd.get(1, 2)) {
+					break;
+			}
+			switch (Rnd.get(1, 2)) {
 				case 1:
 					spawn(243815, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Vice Captain Anggiras.
-				break;
+					break;
 				case 2:
 					spawn(243852, 485.25455f, 877.04614f, 405.01407f, (byte) 90); //Auditor Agwe.
-				break;
+					break;
 			}
 		}, 60000));
 		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
@@ -237,102 +266,103 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc 死亡的 NPC / dying NPC
 	 */
 	@Override
 	public void onDie(Npc npc) {
 		int point = 0;
 		Player mostPlayerDamage = npc.getAggroList().getMostPlayerDamage();
-        if (mostPlayerDamage == null) {
-            return;
-        }
+		if (mostPlayerDamage == null) {
+			return;
+		}
 		Race race = mostPlayerDamage.getRace();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 801972: //Weapons Locker.
-                point = 100;
+				point = 100;
 				despawnNpc(npc);
-            break;
+				break;
 			case 801974: //Armory Surkana.
 			case 801975: //Armory Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 500);
-			break;
+				break;
 			case 801976: //Gravity Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 900);
-			break;
+				break;
 			case 801977: //Nuclear Surkana.
 			case 801978: //Nuclear Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 1100);
-			break;
+				break;
 			case 801979: //Main Cannon Surkana.
 			case 801980: //Main Cannon Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 800);
-			break;
+				break;
 			case 801981: //Drop Authority Surkana.
 			case 801982: //Drop Authority Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 600);
-			break;
+				break;
 			case 801983: //Combatant Enhancing Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 700);
-			break;
+				break;
 			case 801984: //Flywheel Surkana.
 			case 801985: //Flywheel Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 500);
-			break;
+				break;
 			case 801986: //Bridge Power Surkana.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 700);
-			break;
+				break;
 			case 801987: //Basic Systems Surkana.
 				despawnNpc(npc);
 				onDieSurkan(npc, mostPlayerDamage, 1100);
-			break;
+				break;
 			case 243823: //Lieutenant Renuka.
 				if (race.equals(Race.ELYOS)) {
-				   // 中庭尽头现可使用通往船长室的传送装置。 / A teleportation device to the Captain's Cabin is now available at the end of the Atrium.
-				   sendMsgByRace(1401901, Race.ELYOS, 0);
-				   spawn(801993, 473.62231f, 761.99506f, 388.66f, (byte) 0, 33); //Elyos Captain's Cabin Teleporter.
+					// 中庭尽头现可使用通往船长室的传送装置。 / A teleportation device to the Captain's Cabin is now available at the end of the Atrium.
+					sendMsgByRace(1401901, Race.ELYOS, 0);
+					spawn(801993, 473.62231f, 761.99506f, 388.66f, (byte) 0, 33); //Elyos Captain's Cabin Teleporter.
 				} else if (race.equals(Race.ASMODIANS)) {
-				   // 中庭尽头现可使用通往船长室的传送装置。 / A teleportation device to the Captain's Cabin is now available at the end of the Atrium.
-				   sendMsgByRace(1401901, Race.ASMODIANS, 0);
-				   spawn(801994, 473.62231f, 761.99506f, 388.66f, (byte) 0, 186); //Asmodian Captain's Cabin Teleporter.
+					// 中庭尽头现可使用通往船长室的传送装置。 / A teleportation device to the Captain's Cabin is now available at the end of the Atrium.
+					sendMsgByRace(1401901, Race.ASMODIANS, 0);
+					spawn(801994, 473.62231f, 761.99506f, 388.66f, (byte) 0, 186); //Asmodian Captain's Cabin Teleporter.
 				}
 				point = 1000;
-            break;
+				break;
 			case 802001: //Portside Teleporter Generator.
-                despawnNpc(npc);
+				despawnNpc(npc);
 				// 逃生舱口已生成通往后勤区的传送装置。 / A teleport device to the Logistics area has been created at the Escape Hatch.
 				sendMsgByRace(1401897, Race.PC_ALL, 0);
 				spawn(801991, 397.11661f, 184.29782f, 432.8032f, (byte) 0, 42); //Port Supply Room Teleporter.
-            break;
+				break;
 			case 802002: //Starboard Teleporter Generator.
-                despawnNpc(npc);
+				despawnNpc(npc);
 				// 副逃生舱口已生成通往后勤区的传送装置。 / A teleport device to the Logistics area has been created at the Secondary Escape Hatch.
 				sendMsgByRace(1401900, Race.PC_ALL, 0);
 				spawn(801992, 572.10443f, 185.23933f, 432.56024f, (byte) 0, 10); //Starboard Supply Room Teleporter.
-            break;
+				break;
 			case 801997: //Portside Defense Shield.
 			case 801998: //Starboard Defense Shield.
 				despawnNpc(npc);
-			break;
+				break;
 			case 802003: //Portside Defense Shield Generator.
 				despawnNpc(npc);
 				// 左舷防御护盾已在准备室 1 生成。 / The Portside Defense Shield has been generated in Ready Room 1.
 				sendMsgByRace(1400226, Race.PC_ALL, 0);
 				spawn(801997, 448.39151f, 493.64182f, 394.13174f, (byte) 0, 12);  // 生成屏障 / spawn barrier
-			break;
+				break;
 			case 802004: //Starboard Defense Shield Generator.
 				despawnNpc(npc);
 				// 右舷防御护盾已在准备室 2 生成。 / The Starboard Defense Shield has been generated in Ready Room 2.
 				sendMsgByRace(1400227, Race.PC_ALL, 0);
 				spawn(801998, 520.87555f, 493.40115f, 394.43292f, (byte) 0, 133);  // 生成屏障 / spawn barrier
-			break;
+				break;
 			case 802005: //Port Bulkhead.
 			case 802006: //Starboard Bulkhead.
 				bulkhead++;
@@ -340,7 +370,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 					spawn(243817, 456.3946f, 319.65912f, 402.69315f, (byte) 28); //Menehune The Sprightly.
 				}
 				despawnNpc(npc);
-			break;
+				break;
 			case 243808: //Chief Navigator Yatri.
 			case 243809: //Assistant Navigator Magoyart.
 			case 243810: //Arebusqeirs Sub Captain Darma.
@@ -350,29 +380,29 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243814: //Technician Mursillis.
 			case 243819: //Supply Captain Varuk.
 			case 243820: //Supply Vice Captain Aketaton.
-			    secretCache++;
+				secretCache++;
 				if (secretCache == 5) {
-				    // 投放区现有战舰宝箱可用！ / A Dredgion Treasure Chest is now available in the Drop Zone!
+					// 投放区现有战舰宝箱可用！ / A Dredgion Treasure Chest is now available in the Drop Zone!
 					sendMsgByRace(1401902, Race.PC_ALL, 0);
 					spawn(701455, 482.82455f, 496.16556f, 397.28323f, (byte) 92); //Dredgion Opportunity Bundle.
 				}
-			break;
+				break;
 			case 243815: //Vice Captain Anggiras.
 			case 243852: //Auditor Agwe.
-			    point = 500;
-            break;
+				point = 500;
+				break;
 			case 243807: //Supervisor Gayaba.
 			case 243821: //Gatekeeper Menes.
 			case 243822: //Large Bagitara.
 				point = 1000;
-			break;
+				break;
 			case 243817: //Menehune The Sprightly.
-			    point = 1000;
+				point = 1000;
 				AbyssPointsService.addGp(mostPlayerDamage, 300);
-			break;
+				break;
 			case 243818: //Raima The Cruel.
 				AbyssPointsService.addGp(mostPlayerDamage, 300);
-			break;
+				break;
 			case 243816: //Frigate Commander Ashunatal.
 				point = 1000;
 				AbyssPointsService.addGp(mostPlayerDamage, 540);
@@ -382,7 +412,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 						stopInstance(winningRace);
 					}
 				}, 30000);
-			break;
+				break;
 		}
 		updateScore(mostPlayerDamage, npc, point, false);
 	}
@@ -392,6 +422,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			npc.getController().onDelete();
 		}
 	}
+
 	/**
 	 * 打开副本初始阶段的舱门。
 	 * Open the doors for the initial phase of the instance.
@@ -405,6 +436,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -418,6 +450,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -428,9 +461,11 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		startInstanceTask();
 	}
+
 	/**
 	 * 停止副本并结算。
 	 * Stop the instance and settle.
+	 *
 	 * @param race 阵营 / race
 	 */
 
@@ -441,6 +476,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		doReward();
 		sendPacket();
 	}
+
 	/**
 	 * 结算并发放奖励。
 	 * Settle and grant rewards.
@@ -488,23 +524,25 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否接受复活 / whether the revive is accepted
 	 */
 	@Override
-    public boolean onReviveEvent(Player player) {
+	public boolean onReviveEvent(Player player) {
 		player.getGameStats().updateStatsAndSpeedVisually();
 		PlayerReviveService.revive(player, 100, 100, false, 0);
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
 		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_INSTANT_DUNGEON_RESURRECT, 0, 0));
-        dredgionReward.portToPosition(player);
+		dredgionReward.portToPosition(player);
 		return true;
-    }
+	}
 
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
-	 * @param player 玩家 / player
+	 *
+	 * @param player       玩家 / player
 	 * @param lastAttacker 最后攻击者 / last attacker
 	 * @return 是否接受死亡 / whether the death is accepted
 	 */
@@ -512,16 +550,16 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	public boolean onDie(Player player, Creature lastAttacker) {
 		int points = 60;
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);
-        PacketSendUtility.sendPacket(player, new SM_DIE(player.haveSelfRezEffect(), false, 0, 8));
+		PacketSendUtility.sendPacket(player, new SM_DIE(player.haveSelfRezEffect(), false, 0, 8));
 		if (lastAttacker instanceof Player) {
 			if (lastAttacker.getRace() != player.getRace()) {
 				InstancePlayerReward playerReward = getPlayerReward(player);
 				if (getPointsByRace(lastAttacker.getRace()).compareTo(getPointsByRace(player.getRace())) < 0) {
-					points *= loosingGroupMultiplier;
+					points = (int) (points * loosingGroupMultiplier);
 				} else if (loosingGroupMultiplier == 10 || playerReward.getPoints() == 0) {
 					points = 0;
 				}
-			    updateScore((Player) lastAttacker, player, points, true);
+				updateScore((Player) lastAttacker, player, points, true);
 			}
 		}
 		updateScore(player, player, -points, false);
@@ -547,12 +585,14 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	private void addBalaurKillToPlayer(Player player) {
 		getPlayerReward(player).addMonsterKillToPlayer();
 	}
+
 	/**
 	 * 按击杀或死亡更新阵营与玩家分数，并让同组玩家共享分数。
 	 * Update race and player scores on kill or death, sharing points within the group.
-	 * @param player 得分玩家 / scoring player
-	 * @param target 被击杀目标 / slain target
-	 * @param points 分数 / points
+	 *
+	 * @param player  得分玩家 / scoring player
+	 * @param target  被击杀目标 / slain target
+	 * @param points  分数 / points
 	 * @param pvpKill 是否为 PvP 击杀 / whether this is a PvP kill
 	 */
 
@@ -566,7 +606,8 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			for (Player member : player.getPlayerGroup2().getOnlineMembers()) {
 				if (member.getLifeStats().isAlreadyDead()) {
 					continue;
-				} if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
+				}
+				if (MathUtil.isIn3dRange(member, target, GroupConfig.GROUP_MAX_DISTANCE)) {
 					playersToGainScore.add(member);
 				}
 			}
@@ -584,13 +625,15 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		int pointDifference = getPointsByRace(Race.ASMODIANS).intValue() - (getPointsByRace(Race.ELYOS)).intValue();
 		if (pointDifference < 0) {
 			pointDifference *= -1;
-		} if (pointDifference >= 3000) {
+		}
+		if (pointDifference >= 3000) {
 			loosingGroupMultiplier = 10;
 		} else if (pointDifference >= 1000) {
 			loosingGroupMultiplier = 1.5f;
 		} else {
 			loosingGroupMultiplier = 1;
-		} if (pvpKill && points > 0) {
+		}
+		if (pvpKill && points > 0) {
 			addPvPKillToPlayer(player);
 		} else if (target instanceof Npc && target.getRace().equals(Race.DRAKAN)) {
 			addBalaurKillToPlayer(player);
@@ -609,9 +652,11 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		stopInstanceTask();
 		doors.clear();
 	}
+
 	/**
 	 * 打开指定门。
 	 * Open the given door.
+	 *
 	 * @param doorId 门 ID / door id
 	 */
 
@@ -635,52 +680,58 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			}
 		});
 	}
+
 	/**
 	 * 延迟生成 NPC。
 	 * Spawn an NPC after a delay.
+	 *
 	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒数 / delay in milliseconds
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  延迟毫秒数 / delay in milliseconds
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-        sp(npcId, x, y, z, h, 0, time, 0, null);
-    }
+		sp(npcId, x, y, z, h, 0, time, 0, null);
+	}
+
 	/**
 	 * 延迟生成 NPC 并广播系统消息。
 	 * Spawn an NPC after a delay and broadcast a system message.
+	 *
 	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒数 / delay in milliseconds
-	 * @param msg 生成后广播的系统消息 / system message broadcast after spawn
-	 * @param race 消息目标阵营 / message target race
+	 * @param x     X 坐标 / X
+	 * @param y     Y 坐标 / Y
+	 * @param z     Z 坐标 / Z
+	 * @param h     朝向 / h
+	 * @param time  延迟毫秒数 / delay in milliseconds
+	 * @param msg   生成后广播的系统消息 / system message broadcast after spawn
+	 * @param race  消息目标阵营 / message target race
 	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
-        sp(npcId, x, y, z, h, 0, time, msg, race);
-    }
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final int msg, final Race race) {
+		sp(npcId, x, y, z, h, 0, time, msg, race);
+	}
+
 	/**
 	 * 延迟生成带实体 ID 的 NPC 并广播系统消息。
 	 * Spawn an NPC with an entity id after a delay and broadcast a system message.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
+	 *
+	 * @param npcId    NPC ID / NPC id
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
 	 * @param entityId 实体 ID / entity id
-	 * @param time 延迟毫秒数 / delay in milliseconds
-	 * @param msg 生成后广播的系统消息 / system message broadcast after spawn
-	 * @param race 消息目标阵营 / message target race
+	 * @param time     延迟毫秒数 / delay in milliseconds
+	 * @param msg      生成后广播的系统消息 / system message broadcast after spawn
+	 * @param race     消息目标阵营 / message target race
 	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				spawn(npcId, x, y, z, h, entityId);
 				if (msg > 0) {
@@ -688,63 +739,68 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 				}
 			}
 		}, time));
-    }
+	}
+
 	/**
 	 * 延迟生成沿指定巡行路线行走的 NPC。
 	 * Spawn an NPC after a delay that walks along the given route.
-	 * @param npcId NPC ID / NPC id
-	 * @param x X 坐标 / X
-	 * @param y Y 坐标 / Y
-	 * @param z Z 坐标 / Z
-	 * @param h 朝向 / h
-	 * @param time 延迟毫秒数 / delay in milliseconds
+	 *
+	 * @param npcId    NPC ID / NPC id
+	 * @param x        X 坐标 / X
+	 * @param y        Y 坐标 / Y
+	 * @param z        Z 坐标 / Z
+	 * @param h        朝向 / h
+	 * @param time     延迟毫秒数 / delay in milliseconds
 	 * @param walkerId 巡行路线 ID / walker route id
 	 */
 
-    protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				Npc npc = (Npc) spawn(npcId, x, y, z, h);
 				npc.getSpawn().setWalkerId(walkerId);
 				WalkManager.startWalking((NpcAI2) npc.getAi2());
 			}
 		}, time));
-    }
+	}
+
 	/**
 	 * 延迟后向指定阵营广播系统消息。
 	 * Broadcast a system message to the given race after a delay.
-	 * @param msg 系统消息 ID / system message id
+	 *
+	 * @param msg  系统消息 ID / system message id
 	 * @param race 目标阵营 / target race
 	 * @param time 延迟毫秒数 / delay in milliseconds
 	 */
 
-    protected void sendMsgByRace(final int msg, final Race race, int time) {
-        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
-                    PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
-                }
-            }
-        }), time));
-    }
+	protected void sendMsgByRace(final int msg, final Race race, int time) {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+			/**
+			 * 处理 visit。
+			 * Handle visit.
+			 * @param player 玩家 / player
+			 */
+			@Override
+			public void visit(Player player) {
+				if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
+					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
+				}
+			}
+		}), time));
+	}
 
 	private void stopInstanceTask() {
-        for (Future<?> task : asyunatarTask) {
+		for (Future<?> task : asyunatarTask) {
 			if (task != null) {
 				task.cancel(true);
 			}
-        }
-    }
+		}
+	}
 
 	/**
 	 * 返回本副本奖励对象。
 	 * Return this instance's reward object.
+	 *
 	 * @return 副本奖励 / instance reward
 	 */
 	@Override
@@ -755,25 +811,27 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	/**
 	 * 玩家请求退出副本时处理。
 	 * Handle a player exit request.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
-    public void onExitInstance(Player player) {
-        TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
-    }
+	public void onExitInstance(Player player) {
+		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
+	}
 
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
-    public void onLeaveInstance(Player player) {
-        stopInstanceTask();
+	public void onLeaveInstance(Player player) {
+		stopInstanceTask();
 		//“玩家名”已离开战斗。 / "Player Name" has left the battle.
 		PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400255, player.getName()));
-        if (player.isInGroup2()) {
-            PlayerGroupService.removePlayer(player);
-        }
-    }
+		if (player.isInGroup2()) {
+			PlayerGroupService.removePlayer(player);
+		}
+	}
 }

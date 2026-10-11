@@ -27,16 +27,15 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 @Slf4j
 public class AbyssRankCleaningService {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
+	/**
+	 * -- SETTER --
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 */
+	@Setter
+	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
 	private final AbyssRankDAO abyssRankDAO;
 
-	private final int SECURITY_MINIMUM_PERIOD = 30;
 
 	private long startTime;
 
@@ -62,7 +61,7 @@ public class AbyssRankCleaningService {
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
+																			  java.util.function.Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
@@ -82,7 +81,7 @@ public class AbyssRankCleaningService {
 
 		int periodInDays = CleaningConfig.ABYSS_CLEANING_PERIOD;
 
-		if (periodInDays > SECURITY_MINIMUM_PERIOD) {
+		if (periodInDays > 30) {
 			runAbyssRankingCleaning(periodInDays);
 		} else {
 			log.warn(I18n.get("log.d2c5a329849e"));
@@ -138,9 +137,10 @@ public class AbyssRankCleaningService {
 	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
 	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
 	 * creating a second instance outside the container.</p>
+	 *
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
+	 *                               when no provider or bean is available
 	 */
 	public static AbyssRankCleaningService getInstance() {
 		ObjectProvider<AbyssRankCleaningService> provider = instanceProvider;

@@ -16,26 +16,45 @@ import lombok.AccessLevel;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HouseBidEntry {
-	/** 返回条目索引 / Returns the entry index*/
+	/**
+	 * 返回条目索引 / Returns the entry index
+	 */
 	private int entryIndex;
-	/** 返回 land id / Returns the land id */
+	/**
+	 * 返回 land id / Returns the land id
+	 */
 	private int landId;
-	/** 返回 address / Returns the address */
+	/**
+	 * 返回 address / Returns the address
+	 */
 	private int address;
-	/** 返回 building id / Returns the building id */
+	/**
+	 * 返回 building id / Returns the building id
+	 */
 	private int buildingId;
-	/** 获取房屋类型。 / Returns the house type. */
+	/**
+	 * 获取房屋类型。 / Returns the house type.
+	 */
 	private HouseType houseType;
-	/** 返回 bid price / Returns the bid price */
+	/**
+	 * 返回 bid price / Returns the bid price
+	 */
 	private long bidPrice;
-	private final long unk2 = 100000;
-	/** 返回 bid count / Returns the bid count */
+	/**
+	 * 返回 bid count / Returns the bid count
+	 */
 	private int bidCount;
-	/** 返回映射 ID / Returns the map id */
+	/**
+	 * 返回映射 ID / Returns the map id
+	 */
 	private int mapId;
-	/** 返回 last bidding player / Returns the last bidding player */
+	/**
+	 * 返回 last bidding player / Returns the last bidding player
+	 */
 	private int lastBiddingPlayer;
-	/** 返回 last bid time / Returns the last bid time */
+	/**
+	 * 返回 last bid time / Returns the last bid time
+	 */
 	private long lastBidTime;
 
 	public HouseBidEntry(House house, int index, long initialBid) {
@@ -50,22 +69,30 @@ public class HouseBidEntry {
 		lastBidTime = 0;
 	}
 
-	/** 递增 bid count / Increment Bid Count */
+	/**
+	 * 递增 bid count / Increment Bid Count
+	 */
 	public void incrementBidCount() {
 		this.bidCount++;
 	}
 
-	/** 返回 unk 2 / Returns the unk 2 */
+	/**
+	 * 返回 unk 2 / Returns the unk 2
+	 */
 	public final long getUnk2() {
-		return unk2;
+		return 100000;
 	}
 
-	/** 返回 refund kinah / Returns the refund kinah */
+	/**
+	 * 返回 refund kinah / Returns the refund kinah
+	 */
 	public long getRefundKinah() {
 		return (long) (bidPrice * HousingConfig.BID_REFUND_PERCENT);
 	}
 
-	/** 克隆 / Clone. */
+	/**
+	 * 克隆 / Clone.
+	 */
 	public Object Clone() {
 		HouseBidEntry cloned = new HouseBidEntry();
 		cloned.address = this.address;
