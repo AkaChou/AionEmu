@@ -42,10 +42,8 @@ public class CM_EVERGALE_CANYON extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		switch (action) {
-		case 0:
-			PacketSendUtility.sendPacket(getConnection().getActivePlayer(), new SM_EVERGALE_CANYON(0));
-			break;
-		}
+ 		if (action == 0) {
+ 			PacketSendUtility.sendPacket(getConnection().getActivePlayer(), new SM_EVERGALE_CANYON(0));
+ 		}
 	}
 }

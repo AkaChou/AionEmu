@@ -36,11 +36,10 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 235065: //Empowered Mastarius.
-				    announceAgentUnderAttack();
-				break;
-			}
+ 			if (getNpcId() == 235065) {
+ 				//Empowered Mastarius.
+ 				announceAgentUnderAttack();
+ 			}
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}

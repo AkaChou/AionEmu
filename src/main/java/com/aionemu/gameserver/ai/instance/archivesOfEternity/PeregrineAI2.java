@@ -39,11 +39,10 @@ public class PeregrineAI2 extends GeneralNpcAI2
 		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
-		    switch (getNpcId()) {
-			    case 806149: //Peregrine.
-					openRandomRoadDoor();
-				break;
-			}
+ 		    if (getNpcId() == 806149) {
+ 		    	//Peregrine.
+ 		    	openRandomRoadDoor();
+ 		    }
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

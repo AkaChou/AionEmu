@@ -150,11 +150,10 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 234686: //Remodeled Dynatoum.
-			    boost();
-		    break;
-		}
+ 		if (getNpcId() == 234686) {
+ 			//Remodeled Dynatoum.
+ 			boost();
+ 		}
 	}
 
 	@Override

@@ -39,12 +39,9 @@ public class Empyrean_Record_Keeper2AI2 extends NpcAI2
 	
 	@Override
     protected void handleSpawned() {
-		switch (getNpcId()) {
-			case 799567:
-				// 准备好开始试炼场了吗，尼尔克？ / Ready to start running Crucible, nyerk?
-				sendMsg(1111450, getObjectId(), false, 2000);
-			break;
-		}
+ 		if (getNpcId() == 799567) {
+ 			sendMsg(1111450, getObjectId(), false, 2000);
+ 		}
 		super.handleSpawned();
     }
 	

@@ -41,12 +41,10 @@ public class Artifact_Overlord_KrobanAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 243684: //Artifact Overlord Kroban.
-					// 破碎元素正在积蓄力量。聚集在一起以分摊伤害。 / The Fractured Elemental is building up power. Gather together to disperse the damage.
-					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_02, 4000);
-				break;
-			}
+ 			if (getNpcId() == 243684) {
+ 				//Artifact Overlord Kroban.
+ 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_02, 4000);
+ 			}
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}

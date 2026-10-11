@@ -26,11 +26,10 @@ public class Buff_CoffinAI2 extends GeneralNpcAI2
 	@Override
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-			switch (getNpcId()) {
-			    case 835989: // 某个高贵者的棺木 / Buff Coffin.
-					GameEngineServices.skillEngine().applyEffectDirectly(11385, player, player, 3600000);
-				break;
-			}
+ 			if (getNpcId() == 835989) {
+ 				//某个高贵者的棺木 / Buff Coffin.
+ 				GameEngineServices.skillEngine().applyEffectDirectly(11385, player, player, 3600000);
+ 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		AI2Actions.deleteOwner(this);

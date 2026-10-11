@@ -23,11 +23,10 @@ public class Eastern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 702010: //Eastern Shield Generator.
-				    announceEasternShield();
-				break;
-			}
+ 			if (getNpcId() == 702010) {
+ 				//Eastern Shield Generator.
+ 				announceEasternShield();
+ 			}
 		}
 	}
 

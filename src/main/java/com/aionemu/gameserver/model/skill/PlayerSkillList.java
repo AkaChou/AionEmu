@@ -23,6 +23,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 玩家技能列表，用于技能相关逻辑。
  * Player Skill List for skill logic.
+ *
  * @author IceReaper, orfeo087, Avol, AEJTester
  */
 public final class PlayerSkillList implements SkillList<Player> {
@@ -66,27 +67,37 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 
-	/** 返回基础技能 / Returns the basic skills */
+	/**
+	 * 返回基础技能 / Returns the basic skills
+	 */
 	public PlayerSkillEntry[] getBasicSkills() {
 		return basicSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
-	/** 返回 stigma skills / Returns the stigma skills */
+	/**
+	 * 返回 stigma skills / Returns the stigma skills
+	 */
 	public PlayerSkillEntry[] getStigmaSkills() {
 		return stigmaSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
-	/** 返回 linked skills / Returns the linked skills */
+	/**
+	 * 返回 linked skills / Returns the linked skills
+	 */
 	public PlayerSkillEntry[] getLinkedSkills() {
 		return linkedSkills.values().toArray(new PlayerSkillEntry[0]);
 	}
 
-	/** 返回 deleted skills / Returns the deleted skills */
+	/**
+	 * 返回 deleted skills / Returns the deleted skills
+	 */
 	public PlayerSkillEntry[] getDeletedSkills() {
 		return deletedSkills.toArray(new PlayerSkillEntry[0]);
 	}
 
-	/** 捕获事务性装备变更所触及的全部可变技能投影。 / Captures all mutable skill projections touched by transactional equipment changes. */
+	/**
+	 * 捕获事务性装备变更所触及的全部可变技能投影。 / Captures all mutable skill projections touched by transactional equipment changes.
+	 */
 	public synchronized TransactionSnapshot transactionSnapshot() {
 		return new TransactionSnapshot();
 	}
@@ -132,7 +143,9 @@ public final class PlayerSkillList implements SkillList<Player> {
 		}
 	}
 
-	/** 获取技能条目。 / Returns the skill entry. */
+	/**
+	 * 获取技能条目。 / Returns the skill entry.
+	 */
 	public PlayerSkillEntry getSkillEntry(int skillId) {
 		if (basicSkills.containsKey(skillId)) {
 			return basicSkills.get(skillId);
@@ -141,19 +154,23 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 
-	/** 添加技能。 / Adds skill. */
+	/**
+	 * 添加技能。 / Adds skill.
+	 */
 	@Override
 	public boolean addSkill(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NEW);
 	}
 
-	/** 添加 GM 技能 / Adds gm skill */
+	/**
+	 * 添加 GM 技能 / Adds gm skill
+	 */
 	public void addGMSkill(Player player, int skillId, int skillLevel) {
 		addSkillAct(player, skillId, skillLevel, true, false, PersistentState.NOACTION, true);
 	}
 
 	private synchronized boolean addSkillAct(Player player, int skillId, int skillLevel, boolean isStigma,
-			boolean isLinked, PersistentState state, boolean isGMSkill) {
+											 boolean isLinked, PersistentState state, boolean isGMSkill) {
 		PlayerSkillEntry existingSkill = isStigma ? stigmaSkills.get(skillId) : basicSkills.get(skillId);
 
 		boolean isNew = false;
@@ -162,16 +179,16 @@ public final class PlayerSkillList implements SkillList<Player> {
 		} else {
 			if (isStigma) {
 				stigmaSkills.put(skillId,
-						new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false, state));
 			} else if (isLinked) {
 				basicSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
 				linkedSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
 				isNew = true;
 			} else {
 				basicSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, false, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, false, skillLevel, 0, null, 0, false, state));
 				isNew = true;
 			}
 		}
@@ -183,16 +200,21 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
-	/** 添加关联技能 / Adds linked skill */
+	/**
+	 * 添加关联技能 / Adds linked skill
+	 */
 	@Override
 	public void addLinkedSkill(Player player, int skillId) {
 		player.setLinkedSkill(skillId);
 		SkillTemplate linked = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_GET_LINKED_SKILL(
-				new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(linked.getSkillId()).getNameId()), 1));
+			new DescriptionId(DataManager.SKILL_DATA.getSkillTemplate(linked.getSkillId()).getNameId()), 1));
 		addSkill(player, skillId, 1, false, true, PersistentState.NOACTION);
 	}
-	/** Adds 烙印之石技能 / Adds stigma skill */
+
+	/**
+	 * Adds 烙印之石技能 / Adds stigma skill
+	 */
 	public void addStigmaSkill(Player player, int skillId, int skillLevel) {
 		addSkill(player, skillId, skillLevel, true, false, PersistentState.NOACTION);
 	}
@@ -200,8 +222,9 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/**
 	 * 添加临时技能（不保存到数据库）。
 	 * Add a temporary skill which will not be saved in db.
-	 * @param player 玩家 / Player
-	 * @param skillId 技能 ID / Skill ID
+	 *
+	 * @param player     玩家 / Player
+	 * @param skillId    技能 ID / Skill ID
 	 * @param skillLevel 技能等级 / Skill level
 	 * @return 是否成功 / Whether successful
 	 */
@@ -210,10 +233,8 @@ public final class PlayerSkillList implements SkillList<Player> {
 	}
 
 
-
-
 	private synchronized boolean addSkill(Player player, int skillId, int skillLevel, boolean isStigma,
-			boolean isLinked, PersistentState state) {
+										  boolean isLinked, PersistentState state) {
 		PlayerSkillEntry existingSkill = isStigma ? stigmaSkills.get(skillId) : basicSkills.get(skillId);
 
 		boolean isNew = false;
@@ -222,16 +243,16 @@ public final class PlayerSkillList implements SkillList<Player> {
 		} else {
 			if (isStigma) {
 				stigmaSkills.put(skillId,
-						new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, true, false, skillLevel, 0, null, 0, false, state));
 			} else if (isLinked) {
 				basicSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
 				linkedSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, true, skillLevel, 0, null, 0, false, state));
 				isNew = true;
 			} else {
 				basicSkills.put(skillId,
-						new PlayerSkillEntry(skillId, false, false, skillLevel, 0, null, 0, false, state));
+					new PlayerSkillEntry(skillId, false, false, skillLevel, 0, null, 0, false, state));
 				isNew = true;
 			}
 		}
@@ -245,27 +266,30 @@ public final class PlayerSkillList implements SkillList<Player> {
 			long reuseTime = player.getSkillCoolDown(skillTemplate.getDelayId());
 			if (reuseTime > System.currentTimeMillis()) {
 				PacketSendUtility.sendPacket(player,
-						new SM_SKILL_COOLDOWN(player, Map.of(skillTemplate.getDelayId(), reuseTime), false));
+					new SM_SKILL_COOLDOWN(player, Map.of(skillTemplate.getDelayId(), reuseTime), false));
 			}
 		}
 		return true;
 	}
 
-	/** 是否为制作技能。 / Whether craft skill. */
+	/**
+	 * 是否为制作技能。 / Whether craft skill.
+	 */
 	public boolean isCraftSkill(int skilId) {
-        return switch (skilId) {
-            case 30001, 30002, 30003, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010, 40011 ->
-                    true;
-            default -> false;
-        };
+		return switch (skilId) {
+			case 30001, 30002, 30003, 40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008, 40009, 40010, 40011 ->
+				true;
+			default -> false;
+		};
 	}
 
 	/**
 	 * 为制作技能添加经验。
 	 * Add XP to a craft skill.
-	 * @param player 玩家 / Player
-	 * @param skillId 技能 ID / Skill ID
-	 * @param xpReward 奖励经验 / XP reward
+	 *
+	 * @param player         玩家 / Player
+	 * @param skillId        技能 ID / Skill ID
+	 * @param xpReward       奖励经验 / XP reward
 	 * @param objSkillPoints 目标技能点数 / Objective skill points
 	 * @return 是否成功 / Whether successful
 	 */
@@ -277,33 +301,33 @@ public final class PlayerSkillList implements SkillList<Player> {
 			return false;
 		}
 		switch (skillEntry.getSkillId()) {
-		case 30001:
-			if (skillEntry.getSkillLevel() == 49) {
-				return false;
-			}
-		case 30002:
-		case 30003:
-			if (skillEntry.getSkillLevel() == 449) {
-				break;
-			}
-		case 40001:
-		case 40002:
-		case 40003:
-		case 40004:
-		case 40007:
-		case 40008:
-		case 40010:
-			switch (skillEntry.getSkillLevel()) {
-			case 99:
-			case 199:
-			case 299:
-			case 399:
-			case 449:
-			case 499:
-			case 549:
-				return false;
-			}
-			player.getRecipeList().autoLearnRecipe(player, skillId, skillEntry.getSkillLevel());
+			case 30001:
+				if (skillEntry.getSkillLevel() == 49) {
+					return false;
+				}
+			case 30002:
+			case 30003:
+				if (skillEntry.getSkillLevel() == 449) {
+					break;
+				}
+			case 40001:
+			case 40002:
+			case 40003:
+			case 40004:
+			case 40007:
+			case 40008:
+			case 40010:
+				switch (skillEntry.getSkillLevel()) {
+					case 99:
+					case 199:
+					case 299:
+					case 399:
+					case 449:
+					case 499:
+					case 549:
+						return false;
+				}
+				player.getRecipeList().autoLearnRecipe(player, skillId, skillEntry.getSkillLevel());
 		}
 		boolean updateSkill = skillEntry.addSkillXp(player, xpReward);
 		if (updateSkill) {
@@ -312,14 +336,18 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return true;
 	}
 
-	/** 是否技能存在 / Whether skill present */
+	/**
+	 * 是否技能存在 / Whether skill present
+	 */
 	@Override
 	public boolean isSkillPresent(int skillId) {
 		return basicSkills.containsKey(skillId) || stigmaSkills.containsKey(skillId)
-				|| linkedSkills.containsKey(skillId);
+			|| linkedSkills.containsKey(skillId);
 	}
 
-	/** 获取技能等级。 / Returns the skill level. */
+	/**
+	 * 获取技能等级。 / Returns the skill level.
+	 */
 	@Override
 	public int getSkillLevel(int skillId) {
 		if (basicSkills.containsKey(skillId)) {
@@ -334,7 +362,9 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return 0;
 	}
 
-	/** 移除技能。 / Removes skill. */
+	/**
+	 * 移除技能。 / Removes skill.
+	 */
 	@Override
 	public synchronized boolean removeSkill(int skillId) {
 		PlayerSkillEntry entry = basicSkills.get(skillId);
@@ -354,7 +384,9 @@ public final class PlayerSkillList implements SkillList<Player> {
 		return entry != null;
 	}
 
-	/** 大小 / size. */
+	/**
+	 * 大小 / size.
+	 */
 	@Override
 	public int size() {
 		return basicSkills.size() + stigmaSkills.size();
@@ -363,41 +395,44 @@ public final class PlayerSkillList implements SkillList<Player> {
 	/**
 	 * 发送技能列表更新消息给玩家。
 	 * Send skill list update message to the player.
-	 * @param player 玩家 / Player
+	 *
+	 * @param player  玩家 / Player
 	 * @param skillId 技能 ID / Skill ID
-	 * @param isNew 是否为新增技能 / Whether newly added
+	 * @param isNew   是否为新增技能 / Whether newly added
 	 */
 	private void sendMessage(Player player, int skillId, boolean isNew) {
 		switch (skillId) {
-		case 30001:
-		case 30002:
-			PacketSendUtility.sendPacket(player,
+			case 30001:
+			case 30002:
+				PacketSendUtility.sendPacket(player,
 					new SM_SKILL_LIST(player.getSkillList().getSkillEntry(skillId), 1330005, false));
-			break;
-		case 30003:
-			PacketSendUtility.sendPacket(player,
+				break;
+			case 30003:
+				PacketSendUtility.sendPacket(player,
 					new SM_SKILL_LIST(player.getSkillList().getSkillEntry(skillId), 1330005, false));
-			break;
-		case 40001:
-		case 40002:
-		case 40003:
-		case 40004:
-		case 40005:
-		case 40006:
-		case 40007:
-		case 40008:
-		case 40009:
-		case 40010:
-			PacketSendUtility.sendPacket(player,
+				break;
+			case 40001:
+			case 40002:
+			case 40003:
+			case 40004:
+			case 40005:
+			case 40006:
+			case 40007:
+			case 40008:
+			case 40009:
+			case 40010:
+				PacketSendUtility.sendPacket(player,
 					new SM_SKILL_LIST(player.getSkillList().getSkillEntry(skillId), 1330061, false));
-			break;
-		default:
-			PacketSendUtility.sendPacket(player,
+				break;
+			default:
+				PacketSendUtility.sendPacket(player,
 					new SM_SKILL_LIST(player.getSkillList().getSkillEntry(skillId), 1300050, isNew));
 		}
 	}
 
-	/** 添加技能（不保存） / Adds skill without save */
+	/**
+	 * 添加技能（不保存） / Adds skill without save
+	 */
 	public boolean addSkillWithoutSave(Player player, int skillId, int skillLevel) {
 		return addSkill(player, skillId, skillLevel, false, false, PersistentState.NOACTION);
 	}

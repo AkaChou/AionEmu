@@ -36,11 +36,10 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 235064: //Empowered Veille.
-				    announceAgentUnderAttack();
-				break;
-			}
+ 			if (getNpcId() == 235064) {
+ 				//Empowered Veille.
+ 				announceAgentUnderAttack();
+ 			}
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}

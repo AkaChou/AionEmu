@@ -32,11 +32,10 @@ public class Prestige_Society_Medical_AttendantAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000344, 1)) { // 声望硬币 / Prestige Coin.
-		    switch (getNpcId()) {
-		        case 833764: // 声望协会医疗服务员 / Prestige Society Medical Attendant.
-				    GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000); // 尊贵祝福 / Prestigious Blessing.
-				break;
-			}
+ 		    if (getNpcId() == 833764) {
+ 		    	//声望协会医疗服务员 / Prestige Society Medical Attendant.
+ 		    	GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000);
+ 		    }
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;

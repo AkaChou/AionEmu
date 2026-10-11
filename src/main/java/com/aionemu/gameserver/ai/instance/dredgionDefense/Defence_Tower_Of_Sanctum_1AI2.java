@@ -54,11 +54,10 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 220816: //Defence Tower Of Sanctum 1.
-				    announceDefenceSanctumA();
-				break;
-			}
+ 			if (getNpcId() == 220816) {
+ 				//Defence Tower Of Sanctum 1.
+ 				announceDefenceSanctumA();
+ 			}
 		}
 	}
 

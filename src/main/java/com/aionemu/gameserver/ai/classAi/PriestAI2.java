@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.classAi;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -26,11 +25,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 职业技能召唤物/陷阱 AI：Priest（@AIName "priest"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Priest (@AIName "priest"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("priest")
-public class PriestAI2 extends AggressiveNpcAI2
-{
+public class PriestAI2 extends AggressiveNpcAI2 {
 	private int priestPhase = 0;
 	private Future<?> phaseTask;
 	private final Object servantLock = new Object();
@@ -52,7 +51,8 @@ public class PriestAI2 extends AggressiveNpcAI2
 		if (hpPercentage == 95 && priestPhase < 1) {
 			priestPhase = 1;
 			startPhaseTask();
-		} if (hpPercentage == 15 && priestPhase < 2) {
+		}
+		if (hpPercentage == 15 && priestPhase < 2) {
 			priestPhase = 2;
 			startPhaseTask();
 		}
@@ -72,7 +72,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 					if (!players.isEmpty()) {
 						int size = players.size();
 						if (players.isEmpty()) {
-							for (Player p: players) {
+							for (Player p : players) {
 								spawnServant(p);
 							}
 						} else {
@@ -94,22 +94,22 @@ public class PriestAI2 extends AggressiveNpcAI2
 		synchronized (servantLock) {
 			int servantNpcId = getServantNpcId(getNpcId());
 			if (canSpawnServants && servantNpcId != 0 && !isAlreadyDead()
-					&& player.getX() > 0 && player.getY() > 0 && player.getZ() > 0) {
+				&& player.getX() > 0 && player.getY() > 0 && player.getZ() > 0) {
 				SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), servantNpcId,
-						player.getX(), player.getY(), player.getZ(), (byte) 0);
+					player.getX(), player.getY(), player.getZ(), (byte) 0);
 				VisibleObjectSpawner.spawnEnemyServant(template, getOwner().getInstanceId(), getOwner(), getOwner().getLevel());
 			}
 		}
 	}
 
 	static int getServantNpcId(int priestNpcId) {
-        return switch (priestNpcId) {
-            case 280635 -> 280638;
-            case 280636 -> 280639;
-            case 280637 -> 280640;
-            case 281300 -> 281301;
-            default -> 0;
-        };
+		return switch (priestNpcId) {
+			case 280635 -> 280638;
+			case 280636 -> 280639;
+			case 280637 -> 280640;
+			case 281300 -> 281301;
+			default -> 0;
+		};
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();
-		for (Player player: getKnownList().getKnownPlayers().values()) {
+		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
 			}
@@ -150,13 +150,13 @@ public class PriestAI2 extends AggressiveNpcAI2
 			case 214893:
 			case 215238:
 			case 215270:
-		        anuhartBravery();
-			break;
-		} switch (getNpcId()) {
-		    case 233915:
-		        survivalInstinct();
-			break;
-		} switch (getNpcId()) {
+				anuhartBravery();
+				break;
+		}
+ 		if (getNpcId() == 233915) {
+ 			survivalInstinct();
+ 		}
+		switch (getNpcId()) {
 			case 234087:
 			case 234088:
 			case 234102:
@@ -270,13 +270,15 @@ public class PriestAI2 extends AggressiveNpcAI2
 			case 883258:
 			case 883264:
 				conquerorPassion();
-			break;
-		} switch (getNpcId()) {
-		    case 230804:
+				break;
+		}
+		switch (getNpcId()) {
+			case 230804:
 			case 230805:
-			    midnightRobe();
-			break;
-		} switch (getNpcId()) {
+				midnightRobe();
+				break;
+		}
+		switch (getNpcId()) {
 			case 882461:
 			case 882626:
 			case 882791:
@@ -291,8 +293,9 @@ public class PriestAI2 extends AggressiveNpcAI2
 			case 883066:
 			case 883072:
 				ereshkigalRage();
-			break;
-		} switch (getNpcId()) {
+				break;
+		}
+		switch (getNpcId()) {
 			case 234086:
 			case 234101:
 			case 234768:
@@ -313,26 +316,31 @@ public class PriestAI2 extends AggressiveNpcAI2
 			case 883036:
 			case 883042:
 			case 883048:
-			    brokenMorale();
-			break;
+				brokenMorale();
+				break;
 		}
 	}
 
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
+
 	private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
+
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
+
 	private void midnightRobe() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
 	}
+
 	private void ereshkigalRage() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
+
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
@@ -360,7 +368,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteHelpers() {
-		for (Npc npc: getPosition().getWorldMapInstance().getNpcs()) {
+		for (Npc npc : getPosition().getWorldMapInstance().getNpcs()) {
 			if (isOwnedServant(npc, getOwner())) {
 				npc.getController().onDelete();
 			}

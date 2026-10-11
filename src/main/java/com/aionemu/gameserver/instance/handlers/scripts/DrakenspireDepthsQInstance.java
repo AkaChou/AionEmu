@@ -93,11 +93,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
-		switch (npcId) {
-			case 237224: //Fetid Phantomscorch Chimera.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000219, 1)); //Crossroads Choice Key.
-		    break;
-		}
+ 		if (npcId == 237224) {
+ 			//Fetid Phantomscorch Chimera.
+ 			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000219, 1));
+ 		}
 	}
 
 	/**

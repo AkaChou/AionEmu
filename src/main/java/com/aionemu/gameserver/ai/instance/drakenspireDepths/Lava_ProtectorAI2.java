@@ -25,11 +25,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Drakenspire Depths 副本 NPC AI：Lava Protector（@AIName "lava_protector"），继承 AggressiveNpcAI2。
  * Drakenspire Depths instance NPC AI: Lava Protector (@AIName "lava_protector"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("lava_protector")
-public class Lava_ProtectorAI2 extends AggressiveNpcAI2
-{
+public class Lava_ProtectorAI2 extends AggressiveNpcAI2 {
 	private boolean canThink = true;
 	private Future<?> magmaGluttenTask;
 	private Future<?> lavaProtectorTask;
@@ -40,14 +40,12 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 236227: //Lava Protector.
-					lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
-						AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
-						// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
-						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
-					}, 300000);
-				break;
+			if (getNpcId() == 236227) { //Lava Protector.
+				lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
+					// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
+					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
+				}, 300000);
 			}
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
@@ -56,15 +54,13 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 236227:
-			    shareSource();
-		    break;
+		if (getNpcId() == 236227) {
+			shareSource();
 		}
 	}
 
 	private void shareSource() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
 
@@ -73,7 +69,8 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 			if (isStartedEvent.compareAndSet(false, true)) {
 				startMagmaGluttenTask();
 			}
-		} if (hpPercentage <= 30) {
+		}
+		if (hpPercentage <= 30) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				startMagmaGluttenTask();
 			}
@@ -91,7 +88,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 				if (!players.isEmpty()) {
 					int size = players.size();
 					if (players.size() < 6) {
-						for (Player p: players) {
+						for (Player p : players) {
 							spawnMagmaGlutten(p);
 						}
 					} else {
@@ -128,7 +125,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();
-		for (Player player: getKnownList().getKnownPlayers().values()) {
+		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
 			}
@@ -171,7 +168,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}

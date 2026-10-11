@@ -25,11 +25,10 @@ public class KorunerkAI2 extends NpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 
 		if (dialogId == 10000) {
-			switch (getNpcId()) {
-				case 834305: // 科依伦伦 / Korunerk.
-					spawn(220820, 1390.711f, 1692.9382f, 573.28613f, (byte) 105); //Sanctum Tank A.
-				break;
-			}
+ 			if (getNpcId() == 834305) {
+ 				//科依伦伦 / Korunerk.
+ 				spawn(220820, 1390.711f, 1692.9382f, 573.28613f, (byte) 105);
+ 			}
 		}
 		AI2Actions.deleteOwner(this);
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

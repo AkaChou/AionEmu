@@ -23,11 +23,10 @@ public class Western_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 702011: //Western Shield Generator.
-				    announceWesternShield();
-				break;
-			}
+ 			if (getNpcId() == 702011) {
+ 				//Western Shield Generator.
+ 				announceWesternShield();
+ 			}
 		}
 	}
 

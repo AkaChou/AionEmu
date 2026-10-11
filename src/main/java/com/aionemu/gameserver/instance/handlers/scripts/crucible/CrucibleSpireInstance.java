@@ -55,6 +55,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     /** boss timer start / boss timer start */
     private long bossTimerStart;
     /** boss timer end / boss timer end */
+    /** boss timer end / boss timer end */
         private long bossTimerEnd;
     /** floor npcs / floor npcs */
 
@@ -110,11 +111,10 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
-        switch (npcId) {
-            case 247546: //IDInfinity Heal 02.
-                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000530, 1));
-                break;
-        }
+         if (npcId == 247546) {
+         	//IDInfinity Heal 02.
+         	dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000530, 1));
+         }
     }
 
     private void removeItems(Player player) {
@@ -565,7 +565,6 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
 
                         if (i + 1 == 40) {
                             sendPacket(player, "Condition_Infinity_THIS_SEASON_Floor_Reward", 100);
-                            bossTimerEnd = System.currentTimeMillis() - bossTimerStart;
                         }
                     }
                     return;

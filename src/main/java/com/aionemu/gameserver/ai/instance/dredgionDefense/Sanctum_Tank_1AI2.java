@@ -86,11 +86,10 @@ public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 220820: //Sanctum Tank A.
-				    announceSanctumTankA();
-				break;
-			}
+ 			if (getNpcId() == 220820) {
+ 				//Sanctum Tank A.
+ 				announceSanctumTankA();
+ 			}
 		}
 	}
 

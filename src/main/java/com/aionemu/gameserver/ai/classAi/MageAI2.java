@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.classAi;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -22,11 +21,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 职业技能召唤物/陷阱 AI：Mage（@AIName "mage"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Mage (@AIName "mage"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("mage")
-public class MageAI2 extends AggressiveNpcAI2
-{
+public class MageAI2 extends AggressiveNpcAI2 {
 	private int magePhase = 0;
 	private Future<?> phaseTask;
 	private boolean canThink = true;
@@ -43,7 +42,8 @@ public class MageAI2 extends AggressiveNpcAI2
 		if (hpPercentage == 95 && magePhase < 1) {
 			magePhase = 1;
 			startPhaseTask();
-		} if (hpPercentage == 15 && magePhase < 2) {
+		}
+		if (hpPercentage == 15 && magePhase < 2) {
 			magePhase = 2;
 			startPhaseTask();
 		}
@@ -58,7 +58,7 @@ public class MageAI2 extends AggressiveNpcAI2
 				if (!players.isEmpty()) {
 					int size = players.size();
 					if (players.isEmpty()) {
-						for (Player p: players) {
+						for (Player p : players) {
 							spawnSpirit(p);
 						}
 					} else {
@@ -85,16 +85,16 @@ public class MageAI2 extends AggressiveNpcAI2
 					switch (Rnd.get(1, 4)) {
 						case 1:
 							spawn(285470, x, y, z, (byte) 0); //Water Spirit.
-						break;
+							break;
 						case 2:
 							spawn(285473, x, y, z, (byte) 0); //Fire Spirit.
-						break;
+							break;
 						case 3:
 							spawn(285469, x, y, z, (byte) 0); //Earth Spirit.
-						break;
+							break;
 						case 4:
 							spawn(285471, x, y, z, (byte) 0); //Wind Spirit.
-						break;
+							break;
 					}
 				}
 			}, 1000);
@@ -109,7 +109,7 @@ public class MageAI2 extends AggressiveNpcAI2
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();
-		for (Player player: getKnownList().getKnownPlayers().values()) {
+		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
 			}
@@ -126,49 +126,49 @@ public class MageAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
+ 		if (getNpcId() == 212810) {
+ 			iceClawBlessing();
+ 		}
 		switch (getNpcId()) {
-		    case 212810:
-		        iceClawBlessing();
-			break;
-		} switch (getNpcId()) {
-		    case 211596:
+			case 211596:
 			case 212734:
-			    mistShadeBlessing();
-		    break;
-		} switch (getNpcId()) {
+				mistShadeBlessing();
+				break;
+		}
+		switch (getNpcId()) {
 			case 214867:
 			case 214874:
 			case 215428:
-		        anuhartBravery();
-			break;
-		} switch (getNpcId()) {
-		    case 233912:
-		        survivalInstinct();
-			break;
-		} switch (getNpcId()) {
+				anuhartBravery();
+				break;
+		}
+ 		if (getNpcId() == 233912) {
+ 			survivalInstinct();
+ 		}
+		switch (getNpcId()) {
 			case 209667:
 			case 209668:
 			case 209673:
 			case 209674:
 			case 219877:
-            case 219883:
-            case 219890:
-            case 219896:
-            case 219902:
-            case 219909:
-            case 219916:
-            case 219922:
-            case 220076:
-            case 220080:
-            case 220084:
-            case 220088:
-            case 220092:
-            case 220096:
-            case 220100:
-            case 220165:
-            case 220168:
-            case 220171:
-            case 220174:
+			case 219883:
+			case 219890:
+			case 219896:
+			case 219902:
+			case 219909:
+			case 219916:
+			case 219922:
+			case 220076:
+			case 220080:
+			case 220084:
+			case 220088:
+			case 220092:
+			case 220096:
+			case 220100:
+			case 220165:
+			case 220168:
+			case 220171:
+			case 220174:
 			case 234084:
 			case 234085:
 			case 234099:
@@ -287,15 +287,17 @@ public class MageAI2 extends AggressiveNpcAI2
 			case 883261:
 			case 883267:
 				conquerorPassion();
-			break;
-		} switch (getNpcId()) {
-		    case 230798:
+				break;
+		}
+		switch (getNpcId()) {
+			case 230798:
 			case 230799:
 			case 233336:
 			case 233337:
-			    midnightRobe();
-			break;
-		} switch (getNpcId()) {
+				midnightRobe();
+				break;
+		}
+		switch (getNpcId()) {
 			case 882471:
 			case 882636:
 			case 882637:
@@ -312,8 +314,9 @@ public class MageAI2 extends AggressiveNpcAI2
 			case 883069:
 			case 883075:
 				ereshkigalRage();
-			break;
-		} switch (getNpcId()) {
+				break;
+		}
+		switch (getNpcId()) {
 			case 234083:
 			case 234098:
 			case 234765:
@@ -327,31 +330,38 @@ public class MageAI2 extends AggressiveNpcAI2
 			case 883045:
 			case 883051:
 				brokenMorale();
-			break;
+				break;
 		}
 	}
 
 	private void iceClawBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
 	}
+
 	private void mistShadeBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
 	}
+
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
-    private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
+
+	private void survivalInstinct() {
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
+
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
+
 	private void midnightRobe() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
 	}
+
 	private void ereshkigalRage() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
+
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
@@ -392,7 +402,7 @@ public class MageAI2 extends AggressiveNpcAI2
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
+			for (Npc npc : npcs) {
 				npc.getController().onDelete();
 			}
 		}

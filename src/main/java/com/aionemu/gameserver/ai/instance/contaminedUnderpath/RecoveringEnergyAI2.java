@@ -16,61 +16,61 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * Contamined Underpath 副本 NPC AI：Recovering Energy（@AIName "RecoveringEnergy"），继承 NpcAI2。
  * Contamined Underpath instance NPC AI: Recovering Energy (@AIName "RecoveringEnergy"), extends NpcAI2.
+ *
  * @author MATTY (ADev Team)
  */
 @AIName("RecoveringEnergy")
 public class RecoveringEnergyAI2 extends NpcAI2 {
 
-    @Override
-    protected void handleCreatureSee(Creature creature) {
-        checkDistance(this, creature);
-    }
+	@Override
+	protected void handleCreatureSee(Creature creature) {
+		checkDistance(this, creature);
+	}
 
-    @Override
-    protected void handleCreatureMoved(Creature creature) {
-        checkDistance(this, creature);
-    }
+	@Override
+	protected void handleCreatureMoved(Creature creature) {
+		checkDistance(this, creature);
+	}
 
-    /**
-     * 玩家进入 1 码范围且视线通畅时，对其施放恢复技能。
-     * Cast the recovery skill on a player within 1 yard when line of sight is clear.
-     * @param ai AI 实例 / AI instance
-     * @param creature 进入范围的生物 / creature that entered range
-     */
-    protected void checkDistance(NpcAI2 ai, Creature creature) {
-        Npc owner = ai.getOwner();
-        if (creature == null || creature.getLifeStats() == null) {
-            return;
-        }
-        if (creature.getLifeStats().isAlreadyDead()) {
-            return;
-        }
-        if (!owner.canSee(creature)) {
-            return;
-        }
-        if (!owner.getActiveRegion().isMapRegionActive()) {
-            return;
-        }
-        if (!(creature instanceof Player)) {
-            return;
-        }
-        if (MathUtil.isIn3dRange(owner, creature, 1.0f)) {
-            if (GameWorldServices.geoService().canSee(owner, creature)) {
-                AI2Actions.targetCreature(this, creature);
-                AI2Actions.useSkill(this, 11171);
-                AI2Actions.targetCreature(this, null);
-            }
-        }
-    }
+	/**
+	 * 玩家进入 1 码范围且视线通畅时，对其施放恢复技能。
+	 * Cast the recovery skill on a player within 1 yard when line of sight is clear.
+	 *
+	 * @param ai       AI 实例 / AI instance
+	 * @param creature 进入范围的生物 / creature that entered range
+	 */
+	protected void checkDistance(NpcAI2 ai, Creature creature) {
+		Npc owner = ai.getOwner();
+		if (creature == null || creature.getLifeStats() == null) {
+			return;
+		}
+		if (creature.getLifeStats().isAlreadyDead()) {
+			return;
+		}
+		if (!owner.canSee(creature)) {
+			return;
+		}
+		if (!owner.getActiveRegion().isMapRegionActive()) {
+			return;
+		}
+		if (!(creature instanceof Player)) {
+			return;
+		}
+		if (MathUtil.isIn3dRange(owner, creature, 1.0f)) {
+			if (GameWorldServices.geoService().canSee(owner, creature)) {
+				AI2Actions.targetCreature(this, creature);
+				AI2Actions.useSkill(this, 11171);
+				AI2Actions.targetCreature(this, null);
+			}
+		}
+	}
 
-    @Override
-    protected AIAnswer pollInstance(AIQuestion question) {
-        return switch (question) {
-            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
-            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
-            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
-            default -> null;
-        };
-    }
+	@Override
+	protected AIAnswer pollInstance(AIQuestion question) {
+		return switch (question) {
+			case SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD -> AIAnswers.NEGATIVE;
+			default -> null;
+		};
+	}
 
 }

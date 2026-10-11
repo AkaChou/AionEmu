@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.classAi;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -23,11 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * 职业技能召唤物/陷阱 AI：Ranger（@AIName "ranger"），继承 AggressiveNpcAI2。
  * Class-skill summon/trap AI: Ranger (@AIName "ranger"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("ranger")
-public class RangerAI2 extends AggressiveNpcAI2
-{
+public class RangerAI2 extends AggressiveNpcAI2 {
 	private int rangerPhase = 0;
 	private Future<?> phaseTask;
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
@@ -43,7 +42,8 @@ public class RangerAI2 extends AggressiveNpcAI2
 		if (hpPercentage == 95 && rangerPhase < 1) {
 			rangerPhase = 1;
 			startPhaseTask();
-		} if (hpPercentage == 15 && rangerPhase < 2) {
+		}
+		if (hpPercentage == 15 && rangerPhase < 2) {
 			rangerPhase = 2;
 			startPhaseTask();
 		}
@@ -58,7 +58,7 @@ public class RangerAI2 extends AggressiveNpcAI2
 				if (!players.isEmpty()) {
 					int size = players.size();
 					if (players.isEmpty()) {
-						for (Player p: players) {
+						for (Player p : players) {
 							spawnTrap(p);
 						}
 					} else {
@@ -85,16 +85,16 @@ public class RangerAI2 extends AggressiveNpcAI2
 					switch (Rnd.get(1, 4)) {
 						case 1:
 							spawn(282372, x, y, z, (byte) 0); //Spike Bite Trap I.
-						break;
+							break;
 						case 2:
 							spawn(294706, x, y, z, (byte) 0); //Trap Of Slowing III.
-						break;
+							break;
 						case 3:
 							spawn(294707, x, y, z, (byte) 0); //Sleep Trap I.
-						break;
+							break;
 						case 4:
 							spawn(294708, x, y, z, (byte) 0); //Explosive I.
-						break;
+							break;
 					}
 				}
 			}, 1000);
@@ -104,7 +104,7 @@ public class RangerAI2 extends AggressiveNpcAI2
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();
-		for (Player player: getKnownList().getKnownPlayers().values()) {
+		for (Player player : getKnownList().getKnownPlayers().values()) {
 			if (!PlayerActions.isAlreadyDead(player)) {
 				players.add(player);
 			}
@@ -121,34 +121,33 @@ public class RangerAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
+ 		if (getNpcId() == 214846) {
+ 			anuhartBravery();
+ 		}
 		switch (getNpcId()) {
-			case 214846:
-		        anuhartBravery();
-			break;
-		} switch (getNpcId()) {
-            case 209665:
+			case 209665:
 			case 209666:
 			case 209671:
 			case 209672:
-            case 219879:
-            case 219885:
-            case 219892:
-            case 219898:
-            case 219904:
-            case 219911:
-            case 219918:
-            case 219924:
-            case 220075:
-            case 220079:
-            case 220083:
-            case 220087:
-            case 220091:
-            case 220095:
-            case 220099:
-            case 220164:
-            case 220167:
-            case 220170:
-            case 220173:
+			case 219879:
+			case 219885:
+			case 219892:
+			case 219898:
+			case 219904:
+			case 219911:
+			case 219918:
+			case 219924:
+			case 220075:
+			case 220079:
+			case 220083:
+			case 220087:
+			case 220091:
+			case 220095:
+			case 220099:
+			case 220164:
+			case 220167:
+			case 220170:
+			case 220173:
 			case 234081:
 			case 234082:
 			case 234096:
@@ -293,8 +292,9 @@ public class RangerAI2 extends AggressiveNpcAI2
 			case 883259:
 			case 883265:
 				conquerorPassion();
-			break;
-		} switch (getNpcId()) {
+				break;
+		}
+		switch (getNpcId()) {
 			case 882466:
 			case 882631:
 			case 882632:
@@ -312,8 +312,9 @@ public class RangerAI2 extends AggressiveNpcAI2
 			case 883073:
 			case 883643:
 				ereshkigalRage();
-			break;
-		} switch (getNpcId()) {
+				break;
+		}
+		switch (getNpcId()) {
 			case 234080:
 			case 234095:
 			case 234762:
@@ -326,20 +327,23 @@ public class RangerAI2 extends AggressiveNpcAI2
 			case 883037:
 			case 883043:
 			case 883049:
-			    brokenMorale();
-			break;
+				brokenMorale();
+				break;
 		}
 	}
 
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
+
 	private void conquerorPassion() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
+
 	private void ereshkigalRage() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
+
 	private void brokenMorale() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
@@ -370,7 +374,7 @@ public class RangerAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}

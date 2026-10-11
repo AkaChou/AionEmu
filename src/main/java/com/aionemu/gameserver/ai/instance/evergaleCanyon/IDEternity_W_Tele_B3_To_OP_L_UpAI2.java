@@ -48,11 +48,10 @@ public class IDEternity_W_Tele_B3_To_OP_L_UpAI2 extends ActionItemNpcAI2
 
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		switch (getNpcId()) {
-		    case 835278: //IDEternity_W_Tele_B3_To_OP_L_Up.
-				TeleportService2.teleportTo(player, 302350000, 428.87717f, 752.3248f, 336.36725f, (byte) 114);
-			break;
-        }
+ 		if (getNpcId() == 835278) {
+ 			//IDEternity_W_Tele_B3_To_OP_L_Up.
+ 			TeleportService2.teleportTo(player, 302350000, 428.87717f, 752.3248f, 336.36725f, (byte) 114);
+ 		}
 	}
 
 	private void IDEternity_W_Tele_B3_To_OP_D_Up() {

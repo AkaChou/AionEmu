@@ -66,11 +66,9 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 236228:
-			    shareSource();
-		    break;
-		}
+ 		if (getNpcId() == 236228) {
+ 			shareSource();
+ 		}
 	}
 
 	private void shareSource() {

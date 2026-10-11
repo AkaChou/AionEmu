@@ -129,11 +129,9 @@ public class ShugoImperialTombSpawnManager {
 	 * @param npc_id NPC 模板 ID / the npc template id
 	 */
 	public static void sendMessage(Player player, int npc_id) {
-		switch (npc_id) {
-		case 831117:
-			PacketSendUtility.sendSys3Message(player, "\uE09B", "<Shugo Imperial Tomb> is now open !!!");
-			break;
-		}
+ 		if (npc_id == 831117) {
+ 			PacketSendUtility.sendSys3Message(player, "\uE09B", "<Shugo Imperial Tomb> is now open !!!");
+ 		}
 	}
 
 	/**

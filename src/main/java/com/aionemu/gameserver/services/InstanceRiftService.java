@@ -36,6 +36,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 副本裂隙服务：按 InstanceSchedule 调度开启，管理刷怪与生命周期。
  * Instance Rift service: opens by InstanceSchedule and manages spawn lifecycle.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -98,6 +99,7 @@ public class InstanceRiftService {
 	/**
 	 * 启动指定 ID 的副本裂隙，广播消息并在持续时长后自动关闭。
 	 * Starts the instance rift for the given id, broadcasts, and auto-stops after duration.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startInstanceRift(final int id) {
@@ -113,6 +115,7 @@ public class InstanceRiftService {
 	/**
 	 * 停止指定 ID 的副本裂隙。
 	 * Stops the instance rift for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopInstanceRift(int id) {
@@ -126,7 +129,8 @@ public class InstanceRiftService {
 	/**
 	 * 按状态类型在地点刷出对应模板 NPC。
 	 * Spawns NPCs for the location matching the given state type.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param estate state type
 	 */
 	public void spawn(InstanceRiftLocation loc, InstanceRiftStateType estate) {
@@ -144,22 +148,24 @@ public class InstanceRiftService {
 	/**
 	 * 向全体玩家广播副本裂隙开启消息（按 ID）。
 	 * Broadcasts instance-rift open message to all players (by id).
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 handled 则为 true / true if handled
 	 */
-	public boolean instanceRiftMsg(int id) {
-		return switch (id) {
+	public void instanceRiftMsg(int id) {
+		switch (id) {
 			case 1 -> {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
-				yield true;
 			}
-			default -> false;
+			default -> {
+			}
 		};
 	}
 
 	/**
 	 * 清除地点上已刷出的对象（无仇恨时立即删除）。
 	 * Clears spawned objects at the location (deletes immediately when no aggro).
+	 *
 	 * @param loc location
 	 */
 	public void despawn(InstanceRiftLocation loc) {
@@ -180,6 +186,7 @@ public class InstanceRiftService {
 	/**
 	 * 指定副本裂隙是否正在进行中。
 	 * Whether the given instance rift is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 若 active 则为 true / true if active
 	 */
@@ -191,6 +198,7 @@ public class InstanceRiftService {
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -200,8 +208,9 @@ public class InstanceRiftService {
 	/**
 	 * 按 ID 获取地点。
 	 * Returns the location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public InstanceRiftLocation getInstanceRiftLocation(int id) {
 		return instanceRift.get(id);
@@ -232,6 +241,7 @@ public class InstanceRiftService {
 	/**
 	 * 注入 Spring 实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<InstanceRiftService> instanceProvider) {
@@ -242,23 +252,23 @@ public class InstanceRiftService {
 		private static final InstanceRiftService INSTANCE = new InstanceRiftService();
 	}
 
-    /**
-     * 副本裂隙启动定时任务。
-     * Start runnable for instance-rift events.
-     */
-    private record InstanceStartRunnable(int id) implements Runnable {
-        /**
-         * 查找匹配地点并启动裂隙。
-         * Finds the matching location and starts the rift.
-         */
-        @Override
-        public void run() {
-            Map<Integer, InstanceRiftLocation> locations = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations();
-            for (InstanceRiftLocation loc : locations.values()) {
-                if (loc.getId() == id) {
-                    GameLocationBootstrapServices.instanceRiftService().startInstanceRift(loc.getId());
-                }
-            }
-        }
-    }
+	/**
+	 * 副本裂隙启动定时任务。
+	 * Start runnable for instance-rift events.
+	 */
+	private record InstanceStartRunnable(int id) implements Runnable {
+		/**
+		 * 查找匹配地点并启动裂隙。
+		 * Finds the matching location and starts the rift.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, InstanceRiftLocation> locations = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations();
+			for (InstanceRiftLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					GameLocationBootstrapServices.instanceRiftService().startInstanceRift(loc.getId());
+				}
+			}
+		}
+	}
 }

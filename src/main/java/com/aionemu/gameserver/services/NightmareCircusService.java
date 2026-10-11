@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -36,6 +35,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 梦魇马戏团活动服务，管理地点初始化、定时开关与刷怪。
  * Nightmare Circus event service managing location init, scheduled open/close, and spawns.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -98,6 +98,7 @@ public class NightmareCircusService {
 	/**
 	 * 启动指定 ID 的梦魇马戏团活动。
 	 * Starts the Nightmare Circus event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startNightmareCircus(final int id) {
@@ -113,6 +114,7 @@ public class NightmareCircusService {
 	/**
 	 * 停止指定 ID 的梦魇马戏团活动。
 	 * Stops the Nightmare Circus event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopNightmareCircus(int id) {
@@ -126,7 +128,8 @@ public class NightmareCircusService {
 	/**
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param nstate state type
 	 */
 	public void spawn(NightmareCircusLocation loc, NightmareCircusStateType nstate) {
@@ -144,22 +147,24 @@ public class NightmareCircusService {
 	/**
 	 * 向全服广播马戏团开启消息。
 	 * Broadcasts the circus-open system message to all players.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
-	public boolean dreamFaerieMsg(int id) {
-		return switch (id) {
+	public void dreamFaerieMsg(int id) {
+		switch (id) {
 			case 1 -> {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
-				yield true;
 			}
-			default -> false;
+			default -> {
+			}
 		};
 	}
 
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
+	 *
 	 * @param loc location
 	 */
 	public void despawn(NightmareCircusLocation loc) {
@@ -180,6 +185,7 @@ public class NightmareCircusService {
 	/**
 	 * 判断指定马戏团是否进行中。
 	 * Checks whether the circus with the given id is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -191,6 +197,7 @@ public class NightmareCircusService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -200,8 +207,9 @@ public class NightmareCircusService {
 	/**
 	 * 按 ID 获取马戏团地点。
 	 * Returns the circus location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public NightmareCircusLocation getNightmareCircusLocation(int id) {
 		return nightmareCircus.get(id);
@@ -232,6 +240,7 @@ public class NightmareCircusService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<NightmareCircusService> instanceProvider) {
@@ -242,24 +251,24 @@ public class NightmareCircusService {
 		private static final NightmareCircusService INSTANCE = new NightmareCircusService();
 	}
 
-    /**
-     * 梦魇马戏团活动启动定时任务。
-     * Start runnable for the Nightmare Circus world event.
-     */
-    private record CircusStartRunnable(int id) implements Runnable {
-        /**
-         * 执行启动流程。
-         * Runs the start sequence.
-         */
-        @Override
-        public void run() {
-            Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
-                    .getNightmareCircusLocations();
-            for (final NightmareCircusLocation loc : locations.values()) {
-                if (loc.getId() == id) {
-                    NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
-                }
-            }
-        }
-    }
+	/**
+	 * 梦魇马戏团活动启动定时任务。
+	 * Start runnable for the Nightmare Circus world event.
+	 */
+	private record CircusStartRunnable(int id) implements Runnable {
+		/**
+		 * 执行启动流程。
+		 * Runs the start sequence.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
+				.getNightmareCircusLocations();
+			for (final NightmareCircusLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
+				}
+			}
+		}
+	}
 }

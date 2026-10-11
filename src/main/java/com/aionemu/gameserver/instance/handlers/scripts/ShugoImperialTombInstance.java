@@ -1041,11 +1041,10 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void handleUseItemFinish(Player player, Npc npc) {
-		switch (npc.getNpcId()) {
-			case 831095: //Shugo Warrior Transformation Device.
-				GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
-			break;
-		}
+ 		if (npc.getNpcId() == 831095) {
+ 			//Shugo Warrior Transformation Device.
+ 			GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
+ 		}
 	}
 	/**
 	 * 移除相关物品。

@@ -54,11 +54,10 @@ public class Defence_Tower_Of_Pandaemonium_1AI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 220818: //Defence Tower Of Pandaemonium 1.
-				    announceDefencePandaemoniumA();
-				break;
-			}
+ 			if (getNpcId() == 220818) {
+ 				//Defence Tower Of Pandaemonium 1.
+ 				announceDefencePandaemoniumA();
+ 			}
 		}
 	}
 

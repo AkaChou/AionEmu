@@ -150,11 +150,10 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 233740: //Test Weapon Dynatoum.
-			    boost();
-		    break;
-		}
+ 		if (getNpcId() == 233740) {
+ 			//Test Weapon Dynatoum.
+ 			boost();
+ 		}
 	}
 
 	@Override

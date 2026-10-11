@@ -23,11 +23,10 @@ public class Southern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 702012: //Southern Shield Generator.
-				    announceSouthernShield();
-				break;
-			}
+ 			if (getNpcId() == 702012) {
+ 				//Southern Shield Generator.
+ 				announceSouthernShield();
+ 			}
 		}
 	}
 

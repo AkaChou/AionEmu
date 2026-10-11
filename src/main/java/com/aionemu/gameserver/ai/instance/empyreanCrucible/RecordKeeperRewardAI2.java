@@ -27,23 +27,19 @@ public class RecordKeeperRewardAI2 extends NpcAI2
         InstanceHandler instanceHandler = getPosition().getWorldMapInstance().getInstanceHandler();
         PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 10));
 		if (dialogId == 10000) {
-            switch (getNpcId()) {
-                case 205344: // 记录者奖励 / Record Keeper Reward
-                    getPosition().getWorldMapInstance().getInstanceHandler().doReward(player);
-                break;
-            }
+             if (getNpcId() == 205344) {
+             	//记录者奖励 / Record Keeper Reward
+             	getPosition().getWorldMapInstance().getInstanceHandler().doReward(player);
+             }
 		}
         return true;
     }
 	
 	@Override
     protected void handleSpawned() {
-		switch (getNpcId()) {
-			case 205344:
-				// 太棒了，守护者！你完成了整个试炼场！令人印象深刻，尼尔克！ / Wonderful, Daeva! You completed entire Crucible! Very impressive, nyerk!
-				sendMsg(1111469, getObjectId(), false, 2000);
-			break;
-		}
+ 		if (getNpcId() == 205344) {
+ 			sendMsg(1111469, getObjectId(), false, 2000);
+ 		}
 		super.handleSpawned();
     }
 	

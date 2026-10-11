@@ -70,11 +70,9 @@ public class Armored_Transport_AlphaAI2 extends GeneralNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 246463:
-				    announceF6RaidSumAtta01Light();
-				break;
-			}
+ 			if (getNpcId() == 246463) {
+ 				announceF6RaidSumAtta01Light();
+ 			}
 		}
 	}
 

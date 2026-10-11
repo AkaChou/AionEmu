@@ -83,11 +83,10 @@ public class Pandaemonium_Tank_1AI2 extends GeneralNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 220824: //Pandaemonium Tank A.
-				    announcePandaemoniumTankA();
-				break;
-			}
+ 			if (getNpcId() == 220824) {
+ 				//Pandaemonium Tank A.
+ 				announcePandaemoniumTankA();
+ 			}
 		}
 	}
 

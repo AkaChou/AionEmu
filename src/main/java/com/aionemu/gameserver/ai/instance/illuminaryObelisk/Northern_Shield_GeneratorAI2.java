@@ -23,11 +23,10 @@ public class Northern_Shield_GeneratorAI2 extends ActionItemNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 702013: //Northern Shield Generator.
-				    announceNorthernShield();
-				break;
-			}
+ 			if (getNpcId() == 702013) {
+ 				//Northern Shield Generator.
+ 				announceNorthernShield();
+ 			}
 		}
 	}
 

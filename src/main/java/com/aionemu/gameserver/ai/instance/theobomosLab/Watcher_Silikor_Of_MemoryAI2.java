@@ -17,11 +17,11 @@ import java.util.List;
 /**
  * Theobomos Lab 副本 NPC AI：Watcher Silikor Of Memory（@AIName "watcher_silikor_of_memory"），继承 AggressiveNpcAI2。
  * Theobomos Lab instance NPC AI: Watcher Silikor Of Memory (@AIName "watcher_silikor_of_memory"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("watcher_silikor_of_memory")
-public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
-{
+public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2 {
 	private final boolean canThink = true;
 	private final List<Integer> percents = new ArrayList<>();
 
@@ -42,21 +42,15 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 	}
 
 	private void checkPercentage(int hpPercentage) {
-		for (Integer percent: percents) {
+		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
 				switch (percent) {
 					case 50:
-						sp(281054);
-						sp(281053);
-					break;
 					case 25:
-						sp(281054);
-						sp(281053);
-					break;
 					case 10:
 						sp(281054);
 						sp(281053);
-					break;
+						break;
 				}
 			}
 		}
@@ -72,7 +66,7 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			if (npc != null) {
 				npc.getController().onDelete();
 			}
@@ -82,11 +76,10 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (this.getNpcId()) {
-			case 237248: //Watcher Silikor Of Memory.
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18481, 1, getOwner()).useSkill();
-			break;
-		}
+ 		if (this.getNpcId() == 237248) {
+ 			//Watcher Silikor Of Memory.
+ 			GameEngineServices.skillEngine().getSkill(getOwner(), 18481, 1, getOwner()).useSkill();
+ 		}
 	}
 
 	@Override

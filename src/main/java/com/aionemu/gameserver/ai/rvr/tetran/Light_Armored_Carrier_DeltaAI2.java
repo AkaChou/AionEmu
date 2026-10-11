@@ -60,11 +60,9 @@ public class Light_Armored_Carrier_DeltaAI2 extends GeneralNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 246484:
-				    announceF6RaidSumAtta01Light();
-				break;
-			}
+ 			if (getNpcId() == 246484) {
+ 				announceF6RaidSumAtta01Light();
+ 			}
 		}
 	}
 

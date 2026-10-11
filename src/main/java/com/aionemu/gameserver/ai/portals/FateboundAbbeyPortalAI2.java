@@ -30,12 +30,9 @@ public class FateboundAbbeyPortalAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-		    switch (getNpcId()) {
-				// 潘达梦宁至命运修道院。 / Pandaemonium To Fatebound Abbey.
-				case 209677:
-				    TeleportService2.teleportTo(player, 140010000, 284.83774f, 266.19388f, 96.48758f, (byte) 60, TeleportAnimation.BEAM_ANIMATION);
-				break;
-			}
+ 		    if (getNpcId() == 209677) {
+ 		    	TeleportService2.teleportTo(player, 140010000, 284.83774f, 266.19388f, 96.48758f, (byte) 60, TeleportAnimation.BEAM_ANIMATION);
+ 		    }
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;

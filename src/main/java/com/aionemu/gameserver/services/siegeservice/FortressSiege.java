@@ -140,22 +140,20 @@ public class FortressSiege extends Siege<FortressLocation> {
 				break;
 			}
 		} else if (getSiegeLocation().getLocationId() == 10111) {
-			switch (getSiegeLocation().getLocationId()) {
-			case 10111:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-					// 神殿大门将在 5 分钟后打开。 / The Temple Gate will open in 5 minutes.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START01, 0);
-					// 神殿大门将在 1 分钟后打开。 / The Temple Gate will open in 1 minute.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START02, 240000);
-					// 神殿大门将在 30 秒后打开。 / The Temple Gate will open in 30 seconds.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START03, 270000);
-					// 神殿大门将在 10 秒后打开。 / The Temple Gate will open in 10 seconds.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START04, 290000);
-					// 神殿大门已打开。 / The Temple Gate has opened.
-					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START05, 300000);
-				});
-				break;
-			}
+ 			if (getSiegeLocation().getLocationId() == 10111) {
+ 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+ 									// 神殿大门将在 5 分钟后打开。 / The Temple Gate will open in 5 minutes.
+ 									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START01, 0);
+ 									// 神殿大门将在 1 分钟后打开。 / The Temple Gate will open in 1 minute.
+ 									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START02, 240000);
+ 									// 神殿大门将在 30 秒后打开。 / The Temple Gate will open in 30 seconds.
+ 									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START03, 270000);
+ 									// 神殿大门将在 10 秒后打开。 / The Temple Gate will open in 10 seconds.
+ 									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START04, 290000);
+ 									// 神殿大门已打开。 / The Temple Gate has opened.
+ 									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START05, 300000);
+ 								});
+ 			}
 		}
 	}
 	/**

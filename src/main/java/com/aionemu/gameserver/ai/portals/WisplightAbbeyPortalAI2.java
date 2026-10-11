@@ -30,12 +30,9 @@ public class WisplightAbbeyPortalAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-		    switch (getNpcId()) {
-				// 圣所至光辉修道院。 / Sanctum To Wisplight Abbey.
-				case 209676:
-				    TeleportService2.teleportTo(player, 130090000, 247.05283f, 223.70496f, 129.38268f, (byte) 31, TeleportAnimation.BEAM_ANIMATION);
-				break;
-			}
+ 		    if (getNpcId() == 209676) {
+ 		    	TeleportService2.teleportTo(player, 130090000, 247.05283f, 223.70496f, 129.38268f, (byte) 31, TeleportAnimation.BEAM_ANIMATION);
+ 		    }
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;

@@ -28,6 +28,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,21 +39,29 @@ import java.util.Set;
 /**
  * 噩梦马戏团副本事件处理器。
  * Instance event handler for Nightmare Circus.
+ *
  * @author Encom
  */
 
 @InstanceID(301200000)
 public class NightmareCircusInstance extends GeneralInstanceHandler {
-	/** 狂乱梦魇击杀数 / frenetic nightmare killed */
+	/**
+	 * 狂乱梦魇击杀数 / frenetic nightmare killed
+	 */
 	private int freneticNightmareKilled;
-	/** 已播放动画集合 / played-movie set */
+	/**
+	 * 已播放动画集合 / played-movie set
+	 */
 	private final List<Integer> movies = new ArrayList<>();
-		/** 对象 / objects */
-		private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
+	/**
+	 * 对象 / objects
+	 */
+	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<>();
 
 	/**
 	 * 副本创建时初始化逻辑。
 	 * Initialize logic when the instance is created.
+	 *
 	 * @param instance 世界地图实例 / world-map instance
 	 */
 	@Override
@@ -65,25 +74,26 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		SolidIronChain.setEntityId(17);
 		objects.put(831572, SpawnEngine.spawnObject(SolidIronChain, instanceId));
 	}
+
 	/**
 	 * NPC 掉落表注册时处理。
 	 * Handle NPC drop-table registration.
+	 *
 	 * @param npc NPC / npc
 	 */
 
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		switch (npcId) {
-			case 233161: //Nightmare Lord Heiramune.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000163, 1)); //Nightmare Lord's Key.
-		    break;
+		if (npcId == 233161) { //Nightmare Lord Heiramune.
+			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000163, 1)); //Nightmare Lord's Key.
 		}
 	}
 
 	/**
 	 * 玩家进入副本时处理。
 	 * Handle a player entering the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -92,23 +102,23 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
+						break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
+						break;
 				}
-			break;
+				break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
+						break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
+						break;
 				}
-			break;
+				break;
 		}
 	}
 
@@ -128,8 +138,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 1000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -140,8 +150,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 11000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -152,8 +162,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 21000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -164,8 +174,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 31000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -176,8 +186,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 41000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -188,8 +198,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 51000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -200,8 +210,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 61000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -212,8 +222,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 71000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -224,8 +234,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 81000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -236,8 +246,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 91000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -248,8 +258,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 101000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -260,8 +270,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 111000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -272,8 +282,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 121000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -284,8 +294,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 131000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -296,8 +306,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 141000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -308,8 +318,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 151000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -320,8 +330,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 161000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -332,8 +342,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂暴梦魇。 / Violent Nightmare.
-				attackEvent((Npc)spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233149, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 171000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -344,8 +354,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			@Override
 			public void run() {
 				// 狂乱梦魇。 / Frenetic Nightmare.
-				attackEvent((Npc)spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
-				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
+				attackEvent((Npc) spawn(233144, 520.3353f, 494.21973f, 198.34286f, (byte) 28), 519.6476f, 540.5993f, 198.83754f, false);
+				attackEvent((Npc) spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 181000);
 	}
@@ -353,6 +363,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理死亡事件。
 	 * Handle a death event.
+	 *
 	 * @param npc NPC / npc
 	 */
 	@Override
@@ -360,32 +371,32 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 233144: //Frenetic Nightmare.
-			    freneticNightmareKilled++;
+				freneticNightmareKilled++;
 				if (freneticNightmareKilled == 26) {
 					// 博瓦里基已出现！ / Bovariki has appeared!.
 					sendMsgByRace(1401797, Race.PC_ALL, 0);
 					spawn(233153, 529.8865f, 550.8018f, 198.70699f, (byte) 78); //Mistress Viloa.
 				}
 				despawnNpc(npc);
-			break;
+				break;
 			case 233153: //Mistress Viloa.
-			    despawnNpc(npc);
-			    spawnBoxOfTerrors();
+				despawnNpc(npc);
+				spawnBoxOfTerrors();
 				// 丑角领主雷什卡已出现！ / Harlequin Lord Reshka has appeared!
-			    sendMsgByRace(1401798, Race.PC_ALL, 0);
-			    spawn(233147, 551.98303f, 567.18024f, 198.82376f, (byte) 67); //Harlequin Lord Reshka.
-			break;
+				sendMsgByRace(1401798, Race.PC_ALL, 0);
+				spawn(233147, 551.98303f, 567.18024f, 198.82376f, (byte) 67); //Harlequin Lord Reshka.
+				break;
 			case 233147: //Harlequin Lord Reshka.
-			    despawnNpc(npc);
+				despawnNpc(npc);
 				deleteNpc(831348); // 马戏团魔术箱 / Box Of Terrors.
-			    // 梦魇领主海拉穆内将在 5 秒后出现！ / Nightmare Lord Heiramune will appear in 5 seconds!
-			    sendMsgByRace(1401798, Race.PC_ALL, 0);
-			    spawn(233161, 552.595f, 567.2736f, 198.79242f, (byte) 68); //Nightmare Lord Heiramune.
+				// 梦魇领主海拉穆内将在 5 秒后出现！ / Nightmare Lord Heiramune will appear in 5 seconds!
+				sendMsgByRace(1401798, Race.PC_ALL, 0);
+				spawn(233161, 552.595f, 567.2736f, 198.79242f, (byte) 68); //Nightmare Lord Heiramune.
 				spawn(233162, 553.6005f, 562.4973f, 198.93172f, (byte) 65); //Nightmare Lord Heiramune.
-			break;
+				break;
 			case 233161:
-			/* case 233161：梦魇领主海拉穆内 / case 233161: Nightmare Lord Heiramune */
-			    spawnIUFriendDance();
+				/* case 233161：梦魇领主海拉穆内 / case 233161: Nightmare Lord Heiramune */
+				spawnIUFriendDance();
 				sendMovie(player, 982);
 				deleteNpc(831572); //Bird Cage Chain.
 				deleteNpc(831627); //Bird Cage Closed.
@@ -396,11 +407,11 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				OpenCage.setEntityId(14);
 				objects.put(831598, SpawnEngine.spawnObject(OpenCage, instanceId));
 				spawn(831576, 483.582581f, 567.211487f, 201.734894f, (byte) 0); //Nightmare Circus Exit.
-			break;
+				break;
 			case 233162:
-			/* case 233162：梦魇领主海拉穆内之幻影 / case 233162: Phantom of Nightmare Lord Heiramune */
-			    despawnNpc(npc);
-			break;
+				/* case 233162：梦魇领主海拉穆内之幻影 / case 233162: Phantom of Nightmare Lord Heiramune */
+				despawnNpc(npc);
+				break;
 			case 831572: //Solid Iron Chain.
 				startNightmareWave();
 				instance.doOnAllPlayers(new Visitor<>() {
@@ -414,42 +425,44 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 						sendMovie(player, 981);
 					}
 				});
-			break;
+				break;
 		}
 	}
 
 	private void spawnBoxOfTerrors() {
-	    spawn(831348, 534.0532f, 198.64136f, 556.31506f, (byte) 45);
-        spawn(831348, 525.08844f, 552.17865f, 198.75f, (byte) 30);
-        spawn(831348, 515.5271f, 555.8954f, 198.75f, (byte) 15);
-        spawn(831348, 511.9015f, 565.3504f, 198.75f, (byte) 1);
-        spawn(831348, 515.68115f, 574.70087f, 198.75f, (byte) 105);
-        spawn(831348, 525.0347f, 577.6604f, 198.55933f, (byte) 90);
-        spawn(831348, 533.94104f, 574.7093f, 198.75f, (byte) 74);
-        spawn(831348, 537.88513f, 565.4929f, 198.71112f, (byte) 61);
+		spawn(831348, 534.0532f, 198.64136f, 556.31506f, (byte) 45);
+		spawn(831348, 525.08844f, 552.17865f, 198.75f, (byte) 30);
+		spawn(831348, 515.5271f, 555.8954f, 198.75f, (byte) 15);
+		spawn(831348, 511.9015f, 565.3504f, 198.75f, (byte) 1);
+		spawn(831348, 515.68115f, 574.70087f, 198.75f, (byte) 105);
+		spawn(831348, 525.0347f, 577.6604f, 198.55933f, (byte) 90);
+		spawn(831348, 533.94104f, 574.7093f, 198.75f, (byte) 74);
+		spawn(831348, 537.88513f, 565.4929f, 198.71112f, (byte) 61);
 	}
+
 	private void spawnGreaterNightmareCrate() {
-        spawn(831575, 505.28232f, 560.26874f, 198.875f, (byte) 0);
-        spawn(831575, 500.8052f, 560.1265f, 198.875f, (byte) 0);
-        spawn(831575, 500.71606f, 564.9373f, 198.875f, (byte) 0);
-        spawn(831575, 500.82724f, 569.7114f, 198.875f, (byte) 0);
-        spawn(831575, 500.7664f, 574.143f, 199.0f, (byte) 0);
-        spawn(831575, 505.12305f, 573.96344f, 198.8071f, (byte) 119);
-        spawn(831575, 504.6248f, 567.0404f, 198.875f, (byte) 0);
+		spawn(831575, 505.28232f, 560.26874f, 198.875f, (byte) 0);
+		spawn(831575, 500.8052f, 560.1265f, 198.875f, (byte) 0);
+		spawn(831575, 500.71606f, 564.9373f, 198.875f, (byte) 0);
+		spawn(831575, 500.82724f, 569.7114f, 198.875f, (byte) 0);
+		spawn(831575, 500.7664f, 574.143f, 199.0f, (byte) 0);
+		spawn(831575, 505.12305f, 573.96344f, 198.8071f, (byte) 119);
+		spawn(831575, 504.6248f, 567.0404f, 198.875f, (byte) 0);
 	}
+
 	private void spawnNightmareCrate() {
-        spawn(831745, 544.54767f, 569.4929f, 198.875f, (byte) 60);
-        spawn(831745, 544.49084f, 566.5837f, 198.96352f, (byte) 60);
-        spawn(831745, 541.7616f, 566.55865f, 198.95529f, (byte) 60);
-        spawn(831745, 538.9772f, 550.2749f, 198.875f, (byte) 45);
-        spawn(831745, 540.71594f, 552.16797f, 198.875f, (byte) 45);
-        spawn(831745, 537.3058f, 551.9778f, 198.875f, (byte) 45);
-        spawn(831745, 529.0003f, 583.8923f, 198.86154f, (byte) 87);
-        spawn(831745, 526.29016f, 584.32465f, 198.91559f, (byte) 87);
-        spawn(831745, 528.6637f, 581.28894f, 198.69373f, (byte) 87);
-        spawn(831745, 517.5683f, 547.7183f, 198.875f, (byte) 25);
-        spawn(831745, 520.36786f, 546.94763f, 198.875f, (byte) 25);
-        spawn(831745, 518.48267f, 550.7468f, 198.75f, (byte) 25);
+		spawn(831745, 544.54767f, 569.4929f, 198.875f, (byte) 60);
+		spawn(831745, 544.49084f, 566.5837f, 198.96352f, (byte) 60);
+		spawn(831745, 541.7616f, 566.55865f, 198.95529f, (byte) 60);
+		spawn(831745, 538.9772f, 550.2749f, 198.875f, (byte) 45);
+		spawn(831745, 540.71594f, 552.16797f, 198.875f, (byte) 45);
+		spawn(831745, 537.3058f, 551.9778f, 198.875f, (byte) 45);
+		spawn(831745, 529.0003f, 583.8923f, 198.86154f, (byte) 87);
+		spawn(831745, 526.29016f, 584.32465f, 198.91559f, (byte) 87);
+		spawn(831745, 528.6637f, 581.28894f, 198.69373f, (byte) 87);
+		spawn(831745, 517.5683f, 547.7183f, 198.875f, (byte) 25);
+		spawn(831745, 520.36786f, 546.94763f, 198.875f, (byte) 25);
+		spawn(831745, 518.48267f, 550.7468f, 198.75f, (byte) 25);
 	}
 
 	private void spawnIUFriendDance() {
@@ -510,6 +523,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家离开副本时处理。
 	 * Handle a player leaving the instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -532,6 +546,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/**
 	 * 玩家从该副本登出时处理。
 	 * Handle a player logging out from this instance.
+	 *
 	 * @param player 玩家 / player
 	 */
 	@Override
@@ -550,14 +565,16 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			npc.getController().onDelete();
 		}
 	}
+
 	/**
 	 * 处理 despawnNpcs。
 	 * Handle despawnNpcs.
+	 *
 	 * @param npcs NPC 列表 / npcs
 	 */
 
 	protected void despawnNpcs(List<Npc> npcs) {
-		for (Npc npc: npcs) {
+		for (Npc npc : npcs) {
 			npc.getController().onDelete();
 		}
 	}
@@ -565,7 +582,8 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.
-	 * @param msg 消息 / message
+	 *
+	 * @param msg  消息 / message
 	 * @param race 阵营 / race
 	 * @param time 时间 / time
 	 */
@@ -598,46 +616,47 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	/**
 	 * 处理玩家复活事件。
 	 * Handle a player revive event.
+	 *
 	 * @param player 玩家 / player
 	 * @return 结果 / result
 	 */
 	@Override
-    public boolean onReviveEvent(Player player) {
+	public boolean onReviveEvent(Player player) {
 		player.getGameStats().updateStatsAndSpeedVisually();
 		PlayerReviveService.revive(player, 100, 100, false, 0);
 		switch (player.getRace()) {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000); //Embrace The Dream.
+						break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000); //Embrace The Nightmare.
+						break;
 				}
-			break;
+				break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000); //Embrace The Dream.
+						break;
 					case 2:
-					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
-					break;
+						GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000); //Embrace The Nightmare.
+						break;
 				}
-			break;
+				break;
 		}
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
 		PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_INSTANT_DUNGEON_RESURRECT, 0, 0));
-        return TeleportService2.teleportTo(player, mapId, instanceId, 469.65033f, 567.8404f, 201.74283f, (byte) 113);
-    }
+		return TeleportService2.teleportTo(player, mapId, instanceId, 469.65033f, 567.8404f, 201.74283f, (byte) 113);
+	}
 
 	/**
 	 * 副本销毁时清理资源。
 	 * Clean up resources when the instance is destroyed.
 	 */
 	@Override
-    public void onInstanceDestroy() {
+	public void onInstanceDestroy() {
 		movies.clear();
-    }
+	}
 }
