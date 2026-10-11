@@ -12,7 +12,6 @@ import java.nio.ByteOrder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.netty.util.concurrent.EventExecutor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import lombok.AccessLevel;
@@ -177,11 +176,11 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
      */
     @Override
     public void enableWriteInterest() {
+        // Netty 事件循环是长生命周期共享资源，严禁 try-with-resources 关闭（会 shutdown 事件循环）。
+        // The Netty event loop is a long-lived shared resource; never close it via try-with-resources.
         if (context != null) {
-			try (EventExecutor executor = context.executor()) {
-				executor.execute(this::flushWrites);
-			}
-		}
+            context.executor().execute(this::flushWrites);
+        }
     }
 
     /**
