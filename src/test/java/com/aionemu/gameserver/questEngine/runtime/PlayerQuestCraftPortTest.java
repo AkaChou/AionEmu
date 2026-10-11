@@ -222,8 +222,6 @@ class PlayerQuestCraftPortTest {
 		@Override public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) {
 			stored.add(new Call(connection, skillId, targetLevel));
 		}
-		@Override public Timestamp getSkinSkillActiveDateById(int playerObjId, int skillId) { return null; }
-		@Override public int getSkinExpireTime(int playerObjId, int skillId) { return 0; }
 		@Override public boolean supports(String databaseName, int majorVersion, int minorVersion) { return true; }
 	}
 }

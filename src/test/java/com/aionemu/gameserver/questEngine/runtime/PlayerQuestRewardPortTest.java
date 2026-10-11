@@ -801,10 +801,6 @@ class PlayerQuestRewardPortTest {
 			throw new AssertionError("unexpected getPlayerOidsOnAccount");
 		}
 
-		@Override
-		public void storeLastOnlineTime(int objectId, Timestamp lastOnline) {
-			throw new AssertionError("unexpected storeLastOnlineTime");
-		}
 
 		@Override
 		public void onlinePlayer(Player player, boolean online) {
@@ -866,10 +862,6 @@ class PlayerQuestRewardPortTest {
 			throw new AssertionError("unexpected setPlayerLastTransferTime");
 		}
 
-		@Override
-		public Timestamp getCharacterCreationDateId(int obj) {
-			throw new AssertionError("unexpected getCharacterCreationDateId");
-		}
 
 		@Override
 		public void updateLegionJoinRequestState(int playerId,
@@ -887,10 +879,6 @@ class PlayerQuestRewardPortTest {
 			throw new AssertionError("unexpected getJoinRequestState");
 		}
 
-		@Override
-		public int getPlayerLunaConsumeByObjId(int playerObjId) {
-			throw new AssertionError("unexpected getPlayerLunaConsumeByObjId");
-		}
 
 		@Override
 		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
@@ -919,12 +907,12 @@ class PlayerQuestRewardPortTest {
 		}
 
 		@Override
-		public boolean storeTitles(Player player, Title entry) {
+		public void storeTitles(Player player, Title entry) {
 			throw new AssertionError("unexpected storeTitles");
 		}
 
 		@Override
-		public boolean removeTitle(int playerId, int titleId) {
+		public void removeTitle(int playerId, int titleId) {
 			throw new AssertionError("unexpected removeTitle");
 		}
 

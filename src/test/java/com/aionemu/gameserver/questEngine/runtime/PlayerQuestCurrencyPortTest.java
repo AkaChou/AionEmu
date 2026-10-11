@@ -600,12 +600,12 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		@Override
-		public boolean storeTitles(Player player, Title entry) {
+		public void storeTitles(Player player, Title entry) {
 			throw new AssertionError("unexpected storeTitles");
 		}
 
 		@Override
-		public boolean removeTitle(int playerId, int titleId) {
+		public void removeTitle(int playerId, int titleId) {
 			throw new AssertionError("unexpected removeTitle");
 		}
 
@@ -638,7 +638,7 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		@Override
-		public boolean storeAbyssRank(Player player) {
+		public void storeAbyssRank(Player player) {
 			throw new AssertionError("unexpected storeAbyssRank");
 		}
 
@@ -652,10 +652,6 @@ class PlayerQuestCurrencyPortTest {
 			throw new AssertionError("unexpected getAbyssRankingLegions");
 		}
 
-		@Override
-		public Map<Integer, Integer> loadPlayersAp(Race race, int lowerApLimit, int maxOfflineDays) {
-			throw new AssertionError("unexpected loadPlayersAp");
-		}
 
 		@Override
 		public Map<Integer, Integer> loadPlayersGp(Race race, int lowerGpLimit, int maxOfflineDays) {
@@ -757,10 +753,6 @@ class PlayerQuestCurrencyPortTest {
 			throw new AssertionError("unexpected getPlayerOidsOnAccount");
 		}
 
-		@Override
-		public void storeLastOnlineTime(int objectId, Timestamp lastOnline) {
-			throw new AssertionError("unexpected storeLastOnlineTime");
-		}
 
 		@Override
 		public void onlinePlayer(Player player, boolean online) {
@@ -822,10 +814,6 @@ class PlayerQuestCurrencyPortTest {
 			throw new AssertionError("unexpected setPlayerLastTransferTime");
 		}
 
-		@Override
-		public Timestamp getCharacterCreationDateId(int obj) {
-			throw new AssertionError("unexpected getCharacterCreationDateId");
-		}
 
 		@Override
 		public void updateLegionJoinRequestState(int playerId,
@@ -843,10 +831,6 @@ class PlayerQuestCurrencyPortTest {
 			throw new AssertionError("unexpected getJoinRequestState");
 		}
 
-		@Override
-		public int getPlayerLunaConsumeByObjId(int playerObjId) {
-			throw new AssertionError("unexpected getPlayerLunaConsumeByObjId");
-		}
 
 		@Override
 		public boolean supports(String databaseName, int majorVersion, int minorVersion) {

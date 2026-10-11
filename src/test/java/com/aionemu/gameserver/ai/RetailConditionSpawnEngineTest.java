@@ -128,7 +128,7 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	private static RetailAiData retailAiData() {
-		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, true);
+		ConditionSpawnNpc npc = new ConditionSpawnNpc(NPC_ID, 10, 20, 30, 0, 0, 0, null, null, true, 0);
 		ConditionSpawnChoice choice = new ConditionSpawnChoice(10_000, null, List.of(npc));
 		ConditionSpawnGroup group = new ConditionSpawnGroup(1_000, List.of(List.of(choice)));
 		ConditionSpawn condition = new ConditionSpawn(1, "wave == 0", true, "all", List.of(group));

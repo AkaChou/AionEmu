@@ -281,10 +281,6 @@ class SystemMailServiceTest {
 			throw unsupported();
 		}
 
-		@Override
-		public void storeLastOnlineTime(int objectId, Timestamp lastOnline) {
-			throw unsupported();
-		}
 
 		@Override
 		public void onlinePlayer(Player player, boolean online) {
@@ -341,10 +337,6 @@ class SystemMailServiceTest {
 			throw unsupported();
 		}
 
-		@Override
-		public Timestamp getCharacterCreationDateId(int obj) {
-			throw unsupported();
-		}
 
 		@Override
 		public void updateLegionJoinRequestState(int playerId, LegionJoinRequestState state) {
@@ -361,10 +353,6 @@ class SystemMailServiceTest {
 			throw unsupported();
 		}
 
-		@Override
-		public int getPlayerLunaConsumeByObjId(int playerObjId) {
-			throw unsupported();
-		}
 	}
 
 	private static final class FakeMailDAO extends MailDAO {
@@ -389,7 +377,7 @@ class SystemMailServiceTest {
 		}
 
 		@Override
-		public boolean deleteLetter(int letterId) {
+		public void deleteLetter(int letterId) {
 			throw unsupported();
 		}
 

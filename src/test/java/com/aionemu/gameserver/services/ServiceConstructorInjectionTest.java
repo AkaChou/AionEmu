@@ -189,8 +189,8 @@ class ServiceConstructorInjectionTest {
 	void abyssLandingServiceConstructsWithInjectedDao() {
 		AbyssLandingDAO stubAbyssLandingDAO = new AbyssLandingDAO() {
 			@Override
-			public boolean loadLandingLocations(Map<Integer, LandingLocation> locations) {
-				return true;
+			public void loadLandingLocations(Map<Integer, LandingLocation> locations) {
+				return;
 			}
 
 			@Override
@@ -216,8 +216,8 @@ class ServiceConstructorInjectionTest {
 	void abyssLandingSpecialServiceConstructsWithInjectedDao() {
 		AbyssSpecialLandingDAO stubAbyssSpecialLandingDAO = new AbyssSpecialLandingDAO() {
 			@Override
-			public boolean loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations) {
-				return true;
+			public void loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations) {
+				return;
 			}
 
 			@Override
