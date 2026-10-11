@@ -125,8 +125,8 @@ public final class DB {
 	 * @param query 查询 SQL 语句 / The SQL statement
 	 * @return 操作是否成功 / Whether the operation was successful
 	 */
-	public static boolean insertUpdate(String query) {
-		return insertUpdate(query, null, null);
+	public static void insertUpdate(String query) {
+		insertUpdate(query, null, null);
 	}
 
 	/**

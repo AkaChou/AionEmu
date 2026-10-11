@@ -15,21 +15,21 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Miren Master General（@AIName "unsealed_miren"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Miren Master General (@AIName "unsealed_miren"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("unsealed_miren")
-public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
-{
+public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
 
 	@Override
-    protected void handleSpawned() {
-        super.handleSpawned();
+	protected void handleSpawned() {
+		super.handleSpawned();
 		announceUnsealedMiren();
-    }
+	}
 
 	@Override
 	protected void handleDied() {
@@ -40,7 +40,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			case 269911:
 				treasureChest();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-			break;
+				break;
 		}
 		super.handleDied();
 	}

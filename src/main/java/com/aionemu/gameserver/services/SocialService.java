@@ -34,8 +34,8 @@ public class SocialService {
 
 	public SocialService() {
 		this(safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
-			 safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+			safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
 	}
 
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
@@ -65,16 +65,17 @@ public class SocialService {
 	 * 将目标加入玩家黑名单。
 	 * Adds the target to the player's block list.
 	 * operator
+	 *
 	 * @param blockedPlayer 被屏蔽玩家 / blocked player
-	 * block reason
+	 *                      block reason
 	 * @return 添加成功时为 {@code true} / {@code true} if added
 	 */
 	public static boolean addBlockedUser(Player player, Player blockedPlayer, String reason) {
 		if (getInstance().blockListDAO.addBlockedUser(player.getObjectId(), blockedPlayer.getObjectId(),
-				reason)) {
+			reason)) {
 			player.getBlockList().add(new BlockedPlayer(blockedPlayer.getCommonData(), reason));
 			player.getClientConnection()
-					.sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.BLOCK_SUCCESSFUL, blockedPlayer.getName()));
+				.sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.BLOCK_SUCCESSFUL, blockedPlayer.getName()));
 			player.getClientConnection().sendPacket(new SM_BLOCK_LIST());
 			return true;
 		}
@@ -92,7 +93,7 @@ public class SocialService {
 		if (getInstance().blockListDAO.delBlockedUser(player.getObjectId(), blockedUserId)) {
 			player.getBlockList().remove(blockedUserId);
 			player.getClientConnection().sendPacket(new SM_BLOCK_RESPONSE(SM_BLOCK_RESPONSE.UNBLOCK_SUCCESSFUL,
-					getInstance().playerDAO.loadPlayerCommonData(blockedUserId).getName()));
+				getInstance().playerDAO.loadPlayerCommonData(blockedUserId).getName()));
 			player.getClientConnection().sendPacket(new SM_BLOCK_LIST());
 			return true;
 		}
@@ -103,24 +104,26 @@ public class SocialService {
 	 * 更新黑名单条目的屏蔽原因。
 	 * Updates the block reason for a blocked player entry.
 	 * operator
+	 *
 	 * @param target 黑名单条目 / blocked player entry
-	 * new reason
+	 *               new reason
 	 * @return 有变更且持久化成功返回 true / true if changed and persisted
 	 */
-	public static boolean setBlockedReason(Player player, BlockedPlayer target, String reason) {
+	public static void setBlockedReason(Player player, BlockedPlayer target, String reason) {
 		if (!target.getReason().equals(reason)) {
 			if (getInstance().blockListDAO.setReason(player.getObjectId(), target.getObjId(), reason)) {
 				target.setReason(reason);
 				player.getClientConnection().sendPacket(new SM_BLOCK_LIST());
-				return true;
+return;
 			}
 		}
-		return false;
+return;
 	}
 
 	/**
 	 * 建立双向好友关系并同步双方好友列表。
 	 * Creates a mutual friendship and syncs both friend lists.
+	 *
 	 * @param friend1 first player
 	 * @param friend2 second player
 	 */
@@ -131,15 +134,16 @@ public class SocialService {
 		friend1.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 		friend2.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 		friend1.getClientConnection()
-				.sendPacket(new SM_FRIEND_RESPONSE(friend2.getName(), SM_FRIEND_RESPONSE.TARGET_ADDED));
+			.sendPacket(new SM_FRIEND_RESPONSE(friend2.getName(), SM_FRIEND_RESPONSE.TARGET_ADDED));
 		friend2.getClientConnection()
-				.sendPacket(new SM_FRIEND_RESPONSE(friend1.getName(), SM_FRIEND_RESPONSE.TARGET_ADDED));
+			.sendPacket(new SM_FRIEND_RESPONSE(friend1.getName(), SM_FRIEND_RESPONSE.TARGET_ADDED));
 	}
 
 	/**
 	 * 删除好友关系；对方在线时同步通知。
 	 * Deletes a friendship; notifies the other side if online.
-	 * @param deleter 发起删除的玩家 / player who deletes
+	 *
+	 * @param deleter     发起删除的玩家 / player who deletes
 	 * @param exFriend2Id 被删除好友 objectId / former friend object id
 	 */
 	public static void deleteFriend(Player deleter, int exFriend2Id) {
@@ -149,16 +153,16 @@ public class SocialService {
 				friend2Player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(exFriend2Id);
 			}
 			String friend2Name = friend2Player != null ? friend2Player.getName()
-					: getInstance().playerDAO.loadPlayerCommonData(exFriend2Id).getName();
+				: getInstance().playerDAO.loadPlayerCommonData(exFriend2Id).getName();
 			deleter.getFriendList().delFriend(exFriend2Id);
 			deleter.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 			deleter.getClientConnection()
-					.sendPacket(new SM_FRIEND_RESPONSE(friend2Name, SM_FRIEND_RESPONSE.TARGET_REMOVED));
+				.sendPacket(new SM_FRIEND_RESPONSE(friend2Name, SM_FRIEND_RESPONSE.TARGET_REMOVED));
 			if (friend2Player != null) {
 				friend2Player.getFriendList().delFriend(deleter.getObjectId());
 				if (friend2Player.isOnline()) {
 					friend2Player.getClientConnection()
-							.sendPacket(new SM_FRIEND_NOTIFY(SM_FRIEND_NOTIFY.DELETED, deleter.getName()));
+						.sendPacket(new SM_FRIEND_NOTIFY(SM_FRIEND_NOTIFY.DELETED, deleter.getName()));
 					friend2Player.getClientConnection().sendPacket(new SM_FRIEND_LIST());
 				}
 			}
@@ -168,6 +172,7 @@ public class SocialService {
 	/**
 	 * 设置好友备注并刷新好友列表包。
 	 * Sets a friend note and refreshes the friend list packet.
+	 *
 	 * @param player operator
 	 * @param friend friend entry
 	 * @param notice note

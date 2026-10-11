@@ -46,7 +46,7 @@ class QuestExecutionCoordinatorTest {
 		Connection connection = connection(calls);
 		CompiledQuestDefinition definition = definition();
 		QuestEvent event = talkToNpc(700001);
-		QuestTransition transition = definition.definition().transitions().get(0);
+		QuestTransition transition = definition.definition().transitions().getFirst();
 		boolean[] stateApplied = {false};
 		boolean[] afterCommit = {false};
 		QuestActionPort actions = new QuestActionPort() {
@@ -63,16 +63,16 @@ class QuestExecutionCoordinatorTest {
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
 				definition, event, transition, snapshotPort(), actions, new QuestStatePort() {
-				@Override
-				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					stateApplied[0] = true;
-				}
+					@Override
+					public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						stateApplied[0] = true;
+					}
 
-				@Override
-				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-				}
-			},
-						(ignoredAction, ignoredSnapshot, ignoredPlan) -> afterCommit[0] = true));
+					@Override
+					public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+					}
+				},
+				(ignoredAction, ignoredSnapshot, ignoredPlan) -> afterCommit[0] = true));
 		assertEquals(QuestFailureStage.PREFLIGHT, failure.stage());
 		assertFalse(failure.committed());
 		assertInstanceOf(SQLException.class, failure.getCause());
@@ -88,8 +88,8 @@ class QuestExecutionCoordinatorTest {
 		CompiledQuestDefinition definition = definition();
 		QuestEvent event = talkToNpc(700001);
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
-				definition, event, definition.definition().transitions().get(0), snapshotPort(), new RecordingActionPort(calls),
-				new QuestStatePort() {
+			definition, event, definition.definition().transitions().getFirst(), snapshotPort(), new RecordingActionPort(calls),
+			new QuestStatePort() {
 				@Override
 				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
 					calls.add("state");
@@ -100,7 +100,10 @@ class QuestExecutionCoordinatorTest {
 					calls.add("publish");
 				}
 			},
-				(ignoredAction, ignoredSnapshot, ignoredPlan) -> { calls.add("after"); throw new IllegalStateException("packet"); });
+			(ignoredAction, ignoredSnapshot, ignoredPlan) -> {
+				calls.add("after");
+				throw new IllegalStateException("packet");
+			});
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
 		assertEquals(List.of("setAutoCommit:false", "preflight:1", "apply:1", "state", "commit",
@@ -113,7 +116,7 @@ class QuestExecutionCoordinatorTest {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition();
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
 			snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
 				@Override
 				public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
@@ -136,7 +139,7 @@ class QuestExecutionCoordinatorTest {
 		assertEquals(List.of("setAutoCommit:false", "preflight:1", "apply:1", "state", "commit",
 			"required-commit", "publish", "resync", "after"), calls);
 		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
-			result.afterCommitFailures().get(0));
+			result.afterCommitFailures().getFirst());
 		assertEquals(QuestFailureStage.STATE_PUBLISH, failure.stage());
 		assertEquals("publish failed", failure.getCause().getMessage());
 	}
@@ -147,7 +150,7 @@ class QuestExecutionCoordinatorTest {
 		CompiledQuestDefinition definition = definition();
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-				connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+				connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
 				snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
 					@Override
 					public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
@@ -203,12 +206,12 @@ class QuestExecutionCoordinatorTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> required) {
+													 List<QuestAction> required) {
 				throw new AssertionError("empty required actions must not initialize the action port");
 			}
 		};
 		QuestExecutionResult result = coordinator.execute(connection(calls), 7, definition, talkToNpc(700001),
-			definition.definition().transitions().get(0), protocolSnapshot, actions, state,
+			definition.definition().transitions().getFirst(), protocolSnapshot, actions, state,
 			(action, snapshot, plan) -> calls.add("after"));
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
@@ -220,7 +223,7 @@ class QuestExecutionCoordinatorTest {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition();
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()),
 			new RecordingActionPort(calls), new NoOpStatePort(),
@@ -241,7 +244,7 @@ class QuestExecutionCoordinatorTest {
 		List<String> calls = new ArrayList<>();
 		List<AfterCommitAction> afterCommit = new ArrayList<>();
 		CompiledQuestDefinition definition = saturatedSelfLoopDefinition();
-		QuestTransition transition = definition.definition().transitions().get(0);
+		QuestTransition transition = definition.definition().transitions().getFirst();
 		QuestStatePort state = new QuestStatePort() {
 			@Override
 			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
@@ -261,7 +264,7 @@ class QuestExecutionCoordinatorTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> required) {
+													 List<QuestAction> required) {
 				throw new AssertionError("empty required actions must not initialize the action port");
 			}
 		};
@@ -275,7 +278,9 @@ class QuestExecutionCoordinatorTest {
 		assertEquals(List.of(), afterCommit, "a state-identical execution must not announce a quest update");
 	}
 
-	/** 已饱和计数器的"收口"自环：状态不变但会生成计划。 / Clamping self-loop of a saturated counter: no state change, still planned. */
+	/**
+	 * 已饱和计数器的"收口"自环：状态不变但会生成计划。 / Clamping self-loop of a saturated counter: no state change, still planned.
+	 */
 	private static CompiledQuestDefinition saturatedSelfLoopDefinition() {
 		return quest(1006)
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
@@ -320,13 +325,13 @@ class QuestExecutionCoordinatorTest {
 
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 			connection(new ArrayList<>()), 7, definition, talkToNpc(700001),
-			definition.definition().transitions().get(0), snapshotPort(), new RecordingActionPort(new ArrayList<>()),
+			definition.definition().transitions().getFirst(), snapshotPort(), new RecordingActionPort(new ArrayList<>()),
 			new NoOpStatePort(), typedPort);
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
 		assertEquals(1, result.afterCommitFailures().size());
 		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
-			result.afterCommitFailures().get(0));
+			result.afterCommitFailures().getFirst());
 		assertEquals(QuestFailureStage.AFTER_COMMIT, failure.stage());
 		assertInstanceOf(QuestAfterCommitException.class, failure.getCause());
 	}
@@ -336,7 +341,7 @@ class QuestExecutionCoordinatorTest {
 		CompiledQuestDefinition definition = definition();
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 			connection(new ArrayList<>()), 7, definition, talkToNpc(700001),
-			definition.definition().transitions().get(0), snapshotPort(), new RecordingActionPort(new ArrayList<>()),
+			definition.definition().transitions().getFirst(), snapshotPort(), new RecordingActionPort(new ArrayList<>()),
 			new NoOpStatePort(), (action, snapshot, plan) -> {
 				throw new IllegalStateException("dialog service unavailable");
 			});
@@ -367,13 +372,13 @@ class QuestExecutionCoordinatorTest {
 			});
 
 		QuestExecutionResult result = coordinator.execute(connection(calls), 7, definition, talkToNpc(700001),
-			definition.definition().transitions().get(0), snapshotPort(), new RecordingActionPort(calls),
+			definition.definition().transitions().getFirst(), snapshotPort(), new RecordingActionPort(calls),
 			new NoOpStatePort(), (action, snapshot, plan) -> calls.add("after"));
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
 		assertEquals(List.of("after", "cleanup:7:1004"), calls.subList(calls.size() - 2, calls.size()));
 		assertEquals(1, result.afterCommitFailures().size());
-		assertEquals("cleanup failed", result.afterCommitFailures().get(0).getMessage());
+		assertEquals("cleanup failed", result.afterCommitFailures().getFirst().getMessage());
 	}
 
 	@Test
@@ -385,13 +390,13 @@ class QuestExecutionCoordinatorTest {
 		QuestInventoryPort inventory = new QuestInventoryPort() {
 			@Override
 			public void preflight(Connection ignored, QuestSnapshot snapshot, List<QuestAction.RemoveItem> removals,
-					List<QuestAction.GiveItem> gives) {
+								  List<QuestAction.GiveItem> gives) {
 				calls.add("inventory-preflight");
 			}
 
 			@Override
 			public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
-					List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
+													 List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) {
 				calls.add("inventory-apply");
 				return QuestTransactionParticipant.none();
 			}
@@ -399,14 +404,14 @@ class QuestExecutionCoordinatorTest {
 		QuestCurrencyPort currency = new QuestCurrencyPort() {
 			@Override
 			public void preflight(Connection ignored, QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards)
-					throws SQLException {
+				throws SQLException {
 				calls.add("currency-preflight");
 				throw new SQLException("currency unavailable");
 			}
 
 			@Override
 			public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
-					List<QuestAction.GrantReward> rewards) {
+													 List<QuestAction.GrantReward> rewards) {
 				calls.add("currency-apply");
 				return QuestTransactionParticipant.none();
 			}
@@ -419,7 +424,7 @@ class QuestExecutionCoordinatorTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
-					List<QuestAction.GrantReward> rewardList) {
+													 List<QuestAction.GrantReward> rewardList) {
 				calls.add("reward-apply");
 				return QuestTransactionParticipant.none();
 			}
@@ -427,19 +432,19 @@ class QuestExecutionCoordinatorTest {
 
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(connection, 7,
-				definition, event, definition.definition().transitions().get(0), snapshotPort(),
+				definition, event, definition.definition().transitions().getFirst(), snapshotPort(),
 				new CompositeQuestActionPort(inventory, currency, rewards),
 				new QuestStatePort() {
-				@Override
-				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("state");
-				}
+					@Override
+					public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("state");
+					}
 
-				@Override
-				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("publish");
-				}
-			},
+					@Override
+					public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("publish");
+					}
+				},
 				(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
 		assertEquals(QuestFailureStage.PREFLIGHT, failure.stage());
 		assertFalse(failure.committed());
@@ -451,25 +456,25 @@ class QuestExecutionCoordinatorTest {
 	void rejectsSnapshotOwnershipMismatchBeforeRequiredActions() {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition();
-		QuestTransition transition = definition.definition().transitions().get(0);
+		QuestTransition transition = definition.definition().transitions().getFirst();
 		QuestEvent event = talkToNpc(700001);
 		QuestEventPort wrongSnapshot = (connection, playerId, questId, ignored) ->
-				new QuestSnapshot(99, questId + 1, QuestStatus.START, 0, Map.of(182400001, 5));
+			new QuestSnapshot(99, questId + 1, QuestStatus.START, 0, Map.of(182400001, 5));
 
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
 				connection(calls), 7, definition, event, transition, wrongSnapshot,
 				new RecordingActionPort(calls), new QuestStatePort() {
-				@Override
-				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("state");
-				}
+					@Override
+					public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("state");
+					}
 
-				@Override
-				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("publish");
-				}
-			},
+					@Override
+					public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("publish");
+					}
+				},
 				(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
 		assertEquals(QuestFailureStage.SNAPSHOT, failure.stage());
 		assertFalse(failure.committed());
@@ -489,7 +494,7 @@ class QuestExecutionCoordinatorTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection ignored, QuestSnapshot snapshot,
-					List<QuestAction> required) {
+													 List<QuestAction> required) {
 				calls.add("required-apply");
 				return QuestTransactionParticipant.of(() -> calls.add("required-commit"),
 					() -> calls.add("required-rollback"));
@@ -498,23 +503,23 @@ class QuestExecutionCoordinatorTest {
 
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-			connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
-			snapshotPort(), actions, new QuestStatePort() {
-				@Override
-				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("state");
-				}
+				connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
+				snapshotPort(), actions, new QuestStatePort() {
+					@Override
+					public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("state");
+					}
 
-				@Override
-				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("publish");
-				}
+					@Override
+					public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("publish");
+					}
 
-				@Override
-				public void rollback(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-					calls.add("state-rollback");
-				}
-			}, (ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
+					@Override
+					public void rollback(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+						calls.add("state-rollback");
+					}
+				}, (ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
 		assertEquals(QuestFailureStage.COMMIT, failure.stage());
 		assertFalse(failure.committed());
 		assertInstanceOf(SQLException.class, failure.getCause());
@@ -526,11 +531,11 @@ class QuestExecutionCoordinatorTest {
 	void rejectsTransitionFromAnotherDefinitionBeforeOpeningTransaction() {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition();
-		QuestTransition foreignTransition = rewardDefinition().definition().transitions().get(0);
+		QuestTransition foreignTransition = rewardDefinition().definition().transitions().getFirst();
 
 		assertThrows(IllegalArgumentException.class, () -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-				connection(calls), 7, definition, talkToNpc(700001), foreignTransition, snapshotPort(),
-				new RecordingActionPort(calls), new QuestStatePort() {
+			connection(calls), 7, definition, talkToNpc(700001), foreignTransition, snapshotPort(),
+			new RecordingActionPort(calls), new QuestStatePort() {
 				@Override
 				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
 					calls.add("state");
@@ -541,7 +546,7 @@ class QuestExecutionCoordinatorTest {
 					calls.add("publish");
 				}
 			},
-				(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
+			(ignoredAction, ignoredSnapshot, ignoredPlan) -> calls.add("after")));
 		assertEquals(List.of(), calls);
 	}
 
@@ -551,8 +556,8 @@ class QuestExecutionCoordinatorTest {
 		boolean[] spawned = {false};
 		CompiledQuestDefinition definition = spawnDefinition();
 		QuestExecutionResult result = new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-				connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
-				snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
+			connection(calls), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
+			snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
 				@Override
 				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
 				}
@@ -574,16 +579,16 @@ class QuestExecutionCoordinatorTest {
 		// 注入 commit 失败:afterCommit 不得执行,spawn 绝不发生。
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-				connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().get(0),
+				connection(calls, true), 7, definition, talkToNpc(700001), definition.definition().transitions().getFirst(),
 				snapshotPort(), new RecordingActionPort(calls), new QuestStatePort() {
-				@Override
-				public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-				}
+					@Override
+					public void apply(Connection ignored, int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+					}
 
-				@Override
-				public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
-				}
-			}, spawnAfterCommitPort(spawned)));
+					@Override
+					public void publish(int ignoredPlayer, QuestMutationPlan ignoredPlan) {
+					}
+				}, spawnAfterCommitPort(spawned)));
 		assertEquals(QuestFailureStage.COMMIT, failure.stage());
 		assertFalse(failure.committed());
 		assertInstanceOf(SQLException.class, failure.getCause());
@@ -594,7 +599,7 @@ class QuestExecutionCoordinatorTest {
 		QuestSpawnPort spawnPort = new QuestSpawnPort() {
 			@Override
 			public boolean spawnNpc(QuestSnapshot snapshot, QuestMutationPlan plan, String slot, int templateId,
-					com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation location) {
+									com.aionemu.gameserver.questEngine.definition.QuestSpawnLocation location) {
 				spawned[0] = true;
 				return true;
 			}
@@ -624,10 +629,10 @@ class QuestExecutionCoordinatorTest {
 
 	private static CompiledQuestDefinition spawnDefinition() {
 		return quest(1003)
-				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
-				.node("start", project(QuestStatus.START, vars("var1", 0)))
-				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("start")
-				.afterCommit(spawnNpc("guardian", 310040000, 204830, 1f, 2f, 3f, (byte) 0)).compile();
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).goTo("start")
+			.afterCommit(spawnNpc("guardian", 310040000, 204830, 1f, 2f, 3f, (byte) 0)).compile();
 	}
 
 	private static CompiledQuestDefinition protocolOnlyDefinition() {
@@ -640,27 +645,27 @@ class QuestExecutionCoordinatorTest {
 
 	private static QuestEventPort snapshotPort() {
 		return (connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId, QuestStatus.START, 0,
-				Map.of(182400001, 5));
+			Map.of(182400001, 5));
 	}
 
 	private static CompiledQuestDefinition definition() {
 		return quest(1001)
-				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
-				.node("start", project(QuestStatus.START, vars("var1", 0)))
-				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
-				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
-				.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward")
-				.afterCommit(closeDialog()).compile();
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
+			.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward")
+			.afterCommit(closeDialog()).compile();
 	}
 
 	private static CompiledQuestDefinition rewardDefinition() {
 		return quest(1002)
-				.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
-				.node("start", project(QuestStatus.START, vars("var1", 0)))
-				.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
-				.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 1))
-				.then(removeItem(182400001, 1)).then(QuestDsl.grantReward("AP", 0, 5))
-				.then(setVariable("var1", 1)).goTo("reward").compile();
+			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT))
+			.node("start", project(QuestStatus.START, vars("var1", 0)))
+			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
+			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 1))
+			.then(removeItem(182400001, 1)).then(QuestDsl.grantReward("AP", 0, 5))
+			.then(setVariable("var1", 1)).goTo("reward").compile();
 	}
 
 	private static CompiledQuestDefinition terminalDefinition() {
@@ -688,31 +693,38 @@ class QuestExecutionCoordinatorTest {
 
 	private static Connection connection(List<String> calls, boolean failCommit) {
 		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-				(proxy, method, args) -> switch (method.getName()) {
-					case "getAutoCommit" -> true;
-					case "setAutoCommit" -> { calls.add("setAutoCommit:" + args[0]); yield null; }
-					case "commit" -> {
-						calls.add("commit");
-						if (failCommit) throw new SQLException("injected commit failure");
-						yield null;
-					}
-					case "rollback" -> { calls.add("rollback"); yield null; }
-					default -> method.getReturnType().isPrimitive() && method.getReturnType() == boolean.class ? false : null;
-				});
+			(proxy, method, args) -> switch (method.getName()) {
+				case "getAutoCommit" -> true;
+				case "setAutoCommit" -> {
+					calls.add("setAutoCommit:" + args[0]);
+					yield null;
+				}
+				case "commit" -> {
+					calls.add("commit");
+					if (failCommit) throw new SQLException("injected commit failure");
+					yield null;
+				}
+				case "rollback" -> {
+					calls.add("rollback");
+					yield null;
+				}
+				default ->
+					method.getReturnType().isPrimitive() && method.getReturnType() == boolean.class ? false : null;
+			});
 	}
 
-    private record RecordingActionPort(List<String> calls) implements QuestActionPort {
+	private record RecordingActionPort(List<String> calls) implements QuestActionPort {
 
-        @Override
-        public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
-            calls.add("preflight:" + actions.size());
-        }
+		@Override
+		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			calls.add("preflight:" + actions.size());
+		}
 
-        @Override
-        public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
-            calls.add("apply:" + actions.size());
-            return QuestTransactionParticipant.of(() -> calls.add("required-commit"),
-                    () -> calls.add("required-rollback"));
-        }
-    }
+		@Override
+		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			calls.add("apply:" + actions.size());
+			return QuestTransactionParticipant.of(() -> calls.add("required-commit"),
+				() -> calls.add("required-rollback"));
+		}
+	}
 }

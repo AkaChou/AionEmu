@@ -20,6 +20,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 物品拆分服务，处理堆叠拆分与合并。
  * Item split service handling stack split and merge.
+ *
  * @author ATracer
  */
 
@@ -30,8 +31,8 @@ public class ItemSplitService {
 	/**
 	 * Move part of stack into different slot
 	 */
-	public static final void splitItem(Player player, int itemObjId, int destinationObjId, long splitAmount,
-			short slotNum, byte sourceStorageType, byte destinationStorageType) {
+	public static void splitItem(Player player, int itemObjId, int destinationObjId, long splitAmount,
+								 short slotNum, byte sourceStorageType, byte destinationStorageType) {
 		if (splitAmount <= 0) {
 			return;
 		}
@@ -53,14 +54,14 @@ public class ItemSplitService {
 		if (sourceItem == null) {
 			sourceItem = sourceStorage.getKinahItem();
 			if (sourceItem == null || sourceItem.getObjectId() != itemObjId) {
-			log.warn(I18n.get("log.44a3d6f1e0aa", itemObjId, splitAmount, slotNum));
+				log.warn(I18n.get("log.44a3d6f1e0aa", itemObjId, splitAmount, slotNum));
 				return;
 			}
 		}
 
 		if (sourceStorageType != destinationStorageType
-				&& (ItemRestrictionService.isItemRestrictedTo(player, sourceItem, destinationStorageType)
-						|| ItemRestrictionService.isItemRestrictedFrom(player, sourceItem, sourceStorageType))) {
+			&& (ItemRestrictionService.isItemRestrictedTo(player, sourceItem, destinationStorageType)
+			|| ItemRestrictionService.isItemRestrictedFrom(player, sourceItem, sourceStorageType))) {
 			sendStorageUpdatePacket(player, StorageType.getStorageTypeById(sourceStorageType), sourceItem);
 			return;
 		}
@@ -79,14 +80,14 @@ public class ItemSplitService {
 			}
 			if (sourceStorageType != destinationStorageType) {
 				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
-						destStorage);
+					destStorage);
 			}
 			Item newItem = ItemFactory.newItem(sourceItem.getItemTemplate().getTemplateId(), splitAmount);
 			if (sourceStorageType == destinationStorageType)
 				newItem.setEquipmentSlot(slotNum);
 			sourceStorage.decreaseItemCount(sourceItem, splitAmount,
-					sourceStorageType == destinationStorageType ? ItemUpdateType.DEC_ITEM_SPLIT
-							: ItemUpdateType.DEC_ITEM_SPLIT_MOVE);
+				sourceStorageType == destinationStorageType ? ItemUpdateType.DEC_ITEM_SPLIT
+					: ItemUpdateType.DEC_ITEM_SPLIT_MOVE);
 			PacketSendUtility.sendPacket(player, SM_CUBE_UPDATE.cubeSize(sourceStorage.getStorageType(), player));
 			if (destStorage.add(newItem) == null) {
 				// 若物品未添加——可释放其 ID / if item was not added - we can release its id
@@ -95,7 +96,7 @@ public class ItemSplitService {
 		} else if (targetItem.getItemId() == sourceItem.getItemId()) {
 			if (sourceStorageType != destinationStorageType) {
 				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
-						destStorage);
+					destStorage);
 			}
 			mergeStacks(sourceStorage, destStorage, sourceItem, targetItem, splitAmount);
 		}
@@ -105,16 +106,16 @@ public class ItemSplitService {
 	 * Merge 2 stacks with simple validation
 	 */
 	public static void mergeStacks(IStorage sourceStorage, IStorage destStorage, Item sourceItem, Item targetItem,
-			long count) {
+								   long count) {
 		if (sourceItem.getItemCount() >= count) {
 			long freeCount = targetItem.getFreeCount();
 			count = count > freeCount ? freeCount : count;
 			long leftCount = destStorage.increaseItemCount(targetItem, count,
-					sourceStorage.getStorageType() == destStorage.getStorageType() ? ItemUpdateType.INC_ITEM_MERGE
-							: ItemUpdateType.INC_ITEM_COLLECT);
+				sourceStorage.getStorageType() == destStorage.getStorageType() ? ItemUpdateType.INC_ITEM_MERGE
+					: ItemUpdateType.INC_ITEM_COLLECT);
 			sourceStorage.decreaseItemCount(sourceItem, count - leftCount,
-					sourceStorage.getStorageType() == destStorage.getStorageType() ? ItemUpdateType.DEC_ITEM_SPLIT
-							: ItemUpdateType.DEC_ITEM_SPLIT_MOVE);
+				sourceStorage.getStorageType() == destStorage.getStorageType() ? ItemUpdateType.DEC_ITEM_SPLIT
+					: ItemUpdateType.DEC_ITEM_SPLIT_MOVE);
 		}
 	}
 
@@ -126,33 +127,33 @@ public class ItemSplitService {
 			return;
 		}
 		switch (source.getStorageType()) {
-		case CUBE: {
-			IStorage destination = player.getStorage(StorageType.ACCOUNT_WAREHOUSE.getId());
-			long chksum = (source.getKinah() - splitAmount) + (destination.getKinah() + splitAmount);
+			case CUBE: {
+				IStorage destination = player.getStorage(StorageType.ACCOUNT_WAREHOUSE.getId());
+				long chksum = (source.getKinah() - splitAmount) + (destination.getKinah() + splitAmount);
 
-			if (chksum != source.getKinah() + destination.getKinah()) {
-				return;
+				if (chksum != source.getKinah() + destination.getKinah()) {
+					return;
+				}
+				updateKinahCount(source, splitAmount, destination);
+				break;
 			}
-			updateKinahCount(source, splitAmount, destination);
-			break;
-		}
 
-		case ACCOUNT_WAREHOUSE: {
-			IStorage destination = player.getStorage(StorageType.CUBE.getId());
-			long chksum = (source.getKinah() - splitAmount) + (destination.getKinah() + splitAmount);
+			case ACCOUNT_WAREHOUSE: {
+				IStorage destination = player.getStorage(StorageType.CUBE.getId());
+				long chksum = (source.getKinah() - splitAmount) + (destination.getKinah() + splitAmount);
 
-			if (chksum != source.getKinah() + destination.getKinah()) {
-				return;
+				if (chksum != source.getKinah() + destination.getKinah()) {
+					return;
+				}
+				updateKinahCount(source, splitAmount, destination);
+				break;
 			}
-			updateKinahCount(source, splitAmount, destination);
-			break;
-		}
-		default:
-			break;
+			default:
+				break;
 		}
 	}
 
-	private static final void updateKinahCount(IStorage source, long splitAmount, IStorage destination) {
+	private static void updateKinahCount(IStorage source, long splitAmount, IStorage destination) {
 		source.decreaseKinah(splitAmount, ItemUpdateType.DEC_ITEM_SPLIT);
 		destination.increaseKinah(splitAmount, ItemUpdateType.INC_KINAH_MERGE);
 	}

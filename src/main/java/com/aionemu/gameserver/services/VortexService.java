@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
@@ -101,6 +100,7 @@ public class VortexService {
 	/**
 	 * 启动指定 ID 的次元入侵。
 	 * Starts the dimensional invasion for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startInvasion(final int id) {
@@ -122,6 +122,7 @@ public class VortexService {
 	/**
 	 * 停止指定 ID 的次元入侵。
 	 * Stops the dimensional invasion for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopInvasion(int id) {
@@ -136,6 +137,7 @@ public class VortexService {
 	 * 按状态刷出漩涡相关 NPC/裂隙。
 	 * Spawns vortex-related NPCs/rifts according to the given state.
 	 * location
+	 *
 	 * @param state 状态类型 / state type
 	 */
 	public void spawn(VortexLocation loc, VortexStateType state) {
@@ -154,9 +156,10 @@ public class VortexService {
 		}
 	}
 
-		/**
+	/**
 	 * 向魔族广播通往 Theobomos 的漩涡开启消息。
 	 * Broadcasts Theobomos vortex-open message to Asmodians.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -179,6 +182,7 @@ public class VortexService {
 	/**
 	 * 向天族广播通往 Brusthonin 的漩涡开启消息。
 	 * Broadcasts Brusthonin vortex-open message to Elyos.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -198,9 +202,10 @@ public class VortexService {
 		};
 	}
 
-		/**
+	/**
 	 * 广播次元漩涡关闭倒计时消息。
 	 * Broadcasts dimensional vortex close-countdown messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -279,6 +284,7 @@ public class VortexService {
 	/**
 	 * 判断指定入侵是否进行中。
 	 * Checks whether the invasion with the given id is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -290,6 +296,7 @@ public class VortexService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -299,6 +306,7 @@ public class VortexService {
 	/**
 	 * 从活动入侵中移除防守方玩家。
 	 * Removes a defender player from active invasions.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void removeDefenderPlayer(Player player) {
@@ -313,6 +321,7 @@ public class VortexService {
 	/**
 	 * 从活动入侵中移除入侵方玩家。
 	 * Removes an invader player from active invasions.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void removeInvaderPlayer(Player player) {
@@ -328,6 +337,7 @@ public class VortexService {
 	/**
 	 * 判断玩家是否位于漩涡区域内。
 	 * Checks whether the player is inside a vortex zone.
+	 *
 	 * @param player 玩家 / player
 	 * @return 是否在区域内 / whether inside zone
 	 */
@@ -371,8 +381,9 @@ public class VortexService {
 	/**
 	 * 按 ID 获取漩涡地点。
 	 * Returns the vortex location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public VortexLocation getVortexLocation(int id) {
 		return vortex.get(id);
@@ -390,13 +401,14 @@ public class VortexService {
 	/**
 	 * 校验登录位置；非法入侵方坐标会被送回家园点。
 	 * Validates login position; illegal invader coords are moved to home point.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public void validateLoginZone(Player player) {
 		VortexLocation loc = getLocationByWorld(player.getWorldId());
 		if (loc != null && player.getRace().equals(loc.getInvadersRace())) {
 			if (loc.isInsideLocation(player) && loc.isActive()
-					&& loc.getVortexController().getPassedPlayers().containsKey(player.getObjectId())) {
+				&& loc.getVortexController().getPassedPlayers().containsKey(player.getObjectId())) {
 				return;
 			}
 			int mapId = loc.getHomeWorldId();
@@ -424,6 +436,7 @@ public class VortexService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<VortexService> instanceProvider) {
@@ -434,23 +447,23 @@ public class VortexService {
 		private static final VortexService INSTANCE = new VortexService();
 	}
 
-    /**
-     * 次元漩涡入侵启动定时任务。
-     * Start runnable for dimensional-vortex invasions.
-     */
-    private record VortexStartRunnable(int id) implements Runnable {
-        /**
-         * 查找匹配地点并启动入侵。
-         * Finds the matching location and starts the invasion.
-         */
-        @Override
-        public void run() {
-            Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
-            for (final VortexLocation loc : locations.values()) {
-                if (loc.getId() == id) {
-                    VortexService.getInstance().startInvasion(loc.getId());
-                }
-            }
-        }
-    }
+	/**
+	 * 次元漩涡入侵启动定时任务。
+	 * Start runnable for dimensional-vortex invasions.
+	 */
+	private record VortexStartRunnable(int id) implements Runnable {
+		/**
+		 * 查找匹配地点并启动入侵。
+		 * Finds the matching location and starts the invasion.
+		 */
+		@Override
+		public void run() {
+			Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
+			for (final VortexLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					VortexService.getInstance().startInvasion(loc.getId());
+				}
+			}
+		}
+	}
 }

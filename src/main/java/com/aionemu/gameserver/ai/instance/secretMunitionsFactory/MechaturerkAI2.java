@@ -10,12 +10,12 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Secret Munitions Factory 副本 NPC AI：Mechaturerk（@AIName "Mechaturerk"），继承 AggressiveNpcAI2。
  * Secret Munitions Factory instance NPC AI: Mechaturerk (@AIName "Mechaturerk"), extends AggressiveNpcAI2.
+ *
  * @author Rinzler
  * @author Ranastic (Encom)
  */
 @AIName("Mechaturerk")
-public class MechaturerkAI2 extends AggressiveNpcAI2
-{
+public class MechaturerkAI2 extends AggressiveNpcAI2 {
 	private final boolean canThink = true;
 
 	@Override
@@ -29,7 +29,7 @@ public class MechaturerkAI2 extends AggressiveNpcAI2
 	}
 
 	@Override
-    protected void handleDied() {
+	protected void handleDied() {
 		spawnMechaturerkCore(245185);
 		spawn(703381, 138.86005f, 253.14404f, 191.8727f, (byte) 0); //Mechaturerk’s Footlocker.
 		spawn(703382, 138.84244f, 249.96141f, 191.8727f, (byte) 0); //Mechaturerk’s Core.

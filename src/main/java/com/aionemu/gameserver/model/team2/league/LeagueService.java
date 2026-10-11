@@ -46,23 +46,27 @@ public class LeagueService {
 		});
 	}
 
-	/** 邀请战团 / Invite To League*/
-	public static final void inviteToLeague(final Player inviter, final Player invited) {
+	/**
+	 * 邀请战团 / Invite To League
+	 */
+	public static void inviteToLeague(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
 			LeagueInvite invite = new LeagueInvite(inviter, invited);
 			if (invited.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_MSGBOX_UNION_INVITE_ME, invite)) {
 				if (invited.isInAlliance2()) {
 					PacketSendUtility.sendPacket(inviter,
-							SM_SYSTEM_MESSAGE.STR_UNION_INVITE_HIM(invited.getName(), inviter.getName()));
+						SM_SYSTEM_MESSAGE.STR_UNION_INVITE_HIM(invited.getName(), inviter.getName()));
 				}
 				PacketSendUtility.sendPacket(invited,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_MSGBOX_UNION_INVITE_ME, 0, 0, inviter.getName()));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_MSGBOX_UNION_INVITE_ME, 0, 0, inviter.getName()));
 			}
 		}
 	}
 
-	/** 是否邀请 / Whether invite*/
-	public static final boolean canInvite(Player inviter, Player invited) {
+	/**
+	 * 是否邀请 / Whether invite
+	 */
+	public static boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
@@ -82,8 +86,10 @@ public class LeagueService {
 		return RestrictionsManager.canInviteToLeague(inviter, invited);
 	}
 
-	/** 创建战团。 / Create league. */
-	public static final League createLeague(Player inviter, Player invited) {
+	/**
+	 * 创建战团。 / Create league.
+	 */
+	public static League createLeague(Player inviter, Player invited) {
 		PlayerAlliance alliance = inviter.getPlayerAlliance2();
 		Preconditions.checkNotNull(alliance, "League can not be null");
 		League newLeague = new League(new LeagueMember(alliance, 0));
@@ -92,19 +98,25 @@ public class LeagueService {
 		return newLeague;
 	}
 
-	/** 添加联盟。 / Adds alliance. */
-	public static final void addAlliance(League league, PlayerAlliance alliance) {
+	/**
+	 * 添加联盟。 / Adds alliance.
+	 */
+	public static void addAlliance(League league, PlayerAlliance alliance) {
 		Preconditions.checkNotNull(league, "League should not be null");
 		league.onEvent(new LeagueEnteredEvent(league, alliance));
 	}
 
-	/** 添加联盟到战团 / Adds alliance to league*/
-	public static final void addAllianceToLeague(League league, PlayerAlliance alliance) {
+	/**
+	 * 添加联盟到战团 / Adds alliance to league
+	 */
+	public static void addAllianceToLeague(League league, PlayerAlliance alliance) {
 		league.addMember(new LeagueMember(alliance, league.size()));
 	}
 
-	/** 移除联盟。 / Removes alliance. */
-	public static final void removeAlliance(PlayerAlliance alliance) {
+	/**
+	 * 移除联盟。 / Removes alliance.
+	 */
+	public static void removeAlliance(PlayerAlliance alliance) {
 		if (alliance != null) {
 			League league = alliance.getLeague();
 			Preconditions.checkNotNull(league, "League should not be null");
@@ -112,24 +124,28 @@ public class LeagueService {
 		}
 	}
 
-	/** Expel 联盟 / Expel Alliance */
-	public static final void expelAlliance(Player expelledPlayer, Player expelGiver) {
+	/**
+	 * Expel 联盟 / Expel Alliance
+	 */
+	public static void expelAlliance(Player expelledPlayer, Player expelGiver) {
 		Preconditions.checkNotNull(expelledPlayer, "Expelled player should not be null");
 		Preconditions.checkNotNull(expelGiver, "ExpelGiver player should not be null");
 		Preconditions.checkArgument(expelGiver.isInLeague(), "Expelled player should be in league");
 		Preconditions.checkArgument(expelledPlayer.isInLeague(), "ExpelGiver should be in league");
 		Preconditions.checkArgument(
-				expelGiver.getPlayerAlliance2().getLeague().isLeader(expelGiver.getPlayerAlliance2()),
-				"ExpelGiver alliance should be the leader of league");
+			expelGiver.getPlayerAlliance2().getLeague().isLeader(expelGiver.getPlayerAlliance2()),
+			"ExpelGiver alliance should be the leader of league");
 		Preconditions.checkArgument(expelGiver.getPlayerAlliance2().isLeader(expelGiver),
-				"ExpelGiver should be the leader of alliance");
+			"ExpelGiver should be the leader of alliance");
 		PlayerAlliance alliance = expelGiver.getPlayerAlliance2();
 		League league = alliance.getLeague();
 		league.onEvent(
-				new LeagueLeftEvent(league, expelledPlayer.getPlayerAlliance2(), LeagueLeftEvent.LeaveReson.EXPEL));
+			new LeagueLeftEvent(league, expelledPlayer.getPlayerAlliance2(), LeagueLeftEvent.LeaveReson.EXPEL));
 	}
 
-	/** 解散 / disband. */
+	/**
+	 * 解散 / disband.
+	 */
 	public static void disband(League league) {
 		Preconditions.checkState(league.onlineMembers() <= 1, "Can't disband league with more than one online member");
 		leagues.remove(league.getTeamId());

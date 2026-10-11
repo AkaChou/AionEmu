@@ -12,47 +12,48 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 public class AbyssService {
 	private static final int[] abyssMapList = {
-			// 天族领地 / Elyos territories
-			210020000, // Elten.
-			210040000, // Heiron.
-			210050000, // Inggison.
-			210060000, // Theobomos.
-			210070000, // Cygnea.
-			210090000, // Idian Depths.
-			210100000, // Iluma.
-			// 魔族领地 / Asmodian territories
-			220020000, // Morheim.
-			220040000, // Beluslan.
-			220050000, // Brusthonin.
-			220070000, // Gelkmaros.
-			220140000, // Gelkmaros [Master Server].
-			220080000, // Enshar.
-			220100000, // Idian Depths.
-			220110000, // Norvsvold.
-			// 深渊 / The Abyss
-			400010000, // Reshanta.
-			// 帕内斯特拉区域 / Panesterra zones
-			400020000, // 贝洛斯 / Belus.
-			400040000, // Aspida.
-			400050000, // Atanatos.
-			400060000, // Disillon.
-			// 中立区域 / Neutral zones
-			600010000, // Silentera Canyon.
-			600110000, // Silentera Canyon [Master Server].
-			// 4.7 新增地图 / Maps added in 4.7
-			600090000, // Kaldor.
-			600100000, // Levinshor.
-			// 5.8 新增地图 / Maps added in 5.8
-			600040000, // Tiamaranta's Eye.
-			600041000 }; // Tiamaranta's Eye [Master Server].
+		// 天族领地 / Elyos territories
+		210020000, // Elten.
+		210040000, // Heiron.
+		210050000, // Inggison.
+		210060000, // Theobomos.
+		210070000, // Cygnea.
+		210090000, // Idian Depths.
+		210100000, // Iluma.
+		// 魔族领地 / Asmodian territories
+		220020000, // Morheim.
+		220040000, // Beluslan.
+		220050000, // Brusthonin.
+		220070000, // Gelkmaros.
+		220140000, // Gelkmaros [Master Server].
+		220080000, // Enshar.
+		220100000, // Idian Depths.
+		220110000, // Norvsvold.
+		// 深渊 / The Abyss
+		400010000, // Reshanta.
+		// 帕内斯特拉区域 / Panesterra zones
+		400020000, // 贝洛斯 / Belus.
+		400040000, // Aspida.
+		400050000, // Atanatos.
+		400060000, // Disillon.
+		// 中立区域 / Neutral zones
+		600010000, // Silentera Canyon.
+		600110000, // Silentera Canyon [Master Server].
+		// 4.7 新增地图 / Maps added in 4.7
+		600090000, // Kaldor.
+		600100000, // Levinshor.
+		// 5.8 新增地图 / Maps added in 5.8
+		600040000, // Tiamaranta's Eye.
+		600041000}; // Tiamaranta's Eye [Master Server].
 
 	/**
 	 * 判断玩家是否位于欧比斯/PvP 地图列表中。
 	 * Whether the player is on a listed abyss/PvP map.
+	 *
 	 * @param player 玩家 / Player
 	 * @return 在列表内则为 {@code true} / {@code true} if on a listed map
 	 */
-	public static final boolean isOnPvpMap(Player player) {
+	public static boolean isOnPvpMap(Player player) {
 		for (int i : abyssMapList) {
 			if (i == player.getWorldId()) {
 				return true;
@@ -66,13 +67,14 @@ public class AbyssService {
 	/**
 	 * 向同地图其他玩家广播高军阶玩家被击杀。
 	 * Announce a high-rank player's death to others on the same map.
+	 *
 	 * @param victim 被击杀玩家 / Victim player
 	 */
-	public static final void rankedKillAnnounce(final Player victim) {
+	public static void rankedKillAnnounce(final Player victim) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(p -> {
 			if (p != victim && victim.getWorldId() == p.getWorldId()) {
 				PacketSendUtility.sendPacket(p, SM_SYSTEM_MESSAGE.STR_ABYSS_ORDER_RANKER_DIE(victim,
-						AbyssRankEnum.getRankDescriptionId(victim)));
+					AbyssRankEnum.getRankDescriptionId(victim)));
 			}
 		});
 	}
@@ -80,14 +82,15 @@ public class AbyssService {
 	/**
 	 * 向同世界类型非副本玩家广播欧比斯技能释放。
 	 * Announce abyss-skill cast to non-instance players of the same world type.
+	 *
 	 * @param player 施法玩家 / Caster
 	 * @param nameId 技能名称描述 ID / Skill name description id
 	 */
-	public static final void rankerSkillAnnounce(final Player player, final int nameId) {
+	public static void rankerSkillAnnounce(final Player player, final int nameId) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(p -> {
 			if (p != player && player.getWorldType() == p.getWorldType() && !p.isInInstance()) {
 				PacketSendUtility.sendPacket(p,
-						SM_SYSTEM_MESSAGE.STR_SKILL_ABYSS_SKILL_IS_FIRED(player, new DescriptionId(nameId)));
+					SM_SYSTEM_MESSAGE.STR_SKILL_ABYSS_SKILL_IS_FIRED(player, new DescriptionId(nameId)));
 			}
 		});
 	}

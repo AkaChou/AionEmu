@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -37,6 +36,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 战场对决（SvS）服务，管理潘斯特拉等战场开关与刷怪。
  * SvS battlefield service managing Panesterra battlefield open/close and spawns.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -101,6 +101,7 @@ public class SvsService {
 	/**
 	 * 启动指定 ID 的 SvS 战场。
 	 * Starts the SvS battlefield for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startSvs(final int id) {
@@ -116,6 +117,7 @@ public class SvsService {
 	/**
 	 * 停止指定 ID 的 SvS 战场。
 	 * Stops the SvS battlefield for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopSvs(int id) {
@@ -131,6 +133,7 @@ public class SvsService {
 	/**
 	 * 清理活动启动阶段创建的进阶走廊对象。
 	 * Despawns the advance-corridor objects created during event startup.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void clearAdventObjects(int id) {
@@ -142,6 +145,7 @@ public class SvsService {
 	/**
 	 * 清理一组临时对象并释放其引用。
 	 * Despawns one group of temporary objects and releases its references.
+	 *
 	 * @param objects 临时对象集合 / temporary objects
 	 */
 	private void despawnAdventObjects(List<VisibleObject> objects) {
@@ -158,7 +162,8 @@ public class SvsService {
 	/**
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param pstate state type
 	 */
 	public void spawn(SvsLocation loc, SvsStateType pstate) {
@@ -173,9 +178,10 @@ public class SvsService {
 		}
 	}
 
-		/**
+	/**
 	 * 广播前进走廊倒计时系统消息。
 	 * Broadcasts Advance Corridor countdown system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -204,9 +210,10 @@ public class SvsService {
 		};
 	}
 
-		/**
+	/**
 	 * 广播殊勋攻城传送门相关系统消息。
 	 * Broadcasts Distinguished Service siege portal system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -234,9 +241,10 @@ public class SvsService {
 		};
 	}
 
-		/**
+	/**
 	 * 广播 Transidium Annex 入口相关系统消息。
 	 * Broadcasts Transidium Annex entrance system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -265,36 +273,38 @@ public class SvsService {
 		};
 	}
 
-		/**
+	/**
 	 * 刷出前进走廊（Transidium Annex）相关 NPC。
 	 * Spawns Advance Corridor (Transidium Annex) related NPCs.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
 	public boolean advanceCorridorSP(int id) {
 		switch (id) {
-		case 5:
-			advanceCorridor.add(SpawnEngine.spawnObject(
+			case 5:
+				advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400020000, 802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.add(SpawnEngine.spawnObject(
+				advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400040000, 802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.add(SpawnEngine.spawnObject(
+				advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400050000, 802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			advanceCorridor.add(SpawnEngine.spawnObject(
+				advanceCorridor.add(SpawnEngine.spawnObject(
 					SpawnEngine.addNewSingleTimeSpawn(400060000, 802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90),
 					1));
-			return true;
-		default:
-			return false;
+				return true;
+			default:
+				return false;
 		}
 	}
 
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
+	 *
 	 * @param loc location
 	 */
 	public void despawn(SvsLocation loc) {
@@ -315,6 +325,7 @@ public class SvsService {
 	/**
 	 * 判断指定 SvS 是否进行中。
 	 * Checks whether the SvS with the given id is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -326,6 +337,7 @@ public class SvsService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -335,8 +347,9 @@ public class SvsService {
 	/**
 	 * 按 ID 获取 SvS 地点。
 	 * Returns the SvS location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public SvsLocation getSvsLocation(int id) {
 		return svs.get(id);
@@ -367,6 +380,7 @@ public class SvsService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<SvsService> instanceProvider) {
@@ -381,27 +395,27 @@ public class SvsService {
 	 * 帕内斯特拉（SVS）活动启动定时任务。
 	 * Start runnable for Panesterra (SVS) events.
 	 */
-		private record SvsStartRunnable(int id) implements Runnable {
-			/**
-			 * 执行启动流程。
-			 * Runs the start sequence.
-			 */
-			@Override
-			public void run() {
-				// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
-				SvsService.getInstance().clearAdventObjects(id);
+	private record SvsStartRunnable(int id) implements Runnable {
+		/**
+		 * 执行启动流程。
+		 * Runs the start sequence.
+		 */
+		@Override
+		public void run() {
+			// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+			SvsService.getInstance().clearAdventObjects(id);
+			// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
+			SvsService.getInstance().transidiumAnnexMsg(id);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
-				SvsService.getInstance().transidiumAnnexMsg(id);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
-					// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
-					SvsService.getInstance().advanceCorridorSP(id);
-				}, 480000);
-				Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
-				for (final SvsLocation loc : locations.values()) {
-					if (loc.getId() == id) {
-						SvsService.getInstance().startSvs(loc.getId());
-					}
+				SvsService.getInstance().advanceCorridorSP(id);
+			}, 480000);
+			Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
+			for (final SvsLocation loc : locations.values()) {
+				if (loc.getId() == id) {
+					SvsService.getInstance().startSvs(loc.getId());
 				}
 			}
 		}
+	}
 }

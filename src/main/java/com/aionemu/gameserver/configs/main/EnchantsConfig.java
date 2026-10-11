@@ -111,6 +111,9 @@ public class EnchantsConfig {
 		private final EquipmentProperties equipment = new EquipmentProperties();
 		private final CastProperties cast = new CastProperties();
 
+		public void setItem(ItemProperties item) {
+		}
+
 		public float getPlume() {
 			return ENCHANT_PLUME;
 		}
@@ -145,7 +148,8 @@ public class EnchantsConfig {
 
 		@Getter
 		public static class ItemProperties {
-			public ItemProperties() {}
+			public ItemProperties() {
+			}
 
 			public static ItemProperties valueOf(String value) {
 				ItemProperties props = new ItemProperties();

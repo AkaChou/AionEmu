@@ -79,23 +79,23 @@ public final class PlayerCPList {
 	/**
 	 * 添加点。 / Adds point.
 	 */
-	public synchronized boolean addPoint(Player player, int slot, int point) {
+	public synchronized void addPoint(Player player, int slot, int point) {
 		entry.put(slot, new PlayerCPEntry(slot, point, PersistentState.NEW));
 		PlayerService.daos().playerCreativityPointsDAO().storeCP(player.getObjectId(), slot, point);
-		return true;
+return;
 	}
 
 	/**
 	 * 移除点。 / Removes point.
 	 */
-	public synchronized boolean removePoint(Player player, int slot) {
+	public synchronized void removePoint(Player player, int slot) {
 		PlayerCPEntry entries = entry.get(slot);
 		if (entries != null) {
 			entries.setPersistentState(PersistentState.DELETED);
 			entry.remove(slot);
 			PlayerService.daos().playerCreativityPointsDAO().deleteCP(player.getObjectId(), slot);
 		}
-		return true;
+return;
 	}
 
 	/**

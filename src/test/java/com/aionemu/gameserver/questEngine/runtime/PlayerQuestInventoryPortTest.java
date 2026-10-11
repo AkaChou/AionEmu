@@ -102,8 +102,8 @@ class PlayerQuestInventoryPortTest {
 		assertEquals(3, player.getInventory().getItemCountByItemId(ITEM_A));
 		// 通过调用方 Connection 持久化 dirty items,与任务状态同事务
 		assertEquals(1, dao.transactions.size());
-		assertSame(connection, dao.transactions.get(0).connection);
-		assertTrue(dao.transactions.get(0).items.stream()
+		assertSame(connection, dao.transactions.getFirst().connection);
+		assertTrue(dao.transactions.getFirst().items.stream()
 			.anyMatch(item -> item.getItemTemplate().getTemplateId() == ITEM_A));
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
 		participant.afterCommit();
@@ -164,7 +164,7 @@ class PlayerQuestInventoryPortTest {
 		QuestActionPort actions = new QuestActionPort() {
 			@Override
 			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> required)
-					throws SQLException {
+				throws SQLException {
 				inventory.preflight(connection, snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
 						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
@@ -172,7 +172,7 @@ class PlayerQuestInventoryPortTest {
 
 			@Override
 			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> required) throws SQLException {
+													 List<QuestAction> required) throws SQLException {
 				return inventory.apply(connection, snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
 						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
@@ -188,18 +188,21 @@ class PlayerQuestInventoryPortTest {
 
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
 			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-			commitFailingConnection(jdbc), PLAYER_ID, definition, talkToNpc(700001),
-			definition.definition().transitions().get(0),
-			(connection, playerId, questId, event) -> snapshotWith(ITEM_A, 5), actions,
-			new QuestStatePort() {
-				@Override public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
-				}
-				@Override public void publish(int playerId, QuestMutationPlan plan) {
-					throw new AssertionError("publish must not run after failed commit");
-				}
-			}, (action, snapshot, plan) -> {
-				throw new AssertionError("afterCommit must not run after failed commit");
-			}));
+				commitFailingConnection(jdbc), PLAYER_ID, definition, talkToNpc(700001),
+				definition.definition().transitions().getFirst(),
+				(connection, playerId, questId, event) -> snapshotWith(ITEM_A, 5), actions,
+				new QuestStatePort() {
+					@Override
+					public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+					}
+
+					@Override
+					public void publish(int playerId, QuestMutationPlan plan) {
+						throw new AssertionError("publish must not run after failed commit");
+					}
+				}, (action, snapshot, plan) -> {
+					throw new AssertionError("afterCommit must not run after failed commit");
+				}));
 
 		assertEquals(QuestFailureStage.COMMIT, failure.stage());
 		assertFalse(failure.committed());
@@ -223,10 +226,10 @@ class PlayerQuestInventoryPortTest {
 			List.of(), gives(169001002, 2));
 
 		assertEquals(1, adder.calls.size());
-		assertEquals(169001002, adder.calls.get(0).get(0).getItemId());
-		assertEquals(2, adder.calls.get(0).get(0).getCount());
+		assertEquals(169001002, adder.calls.getFirst().getFirst().getItemId());
+		assertEquals(2, adder.calls.getFirst().getFirst().getCount());
 		assertEquals(1, dao.transactions.size());
-		assertSame(connection, dao.transactions.get(0).connection);
+		assertSame(connection, dao.transactions.getFirst().connection);
 		assertEquals(2, player.getInventory().getItemCountByItemId(169001002));
 		participant.afterCommit();
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
@@ -284,7 +287,9 @@ class PlayerQuestInventoryPortTest {
 		return List.of(new QuestAction.GiveItem(itemId, count));
 	}
 
-	/** itemAdder 把任务工作物品写入 CUBE 并标记 dirty,模拟真实 addQuestItems 副作用。 */
+	/**
+	 * itemAdder 把任务工作物品写入 CUBE 并标记 dirty,模拟真实 addQuestItems 副作用。
+	 */
 	private static final class AddingItemAdder implements BiFunction<Player, List<QuestItems>, Boolean> {
 		private final List<List<QuestItems>> calls = new ArrayList<>();
 
@@ -426,14 +431,14 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	private static final class RecordingDao extends InventoryDAO {
-        private record Transaction(Connection connection, List<Item> items) {
-        }
+		private record Transaction(Connection connection, List<Item> items) {
+		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
 
 		@Override
 		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-				Integer legionId) {
+									   Integer legionId) {
 			transactions.add(new Transaction(connection, items));
 		}
 

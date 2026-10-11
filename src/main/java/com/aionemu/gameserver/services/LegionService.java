@@ -135,11 +135,11 @@ public class LegionService {
 	 * 使用指定 DAO 依赖构造军团服务。
 	 * Constructs the legion service with given DAO dependencies.
 	 *
-	 * @param legionDAO 军团 DAO / Legion DAO
-	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
-	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
+	 * @param legionDAO        军团 DAO / Legion DAO
+	 * @param legionMemberDAO  军团成员 DAO / Legion member DAO
+	 * @param inventoryDAO     道具仓库 DAO / Inventory DAO
 	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
-	 * @param playerDAO 玩家 DAO / Player DAO
+	 * @param playerDAO        玩家 DAO / Player DAO
 	 */
 	public LegionService(@NonNull LegionDAO legionDAO,
 						 @NonNull LegionMemberDAO legionMemberDAO,
@@ -165,12 +165,12 @@ public class LegionService {
 	 * 使用指定 DAO 依赖与世界实例构造军团服务。
 	 * Constructs the legion service with given DAO dependencies and world instance.
 	 *
-	 * @param legionDAO 军团 DAO / Legion DAO
-	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
-	 * @param inventoryDAO 道具仓库 DAO / Inventory DAO
+	 * @param legionDAO        军团 DAO / Legion DAO
+	 * @param legionMemberDAO  军团成员 DAO / Legion member DAO
+	 * @param inventoryDAO     道具仓库 DAO / Inventory DAO
 	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
-	 * @param playerDAO 玩家 DAO / Player DAO
-	 * @param world 世界实例 / World instance
+	 * @param playerDAO        玩家 DAO / Player DAO
+	 * @param world            世界实例 / World instance
 	 */
 	public LegionService(@NonNull LegionDAO legionDAO,
 						 @NonNull LegionMemberDAO legionMemberDAO,
@@ -192,10 +192,10 @@ public class LegionService {
 	 */
 	public LegionService() {
 		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new),
-			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
-			 safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			 safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
+			safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
+			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
+			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
+			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
 	}
 
 	/**
@@ -495,12 +495,12 @@ public class LegionService {
 	 *
 	 * @return 若 joined successfully 则为 true / True if joined successfully
 	 */
-	public boolean directAddPlayer(int legionId, Player player) {
+	public void directAddPlayer(int legionId, Player player) {
 		Legion legion = getLegion(legionId);
 		if (legion == null) {
-			return false;
+return;
 		}
-		return directAddPlayer(legion, player);
+directAddPlayer(legion, player);
 	}
 
 	/**
@@ -1350,7 +1350,7 @@ public class LegionService {
 		return allCachedLegionMembers;
 	}
 
-	
+
 	/**
 	 * 返回当前全部已缓存军团的快照列表。
 	 * Returns a snapshot list of all currently cached legions.

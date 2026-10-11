@@ -15,54 +15,54 @@ import java.util.List;
 /**
  * Fissure Of Oblivion 副本 NPC AI：ID Transform Trans Room04（@AIName "IDTransform_TransRoom_04"），继承 NpcAI2。
  * Fissure Of Oblivion instance NPC AI: ID Transform Trans Room04 (@AIName "IDTransform_TransRoom_04"), extends NpcAI2.
+ *
  * @author Encom
  */
 @AIName("IDTransform_TransRoom_04")
-public class IDTransformTransRoom04AI2 extends NpcAI2
-{
+public class IDTransformTransRoom04AI2 extends NpcAI2 {
 	@Override
-    protected void handleCreatureSee(Creature creature) {
-        checkDistance(this, creature);
-    }
+	protected void handleCreatureSee(Creature creature) {
+		checkDistance(this, creature);
+	}
 
-    @Override
-    protected void handleCreatureMoved(Creature creature) {
-        checkDistance(this, creature);
-    }
+	@Override
+	protected void handleCreatureMoved(Creature creature) {
+		checkDistance(this, creature);
+	}
 
 	/**
 	 * 检测进入 15 米范围内的玩家，按其等级（66–75）触发对应的房间变换逻辑。
 	 * Detects players within 15m and triggers the room transformation matching their level (66-75).
 	 */
 	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
-        	if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 66) {
-        		IDTransformTransRoom04_66();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 67) {
-        		IDTransformTransRoom04_67();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 68) {
-        		IDTransformTransRoom04_68();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 69) {
-        		IDTransformTransRoom04_69();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 70) {
-        		IDTransformTransRoom04_70();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 71) {
-        		IDTransformTransRoom04_71();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 72) {
-        		IDTransformTransRoom04_72();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 73) {
-        		IDTransformTransRoom04_73();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 74) {
-        		IDTransformTransRoom04_74();
-        	} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 75) {
-        		IDTransformTransRoom04_75();
-        	}
-        }
-    }
+		if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
+			if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 66) {
+				IDTransformTransRoom04_66();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 67) {
+				IDTransformTransRoom04_67();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 68) {
+				IDTransformTransRoom04_68();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 69) {
+				IDTransformTransRoom04_69();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 70) {
+				IDTransformTransRoom04_70();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 71) {
+				IDTransformTransRoom04_71();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 72) {
+				IDTransformTransRoom04_72();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 73) {
+				IDTransformTransRoom04_73();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 74) {
+				IDTransformTransRoom04_74();
+			} else if (MathUtil.isIn3dRange(getOwner(), creature, 15) && creature.getLevel() == 75) {
+				IDTransformTransRoom04_75();
+			}
+		}
+	}
 
 	// 玩家等级 66 / Player Lvl 66
 	private void IDTransformTransRoom04_66() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -73,11 +73,17 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244490, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+		// 延迟 2 秒刷 BOSS；块 lambda 保持刷怪语句与零售原文逐字一致（FissureOfOblivionInstanceTest 源码门钉住行文本）。
+		// Boss spawns 2s later; the block lambda keeps the spawn statement verbatim (pinned by the
+		// FissureOfOblivionInstanceTest source gate).
+		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			spawn(244490, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
+		}, 2000);
+	}
+
 	// 玩家等级 67 / Player Lvl 67
 	private void IDTransformTransRoom04_67() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -89,10 +95,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244531, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 68 / Player Lvl 68
 	private void IDTransformTransRoom04_68() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -104,10 +111,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244572, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 69 / Player Lvl 69
 	private void IDTransformTransRoom04_69() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -119,10 +127,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244613, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 70 / Player Lvl 70
 	private void IDTransformTransRoom04_70() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -134,10 +143,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244654, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 71 / Player Lvl 71
 	private void IDTransformTransRoom04_71() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -149,10 +159,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244695, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 72 / Player Lvl 72
 	private void IDTransformTransRoom04_72() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -164,10 +175,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244736, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 73 / Player Lvl 73
 	private void IDTransformTransRoom04_73() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -179,10 +191,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244777, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 74 / Player Lvl 74
 	private void IDTransformTransRoom04_74() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -194,10 +207,11 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244818, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
+
 	// 玩家等级 75 / Player Lvl 75
 	private void IDTransformTransRoom04_75() {
-    	// 暗影 D。 / Shadow D.
+		// 暗影 D。 / Shadow D.
 		despawnNpc(244854);
 		despawnNpc(244855);
 		despawnNpc(244856);
@@ -209,12 +223,12 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244859, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
-    }
+	}
 
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
+			for (Npc npc : npcs) {
 				npc.getController().onDelete();
 			}
 		}

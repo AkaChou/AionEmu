@@ -66,25 +66,25 @@ public final class RetailDirectPortalEngine {
 		return true;
 	}
 
-	public static synchronized boolean openByUser(int id, Npc owner, Player player) {
+	public static synchronized void openByUser(int id, Npc owner, Player player) {
 		DirectPortal definition = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getDirectPortal(id);
 		if (definition == null || definition.needItem().isBlank() || definition.groupId() <= 0
-				|| definition.invadeType() != 5) {
-			return false;
+			|| definition.invadeType() != 5) {
+return;
 		}
 		if (ACTIVE.values().stream().anyMatch(active -> !active.closed
-				&& active.definition.groupId() == definition.groupId())) {
-			return false;
+			&& active.definition.groupId() == definition.groupId())) {
+return;
 		}
 		var item = DataManager.ITEM_DATA.getItemTemplate(definition.needItem());
 		if (item == null || player.getInventory().getItemCountByItemId(item.getTemplateId()) == 0 || !open(id, owner)) {
-			return false;
+return;
 		}
 		if (!player.getInventory().decreaseByItemId(item.getTemplateId(), 1)) {
 			close(id);
-			return false;
+return;
 		}
-		return true;
+return;
 	}
 
 	public static synchronized void close(int id) {

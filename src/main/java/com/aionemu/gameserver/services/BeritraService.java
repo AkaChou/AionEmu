@@ -209,8 +209,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean beritraInvasionMsg(int id) {
-		return broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
+	public void beritraInvasionMsg(int id) {
+		broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
 	}
 
 	/**
@@ -220,8 +220,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean invasionCorridorMsg(int id) {
-		return broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_01);
+	public void invasionCorridorMsg(int id) {
+		broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_01);
 	}
 
 	/**
@@ -231,8 +231,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean devilUnitThroughMsg(int id) {
-		return broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_02);
+	public void devilUnitThroughMsg(int id) {
+		broadcastMessage(id, 1, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_02);
 	}
 
 	/**
@@ -253,8 +253,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean ereshkigalInvasionMsg(int id) {
-		return broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
+	public void ereshkigalInvasionMsg(int id) {
+		broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
 	}
 
 	/**
@@ -264,8 +264,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean ereshkigalCorridorMsg(int id) {
-		return broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_01);
+	public void ereshkigalCorridorMsg(int id) {
+		broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_01);
 	}
 
 	/**
@@ -275,8 +275,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean ereshkigalLegionThroughMsg(int id) {
-		return broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_02);
+	public void ereshkigalLegionThroughMsg(int id) {
+		broadcastMessage(id, 35, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_02);
 	}
 
 	/**
@@ -297,8 +297,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean dredgionDefenseMsg(int id) {
-		return broadcastMessage(id, 57, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L);
+	public void dredgionDefenseMsg(int id) {
+		broadcastMessage(id, 57, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L);
 	}
 
 	private record AdventPoint(int worldId, float x, float y, float z, byte heading) {
@@ -385,8 +385,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventControlSP(int id) {
-		return spawnAdventSp(id, 1, 702529, BERITRA_ADVENT_POINTS, adventControl);
+	public void adventControlSP(int id) {
+		spawnAdventSp(id, 1, 702529, BERITRA_ADVENT_POINTS, adventControl);
 	}
 
 	/**
@@ -396,8 +396,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventEffectSP(int id) {
-		return spawnAdventSp(id, 1, 702549, BERITRA_ADVENT_POINTS, adventEffect);
+	public void adventEffectSP(int id) {
+		spawnAdventSp(id, 1, 702549, BERITRA_ADVENT_POINTS, adventEffect);
 	}
 
 	/**
@@ -407,8 +407,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventPortalSP(int id) {
-		return spawnAdventSp(id, 1, 702550, BERITRA_ADVENT_POINTS, adventPortal);
+	public void adventPortalSP(int id) {
+		spawnAdventSp(id, 1, 702550, BERITRA_ADVENT_POINTS, adventPortal);
 	}
 
 	/**
@@ -418,8 +418,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventDirectingSP(int id) {
-		return spawnAdventSp(id, 1, 855231, BERITRA_ADVENT_POINTS, adventDirecting);
+	public void adventDirectingSP(int id) {
+		spawnAdventSp(id, 1, 855231, BERITRA_ADVENT_POINTS, adventDirecting);
 	}
 
 	/**
@@ -429,8 +429,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventControlEreshSP(int id) {
-		return spawnAdventSp(id, 35, 702529, ERESHKIGAL_ADVENT_POINTS, adventEreshControl);
+	public void adventControlEreshSP(int id) {
+		spawnAdventSp(id, 35, 702529, ERESHKIGAL_ADVENT_POINTS, adventEreshControl);
 	}
 
 	/**
@@ -440,8 +440,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventEffectEreshSP(int id) {
-		return spawnAdventSp(id, 35, 702549, ERESHKIGAL_ADVENT_POINTS, adventEreshEffect);
+	public void adventEffectEreshSP(int id) {
+		spawnAdventSp(id, 35, 702549, ERESHKIGAL_ADVENT_POINTS, adventEreshEffect);
 	}
 
 	/**
@@ -451,8 +451,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventPortalEreshSP(int id) {
-		return spawnAdventSp(id, 35, 702550, ERESHKIGAL_ADVENT_POINTS, adventEreshPortal);
+	public void adventPortalEreshSP(int id) {
+		spawnAdventSp(id, 35, 702550, ERESHKIGAL_ADVENT_POINTS, adventEreshPortal);
 	}
 
 	/**
@@ -462,8 +462,8 @@ public class BeritraService {
 	 * @param id 入侵地点 ID / beritra location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
-	public boolean adventDirectingEreshSP(int id) {
-		return spawnAdventSp(id, 35, 855231, ERESHKIGAL_ADVENT_POINTS, adventEreshDirecting);
+	public void adventDirectingEreshSP(int id) {
+		spawnAdventSp(id, 35, 855231, ERESHKIGAL_ADVENT_POINTS, adventEreshDirecting);
 	}
 
 	/**
@@ -498,7 +498,7 @@ public class BeritraService {
 		return activeInvasions.containsKey(id);
 	}
 
-	
+
 	/**
 	 * 返回入侵持续时长（小时，来自配置）。
 	 * Return invasion duration in hours (from config).

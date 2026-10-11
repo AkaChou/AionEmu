@@ -21,6 +21,7 @@ public class ClassChangeService {
 	/**
 	 * 满足等级与起始职业条件时弹出转职对话框。
 	 * Shows the class-change dialog when level and starting-class conditions are met.
+	 *
 	 * @param player 玩家 / player
 	 */
 	public static void showClassChangeDialog(Player player) {
@@ -30,52 +31,52 @@ public class ClassChangeService {
 			int questId = questIdForRace(playerRace);
 			QuestState questState = questId == 0 ? null : player.getQuestStateList().getQuestState(questId);
 			if (questId != 0 && (questState == null || questState.getStatus() != QuestStatus.COMPLETE)
-					&& player.getLevel() >= 9 && playerClass.isStartingClass()) {
+				&& player.getLevel() >= 9 && playerClass.isStartingClass()) {
 				if (playerRace == Race.ELYOS) {
 					switch (playerClass) {
-					case WARRIOR:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 2375, 1006));
-						break;
-					case SCOUT:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 2716, 1006));
-						break;
-					case MAGE:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3057, 1006));
-						break;
-					case PRIEST:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3398, 1006));
-						break;
-					case TECHNIST:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3739, 1006));
-						break;
-					case MUSE:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 4080, 1006));
-						break;
-					default:
-						break;
+						case WARRIOR:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 2375, 1006));
+							break;
+						case SCOUT:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 2716, 1006));
+							break;
+						case MAGE:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3057, 1006));
+							break;
+						case PRIEST:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3398, 1006));
+							break;
+						case TECHNIST:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3739, 1006));
+							break;
+						case MUSE:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 4080, 1006));
+							break;
+						default:
+							break;
 					}
 				} else if (playerRace == Race.ASMODIANS) {
 					switch (playerClass) {
-					case WARRIOR:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3057, 2008));
-						break;
-					case SCOUT:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3398, 2008));
-						break;
-					case MAGE:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3739, 2008));
-						break;
-					case PRIEST:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 4080, 2008));
-						break;
-					case TECHNIST:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3569, 2008));
-						break;
-					case MUSE:
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3910, 2008));
-						break;
-					default:
-						break;
+						case WARRIOR:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3057, 2008));
+							break;
+						case SCOUT:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3398, 2008));
+							break;
+						case MAGE:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3739, 2008));
+							break;
+						case PRIEST:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 4080, 2008));
+							break;
+						case TECHNIST:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3569, 2008));
+							break;
+						case MUSE:
+							PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(0, 3910, 2008));
+							break;
+						default:
+							break;
 					}
 				}
 			}
@@ -85,29 +86,30 @@ public class ClassChangeService {
 	/**
 	 * 根据对话框选项完成职业切换，并奖励经验与完成转职任务。
 	 * Applies the class switch from dialog selection and grants exp plus the class-change quest.
-	 * @param player 玩家 / player
+	 *
+	 * @param player   玩家 / player
 	 * @param dialogId 对话框选项 ID / dialog option id
 	 */
-	public static boolean changeClassToSelection(final Player player, final int questId, final int dialogId) {
+	public static void changeClassToSelection(final Player player, final int questId, final int dialogId) {
 		if (!CustomConfig.ENABLE_SIMPLE_2NDCLASS || player == null) {
-			return false;
+return;
 		}
 		Race playerRace = player.getRace();
 		int expectedQuestId = questIdForRace(playerRace);
 		if (questId != expectedQuestId || expectedQuestId == 0) {
-			return false;
+return;
 		}
 		QuestState questState = player.getQuestStateList().getQuestState(questId);
 		if (questState != null && questState.getStatus() == QuestStatus.COMPLETE) {
-			return false;
+return;
 		}
 		PlayerClass targetClass = classForSelection(playerRace, dialogId);
 		if (targetClass == null || !trySetClass(player, targetClass)) {
-			return false;
+return;
 		}
 		player.getCommonData().addExp(73200, null);
 		completeQuest(player, questId);
-		return true;
+return;
 	}
 
 	static int questIdForRace(Race race) {
@@ -195,6 +197,7 @@ public class ClassChangeService {
 	 * Validates class switch: level, starting class, and legal branch.
 	 * 玩家 / player
 	 * target class
+	 *
 	 * @return 可转职时为 {@code true} / {@code true} if valid
 	 */
 	private static boolean validateSwitch(Player player, PlayerClass playerClass) {
@@ -217,14 +220,14 @@ public class ClassChangeService {
 	}
 
 	static boolean isValidClassSwitch(PlayerClass oldClass, PlayerClass playerClass) {
-        return switch (oldClass) {
-            case WARRIOR -> playerClass == PlayerClass.GLADIATOR || playerClass == PlayerClass.TEMPLAR;
-            case SCOUT -> playerClass == PlayerClass.ASSASSIN || playerClass == PlayerClass.RANGER;
-            case MAGE -> playerClass == PlayerClass.SORCERER || playerClass == PlayerClass.SPIRIT_MASTER;
-            case PRIEST -> playerClass == PlayerClass.CLERIC || playerClass == PlayerClass.CHANTER;
-            case TECHNIST -> playerClass == PlayerClass.GUNSLINGER || playerClass == PlayerClass.AETHERTECH;
-            case MUSE -> playerClass == PlayerClass.SONGWEAVER;
-            default -> false;
-        };
+		return switch (oldClass) {
+			case WARRIOR -> playerClass == PlayerClass.GLADIATOR || playerClass == PlayerClass.TEMPLAR;
+			case SCOUT -> playerClass == PlayerClass.ASSASSIN || playerClass == PlayerClass.RANGER;
+			case MAGE -> playerClass == PlayerClass.SORCERER || playerClass == PlayerClass.SPIRIT_MASTER;
+			case PRIEST -> playerClass == PlayerClass.CLERIC || playerClass == PlayerClass.CHANTER;
+			case TECHNIST -> playerClass == PlayerClass.GUNSLINGER || playerClass == PlayerClass.AETHERTECH;
+			case MUSE -> playerClass == PlayerClass.SONGWEAVER;
+			default -> false;
+		};
 	}
 }

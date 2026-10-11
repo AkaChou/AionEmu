@@ -13,69 +13,72 @@ import com.google.common.base.Preconditions;
 /**
  * 玩家团队 Command 服务，用于团队2相关逻辑。
  * Player Team Command Service for team 2 logic.
+ *
  * @author ATracer
  */
 public class PlayerTeamCommandService {
 
-	/** 执行命令 / execute Command. */
-	public static final void executeCommand(Player player, TeamCommand command, int playerObjId) {
+	/**
+	 * 执行命令 / execute Command.
+	 */
+	public static void executeCommand(Player player, TeamCommand command, int playerObjId) {
 		Player teamSubjective = getTeamSubjective(player, playerObjId);
 		Preconditions.checkArgument(playerObjId == 0 || teamSubjective.getObjectId().equals(playerObjId)
-				|| command == TeamCommand.LEAGUE_EXPEL, "Wrong command detected " + command);
+			|| command == TeamCommand.LEAGUE_EXPEL, "Wrong command detected " + command);
 		execute(player, command, teamSubjective);
 	}
 
-	private static final void execute(Player player, TeamCommand eventCode, Player teamSubjective) {
+	private static void execute(Player player, TeamCommand eventCode, Player teamSubjective) {
 		switch (eventCode) {
-		case GROUP_BAN_MEMBER:
-			PlayerGroupService.banPlayer(teamSubjective, player);
-			break;
-		case GROUP_SET_LEADER:
-			PlayerGroupService.changeLeader(teamSubjective);
-			break;
-		case GROUP_REMOVE_MEMBER:
-			PlayerGroupService.removePlayer(teamSubjective);
-			break;
-		case GROUP_START_MENTORING:
-			PlayerGroupService.startMentoring(player);
-			break;
-		case GROUP_END_MENTORING:
-			PlayerGroupService.stopMentoring(player);
-			break;
-		case ALLIANCE_LEAVE:
-			PlayerAllianceService.removePlayer(player);
-			break;
-		case ALLIANCE_BAN_MEMBER:
-			PlayerAllianceService.banPlayer(teamSubjective, player);
-			break;
-		case ALLIANCE_SET_CAPTAIN:
-			PlayerAllianceService.changeLeader(teamSubjective);
-			break;
-		case ALLIANCE_CHECKREADY_CANCEL:
-		case ALLIANCE_CHECKREADY_START:
-		case ALLIANCE_CHECKREADY_AUTOCANCEL:
-		case ALLIANCE_CHECKREADY_NOTREADY:
-		case ALLIANCE_CHECKREADY_READY:
-			PlayerAllianceService.checkReady(player, eventCode);
-			break;
-		case ALLIANCE_SET_VICECAPTAIN:
-			PlayerAllianceService.changeViceCaptain(teamSubjective, AssignType.PROMOTE);
-			break;
-		case ALLIANCE_UNSET_VICECAPTAIN:
-			PlayerAllianceService.changeViceCaptain(teamSubjective, AssignType.DEMOTE);
-			break;
-		case LEAGUE_LEAVE:
-			LeagueService.removeAlliance(player.getPlayerAlliance2());
-			break;
-		case LEAGUE_EXPEL:
-			LeagueService.expelAlliance(teamSubjective, player);
-			break;
-		default:
-			break;
+			case GROUP_BAN_MEMBER:
+				PlayerGroupService.banPlayer(teamSubjective, player);
+				break;
+			case GROUP_SET_LEADER:
+				PlayerGroupService.changeLeader(teamSubjective);
+				break;
+			case GROUP_REMOVE_MEMBER:
+				PlayerGroupService.removePlayer(teamSubjective);
+				break;
+			case GROUP_START_MENTORING:
+				PlayerGroupService.startMentoring(player);
+				break;
+			case GROUP_END_MENTORING:
+				PlayerGroupService.stopMentoring(player);
+				break;
+			case ALLIANCE_LEAVE:
+				PlayerAllianceService.removePlayer(player);
+				break;
+			case ALLIANCE_BAN_MEMBER:
+				PlayerAllianceService.banPlayer(teamSubjective, player);
+				break;
+			case ALLIANCE_SET_CAPTAIN:
+				PlayerAllianceService.changeLeader(teamSubjective);
+				break;
+			case ALLIANCE_CHECKREADY_CANCEL:
+			case ALLIANCE_CHECKREADY_START:
+			case ALLIANCE_CHECKREADY_AUTOCANCEL:
+			case ALLIANCE_CHECKREADY_NOTREADY:
+			case ALLIANCE_CHECKREADY_READY:
+				PlayerAllianceService.checkReady(player, eventCode);
+				break;
+			case ALLIANCE_SET_VICECAPTAIN:
+				PlayerAllianceService.changeViceCaptain(teamSubjective, AssignType.PROMOTE);
+				break;
+			case ALLIANCE_UNSET_VICECAPTAIN:
+				PlayerAllianceService.changeViceCaptain(teamSubjective, AssignType.DEMOTE);
+				break;
+			case LEAGUE_LEAVE:
+				LeagueService.removeAlliance(player.getPlayerAlliance2());
+				break;
+			case LEAGUE_EXPEL:
+				LeagueService.expelAlliance(teamSubjective, player);
+				break;
+			default:
+				break;
 		}
 	}
 
-	private static final Player getTeamSubjective(Player player, int playerObjId) {
+	private static Player getTeamSubjective(Player player, int playerObjId) {
 		if (playerObjId == 0) {
 			return player;
 		}

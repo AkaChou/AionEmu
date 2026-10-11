@@ -24,6 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 宠物生成服务，管理宠物召唤与周期存盘。
  * Pet spawn service managing pet summoning and periodic persistence.
+ *
  * @author ATracer
  */
 public class PetSpawnService {
@@ -31,11 +32,12 @@ public class PetSpawnService {
 	/**
 	 * 召唤宠物；若已有其他宠物则先解散。
 	 * Summon a pet; dismiss the current one if different.
-	 * @param player 玩家 / Player
-	 * @param petId 宠物模板 ID / Pet template id
+	 *
+	 * @param player        玩家 / Player
+	 * @param petId         宠物模板 ID / Pet template id
 	 * @param isManualSpawn 是否手动召唤 / Whether manually summoned
 	 */
-	public static final void summonPet(Player player, int petId, boolean isManualSpawn) {
+	public static void summonPet(Player player, int petId, boolean isManualSpawn) {
 		PetCommonData lastPetCommonData;
 
 		if (player.getPet() != null) {
@@ -75,19 +77,21 @@ public class PetSpawnService {
 	/**
 	 * 重新调度宠物数据的周期存盘任务。
 	 * Reschedule the periodic pet data save task.
+	 *
 	 * @param player 玩家 / Player
 	 */
 	public static void reschedulePeriodicSaveTask(Player player) {
 		player.getController().addTask(TaskId.PET_UPDATE,
-				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
-						PeriodicSaveConfig.PLAYER_PETS * 1000L, PeriodicSaveConfig.PLAYER_PETS * 1000L));
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
+				PeriodicSaveConfig.PLAYER_PETS * 1000L, PeriodicSaveConfig.PLAYER_PETS * 1000L));
 	}
 
 	/**
 	 * 若宠物具备仓库功能，向客户端发送仓库信息。
 	 * Send warehouse info to client when the pet has warehouse function.
+	 *
 	 * @param player 玩家 / Player
-	 * @param petId 宠物模板 ID / Pet template id
+	 * @param petId  宠物模板 ID / Pet template id
 	 */
 	private static void sendWhInfo(Player player, int petId) {
 		PetTemplate petTemplate = DataManager.PET_DATA.getPetTemplate(petId);
@@ -96,7 +100,7 @@ public class PetSpawnService {
 			int itemLocation = StorageType.getStorageId(pf.getSlots(), 6);
 			if (itemLocation != -1) {
 				PacketSendUtility.sendPacket(player, new SM_WAREHOUSE_INFO(
-						player.getStorage(itemLocation).getItemsWithKinah(), itemLocation, 0, true, player));
+					player.getStorage(itemLocation).getItemsWithKinah(), itemLocation, 0, true, player));
 				PacketSendUtility.sendPacket(player, new SM_WAREHOUSE_INFO(null, itemLocation, 0, false, player));
 			}
 		}
@@ -106,17 +110,18 @@ public class PetSpawnService {
 	 * 解散当前宠物并保存喂养/增益/心情数据。
 	 * Dismiss the current pet and persist feed/doping/mood data.
 	 * 玩家 / Player
+	 *
 	 * @param isManualDespawn 是否手动解散 / Whether manually despawned
 	 */
-	public static final void dismissPet(Player player, boolean isManualDespawn) {
+	public static void dismissPet(Player player, boolean isManualDespawn) {
 		Pet toyPet = player.getPet();
 		if (toyPet != null) {
 			PetFeedProgress progress = toyPet.getCommonData().getFeedProgress();
 			if (progress != null) {
 				toyPet.getCommonData().setCancelFeed(true);
 				GameFeatureServices.petService().playerPetsDAO().saveFeedStatus(player, toyPet.getPetId(),
-						progress.getHungryLevel().getValue(), progress.getDataForPacket(),
-						toyPet.getCommonData().getCurentTime());
+					progress.getHungryLevel().getValue(), progress.getDataForPacket(),
+					toyPet.getCommonData().getCurentTime());
 			}
 			PetDopingBag bag = toyPet.getCommonData().getDopingBag();
 			if (bag != null && bag.isDirty()) {

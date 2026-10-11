@@ -21,6 +21,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import lombok.Getter;
 
 /**
@@ -30,37 +31,64 @@ import lombok.Getter;
 @Getter
 public class RVController extends NpcController {
 
-	/** 是否为裂隙主端（可接受通行）。 / Whether this is the master side of the rift. */
+	/**
+	 * 是否为裂隙主端（可接受通行）。 / Whether this is the master side of the rift.
+	 */
 	private boolean isMaster = false;
-	/** 是否为入侵旋涡。 / Whether this is an invasion vortex. */
+	/**
+	 * 是否为入侵旋涡。 / Whether this is an invasion vortex.
+	 */
 	private boolean isVortex = false;
-	/** 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex. */
+	/**
+	 * 已通过旋涡的玩家映射。 / Map of players who have passed through the vortex.
+	 */
 	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<>();
-	/** 从端（出口）生成模板。 / Slave (exit) spawn template. */
+	/**
+	 * 从端（出口）生成模板。 / Slave (exit) spawn template.
+	 */
 	private SpawnTemplate slaveSpawnTemplate;
-	/** 从属 NPC / Slave NPC */
+	/**
+	 * 从属 NPC / Slave NPC
+	 */
 	private Npc slave;
-	/** 最低可进入等级。 / Minimum entry level. */
+	/**
+	 * 最低可进入等级。 / Minimum entry level.
+	 */
 	private final Integer minLevel;
-	/** 最高可进入等级。 / Maximum entry level. */
+	/**
+	 * 最高可进入等级。 / Maximum entry level.
+	 */
 	private final Integer maxLevel;
-	/** 预计消失时间（秒级时间戳）。 / Expected despawn time as epoch seconds. */
+	/**
+	 * 预计消失时间（秒级时间戳）。 / Expected despawn time as epoch seconds.
+	 */
 	private final int deSpawnedTime;
-	/** 最大可通行人数。 / Maximum number of entries. */
+	/**
+	 * 最大可通行人数。 / Maximum number of entries.
+	 */
 	private final Integer maxEntries;
-	/** 消耗的欧比斯点数。 / Abyss points cost. */
+	/**
+	 * 消耗的欧比斯点数。 / Abyss points cost.
+	 */
 	private final Integer abyssPoint;
-	/** 当前是否接受通行。 / Whether entries are currently accepted. */
+	/**
+	 * 当前是否接受通行。 / Whether entries are currently accepted.
+	 */
 	private boolean isAccepting;
-	/** 已使用的通行次数。 / Number of used entries. */
+	/**
+	 * 已使用的通行次数。 / Number of used entries.
+	 */
 	private int usedEntries = 0;
-	/** 裂隙模板枚举。 / Rift template enum. */
+	/**
+	 * 裂隙模板枚举。 / Rift template enum.
+	 */
 	private final RiftEnum riftTemplate;
 
 	/**
 	 * 根据从端 NPC 与裂隙模板构造控制器。
 	 * Constructs the controller from a slave NPC and rift template.
-	 * @param slave 从端 NPC，主端时非 null / slave NPC, non-null on master side
+	 *
+	 * @param slave        从端 NPC，主端时非 null / slave NPC, non-null on master side
 	 * @param riftTemplate 裂隙模板 / rift template
 	 */
 	public RVController(Npc slave, RiftEnum riftTemplate) {
@@ -71,8 +99,8 @@ public class RVController extends NpcController {
 		this.minLevel = riftTemplate.getMinLevel();
 		this.maxLevel = riftTemplate.getMaxLevel();
 		this.deSpawnedTime = ((int) (System.currentTimeMillis() / 1000))
-				+ (isVortex ? GameLocationBootstrapServices.vortexService().getDuration() * 3600
-						: GameLocationBootstrapServices.riftService().getDuration() * 3600);
+			+ (isVortex ? GameLocationBootstrapServices.vortexService().getDuration() * 3600
+			: GameLocationBootstrapServices.riftService().getDuration() * 3600);
 		if (slave != null) {
 			this.slave = slave;
 			this.slaveSpawnTemplate = slave.getSpawn();
@@ -84,6 +112,7 @@ public class RVController extends NpcController {
 	/**
 	 * 处理玩家对话请求，弹出通行确认窗。
 	 * Handles player dialog requests and shows the entry confirmation window.
+	 *
 	 * @param player 请求的玩家 / requesting player
 	 */
 	@Override
@@ -97,6 +126,7 @@ public class RVController extends NpcController {
 	/**
 	 * 按旋涡或普通裂隙弹出确认并在同意后传送。
 	 * Shows vortex or normal-rift confirmation and teleports on accept.
+	 *
 	 * @param player 请求的玩家 / requesting player
 	 */
 	private void onRequest(Player player) {
@@ -115,7 +145,7 @@ public class RVController extends NpcController {
 						VortexLocation loc = GameLocationBootstrapServices.vortexService().getLocationByRift(getOwner().getNpcId());
 						TeleportService2.teleportTo(responder, loc.getStartPoint());
 						PacketSendUtility.playerSendPacketTime(responder,
-								SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_OPEN_NOTICE, 10000);
+							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_OPEN_NOTICE, 10000);
 						passedPlayers.put(responder.getObjectId(), responder);
 						syncPassed(true);
 					}
@@ -141,7 +171,7 @@ public class RVController extends NpcController {
 						float z = slaveSpawnTemplate.getZ();
 						TeleportService2.teleportTo(responder, worldId, x, y, z);
 						PacketSendUtility.playerSendPacketTime(responder,
-								SM_SYSTEM_MESSAGE.STR_MSG_RVR_DIRECT_PORTAL_OPEN_NOTICE, 10000);
+							SM_SYSTEM_MESSAGE.STR_MSG_RVR_DIRECT_PORTAL_OPEN_NOTICE, 10000);
 						syncPassed(false);
 					}
 				}
@@ -152,10 +182,10 @@ public class RVController extends NpcController {
 				}
 			};
 			boolean requested = player.getResponseRequester()
-					.putRequest(SM_QUESTION_WINDOW.STR_ASK_PASS_BY_CHAOS_DIRECT_PORTAL, responseHandler);
+				.putRequest(SM_QUESTION_WINDOW.STR_ASK_PASS_BY_CHAOS_DIRECT_PORTAL, responseHandler);
 			if (requested) {
 				PacketSendUtility.sendPacket(player,
-						new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_PASS_BY_CHAOS_DIRECT_PORTAL, 0, 0));
+					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_ASK_PASS_BY_CHAOS_DIRECT_PORTAL, 0, 0));
 			}
 		}
 	}
@@ -163,6 +193,7 @@ public class RVController extends NpcController {
 	/**
 	 * 校验玩家是否允许通行（等级、人数、接受状态等）。
 	 * Validates whether the player is allowed to pass (level, capacity, accepting state, etc.).
+	 *
 	 * @param player 请求的玩家 / requesting player
 	 * @return 是否允许通行 / whether passage is allowed
 	 */
@@ -189,11 +220,12 @@ public class RVController extends NpcController {
 	/**
 	 * 玩家拒绝通行确认。
 	 * Handles player denial of the entry confirmation.
+	 *
 	 * @param player 拒绝的玩家 / denying player
 	 * @return 恒为 true / always true
 	 */
-	private boolean onDeny(Player player) {
-		return true;
+	private void onDeny(Player player) {
+return;
 	}
 
 	/**
@@ -210,6 +242,7 @@ public class RVController extends NpcController {
 	/**
 	 * 获取剩余存活秒数。
 	 * Gets remaining lifetime in seconds.
+	 *
 	 * @return 剩余秒数 / remaining seconds
 	 */
 	public int getRemainTime() {
@@ -219,6 +252,7 @@ public class RVController extends NpcController {
 	/**
 	 * 同步已通行人数并广播裂隙信息。
 	 * Syncs used entries and broadcasts rift info.
+	 *
 	 * @param invasion 是否为入侵旋涡模式 / whether invasion vortex mode
 	 */
 	public void syncPassed(boolean invasion) {
@@ -229,14 +263,15 @@ public class RVController extends NpcController {
 	/**
 	 * 构建需要同步的世界 ID 列表。
 	 * Builds the list of world ids that need sync.
+	 *
 	 * @param controller 裂隙控制器 / rift controller
 	 * @return 世界 ID 数组 / world id array
 	 */
 	private int[] getWorldsList(RVController controller) {
 		int first = controller.getOwner().getWorldId();
 		if (controller.isMaster()) {
-			return new int[] { first, controller.slaveSpawnTemplate.getWorldId() };
+			return new int[]{first, controller.slaveSpawnTemplate.getWorldId()};
 		}
-		return new int[] { first };
+		return new int[]{first};
 	}
 }

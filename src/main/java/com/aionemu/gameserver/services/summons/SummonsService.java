@@ -33,9 +33,10 @@ public class SummonsService {
 	 * Summon NPC id
 	 * Summon skill id
 	 * Skill level
+	 *
 	 * @param time 存活时间 / Lifetime
 	 */
-	public static final void createSummon(Player master, int npcId, int skillId, int skillLevel, int time) {
+	public static void createSummon(Player master, int npcId, int skillId, int skillLevel, int time) {
 		if (master.getSummon() != null) {
 			PacketSendUtility.sendPacket(master, new SM_SYSTEM_MESSAGE(1300072));
 			return;
@@ -85,7 +86,7 @@ public class SummonsService {
 			}
 			if (!summon.isSpawned()) {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(summon, master.getWorldId(),
-						master.getInstanceId(), master.getX(), master.getY(), master.getZ(), master.getHeading());
+					master.getInstanceId(), master.getX(), master.getY(), master.getZ(), master.getHeading());
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 			}
 			PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL(summon));
@@ -93,7 +94,9 @@ public class SummonsService {
 		}
 	}
 
-	/** 到期并解散召唤物，与过图恢复使用同一把对象锁。 / Expires a summon under the same lock used by teleport restoration. */
+	/**
+	 * 到期并解散召唤物，与过图恢复使用同一把对象锁。 / Expires a summon under the same lock used by teleport restoration.
+	 */
 	public static void expire(Summon summon) {
 		if (summon == null) {
 			return;
@@ -108,39 +111,41 @@ public class SummonsService {
 	 * Release/unsummon the summon, send reason messages and schedule delayed deletion.
 	 * Summon
 	 * Unsummon reason
+	 *
 	 * @param isAttacked 主人是否处于被攻击状态 / Whether the master is under attack
 	 */
-	public static final void release(Summon summon, UnsummonType unsummonType, boolean isAttacked) {
+	public static void release(Summon summon, UnsummonType unsummonType, boolean isAttacked) {
 		if (summon.getMode() == SummonMode.RELEASE)
 			return;
 		summon.getController().cancelCurrentSkill();
 		summon.setMode(SummonMode.RELEASE);
 		Player master = summon.getMaster();
 		switch (unsummonType) {
-		case COMMAND:
-			PacketSendUtility.sendPacket(master,
+			case COMMAND:
+				PacketSendUtility.sendPacket(master,
 					SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMON_FOLLOWER(summon.getNameId()));
-			PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
-			break;
-		case DISTANCE:
-			PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMON_BY_TOO_DISTANCE);
-			PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
-			break;
-		case UNSPECIFIED:
-		case LOGOUT:
-			break;
+				PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
+				break;
+			case DISTANCE:
+				PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMON_BY_TOO_DISTANCE);
+				PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
+				break;
+			case UNSPECIFIED:
+			case LOGOUT:
+				break;
 		}
 		summon.getObserveController().notifySummonReleaseObservers();
 		summon.setReleaseTask(GameThreadPoolServices.threadPoolManager()
-				.schedule(new ReleaseSummonTask(summon, unsummonType, isAttacked), 5000));
+			.schedule(new ReleaseSummonTask(summon, unsummonType, isAttacked), 5000));
 	}
 
 	/**
 	 * 将召唤物切换为休息模式并触发恢复任务。
 	 * Switch the summon to rest mode and trigger restore task.
+	 *
 	 * @param summon Summon
 	 */
-	public static final void restMode(final Summon summon) {
+	public static void restMode(final Summon summon) {
 		summon.getController().cancelCurrentSkill();
 		summon.setMode(SummonMode.REST);
 		Player master = summon.getMaster();
@@ -152,9 +157,10 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为未知/过渡模式。
 	 * Switch the summon to unknown/transitional mode.
+	 *
 	 * @param summon Summon
 	 */
-	public static final void setUnkMode(final Summon summon) {
+	public static void setUnkMode(final Summon summon) {
 		summon.setMode(SummonMode.UNK);
 		Player master = summon.getMaster();
 		PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
@@ -163,9 +169,10 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为守卫模式并触发恢复任务。
 	 * Switch the summon to guard mode and trigger restore task.
+	 *
 	 * @param summon Summon
 	 */
-	public static final void guardMode(final Summon summon) {
+	public static void guardMode(final Summon summon) {
 		summon.getController().cancelCurrentSkill();
 		summon.setMode(SummonMode.GUARD);
 		Player master = summon.getMaster();
@@ -177,9 +184,10 @@ public class SummonsService {
 	/**
 	 * 将召唤物切换为攻击模式并取消恢复任务。
 	 * Switch the summon to attack mode and cancel restore task.
+	 *
 	 * @param summon Summon
 	 */
-	public static final void attackMode(final Summon summon) {
+	public static void attackMode(final Summon summon) {
 		summon.setMode(SummonMode.ATTACK);
 		Player master = summon.getMaster();
 		PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_ATTACK_MODE(summon.getNameId()));
@@ -190,21 +198,23 @@ public class SummonsService {
 	/**
 	 * 按模式驱动召唤物行为（无目标、无解散类型）。
 	 * Drive summon behavior by mode (no target, no unsummon type).
+	 *
 	 * @param summonMode Target mode
-	 * @param summon Summon
+	 * @param summon     Summon
 	 */
-	public static final void doMode(SummonMode summonMode, Summon summon) {
+	public static void doMode(SummonMode summonMode, Summon summon) {
 		doMode(summonMode, summon, 0, null);
 	}
 
 	/**
 	 * 按模式驱动召唤物行为（指定解散类型）。
 	 * Drive summon behavior by mode with an unsummon type.
-	 * @param summonMode Target mode
-	 * @param summon Summon
+	 *
+	 * @param summonMode   Target mode
+	 * @param summon       Summon
 	 * @param unsummonType Unsummon reason
 	 */
-	public static final void doMode(SummonMode summonMode, Summon summon, UnsummonType unsummonType) {
+	public static void doMode(SummonMode summonMode, Summon summon, UnsummonType unsummonType) {
 		doMode(summonMode, summon, 0, unsummonType);
 	}
 
@@ -213,15 +223,16 @@ public class SummonsService {
 	 * Drive summon behavior by mode: rest/attack/guard/release, etc.
 	 * Target mode
 	 * Summon
-	 * @param targetObjId 攻击目标对象 ID / Attack target object id
+	 *
+	 * @param targetObjId  攻击目标对象 ID / Attack target object id
 	 * @param unsummonType 解散原因（释放模式时使用） / Unsummon reason (used in release mode)
 	 */
-	public static final void doMode(SummonMode summonMode, Summon summon, int targetObjId, UnsummonType unsummonType) {
+	public static void doMode(SummonMode summonMode, Summon summon, int targetObjId, UnsummonType unsummonType) {
 		if (summon.getLifeStats().isAlreadyDead()) {
 			return;
 		}
 		if (unsummonType != null && unsummonType.equals(UnsummonType.COMMAND)
-				&& !summonMode.equals(SummonMode.RELEASE)) {
+			&& !summonMode.equals(SummonMode.RELEASE)) {
 			summon.cancelReleaseTask();
 		}
 		SummonController summonController = summon.getController();
@@ -233,22 +244,22 @@ public class SummonsService {
 			return;
 		}
 		switch (summonMode) {
-		case REST:
-			summonController.restMode();
-			break;
-		case ATTACK:
-			summonController.attackMode(targetObjId);
-			break;
-		case GUARD:
-			summonController.guardMode();
-			break;
-		case RELEASE:
-			if (unsummonType != null) {
-				summonController.release(unsummonType);
-			}
-			break;
-		case UNK:
-			break;
+			case REST:
+				summonController.restMode();
+				break;
+			case ATTACK:
+				summonController.attackMode(targetObjId);
+				break;
+			case GUARD:
+				summonController.guardMode();
+				break;
+			case RELEASE:
+				if (unsummonType != null) {
+					summonController.release(unsummonType);
+				}
+				break;
+			case UNK:
+				break;
 		}
 	}
 
@@ -268,6 +279,7 @@ public class SummonsService {
 		 * Construct a delayed release task.
 		 * Summon owner
 		 * Unsummon reason
+		 *
 		 * @param isAttacked 主人是否被攻击 / Whether the master is under attack
 		 */
 		public ReleaseSummonTask(Summon owner, UnsummonType unsummonType, boolean isAttacked) {
@@ -288,21 +300,21 @@ public class SummonsService {
 			owner.setMaster(null);
 			master.setSummon(null);
 			switch (unsummonType) {
-			case COMMAND:
-			case DISTANCE:
-			case UNSPECIFIED:
-				PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMONED(owner.getNameId()));
-				PacketSendUtility.sendPacket(master, new SM_SUMMON_OWNER_REMOVE(owner.getObjectId()));
-				PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL_REMOVE());
-				if (target instanceof Creature lastAttacker) {
-					if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
+				case COMMAND:
+				case DISTANCE:
+				case UNSPECIFIED:
+					PacketSendUtility.sendPacket(master, SM_SYSTEM_MESSAGE.STR_SKILL_SUMMON_UNSUMMONED(owner.getNameId()));
+					PacketSendUtility.sendPacket(master, new SM_SUMMON_OWNER_REMOVE(owner.getObjectId()));
+					PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL_REMOVE());
+					if (target instanceof Creature lastAttacker) {
+						if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
 							&& isAttacked) {
-						GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
+							GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
+						}
 					}
-				}
-				break;
-			case LOGOUT:
-				break;
+					break;
+				case LOGOUT:
+					break;
 			}
 		}
 	}

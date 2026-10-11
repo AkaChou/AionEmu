@@ -10,10 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,11 +36,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class Batch37TalkKillReportRowLadderContractTest {
 
-	/** 三行 bounty 族 / Three-row monster-hunt bounty contract. */
+	/**
+	 * 三行 bounty 族 / Three-row monster-hunt bounty contract.
+	 */
 	private record Kill3Contract(int questId, int startNpc, int endNpc, Set<Integer> kills) {
 	}
 
-	/** 四行 Dredgion 舰长族 / Four-row Dredgion captain contract. */
+	/**
+	 * 四行 Dredgion 舰长族 / Four-row Dredgion captain contract.
+	 */
 	private record Talk4Contract(int questId, int startNpc, int firstNpc, int intelNpc, int killNpc) {
 	}
 
@@ -97,7 +99,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	}
 
 	@Test
-	void dredgionCaptainFamilyTalksToFirstOfficerAndShugoTrading() throws Exception {
+	void dredgionCaptainFamilyTalksToFirstOfficerAndShugoTrading() {
 		for (Talk4Contract contract : TALK4_FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 
@@ -105,7 +107,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 			assertEquals(1, firstTalk.size(),
 				() -> "quest " + contract.questId() + " advances row 0 -> 1 exactly once");
 			assertEquals(new QuestEvent.TalkToNpc(contract.firstNpc(),
-				QuestDialogAction.SETPRO1.id(), 0), firstTalk.getFirst().event(),
+					QuestDialogAction.SETPRO1.id(), 0), firstTalk.getFirst().event(),
 				() -> "quest " + contract.questId() + " ends row 0 on the first officer's SETPRO1 button");
 			assertTrue(firstTalk.getFirst().actions().contains(new QuestAction.SetVariable("var0", 1)),
 				() -> "quest " + contract.questId() + " writes row 1 after the first officer dialog");
@@ -113,13 +115,13 @@ class Batch37TalkKillReportRowLadderContractTest {
 			assertTrue(routes(definition, "s1", "s1").stream()
 					.anyMatch(route -> talk(route, contract.intelNpc())
 						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.SELECT2.id())))),
+						QuestDialogPage.SELECT2.id())))),
 				() -> "quest " + contract.questId() + " shows the shugo select2 page on row 1");
 			List<QuestTransition> intel = routes(definition, "s1", "s2");
 			assertEquals(1, intel.size(),
 				() -> "quest " + contract.questId() + " advances row 1 -> 2 exactly once");
 			assertEquals(new QuestEvent.TalkToNpc(contract.intelNpc(),
-				QuestDialogAction.SETPRO2.id(), 0), intel.getFirst().event(),
+					QuestDialogAction.SETPRO2.id(), 0), intel.getFirst().event(),
 				() -> "quest " + contract.questId() + " ends the intel row on SETPRO2");
 
 			List<QuestTransition> kill = routes(definition, "s2", "reward");
@@ -131,7 +133,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 			assertTrue(routes(definition, "reward", "reward").stream()
 					.anyMatch(route -> talk(route, contract.startNpc())
 						&& route.afterCommit().equals(List.of(new AfterCommitAction.ShowQuestDialog(
-							QuestDialogPage.DEFAULT_SUCCESS.id())))),
+						QuestDialogPage.DEFAULT_SUCCESS.id())))),
 				() -> "quest " + contract.questId() + " opens the legacy report entry page on row 3");
 			assertTrue(routes(definition, "reward", "complete").stream()
 					.allMatch(route -> talk(route, contract.startNpc())),
@@ -161,7 +163,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 		}
 	}
 
-	private static void assertHealsTo(int questId, int rewardRow) throws Exception {
+	private static void assertHealsTo(int questId, int rewardRow) {
 		CompiledQuestDefinition compiled = definition(questId);
 		List<QuestTransition> recoveries = enterWorldRecoveries(compiled.definition());
 		for (int staleRow = 0; staleRow < rewardRow; staleRow++) {
@@ -177,7 +179,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 			assertEquals(List.of(new QuestAction.SetVariable("var0", rewardRow)), heal.actions(),
 				() -> "quest " + questId + " heal writes the reward row");
 			assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-				QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), heal.afterCommit(),
+					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), heal.afterCommit(),
 				() -> "quest " + questId + " heal refreshes the journal");
 			assertNull(heal.priority(), () -> "quest " + questId + " heal priority");
 
@@ -208,7 +210,9 @@ class Batch37TalkKillReportRowLadderContractTest {
 			|| event.equals(new QuestEvent.KillNpcSet(Set.of(npcId)));
 	}
 
-	/** 击杀边覆盖的 npc 集（KillNpc 单只 / KillNpcSet 家族）。 / Npc targets covered by a kill edge. */
+	/**
+	 * 击杀边覆盖的 npc 集（KillNpc 单只 / KillNpcSet 家族）。 / Npc targets covered by a kill edge.
+	 */
 	private static Set<Integer> killTargets(QuestEvent event) {
 		return switch (event) {
 			case QuestEvent.KillNpc(int npcId) -> Set.of(npcId);
@@ -217,7 +221,9 @@ class Batch37TalkKillReportRowLadderContractTest {
 		};
 	}
 
-	/** 原版单槽网格的目标状态：计数 0/1 + 简报标志位。 / Retail single-slot grid state. */
+	/**
+	 * 原版单槽网格的目标状态：计数 0/1 + 简报标志位。 / Retail single-slot grid state.
+	 */
 	private static Map<String, Integer> counters(int kills, boolean briefing) {
 		return Map.of("var0", kills, "var5", briefing ? 1 : 0);
 	}
@@ -227,7 +233,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	 * Semantic (status, projection) node lookup for the retail grid labels.
 	 */
 	private static String nodeLabel(QuestDefinition definition, int questId, QuestStatus status,
-			Map<String, Integer> state) {
+									Map<String, Integer> state) {
 		List<String> labels = definition.nodes().stream()
 			.filter(node -> node.projection().status() == status)
 			.filter(node -> node.projection().variables().equals(state))
@@ -239,7 +245,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	}
 
 	private static void assertNode(QuestDefinition definition, int questId, QuestStatus status,
-			Map<String, Integer> state, String role) {
+								   Map<String, Integer> state, String role) {
 		String label = nodeLabel(definition, questId, status, state);
 		assertEquals(state, node(definition, label).projection().variables(),
 			() -> "quest " + questId + " " + role + " projection");

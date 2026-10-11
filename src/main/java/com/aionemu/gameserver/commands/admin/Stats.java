@@ -23,6 +23,7 @@ import java.util.List;
  * //stats hp &lt;value&gt; — 覆盖最大生命 / Override max HP<br>
  * //stats dev &lt;level&gt; — 设置已装备羽饰强化等级（需高权限） / Set equipped plume authorize level (high access)
  * </p>
+ *
  * @author Kill3r
  */
 public class Stats extends AdminCommand implements StatOwner {
@@ -31,37 +32,38 @@ public class Stats extends AdminCommand implements StatOwner {
 	 * 构造 stats 命令。
 	 * Creates the stats command.
 	 */
-	public Stats(){
+	public Stats() {
 		super("stats");
 	}
 
 	/**
 	 * 按子命令覆盖 HP 或设置羽饰强化等级。
 	 * Overrides HP or sets plume authorize level by subcommand.
+	 *
 	 * @param player 执行 GM / Admin player
 	 * @param params hp|dev 与数值 / hp|dev and value
 	 */
-	public void execute(Player player, String...params){
+	public void execute(Player player, String... params) {
 		int value = 1;
-		try{
+		try {
 			value = Integer.parseInt(params[1]);
-		}catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			PacketSendUtility.sendMessage(player, "Wrong Param");
 			return;
 		}
 
-		if(params[0].equals("hp")){
-			if(value < 9999999){
+		if (params[0].equals("hp")) {
+			if (value < 9999999) {
 				List<IStatFunction> functions = new ArrayList<>();
 				functions.add(new StatChangeFunction(StatEnum.MAXHP, value));
 				player.getGameStats().addEffect(this, functions);
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_EMOTE2, 0, 0), true);
-				PacketSendUtility.sendMessage(player, "You've changed you're MAX HP to "+value);
-			}else{
+				PacketSendUtility.sendMessage(player, "You've changed you're MAX HP to " + value);
+			} else {
 				PacketSendUtility.sendMessage(player, "You've exceeded the max amount! Use a lower value!");
 			}
-		} else if (params[0].equals("dev")){
-			if (player.getAccessLevel() < 5){
+		} else if (params[0].equals("dev")) {
+			if (player.getAccessLevel() < 5) {
 				PacketSendUtility.sendMessage(player, "Need Access!");
 				return;
 			}
@@ -79,31 +81,27 @@ public class Stats extends AdminCommand implements StatOwner {
 	 * 属性基值覆盖函数（支持多种 StatEnum）。
 	 * Base-stat override function for many StatEnum values.
 	 */
-	class StatChangeFunction extends StatFunction
-	{
+	class StatChangeFunction extends StatFunction {
 		static final int speed = 6000;
 		static final int flyspeed = 9000;
 		static final int maxDp = 4000;
 		int modifier = 1;
 
-		StatChangeFunction(StatEnum stat, int modifier)
-		{
+		StatChangeFunction(StatEnum stat, int modifier) {
 			this.stat = stat;
 			this.modifier = modifier;
 		}
 
 		@Override
-		public void apply(com.aionemu.gameserver.model.stats.calc.Stat2 stat)
-		{
-			switch (this.stat)
-			{
+		public void apply(com.aionemu.gameserver.model.stats.calc.Stat2 stat) {
+			switch (this.stat) {
 				case SPEED:
 					stat.setBase(speed + (speed * modifier) / 100);
 					break;
 				case FLY_SPEED:
 					stat.setBase(flyspeed + (flyspeed * modifier) / 100);
 					break;
-				case POWER :
+				case POWER:
 					short modifierPower = (short) modifier;
 					stat.setBase(modifierPower);
 					break;
@@ -117,11 +115,11 @@ public class Stats extends AdminCommand implements StatOwner {
 					break;
 				case REGEN_HP:
 					int baseHp = stat.getOwner().getLevel() + 3;
-					stat.setBase(baseHp *= modifier / 100f);
+					stat.setBase(baseHp = (int) (baseHp * modifier / 100f));
 					break;
 				case REGEN_MP:
 					int baseMp = stat.getOwner().getLevel() + 8;
-					stat.setBase(baseMp *= modifier / 100f);
+					stat.setBase(baseMp = (int) (baseMp * modifier / 100f));
 					break;
 				case MAXDP:
 					stat.setBase(maxDp + (maxDp * modifier) / 100);
@@ -183,8 +181,6 @@ public class Stats extends AdminCommand implements StatOwner {
 					stat.setBase(modifierFireRes);
 					break;
 				case REGEN_FP:
-					stat.setBase(modifier);
-					break;
 				case PHYSICAL_DEFENSE:
 					stat.setBase(modifier);
 					break;
@@ -437,8 +433,7 @@ public class Stats extends AdminCommand implements StatOwner {
 		}
 
 		@Override
-		public int getPriority()
-		{
+		public int getPriority() {
 			return 60;
 		}
 	}
@@ -446,10 +441,11 @@ public class Stats extends AdminCommand implements StatOwner {
 	/**
 	 * 参数错误时的用法提示。
 	 * Usage hint on invalid parameters.
+	 *
 	 * @param player 玩家 / Player
-	 * @param msg 失败消息 / Failure message
+	 * @param msg    失败消息 / Failure message
 	 */
-	public void onFail(Player player,String msg){
+	public void onFail(Player player, String msg) {
 		PacketSendUtility.sendMessage(player, "Synax : //stats hp <value>");
 
 	}

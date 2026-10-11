@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -37,6 +36,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 佐西夫无畏舰服务，管理无畏舰降落地点、刷怪与入侵特效。
  * Zorshiv Dredgion service managing dredgion landing locations, spawns, and invasion effects.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -104,6 +104,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 启动指定 ID 的佐西夫无畏舰活动。
 	 * Starts the Zorshiv Dredgion event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void startZorshivDredgion(final int id) {
@@ -118,6 +119,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 停止指定 ID 的佐西夫无畏舰活动。
 	 * Stops the Zorshiv Dredgion event for the given id.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void stopZorshivDredgion(int id) {
@@ -132,6 +134,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 清理活动启动阶段创建的临时对象。
 	 * Despawns temporary objects created during the event startup sequence.
+	 *
 	 * @param id 地点 ID / location id
 	 */
 	public void clearAdventObjects(int id) {
@@ -146,6 +149,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 清理一组临时对象并释放其引用。
 	 * Despawns one group of temporary objects and releases its references.
+	 *
 	 * @param objects 临时对象集合 / temporary objects
 	 */
 	private void despawnAdventObjects(List<VisibleObject> objects) {
@@ -162,7 +166,8 @@ public class ZorshivDredgionService {
 	/**
 	 * 按状态在地点刷出对应 NPC。
 	 * Spawns NPCs for the location according to the given state.
-	 * @param loc location
+	 *
+	 * @param loc    location
 	 * @param zstate state type
 	 */
 	public void spawn(ZorshivDredgionLocation loc, ZorshivDredgionStateType zstate) {
@@ -177,9 +182,10 @@ public class ZorshivDredgionService {
 		}
 	}
 
-		/**
+	/**
 	 * 广播 Levinshor 无畏舰入侵系统消息。
 	 * Broadcasts Levinshor dredgion invasion system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -208,6 +214,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 广播 Inggison 无畏舰入侵系统消息。
 	 * Broadcasts Inggison dredgion invasion system messages.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已广播 / whether message was sent
 	 */
@@ -236,6 +243,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 刷出入侵控制类特效/NPC。
 	 * Spawns advent control effect/NPC.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
@@ -254,6 +262,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 刷出入侵视觉特效。
 	 * Spawns advent visual effect.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
@@ -272,6 +281,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 刷出入侵传送门。
 	 * Spawns advent portal.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
@@ -290,6 +300,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 刷出入侵引导/指向特效。
 	 * Spawns advent directing effect.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否已刷出 / whether spawned
 	 */
@@ -308,6 +319,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 清除地点已刷出的 NPC。
 	 * Despawns NPCs previously spawned at the location.
+	 *
 	 * @param loc location
 	 */
 	public void despawn(ZorshivDredgionLocation loc) {
@@ -328,6 +340,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 判断指定无畏舰是否进行中。
 	 * Checks whether the dredgion with the given id is in progress.
+	 *
 	 * @param id 地点 ID / location id
 	 * @return 是否进行中 / whether in progress
 	 */
@@ -339,6 +352,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -348,8 +362,9 @@ public class ZorshivDredgionService {
 	/**
 	 * 按 ID 获取无畏舰地点。
 	 * Returns the dredgion location by id.
+	 *
 	 * @param id 地点 ID / location id
-	 * location
+	 *           location
 	 */
 	public ZorshivDredgionLocation getZorshivDredgionLocation(int id) {
 		return zorshivDredgion.get(id);
@@ -380,6 +395,7 @@ public class ZorshivDredgionService {
 	/**
 	 * 注入 Spring 的实例提供者。
 	 * Sets the Spring instance provider.
+	 *
 	 * @param instanceProvider 实例提供者 / instance provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<ZorshivDredgionService> instanceProvider) {
@@ -390,44 +406,44 @@ public class ZorshivDredgionService {
 		private static final ZorshivDredgionService INSTANCE = new ZorshivDredgionService();
 	}
 
-    /**
-     * 佐尔希夫挖掘舰活动启动定时任务。
-     * Start runnable for the Zorshiv dredgion world event.
-     */
-    private record DredgionStartRunnable(int id) implements Runnable {
-        /**
-         * 执行分阶段启动流程。
-         * Runs the staged start sequence.
-         */
-        @Override
-        public void run() {
-            // 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
-            ZorshivDredgionService.getInstance().clearAdventObjects(id);
-            // 入侵传送门。 / Invasion Portal.
-            ZorshivDredgionService.getInstance().adventPortalSP(id);
-            GameThreadPoolServices.threadPoolManager().schedule(() -> {
-                // 入侵激光。 / Invasion Lazer.
-                ZorshivDredgionService.getInstance().adventDirectingSP(id);
-            }, 180000);
-            GameThreadPoolServices.threadPoolManager().schedule(() -> {
-                // 入侵黑空。 / Invasion Black Sky.
-                ZorshivDredgionService.getInstance().adventControlSP(id);
-            }, 300000);
-            GameThreadPoolServices.threadPoolManager().schedule(() -> {
-                Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
-                        .getZorshivDredgionLocations();
-                for (ZorshivDredgionLocation loc : locations.values()) {
-                    if (loc.getId() == id) {
-                        // 入侵浅蓝。 / Invasion Light Blue.
-                        ZorshivDredgionService.getInstance().adventEffectSP(id);
-                        // 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
-                        ZorshivDredgionService.getInstance().levinshorMsg(id);
-                        // 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
-                        ZorshivDredgionService.getInstance().inggisonMsg(id);
-                        ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
-                    }
-                }
-            }, 600000);
-        }
-    }
+	/**
+	 * 佐尔希夫挖掘舰活动启动定时任务。
+	 * Start runnable for the Zorshiv dredgion world event.
+	 */
+	private record DredgionStartRunnable(int id) implements Runnable {
+		/**
+		 * 执行分阶段启动流程。
+		 * Runs the staged start sequence.
+		 */
+		@Override
+		public void run() {
+			// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
+			ZorshivDredgionService.getInstance().clearAdventObjects(id);
+			// 入侵传送门。 / Invasion Portal.
+			ZorshivDredgionService.getInstance().adventPortalSP(id);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// 入侵激光。 / Invasion Lazer.
+				ZorshivDredgionService.getInstance().adventDirectingSP(id);
+			}, 180000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// 入侵黑空。 / Invasion Black Sky.
+				ZorshivDredgionService.getInstance().adventControlSP(id);
+			}, 300000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
+					.getZorshivDredgionLocations();
+				for (ZorshivDredgionLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						// 入侵浅蓝。 / Invasion Light Blue.
+						ZorshivDredgionService.getInstance().adventEffectSP(id);
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at levinshor.
+						ZorshivDredgionService.getInstance().levinshorMsg(id);
+						// 龙族战舰已出现。 / The Balaur Dredgion has appeared at inggison.
+						ZorshivDredgionService.getInstance().inggisonMsg(id);
+						ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
+					}
+				}
+			}, 600000);
+		}
+	}
 }

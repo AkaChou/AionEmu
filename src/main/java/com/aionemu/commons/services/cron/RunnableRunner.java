@@ -10,50 +10,55 @@ import org.quartz.JobExecutionContext;
  * 该类实现了 Quartz 的 Job 接口，提供了任务执行的基础框架：
  * This class implements Quartz's Job interface, providing a basic framework for task execution:
  * 1. 支持长短任务的区分执行
- *    Supports differentiated execution of long and short running tasks
+ * Supports differentiated execution of long and short running tasks
  * 2. 通过 JobDataMap 传递任务参数
- *    Passes task parameters through JobDataMap
+ * Passes task parameters through JobDataMap
  * 3. 提供抽象方法由子类实现具体执行逻辑
- *    Provides abstract methods for subclasses to implement specific execution logic
+ * Provides abstract methods for subclasses to implement specific execution logic
  */
 public abstract class RunnableRunner implements Job {
 
-    /** 任务实例的 JobDataMap 键名 / JobDataMap key for runnable instance */
-    public static final String KEY_RUNNABLE_OBJECT = "cronservice.scheduled.runnable.instance";
-
-    /** 是否为长时任务的 JobDataMap 键名 / JobDataMap key for long-running task flag */
-    public static final String KEY_PROPERTY_IS_LONGRUNNING_TASK = "cronservice.scheduled.runnable.islognrunning";
-
-    /** Cron 表达式的 JobDataMap 键名 / JobDataMap key for cron expression */
-
-    /**
-     * 执行定时任务
-     * Execute scheduled task
-     * @param context 任务执行上下文 / task execution context
+	/**
+	 * 任务实例的 JobDataMap 键名 / JobDataMap key for runnable instance
 	 */
-    public void execute(JobExecutionContext context) {
-        JobDataMap jdm = context.getJobDetail().getJobDataMap();
-        Runnable r = (Runnable)jdm.get(KEY_RUNNABLE_OBJECT);
-        boolean longRunning = jdm.getBoolean(KEY_PROPERTY_IS_LONGRUNNING_TASK);
+	public static final String KEY_RUNNABLE_OBJECT = "cronservice.scheduled.runnable.instance";
 
-        if (longRunning) {
-            this.executeLongRunningRunnable(r);
-        } else {
-            this.executeRunnable(r);
-        }
-    }
+	/**
+	 * 是否为长时任务的 JobDataMap 键名 / JobDataMap key for long-running task flag
+	 */
+	public static final String KEY_PROPERTY_IS_LONGRUNNING_TASK = "cronservice.scheduled.runnable.islognrunning";
 
-    /**
-     * 执行普通任务
-     * Execute normal task
-     * @param r 要执行的任务 / task to execute
-     */
-    public abstract void executeRunnable(Runnable r);
+	/**
+	 * 执行定时任务
+	 * Execute scheduled task
+	 *
+	 * @param context 任务执行上下文 / task execution context
+	 */
+	public void execute(JobExecutionContext context) {
+		JobDataMap jdm = context.getJobDetail().getJobDataMap();
+		Runnable r = (Runnable) jdm.get(KEY_RUNNABLE_OBJECT);
+		boolean longRunning = jdm.getBoolean(KEY_PROPERTY_IS_LONGRUNNING_TASK);
 
-    /**
-     * 执行长时任务
-     * Execute long-running task
-     * @param r 要执行的任务 / task to execute
-     */
-    public abstract void executeLongRunningRunnable(Runnable r);
+		if (longRunning) {
+			this.executeLongRunningRunnable(r);
+		} else {
+			this.executeRunnable(r);
+		}
+	}
+
+	/**
+	 * 执行普通任务
+	 * Execute normal task
+	 *
+	 * @param r 要执行的任务 / task to execute
+	 */
+	public abstract void executeRunnable(Runnable r);
+
+	/**
+	 * 执行长时任务
+	 * Execute long-running task
+	 *
+	 * @param r 要执行的任务 / task to execute
+	 */
+	public abstract void executeLongRunningRunnable(Runnable r);
 }

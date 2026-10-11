@@ -33,13 +33,17 @@ public class PlayerStatFunctions {
 		FUNCTIONS.add(new AgilityModifierFunction(StatEnum.EVASION, 0.3f));
 	}
 
-	/** 返回 functions / Returns the functions */
-	public static final List<IStatFunction> getFunctions() {
+	/**
+	 * 返回 functions / Returns the functions
+	 */
+	public static List<IStatFunction> getFunctions() {
 		return FUNCTIONS;
 	}
 
-	/** 添加 predefined stat functions / Adds predefined stat functions */
-	public static final void addPredefinedStatFunctions(Player player) {
+	/**
+	 * 添加 predefined stat functions / Adds predefined stat functions
+	 */
+	public static void addPredefinedStatFunctions(Player player) {
 		player.getGameStats().addEffectOnly(null, FUNCTIONS);
 	}
 }

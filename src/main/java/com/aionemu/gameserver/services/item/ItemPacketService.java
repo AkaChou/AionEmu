@@ -20,6 +20,7 @@ import lombok.Getter;
 /**
  * 物品数据包服务，同步物品增删改与装备状态。
  * Item packet service syncing item add/delete/update and equip state.
+ *
  * @author ATracer
  */
 
@@ -34,8 +35,8 @@ public class ItemPacketService {
 		DEC_ITEM_SPLIT_MOVE(0x0A, true), // 拆分后移入其他仓库 / move to other storage with split
 		DEC_ITEM_USE(0x16, true), INC_ITEM_COLLECT(0x19, true), INC_KINAH_COLLECT(0x1A, true),
 		DEC_KINAH_BUY(0x1D, true), INC_KINAH_SELL(0x20, true), INC_KINAH_QUEST(0x32, true), DEC_KINAH_LEARN(0x49, true), // craft
-																															// 技能 / skill
-																															// 学习 / learn
+		// 技能 / skill
+		// 学习 / learn
 		DEC_KINAH_FLY(0x4B, true), // 传送或飞行 / teleport or fly
 		LUNA_UPDATE(0x49, true), // 5.1 新增 / new 5.1
 		INC_CASH_ITEM(0x50, true), // 活动物品，用于兑换 / event items, for exchange
@@ -44,16 +45,16 @@ public class ItemPacketService {
 
 		/**
 		 * -- GETTER --
-		 *  getMask 方法。
-		 *  getMask method.
-		 *  result
+		 * getMask 方法。
+		 * getMask method.
+		 * result
 		 */
 		private final int mask;
 		/**
 		 * -- GETTER --
-		 *  isSendable 方法。
-		 *  isSendable method.
-		 *  result
+		 * isSendable 方法。
+		 * isSendable method.
+		 * result
 		 */
 		private final boolean sendable;
 
@@ -65,9 +66,10 @@ public class ItemPacketService {
 		/**
 		 * getKinahUpdateTypeFromAddType 方法。
 		 * getKinahUpdateTypeFromAddType method.
+		 *
 		 * @param itemAddType 物品添加类型 / itemAddType
-		 * isIncrease
-		 * result
+		 *                    isIncrease
+		 *                    result
 		 */
 		public static ItemUpdateType getKinahUpdateTypeFromAddType(ItemAddType itemAddType, boolean isIncrease) {
 			if (!isIncrease) {
@@ -92,9 +94,9 @@ public class ItemPacketService {
 
 		/**
 		 * -- GETTER --
-		 *  getMask 方法。
-		 *  getMask method.
-		 *  result
+		 * getMask 方法。
+		 * getMask method.
+		 * result
 		 */
 		private final int mask;
 
@@ -111,9 +113,9 @@ public class ItemPacketService {
 
 		/**
 		 * -- GETTER --
-		 *  getMask 方法。
-		 *  getMask method.
-		 *  result
+		 * getMask 方法。
+		 * getMask method.
+		 * result
 		 */
 		private final int mask;
 
@@ -127,7 +129,7 @@ public class ItemPacketService {
 		 * updateType
 		 * result
 		 */
-		public static final ItemDeleteType fromUpdateType(ItemUpdateType updateType) {
+		public static ItemDeleteType fromUpdateType(ItemUpdateType updateType) {
 			return switch (updateType) {
 				case DEC_ITEM_SPLIT -> SPLIT;
 				case DEC_ITEM_USE -> USE;
@@ -143,12 +145,12 @@ public class ItemPacketService {
 		 * result
 		 */
 		public static ItemDeleteType fromQuestStatus(QuestStatus questStatus) {
-            return switch (questStatus) {
-                case START -> QUEST_START;
-                case REWARD -> QUEST_REWARD;
-                case COMPLETE -> QUEST_COMPLETE;
-                default -> QUEST_REWARD;
-            };
+			return switch (questStatus) {
+				case START -> QUEST_START;
+				case REWARD -> QUEST_REWARD;
+				case COMPLETE -> QUEST_COMPLETE;
+				default -> QUEST_REWARD;
+			};
 		}
 	}
 
@@ -158,7 +160,7 @@ public class ItemPacketService {
 	 * 玩家 / player
 	 * item
 	 */
-	public static final void updateItemAfterInfoChange(Player player, Item item) {
+	public static void updateItemAfterInfoChange(Player player, Item item) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item));
 	}
 
@@ -169,7 +171,7 @@ public class ItemPacketService {
 	 * item
 	 * updateType
 	 */
-	public static final void updateItemAfterInfoChange(Player player, Item item, ItemUpdateType updateType) {
+	public static void updateItemAfterInfoChange(Player player, Item item, ItemUpdateType updateType) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, updateType));
 	}
 
@@ -179,7 +181,7 @@ public class ItemPacketService {
 	 * 玩家 / player
 	 * item
 	 */
-	public static final void updateItemAfterEquip(Player player, Item item) {
+	public static void updateItemAfterEquip(Player player, Item item) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, ItemUpdateType.EQUIP_UNEQUIP));
 	}
 
@@ -191,8 +193,8 @@ public class ItemPacketService {
 	 * item
 	 * updateType
 	 */
-	public static final void sendItemPacket(Player player, StorageType storageType, Item item,
-			ItemUpdateType updateType) {
+	public static void sendItemPacket(Player player, StorageType storageType, Item item,
+									  ItemUpdateType updateType) {
 		if (item.getItemCount() <= 0 && !item.getItemTemplate().isKinah()) {
 			sendItemDeletePacket(player, storageType, item, ItemDeleteType.fromUpdateType(updateType));
 		} else {
@@ -203,14 +205,14 @@ public class ItemPacketService {
 	/**
 	 * Item will be deleted from UI slot
 	 */
-	public static final void sendItemDeletePacket(Player player, StorageType storageType, Item item,
-			ItemDeleteType deleteType) {
+	public static void sendItemDeletePacket(Player player, StorageType storageType, Item item,
+											ItemDeleteType deleteType) {
 		switch (storageType) {
-		case CUBE:
-			PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(item.getObjectId(), deleteType));
-			break;
-		default:
-			PacketSendUtility.sendPacket(player,
+			case CUBE:
+				PacketSendUtility.sendPacket(player, new SM_DELETE_ITEM(item.getObjectId(), deleteType));
+				break;
+			default:
+				PacketSendUtility.sendPacket(player,
 					new SM_DELETE_WAREHOUSE_ITEM(storageType.getId(), item.getObjectId(), deleteType));
 		}
 		PacketSendUtility.sendPacket(player, SM_CUBE_UPDATE.cubeSize(storageType, player));
@@ -219,19 +221,19 @@ public class ItemPacketService {
 	/**
 	 * UI 槽位中更新物品（堆叠物品）。 / Item will be updated in UI slot (stacked items)
 	 */
-	public static final void sendItemUpdatePacket(Player player, StorageType storageType, Item item,
-			ItemUpdateType updateType) {
+	public static void sendItemUpdatePacket(Player player, StorageType storageType, Item item,
+											ItemUpdateType updateType) {
 		switch (storageType) {
-		case CUBE:
-			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, updateType));
-			break;
-		case LEGION_WAREHOUSE:
-			if (item.getItemTemplate().isKinah()) {
-				PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));
+			case CUBE:
+				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, updateType));
 				break;
-			}
-		default:
-			PacketSendUtility.sendPacket(player,
+			case LEGION_WAREHOUSE:
+				if (item.getItemTemplate().isKinah()) {
+					PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));
+					break;
+				}
+			default:
+				PacketSendUtility.sendPacket(player,
 					new SM_WAREHOUSE_UPDATE_ITEM(player, item, storageType.getId(), updateType));
 		}
 	}
@@ -243,27 +245,27 @@ public class ItemPacketService {
 	 * storageType
 	 * item
 	 */
-	public static final void sendStorageUpdatePacket(Player player, StorageType storageType, Item item) {
+	public static void sendStorageUpdatePacket(Player player, StorageType storageType, Item item) {
 		sendStorageUpdatePacket(player, storageType, item, ItemAddType.ITEM_COLLECT);
 	}
 
 	/**
 	 * New item will be displayed in storage
 	 */
-	public static final void sendStorageUpdatePacket(Player player, StorageType storageType, Item item,
-			ItemAddType addType) {
+	public static void sendStorageUpdatePacket(Player player, StorageType storageType, Item item,
+											   ItemAddType addType) {
 		switch (storageType) {
-		case CUBE:
-			PacketSendUtility.sendPacket(player,
+			case CUBE:
+				PacketSendUtility.sendPacket(player,
 					new SM_INVENTORY_ADD_ITEM(Collections.singletonList(item), player, addType));
-			break;
-		case LEGION_WAREHOUSE:
-			if (item.getItemTemplate().isKinah()) {
-				PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));
 				break;
-			}
-		default:
-			PacketSendUtility.sendPacket(player, new SM_WAREHOUSE_ADD_ITEM(item, storageType.getId(), player, addType));
+			case LEGION_WAREHOUSE:
+				if (item.getItemTemplate().isKinah()) {
+					PacketSendUtility.sendPacket(player, new SM_LEGION_EDIT(0x04, player.getLegion()));
+					break;
+				}
+			default:
+				PacketSendUtility.sendPacket(player, new SM_WAREHOUSE_ADD_ITEM(item, storageType.getId(), player, addType));
 		}
 		PacketSendUtility.sendPacket(player, SM_CUBE_UPDATE.cubeSize(storageType, player));
 	}

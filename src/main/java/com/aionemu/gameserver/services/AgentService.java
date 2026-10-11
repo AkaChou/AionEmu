@@ -38,6 +38,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * 天族/魔族神代代理人（Agent / Empyrean Lord Agent）战斗活动服务。
  * Service for Empyrean Lord Agent fight events (scheduled world spawns and battle messages).
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -100,6 +101,7 @@ public class AgentService {
 	/**
 	 * 启动指定地点的代理人战斗，并在持续时长结束后自动停止。
 	 * Start the agent fight at the given location and auto-stop after the configured duration.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 */
 	public void startAgentFight(final int id) {
@@ -115,6 +117,7 @@ public class AgentService {
 	/**
 	 * 停止指定地点的代理人战斗。
 	 * Stop the agent fight at the given location.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 */
 	public void stopAgentFight(int id) {
@@ -128,8 +131,9 @@ public class AgentService {
 	/**
 	 * 按状态刷出代理人活动相关 NPC。
 	 * Spawn agent-event NPCs for the given location and state.
+	 *
 	 * @param loc 活动地点 / agent location
-	 * spawn state
+	 *            spawn state
 	 */
 	public void spawn(AgentLocation loc, AgentStateType astate) {
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getAgentSpawnsByLocId(loc.getId());
@@ -146,6 +150,7 @@ public class AgentService {
 	/**
 	 * 广播神代代理人倒计时系统消息。
 	 * Broadcast Empyrean Lord Agent countdown system messages.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -169,6 +174,7 @@ public class AgentService {
 	/**
 	 * 广播代理人战斗 10 分钟预告。
 	 * Broadcast the 10-minute agent battle warning.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -189,6 +195,7 @@ public class AgentService {
 	/**
 	 * 广播代理人战斗 5 分钟预告。
 	 * Broadcast the 5-minute agent battle warning.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -209,6 +216,7 @@ public class AgentService {
 	/**
 	 * 广播提亚马特化身（Governor Sunayaka）出现消息。
 	 * Broadcast Governor Sunayaka (Tiamat incarnation) appearance messages.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -231,6 +239,7 @@ public class AgentService {
 	/**
 	 * 广播狂暴提亚马特化身（Berserker Sunayaka）出现消息。
 	 * Broadcast Berserker Sunayaka (Tiamat incarnation) appearance messages.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 是否已处理该 ID / whether the id was handled
 	 */
@@ -253,6 +262,7 @@ public class AgentService {
 	/**
 	 * 清除指定地点已刷出的代理人活动 NPC。
 	 * Despawn agent-event NPCs at the given location.
+	 *
 	 * @param loc 活动地点 / agent location
 	 */
 	public void despawn(AgentLocation loc) {
@@ -273,6 +283,7 @@ public class AgentService {
 	/**
 	 * 判断指定地点是否正在进行代理人战斗。
 	 * Whether an agent fight is in progress at the given location.
+	 *
 	 * @param id 活动地点 ID / agent location id
 	 * @return 若 in progress 则为 true / true if in progress
 	 */
@@ -284,6 +295,7 @@ public class AgentService {
 	/**
 	 * 返回代理人战斗持续时长（小时，来自配置）。
 	 * Return agent fight duration in hours (from config).
+	 *
 	 * @return 持续小时数 / duration hours
 	 */
 	public int getDuration() {
@@ -293,8 +305,9 @@ public class AgentService {
 	/**
 	 * 按 ID 获取代理人活动地点。
 	 * Get an agent location by id.
+	 *
 	 * @param id 活动地点 ID / agent location id
-	 * agent location
+	 *           agent location
 	 */
 	public AgentLocation getAgentLocation(int id) {
 		return agent.get(id);
@@ -325,6 +338,7 @@ public class AgentService {
 	/**
 	 * 注入 Spring ObjectProvider，供 getInstance 使用。
 	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
 	 * @param instanceProvider Spring provider
 	 */
 	public static void setInstanceProvider(ObjectProvider<AgentService> instanceProvider) {
@@ -335,40 +349,40 @@ public class AgentService {
 		private static final AgentService INSTANCE = new AgentService();
 	}
 
-    /**
-     * 代理战启动定时任务。
-     * Start runnable for Agent Fight events.
-     */
-    private record AgentStartRunnable(int id) implements Runnable {
-        /**
-         * 执行倒计时与启动流程。
-         * Runs the countdown and start sequence.
-         */
-        @Override
-        public void run() {
-            // 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
-            AgentService.getInstance().agentBattleMsg1(id);
-            GameThreadPoolServices.threadPoolManager().schedule(() -> {
-                // 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
-                AgentService.getInstance().agentBattleMsg2(id);
-            }, 300000);
-            GameThreadPoolServices.threadPoolManager().schedule(() -> {
-                Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
-                for (final AgentLocation loc : locations.values()) {
-                    if (loc.getId() == id) {
-                        // 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
-                        AgentService.getInstance().governorSunayakaMsg(id);
-                        // 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
-                        AgentService.getInstance().berserkerSunayakaMsg(id);
-                        // 代理人之战 4.7 / Agent Fight 4.7
-                        AgentService.getInstance().startAgentFight(loc.getId());
-                    }
-                }
-                GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-                    // 一名代理人已生成。 / An Agent has spawned.
-                    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
-                });
-            }, 600000);
-        }
-    }
+	/**
+	 * 代理战启动定时任务。
+	 * Start runnable for Agent Fight events.
+	 */
+	private record AgentStartRunnable(int id) implements Runnable {
+		/**
+		 * 执行倒计时与启动流程。
+		 * Runs the countdown and start sequence.
+		 */
+		@Override
+		public void run() {
+			// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
+			AgentService.getInstance().agentBattleMsg1(id);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
+				AgentService.getInstance().agentBattleMsg2(id);
+			}, 300000);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
+				for (final AgentLocation loc : locations.values()) {
+					if (loc.getId() == id) {
+						// 总督苏纳亚卡 5.8 / Governor Sunayaka 5.8
+						AgentService.getInstance().governorSunayakaMsg(id);
+						// 狂战士苏纳亚卡 5.8 / Berserker Sunayaka 5.8
+						AgentService.getInstance().berserkerSunayakaMsg(id);
+						// 代理人之战 4.7 / Agent Fight 4.7
+						AgentService.getInstance().startAgentFight(loc.getId());
+					}
+				}
+				GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+					// 一名代理人已生成。 / An Agent has spawned.
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
+				});
+			}, 600000);
+		}
+	}
 }

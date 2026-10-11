@@ -18,25 +18,41 @@ import lombok.Setter;
 @Setter
 public class MinionCommonData extends VisibleObjectTemplate implements IExpirable {
 
-	/** 返回 minion id / Returns the minion id */
+	/**
+	 * 返回 minion id / Returns the minion id
+	 */
 	private int minionId;
-	/** 设置 birthday / Sets the birthday */
+	/**
+	 * 设置 birthday / Sets the birthday
+	 */
 	private Timestamp birthday;
 	private int minionObjId = 0;
-	/** 返回 master object id / Returns the master object id */
+	/**
+	 * 返回 master object id / Returns the master object id
+	 */
 	private final int masterObjectId;
-	/** 返回 minion grade / Returns the minion grade */
+	/**
+	 * 返回 minion grade / Returns the minion grade
+	 */
 	private final String minionGrade;
-	/** 设置名称。 / Sets the name. */
+	/**
+	 * 设置名称。 / Sets the name.
+	 */
 	private String name;
-	/** 获取守护灵等级。 / Returns the minion level. */
+	/**
+	 * 获取守护灵等级。 / Returns the minion level.
+	 */
 	private int minionLevel;
 	private int miniongrowthpoint = 0;
 	private boolean lock = false;
-	/** 设置 is buffing / Sets the is buffing */
+	/**
+	 * 设置 is buffing / Sets the is buffing
+	 */
 	private boolean IsBuffing = false;
 	private boolean isLooting = false;
-	/** 返回 doping bag / Returns the doping bag */
+	/**
+	 * 返回 doping bag / Returns the doping bag
+	 */
 	MinionDopingBag dopingBag = null;
 	private Timestamp despawnTime;
 	private int minionSkillPoints;
@@ -44,11 +60,11 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {
 		this(GameWorldBootstrapServices.idFactory().nextId(), minionId, masterObjectId, name, minionGrade, minionLevel,
-				miniongrowthpoint);
+			miniongrowthpoint);
 	}
 
 	public MinionCommonData(int minionObjId, int minionId, int masterObjectId, String name, String minionGrade,
-			int minionLevel, int miniongrowthpoint) {
+							int minionLevel, int miniongrowthpoint) {
 		this.minionObjId = minionObjId;
 		this.minionId = minionId;
 		this.masterObjectId = masterObjectId;
@@ -61,27 +77,37 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		}
 	}
 
-	/** 设置 object id / Sets the object id */
+	/**
+	 * 设置 object id / Sets the object id
+	 */
 	public void setObjectId(int minionObjId) {
 		this.minionObjId = minionObjId;
 	}
 
-	/** 返回对象 ID / Returns the object id */
+	/**
+	 * 返回对象 ID / Returns the object id
+	 */
 	public int getObjectId() {
 		return minionObjId;
 	}
 
-	/** 设置 minion id / Sets the minion id */
-	public int setMinionId(int minionId) {
-		return this.minionId = minionId;
+	/**
+	 * 设置 minion id / Sets the minion id
+	 */
+	public void setMinionId(int minionId) {
+		this.minionId = minionId;
 	}
 
-	/** 设置守护灵等级。 / Sets the minion level. */
-	public int setMinionLevel(int minionLevel) {
-		return this.minionLevel = minionLevel;
+	/**
+	 * 设置守护灵等级。 / Sets the minion level.
+	 */
+	public void setMinionLevel(int minionLevel) {
+		this.minionLevel = minionLevel;
 	}
 
-	/** 返回 birthday / Returns the birthday */
+	/**
+	 * 返回 birthday / Returns the birthday
+	 */
 	public int getBirthday() {
 		if (birthday == null) {
 			return 0;
@@ -89,67 +115,91 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 		return (int) (birthday.getTime() / 1000);
 	}
 
-	/** 返回 birthday timestamp / Returns the birthday timestamp */
+	/**
+	 * 返回 birthday timestamp / Returns the birthday timestamp
+	 */
 	public Timestamp getBirthdayTimestamp() {
 		return birthday;
 	}
 
-	/** 获取过期时间。 / Returns the expire time. */
+	/**
+	 * 获取过期时间。 / Returns the expire time.
+	 */
 	@Override
 	public int getExpireTime() {
 		return 0;
 	}
 
-	/** 到期结束 / Expire End */
+	/**
+	 * 到期结束 / Expire End
+	 */
 	@Override
 	public void expireEnd(Player player) {
 	}
 
-	/** 是否立即过期 / Whether expire now */
+	/**
+	 * 是否立即过期 / Whether expire now
+	 */
 	@Override
 	public boolean canExpireNow() {
 		return false;
 	}
 
-	/** 过期消息。 / Expire Message. */
+	/**
+	 * 过期消息。 / Expire Message.
+	 */
 	@Override
 	public void expireMessage(Player player, int n) {
 	}
 
-	/** 返回模板 ID / Returns the template id */
+	/**
+	 * 返回模板 ID / Returns the template id
+	 */
 	@Override
 	public int getTemplateId() {
 		return minionId;
 	}
 
-	/** 获取名称。 / Returns the name. */
+	/**
+	 * 获取名称。 / Returns the name.
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/** 返回名称 ID / Returns the name id */
+	/**
+	 * 返回名称 ID / Returns the name id
+	 */
 	@Override
 	public int getNameId() {
 		return 0;
 	}
 
-	/** 返回 minion growth point / Returns the minion growth point */
+	/**
+	 * 返回 minion growth point / Returns the minion growth point
+	 */
 	public int getMinionGrowthPoint() {
 		return miniongrowthpoint;
 	}
 
-	/** 设置 minion growth point / Sets the minion growth point */
+	/**
+	 * 设置 minion growth point / Sets the minion growth point
+	 */
 	public void setMinionGrowthPoint(int miniongrowthpoint) {
 		this.miniongrowthpoint = miniongrowthpoint;
 	}
 
-	/** 是否增益中 / Is Buffing. */
+	/**
+	 * 是否增益中 / Is Buffing.
+	 */
 	public boolean IsBuffing() {
 		return IsBuffing;
 	}
 
-	/** 设置 is looting / Sets the is looting */
+	/**
+	 * 设置 is looting / Sets the is looting
+	 */
 	public void setIsLooting(boolean isLooting) {
 		this.isLooting = isLooting;
 	}

@@ -54,7 +54,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	 * are gone, and an incomplete hand-in has no route.
 	 */
 	@Test
-	void canonicalUseItemQuestDeliversOnQuestSelect() throws Exception {
+	void canonicalUseItemQuestDeliversOnQuestSelect() {
 		for (int[] quest : new int[][] {{80482, 831959, 182215419}, {80486, 831961, 182215421}}) {
 			QuestDefinition definition = definition(quest[0]).definition();
 			int rewardWindow = QuestDialogPage.rewardWindowForTier(
@@ -91,7 +91,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	 * pair are gone, and an incomplete hand-in has no route.
 	 */
 	@Test
-	void canonicalCollectQuestDeliversOnQuestSelect() throws Exception {
+	void canonicalCollectQuestDeliversOnQuestSelect() {
 		QuestDefinition definition = definition(1103).definition();
 		QuestTransition deliver = transition(definition, "started", "reward",
 			new QuestEvent.TalkToNpc(203057, QuestDialogAction.QUEST_SELECT.id()));
@@ -115,7 +115,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	@Test
-	void quest1137ChecksOnlyTheCollectedFossilNotTheWorkItem() throws Exception {
+	void quest1137ChecksOnlyTheCollectedFossilNotTheWorkItem() {
 		QuestDefinition definition = definition(1137).definition();
 		checkTurnInBranches(definition, 203111, List.of(new QuestCondition.HasItem(182200513, 1)), "SELECT6");
 		// 工具物品 182200512 是 work-item，由完成清理回收，不得作为交付条件或被交付移除。
@@ -130,7 +130,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	@Test
-	void dualNpcQuest1351KeepsRewardOwnershipOnTheTurnInNpc() throws Exception {
+	void dualNpcQuest1351KeepsRewardOwnershipOnTheTurnInNpc() {
 		QuestDefinition definition = definition(1351).definition();
 
 		// P0c-27 裁定（原版对、XML 错）：族形 started 态在接取 NPC 上只有 FINISH_DIALOG(1008)
@@ -185,7 +185,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	 * check-failure page are gone.
 	 */
 	@Test
-	void raksangQuestsGrantOnAreaEntryAndDeliverOnQuestSelect() throws Exception {
+	void raksangQuestsGrantOnAreaEntryAndDeliverOnQuestSelect() {
 		for (int questId : RAKSANG_QUESTS) {
 			int itemId = questId == 18739 ? 182215692 : 182215693;
 			int count = questId == 18739 ? 5 : 8;
@@ -215,7 +215,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	@Test
-	void expertTapperQuestsCheckItemsOnTheSelect2PageAction() throws Exception {
+	void expertTapperQuestsCheckItemsOnTheSelect2PageAction() {
 		QuestDefinition asmodians = definition(29000).definition();
 		QuestTransition entry = talk(asmodians, "started", "started", 204096,
 			QuestDialogAction.QUEST_SELECT.id());
@@ -243,7 +243,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	@Test
-	void stigmaScarChainSpawnsAndDeletesTheMidwayNpcBeforeTheTurnIn() throws Exception {
+	void stigmaScarChainSpawnsAndDeletesTheMidwayNpcBeforeTheTurnIn() {
 		QuestDefinition definition = definition(30217).definition();
 		assertNode(definition, "s1", QuestStatus.START, Map.of("var0", 1));
 		assertNode(definition, "s2", QuestStatus.START, Map.of("var0", 2));
@@ -286,7 +286,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	}
 
 	@Test
-	void quest18745KeepsTheRewardOwnerExclusive() throws Exception {
+	void quest18745KeepsTheRewardOwnerExclusive() {
 		QuestDefinition definition = definition(18745).definition();
 		checkTurnInBranches(definition, 804707, 182215943, 1, "CHECK_USER_ITEM_FAIL", true);
 		for (int npcId : new int[] {206378, 206379, 206380, 702958}) {
@@ -311,7 +311,7 @@ class CollectTurnInClientActionAlignmentBatchTest {
 	 * SELECT5/SELECT6 report pages must all be absent (an incomplete hand-in has no route). The gate is the
 	 * whole retail collect_item1 group; a single reward tier maps to window 1.
 	 */
-	private static void checkCanonicalTurnIn(int questId, int npcId, int itemId, int count) throws Exception {
+	private static void checkCanonicalTurnIn(int questId, int npcId, int itemId, int count) {
 		QuestDefinition definition = definition(questId).definition();
 		QuestTransition deliver = delivery(definition, npcId, "quest " + questId + " delivery route");
 		assertNull(deliver.priority(), "quest " + questId + " delivery route priority");

@@ -15,21 +15,21 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Krotan Auxillary General（@AIName "unsealed_krotan"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Krotan Auxillary General (@AIName "unsealed_krotan"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("unsealed_krotan")
-public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
-{
+public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
 
 	@Override
-    protected void handleSpawned() {
-        super.handleSpawned();
+	protected void handleSpawned() {
+		super.handleSpawned();
 		announceUnsealedKrotan();
-    }
+	}
 
 	@Override
 	protected void handleDied() {
@@ -40,7 +40,7 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 			case 267811:
 				treasureChest();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-			break;
+				break;
 		}
 		super.handleDied();
 	}

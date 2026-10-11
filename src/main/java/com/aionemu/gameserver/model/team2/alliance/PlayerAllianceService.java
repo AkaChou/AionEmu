@@ -55,13 +55,24 @@ public class PlayerAllianceService {
 	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 
-	/** 联盟事件监听器接口 / Player alliance event listener interface */
+	/**
+	 * 联盟事件监听器接口 / Player alliance event listener interface
+	 */
 	public interface PlayerAllianceListener {
-		default void onAllianceCreated(Player leader) {}
-		default void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {}
-		default void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {}
-		default void onBeforeAllianceDisbanded(PlayerAlliance alliance) {}
-		default void onAfterAllianceDisbanded(PlayerAlliance alliance) {}
+		default void onAllianceCreated(Player leader) {
+		}
+
+		default void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
+		}
+
+		default void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
+		}
+
+		default void onBeforeAllianceDisbanded(PlayerAlliance alliance) {
+		}
+
+		default void onAfterAllianceDisbanded(PlayerAlliance alliance) {
+		}
 	}
 
 	private static final List<PlayerAllianceListener> allianceListeners = new CopyOnWriteArrayList<>();
@@ -104,25 +115,29 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** Invite 联盟 / Invite To Alliance */
-	public static final void inviteToAlliance(final Player inviter, final Player invited) {
+	/**
+	 * Invite 联盟 / Invite To Alliance
+	 */
+	public static void inviteToAlliance(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
 			PlayerAllianceInvite invite = new PlayerAllianceInvite(inviter, invited);
 			if (invited.getResponseRequester().putRequest(SM_QUESTION_WINDOW.STR_MSGBOX_FORCE_INVITE_PARTY, invite)) {
 				if (invited.isInGroup2()) {
 					PacketSendUtility.sendPacket(inviter,
-							SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_INVITED_HIS_PARTY(invited.getName()));
+						SM_SYSTEM_MESSAGE.STR_PARTY_ALLIANCE_INVITED_HIS_PARTY(invited.getName()));
 				} else {
 					PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_FORCE_INVITED_HIM(invited.getName()));
 				}
 				PacketSendUtility.sendPacket(invited, new SM_QUESTION_WINDOW(
-						SM_QUESTION_WINDOW.STR_MSGBOX_FORCE_INVITE_PARTY, 0, 0, inviter.getName()));
+					SM_QUESTION_WINDOW.STR_MSGBOX_FORCE_INVITE_PARTY, 0, 0, inviter.getName()));
 			}
 		}
 	}
 
-	/** 是否邀请 / Whether invite*/
-	public static final boolean canInvite(Player inviter, Player invited) {
+	/**
+	 * 是否邀请 / Whether invite
+	 */
+	public static boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
 			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
@@ -150,7 +165,7 @@ public class PlayerAllianceService {
 						return false;
 					} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(tm)) {
 						PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE
-								.STR_PARTY_ALLIANCE_CANT_INVITE_WHEN_HE_IS_ASKED_QUESTION(tm.getName()));
+							.STR_PARTY_ALLIANCE_CANT_INVITE_WHEN_HE_IS_ASKED_QUESTION(tm.getName()));
 						return false;
 					}
 				}
@@ -163,8 +178,10 @@ public class PlayerAllianceService {
 		return RestrictionsManager.canInviteToAlliance(inviter, invited);
 	}
 
-	/** 创建联盟。 / Create alliance. */
-	public static final PlayerAlliance createAlliance(Player leader, Player invited, TeamType type) {
+	/**
+	 * 创建联盟。 / Create alliance.
+	 */
+	public static PlayerAlliance createAlliance(Player leader, Player invited, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
 		alliances.put(newAlliance.getTeamId(), newAlliance);
 		addPlayer(newAlliance, leader);
@@ -176,8 +193,10 @@ public class PlayerAllianceService {
 		return newAlliance;
 	}
 
-	/** 创建指定协议类型的单人联盟。 / Creates a single-player alliance of the given team type. */
-	public static final PlayerAlliance createAlliance(Player leader, TeamType type) {
+	/**
+	 * 创建指定协议类型的单人联盟。 / Creates a single-player alliance of the given team type.
+	 */
+	public static PlayerAlliance createAlliance(Player leader, TeamType type) {
 		PlayerAlliance newAlliance = new PlayerAlliance(new PlayerAllianceMember(leader), type);
 		alliances.put(newAlliance.getTeamId(), newAlliance);
 		addPlayer(newAlliance, leader);
@@ -192,20 +211,26 @@ public class PlayerAllianceService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
 	}
 
-	/** 添加玩家到联盟 / Adds player to alliance*/
-	public static final void addPlayerToAlliance(PlayerAlliance alliance, Player invited) {
+	/**
+	 * 添加玩家到联盟 / Adds player to alliance
+	 */
+	public static void addPlayerToAlliance(PlayerAlliance alliance, Player invited) {
 		notifyBeforePlayerAdded(alliance, invited);
 		alliance.addMember(new PlayerAllianceMember(invited));
 		notifyPlayerAdded(alliance, invited);
 	}
 
-	/** 更改小队规则 / Change Group Rules */
-	public static final void changeGroupRules(PlayerAlliance alliance, LootGroupRules lootRules) {
+	/**
+	 * 更改小队规则 / Change Group Rules
+	 */
+	public static void changeGroupRules(PlayerAlliance alliance, LootGroupRules lootRules) {
 		alliance.onEvent(new ChangeAllianceLootRulesEvent(alliance, lootRules));
 	}
 
-	/** 玩家登录 / On Player Login */
-	public static final void onPlayerLogin(Player player) {
+	/**
+	 * 玩家登录 / On Player Login
+	 */
+	public static void onPlayerLogin(Player player) {
 		for (PlayerAlliance alliance : alliances.values()) {
 			PlayerAllianceMember member = alliance.getMember(player.getObjectId());
 			if (member != null) {
@@ -214,8 +239,10 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 玩家登出时 / On Player Logout */
-	public static final void onPlayerLogout(Player player) {
+	/**
+	 * 玩家登出时 / On Player Logout
+	 */
+	public static void onPlayerLogout(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
 			PlayerAllianceMember member = alliance.getMember(player.getObjectId());
@@ -224,22 +251,28 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 更新联盟。 / Update alliance. */
-	public static final void updateAlliance(Player player, PlayerAllianceEvent allianceEvent) {
+	/**
+	 * 更新联盟。 / Update alliance.
+	 */
+	public static void updateAlliance(Player player, PlayerAllianceEvent allianceEvent) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
 			alliance.onEvent(new PlayerAllianceUpdateEvent(alliance, player, allianceEvent));
 		}
 	}
 
-	/** 添加玩家。 / Adds player. */
-	public static final void addPlayer(PlayerAlliance alliance, Player player) {
+	/**
+	 * 添加玩家。 / Adds player.
+	 */
+	public static void addPlayer(PlayerAlliance alliance, Player player) {
 		Preconditions.checkNotNull(alliance, "Alliance should not be null");
 		alliance.onEvent(new PlayerEnteredEvent(alliance, player));
 	}
 
-	/** 移除玩家。 / Removes player. */
-	public static final void removePlayer(Player player) {
+	/**
+	 * 移除玩家。 / Removes player.
+	 */
+	public static void removePlayer(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
 			if (alliance.getTeamType().isDefence()) {
@@ -249,8 +282,10 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 封禁玩家。 / Ban Player. */
-	public static final void banPlayer(Player bannedPlayer, Player banGiver) {
+	/**
+	 * 封禁玩家。 / Ban Player.
+	 */
+	public static void banPlayer(Player bannedPlayer, Player banGiver) {
 		Preconditions.checkNotNull(bannedPlayer, "Banned player should not be null");
 		Preconditions.checkNotNull(banGiver, "Bangiver player should not be null");
 		PlayerAlliance alliance = banGiver.getPlayerAlliance2();
@@ -261,24 +296,28 @@ public class PlayerAllianceService {
 			PlayerAllianceMember bannedMember = alliance.getMember(bannedPlayer.getObjectId());
 			if (bannedMember != null) {
 				alliance.onEvent(new PlayerAllianceLeavedEvent(alliance, bannedMember.getObject(), LeaveReson.BAN,
-						banGiver.getName()));
+					banGiver.getName()));
 			} else {
 				log.warn(I18n.get("log.937a517c5094", alliance.onlineMembers()));
 			}
 		}
 	}
 
-	/** 解散 / disband. */
+	/**
+	 * 解散 / disband.
+	 */
 	public static void disband(PlayerAlliance alliance) {
 		Preconditions.checkState(alliance.onlineMembers() <= 1,
-				"Can't disband alliance with more than one online member");
+			"Can't disband alliance with more than one online member");
 		notifyAllianceDisbanded(alliance);
 		alliances.remove(alliance.getTeamId());
 		alliance.onEvent(new AllianceDisbandEvent(alliance));
 		notifyAllianceDisbandedAfter(alliance);
 	}
 
-	/** 更换队长 / change Leader. */
+	/**
+	 * 更换队长 / change Leader.
+	 */
 	public static void changeLeader(Player player) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -286,7 +325,9 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 更换副队长 / change Vice Captain. */
+	/**
+	 * 更换副队长 / change Vice Captain.
+	 */
 	public static void changeViceCaptain(Player player, AssignType assignType) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -294,8 +335,10 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 搜索联盟。 / Search alliance. */
-	public static final PlayerAlliance searchAlliance(Integer playerObjId) {
+	/**
+	 * 搜索联盟。 / Search alliance.
+	 */
+	public static PlayerAlliance searchAlliance(Integer playerObjId) {
 		for (PlayerAlliance alliance : alliances.values()) {
 			if (alliance.hasMember(playerObjId)) {
 				return alliance;
@@ -304,7 +347,9 @@ public class PlayerAllianceService {
 		return null;
 	}
 
-	/** 更换成员小队 / Change Member Group */
+	/**
+	 * 更换成员小队 / Change Member Group
+	 */
 	public static void changeMemberGroup(Player player, int firstPlayer, int secondPlayer, int allianceGroupId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		Preconditions.checkNotNull(alliance, "Alliance should not be null for group change");
@@ -325,7 +370,9 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 分配基纳 / Distribute Kinah */
+	/**
+	 * 分配基纳 / Distribute Kinah
+	 */
 	public static void distributeKinah(Player player, long amount) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -333,7 +380,9 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 在队伍内分配基纳 / Distribute Kinah In Group */
+	/**
+	 * 在队伍内分配基纳 / Distribute Kinah In Group
+	 */
 	public static void distributeKinahInGroup(Player player, long amount) {
 		PlayerAllianceGroup allianceGroup = player.getPlayerAllianceGroup2();
 		if (allianceGroup != null) {
@@ -341,7 +390,9 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 显示烙印标记 / show Brand. */
+	/**
+	 * 显示烙印标记 / show Brand.
+	 */
 	public static void showBrand(Player player, int targetObjId, int brandId) {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
@@ -349,15 +400,19 @@ public class PlayerAllianceService {
 		}
 	}
 
-	/** 获取服务状态。 / Returns the service status. */
-	public static final String getServiceStatus() {
+	/**
+	 * 获取服务状态。 / Returns the service status.
+	 */
+	public static String getServiceStatus() {
 		return "Number of alliances: " + alliances.size();
 	}
 
 	public static class OfflinePlayerAllianceChecker implements Runnable, Predicate<PlayerAllianceMember> {
 		private PlayerAlliance currentAlliance;
 
-		/** 运行 / run. */
+		/**
+		 * 运行 / run.
+		 */
 		@Override
 		public void run() {
 			for (PlayerAlliance alliance : alliances.values()) {
@@ -367,7 +422,9 @@ public class PlayerAllianceService {
 			currentAlliance = null;
 		}
 
-		/** 应用。 / Apply. */
+		/**
+		 * 应用。 / Apply.
+		 */
 		@Override
 		public boolean apply(PlayerAllianceMember member) {
 			int kickDelay = currentAlliance.getTeamType().isAutoTeam() ? 60 : GroupConfig.ALLIANCE_REMOVE_TIME;
@@ -376,7 +433,7 @@ public class PlayerAllianceService {
 					GameLocationBootstrapServices.vortexService().removeInvaderPlayer(member.getObject());
 				}
 				currentAlliance.onEvent(
-						new PlayerAllianceLeavedEvent(currentAlliance, member.getObject(), LeaveReson.LEAVE_TIMEOUT));
+					new PlayerAllianceLeavedEvent(currentAlliance, member.getObject(), LeaveReson.LEAVE_TIMEOUT));
 			}
 			return true;
 		}

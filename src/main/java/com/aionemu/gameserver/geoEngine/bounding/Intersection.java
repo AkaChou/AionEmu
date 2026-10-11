@@ -10,6 +10,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 /**
  * 包围体与三角形相交检测的工具类。
  * Utility methods for computing intersection between bounding volumes and triangles.
+ *
  * @author Kirill
  */
 public class Intersection {
@@ -17,12 +18,13 @@ public class Intersection {
 	/**
 	 * 在给定轴上求三点最小/最大值，结果写入 minMax（x=min, y=max）。
 	 * Finds min/max of three values on one axis; stores min in x and max in y of minMax.
-	 * @param x0 第一分量 / first component
-	 * @param x1 第二分量 / second component
-	 * @param x2 第三分量 / third component
+	 *
+	 * @param x0     第一分量 / first component
+	 * @param x1     第二分量 / second component
+	 * @param x2     第三分量 / third component
 	 * @param minMax 输出向量 / output vector
 	 */
-	private static final void findMinMax(float x0, float x1, float x2, Vector3f minMax) {
+	private static void findMinMax(float x0, float x1, float x2, Vector3f minMax) {
 		minMax.set(x0, x0, 0);
 		if (x1 < minMax.x) {
 			minMax.setX(x1);
@@ -47,13 +49,14 @@ public class Intersection {
 	 * <p>
 	 * 检测方向：三角形边与坐标轴的叉积（9 次）、三角形 AABB 轴（3 次）、三角形法线。
 	 * Tests: 9 cross-products of tri edges with axes, 3 AABB axes, and the triangle plane.
+	 *
 	 * @param bbox 轴对齐包围盒 / axis-aligned bounding box
-	 * @param v1 三角形顶点 1 / triangle vertex 1
-	 * @param v2 三角形顶点 2 / triangle vertex 2
-	 * @param v3 三角形顶点 3 / triangle vertex 3
+	 * @param v1   三角形顶点 1 / triangle vertex 1
+	 * @param v2   三角形顶点 2 / triangle vertex 2
+	 * @param v3   三角形顶点 3 / triangle vertex 3
 	 * @return 若 box and triangle overlap 则为 true / true if box and triangle overlap
 	 */
-	public static final boolean intersect(BoundingBox bbox, Vector3f v1, Vector3f v2, Vector3f v3) {
+	public static boolean intersect(BoundingBox bbox, Vector3f v1, Vector3f v2, Vector3f v3) {
 		// 用分离轴定理检测三角形与盒子是否重叠 / use separating axis theorem to test overlap between triangle and box
 		// 需在这些方向测试重叠： / need to test for overlap in these directions:
 		// 1) {x,y,z} 方向（实际上因使用三角形的 AABB / 1) the {x,y,z}-directions (actually, since we use the AABB of the triangle
@@ -216,7 +219,7 @@ public class Intersection {
 		// Bullet 2:
 		// 测试盒子是否与三角形平面相交。 / test if the box intersects the plane of the triangle
 		// 计算三角形平面方程：normal * x + d = 0。 / compute plane equation of triangle: normal * x + d = 0
-        Plane p = new Plane();
+		Plane p = new Plane();
 		p.setPlanePoints(v1, v2, v3);
 		return bbox.whichSide(p) != Plane.Side.Negative;
 		//

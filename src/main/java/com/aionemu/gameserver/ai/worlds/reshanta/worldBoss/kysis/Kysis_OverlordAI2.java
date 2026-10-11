@@ -15,21 +15,21 @@ import com.aionemu.gameserver.world.WorldPosition;
 /**
  * Reshanta 区域 NPC AI：Kysis Overlord（@AIName "unsealed_kysis"），继承 AggressiveNpcAI2。
  * Reshanta zone NPC AI: Kysis Overlord (@AIName "unsealed_kysis"), extends AggressiveNpcAI2.
+ *
  * @author Encom
  */
 @AIName("unsealed_kysis")
-public class Kysis_OverlordAI2 extends AggressiveNpcAI2
-{
+public class Kysis_OverlordAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
 
 	@Override
-    protected void handleSpawned() {
-        super.handleSpawned();
+	protected void handleSpawned() {
+		super.handleSpawned();
 		announceUnsealedKysis();
-    }
+	}
 
 	@Override
 	protected void handleDied() {
@@ -40,7 +40,7 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2
 			case 269011:
 				treasureChest();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-			break;
+				break;
 		}
 		super.handleDied();
 	}

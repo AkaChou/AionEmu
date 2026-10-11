@@ -24,10 +24,13 @@ import com.aionemu.gameserver.services.QuestService;
  * Dispatcher for retail system-granted quests: definitions that carry a {@code SystemGrant} edge are
  * started directly by the granting subsystem (faction daily rotation today), mirroring the existing
  * {@code RetailAreaEngine} quest-area grant. Definitions without that edge are never touched.
+ *
  * @author AionEmu
  */
 public final class RetailSystemGrantDispatcher {
-	/** {@link QuestEvent.SystemGrant#type()} 的类型串。 / Event-type string of {@code SystemGrant}. */
+	/**
+	 * {@link QuestEvent.SystemGrant#type()} 的类型串。 / Event-type string of {@code SystemGrant}.
+	 */
 	private static final String SYSTEM_GRANT_TYPE = new QuestEvent.SystemGrant().type();
 
 	private RetailSystemGrantDispatcher() {
@@ -36,6 +39,7 @@ public final class RetailSystemGrantDispatcher {
 	/**
 	 * 判断给定任务的定义是否含系统发放边。
 	 * Returns whether the given quest definition carries a system-grant edge.
+	 *
 	 * @param catalog 任务目录 / quest catalog
 	 * @param questId 任务 ID / quest id
 	 * @return 含 {@code SystemGrant} 边时为 true / true when a {@code SystemGrant} edge exists
@@ -52,24 +56,25 @@ public final class RetailSystemGrantDispatcher {
 	/**
 	 * 若该任务是系统发放任务且玩家尚未开始，则直接发放。
 	 * Grants the quest directly when it is system-granted and the player has not started it yet.
-	 * @param player 玩家 / player
+	 *
+	 * @param player  玩家 / player
 	 * @param questId 任务 ID / quest id
 	 * @return 实际发放成功时为 true / true when the quest was granted
 	 */
-	public static boolean grantIfSystemGranted(Player player, int questId) {
+	public static void grantIfSystemGranted(Player player, int questId) {
 		if (player == null || questId <= 0) {
-			return false;
+return;
 		}
 		QuestEngine questEngine = GameEngineServices.questEngine();
 		if (questEngine == null || !isSystemGranted(questEngine.questCatalog(), questId)) {
-			return false;
+return;
 		}
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		if (state != null && state.getStatus() != QuestStatus.NONE) {
 			// 已有进度（START/REWARD/COMPLETE）：不重复发放。
 			// Already in progress: never re-grant.
-			return false;
+return;
 		}
-		return QuestService.startQuest(new QuestEnv(null, player, questId, 0));
+QuestService.startQuest(new QuestEnv(null, player, questId, 0));
 	}
 }

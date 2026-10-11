@@ -47,7 +47,7 @@ class QuestInteractionObjectCatalogTest {
 	void productionQuestUseItemTalkRoutesDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
+			"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
 		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
@@ -57,8 +57,8 @@ class QuestInteractionObjectCatalogTest {
 			List<QuestTransition> transitions = definition.definition().transitions();
 			for (var transition : transitions) {
 				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
-						|| (talk.dialogId() != null && talk.dialogId() != -1)
-						|| !questUseItemNpcs.contains(talk.npcId())) {
+					|| (talk.dialogId() != null && talk.dialogId() != -1)
+					|| !questUseItemNpcs.contains(talk.npcId())) {
 					continue;
 				}
 				boolean started = definition.definition().nodes().stream()
@@ -84,7 +84,7 @@ class QuestInteractionObjectCatalogTest {
 	void productionQuestUseItemDropsDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
+			"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
 			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
 		}
 		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
@@ -98,15 +98,15 @@ class QuestInteractionObjectCatalogTest {
 				}
 				boolean eligible = transitions.stream().anyMatch(transition -> {
 					if (!(transition.event() instanceof QuestEvent.CanAct(int templateId, String actionType))
-							|| templateId != drop.npcId()
-							|| !"ACTION_ITEM_USE".equals(actionType)) {
+						|| templateId != drop.npcId()
+						|| !"ACTION_ITEM_USE".equals(actionType)) {
 						return false;
 					}
 					return definition.definition().nodes().stream()
 						.anyMatch(node -> node.label().equals(transition.sourceNode())
 							&& node.projection().status() == QuestStatus.START
 							&& (drop.collectingStep() == 0
-								|| Objects.equals(node.projection().variables().get("var0"), drop.collectingStep())));
+							|| Objects.equals(node.projection().variables().get("var0"), drop.collectingStep())));
 				});
 				if (!eligible) {
 					missing.add(definition.id() + ":" + drop.npcId() + ":" + drop.itemId()
@@ -121,16 +121,16 @@ class QuestInteractionObjectCatalogTest {
 	void wineBarrel1109UsesCatalogDropTalkAndActionObjectRoutes() throws Exception {
 		CompiledQuestDefinition definition;
 		try (InputStream input = resource(
-				"aion/data/static_data/quest/definitions/quests/1109.xml")) {
+			"aion/data/static_data/quest/definitions/quests/1109.xml")) {
 			definition = QuestDefinitionXmlCompiler.compile(input);
 		}
 		QuestProductionDispatcher dispatcher = dispatcher(definition);
 
 		List<QuestCatalogDrop> drops = dispatcher.questDrops(700106);
 		assertEquals(1, drops.size());
-		assertEquals(1109, drops.get(0).questId());
-		assertEquals(182200205, drops.get(0).itemId());
-		assertEquals(QuestDropScope.GROUP, drops.get(0).scope());
+		assertEquals(1109, drops.getFirst().questId());
+		assertEquals(182200205, drops.getFirst().itemId());
+		assertEquals(QuestDropScope.GROUP, drops.getFirst().scope());
 		assertTrue(definition.definition().transitions().stream()
 			.anyMatch(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
 				&& talk.npcId() == 700106));
@@ -213,25 +213,27 @@ class QuestInteractionObjectCatalogTest {
 			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId,
 				QuestStatus.START, 0, Map.of()), new QuestActionPort() {
-					@Override
-					public void preflight(Connection connection, QuestSnapshot snapshot,
-							List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
-					}
+			@Override
+			public void preflight(Connection connection, QuestSnapshot snapshot,
+								  List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
+			}
 
-					@Override
-					public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-							List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
-						return QuestTransactionParticipant.none();
-					}
-				}, new QuestStatePort() {
-					@Override
-					public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
-					}
+			@Override
+			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+													 List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
+				return QuestTransactionParticipant.none();
+			}
+		}, new QuestStatePort() {
+			@Override
+			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			}
 
-					@Override
-					public void publish(int playerId, QuestMutationPlan plan) {
-					}
-				}, (action, snapshot, plan) -> { }, () -> connection(), ignored -> { },
+			@Override
+			public void publish(int playerId, QuestMutationPlan plan) {
+			}
+		}, (action, snapshot, plan) -> {
+		}, () -> connection(), ignored -> {
+		},
 			new QuestRuntimeMetricsCollector());
 	}
 
@@ -250,8 +252,8 @@ class QuestInteractionObjectCatalogTest {
 				var reader = factory.createXMLStreamReader(input);
 				while (reader.hasNext()) {
 					if (reader.next() == XMLStreamConstants.START_ELEMENT
-							&& "npc_template".equals(reader.getLocalName())
-							&& Integer.toString(npcId).equals(reader.getAttributeValue(null, "npc_id"))) {
+						&& "npc_template".equals(reader.getLocalName())
+						&& Integer.toString(npcId).equals(reader.getAttributeValue(null, "npc_id"))) {
 						return reader.getAttributeValue(null, "ai");
 					}
 				}
