@@ -212,10 +212,10 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 			player.getController().addTask(TaskId.QUEST_LURE, task);
 			return true;
 		};
-		this.targetNpcResolver = (player, templateId) -> findLivingNpc(player, templateId);
+		this.targetNpcResolver = PlayerQuestAiPort::findLivingNpc;
 		this.taskRegistrar = Objects.requireNonNull(taskRegistrar, "taskRegistrar");
 		this.npcInfo = Objects.requireNonNull(npcInfo, "npcInfo");
-		this.worldNpcResolver = (player, templateId) -> findLivingNpc(player, templateId);
+		this.worldNpcResolver = PlayerQuestAiPort::findLivingNpc;
 	}
 
 	PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai,

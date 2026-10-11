@@ -155,7 +155,7 @@ public final class QuestDefinitionCompiler {
 			long archDaevaPromotions = transition.actions().stream()
 				.filter(QuestAction.PromoteArchDaeva.class::isInstance).count();
 			boolean blockOnly = transition.actions().size() == 1
-				&& transition.actions().get(0) instanceof QuestAction.BlockDefaultItemUse;
+				&& transition.actions().getFirst() instanceof QuestAction.BlockDefaultItemUse;
 			if (blockOnly && !(transition.event() instanceof QuestEvent.UseItem)) {
 				fail("BLOCK_DEFAULT_ITEM_USE_EVENT_MISMATCH",
 					"block-default-item-use is only valid on use-item events");
@@ -196,7 +196,7 @@ public final class QuestDefinitionCompiler {
 				fail("DUPLICATE_DIALOG_CLOSE", "a transition may close the dialog only once");
 			}
 			boolean completionSync = stateSyncs.size() == 1
-				&& stateSyncs.get(0).mode() == QuestStateSyncMode.COMPLETION;
+				&& stateSyncs.getFirst().mode() == QuestStateSyncMode.COMPLETION;
 			if (effectiveStatus == QuestStatus.COMPLETE && !completionSync && !preservesCompletedProjection) {
 				fail("COMPLETE_QUEST_SYNC_REQUIRED",
 					"a COMPLETE projection requires one COMPLETION quest-state sync");
@@ -212,7 +212,7 @@ public final class QuestDefinitionCompiler {
 		validateCraftLifecycle(definition, nodes);
 		Set<String> reached = new HashSet<>();
 		java.util.ArrayDeque<String> pending = new java.util.ArrayDeque<>();
-		pending.add(definition.nodes().get(0).label());
+		pending.add(definition.nodes().getFirst().label());
 		while (!pending.isEmpty()) {
 			String current = pending.removeFirst();
 			if (!reached.add(current)) {
@@ -524,7 +524,7 @@ public final class QuestDefinitionCompiler {
 			}
 		}
 		if (definition.nodes().size() == 1) {
-			return Set.of(definition.nodes().get(0).label());
+			return Set.of(definition.nodes().getFirst().label());
 		}
 		fail("AMBIGUOUS_SOURCE", "transition source cannot be inferred; declare source explicitly or add one status-is condition");
 		return Set.of();

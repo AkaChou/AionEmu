@@ -44,7 +44,7 @@ public final class NativeQuestXmlTable {
 		/** 首个值（缺字段/空值返回 ""）。 / The first value ("" when absent or empty). */
 		public String text(String tag) {
 			List<String> values = fields.get(tag);
-			return values == null || values.isEmpty() ? "" : values.get(0);
+			return values == null || values.isEmpty() ? "" : values.getFirst();
 		}
 
 		/** 全部值（缺字段返回空表）。 / All values (empty when absent). */
@@ -66,7 +66,7 @@ public final class NativeQuestXmlTable {
 				}
 				String suffix = key.substring(base.length());
 				if (!suffix.isEmpty() && suffix.chars().allMatch(Character::isDigit)) {
-					bySlot.put(Integer.parseInt(suffix), field.getValue().get(0));
+					bySlot.put(Integer.parseInt(suffix), field.getValue().getFirst());
 				}
 			}
 			return List.copyOf(bySlot.values());

@@ -20,7 +20,7 @@ public final class PlayerQuestAiPerceptionEventPort implements QuestAiPerception
 	private final ToIntFunction<Npc> aggroRange;
 
 	public PlayerQuestAiPerceptionEventPort() {
-		this((source, npc) -> source.isEnemy(npc), MathUtil::getDistance,
+		this(Creature::isEnemy, MathUtil::getDistance,
 			npc -> Math.max(1, npc.getAggroRange()));
 	}
 

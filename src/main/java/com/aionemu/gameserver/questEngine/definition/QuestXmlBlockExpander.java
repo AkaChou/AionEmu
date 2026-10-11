@@ -111,7 +111,7 @@ final class QuestXmlBlockExpander {
 	private static List<QuestTransition> expandFixedReportedReward(Context context,
 																   List<QuestTransition> transitions) {
 		if (context.metadata().useClassReward() == 1 || !context.metadata().classRewards().isEmpty()
-			|| selectableRewards(context).size() != 0) {
+			|| !selectableRewards(context).isEmpty()) {
 			return fail("REPORTED_REWARD_METADATA_MISMATCH", context, "transitions", "reported-reward-mode",
 				"FIXED requires fixed rewards without single-class or selectable rewards");
 		}
@@ -1402,7 +1402,7 @@ final class QuestXmlBlockExpander {
 		// A few evidence-backed custom owners persist a non-zero completion reward while declaring one
 		// physical reward group. Preserve that state contract; only multiple groups use the index as a selector.
 		if (groups.size() == 1) {
-			return groups.get(0).rewards();
+			return groups.getFirst().rewards();
 		}
 		if (completeRewardIndex >= groups.size()) {
 			return fail("NPC_COMPLETE_REWARD_GROUP_OUT_OF_RANGE", context, "npc-complete",

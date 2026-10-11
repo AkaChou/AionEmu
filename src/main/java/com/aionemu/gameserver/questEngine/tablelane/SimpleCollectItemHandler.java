@@ -204,7 +204,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 			for (String talkName : row.talkNpcNames()) {
 				NativeNpcNameResolver.Match talk = nameResolver.resolve(talkName);
 				if (talk.resolution() == NativeNpcNameResolver.Resolution.UNIQUE) {
-					talkIds.add(talk.npcIds().get(0));
+					talkIds.add(talk.npcIds().getFirst());
 				}
 			}
 			if (!talkIds.isEmpty()) {
@@ -231,7 +231,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 					}
 					continue;
 				}
-				int objectId = candidates.get(0);
+				int objectId = candidates.getFirst();
 				Integer slot = slotByDropSource.get(objectId);
 				if (slot == null) {
 					// 对象不在任何掉落列里 ⇒ 原版没有给它槽位（如 41216 的来源是另一个 FOBJ）；
@@ -998,10 +998,7 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 		// two rows) advances no state but must be served, otherwise the client stalls on the page; the
 		// movie itself is sent by the onDialog wrapper.
 		Cutscene cutscene = cutsceneByQuestId.get(questId);
-		if (cutscene != null && cutscene.triggerAction() == dialogId) {
-			return true;
-		}
-		return false;
+		return cutscene != null && cutscene.triggerAction() == dialogId;
 	}
 
 	private boolean onAcceptDialog(Player player, int questId, int npcId, int objectId, int dialogId) {

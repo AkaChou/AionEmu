@@ -54,7 +54,7 @@ public final class QuestEventRouter {
 				break;
 			case FIRST_REGISTERED:
 				if (!routes.isEmpty()) {
-					results.add(invoke(event, contract, routes.get(0), handler));
+					results.add(invoke(event, contract, routes.getFirst(), handler));
 				}
 				break;
 			case FIRST_NON_UNKNOWN:

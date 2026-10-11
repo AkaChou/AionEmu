@@ -51,7 +51,7 @@ public class QuestTasks {
 		}
 		return GameThreadPoolServices.threadPoolManager()
 				.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc,
-					searchResult.getSpot().getX(), searchResult.getSpot().getY(), searchResult.getSpot().getZ())), 1000, 1000);
+					searchResult.spot().getX(), searchResult.spot().getY(), searchResult.spot().getZ())), 1000, 1000);
 	}
 
 	private static Npc findLivingTarget(Npc follower, int npcTargetId) {

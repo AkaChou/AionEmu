@@ -9,7 +9,7 @@ import java.util.Set;
 public record QuestMembershipFacts(Set<QuestMembershipPermission> granted) {
 	public QuestMembershipFacts {
 		Objects.requireNonNull(granted, "granted");
-		if (granted.stream().anyMatch(permission -> permission == null)) {
+		if (granted.stream().anyMatch(Objects::isNull)) {
 			throw new IllegalArgumentException("granted membership permissions must not contain null");
 		}
 		granted = Set.copyOf(granted);

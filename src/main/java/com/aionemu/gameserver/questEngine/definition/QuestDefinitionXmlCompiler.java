@@ -961,7 +961,7 @@ public final class QuestDefinitionXmlCompiler {
 		if (elements.size() != 1) {
 			return fail("INVALID_ELEMENT_COUNT", parent.getTagName() + " requires exactly one typed child");
 		}
-		return elements.get(0);
+		return elements.getFirst();
 	}
 
 	private static Element child(Element parent, String name) {

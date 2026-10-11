@@ -451,7 +451,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + snapshot.playerId());
 		}
-		QuestAction.SetCurrency set = sets.get(0);
+		QuestAction.SetCurrency set = sets.getFirst();
 		if (player.getCommonData() == null) {
 			throw new SQLException("player common data is unavailable: " + snapshot.playerId());
 		}

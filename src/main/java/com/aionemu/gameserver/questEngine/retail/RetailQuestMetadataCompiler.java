@@ -79,10 +79,6 @@ public final class RetailQuestMetadataCompiler {
 		Map.entry("rider_selectable_reward", "AETHERTECH"));
 
 	/**
-	 * 原版工艺技能名 → 生产数字 id（全库投票无歧义；{@code any} 无在库对应，见分歧台账）。
-	 * Retail craft-skill name to the production numeric id (library-wide unambiguous votes).
-	 */
-	/**
 	 * 原版 CombineTask 表的 {@code combineskill} 符号名 → 技能 id（包内共享，供合成器复用同一张表）。
 	 * Retail craft-skill symbol to skill id; shared package-wide so the synthesizer reuses one table.
 	 */
@@ -591,10 +587,10 @@ public final class RetailQuestMetadataCompiler {
 	}
 
 	private static List<QuestRewardGroup> collapseIdenticalGroups(List<QuestRewardGroup> groups) {
-		if (groups.size() < 2 || !groups.stream().skip(1).allMatch(group -> group.equals(groups.get(0)))) {
+		if (groups.size() < 2 || !groups.stream().skip(1).allMatch(group -> group.equals(groups.getFirst()))) {
 			return groups;
 		}
-		return List.of(groups.get(0));
+		return List.of(groups.getFirst());
 	}
 
 	/** 扩展奖励（{@code *_ext} 族）单组。 / The extended-reward group from the *_ext family. */

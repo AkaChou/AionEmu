@@ -575,7 +575,7 @@ public final class DataDrivenNativeRuntime {
 			for (java.util.List<com.aionemu.gameserver.model.templates.zone.ZoneInfo> infos : com.aionemu.gameserver.dataholders.DataManager.ZONE_DATA
 					.getZones().values()) {
 				for (com.aionemu.gameserver.model.templates.zone.ZoneInfo info : infos) {
-					names.add(info.getZoneTemplate().getName().name());
+					names.add(info.zoneTemplate().getName().name());
 				}
 			}
 		} else {
@@ -693,7 +693,7 @@ public final class DataDrivenNativeRuntime {
 				freeze = scanAcceptActions(row, nameResolver, itemIndex, acceptSink, acceptUnresolved);
 				acceptUnresolved.forEach(unresolved::add);
 				if (freeze == null && !acceptSink.isEmpty()) {
-					acceptActions = acceptSink.get(0);
+					acceptActions = acceptSink.getFirst();
 				}
 			}
 			if (freeze != null) {
@@ -2034,7 +2034,7 @@ public final class DataDrivenNativeRuntime {
 				case SAY -> sayPort.say(player, action.stringId());
 				case TIMER -> timerPort.schedule(player, questId, action.count(), action.movieId(),
 					action.itemId() == 1);
-				case ENTER_INSTANCE -> {
+				case ENTER_INSTANCE ->
 					// 原版 case 9 立即面 = `+0x220(creationId)` → `User::EnterInstance`：本服 = 复用
 					// 已注册实例 / 下一可用实例 + 注册 + 带 instanceId 传送（裸传送会落到副本默认空
 					// 实例 instanceId=1，2026-10-08 实机 10034 空副本事故）。
@@ -2044,7 +2044,6 @@ public final class DataDrivenNativeRuntime {
 					// 2026-10-08 10034 empty-instance incident).
 					teleportPort.enterInstance(player, action.worldId(), action.x(), action.y(), action.z(),
 						action.heading());
-				}
 			}
 		}
 	}
@@ -2191,7 +2190,7 @@ public final class DataDrivenNativeRuntime {
 	 * counterpart on this server ⇒ not mirrored (the start-port conditions still gate).
 	 */
 	public boolean onLevelReached(Player player, int level, boolean loginWalk) {
-		boolean acquired = acquire(player, acquireLevelsByLevel.get(level), loginWalk ? Integer.valueOf(10) : null);
+		boolean acquired = acquire(player, acquireLevelsByLevel.get(level), loginWalk ? 10 : null);
 		// 链式发放重走（原版 `<level-up/> + <start-eligible/>` 发放边的镜像）：完成时被等级/unfinished
 		// 条件挡住的后继在此补发。**注意**：本方法同时是 native 完成通知的到达点
 		// （`QuestService.setFinishingState` → `QuestEngine.onLvlUp` → 此处），typed 车道完成另经

@@ -221,7 +221,7 @@ public final class NativeReportRewardFlow {
 			return rewardIndex < classReward.size()
 				? null : "index " + rewardIndex + " beyond " + classReward.size() + " class options";
 		}
-		int options = template.getRewards().get(0).getSelectableRewardItem().size();
+		int options = template.getRewards().getFirst().getSelectableRewardItem().size();
 		if (options == 0) {
 			// 无声明可选奖励 ⇒ 奖励窗只有领取按钮（下标 0）。 / No options: only the claim button.
 			return rewardIndex == 0 ? null : "index " + rewardIndex + " without declared options";

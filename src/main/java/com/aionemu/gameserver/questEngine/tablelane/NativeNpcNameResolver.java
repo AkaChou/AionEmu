@@ -534,7 +534,7 @@ public final class NativeNpcNameResolver {
 			throw new IllegalStateException(
 					"NATIVE_NAME_AMBIGUOUS: npc name '" + rawName + "' -> " + match.npcIds());
 		}
-		return match.npcIds().get(0);
+		return match.npcIds().getFirst();
 	}
 
 	/** 已索引的规范化名数量。 / Number of indexed normalized names. */

@@ -246,7 +246,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	/** 获取任务起始 NPC ID（成员集首项；未解析为 null）。 / Returns the acquire NPC ID for the quest. */
 	public Integer acquireNpc(int questId) {
 		List<Integer> members = acquireNpcIdsByQuestId.get(questId);
-		return members == null || members.isEmpty() ? null : members.get(0);
+		return members == null || members.isEmpty() ? null : members.getFirst();
 	}
 
 	/** 接取 NPC 成员集（空表 = 未解析）。 / The acquire NPC member set. */
@@ -257,7 +257,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 	/** 获取任务交付 NPC ID（成员集首项；未解析为 null）。 / Returns the reward NPC ID for the quest. */
 	public Integer rewardNpc(int questId) {
 		List<Integer> members = rewardNpcIdsByQuestId.get(questId);
-		return members == null || members.isEmpty() ? null : members.get(0);
+		return members == null || members.isEmpty() ? null : members.getFirst();
 	}
 
 	/** 交付 NPC 成员集（空表 = 未解析）。 / The reward NPC member set. */

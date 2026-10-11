@@ -251,9 +251,7 @@ public final class DataDrivenQuestTable {
 				}
 			}
 			return new DataDrivenQuestTable(parsed);
-		} catch (IOException e) {
-			throw e;
-		} catch (RuntimeException e) {
+		} catch (IOException | RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new IOException("failed to parse retail DataDriven table", e);

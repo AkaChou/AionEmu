@@ -52,8 +52,8 @@ public final class QuestMovieContinuation {
 		for (AfterCommitAction action : transition.afterCommit()) {
 			if (action instanceof AfterCommitAction.PlayMovie movie) {
 				result.add(movie.movieId());
-			} else if (action instanceof AfterCommitAction.PlayMovieRandom random) {
-				result.addAll(random.movieIds());
+			} else if (action instanceof AfterCommitAction.PlayMovieRandom(List<Integer> movieIds)) {
+				result.addAll(movieIds);
 			}
 		}
 		return Set.copyOf(result);
@@ -71,8 +71,8 @@ public final class QuestMovieContinuation {
 	public static boolean hasMovieEndRoute(QuestDefinition definition, String sourceNode, Set<Integer> movieIds) {
 		return definition.transitions().stream()
 			.filter(candidate -> Objects.equals(candidate.sourceNode(), sourceNode))
-			.filter(candidate -> candidate.event() instanceof QuestEvent.MovieEnd end
-				&& movieIds.contains(end.movieId()))
+			.filter(candidate -> candidate.event() instanceof QuestEvent.MovieEnd(int movieId)
+				&& movieIds.contains(movieId))
 			.anyMatch(candidate -> !candidate.afterCommit().isEmpty());
 	}
 

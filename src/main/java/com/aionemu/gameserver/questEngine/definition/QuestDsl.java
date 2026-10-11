@@ -789,7 +789,7 @@ public final class QuestDsl {
 			if (transitions.isEmpty()) {
 				throw new IllegalStateException("goTo must be called before afterCommit");
 			}
-			QuestTransition current = transitions.remove(transitions.size() - 1);
+			QuestTransition current = transitions.removeLast();
 			List<AfterCommitAction> updated = new ArrayList<>(current.afterCommit());
 			updated.add(Objects.requireNonNull(action, "action"));
 			transitions.add(new QuestTransition(current.event(), current.conditions(), current.actions(),

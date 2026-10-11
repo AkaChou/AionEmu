@@ -132,7 +132,7 @@ public final class RetailQuestXmlTable {
 		/** 读取布尔字段（1/TRUE）。 / Reads a 1/TRUE boolean field. */
 		public boolean bool(String tag) {
 			String value = text(tag);
-			return value != null && ("1".equals(value) || "TRUE".equalsIgnoreCase(value));
+			return ("1".equals(value) || "TRUE".equalsIgnoreCase(value));
 		}
 
 		/**

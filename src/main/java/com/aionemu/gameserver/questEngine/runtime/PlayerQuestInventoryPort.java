@@ -141,9 +141,7 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 			List<Item> dirty = List.copyOf(player.getDirtyItemsToUpdate());
 			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
 			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
-			return QuestTransactionParticipant.of(() -> {
-				committedInventoryStage.afterCommit();
-			}, () -> {
+			return QuestTransactionParticipant.of(committedInventoryStage::afterCommit, () -> {
 				committedInventoryStage.afterRollback();
 				liveSnapshot.restore();
 			});
