@@ -33,11 +33,8 @@ public class Room_Of_Meditation_DoorAI2 extends NpcAI2
 	@Override
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 10000 && player.getInventory().decreaseByItemId(185000308, 1)) {
-            switch (getNpcId()) {
-                case 806669:
-				case 806670:
-                    handleUseItemStart(player);
-                break;
+            if (getNpcId() == 806669 || getNpcId() == 806670) {
+            	handleUseItemStart(player);
             }
         }
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

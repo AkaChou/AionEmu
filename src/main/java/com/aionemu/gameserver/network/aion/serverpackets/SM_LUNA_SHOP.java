@@ -142,15 +142,12 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			break;
 		case 2:
 			writeC(fail);
-			switch (fail) {
-			case 0:
+			if (fail == 0) {
 				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1330049, new DescriptionId(item.getNameId())));// Success
-				break;
-			case 1:
+										new SM_SYSTEM_MESSAGE(1330049, new DescriptionId(item.getNameId())));
+			} else if (fail == 1) {
 				PacketSendUtility.sendPacket(player,
-						new SM_SYSTEM_MESSAGE(1330050, new DescriptionId(item.getNameId())));// Fail
-				break;
+										new SM_SYSTEM_MESSAGE(1330050, new DescriptionId(item.getNameId())));
 			}
 			break;
 		case 3:

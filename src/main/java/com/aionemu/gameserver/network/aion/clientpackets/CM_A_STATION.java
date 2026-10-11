@@ -29,13 +29,10 @@ public class CM_A_STATION extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player requested = getConnection().getActivePlayer();
-		switch (action) {
-		case 1:
+		if (action == 1) {
 			GameFeatureServices.aStationService().handleMoveThere(requested);
-			break;
-		case 2:
+		} else if (action == 2) {
 			GameFeatureServices.aStationService().handleMoveBack(requested);
-			break;
 		}
 	}
 }

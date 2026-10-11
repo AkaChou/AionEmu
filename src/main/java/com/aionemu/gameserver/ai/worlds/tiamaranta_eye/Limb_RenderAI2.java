@@ -38,14 +38,9 @@ public class Limb_RenderAI2 extends NpcAI2
 
 	@Override
 	protected void handleSpawned() {
-  		switch (getNpcId()) {
-			// 肢体撕裂者。 / Limb Render.
-			case 283072:
-			case 858016:
-			    // 肢体撕裂者已出现。摧毁时会爆炸并对附近造成严重伤害。 / A Limb Render has appeared. It explodes when destroyed, inflicting serious damage to those nearby.
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401461);
-			break;
-		}
+  		if (getNpcId() == 283072 || getNpcId() == 858016) {
+  			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401461);
+  		}
 		super.handleSpawned();
 	}
 

@@ -429,13 +429,10 @@ public class ItemService {
 		}
 		int chargeWay = improvement.getChargeWay();
 		int currentCharge = item.getChargePoints();
-		switch (level) {
-			case 1:
-				item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL1 - currentCharge);
-				break;
-			case 2:
-				item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL2 - currentCharge);
-				break;
+		if (level == 1) {
+			item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL1 - currentCharge);
+		} else if (level == 2) {
+			item.getConditioningInfo().updateChargePoints(ChargeInfo.LEVEL2 - currentCharge);
 		}
 		if (item.isEquipped()) {
 			player.getGameStats().updateStatsVisually();

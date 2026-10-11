@@ -57,13 +57,10 @@ public class CM_GROUP_LOOT extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		switch (distributionId) {
-		case 2:
+		if (distributionId == 2) {
 			GameFeatureServices.dropDistributionService().handleRoll(player, roll, itemId, npcId, index);
-			break;
-		case 3:
+		} else if (distributionId == 3) {
 			GameFeatureServices.dropDistributionService().handleBid(player, bid, itemId, npcId, index);
-			break;
 		}
 	}
 }

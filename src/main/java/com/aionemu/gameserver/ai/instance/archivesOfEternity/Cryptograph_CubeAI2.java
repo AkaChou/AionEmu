@@ -22,15 +22,14 @@ public class Cryptograph_CubeAI2 extends GeneralNpcAI2
 		    PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 1011));
 		}
 	}
-	
+
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-			switch (getNpcId()) {
-				case 806152: //密码背包。 / Cryptograph Cube.
-				case 806153: //密码背包。 / Cryptograph Cube.
-				    ItemService.addItem(player, 125004516, 1); // 发放密码背包 / Grant the Cryptograph Cube
-			    break;
+			if (getNpcId() == 806152 || getNpcId() == 806153) {
+				//密码背包。 / Cryptograph Cube.
+				//密码背包。 / Cryptograph Cube.
+				ItemService.addItem(player, 125004516, 1);
 			}
 		}
 		AI2Actions.deleteOwner(this);

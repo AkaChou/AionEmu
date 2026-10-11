@@ -79,11 +79,8 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 215240:
-			case 215241:
-			    anuhartBravery();
-		    break;
+		if (getNpcId() == 215240 || getNpcId() == 215241) {
+			anuhartBravery();
 		}
 		if (getNpcId() == 235975) {
 			bellowingRoar();

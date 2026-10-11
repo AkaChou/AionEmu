@@ -33,11 +33,8 @@ public class CM_APPEARANCE extends AionClientPacket {
 		readC();
 		readH();
 		itemObjId = readD();
-		switch (type) {
-		case 0:
-		case 1:
+		if (type == 0 || type == 1) {
 			name = readS();
-			break;
 		}
 	}
 

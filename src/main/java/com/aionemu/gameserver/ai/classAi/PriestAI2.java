@@ -272,11 +272,8 @@ public class PriestAI2 extends AggressiveNpcAI2 {
 				conquerorPassion();
 				break;
 		}
-		switch (getNpcId()) {
-			case 230804:
-			case 230805:
-				midnightRobe();
-				break;
+		if (getNpcId() == 230804 || getNpcId() == 230805) {
+			midnightRobe();
 		}
 		switch (getNpcId()) {
 			case 882461:

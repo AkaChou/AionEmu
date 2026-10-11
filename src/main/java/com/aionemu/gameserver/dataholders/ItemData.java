@@ -131,13 +131,10 @@ public class ItemData extends ReloadableData {
 
 	private void applyCleanup(ItemTemplate item, byte result, int mask) {
 		if (result != -1) {
-			switch (result) {
-				case 1:
-					item.modifyMask(true, mask);
-					break;
-				case 0:
-					item.modifyMask(false, mask);
-					break;
+			if (result == 1) {
+				item.modifyMask(true, mask);
+			} else if (result == 0) {
+				item.modifyMask(false, mask);
 			}
 		}
 	}

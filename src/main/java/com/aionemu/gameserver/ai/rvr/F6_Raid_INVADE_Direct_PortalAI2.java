@@ -122,11 +122,10 @@ public class F6_Raid_INVADE_Direct_PortalAI2 extends NpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		switch (getNpcId()) {
-			case 835522: //F6_Raid_INVADE_DirectPortal_Start_D.
-			case 835523: //F6_Raid_INVADE_DirectPortal_Start_L.
-				startLifeTask();
-				break;
+		if (getNpcId() == 835522 || getNpcId() == 835523) {
+			//F6_Raid_INVADE_DirectPortal_Start_D.
+			//F6_Raid_INVADE_DirectPortal_Start_L.
+			startLifeTask();
 		}
 	}
 

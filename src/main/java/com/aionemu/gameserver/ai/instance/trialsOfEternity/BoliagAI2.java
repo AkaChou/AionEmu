@@ -40,14 +40,10 @@ public class BoliagAI2 extends AggressiveNpcAI2 {
 	private void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent) {
-				switch (percent) {
-					case 30:
-						spawnBossPortal();
-						break;
-					case 20:
-					case 10:
-						spawnBossSum();
-						break;
+				if (percent == 30) {
+					spawnBossPortal();
+				} else if (percent == 20 || percent == 10) {
+					spawnBossSum();
 				}
 				percents.remove(percent);
 				break;

@@ -28,11 +28,8 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
-			switch (getNpcId()) {
-				case 267814:
-				case 267815:
-				    announcePublicQuest();
-				break;
+			if (getNpcId() == 267814 || getNpcId() == 267815) {
+				announcePublicQuest();
 			}
 		}
 	}

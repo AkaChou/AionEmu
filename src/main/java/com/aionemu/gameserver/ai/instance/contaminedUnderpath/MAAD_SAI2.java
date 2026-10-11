@@ -29,11 +29,10 @@ public class MAAD_SAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleDied() {
-		switch (getNpcId()) {
-			case 245575: //MAAD-S.
-			case 248525: //IDEvent_Def_ZombieKing_65.
-				spawnMAD99SCore(246352);
-				break;
+		if (getNpcId() == 245575 || getNpcId() == 248525) {
+			//MAAD-S.
+			//IDEvent_Def_ZombieKing_65.
+			spawnMAD99SCore(246352);
 		}
 		super.handleDied();
 	}

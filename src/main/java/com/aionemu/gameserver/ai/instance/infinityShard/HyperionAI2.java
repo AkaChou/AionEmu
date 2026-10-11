@@ -203,13 +203,10 @@ public class HyperionAI2 extends AggressiveNpcAI2
     }
 
 	private void Cast2() {
-		switch (castc) {
-		    case 1:
-		       AI2Actions.useSkill(this, 21250);
-		    break;
-		    case 2:
-		       AI2Actions.useSkill(this, 21251);
-		    break;
+		if (castc == 1) {
+			AI2Actions.useSkill(this, 21250);
+		} else if (castc == 2) {
+			AI2Actions.useSkill(this, 21251);
 		}
 	}
 
@@ -272,13 +269,10 @@ public class HyperionAI2 extends AggressiveNpcAI2
     }
 
 	private void Cast5() {
-		switch (castc) {
-		    case 1:
-		       AI2Actions.useSkill(this, 21241);
-		    break;
-		    case 2:
-		       AI2Actions.useSkill(this, 21245);
-		    break;
+		if (castc == 1) {
+			AI2Actions.useSkill(this, 21241);
+		} else if (castc == 2) {
+			AI2Actions.useSkill(this, 21245);
 		}
 	}
 

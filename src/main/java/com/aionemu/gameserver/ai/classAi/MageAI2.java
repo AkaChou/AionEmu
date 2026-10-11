@@ -129,11 +129,8 @@ public class MageAI2 extends AggressiveNpcAI2 {
  		if (getNpcId() == 212810) {
  			iceClawBlessing();
  		}
-		switch (getNpcId()) {
-			case 211596:
-			case 212734:
-				mistShadeBlessing();
-				break;
+		if (getNpcId() == 211596 || getNpcId() == 212734) {
+			mistShadeBlessing();
 		}
 		switch (getNpcId()) {
 			case 214867:
