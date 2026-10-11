@@ -14,9 +14,10 @@ import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
  */
 @Slf4j
 public class CleanAccountsHandler extends TaskFromDBHandler {
-
     /** 不活跃天数配置。 / Days of inactivity. */
     private int daysOfInactivity;
+
+    /** 不活跃天数配置。 / Days of inactivity. */
 
     /**
      * 校验参数：需要恰好一个表示不活跃天数的参数。
@@ -38,7 +39,6 @@ public class CleanAccountsHandler extends TaskFromDBHandler {
      */
     @Override
     public void trigger() {
-        daysOfInactivity = Integer.parseInt(params[0]);
         log.info(I18n.get("log.18943e91d563", daysOfInactivity));
         LoginDaosHolder.daos().accountDAO().deleteInactiveAccounts(daysOfInactivity);
     }

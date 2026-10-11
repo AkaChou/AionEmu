@@ -161,14 +161,25 @@ public class DeadLockDetector extends Thread {
      */
     private String printDumpedThreadInfo(ThreadInfo threadInfo) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n\"" + threadInfo.getThreadName() + "\"" + " Id=" + threadInfo.getThreadId() + " " + threadInfo.getThreadState() + "\n");
+        sb.append("\n\"")
+        	.append(threadInfo.getThreadName())
+        	.append("\"")
+        	.append(" Id=")
+        	.append(threadInfo.getThreadId())
+        	.append(" ")
+        	.append(threadInfo.getThreadState())
+        	.append("\n");
         StackTraceElement[] stacktrace = threadInfo.getStackTrace();
         for (int i = 0; i < stacktrace.length; i++) {
             StackTraceElement ste = stacktrace[i];
-            sb.append("\t" + "at " + ste.toString() + "\n");
+            sb.append("\t")
+            	.append("at ")
+            	.append(ste.toString())
+            	.append("\n");
             for (MonitorInfo mi : threadInfo.getLockedMonitors()) {
                 if (mi.getLockedStackDepth() == i) {
-                    sb.append("\t-  locked " + mi);
+                    sb.append("\t-  locked ")
+                    	.append(mi);
                     sb.append('\n');
                 }
             }

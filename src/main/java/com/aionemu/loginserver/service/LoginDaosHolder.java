@@ -1,6 +1,5 @@
 package com.aionemu.loginserver.service;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -34,6 +33,7 @@ public final class LoginDaosHolder {
 	/**
 	 * 由 Spring 配置类在启动期绑定聚合。
 	 * Binds the aggregate from the Spring configuration at startup.
+	 *
 	 * @param daos 依赖聚合 / dependency aggregate
 	 */
 	public static void bindDaos(LoginDaos daos) {
@@ -43,6 +43,7 @@ public final class LoginDaosHolder {
 	/**
 	 * 返回持久层依赖聚合；未绑定（离线/单测环境）时按 safeDao 逐项兜底构建并缓存。
 	 * Returns the persistence aggregate; falls back to per-DAO safeDao construction when unbound (offline/unit tests).
+	 *
 	 * @return 依赖聚合 / dependency aggregate
 	 */
 	public static LoginDaos daos() {
@@ -64,17 +65,17 @@ public final class LoginDaosHolder {
 	 */
 	private static LoginDaos buildOfflineDaos() {
 		return new LoginDaos(
-				safeDao(AccountDAO.class, com.aionemu.loginserver.dao.impl.AccountDAO::new),
-				safeDao(AccountTimeDAO.class, com.aionemu.loginserver.dao.impl.AccountTimeDAO::new),
-				safeDao(AccountPlayTimeDAO.class, com.aionemu.loginserver.dao.impl.AccountPlayTimeDAO::new),
-				safeDao(PremiumDAO.class, com.aionemu.loginserver.dao.impl.PremiumDAO::new),
-				safeDao(VipDAO.class, com.aionemu.loginserver.dao.impl.VipDAO::new),
-				safeDao(BannedIpDAO.class, com.aionemu.loginserver.dao.impl.BannedIpDAO::new),
-				safeDao(BannedMacDAO.class, com.aionemu.loginserver.dao.impl.BannedMacDAO::new),
-				safeDao(GameServersDAO.class, com.aionemu.loginserver.dao.impl.GameServersDAO::new),
-				safeDao(PlayerTransferDAO.class, com.aionemu.loginserver.dao.impl.PlayerTransferDAO::new),
-				safeDao(SvStatsDAO.class, com.aionemu.loginserver.dao.impl.SvStatsDAO::new),
-				safeDao(TaskFromDBDAO.class, com.aionemu.loginserver.dao.impl.TaskFromDBDAO::new));
+			safeDao(AccountDAO.class, com.aionemu.loginserver.dao.impl.AccountDAO::new),
+			safeDao(AccountTimeDAO.class, com.aionemu.loginserver.dao.impl.AccountTimeDAO::new),
+			safeDao(AccountPlayTimeDAO.class, com.aionemu.loginserver.dao.impl.AccountPlayTimeDAO::new),
+			safeDao(PremiumDAO.class, com.aionemu.loginserver.dao.impl.PremiumDAO::new),
+			safeDao(VipDAO.class, com.aionemu.loginserver.dao.impl.VipDAO::new),
+			safeDao(BannedIpDAO.class, com.aionemu.loginserver.dao.impl.BannedIpDAO::new),
+			safeDao(BannedMacDAO.class, com.aionemu.loginserver.dao.impl.BannedMacDAO::new),
+			safeDao(GameServersDAO.class, com.aionemu.loginserver.dao.impl.GameServersDAO::new),
+			safeDao(PlayerTransferDAO.class, com.aionemu.loginserver.dao.impl.PlayerTransferDAO::new),
+			safeDao(SvStatsDAO.class, com.aionemu.loginserver.dao.impl.SvStatsDAO::new),
+			safeDao(TaskFromDBDAO.class, com.aionemu.loginserver.dao.impl.TaskFromDBDAO::new));
 	}
 
 	/**
@@ -82,7 +83,7 @@ public final class LoginDaosHolder {
 	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
 	 */
 	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			Supplier<T> fallback) {
+																			  Supplier<T> fallback) {
 		if (DAOManager.isInitialized()) {
 			try {
 				return DAOManager.getDAO(daoClass);
