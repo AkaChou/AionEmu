@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class Quest11110And1548PostKillReportDialogTest {
 
 	@Test
-	void retailRowsKeepTheKillGoalAndTheReportOwner() throws Exception {
+	void retailRowsKeepTheKillGoalAndTheReportOwner() {
 		assertRow(11110, "Suleion", 10, List.of("LF4_B8_Nepilim_55_An", "LF4_B8_Nepilim_Tech_55_An"));
 		assertRow(1548, "Senemonea", 5, List.of("LF3_Neutspawner_Q1053"));
 		assertEquals(Integer.valueOf(1549), SimpleHuntHandler.instance().conQuest(1548), "原版 con_quest");

@@ -35,7 +35,7 @@ class QuestUseItemRewardCleanupGateTest {
 		"28738:164000342");
 
 	@Test
-	void everyQuestGrantedUseItemRewardRouteCleansUpItsItem() throws Exception {
+	void everyQuestGrantedUseItemRewardRouteCleansUpItsItem() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		List<String> defects = new ArrayList<>();
 		for (CompiledQuestDefinition compiled : catalog.executables()) {

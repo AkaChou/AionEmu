@@ -71,7 +71,7 @@ class Quest18501InteractionObjectTest {
 	}
 
 	@Test
-	void eachObjectClaimsWithoutWritingState() throws IOException {
+	void eachObjectClaimsWithoutWritingState() {
 		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
 		Player player = NativeTalkFixture.player();
 		int odBox = objectId(OD_BOX);

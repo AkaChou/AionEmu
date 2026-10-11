@@ -48,7 +48,7 @@ class PlayerQuestEffectPortTest {
 	}
 
 	@Test
-	void playerEmotionFailsClosedWithoutAnAuthoritativeInteractionObject() throws Exception {
+	void playerEmotionFailsClosedWithoutAnAuthoritativeInteractionObject() {
 		Player player = new ObjenesisStd().newInstance(Player.class);
 		PlayerQuestEffectPort port = new PlayerQuestEffectPort(playerId -> player);
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1004, QuestStatus.START, 0, Map.of());

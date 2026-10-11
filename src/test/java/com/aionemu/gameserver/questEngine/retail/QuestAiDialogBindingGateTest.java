@@ -187,7 +187,7 @@ class QuestAiDialogBindingGateTest {
 			Document document = RetailLedgerXml.parse(input);
 			List<org.w3c.dom.Element> globalRows = RetailLedgerXml.rows(document, "quest_ai_npc_ids");
 			assertEquals(1, globalRows.size(), "证据表必须恰有一个 quest_ai_npc_ids 元素");
-			globalAi = parseIds(globalRows.get(0).getTextContent());
+			globalAi = parseIds(globalRows.getFirst().getTextContent());
 			Map<Integer, Set<Integer>> rows = new LinkedHashMap<>();
 			Map<Integer, String> names = new LinkedHashMap<>();
 			Map<Integer, String> ids = new LinkedHashMap<>();
@@ -236,12 +236,12 @@ class QuestAiDialogBindingGateTest {
 		return Map.copyOf(refs);
 	}
 
-	private static List<File> xmlLaneFiles() throws Exception {
+	private static List<File> xmlLaneFiles() {
 		URL dirUrl = QuestAiDialogBindingGateTest.class.getClassLoader().getResource(XML_LANE_DIR);
-		assertNotNull(dirUrl, () -> "类路径缺 " + XML_LANE_DIR);
+		assertNotNull(dirUrl, "类路径缺 " + XML_LANE_DIR);
 		File dir = new File(URI.create(dirUrl.toExternalForm().replace(" ", "%20")));
 		File[] files = dir.listFiles(File::isFile);
-		assertNotNull(files, () -> XML_LANE_DIR + " 必须是可列举的目录（测试在 target/classes 上跑）");
+		assertNotNull(files, XML_LANE_DIR + " 必须是可列举的目录（测试在 target/classes 上跑）");
 		return Arrays.stream(files).sorted().toList();
 	}
 

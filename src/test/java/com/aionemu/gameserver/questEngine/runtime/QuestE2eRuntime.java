@@ -1108,7 +1108,7 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 				}
 			}
 		}
-		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
+		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
 			trace.add("TRANSACTION", "actions");
 			List<QuestAction> appliedActions = List.copyOf(actions);
 			for (QuestAction action : actions) {

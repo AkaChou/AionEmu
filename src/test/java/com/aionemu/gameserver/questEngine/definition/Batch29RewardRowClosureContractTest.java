@@ -61,7 +61,7 @@ class Batch29RewardRowClosureContractTest {
 		new Contract(1466, 1, List.of(0, 2)));
 
 	@Test
-	void rewardProjectionMatchesTheLegacyPersistedRow() throws Exception {
+	void rewardProjectionMatchesTheLegacyPersistedRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", contract.rewardRow())),
@@ -71,7 +71,7 @@ class Batch29RewardRowClosureContractTest {
 	}
 
 	@Test
-	void everyRewardEntryLandsOnThePersistedRow() throws Exception {
+	void everyRewardEntryLandsOnThePersistedRow() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -107,7 +107,7 @@ class Batch29RewardRowClosureContractTest {
 	}
 
 	@Test
-	void staleRewardRowIsRepairedOnEnterWorld() throws Exception {
+	void staleRewardRowIsRepairedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> recoveryRoutes = recoveryRoutes(compiled.definition());
@@ -142,7 +142,7 @@ class Batch29RewardRowClosureContractTest {
 	}
 
 	@Test
-	void liveRewardRowIsNotReplayed() throws Exception {
+	void liveRewardRowIsNotReplayed() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			assertTrue(plans(compiled, QuestStatus.REWARD, Map.of("var0", contract.rewardRow()),

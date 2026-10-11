@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuestNoHandlerShard3DefinitionTest {
 
 	@Test
-	void truthHurtsGivesWorkItemAtAcceptAndDeletesDrakanAfterSetReward() throws Exception {
+	void truthHurtsGivesWorkItemAtAcceptAndDeletesDrakanAfterSetReward() {
 		CompiledQuestDefinition compiled = definition("30208.xml");
 		QuestMetadata meta = compiled.definition().metadata();
 		assertEquals("[Group] The Truth Hurts", meta.name());
@@ -59,7 +59,7 @@ class QuestNoHandlerShard3DefinitionTest {
 	}
 
 	@Test
-	void petrifiedHeroSpawnsHakelanAfterUsingTheStatue() throws Exception {
+	void petrifiedHeroSpawnsHakelanAfterUsingTheStatue() {
 		CompiledQuestDefinition compiled = definition("30760.xml");
 		QuestMetadata meta = compiled.definition().metadata();
 		assertEquals("[Group] Petrified Hero of the Asmodians", meta.name());

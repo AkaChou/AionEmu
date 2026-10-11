@@ -98,7 +98,7 @@ class RetailQuestAiNameGroupGateTest {
 
 	/** ①′全表不变式 + 绑定：每一行声明的组都满足编制不变式，且 hunt 计划两轴取到成员集并打标。 */
 	@Test
-	void everyDeclaredGroupSatisfiesTheTableInvariants() throws Exception {
+	void everyDeclaredGroupSatisfiesTheTableInvariants() {
 		Map<String, List<String>> table = declaredGroups();
 		assertTrue(table.size() >= 31, () -> "组表规模回退：" + table.size());
 		for (Map.Entry<String, List<String>> declared : table.entrySet()) {
@@ -151,7 +151,7 @@ class RetailQuestAiNameGroupGateTest {
 	 * variant family is wider than the declaration (the P0c-53 narrowing evidence).
 	 */
 	@Test
-	void groupDeclarationOutranksNameMorphology() throws Exception {
+	void groupDeclarationOutranksNameMorphology() {
 		int pinned = 0;
 		for (String group : declaredGroups().keySet()) {
 			Set<Integer> members = index.resolveQuestAiNameGroup(group);
@@ -265,7 +265,7 @@ class RetailQuestAiNameGroupGateTest {
 		}
 	}
 
-	private static InputStream open(String resource) throws Exception {
+	private static InputStream open(String resource) {
 		InputStream input = RetailQuestAiNameGroupGateTest.class.getResourceAsStream(resource);
 		if (input == null) {
 			throw new IllegalStateException("missing resource " + resource);

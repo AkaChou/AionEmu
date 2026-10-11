@@ -35,7 +35,7 @@ class QuestRewardTitlePrerequisiteAuditTest {
 		Map.entry(20521, 306));
 
 	@Test
-	void noQuestRequiresItsOwnRewardTitle() throws Exception {
+	void noQuestRequiresItsOwnRewardTitle() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		for (CompiledQuestDefinition compiled : catalog.all()) {
 			QuestDefinition definition = compiled.definition();
@@ -100,7 +100,7 @@ class QuestRewardTitlePrerequisiteAuditTest {
 		return SimpleTalkHandler.instance().routes(questId) || SimpleHuntHandler.instance().routes(questId);
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
+	private static CompiledQuestDefinition load(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}

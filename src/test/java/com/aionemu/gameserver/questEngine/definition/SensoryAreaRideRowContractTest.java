@@ -294,7 +294,7 @@ class SensoryAreaRideRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务统一走生产视图（原版 overlay 合成；旧 XML 只在 git 历史里）。
 		// Retired quests resolve through the production view (retail overlay; the old XML lives in
 		// git history only).

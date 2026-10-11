@@ -61,14 +61,14 @@ class CollapsedSingleStepLadderContractTest {
 	void collapsedShardsProjectTheAlignedRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			assertEquals(contract.rewardRow(),
-				node(definition(contract.questId()).definition(), "reward").projection().variables().get("var0"),
+				node(definition(contract.questId()).definition()).projection().variables().get("var0"),
 				() -> "quest " + contract.questId() + " reward journal row");
 			assertEquals(QuestStatus.REWARD,
-				node(definition(contract.questId()).definition(), "reward").projection().status(),
+				node(definition(contract.questId()).definition()).projection().status(),
 				() -> "quest " + contract.questId() + " reward node status");
 			assertEquals(
-				node(definition(contract.mirrorId()).definition(), "reward").projection().variables().get("var0"),
-				node(definition(contract.questId()).definition(), "reward").projection().variables().get("var0"),
+				node(definition(contract.mirrorId()).definition()).projection().variables().get("var0"),
+				node(definition(contract.questId()).definition()).projection().variables().get("var0"),
 				() -> "mirror pair " + contract.questId() + "/" + contract.mirrorId() + " reward row");
 		}
 	}
@@ -100,18 +100,18 @@ class CollapsedSingleStepLadderContractTest {
 	void milliardShardWalksTheClientActionLadder() {
 		QuestDefinition definition = definition(15000).definition();
 		assertEquals(1, routes(definition, "started", "s1").size(),
-			() -> "15000 hands the bag over into journal row 1");
+			"15000 hands the bag over into journal row 1");
 		assertEquals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0),
 			routes(definition, "started", "s1").getFirst().event(),
-			() -> "15000 row 0 uses the client CHECK_USER_HAS_QUEST_ITEM page");
+			"15000 row 0 uses the client CHECK_USER_HAS_QUEST_ITEM page");
 		assertTrue(conditions(routes(definition, "started", "s1").getFirst()).stream()
 				.anyMatch(condition -> condition instanceof QuestCondition.HasItem hasItem
 					&& hasItem.itemId() == BAG),
-			() -> "15000 row 0 requires the recovered bag " + BAG);
+			"15000 row 0 requires the recovered bag " + BAG);
 
 		QuestTransition takeTool = routes(definition, "s1", "s2").getFirst();
 		assertEquals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.SETPRO2.id(), 0), takeTool.event(),
-			() -> "15000 row 1 ends with the client SETPRO2 page");
+			"15000 row 1 ends with the client SETPRO2 page");
 		// 原版凭证模型：维修工具（quest_work_item1 = 182215662）改为接取边同事务发放，行 1 只升行——
 		// 遗留 XML 把工具挂在行 1 的 SETPRO2 边上是旧形。
 		// The retail credential model grants the repair tool (quest_work_item1 = 182215662) on the
@@ -122,7 +122,7 @@ class CollapsedSingleStepLadderContractTest {
 			.filter(route -> "unaccepted".equals(route.sourceNode()) && "started".equals(route.targetNode()))
 			.flatMap(route -> route.actions().stream())
 			.anyMatch(action -> action instanceof QuestAction.GiveItem give && give.itemId() == REPAIR_TOOL),
-			() -> "15000 acceptance edges must grant the repair tool " + REPAIR_TOOL);
+			"15000 acceptance edges must grant the repair tool " + REPAIR_TOOL);
 
 		/* 段首屏：段首页自身的同名动作（SELECT2=1352）回显段首屏；段内翻页（SELECT2_1=1353）由客户端本地
 		   完成——引擎的本地翻页 no-op 受理它，服务端不再建逐页路由（页梯退场片）。
@@ -134,13 +134,13 @@ class CollapsedSingleStepLadderContractTest {
 				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
 					MILLIARD, QuestDialogAction.SELECT2.id(), 0)))
 				.findFirst().orElseThrow().afterCommit(),
-			() -> "15000 page 1352 opens the client select2 page");
+			"15000 page 1352 opens the client select2 page");
 		assertTrue(definition.transitions().stream().noneMatch(route ->
 				route.event().equals(new QuestEvent.TalkToNpc(MILLIARD, QuestDialogAction.SELECT2_1.id(), 0))),
-			() -> "15000 in-stage page turn SELECT2_1 must stay client-local (no server route)");
+			"15000 in-stage page turn SELECT2_1 must stay client-local (no server route)");
 
 		assertEquals(1, routes(definition, "s2", "reward").size(),
-			() -> "15000 row 2 advances into the reward row exactly once");
+			"15000 row 2 advances into the reward row exactly once");
 		// 原版把带演出的道具使用步写成 ItemPlay(itemId, animationMillis)：引擎的同一条"使用道具"
 		// 客户端动作先查 ItemPlay 注册（有则播 3s 演出并派发 ItemPlay），未注册才落到 UseItem 通道。
 		// The retail chain models an animated item-use step as ItemPlay(itemId, animationMillis): the
@@ -148,9 +148,9 @@ class CollapsedSingleStepLadderContractTest {
 		// animation and dispatching ItemPlay) and only falls back to the UseItem channel otherwise.
 		assertEquals(new QuestEvent.ItemPlay(REPAIR_TOOL, 3000),
 			routes(definition, "s2", "reward").getFirst().event(),
-			() -> "15000 row 2 is the client 'use the repair tool near the generator' step");
+			"15000 row 2 is the client 'use the repair tool near the generator' step");
 		assertTrue(definition.metadata().questWorkItems().contains(new QuestItemRequirement(REPAIR_TOOL, 1)),
-			() -> "15000 declares the repair tool as a quest work item");
+			"15000 declares the repair tool as a quest work item");
 	}
 
 	@Test
@@ -158,16 +158,16 @@ class CollapsedSingleStepLadderContractTest {
 		QuestDefinition definition = definition(15670).definition();
 		assertEquals(new QuestEvent.TalkToNpc(HEMELLOS, QuestDialogAction.SETPRO1.id(), 0),
 			routes(definition, "started", "s1").getFirst().event(),
-			() -> "15670 row 0 ends on the client SETPRO1 page at Hemellos");
+			"15670 row 0 ends on the client SETPRO1 page at Hemellos");
 
 		QuestTransition handover = routes(definition, "s1", "s2").getFirst();
 		assertEquals(new QuestEvent.TalkToNpc(HEMELLOS, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0),
-			handover.event(), () -> "15670 row 1 hands the evidence to Hemellos");
+			handover.event(), "15670 row 1 hands the evidence to Hemellos");
 		List<Integer> removed = handover.actions().stream()
 			.filter(action -> action instanceof QuestAction.RemoveItem)
 			.map(action -> ((QuestAction.RemoveItem) action).itemId())
 			.toList();
-		assertEquals(EVIDENCE, removed, () -> "15670 row 1 consumes the four evidence items");
+		assertEquals(EVIDENCE, removed, "15670 row 1 consumes the four evidence items");
 
 		// 末 talk 段的推进按钮：客户端末段页尾可声明 SETPRO{K}/SET_SUCCEED/SELECT_QUEST_REWARD 三种收尾
 		// 按钮（`RetailQuestDialogPages#advanceActions`），服务端全部收下并收口到领奖态。
@@ -177,13 +177,13 @@ class CollapsedSingleStepLadderContractTest {
 		assertTrue(routes(definition, "s2", "reward").stream()
 				.anyMatch(route -> route.event().equals(new QuestEvent.TalkToNpc(
 					FIFTH_TRACE, QuestDialogAction.SET_SUCCEED.id(), 0))),
-			() -> "15670 row 2 keeps the client SET_SUCCEED step on the fifth trace object");
+			"15670 row 2 keeps the client SET_SUCCEED step on the fifth trace object");
 		assertEquals(Set.of(QuestDialogAction.SETPRO3.id(), QuestDialogAction.SET_SUCCEED.id(),
 				QuestDialogAction.SELECT_QUEST_REWARD.id()),
 			routes(definition, "s2", "reward").stream()
 				.map(route -> ((QuestEvent.TalkToNpc) route.event()).dialogId())
 				.collect(java.util.stream.Collectors.toSet()),
-			() -> "15670 row 2 carries the three client terminal tail buttons into reward");
+			"15670 row 2 carries the three client terminal tail buttons into reward");
 
 		Set<Integer> completionNpcs = new LinkedHashSet<>();
 		definition.transitions().stream()
@@ -194,9 +194,9 @@ class CollapsedSingleStepLadderContractTest {
 				}
 			});
 		assertEquals(Set.of(ILISIA), completionNpcs,
-			() -> "15670 completion owner stays on the reward-row NPC Ilisia");
+			"15670 completion owner stays on the reward-row NPC Ilisia");
 		assertFalse(routes(definition, "reward", "complete").isEmpty(),
-			() -> "15670 keeps a reward -> complete route");
+			"15670 keeps a reward -> complete route");
 	}
 
 	@Test
@@ -279,9 +279,9 @@ class CollapsedSingleStepLadderContractTest {
 			.toList();
 	}
 
-	private static QuestNode node(QuestDefinition definition, String label) {
-		return definition.nodes().stream().filter(candidate -> label.equals(candidate.label()))
-			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));
+	private static QuestNode node(QuestDefinition definition) {
+		return definition.nodes().stream().filter(candidate -> "reward".equals(candidate.label()))
+			.findFirst().orElseThrow(() -> new AssertionError("missing node " + "reward"));
 	}
 
 	private static List<QuestTransition> enterWorldRecoveries(QuestDefinition definition) {

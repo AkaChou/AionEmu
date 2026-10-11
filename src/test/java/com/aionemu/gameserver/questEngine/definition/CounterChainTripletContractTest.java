@@ -73,7 +73,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void everyClientRowOwnsOneCounterSlot() throws Exception {
+	void everyClientRowOwnsOneCounterSlot() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -114,7 +114,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void eachTargetAdvancesExactlyItsOwnSlot() throws Exception {
+	void eachTargetAdvancesExactlyItsOwnSlot() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			for (int index = 0; index < contract.killGroups().size(); index++) {
@@ -138,7 +138,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void outOfOrderKillsAdvanceOnlyTheirOwnSlot() throws Exception {
+	void outOfOrderKillsAdvanceOnlyTheirOwnSlot() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			/* 原版网格语义：各维度独立推进——任意网格状态下，组 i 的怪把 var_i 0→1、
@@ -183,7 +183,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void reportAndCompletionStayOnTheJournalRowNpc() throws Exception {
+	void reportAndCompletionStayOnTheJournalRowNpc() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			/* 原版形状按 (状态, 打包投影) 定位边：客户端任务书行 0（接取）/行 1（报告+领奖）
@@ -205,7 +205,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void armyCompletionsGrantTheFullFixedRewardSet() throws Exception {
+	void armyCompletionsGrantTheFullFixedRewardSet() {
 		for (Contract contract : CONTRACTS) {
 			if (contract.legacyStepModel()) {
 				/* 28313 走按职业展开的奖励分支，另见 ninevehKeepsEveryClassRewardBranch。 */
@@ -236,7 +236,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void legacySaveHealEdgesAreRetiredWithTheXml() throws Exception {
+	void legacySaveHealEdgesAreRetiredWithTheXml() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			/* 原版网格不表达旧 XML 的 EnterWorld 存档自愈边（步骤号→行号归一）：登录边按 P0c-6 先例
@@ -257,7 +257,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void ninevehKeepsEveryClassRewardBranch() throws Exception {
+	void ninevehKeepsEveryClassRewardBranch() {
 		QuestDefinition definition = definition(28313).definition();
 		ProgressLayout layout = definition.progressLayout();
 		/* 完成段 = 源投影 REWARD/4161、目标投影 COMPLETE/0 的全部确认路由（原版规范确认段 8..23）。 */
@@ -349,7 +349,7 @@ class CounterChainTripletContractTest {
 	}
 
 	@Test
-	void treasureChamberRewardProjectionIsSaturated() throws Exception {
+	void treasureChamberRewardProjectionIsSaturated() {
 		CompiledQuestDefinition compiled = definition(2842);
 		QuestDefinition definition = compiled.definition();
 		BitField field = definition.progressLayout().field("var0");

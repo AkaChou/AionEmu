@@ -362,7 +362,7 @@ class ArchivesRewardStepLadderContractTest {
 			.projection().variables();
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 16800/26800 已由原版驱动退役（wave4 enterarea 区名解析）：退役任务的 XML 只在 git 历史里，
 		// 统一取生产视图（XML 目录 + 原版 overlay）——未退役任务与直接编译 XML 等价。
 		// The archives quests 16800/26800 are retail-driven now (wave4 enterarea zone resolution), so

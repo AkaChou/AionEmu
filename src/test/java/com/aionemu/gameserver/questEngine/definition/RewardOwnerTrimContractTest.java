@@ -62,7 +62,7 @@ class RewardOwnerTrimContractTest {
 	private static final List<Integer> HENIR_ROW_SIBLINGS = List.of(4713, 4714, 4716);
 
 	@Test
-	void rewardCompletionOwnerIsUniqueAndIsTheRewardRowNpc() throws Exception {
+	void rewardCompletionOwnerIsUniqueAndIsTheRewardRowNpc() {
 		for (Contract contract : CONTRACTS) {
 			assertEquals(Set.of(contract.rewardRowNpc()),
 				rewardOwners(definition(contract.questId()).definition()),
@@ -71,7 +71,7 @@ class RewardOwnerTrimContractTest {
 	}
 
 	@Test
-	void rowZeroEntryRoutesKeepTheirRegisteredOwners() throws Exception {
+	void rowZeroEntryRoutesKeepTheirRegisteredOwners() {
 		for (Contract contract : CONTRACTS) {
 			assertEquals(contract.entryOwners(), reportRouteOwners(definition(contract.questId()).definition()),
 				() -> "quest " + contract.questId() + " row-0 entry routes (NPC_REPORT -> reward)");
@@ -95,7 +95,7 @@ class RewardOwnerTrimContractTest {
 	}
 
 	@Test
-	void rewardProjectionPointsAtTheJournalRewardRow() throws Exception {
+	void rewardProjectionPointsAtTheJournalRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(Map.of("var0", REWARD_ROW), node(definition, "reward").projection().variables(),
@@ -108,7 +108,7 @@ class RewardOwnerTrimContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreHealedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreHealedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -136,7 +136,7 @@ class RewardOwnerTrimContractTest {
 	}
 
 	@Test
-	void noRewardRouteWritesAStaleJournalRow() throws Exception {
+	void noRewardRouteWritesAStaleJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()

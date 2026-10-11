@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 锁定批次 31：Gelkmaros 三行交接族（21217 / 21244 / 21249）的客户端任务书行阶梯。
@@ -63,7 +61,7 @@ class Batch31GelkmarosRowLadderContractTest {
 	);
 
 	@Test
-	void everyShardProjectsThreeJournalRows() throws Exception {
+	void everyShardProjectsThreeJournalRows() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(0, node(definition, "started").projection().variables().get("var0"),
@@ -102,7 +100,7 @@ class Batch31GelkmarosRowLadderContractTest {
 	}
 
 	@Test
-	void shardWalksTheLegacyActionLadder() throws Exception {
+	void shardWalksTheLegacyActionLadder() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> firstRow = routes(definition, "started", "s1");
@@ -129,7 +127,7 @@ class Batch31GelkmarosRowLadderContractTest {
 	}
 
 	@Test
-	void rewardOwnerIsTheThirdJournalRowNpc() throws Exception {
+	void rewardOwnerIsTheThirdJournalRowNpc() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			Set<Integer> completionNpcs = new LinkedHashSet<>();
@@ -142,13 +140,12 @@ class Batch31GelkmarosRowLadderContractTest {
 				});
 			assertEquals(Set.of(contract.rewardNpc()), completionNpcs,
 				() -> "quest " + contract.questId() + " completion owner stays on the reward-row NPC");
-			assertTrue(routes(definition, "reward", "complete").size() >= 1,
-				() -> "quest " + contract.questId() + " keeps a reward -> complete route");
+			assertFalse(routes(definition, "reward", "complete").isEmpty(), () -> "quest " + contract.questId() + " keeps a reward -> complete route");
 		}
 	}
 
 	@Test
-	void rewardWindowButtonsKeepTheirClientRoutes() throws Exception {
+	void rewardWindowButtonsKeepTheirClientRoutes() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			// S3c-D（quest-native-dispatch）：交付 NPC 侧下发报告页的记录按 R-REP **页下发判据**退场（有
@@ -182,29 +179,29 @@ class Batch31GelkmarosRowLadderContractTest {
 	}
 
 	@Test
-	void workItemLifecycleFollowsTheLegacyHandler() throws Exception {
+	void workItemLifecycleFollowsTheLegacyHandler() {
 		QuestDefinition report = definition(21217).definition();
 		assertTrue(report.metadata().questWorkItems()
 				.contains(new QuestItemRequirement(REPORT_ITEM_21217, 1)),
-			() -> "21217 declares the report as a quest work item");
+			"21217 declares the report as a quest work item");
 		assertTrue(claimRoute(report, 799226).actions()
 				.contains(new QuestAction.RemoveItem(REPORT_ITEM_21217, 1)),
-			() -> "21217 consumes the report when the reward window opens");
+			"21217 consumes the report when the reward window opens");
 
 		QuestDefinition scroll = definition(21244).definition();
 		assertTrue(scroll.metadata().questWorkItems()
 				.contains(new QuestItemRequirement(SCROLL_21244, 1)),
-			() -> "21244 declares the sealed scroll as a quest work item");
+			"21244 declares the sealed scroll as a quest work item");
 		assertTrue(routes(scroll, "s1", "reward").getFirst().actions()
 				.contains(new QuestAction.GiveItem(SCROLL_21244, 1)),
-			() -> "21244 hands over the scroll on journal row 1");
+			"21244 hands over the scroll on journal row 1");
 		assertTrue(claimRoute(scroll, 799317).actions()
 				.contains(new QuestAction.RemoveItem(SCROLL_21244, 1)),
-			() -> "21244 consumes the scroll when the reward window opens");
+			"21244 consumes the scroll when the reward window opens");
 	}
 
 	@Test
-	void staleCollapsedRewardSavesHealToTheRewardRow() throws Exception {
+	void staleCollapsedRewardSavesHealToTheRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -232,7 +229,7 @@ class Batch31GelkmarosRowLadderContractTest {
 	}
 
 	@Test
-	void collapsedHandoverNoLongerJumpsStraightToReward() throws Exception {
+	void collapsedHandoverNoLongerJumpsStraightToReward() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertTrue(routes(definition, "started", "reward").isEmpty(),

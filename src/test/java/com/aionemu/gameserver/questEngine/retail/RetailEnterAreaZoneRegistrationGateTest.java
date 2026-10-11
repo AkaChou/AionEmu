@@ -104,7 +104,7 @@ class RetailEnterAreaZoneRegistrationGateTest {
 
 	private static Set<String> registeredZoneNames() throws Exception {
 		URL url = RetailEnterAreaZoneRegistrationGateTest.class.getResource(ZONES_DIR);
-		assertNotNull(url, () -> "缺少 zones 数据目录: " + ZONES_DIR);
+		assertNotNull(url, "缺少 zones 数据目录: " + ZONES_DIR);
 		Path dir = Path.of(url.toURI());
 		Set<String> names = new TreeSet<>();
 		try (Stream<Path> entries = Files.list(dir)) {

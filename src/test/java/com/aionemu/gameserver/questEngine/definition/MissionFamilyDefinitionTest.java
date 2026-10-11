@@ -51,7 +51,7 @@ class MissionFamilyDefinitionTest {
 	}
 
 	@Test
-	void packagedProductionDirectoryCompilesTheMigratedMissionOwners() throws Exception {
+	void packagedProductionDirectoryCompilesTheMigratedMissionOwners() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		assertTrue(catalog.find(1000).isPresent());
 		assertTrue(catalog.find(1002).isPresent());

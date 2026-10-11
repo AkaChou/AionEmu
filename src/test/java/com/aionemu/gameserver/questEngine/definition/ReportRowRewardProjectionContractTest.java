@@ -70,7 +70,7 @@ class ReportRowRewardProjectionContractTest {
 		new StartNodeContract(28036, 802015, 801280));
 
 	@Test
-	void rewardRowSitsOnTheLastJournalRowWithFieldRoom() throws Exception {
+	void rewardRowSitsOnTheLastJournalRowWithFieldRoom() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(contract.rewardRow(), row(definition, "reward"),
@@ -90,7 +90,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	@Test
-	void enterWorldRecoveryRepairsEveryStaleRewardRow() throws Exception {
+	void enterWorldRecoveryRepairsEveryStaleRewardRow() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> recoveries = compiled.definition().transitions().stream()
@@ -125,7 +125,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	@Test
-	void handOverRoutesNeverWriteAStaleJournalRow() throws Exception {
+	void handOverRoutesNeverWriteAStaleJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()
@@ -145,7 +145,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	@Test
-	void handOverLandsOnTheStartNodeThatOwnsTheReportRow() throws Exception {
+	void handOverLandsOnTheStartNodeThatOwnsTheReportRow() {
 		for (StartNodeContract contract : START_NODE_CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertEquals(1, row(definition, "s1"),
@@ -174,7 +174,7 @@ class ReportRowRewardProjectionContractTest {
 	}
 
 	@Test
-	void growthMirrorsShareTheSameRewardRowModel() throws Exception {
+	void growthMirrorsShareTheSameRewardRowModel() {
 		for (int elyosId : List.of(19672, 19677, 19684, 19685, 19686, 19687, 19688, 19689, 19694)) {
 			QuestDefinition elyos = definition(elyosId).definition();
 			QuestDefinition asmodian = definition(elyosId + 10000).definition();

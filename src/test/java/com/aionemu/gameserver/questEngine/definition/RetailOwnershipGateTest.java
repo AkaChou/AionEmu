@@ -46,7 +46,6 @@ class RetailOwnershipGateTest {
 	private static final String SIMPLE_HUNT_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String SIMPLE_TALK_TABLE = "/aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
-	/** 清单允许的保留原因前缀。 / Allowed retention reason prefixes. */
 	/**
 	 * 清单允许的保留原因前缀。{@code FAMILY_PENDING} = 原版表有行但该族驱动尚未实现
 	 * （禁止虚报为 RETAIL_TABLE，见 build_retention_list.py 的 IMPLEMENTED_FAMILIES）；
@@ -258,7 +257,7 @@ class RetailOwnershipGateTest {
 		}
 	}
 
-	private static InputStream open(String resource) throws IOException {
+	private static InputStream open(String resource) {
 		InputStream input = RetailOwnershipGateTest.class.getResourceAsStream(resource);
 		assertNotNull(input, "missing resource " + resource);
 		return input;

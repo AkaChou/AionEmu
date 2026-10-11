@@ -34,7 +34,7 @@ class Quest30318To30321RetailAlignmentTest {
 
 	/** 原版行：接取 = 报告 NPC（Aeshma 799504 / Bhemah 799505），单槽计数。 */
 	@Test
-	void retailRowsKeepThePrerequisiteChainAndTheKillGates() throws Exception {
+	void retailRowsKeepThePrerequisiteChainAndTheKillGates() {
 		assertRow(30318, "Aeshma", 25, "IDCatacombsN_UnDrakanBoneFi_55_Ae");
 		assertRow(30319, "Aeshma", 1, "IDCatacombsN_UnDrakanScNmd_55_Ah");
 		assertRow(30320, "Bhemah", 25, "IDCatacombsN_UnDrakanGhostFi_55_Ae");

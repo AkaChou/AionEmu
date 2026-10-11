@@ -77,7 +77,7 @@ class DataDrivenItemPlayGrantGateTest {
 	}
 
 	@Test
-	void everyRoutedItemPlayStepConsumesAnObtainableItem() throws Exception {
+	void everyRoutedItemPlayStepConsumesAnObtainableItem() {
 		int playSteps = 0;
 		Set<Integer> quests = new TreeSet<>();
 		Set<Integer> usedRegistrations = new TreeSet<>();

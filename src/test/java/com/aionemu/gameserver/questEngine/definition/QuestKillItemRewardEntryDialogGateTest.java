@@ -72,7 +72,7 @@ class QuestKillItemRewardEntryDialogGateTest {
 	 * advance or the counter write-back.
 	 */
 	@Test
-	void completingKillOfQuest3031StillEntersReward() throws Exception {
+	void completingKillOfQuest3031StillEntersReward() {
 		CompiledQuestDefinition compiled = load(3031);
 		QuestDefinition definition = compiled.definition();
 		ProgressLayout layout = definition.progressLayout();
@@ -94,7 +94,7 @@ class QuestKillItemRewardEntryDialogGateTest {
 	 * Whole production catalog: no kill / item edge into REWARD may carry a dialog-page after-commit.
 	 */
 	@Test
-	void noKillOrItemRewardEntryInTheProductionCatalogCarriesADialogPage() throws Exception {
+	void noKillOrItemRewardEntryInTheProductionCatalogCarriesADialogPage() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		List<String> defects = new ArrayList<>();
 		for (CompiledQuestDefinition compiled : catalog.executables()) {

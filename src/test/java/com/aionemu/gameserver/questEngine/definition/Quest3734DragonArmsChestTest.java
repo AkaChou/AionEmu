@@ -59,7 +59,7 @@ class Quest3734DragonArmsChestTest {
 	}
 
 	@Test
-	void chestIsUsableOnlyAfterAcceptanceAndClaimsWithoutWritingState() throws IOException {
+	void chestIsUsableOnlyAfterAcceptanceAndClaimsWithoutWritingState() {
 		SimpleCollectItemHandler handler = SimpleCollectItemHandler.instance();
 		Player player = NativeTalkFixture.player();
 		int chest = objectId();

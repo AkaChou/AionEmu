@@ -247,7 +247,7 @@ class RetailQuestDriverOverlayTest {
 		}
 	}
 
-	private InputStream open(String resource) throws Exception {
+	private InputStream open(String resource) {
 		InputStream input = RetailQuestDriverOverlayTest.class.getResourceAsStream(resource);
 		assertNotNull(input, "missing resource " + resource);
 		return input;

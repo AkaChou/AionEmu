@@ -67,7 +67,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void everyClientRowOwnsItsCounterSlotAndTheBriefingFlag() throws Exception {
+	void everyClientRowOwnsItsCounterSlotAndTheBriefingFlag() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			QuestDefinition definition = compiled.definition();
@@ -104,7 +104,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void briefingTalkClearsTheFlagInOneStepAndKillsStayGated() throws Exception {
+	void briefingTalkClearsTheFlagInOneStepAndKillsStayGated() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			/* 规范形简报（quest-native-dispatch P0-2，网格族与串行族同形）：简报 NPC 的 QUEST_SELECT
@@ -154,7 +154,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void eachKillAdvancesOnlyItsOwnSlotInOrder() throws Exception {
+	void eachKillAdvancesOnlyItsOwnSlotInOrder() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			/* 行 1：任一 Named 指挥官都只推 SECTION_0。 */
@@ -194,7 +194,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void journalNpcOwnersConvergeAndUnreachableLegacyOwnersAreGone() throws Exception {
+	void journalNpcOwnersConvergeAndUnreachableLegacyOwnersAreGone() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			String unaccepted = nodeLabel(definition, QuestStatus.NONE, slots(contract, 0, false, false));
@@ -234,7 +234,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void legacySavesMigrateOnEnterWorld() throws Exception {
+	void legacySavesMigrateOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			/* 新模型自身的三个 START 状态不得被迁移边重写。 */
@@ -279,7 +279,7 @@ class CounterChainBriefingStageContractTest {
 	}
 
 	@Test
-	void completionsGrantTheFullFixedRewardSet() throws Exception {
+	void completionsGrantTheFullFixedRewardSet() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			int expectedRewards = contract.bossKill() == null ? 3 : 4;

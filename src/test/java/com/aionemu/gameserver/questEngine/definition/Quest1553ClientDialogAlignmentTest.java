@@ -52,11 +52,11 @@ class Quest1553ClientDialogAlignmentTest {
 		assertEquals(List.of("DF2_NPC_TalkingMirror", "Perento"), handler.requireRow(QUEST_ID).talkNpcNames(),
 			"原版中继链（talk_npc1 → talk_npc2）");
 		assertEquals("Piera", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
-		assertEquals(DIANA_NPC, NativeNpcNameResolver.instance().resolve("Diana").npcIds().get(0));
+		assertEquals(DIANA_NPC, NativeNpcNameResolver.instance().resolve("Diana").npcIds().getFirst());
 		assertEquals(TALKING_MIRROR_NPC,
-			NativeNpcNameResolver.instance().resolve("DF2_NPC_TalkingMirror").npcIds().get(0));
-		assertEquals(PERENTO_NPC, NativeNpcNameResolver.instance().resolve("Perento").npcIds().get(0));
-		assertEquals(PIERA_NPC, NativeNpcNameResolver.instance().resolve("Piera").npcIds().get(0));
+			NativeNpcNameResolver.instance().resolve("DF2_NPC_TalkingMirror").npcIds().getFirst());
+		assertEquals(PERENTO_NPC, NativeNpcNameResolver.instance().resolve("Perento").npcIds().getFirst());
+		assertEquals(PIERA_NPC, NativeNpcNameResolver.instance().resolve("Piera").npcIds().getFirst());
 		assertEquals(DIANA_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Diana");
 		assertEquals(PIERA_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Piera");
 		assertEquals(2, handler.relayCount(QUEST_ID), "1553 是两步中继行");

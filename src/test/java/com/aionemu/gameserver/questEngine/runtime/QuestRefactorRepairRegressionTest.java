@@ -38,7 +38,7 @@ class QuestRefactorRepairRegressionTest {
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(1354)), plan.afterCommit());
 	}
 
-	private static CompiledQuestDefinition load(int id) throws Exception {
+	private static CompiledQuestDefinition load(int id) {
 		// XML 保留行直接取 XML 目录编译产物（退役任务无 IR，见类注释）。
 		// XML-retained rows come straight from the XML directory compile (retired rows have no IR).
 		return CATALOG.updateAndGet(current -> current != null ? current

@@ -42,7 +42,7 @@ class Batch40ThreeNpcTalkLadderContractTest {
 	);
 
 	@Test
-	void everyJournalRowOwnsAState() throws Exception {
+	void everyJournalRowOwnsAState() {
 		for (TalkQuest contract : FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			assertNode(definition, contract.questId(), "started", QuestStatus.START, 0);
@@ -65,7 +65,7 @@ class Batch40ThreeNpcTalkLadderContractTest {
 	}
 
 	@Test
-	void acceptChainStaysOnTheAcceptNpcOnly() throws Exception {
+	void acceptChainStaysOnTheAcceptNpcOnly() {
 		for (TalkQuest contract : FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> starts = definition.transitions().stream()
@@ -83,7 +83,7 @@ class Batch40ThreeNpcTalkLadderContractTest {
 	}
 
 	@Test
-	void rowOwnersDriveTheClientPageChain() throws Exception {
+	void rowOwnersDriveTheClientPageChain() {
 		for (TalkQuest contract : FAMILY) {
 			int questId = contract.questId();
 			QuestDefinition definition = definition(questId).definition();
@@ -150,7 +150,7 @@ class Batch40ThreeNpcTalkLadderContractTest {
 	}
 
 	@Test
-	void rewardOwnerHoldsTheCompletionAndOtherNpcsDoNot() throws Exception {
+	void rewardOwnerHoldsTheCompletionAndOtherNpcsDoNot() {
 		for (TalkQuest contract : FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> completions = definition.transitions().stream()
@@ -203,7 +203,7 @@ class Batch40ThreeNpcTalkLadderContractTest {
 	}
 
 	@Test
-	void staleRewardSaveHealsToRowTwo() throws Exception {
+	void staleRewardSaveHealsToRowTwo() {
 		for (TalkQuest contract : FAMILY) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> stale = definition.transitions().stream()

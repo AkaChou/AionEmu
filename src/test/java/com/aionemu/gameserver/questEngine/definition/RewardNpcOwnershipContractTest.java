@@ -149,7 +149,7 @@ class RewardNpcOwnershipContractTest {
 			"21455 stale SELECT5 route must be gone");
 	}
 
-	private static void assertRecovery(int questId, int staleRow) throws Exception {
+	private static void assertRecovery(int questId, int staleRow) {
 		CompiledQuestDefinition compiled = definitionResource(questId);
 		List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
 			.filter(route -> route.conditions().equals(List.of(
@@ -215,7 +215,7 @@ class RewardNpcOwnershipContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static QuestDefinition definition(int questId) throws IOException {
+	private static QuestDefinition definition(int questId) {
 		return definitionResource(questId).definition();
 	}
 

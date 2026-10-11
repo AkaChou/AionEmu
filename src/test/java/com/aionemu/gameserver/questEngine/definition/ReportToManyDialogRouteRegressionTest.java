@@ -77,7 +77,7 @@ class ReportToManyDialogRouteRegressionTest {
 		new ExpectedRoute(80952, 835553, 10002));
 
 	@Test
-	void migratedReportNpcsOpenTheirPageFromStartDialog() throws Exception {
+	void migratedReportNpcsOpenTheirPageFromStartDialog() {
 		Map<Integer, QuestDefinition> definitions = new HashMap<>();
 		for (ExpectedRoute expected : EXPECTED_ROUTES) {
 			QuestDefinition definition = definitions.computeIfAbsent(expected.questId(), questId -> load(questId));

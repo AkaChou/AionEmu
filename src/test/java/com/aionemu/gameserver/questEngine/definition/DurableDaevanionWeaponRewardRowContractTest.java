@@ -236,7 +236,7 @@ class DurableDaevanionWeaponRewardRowContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws IOException {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}

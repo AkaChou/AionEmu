@@ -85,7 +85,7 @@ class QuestPrerequisiteRetailContractTest {
 	}
 
 	@Test
-	void batchPrerequisitesMatchTheRetailConditionExactly() throws Exception {
+	void batchPrerequisitesMatchTheRetailConditionExactly() {
 		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
 			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
 		for (Map.Entry<Integer, Integer> expected : PREREQ_BATCH.entrySet()) {

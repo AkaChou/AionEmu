@@ -292,7 +292,7 @@ class MirrorPairRewardRowContractTest {
 	 * Definitions come from the XML directory only: retired rows (e.g. 11323/16960) have no IR and
 	 * are skipped by retiredOnly before the lookup.
 	 */
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		return catalog().findExecutable(questId)
 			.orElseThrow(() -> new IllegalStateException("missing production quest definition " + questId));
 	}
@@ -301,7 +301,7 @@ class MirrorPairRewardRowContractTest {
 	 * 退役行（目录缺行）跳过并要求确属退役（防名单陈旧静默缩水）；XML 保留行仍逐条断言。
 	 * Retired rows (absent from the catalog) are skipped but must be really retired; XML rows still assert.
 	 */
-	private static boolean retiredOnly(int questId) throws Exception {
+	private static boolean retiredOnly(int questId) {
 		if (catalog().findExecutable(questId).isPresent()) {
 			return false;
 		}

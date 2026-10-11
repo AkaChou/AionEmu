@@ -123,7 +123,7 @@ class RetailNonIrAxisGateTest {
 	}
 
 	@Test
-	void saveHealQuestsAreRetailDrivenWithoutEnterWorldRoutes() throws Exception {
+	void saveHealQuestsAreRetailDrivenWithoutEnterWorldRoutes() {
 		List<String> violations = new ArrayList<>();
 		for (int questId : new TreeSet<>(healLedgerEdgeCounts.keySet())) {
 			String owner = owners.get(questId);

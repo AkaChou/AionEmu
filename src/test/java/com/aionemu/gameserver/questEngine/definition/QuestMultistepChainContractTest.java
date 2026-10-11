@@ -279,7 +279,7 @@ class QuestMultistepChainContractTest {
 	}
 
 	@Test
-	void theChainWalksRowByRowAtRuntime() throws Exception {
+	void theChainWalksRowByRowAtRuntime() {
 		for (Chain chain : CHAINS) {
 			CompiledQuestDefinition compiled = compiled(chain.questId());
 			QuestDefinition definition = compiled.definition();
@@ -514,7 +514,7 @@ class QuestMultistepChainContractTest {
 				"missing route " + source + " -> " + target + " npc=" + npcId + " action=" + action));
 	}
 
-	private static QuestDefinition definition(int questId) throws Exception {
+	private static QuestDefinition definition(int questId) {
 		return compiled(questId).definition();
 	}
 

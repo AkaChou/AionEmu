@@ -22,7 +22,7 @@ class ThreeStageReportClientPathTest {
 		new Case(25550, "ASMODIANS", 806116, 806115, 806135, 806101));
 
 	@Test
-	void clientPagedReportsUseTheObservedButtonIdsAndOwners() throws Exception {
+	void clientPagedReportsUseTheObservedButtonIdsAndOwners() {
 		for (Case contract : CASES) {
 			QuestDefinition definition = definition(contract.questId());
 			assertEquals(List.of(contract.race()), definition.metadata().permittedRaces().stream().toList());

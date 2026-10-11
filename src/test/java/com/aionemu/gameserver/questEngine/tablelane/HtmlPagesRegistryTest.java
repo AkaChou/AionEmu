@@ -30,7 +30,7 @@ class HtmlPagesRegistryTest {
 	private static final String XSD_RESOURCE = "aion/data/static_data/quest/retail/HtmlPages.xsd";
 
 	@Test
-	void loadsIngestedRetailPageTable() throws IOException {
+	void loadsIngestedRetailPageTable() {
 		HtmlPagesRegistry registry = HtmlPagesRegistry.load(getClass().getClassLoader());
 		// 行数与 P0a 审计清单一致（rows=5904）。
 		// The row count matches the P0a audit (rows=5904).

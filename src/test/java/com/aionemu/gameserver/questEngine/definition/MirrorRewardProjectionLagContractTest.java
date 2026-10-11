@@ -74,9 +74,6 @@ class MirrorRewardProjectionLagContractTest {
 	   the reward projection is no longer the mirror row — neither the mirror row lock nor a source-less heal
 	   edge applies (same ruling as 24201/11110/17526). */
 
-	/** 原版驱动且其镜像仍是 XML 的任务：镜像行锁不适用（见 RETAIL_DRIVEN_RETAIL 注释）。 */
-	/** Retail-driven shards whose mirror is still XML: the mirror row lock does not apply. */
-
 	private static final int STALE_ROW = 0;
 
 	/* 同族但被既有门禁锁定 packed step 的任务：不得按镜像推进。 */

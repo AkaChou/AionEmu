@@ -69,7 +69,7 @@ class NativeQuestXmlTableTest {
 	}
 
 	@Test
-	void negativeCasesFailClosed() throws IOException {
+	void negativeCasesFailClosed() {
 		// 重复任务 id。 / Duplicate quest id.
 		IllegalStateException duplicate = assertThrows(IllegalStateException.class,
 				() -> NativeQuestXmlTable.parse(new ByteArrayInputStream("""

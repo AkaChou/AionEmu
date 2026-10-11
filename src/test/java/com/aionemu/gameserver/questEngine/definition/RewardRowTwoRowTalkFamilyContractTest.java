@@ -61,7 +61,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	private static final List<Integer> QE045_LOCKED_SIBLINGS = List.of(1926, 2938, 13965, 23965, 15674, 25674);
 
 	@Test
-	void rewardRowIsTheSecondClientRow() throws Exception {
+	void rewardRowIsTheSecondClientRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestNode reward = node(definition(contract.questId()).definition(), "reward");
 			assertEquals(QuestStatus.REWARD, reward.projection().status(),
@@ -75,7 +75,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	}
 
 	@Test
-	void rewardOwnerIsTheSecondRowNpc() throws Exception {
+	void rewardOwnerIsTheSecondRowNpc() {
 		for (Contract contract : CONTRACTS) {
 			assertEquals(Set.of(contract.rowNpcId()),
 				rewardOwners(definition(contract.questId()).definition()),
@@ -84,7 +84,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	}
 
 	@Test
-	void staleRewardRowsAreHealedOnEnterWorld() throws Exception {
+	void staleRewardRowsAreHealedOnEnterWorld() {
 		for (Contract contract : CONTRACTS) {
 			CompiledQuestDefinition compiled = definition(contract.questId());
 			List<QuestTransition> matches = enterWorldRecoveries(compiled.definition()).stream()
@@ -112,7 +112,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	}
 
 	@Test
-	void migratedRewardEntryRoutesAreKeptOrAbsent() throws Exception {
+	void migratedRewardEntryRoutesAreKeptOrAbsent() {
 		for (Contract contract : CONTRACTS) {
 			List<QuestTransition> matches = enterWorldRecoveries(
 				definition(contract.questId()).definition()).stream()
@@ -133,7 +133,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	}
 
 	@Test
-	void noRewardRouteWritesAStaleJournalRow() throws Exception {
+	void noRewardRouteWritesAStaleJournalRow() {
 		for (Contract contract : CONTRACTS) {
 			QuestDefinition definition = definition(contract.questId()).definition();
 			List<QuestTransition> rewardRoutes = definition.transitions().stream()
@@ -153,7 +153,7 @@ class RewardRowTwoRowTalkFamilyContractTest {
 	}
 
 	@Test
-	void qe045LockedSiblingsKeepTheirLegacyBaseline() throws Exception {
+	void qe045LockedSiblingsKeepTheirLegacyBaseline() {
 		for (int questId : QE045_LOCKED_SIBLINGS) {
 			assertEquals(Map.of("var0", STALE_ROW),
 				node(definition(questId).definition(), "reward").projection().variables(),

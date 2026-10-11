@@ -51,9 +51,9 @@ class Quest1913ClientDialogAlignmentTest {
 		assertEquals("Macus", handler.requireRow(QUEST_ID).acquiredNpcName(), "接取 owner 名");
 		assertEquals(List.of("Polyidus"), handler.requireRow(QUEST_ID).talkNpcNames(), "原版中继链");
 		assertEquals("Hyacinte", handler.requireRow(QUEST_ID).rewardNpcName(), "交付 owner 名");
-		assertEquals(START_NPC, NativeNpcNameResolver.instance().resolve("Macus").npcIds().get(0));
-		assertEquals(PROGRESS_NPC, NativeNpcNameResolver.instance().resolve("Polyidus").npcIds().get(0));
-		assertEquals(REPORT_NPC, NativeNpcNameResolver.instance().resolve("Hyacinte").npcIds().get(0));
+		assertEquals(START_NPC, NativeNpcNameResolver.instance().resolve("Macus").npcIds().getFirst());
+		assertEquals(PROGRESS_NPC, NativeNpcNameResolver.instance().resolve("Polyidus").npcIds().getFirst());
+		assertEquals(REPORT_NPC, NativeNpcNameResolver.instance().resolve("Hyacinte").npcIds().getFirst());
 		assertEquals(START_NPC, handler.acquireNpc(QUEST_ID), "接取 owner = Macus");
 		assertEquals(REPORT_NPC, handler.rewardNpc(QUEST_ID), "交付 owner = Hyacinte");
 		assertEquals(1, handler.relayCount(QUEST_ID), "1913 是单步中继行");

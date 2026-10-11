@@ -466,7 +466,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 		}
 	}
 
-	private static CompiledQuestDefinition compileTierFixture(int tier, boolean declaredPreview) throws Exception {
+	private static CompiledQuestDefinition compileTierFixture(int tier, boolean declaredPreview) {
 		StringBuilder groups = new StringBuilder();
 		for (int index = 0; index <= tier; index++) {
 			groups.append("      <group><reward kind=\"ITEM\" id=\"18805").append(100 + index)
@@ -551,7 +551,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 		assertEquals(variables, node.projection().variables());
 	}
 
-	private CompiledQuestDefinition definition(int questId) throws Exception {
+	private CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);

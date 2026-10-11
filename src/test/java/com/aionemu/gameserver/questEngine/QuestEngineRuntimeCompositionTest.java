@@ -168,11 +168,11 @@ class QuestEngineRuntimeCompositionTest {
 
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
 
-		var equipListeners = QuestEngine.class.getDeclaredField("questOnEquipItem");
+		var equipListeners = QuestEventRegistry.class.getDeclaredField("questOnEquipItem");
 		equipListeners.setAccessible(true);
 		@SuppressWarnings("unchecked")
 		Map<Integer, java.util.Set<Integer>> registrations =
-			(Map<Integer, java.util.Set<Integer>>) equipListeners.get(engine);
+			(Map<Integer, java.util.Set<Integer>>) equipListeners.get(engineRegistry(engine));
 		assertEquals(java.util.Set.of(990014), registrations.get(140000003));
 		assertTrue(engine.isHaveHandler(990014));
 	}
@@ -189,9 +189,9 @@ class QuestEngineRuntimeCompositionTest {
 
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
 
-		var dieListeners = QuestEngine.class.getDeclaredField("questOnDie");
+		var dieListeners = QuestEventRegistry.class.getDeclaredField("questOnDie");
 		dieListeners.setAccessible(true);
-		assertTrue(((IntArrayList) dieListeners.get(engine)).contains(990005));
+		assertTrue(((IntArrayList) dieListeners.get(engineRegistry(engine))).contains(990005));
 		assertTrue(engine.isHaveHandler(990005));
 	}
 
@@ -315,5 +315,12 @@ class QuestEngineRuntimeCompositionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.on(new QuestEvent.LevelUp()).from("start").goTo("start")
 			.compile();
+	}
+
+	/** 读取引擎实例持有的注册表（反射锚点：事件监听集合已迁入 QuestEventRegistry）。 / Reads the registry held by the engine (the listener sets moved into QuestEventRegistry). */
+	private static QuestEventRegistry engineRegistry(QuestEngine engine) throws ReflectiveOperationException {
+		var registryField = QuestEngine.class.getDeclaredField("registry");
+		registryField.setAccessible(true);
+		return (QuestEventRegistry) registryField.get(engine);
 	}
 }

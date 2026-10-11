@@ -206,7 +206,7 @@ class NativeQuestTableLoaderTest {
 
 	/** 双 NPC 缺一即 fail-closed（原版不存在此形）。 / A missing NPC fails closed: retail has no such shape. */
 	@Test
-	void talkRowsFailClosedWhenAnNpcIsMissing() throws IOException {
+	void talkRowsFailClosedWhenAnNpcIsMissing() {
 		IllegalStateException missingReward = assertThrows(IllegalStateException.class,
 			() -> NativeQuestTableLoader.parse(huntStream(), serialStream(), new ByteArrayInputStream("""
 				<?xml version="1.0" encoding="UTF-8"?>
@@ -242,7 +242,7 @@ class NativeQuestTableLoaderTest {
 	}
 
 	@Test
-	void negativeCasesFailClosed() throws IOException {
+	void negativeCasesFailClosed() {
 		// 重复任务 id。 / Duplicate quest id.
 		IllegalStateException duplicate = assertThrows(IllegalStateException.class, () -> NativeQuestTableLoader
 				.parse(new ByteArrayInputStream("""

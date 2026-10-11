@@ -14,10 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 锁定批次 32：卡多尔迎新族（13800 New Lands to Behold / 23800 A Full New World）的两阶段任务书行阶梯。
@@ -145,8 +142,7 @@ class Batch32KaldorRowLadderContractTest {
 				});
 			assertEquals(Set.of(contract.rewardNpc()), completionNpcs,
 				() -> "quest " + contract.questId() + " completion owner stays on the reward-row NPC");
-			assertTrue(routes(definition, "reward", "complete").size() >= 1,
-				() -> "quest " + contract.questId() + " keeps a reward -> complete route");
+			assertFalse(routes(definition, "reward", "complete").isEmpty(), () -> "quest " + contract.questId() + " keeps a reward -> complete route");
 			assertTrue(definition.transitions().stream()
 					.noneMatch(route -> contract.rowZeroNpc() == talkNpc(route)
 						&& "complete".equals(route.targetNode())),

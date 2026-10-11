@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class QuestItemSourceContractGateTest {
 
 	@Test
-	void collectItemEventsOnlyWatchItemsTheQuestItselfTracks() throws Exception {
+	void collectItemEventsOnlyWatchItemsTheQuestItselfTracks() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		List<String> violations = new ArrayList<>();
 		for (CompiledQuestDefinition compiled : catalog.executables()) {
@@ -134,7 +134,7 @@ class QuestItemSourceContractGateTest {
 	}
 
 	@Test
-	void repairedQuestsRequireTheirOwnRetailCollectItems() throws Exception {
+	void repairedQuestsRequireTheirOwnRetailCollectItems() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		// 15010 原版 collect/check = quest_15010a 5 + quest_15010b 3（原写成 15011 的 quest_15011a 7）
 		assertTurnInItemsOrRetired(catalog, 15010, Map.of(182215664, 5, 182215665, 3));

@@ -46,7 +46,7 @@ class PlayerQuestStatePortTest {
 	private static final int QUEST_ID = 1001;
 
 	@Test
-	void missingPlayerFailsBeforeAnyDaoWrite() throws Exception {
+	void missingPlayerFailsBeforeAnyDaoWrite() {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> null, dao);
 		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);

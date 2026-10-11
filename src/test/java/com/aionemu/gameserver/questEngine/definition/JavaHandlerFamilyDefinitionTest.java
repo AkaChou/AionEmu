@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /** Full vertical proof for the migrated Poeta Java-handler owners 1122 / 1123 / 1230 / 1231 / 1205. */
 class JavaHandlerFamilyDefinitionTest {
 	@Test
-	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() throws Exception {
+	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() {
 		// 生产视图 = XML 目录 + 原版 overlay：部分 Poeta owner 已迁到原版驱动，不再由 XML 目录持有。
 		// Production view = XML directory plus the retail overlay.
 		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
@@ -33,7 +33,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void lostAxeUsesTheAxeThenAcceptsThroughTheTargetlessDialog() throws Exception {
+	void lostAxeUsesTheAxeThenAcceptsThroughTheTargetlessDialog() {
 		CompiledQuestDefinition compiled = definition("1107.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 		QuestTransition use = transitions.stream()
@@ -64,7 +64,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void nymphsGownStartsByUsingTheDiaryAndBranchesIntoTwoRewardPaths() throws Exception {
+	void nymphsGownStartsByUsingTheDiaryAndBranchesIntoTwoRewardPaths() {
 		CompiledQuestDefinition compiled = definition("1114.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
@@ -129,7 +129,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void tuttySearchAdvancesViaZoneEntryAndMovie() throws Exception {
+	void tuttySearchAdvancesViaZoneEntryAndMovie() {
 		CompiledQuestDefinition compiled = definition("1123.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 		QuestTransition zone = transitions.stream()
@@ -146,7 +146,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void robeDeliveryConfirmsTheChoiceThenSelectsAmongThreeItemGatedRewardBranches() throws Exception {
+	void robeDeliveryConfirmsTheChoiceThenSelectsAmongThreeItemGatedRewardBranches() {
 		CompiledQuestDefinition compiled = definition("1122.xml");
 		Set<Integer> prerequisites = compiled.definition().metadata().prerequisites();
 		assertTrue(prerequisites.contains(1116));
@@ -205,7 +205,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void insomniaMedicineBranchesByCollectedHerbsThenChoosesARewardPath() throws Exception {
+	void insomniaMedicineBranchesByCollectedHerbsThenChoosesARewardPath() {
 		CompiledQuestDefinition compiled = definition("1111.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
@@ -239,7 +239,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void messageForMadelinAndIrreconcilableLoversArePlainReports() throws Exception {
+	void messageForMadelinAndIrreconcilableLoversArePlainReports() {
 		CompiledQuestDefinition madelin = definition("1230.xml");
 		List<QuestAction> madelinCompletions = completions(madelin.definition().transitions(), "reward");
 		// 原版合成器对领奖确认按钮发放全段（SELECTED_QUEST_REWARD1..NOREWARD）共 16 条完成路由；
@@ -263,7 +263,7 @@ class JavaHandlerFamilyDefinitionTest {
 	}
 
 	@Test
-	void newSkillRoutesEachStartingClassToItsOwnRewardNode() throws Exception {
+	void newSkillRoutesEachStartingClassToItsOwnRewardNode() {
 		CompiledQuestDefinition compiled = definition("1205.xml");
 		List<QuestTransition> transitions = compiled.definition().transitions();
 

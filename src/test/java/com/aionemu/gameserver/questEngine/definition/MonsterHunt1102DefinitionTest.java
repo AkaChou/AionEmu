@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MonsterHunt1102DefinitionTest {
 
 	@Test
-	void definitionCoversTheCompleteLegacyDialogAndKillLifecycle() throws Exception {
+	void definitionCoversTheCompleteLegacyDialogAndKillLifecycle() {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
@@ -43,7 +43,7 @@ class MonsterHunt1102DefinitionTest {
 	}
 
 	@Test
-	void everyKillAdvancesOneStepAndSendsTheProgressPacket() throws Exception {
+	void everyKillAdvancesOneStepAndSendsTheProgressPacket() {
 		CompiledQuestDefinition compiled = definition();
 		int packed = 0;
 		for (String source : List.of("a0", "a1", "a2")) {
@@ -62,7 +62,7 @@ class MonsterHunt1102DefinitionTest {
 	}
 
 	@Test
-	void acceptanceFailsClosedWithoutTheQuestTemplatePreconditions() throws Exception {
+	void acceptanceFailsClosedWithoutTheQuestTemplatePreconditions() {
 		CompiledQuestDefinition compiled = definition();
 		QuestTransition accept = talk(compiled, "unaccepted", 1002);
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1102, QuestStatus.NONE, 0, Map.of());
@@ -76,7 +76,7 @@ class MonsterHunt1102DefinitionTest {
 	}
 
 	@Test
-	void completionUsesTheTypedRewardsAndLifecycle() throws Exception {
+	void completionUsesTheTypedRewardsAndLifecycle() {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestAction> expected = List.of(
 			new QuestAction.GrantReward("GOLD", 0, 400, QuestRewardAmountMode.QUEST_BASE),

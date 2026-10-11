@@ -7,12 +7,7 @@ import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -117,9 +112,7 @@ class QuestEquipmentExchangeDefinitionTest {
 	private static Optional<QuestMutationPlan> route(CompiledQuestDefinition definition,
 			QuestSnapshot snapshot, QuestEvent event) {
 		List<QuestTransition> candidates = new ArrayList<>(definition.definition().transitions());
-		candidates.sort((left, right) -> Integer.compare(
-			left.priority() == null ? Integer.MAX_VALUE : left.priority(),
-			right.priority() == null ? Integer.MAX_VALUE : right.priority()));
+		candidates.sort(Comparator.comparingInt(left -> left.priority() == null ? Integer.MAX_VALUE : left.priority()));
 		return candidates.stream()
 			.map(transition -> QuestMutationPlanner.plan(definition, snapshot, event, transition))
 			.flatMap(Optional::stream).findFirst();

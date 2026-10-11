@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class MissionItemConsumptionBatchRegressionTest {
 
 	@Test
-	void rewardWindowPreviewDoesNotPrematurelyConsumeQuestItems() throws Exception {
+	void rewardWindowPreviewDoesNotPrematurelyConsumeQuestItems() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		for (int questId : List.of(24012, 24051)) {
 			CompiledQuestDefinition compiled = catalog.findExecutable(questId).orElseThrow();
@@ -190,7 +190,7 @@ class MissionItemConsumptionBatchRegressionTest {
 				+ " must remove items " + expectedRemovedItemIds + ", but removed " + removedInTransitions);
 	}
 
-	private static CompiledQuestDefinition load(int questId) throws Exception {
+	private static CompiledQuestDefinition load(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}

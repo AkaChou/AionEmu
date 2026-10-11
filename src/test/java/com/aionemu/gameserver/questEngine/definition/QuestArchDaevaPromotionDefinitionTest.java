@@ -60,7 +60,7 @@ class QuestArchDaevaPromotionDefinitionTest {
 		}
 	}
 
-	private CompiledQuestDefinition load(int questId) throws Exception {
+	private CompiledQuestDefinition load(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}

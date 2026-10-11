@@ -145,7 +145,7 @@ class QuestEventQuestBatchDefinitionTest {
 	 * item_check channel and carries no event-active axis at all.
 	 */
 	@Test
-	void eventRowsCarryNoSynthesizedWorkItemGateOrEventActiveAxis() throws Exception {
+	void eventRowsCarryNoSynthesizedWorkItemGateOrEventActiveAxis() {
 		for (int questId : CAKE_QUESTS) {
 			assertTrue(USE.routes(questId), "cake 行必须由 native 车道服务: " + questId);
 			assertTrue(USE.gateItems(questId).isEmpty(), "原版 item_check=false ⇒ 无工作物品门: " + questId);

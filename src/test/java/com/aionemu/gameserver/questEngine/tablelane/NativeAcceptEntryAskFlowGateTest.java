@@ -183,8 +183,7 @@ class NativeAcceptEntryAskFlowGateTest {
 		return end < 0 ? null : block.substring(start + open.length(), end).trim();
 	}
 
-	private static int npcIdOf(SimpleHuntHandler hunt, SimpleTalkHandler talk, int questId, String npcName)
-			throws Exception {
+	private static int npcIdOf(SimpleHuntHandler hunt, SimpleTalkHandler talk, int questId, String npcName) {
 		int npcId = hunt.owns(questId) ? hunt.acquireNpc(questId) : talk.acquireNpc(questId);
 		assertTrue(npcId > 0, "原版行必须有可解析的接取 NPC: " + questId + " (" + npcName + ")");
 		return npcId;

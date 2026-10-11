@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,10 +30,11 @@ public final class QuestXmlFixtures {
 	 * Opens the production XML; retired quests must go through {@link ProductionQuestDefinitions}.
 	 */
 	public static InputStream open(int questId) {
-		InputStream production = QuestXmlFixtures.class
-			.getResourceAsStream(String.format(PRODUCTION_RESOURCE, questId));
-		return Objects.requireNonNull(production, "quest " + questId
-			+ " no longer has a production XML (retail-driven); use ProductionQuestDefinitions");
+		try (InputStream production = QuestXmlFixtures.class.getResourceAsStream(String.format(PRODUCTION_RESOURCE, questId))) {
+			return Objects.requireNonNull(production, "quest " + questId + " no longer has a production XML (retail-driven); use ProductionQuestDefinitions");
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/** 编译定义 XML。 / Compiles the definition XML. */
@@ -42,22 +44,6 @@ public final class QuestXmlFixtures {
 		}
 	}
 
-	/**
-	 * 按生产资源路径打开定义 XML，缺失时回落到退役冻结副本；路径末段的任务号即索引。
-	 * <p>
-	 * 供仍按 {@code getResourceAsStream("/aion/data/.../quests/<id>.xml")} 形态读取定义的测试使用：
-	 * 任务迁到原版驱动后生产资源消失，读到的内容与冻结副本逐字节相同。
-	 * <p>
-	 * Opens a definition by its production resource path with a retired-fixture fallback.
-	 */
-	public static InputStream openResource(String productionPath) {
-		String name = productionPath.substring(productionPath.lastIndexOf('/') + 1);
-		String digits = name.replaceAll("\\D+", "");
-		if (digits.isEmpty()) {
-			throw new IllegalArgumentException("quest definition path has no quest id: " + productionPath);
-		}
-		return open(Integer.parseInt(digits));
-	}
 
 	/** 生产源树里是否仍有该任务的 XML（退役判据）。 / Whether the production source tree still holds the XML. */
 	public static boolean productionXmlPresent(int questId) {

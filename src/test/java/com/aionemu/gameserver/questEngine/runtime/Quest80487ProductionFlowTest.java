@@ -92,7 +92,7 @@ class Quest80487ProductionFlowTest {
 	}
 
 	@Test
-	void growthQuestFamilyRestoresLegacyNpcStartRoutes() throws Exception {
+	void growthQuestFamilyRestoresLegacyNpcStartRoutes() {
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();
 		for (int questId = 80487; questId <= 80538; questId++) {
 			int npcId = questId <= 80512 ? 831031 : 831029;
@@ -111,7 +111,7 @@ class Quest80487ProductionFlowTest {
 		return definition(QUEST_ID);
 	}
 
-	private CompiledQuestDefinition definition(int questId) throws Exception {
+	private CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(questId);
 	}

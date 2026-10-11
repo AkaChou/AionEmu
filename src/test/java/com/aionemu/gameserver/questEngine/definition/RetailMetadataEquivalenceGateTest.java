@@ -137,7 +137,7 @@ class RetailMetadataEquivalenceGateTest {
 			writeDump(diffs);
 		}
 		List<String> failures = new ArrayList<>();
-		diffs.forEach((axis, rows) -> failures.add(axis + " x" + rows.size() + " first=" + rows.get(0)));
+		diffs.forEach((axis, rows) -> failures.add(axis + " x" + rows.size() + " first=" + rows.getFirst()));
 		assertTrue(failures.isEmpty(), () -> "retail metadata divergences:\n" + String.join("\n", failures));
 		assertEquals(catalog.size(), accounted + retailMissing,
 			"every catalog quest must be retail-compiled or explicitly registered as missing");
@@ -384,7 +384,7 @@ class RetailMetadataEquivalenceGateTest {
 		return nodes.getLength() == 0 ? "" : nodes.item(0).getTextContent().trim();
 	}
 
-	private static InputStream open(String resource) throws IOException {
+	private static InputStream open(String resource) {
 		InputStream input = RetailMetadataEquivalenceGateTest.class.getResourceAsStream(resource);
 		assertNotNull(input, "missing resource " + resource);
 		return input;

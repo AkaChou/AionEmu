@@ -51,11 +51,11 @@ class Batch33SharedVisibleSlotContractTest {
 	void sharedSlotJournalKeepsTwoClientStates() throws Exception {
 		QuestDefinition definition = definition().definition();
 		assertEquals(COLLECT_STATE, node(definition, "started").projection().variables().get("var0"),
-			() -> "row 0 lives on the collect state");
+			"row 0 lives on the collect state");
 		assertEquals(SHARED_SLOT_STATE, node(definition, "s1").projection().variables().get("var0"),
-			() -> "rows 1 and 2 share the %3 slot");
+			"rows 1 and 2 share the %3 slot");
 		assertEquals(SHARED_SLOT_STATE, node(definition, "reward").projection().variables().get("var0"),
-			() -> "the reward row is the shared slot, not the next row index");
+			"the reward row is the shared slot, not the next row index");
 		assertEquals(QuestStatus.START, node(definition, "s1").projection().status());
 		assertEquals(QuestStatus.REWARD, node(definition, "reward").projection().status());
 	}
@@ -74,29 +74,29 @@ class Batch33SharedVisibleSlotContractTest {
 			rows.add(row);
 		}
 		assertEquals(Set.of(COLLECT_STATE, SHARED_SLOT_STATE), rows,
-			() -> "both client visibility slots must own a state");
+			"both client visibility slots must own a state");
 	}
 
 	@Test
 	void collectStepAdvancesIntoTheSharedSlot() throws Exception {
 		QuestDefinition definition = definition().definition();
 		List<QuestTransition> handOver = routes(definition, "started", "s1");
-		assertEquals(1, handOver.size(), () -> "the collect state advances exactly once");
+		assertEquals(1, handOver.size(), "the collect state advances exactly once");
 		QuestTransition route = handOver.getFirst();
 		assertEquals(new QuestEvent.TalkToNpc(
 			ACCEPT_NPC, QuestDialogAction.CHECK_USER_HAS_QUEST_ITEM.id(), 0), route.event(),
-			() -> "row 1 ends on the client quest-item check button");
+			"row 1 ends on the client quest-item check button");
 		assertTrue(route.conditions().contains(new QuestCondition.HasItem(BONE_ITEM, BONE_COUNT)),
-			() -> "the check requires the collected bones");
+			"the check requires the collected bones");
 		assertTrue(route.actions().contains(new QuestAction.SetVariable("var0", SHARED_SLOT_STATE)),
-			() -> "handing the bones over persists the shared slot");
+			"handing the bones over persists the shared slot");
 		assertTrue(route.actions().contains(new QuestAction.RemoveItem(BONE_ITEM, BONE_COUNT)),
-			() -> "the bones are consumed on hand-over");
+			"the bones are consumed on hand-over");
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.CHECK_USER_ITEM_OK.id())),
 			route.afterCommit(),
-			() -> "the client shows the success page for the collected bones");
+			"the client shows the success page for the collected bones");
 	}
 
 	@Test
@@ -106,16 +106,16 @@ class Batch33SharedVisibleSlotContractTest {
 			.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
 				ACCEPT_NPC, QuestDialogAction.SET_SUCCEED.id(), 0)))
 			.toList();
-		assertEquals(1, finish.size(), () -> "the select2 page ends on SET_SUCCEED exactly once");
+		assertEquals(1, finish.size(), "the select2 page ends on SET_SUCCEED exactly once");
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.CloseDialog()), finish.getFirst().afterCommit(),
-			() -> "SET_SUCCEED refreshes the journal and closes the dialog");
+			"SET_SUCCEED refreshes the journal and closes the dialog");
 		assertEquals(1, routes(definition, "s1", "s1").stream()
 			.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
 				ACCEPT_NPC, QuestDialogAction.QUEST_SELECT.id(), 0)))
 			.count(),
-			() -> "the client select2 page stays reachable from the shared slot");
+			"the client select2 page stays reachable from the shared slot");
 		assertEquals(List.of(new AfterCommitAction.CloseDialog()),
 			routes(definition, "s1", "s1").stream()
 				.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
@@ -123,7 +123,7 @@ class Batch33SharedVisibleSlotContractTest {
 				.findFirst().orElseThrow(() -> new AssertionError(
 					"the client check_ok page closes on FINISH_DIALOG"))
 				.afterCommit(),
-			() -> "the check_ok page keeps its FINISH_DIALOG route on the shared slot");
+			"the check_ok page keeps its FINISH_DIALOG route on the shared slot");
 	}
 
 	@Test
@@ -134,12 +134,12 @@ class Batch33SharedVisibleSlotContractTest {
 				REWARD_NPC, QuestDialogAction.QUEST_SELECT.id(), 0)))
 			.toList();
 		assertEquals(1, entry.size(),
-			() -> "talking to the reward NPC must not soft-lock the shared slot");
+			"talking to the reward NPC must not soft-lock the shared slot");
 		assertEquals(List.of(
 			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
 			new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
 			entry.getFirst().afterCommit(),
-			() -> "Daruku opens the client reward entry page");
+			"Daruku opens the client reward entry page");
 	}
 
 	@Test
@@ -154,7 +154,7 @@ class Batch33SharedVisibleSlotContractTest {
 				}
 			});
 		assertEquals(Set.of(REWARD_NPC), completionNpcs,
-			() -> "completion stays on the reward-row NPC");
+			"completion stays on the reward-row NPC");
 
 		QuestTransition claim = routes(definition, "reward", "reward").stream()
 			.filter(route -> route.event().equals(new QuestEvent.TalkToNpc(
@@ -162,11 +162,11 @@ class Batch33SharedVisibleSlotContractTest {
 			.findFirst().orElseThrow(() -> new AssertionError("missing claim route"));
 		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
 			QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), claim.afterCommit(),
-			() -> "the claim button opens the reward window");
+			"the claim button opens the reward window");
 		assertTrue(routes(definition, "reward", "reward").stream()
 			.anyMatch(route -> route.event().equals(new QuestEvent.TalkToNpc(
 				REWARD_NPC, QuestDialogAction.QUEST_SELECT.id(), 0))),
-			() -> "the reward entry page stays reachable in REWARD");
+			"the reward entry page stays reachable in REWARD");
 	}
 
 	@Test
@@ -180,36 +180,36 @@ class Batch33SharedVisibleSlotContractTest {
 				new QuestCondition.StatusIs(QuestStatus.REWARD),
 				new QuestCondition.QuestVariableIs("var0", COLLECT_STATE))))
 			.toList();
-		assertEquals(1, matches.size(), () -> "the collapsed reward save needs one heal route");
+		assertEquals(1, matches.size(), "the collapsed reward save needs one heal route");
 		QuestTransition heal = matches.getFirst();
 		assertEquals(List.of(new QuestAction.SetVariable("var0", SHARED_SLOT_STATE)), heal.actions(),
-			() -> "the heal writes the shared slot");
+			"the heal writes the shared slot");
 		assertEquals(List.of(new AfterCommitAction.SyncQuestState(
 			QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), heal.afterCommit(),
-			() -> "the heal refreshes the journal");
-		assertNull(heal.priority(), () -> "the heal carries no priority");
+			"the heal refreshes the journal");
+		assertNull(heal.priority(), "the heal carries no priority");
 
 		Map<String, Integer> stale = new LinkedHashMap<>(compiled.definition().progressLayout().unpack(0));
 		stale.put("var0", COLLECT_STATE);
 		QuestMutationPlan plan = QuestMutationPlanner.plan(compiled, snapshot(compiled, stale), heal)
 			.orElseThrow();
-		assertEquals(QuestStatus.REWARD, plan.nextStatus(), () -> "healed status");
+		assertEquals(QuestStatus.REWARD, plan.nextStatus(), "healed status");
 		assertEquals(SHARED_SLOT_STATE, unpack(compiled, plan).get("var0"),
-			() -> "healed journal row");
+			"healed journal row");
 	}
 
 	@Test
 	void collapsedJumpNoLongerSkipsTheSharedSlot() throws Exception {
 		QuestDefinition definition = definition().definition();
 		assertTrue(routes(definition, "started", "reward").isEmpty(),
-			() -> "the collapsed started -> reward jump must be gone");
+			"the collapsed started -> reward jump must be gone");
 		assertTrue(definition.transitions().stream()
 			.noneMatch(route -> route.actions().contains(new QuestAction.SetVariable("var0", 2))),
-			() -> "no route may write the surplus row index");
+			"no route may write the surplus row index");
 		assertTrue(routes(definition, "started", "started").stream()
 			.anyMatch(route -> route.event().equals(new QuestEvent.CanAct(
 				BONE_OBJECT, "ACTION_ITEM_USE"))),
-			() -> "the bone object stays actionable on the collect row");
+			"the bone object stays actionable on the collect row");
 	}
 
 	private static List<QuestTransition> routes(QuestDefinition definition, String source, String target) {
@@ -236,7 +236,7 @@ class Batch33SharedVisibleSlotContractTest {
 	private static CompiledQuestDefinition definition() throws IOException {
 		try (InputStream input = Batch33SharedVisibleSlotContractTest.class.getResourceAsStream(
 				"/aion/data/static_data/quest/definitions/quests/" + QUEST + ".xml")) {
-			assertNotNull(input, () -> "missing quest definition " + QUEST + ".xml");
+			assertNotNull(input, "missing quest definition " + QUEST + ".xml");
 			return QuestDefinitionXmlCompiler.compile(input);
 		}
 	}

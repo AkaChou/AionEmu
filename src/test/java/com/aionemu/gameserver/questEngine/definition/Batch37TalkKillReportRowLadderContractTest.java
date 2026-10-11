@@ -81,7 +81,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 	}
 
 	@Test
-	void bountyFamilyAcceptsFromStarterAndReportsToJournalNpc() throws Exception {
+	void bountyFamilyAcceptsFromStarterAndReportsToJournalNpc() {
 		for (Kill3Contract contract : KILL3_FAMILY) {
 			/* P0c-6：三行走原版网格合成器直驱（无 IR）：本方法原有一整段编译视图断言（简报页/
 			 * SETPRO1 清位/击杀计数/报告页/领奖路由）随退役整体停用——守卫 = 必须确属退役
@@ -274,7 +274,7 @@ class Batch37TalkKillReportRowLadderContractTest {
 			true, true, 0, 0, 100000000, 1, 0f, 0f, 0f, (byte) 0);
 	}
 
-	private static CompiledQuestDefinition definition(int questId) throws Exception {
+	private static CompiledQuestDefinition definition(int questId) {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		// Retired quests live in git history only: use the production view (XML dir + retail overlay).
 		return ProductionQuestDefinitions.definition(questId);

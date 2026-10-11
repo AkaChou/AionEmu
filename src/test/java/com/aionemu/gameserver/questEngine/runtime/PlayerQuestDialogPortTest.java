@@ -125,7 +125,7 @@ class PlayerQuestDialogPortTest {
 	}
 
 	@Test
-	void showDialogIsBestEffortWhenPlayerLoggedOut() throws Exception {
+	void showDialogIsBestEffortWhenPlayerLoggedOut() {
 		PlayerQuestDialogPort port = new PlayerQuestDialogPort(playerId -> null);
 
 		assertFalse(port.showDialog(snapshot().withInteractionObjectId(204160), plan(), 1011));

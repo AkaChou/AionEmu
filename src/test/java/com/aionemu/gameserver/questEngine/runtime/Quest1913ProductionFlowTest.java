@@ -86,7 +86,7 @@ class Quest1913ProductionFlowTest {
 		Player player = NativeTalkFixture.player(Race.ELYOS, PlayerClass.GLADIATOR, 10);
 		NativeTalkFixture.completePrerequisites(player, 1007);
 		Integer acquireNpc = handler.acquireNpc(QUEST_ID);
-		Integer progressNpc = NativeNpcNameResolver.instance().resolveMembers("Polyidus").get(0);
+		Integer progressNpc = NativeNpcNameResolver.instance().resolveMembers("Polyidus").getFirst();
 		Integer reportNpc = handler.rewardNpc(QUEST_ID);
 		assertNotNull(acquireNpc);
 		assertNotNull(progressNpc);

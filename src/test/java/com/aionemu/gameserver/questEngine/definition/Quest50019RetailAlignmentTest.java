@@ -76,7 +76,7 @@ class Quest50019RetailAlignmentTest {
 				&& transition.conditions().contains(new QuestCondition.StartEligible()));
 	}
 
-	private static QuestDefinition load() throws Exception {
+	private static QuestDefinition load() {
 		// 退役任务的生产 XML 只在 git 历史里：统一取生产视图（XML 目录 + 原版 overlay）。
 		return ProductionQuestDefinitions.definition(50019).definition();
 	}

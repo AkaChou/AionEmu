@@ -76,7 +76,7 @@ class QuestWorkItemMigrationCoverageTest {
 	}
 
 	@Test
-	void everyExecutableWorkItemQuestIsCleanedUpOnCompletion() throws Exception {
+	void everyExecutableWorkItemQuestIsCleanedUpOnCompletion() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		Map<Integer, List<Integer>> legacyWorkItems = legacyWorkItems();
 
@@ -104,7 +104,7 @@ class QuestWorkItemMigrationCoverageTest {
 	}
 
 	@Test
-	void everyItemEnteringRewardIsHandedInOrDeclaredAsAWorkItem() throws Exception {
+	void everyItemEnteringRewardIsHandedInOrDeclaredAsAWorkItem() {
 		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
 		List<String> defects = new ArrayList<>();
 		for (Map.Entry<Integer, List<Integer>> entry : legacyWorkItems().entrySet()) {

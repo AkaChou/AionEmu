@@ -139,7 +139,7 @@ class CutsceneHiddenQuestFamilyContractTest {
 	}
 
 	@Test
-	void isolatedClientOnlyQuestsStayOutOfTheProductionCatalog() throws Exception {
+	void isolatedClientOnlyQuestsStayOutOfTheProductionCatalog() {
 		QuestCatalog catalog = QuestDefinitionCatalogManifest.compile(DEFINITION_DIRECTORY);
 		for (int questId : ISOLATED_CLIENT_ONLY_QUESTS) {
 			assertTrue(catalog.findEntry(questId).isEmpty(),

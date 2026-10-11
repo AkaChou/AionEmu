@@ -15,7 +15,7 @@ class ReportToManySetSucceedAlignmentTest {
 		"src/main/resources/aion/data/static_data/quest/definitions/quests");
 
 	@Test
-	void clientSetSucceedRoutesPreserveExistingProgressionSemantics() throws Exception {
+	void clientSetSucceedRoutesPreserveExistingProgressionSemantics() {
 		for (AliasQuest quest : List.of(
 			new AliasQuest(35055, "started", 804874, 10255, null),
 			new AliasQuest(35056, "started", 804704, 10255, null),
@@ -58,7 +58,7 @@ class ReportToManySetSucceedAlignmentTest {
 	}
 
 	@Test
-	void completedReportToManyStepsOpenTheRewardSelectionDirectly() throws Exception {
+	void completedReportToManyStepsOpenTheRewardSelectionDirectly() {
 		for (CompletedQuest quest : List.of(
 			new CompletedQuest(19004, "s1", 203701, 10001, 798500))) {
 			QuestDefinition definition = compile(quest.id());
@@ -83,7 +83,7 @@ class ReportToManySetSucceedAlignmentTest {
 		}
 	}
 
-	private static void assertOrderedQuest(OrderedQuest quest) throws Exception {
+	private static void assertOrderedQuest(OrderedQuest quest) {
 		QuestDefinition definition = compile(quest.id());
 		assertEquals(List.of(quest.startNpcId()), dialogNpcs(definition, "unaccepted", 31),
 			"quest " + quest.id() + " start NPCs");

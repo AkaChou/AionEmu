@@ -33,7 +33,7 @@ class QuestStartItemDefinitionRegressionTest {
 	private static final int TALK_NPC = 700196;
 
 	@Test
-	void startItemNpcsExposeTheDialogRoutesUsedAfterReading() throws Exception {
+	void startItemNpcsExposeTheDialogRoutesUsedAfterReading() {
 		// 1323（退役）：原版 acquired_npc_name 解析为交互物 NPC，任务行（31）下发客户端入口页。
 		assertTrue(RetiredQuestIds.contains(RETIRED_QUEST));
 		SimpleTalkHandler handler = SimpleTalkHandler.instance();

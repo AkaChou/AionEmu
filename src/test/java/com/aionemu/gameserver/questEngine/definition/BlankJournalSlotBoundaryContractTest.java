@@ -39,7 +39,7 @@ class BlankJournalSlotBoundaryContractTest {
 	private static final int PAION_OWNER = 203941;
 
 	@Test
-	void prologueQuestsCompleteWithoutAnyRewardRow() throws Exception {
+	void prologueQuestsCompleteWithoutAnyRewardRow() {
 		for (int questId : List.of(ELYOS_PROLOGUE, ASMODIAN_PROLOGUE)) {
 			QuestDefinition definition = definition(questId).definition();
 			assertEquals(Set.of("unaccepted", "started", "complete"),
@@ -62,7 +62,7 @@ class BlankJournalSlotBoundaryContractTest {
 	}
 
 	@Test
-	void prologueQuestsMustNotGrowJournalRows() throws Exception {
+	void prologueQuestsMustNotGrowJournalRows() {
 		for (int questId : List.of(ELYOS_PROLOGUE, ASMODIAN_PROLOGUE)) {
 			QuestDefinition definition = definition(questId).definition();
 			/* 序幕没有 NPC 对话，也没有 s1/s2/s3 之类的行节点——这两样出现即说明按空槽补了阶梯。 */
@@ -78,7 +78,7 @@ class BlankJournalSlotBoundaryContractTest {
 	}
 
 	@Test
-	void killCounterQuestKeepsItsCombinationCounterSlots() throws Exception {
+	void killCounterQuestKeepsItsCombinationCounterSlots() {
 		QuestDefinition definition = definition(KILL_COUNTER).definition();
 		assertEquals(35, definition.nodes().size(),
 			"1400 keeps its 8x4 kill counter combination (32 combinations + unaccepted/reward/complete)");
@@ -97,7 +97,7 @@ class BlankJournalSlotBoundaryContractTest {
 			.collect(Collectors.toSet()), "completion owner stays on Paion");
 	}
 
-	private static void assertPrologue(int questId, String zone, int movieId) throws Exception {
+	private static void assertPrologue(int questId, String zone, int movieId) {
 		QuestDefinition definition = definition(questId).definition();
 		List<QuestTransition> accepts = routes(definition, "unaccepted", "started");
 		assertEquals(1, accepts.size(), () -> "quest " + questId + " accept route");

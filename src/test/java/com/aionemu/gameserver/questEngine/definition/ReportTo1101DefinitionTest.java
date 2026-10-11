@@ -21,7 +21,7 @@ class ReportTo1101DefinitionTest {
 	private static final int QUEST_ID = 1101;
 
 	@Test
-	void productionDirectoryCompilesTheTaskDefinition() throws Exception {
+	void productionDirectoryCompilesTheTaskDefinition() {
 		QuestCatalog catalog = productionCatalog();
 		assertTrue(catalog.find(1101).isPresent());
 		// 1102 已迁到原版驱动：不再由 XML 目录拥有，生产证据 = 原版合成定义（旧 XML 在 git 历史里）。
@@ -30,7 +30,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void definitionCoversEveryHandleableReportToDialogPath() throws Exception {
+	void definitionCoversEveryHandleableReportToDialogPath() {
 		CompiledQuestDefinition compiled = definition();
 		List<QuestTransition> transitions = compiled.definition().transitions();
 
@@ -69,7 +69,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void productionCatalogDoesNotRetainTheLegacy1101Owner() throws Exception {
+	void productionCatalogDoesNotRetainTheLegacy1101Owner() {
 		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 		QuestCatalog catalog = productionCatalog();
 		assertTrue(catalog.find(1101).isPresent());
@@ -77,7 +77,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void acceptanceFailsClosedWithoutEligibilityAndUsesTheCorrectProtocol() throws Exception {
+	void acceptanceFailsClosedWithoutEligibilityAndUsesTheCorrectProtocol() {
 		CompiledQuestDefinition compiled = definition();
 		QuestTransition accept = transition(compiled, "unaccepted", 203049, 1002);
 		QuestSnapshot unknown = new QuestSnapshot(7, 1101, QuestStatus.NONE, 0, Map.of());
@@ -116,7 +116,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void everyCompletionPathUsesTypedRewardsAndCompleteLifecycle() throws Exception {
+	void everyCompletionPathUsesTypedRewardsAndCompleteLifecycle() {
 		CompiledQuestDefinition compiled = definition();
 		// 发放顺序 = 原版 quest.xml 的奖励字段顺序（GOLD/EXP/ITEM）；XML 时代的
 		// fixed-reward-indices="2 3 4 0 1"（道具先行）是旧 DSL 的排序痕迹，退役后不再保留。
@@ -142,7 +142,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void noFivePathFixtureCanBeMistakenForReplacementProof() throws Exception {
+	void noFivePathFixtureCanBeMistakenForReplacementProof() {
 		CompiledQuestDefinition compiled = definition();
 		assertNotEquals(5, compiled.definition().transitions().size());
 		assertEquals(3, compiled.definition().metadata().rewards().stream()
@@ -150,7 +150,7 @@ class ReportTo1101DefinitionTest {
 	}
 
 	@Test
-	void mutationPlannerBuildsAPlanForEveryProductionPath() throws Exception {
+	void mutationPlannerBuildsAPlanForEveryProductionPath() {
 		CompiledQuestDefinition compiled = definition();
 		for (QuestTransition transition : compiled.definition().transitions()) {
 			QuestEvent.TalkToNpc route = (QuestEvent.TalkToNpc) transition.event();

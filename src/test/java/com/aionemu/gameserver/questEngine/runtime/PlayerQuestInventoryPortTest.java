@@ -54,7 +54,7 @@ class PlayerQuestInventoryPortTest {
 	private static final int ITEM_A = 169001001;
 
 	@Test
-	void preflightFailsWhenFactsWereNotCaptured() throws Exception {
+	void preflightFailsWhenFactsWereNotCaptured() {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
 		// inventory=null → inventoryCaptured=false,itemCount fail-closed
 		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
@@ -66,7 +66,7 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	@Test
-	void preflightFailsOnInsufficientKnownCount() throws Exception {
+	void preflightFailsOnInsufficientKnownCount() {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
 		QuestSnapshot snapshot = snapshotWith(ITEM_A, 1);
 
@@ -249,7 +249,7 @@ class PlayerQuestInventoryPortTest {
 	}
 
 	@Test
-	void applyFailsWhenPlayerIsUnavailableBeforeAnyDaoWrite() throws Exception {
+	void applyFailsWhenPlayerIsUnavailableBeforeAnyDaoWrite() {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, dao);
 

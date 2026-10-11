@@ -32,7 +32,7 @@ class MonsterHuntFamilyDefinitionTest {
 	private static final int LAST_CONFIRM_ID = QuestDialogAction.SELECTED_QUEST_NOREWARD.id();
 
 	@Test
-	void packagedProductionDirectoryCompilesTheThreeHuntOwners() throws Exception {
+	void packagedProductionDirectoryCompilesTheThreeHuntOwners() {
 		QuestCatalog catalog = ProductionQuestDefinitions.catalog();
 		// 1112 已迁到原版驱动（XML 退役、定义由 overlay 提供）：判据统一落在生产视图。
 		// 1112 is retail-driven now; every owner is present in the production view.
@@ -42,7 +42,7 @@ class MonsterHuntFamilyDefinitionTest {
 	}
 
 	@Test
-	void mushroomThievesKillChainAdvancesVar0OneStepPerKill() throws Exception {
+	void mushroomThievesKillChainAdvancesVar0OneStepPerKill() {
 		CompiledQuestDefinition compiled = definition(1113);
 		assertEquals(Set.of(210262, 210675), killNpcIds(compiled));
 		List<QuestTransition> kills = kills(compiled);
@@ -65,7 +65,7 @@ class MonsterHuntFamilyDefinitionTest {
 	}
 
 	@Test
-	void thinningWorgsKillChainAdvancesVar0OneStepPerKill() throws Exception {
+	void thinningWorgsKillChainAdvancesVar0OneStepPerKill() {
 		CompiledQuestDefinition compiled = definition(1120);
 		assertEquals(Set.of(210142, 210143), killNpcIds(compiled));
 		assertEquals(18, kills(compiled).size());
@@ -78,7 +78,7 @@ class MonsterHuntFamilyDefinitionTest {
 	}
 
 	@Test
-	void toFishInPeaceUsesTwoIndependentSixBitKillCounts() throws Exception {
+	void toFishInPeaceUsesTwoIndependentSixBitKillCounts() {
 		CompiledQuestDefinition compiled = definition(1112);
 		assertEquals(Set.of(210259, 210260, 210065, 210066), killNpcIds(compiled));
 		List<QuestTransition> kills = kills(compiled);
@@ -111,7 +111,7 @@ class MonsterHuntFamilyDefinitionTest {
 	}
 
 	@Test
-	void completionRewardsCarrySelectableItemsAndFixedRewards() throws Exception {
+	void completionRewardsCarrySelectableItemsAndFixedRewards() {
 		CompiledQuestDefinition mushroom = definition(1113);
 		Map<Integer, List<QuestAction>> mushroomOptions = completionActions(mushroom);
 		assertEquals(completionIds(2), mushroomOptions.keySet());
@@ -174,7 +174,7 @@ class MonsterHuntFamilyDefinitionTest {
 	}
 
 	@Test
-	void productionCatalogDoesNotRetainTheLegacyMonsterHuntOwners() throws Exception {
+	void productionCatalogDoesNotRetainTheLegacyMonsterHuntOwners() {
 		assertFalse(legacyScriptDataExists(), "quest_script_data directory must be fully removed");
 	}
 
