@@ -212,7 +212,7 @@ public class OutpostService {
 	 */
 	public void captureArtifact(int id, Race race) {
 		// 占领神器。 / Capture Artifact.
-		SiegeRace sr = null;
+		SiegeRace sr ;
 		if (race == Race.ASMODIANS) {
 			sr = SiegeRace.ASMODIANS;
 		} else if (race == Race.ELYOS) {

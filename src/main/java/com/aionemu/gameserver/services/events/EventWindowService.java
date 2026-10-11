@@ -102,7 +102,7 @@ public class EventWindowService {
 	 */
 	public void initialize() {
 		Map<Integer, EventsWindow> events = allEvents();
-		if (events.size() != 0) {
+		if (!events.isEmpty()) {
 			for (EventsWindow eventsWindow : events.values()) {
 				log.info(I18n.get("log.4a260e6153da", eventsWindow.getPeriodStart(), eventsWindow.getPeriodEnd()));
 			}

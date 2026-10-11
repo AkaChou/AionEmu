@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
@@ -105,7 +104,7 @@ public class AccountService {
 	 */
 	public static Account getAccount(int accountId, String accountName, AccountTime accountTime, byte accessLevel,
 			byte membership, long toll, long luna, byte vipLevel, long vipExp, long vipExpireTime) {
-		log.debug("[AS] request for account: " + accountId);
+		log.debug("[AS] request for account: {}", accountId);
 
 		Account account = accountsMap.get(accountId);
 		if (account == null) {

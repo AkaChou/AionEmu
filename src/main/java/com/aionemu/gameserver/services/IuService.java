@@ -191,15 +191,7 @@ public class IuService {
 		return activeConcert.containsKey(id);
 	}
 
-	/**
-	 * 获取当前激活的演唱会映射。
-	 * Returns the map of active concerts.
-	 * @return 激活演唱会 / active concerts
-	 */
-	public Map<Integer, Iu<?>> getActiveIu() {
-		return activeConcert;
-	}
-
+	
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.

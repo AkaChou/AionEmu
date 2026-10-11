@@ -78,9 +78,8 @@ public class PigPoppyEventService {
 	 * Schedules the Pig Poppy event from configured cron.
 	 */
 	public static void ScheduleCron() {
-		GameCronServices.cronService().schedule(() -> {
-			startEvent(); // To change body of generated methods, choose Tools | Templates.
-		}, PIG_POPPY_EVENT_SCHEDULE);
+		// To change body of generated methods, choose Tools | Templates.
+		GameCronServices.cronService().schedule(PigPoppyEventService::startEvent, PIG_POPPY_EVENT_SCHEDULE);
 		log.info(I18n.get("log.5df8f3db8e1d", EventsConfig.PIG_POPPY_EVENT_SCHEDULE));
 	}
 
@@ -96,9 +95,8 @@ public class PigPoppyEventService {
 		}
 		initPigAsmo();
 		initPigEly();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			endEvent(); // To change body of generated methods, choose Tools | Templates.
-		}, 30 * 60 * 1000);
+        // To change body of generated methods, choose Tools | Templates.
+        GameThreadPoolServices.threadPoolManager().schedule(PigPoppyEventService::endEvent, 30 * 60 * 1000);
 	}
 
 	/**

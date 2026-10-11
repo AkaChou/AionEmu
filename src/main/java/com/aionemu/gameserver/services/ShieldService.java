@@ -10,9 +10,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
-import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
 import com.aionemu.gameserver.controllers.observer.ShieldObserver;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -44,7 +42,7 @@ public class ShieldService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final ShieldService getInstance() {
+	public static ShieldService getInstance() {
 		ObjectProvider<ShieldService> provider = instanceProvider;
 		ShieldService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -93,12 +91,12 @@ public class ShieldService {
 	public void spawnAll() {
 		for (Shield shield : sphereShields.values()) {
 			shield.spawn();
-			log.debug("Added " + shield.getName() + " at m=" + shield.getWorldId() + ",x=" + shield.getX() + ",y="
-					+ shield.getY() + ",z=" + shield.getZ());
+			log.debug("Added {} at m={},x={},y={},z={}", shield.getName(), shield.getWorldId(), shield.getX(),
+					shield.getY(), shield.getZ());
 		}
 		for (List<SiegeShield> otherShields : registeredShields.values()) {
 			for (SiegeShield shield : otherShields)
-				log.debug("Not bound shield " + shield.getGeometry().getName());
+				log.debug("Not bound shield {}", shield.getGeometry().getName());
 		}
 	}
 
@@ -115,22 +113,7 @@ public class ShieldService {
 		return null;
 	}
 
-	/**
-	 * 按攻城几何护盾创建碰撞死亡观察者（受 GEO 开关控制）。
-	 * Creates a collision-die observer for a siege geo shield (gated by GEO config).
-	 * @param geoShield 攻城几何护盾 / siege geo shield
-	 * @param observed 被观察生物 / observed creature
-	 * @return 观察者，未启用时为 null / observer, or null if disabled
-	 */
-	public ActionObserver createShieldObserver(SiegeShield geoShield, Creature observed) {
-		ActionObserver observer = null;
-		if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
-			observer = new CollisionDieActor(observed, geoShield.getGeometry());
-			((CollisionDieActor) observer).setEnabled(true);
-		}
-		return observer;
-	}
-
+	
 	/**
 	 * 向指定世界注册攻城护盾。
 	 * Registers a siege shield for the given world.
@@ -155,7 +138,7 @@ public class ShieldService {
 		List<SiegeShield> mapShields = registeredShields.get(location.getTemplate().getWorldId());
 		if (mapShields == null)
 			return;
-		ZoneInstance zone = location.getZone().get(0);
+		ZoneInstance zone = location.getZone().getFirst();
 		List<SiegeShield> shields = new ArrayList<>();
 		for (int index = mapShields.size() - 1; index >= 0; index--) {
 			SiegeShield shield = mapShields.get(index);
@@ -170,7 +153,7 @@ public class ShieldService {
 				shield.setSiegeLocationId(location.getLocationId());
 			}
 		}
-		if (shields.size() == 0) {
+		if (shields.isEmpty()) {
 			log.warn(I18n.get("log.da634bb6f328", location.getLocationId()));
 		} else {
 			location.setShields(shields);

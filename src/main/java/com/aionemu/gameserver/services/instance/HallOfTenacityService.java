@@ -50,9 +50,9 @@ public class HallOfTenacityService {
 		if (AutoGroupConfig.HALL_OF_TENACITY_ENABLED) {
 			log.info(I18n.get("log.9b3ac2974711"));
 			// 坚韧大厅 周六/日 09:00–17:00 / Hall Of Tenacity SAT-SUN "9AM-5PM"
-            GameCronServices.cronService().schedule(() -> startHallOfTenacityRegistration(), AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
+            GameCronServices.cronService().schedule(this::startHallOfTenacityRegistration, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
 			// 坚韧大厅 周一至周五 18:00–00:00 / Hall Of Tenacity MON-TUE-WED-THU-FRI "6PM-0AM"
-            GameCronServices.cronService().schedule(() -> startHallOfTenacityRegistration(), AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_EVENING);
+            GameCronServices.cronService().schedule(this::startHallOfTenacityRegistration, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_EVENING);
 		}
 	}
 

@@ -180,7 +180,7 @@ public class DropRegistrationService {
 		if (player.getPet() != null && player.getPet().getPetTemplate().getPetFunction(PetFunctionType.LOOT) != null && player.getPet().getCommonData().isLooting()) {
 			PacketSendUtility.sendPacket(player, new SM_PET(true, npcObjId));
 			Set<DropItem> drops = getCurrentDropMap().get(npcObjId);
-			if (drops == null || drops.size() == 0) {
+			if (drops == null || drops.isEmpty()) {
 				npc.getController().onDelete();
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
@@ -189,7 +189,7 @@ public class DropRegistrationService {
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_PET(false, npcObjId));
-			if (drops == null || drops.size() == 0) {
+			if (drops == null || drops.isEmpty()) {
 				return;
 			}
 		}
@@ -197,7 +197,7 @@ public class DropRegistrationService {
 				&& !MinionService.rejectIfMinionFunctionExpired(player)) {
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, true));
 			Set<DropItem> drops = getCurrentDropMap().get(npcObjId);
-			if (drops == null || drops.size() == 0) {
+			if (drops == null || drops.isEmpty()) {
 				npc.getController().onDelete();
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[drops.size()]);
@@ -206,7 +206,7 @@ public class DropRegistrationService {
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, false));
-			if (drops == null || drops.size() == 0) {
+			if (drops == null || drops.isEmpty()) {
 				return;
 			}
 		}

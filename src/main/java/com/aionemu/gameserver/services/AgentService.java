@@ -280,15 +280,7 @@ public class AgentService {
 		return activeFights.containsKey(id);
 	}
 
-	/**
-	 * 返回当前活跃的代理人战斗映射。
-	 * Return the map of currently active agent fights.
-	 * @return 地点 ID → 战斗实例 / location id to fight instance
-	 */
-	public Map<Integer, AgentFight<?>> getActiveFights() {
-		return activeFights;
-	}
-
+	
 	/**
 	 * 返回代理人战斗持续时长（小时，来自配置）。
 	 * Return agent fight duration in hours (from config).

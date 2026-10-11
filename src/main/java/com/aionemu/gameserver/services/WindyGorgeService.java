@@ -41,7 +41,7 @@ public class WindyGorgeService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final WindyGorgeService getInstance() {
+	public static WindyGorgeService getInstance() {
 		ObjectProvider<WindyGorgeService> provider = instanceProvider;
 		WindyGorgeService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

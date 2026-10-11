@@ -80,7 +80,7 @@ public class AnnouncementService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final AnnouncementService getInstance() {
+	public static AnnouncementService getInstance() {
 		ObjectProvider<AnnouncementService> provider = instanceProvider;
 		AnnouncementService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -97,7 +97,7 @@ public class AnnouncementService {
 	 */
 	public void reload() {
 		// 取消全部任务 / Cancel all tasks
-		if (delays != null && delays.size() > 0) {
+		if (delays != null && !delays.isEmpty()) {
 			for (Future<?> delay : delays) {
 				delay.cancel(false);
 			}

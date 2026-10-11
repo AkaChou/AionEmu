@@ -46,7 +46,7 @@ public class WeatherService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final WeatherService getInstance() {
+	public static WeatherService getInstance() {
 		ObjectProvider<WeatherService> provider = instanceProvider;
 		WeatherService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -73,8 +73,8 @@ public class WeatherService {
 	public WeatherService() {
 		worldZoneWeathers = new HashMap<>();
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
-		for (Iterator<WorldMapTemplate> mapIterator = DataManager.WORLD_MAPS_DATA.iterator(); mapIterator.hasNext();) {
-			int mapId = mapIterator.next().getMapId();
+		for (WorldMapTemplate mapTemplate : DataManager.WORLD_MAPS_DATA) {
+			int mapId = mapTemplate.getMapId();
 			WeatherTable table = DataManager.MAP_WEATHER_DATA.getWeather(mapId);
 			if (table != null) {
 				WeatherKey key = new WeatherKey(gameTime, mapId);
@@ -140,7 +140,7 @@ public class WeatherService {
 		key.created = (GameTime) GameTimeManager.getGameTime().clone();
 		for (int zoneIndex = 0; zoneIndex < weatherEntries.length; zoneIndex++) {
 			WeatherEntry oldEntry = weatherEntries[zoneIndex];
-			WeatherEntry newEntry = null;
+			WeatherEntry newEntry ;
 			if (oldEntry == null) {
 				newEntry = getRandomWeather(key.getCreatedTime(), table, zoneIndex + 1);
 			} else {
@@ -186,14 +186,14 @@ public class WeatherService {
 					chosenWeather.add(entry);
 				}
 			}
-			if (chosenWeather.size() > 0) {
+			if (!chosenWeather.isEmpty()) {
 				attRanking = -1;
 				break;
 			}
 			attRanking--;
 		}
-		WeatherEntry newWeather = null;
-		if (chosenWeather.size() == 0) {
+		WeatherEntry newWeather;
+		if (chosenWeather.isEmpty()) {
 			newWeather = clearWeather(zoneId);
 		} else {
 			newWeather = chosenWeather.get(Rnd.get(chosenWeather.size()));

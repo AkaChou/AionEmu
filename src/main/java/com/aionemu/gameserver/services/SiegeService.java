@@ -50,7 +50,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_ARTIFACT_INFO3
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORTRESS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORTRESS_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INFLUENCE_RATIO;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_RIFT_ANNOUNCE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHIELD_EFFECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -61,7 +60,6 @@ import com.aionemu.gameserver.services.siegeservice.SiegeAutoRace;
 import com.aionemu.gameserver.services.siegeservice.SiegeException;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldType;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -180,10 +178,10 @@ public class SiegeService {
 		reloadSchedule();
 		for (ArtifactLocation artifact : artifacts.values()) {
 			if (artifact.isStandAlone()) {
-				log.debug("Starting siege of artifact #" + artifact.getLocationId());
+				log.debug("Starting siege of artifact #{}", artifact.getLocationId());
 				startSiege(artifact.getLocationId());
 			} else {
-				log.debug("Artifact #" + artifact.getLocationId() + " siege was not started, it belongs to fortress");
+				log.debug("Artifact #{} siege was not started, it belongs to fortress", artifact.getLocationId());
 			}
 		}
 		updateFortressNextState();
@@ -257,10 +255,10 @@ public class SiegeService {
 	 * siege location id
 	 */
 	public void stopSiege(int siegeLocationId) {
-		log.debug("Stopping siege of siege location: " + siegeLocationId);
+		log.debug("Stopping siege of siege location: {}", siegeLocationId);
 		Siege<?> siege = activeSieges.remove(siegeLocationId);
 		if (siege == null) {
-			log.debug("Siege of siege location " + siegeLocationId + " is not in progress, it was captured earlier?");
+			log.debug("Siege of siege location {} is not in progress, it was captured earlier?", siegeLocationId);
 			return;
 		}
 		if (siege.isFinished()) {
@@ -280,12 +278,8 @@ public class SiegeService {
 		Map<Integer, List<Trigger>> siegeIdToStartTriggers = Maps.newHashMap();
 		for (Map.Entry<Runnable, JobDetail> entry : siegeStartRunables.entrySet()) {
 			SiegeStartRunnable fssr = (SiegeStartRunnable) entry.getKey();
-			List<Trigger> storage = siegeIdToStartTriggers.get(fssr.locationId());
-			if (storage == null) {
-				storage = Lists.newArrayList();
-				siegeIdToStartTriggers.put(fssr.locationId(), storage);
-			}
-			storage.addAll(GameCronServices.cronService().getJobTriggers(entry.getValue()));
+			siegeIdToStartTriggers.computeIfAbsent(fssr.locationId(), _ -> Lists.newArrayList())
+				.addAll(GameCronServices.cronService().getJobTriggers(entry.getValue()));
 		}
 		for (Map.Entry<Integer, List<Trigger>> entry : siegeIdToStartTriggers.entrySet()) {
 			List<Date> nextFireDates = Lists.newArrayListWithCapacity(entry.getValue().size());
@@ -293,7 +287,7 @@ public class SiegeService {
 				nextFireDates.add(trigger.getNextFireTime());
 			}
 			Collections.sort(nextFireDates);
-			Date nextSiegeDate = nextFireDates.get(0);
+			Date nextSiegeDate = nextFireDates.getFirst();
 			Calendar siegeStartHour = Calendar.getInstance();
 			siegeStartHour.setTime(nextSiegeDate);
 			siegeStartHour.set(Calendar.MINUTE, 0);
@@ -350,19 +344,10 @@ public class SiegeService {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.SECOND, siege.getSiegeLocation().getSiegeDuration());
 		int result = (int) ((calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
-		return result > 0 ? result : 0;
+		return Math.max(result, 0);
 	}
 
-	/**
-	 * 按地点对象获取进行中的攻城实例。
-	 * Returns the active siege instance for the location object.
-	 * @param loc 攻城地点 / siege location
-	 * siege instance
-	 */
-	public Siege<?> getSiege(SiegeLocation loc) {
-		return activeSieges.get(loc.getLocationId());
-	}
-
+	
 	/**
 	 * 按 ID 获取进行中的攻城实例。
 	 * Returns the active siege instance by location id.
@@ -440,22 +425,7 @@ public class SiegeService {
 		return locations.get(locationId);
 	}
 
-	/**
-	 * 获取指定世界内的攻城地点。
-	 * Returns siege locations within the given world.
-	 * 世界 ID / world id
-	 * locations map
-	 */
-	public Map<Integer, SiegeLocation> getSiegeLocations(int worldId) {
-		Map<Integer, SiegeLocation> mapLocations = new HashMap<>();
-		for (SiegeLocation location : getSiegeLocations().values()) {
-			if (location.getWorldId() == worldId) {
-				mapLocations.put(location.getLocationId(), location);
-			}
-		}
-		return mapLocations;
-	}
-
+	
 	protected Siege<?> newSiege(int siegeLocationId) {
 		if (fortresses.containsKey(siegeLocationId)) {
 			return new FortressSiege(fortresses.get(siegeLocationId), siegeDAO);
@@ -532,14 +502,7 @@ public class SiegeService {
 		return false;
 	}
 
-	/**
-	 * 向全服广播攻城状态更新。
-	 * Broadcasts siege status update to all players.
-	 */
-	public void broadcastUpdate() {
-		broadcast(new SM_SIEGE_LOCATION_INFO(), null);
-	}
-
+	
 	/**
 	 * 广播单个地点的攻城状态更新。
 	 * Broadcasts siege status update for a single location.
@@ -591,15 +554,6 @@ public class SiegeService {
 		});
 	}
 
-	private void broadcast(final SM_RIFT_ANNOUNCE rift, final SM_SYSTEM_MESSAGE info) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-			PacketSendUtility.sendPacket(player, rift);
-			if (info != null && player.getWorldType().equals(WorldType.BALAUREA)
-					|| info != null && player.getWorldType().equals(WorldType.PANESTERRA)) {
-				PacketSendUtility.sendPacket(player, info);
-			}
-		});
-	}
 
 	/**
 	 * 玩家登录时下发攻城相关信息。
@@ -643,31 +597,7 @@ public class SiegeService {
 	public void onWeatherChanged(WeatherEntry entry) {
 	}
 
-	/**
-	 * 将地点 ID 映射为要塞 ID。
-	 * Maps a location id to its fortress id.
-	 * location id
-	 * fortress id
-	 */
-	public int getFortressId(int locId) {
-        return switch (locId) {
-            case 49, 61 -> 1011;
-            case 36, 54 -> 1131;
-            case 37, 55 -> 1132;
-            case 39, 56 -> 1141;
-            case 45, 57, 72, 75 -> 1221;
-            case 46, 58, 73, 76 -> 1231;
-            case 47, 59, 74, 77 -> 1241;
-            // 4.7
-            case 102 -> 7011;
-            case 103 -> 10111;
-            case 104 -> 10211;
-            case 105 -> 10311;
-            case 106 -> 10411;
-            default -> 0;
-        };
-    }
-
+	
 	/**
 	 * 攻城启动任务，到点触发指定要塞攻城。
 	 * Siege start runnable triggering a fortress siege when due.

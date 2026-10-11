@@ -1350,13 +1350,7 @@ public class LegionService {
 		return allCachedLegionMembers;
 	}
 
-	/**
-	 * 供成员域读取军团缓存 / exposes the legion cache to the member domain.
-	 */
-	LegionContainer allCachedLegions() {
-		return allCachedLegions;
-	}
-
+	
 	/**
 	 * 返回当前全部已缓存军团的快照列表。
 	 * Returns a snapshot list of all currently cached legions.

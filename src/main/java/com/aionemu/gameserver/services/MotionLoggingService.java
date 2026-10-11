@@ -81,7 +81,7 @@ public class MotionLoggingService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final MotionLoggingService getInstance() {
+	public static MotionLoggingService getInstance() {
 		ObjectProvider<MotionLoggingService> provider = instanceProvider;
 		MotionLoggingService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -114,7 +114,7 @@ public class MotionLoggingService {
 	 * distance
 	 */
 	public void logTime(Player player, SkillTemplate sk, int clientTime, double distance) {
-		int currentAttackSpeed = 0;
+		int currentAttackSpeed ;
 		if (!started) {
 			return;
 		}
@@ -348,7 +348,7 @@ public class MotionLoggingService {
 	 * 按基础值/上限/给定攻速重算时间。 / method used to recalculate time to base, cap or given attackspeed.
 	 */
 	private int recalculate(String method, WeaponTypeWrapper weapon, int attackSpeed, int time) {
-		int finalTime = 0;
+		int finalTime ;
 		TreeMap<WeaponType, float[]> list = new TreeMap<>();
 
 		float[] mace1h = { 750f, 1500f };
@@ -382,14 +382,14 @@ public class MotionLoggingService {
 
 		float speed = 0;
 		if (method.equalsIgnoreCase("base")) {
-			speed = list.get(weapon.getMainHand())[1];
-			if (weapon.getOffHand() != null) {
-				speed += (list.get(weapon.getOffHand())[1] * 0.25);
+			speed = list.get(weapon.mainHand())[1];
+			if (weapon.offHand() != null) {
+				speed += (list.get(weapon.offHand())[1] * 0.25);
 			}
 		} else if (method.equalsIgnoreCase("cap")) {
-			speed = list.get(weapon.getMainHand())[0];
-			if (weapon.getOffHand() != null) {
-				speed += (list.get(weapon.getOffHand())[0] * 0.25);
+			speed = list.get(weapon.mainHand())[0];
+			if (weapon.offHand() != null) {
+				speed += (list.get(weapon.offHand())[0] * 0.25);
 			}
 		} else {
 			try {
@@ -426,11 +426,11 @@ public class MotionLoggingService {
 				}
 				// 遍历武器类型 / loop through weaponType
 				for (Entry<WeaponTypeWrapper, List<SkillTime>> entry2 : entry.getValue().getMotionLog().entrySet()) {
-					String weaponType = (entry2.getKey().getMainHand() != null
-							? entry2.getKey().getMainHand().toString()
+					String weaponType = (entry2.getKey().mainHand() != null
+							? entry2.getKey().mainHand().toString()
 							: "null");
-					String offWeaponType = (entry2.getKey().getOffHand() != null
-							? entry2.getKey().getOffHand().toString()
+					String offWeaponType = (entry2.getKey().offHand() != null
+							? entry2.getKey().offHand().toString()
 							: "null");
 					// 设置武器类型 / set weapon_type
 					stmt.setString(2, weaponType);
@@ -506,15 +506,7 @@ public class MotionLoggingService {
 		}
 	}
 
-	/**
-	 * 清空内存后从数据库重新加载动作时间。
-	 * Clears memory and reloads motion times from the database.
-	 */
-	public void reloadFromSql() {
-		this.clearMotions();
-		this.loadFromSql();
-	}
-
+	
 	private void clearMotions() {
 		for (MotionLog mLog : this.motionsMap.values()) {
 			mLog.getMotionLog().clear();
@@ -743,7 +735,7 @@ public class MotionLoggingService {
 			for (Entry<WeaponTypeWrapper, List<Integer>> entry2 : values.entrySet()) {
 				// 按 weaponType 计算一个值的逻辑 / logic to calculate one value per weaponType
 				// 统计出现次数最多的元素 / count the element with the most occurencies
-				int finalValue = 0;
+				int finalValue ;
 				int maxFrequency = 0;
 				int value = 0;
 				int total = 0;

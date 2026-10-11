@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.Iterator;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,7 @@ public class NpcShoutsService {
 				continue;
 			}
 			final List<NpcShout> shouts = shoutsCache.getNpcShouts(worldId, npcId, ShoutEventType.IDLE, null, 0);
-			if (shouts.size() == 0) {
+			if (shouts.isEmpty()) {
 				continue;
 			}
 			int defaultPollDelay = Rnd.get(180, 360) * 1000;
@@ -75,9 +74,7 @@ public class NpcShoutsService {
 							.onPatternShout(ShoutEventType.IDLE, shout.getPattern(), 0)) {
 						return;
 					}
-					Iterator<Player> iter = npc2.getKnownList().getKnownPlayers().values().iterator();
-					while (iter.hasNext()) {
-						Player kObj = iter.next();
+					for (Player kObj : npc2.getKnownList().getKnownPlayers().values()) {
 						if (kObj.getLifeStats().isAlreadyDead()) {
 							return;
 						}
@@ -118,7 +115,7 @@ public class NpcShoutsService {
 				shout(owner, target, shouts.get(randomShout), delaySeconds);
 			}
 		} else if (shouts.size() == 1)
-			shout(owner, target, shouts.get(0), delaySeconds);
+			shout(owner, target, shouts.getFirst(), delaySeconds);
 	}
 
 	/**
@@ -268,7 +265,7 @@ public class NpcShoutsService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final NpcShoutsService getInstance() {
+	public static NpcShoutsService getInstance() {
 		ObjectProvider<NpcShoutsService> provider = instanceProvider;
 		NpcShoutsService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

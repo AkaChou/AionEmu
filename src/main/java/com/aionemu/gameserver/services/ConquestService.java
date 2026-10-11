@@ -173,16 +173,7 @@ public class ConquestService {
 		return activeConquest.containsKey(id);
 	}
 
-	/**
-	 * 返回当前活跃的征服/供奉映射。
-	 * Return the map of currently active conquest/offering events.
-	 *
-	 * @return 地点 ID → 活动实例 / location id to event instance
-	 */
-	public Map<Integer, ConquestOffering<?>> getActiveConquest() {
-		return activeConquest;
-	}
-
+	
 	/**
 	 * 返回征服/供奉持续时长（小时，来自配置）。
 	 * Return conquest/offering duration in hours (from config).

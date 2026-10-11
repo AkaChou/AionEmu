@@ -144,7 +144,7 @@ public class AtreianPassportService {
 	 */
 	public void onStart() {
 		Map<Integer, AtreianPassport> raw = DataManager.ATREIAN_PASSPORT_DATA.getAll();
-		if (raw.size() != 0) {
+		if (!raw.isEmpty()) {
 			getPassports(raw);
 		} else {
 			log.warn(I18n.get("log.2ea564e44e72"));

@@ -70,10 +70,10 @@ final class BattlegroundLadder {
 			dao.addLoss(pl);
 			avgLoserRating += dao.getRating(pl);
 		}
-		if (winner.size() > 0) {
+		if (!winner.isEmpty()) {
 			avgWinnerRating = avgWinnerRating / winner.size();
 		}
-		if (loser.size() > 0) {
+		if (!loser.isEmpty()) {
 			avgLoserRating = avgLoserRating / loser.size();
 		}
 		int ratingChange = calcRatingChange(avgWinnerRating, avgLoserRating);

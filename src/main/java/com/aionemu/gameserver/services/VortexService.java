@@ -287,15 +287,7 @@ public class VortexService {
 		return activeInvasions.containsKey(id);
 	}
 
-	/**
-	 * 获取进行中的入侵实例映射。
-	 * Returns the map of active invasion instances.
-	 * @return 活动实例映射 / active instances map
-	 */
-	public Map<Integer, DimensionalVortex<?>> getActiveInvasions() {
-		return activeInvasions;
-	}
-
+	
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
@@ -333,21 +325,7 @@ public class VortexService {
 		}
 	}
 
-	/**
-	 * 判断玩家是否为当前入侵方成员。
-	 * Checks whether the player is an invader in an active invasion.
-	 * @param player 玩家 / player
-	 * @return 是否入侵方 / whether invader
-	 */
-	public boolean isInvaderPlayer(Player player) {
-		for (DimensionalVortex<?> invasion : activeInvasions.values()) {
-			if (invasion.getInvaders().containsKey(player.getObjectId())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
+	
 	/**
 	 * 判断玩家是否位于漩涡区域内。
 	 * Checks whether the player is inside a vortex zone.

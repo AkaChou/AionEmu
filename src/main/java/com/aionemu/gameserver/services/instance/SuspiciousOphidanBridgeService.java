@@ -50,7 +50,7 @@ public class SuspiciousOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_WARPATH_ENABLED) {
 			log.info(I18n.get("log.926526f1607c"));
 			// 奥菲丹战道 二/四 23:00–00:00 / Ophidan Warpath TUE-THU "11PM-00AM"
-            GameCronServices.cronService().schedule(() -> startSuspiciousOphidanRegistration(), AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startSuspiciousOphidanRegistration, AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
 		}
 	}
 

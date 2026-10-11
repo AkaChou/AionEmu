@@ -142,7 +142,7 @@ public class DisputeLandService {
 	}
 
 	private void broadcast() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> broadcast(player));
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(this::broadcast);
 	}
 
 	/**

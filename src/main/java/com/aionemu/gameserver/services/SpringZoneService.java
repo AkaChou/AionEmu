@@ -64,7 +64,7 @@ public class SpringZoneService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final SpringZoneService getInstance() {
+	public static SpringZoneService getInstance() {
 		ObjectProvider<SpringZoneService> provider = instanceProvider;
 		SpringZoneService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

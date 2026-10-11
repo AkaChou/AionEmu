@@ -202,19 +202,7 @@ public class StigmaService {
 		}
 	}
 
-	/**
-	 * 强化连结技能相关烙印技能等级。
-	 * Updates stigma skill levels for linked-skill enchant.
-	 * @param player 玩家 / player
-	 * @param enchantLevel 强化等级 / enchant level
-	 */
-	public static void enchanteLinkedSkill(Player player, int enchantLevel) {
-		for (PlayerSkillEntry skill : player.getSkillList().getStigmaSkills()) {
-			player.getSkillList().addStigmaSkill(player, skill.getSkillId(), 1 + enchantLevel + player.getStigmaSet());
-			PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getStigmaSkills()));
-		}
-	}
-
+	
 	/**
 	 * 移除套装加成后，按单件强化等级重建烙印技能。
 	 * After set-bonus removal, rebuilds stigma skills from per-item enchant levels.

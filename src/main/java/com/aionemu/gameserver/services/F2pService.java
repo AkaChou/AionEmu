@@ -80,7 +80,7 @@ public class F2pService {
 	public void onAddF2p(Player player, Integer minutes) {
 		boolean isGM = player.getAccessLevel() >= AdminConfig.GM_PANEL;
 		F2pAccount f2pAccount = new F2pAccount(
-				minutes == null ? 0 : (int) (System.currentTimeMillis() / 1000 + minutes.intValue() * 60));
+				minutes == null ? 0 : (int) (System.currentTimeMillis() / 1000 + minutes * 60));
 		player.getF2p().add(f2pAccount, true);
 		PacketSendUtility.sendPacket(player,
 				new SM_ACCOUNT_PROPERTIES(isGM, 0, 8, player.getF2p().getF2pAccount().getRemainingTime()));

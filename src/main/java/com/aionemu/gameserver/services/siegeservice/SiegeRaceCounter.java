@@ -88,11 +88,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	protected <K> void addToCounter(K key, int value, Map<K, AtomicLong> counterMap) {
 		AtomicLong counter;
 		synchronized (counterMap) {
-			counter = counterMap.get(key);
-			if (counter == null) {
-				counter = new AtomicLong();
-				counterMap.put(key, counter);
-			}
+			counter = counterMap.computeIfAbsent(key, k -> new AtomicLong());
 		}
 		counter.addAndGet(value);
 	}
@@ -138,7 +134,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 			}
 			tempList = Lists.newLinkedList(unorderedMap.entrySet());
 		}
-        Collections.sort(tempList, (o1, o2) -> Long.compare(o2.getValue().get(), o1.getValue().get()));
+        tempList.sort((o1, o2) -> Long.compare(o2.getValue().get(), o1.getValue().get()));
 		Map<K, Long> result = Maps.newLinkedHashMap();
 		for (Map.Entry<K, AtomicLong> entry : tempList) {
 			if (entry.getValue().get() > 0) {

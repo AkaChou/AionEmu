@@ -798,7 +798,7 @@ public class DeathmatchBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endDeathmatch(), getMatchLength() * 1000L));
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(this::endDeathmatch, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 

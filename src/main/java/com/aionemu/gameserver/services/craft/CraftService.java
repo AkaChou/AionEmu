@@ -176,7 +176,7 @@ public class CraftService {
 	public static void startAetherforging(final Player player, int recipeId, int craftType, int craftCount) {
 		final RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
 		final int productCount = Math.max(1, craftCount);
-		PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 3000, 0), true);
+		PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(recipeTemplate.getId(), 3000, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
@@ -186,7 +186,7 @@ public class CraftService {
 				}
 				player.getObserveController().removeObserver(this);
 				player.setCraftObserver(null);
-				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
+				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(recipeTemplate.getId(), 0, 1), true);
 			}
 		};
 		player.getObserveController().attach(observer);
@@ -198,7 +198,7 @@ public class CraftService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 				player.getObserveController().removeObserver(observer);
 				player.setCraftObserver(null);
-				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 1), true);
+				PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(recipeTemplate.getId(), 0, 1), true);
 				return;
 			}
 			if (Rnd.get(1, 10) == 10 && player.getSkillList().getSkillLevel(40011) != 300) {
@@ -209,7 +209,7 @@ public class CraftService {
 			player.getObserveController().removeObserver(observer);
 			player.setCraftObserver(null);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_SUCCESS_GETEXP);
-			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 0, 2));
+			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_ANIMATION(recipeTemplate.getId(), 0, 2));
 		}, 3000);
 	}
 

@@ -56,7 +56,7 @@ public class GameTimeService {
 	/**
 	 * 游戏时间广播间隔（毫秒）。 / Game-time broadcast interval in milliseconds.
 	 */
-	private final static int GAMETIME_UPDATE = 3 * 60000;
+	private static final int GAMETIME_UPDATE = 3 * 60000;
 
 	/**
 	 * 启动定时任务：向所有在线玩家发送游戏时间并保存。

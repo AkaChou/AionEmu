@@ -179,7 +179,7 @@ public class LifeStatsRestoreService {
 				int reduceFp = lifeStats.getOwner().getFlyState() == 2
 						&& lifeStats.getOwner().isInsideZoneType(ZoneType.FLY) ? 1 : 2;
 				if (costFp != null) {
-					reduceFp = costFp.intValue();
+					reduceFp = costFp;
 				}
 
 				lifeStats.reduceFp(reduceFp);

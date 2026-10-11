@@ -188,15 +188,7 @@ public class InstanceRiftService {
 		return activeInstanceRift.containsKey(id);
 	}
 
-	/**
-	 * 获取当前激活的副本裂隙映射。
-	 * Returns the map of active instance rifts.
-	 * active rifts
-	 */
-	public Map<Integer, RiftInstance<?>> getActiveInstanceRift() {
-		return activeInstanceRift;
-	}
-
+	
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.

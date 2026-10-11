@@ -51,7 +51,7 @@ public class LandingUpdateService {
 	 */
 	public void initResetQuestPoints() {
 		if (AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_ENABLED) {
-			GameCronServices.cronService().schedule(() -> resetQuestPoints(), () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
+			GameCronServices.cronService().schedule(this::resetQuestPoints, () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
 		}
 	}
 

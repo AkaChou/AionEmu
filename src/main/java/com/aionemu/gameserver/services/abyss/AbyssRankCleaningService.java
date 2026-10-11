@@ -123,7 +123,7 @@ public class AbyssRankCleaningService {
 			}
 		}
 
-		if (ToArray.size() > 0) {
+		if (!ToArray.isEmpty()) {
 			abyssRankDAO.removePlayer(ToArray);
 			GameCoreGameplayServices.abyssRankingCache().reloadRankings();
 			log.info(I18n.get("log.3ff8b7b008ed", ToArray.size(), (System.currentTimeMillis() - startTime) / 1000L));

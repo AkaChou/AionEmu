@@ -57,7 +57,7 @@ public class LimitedItemTradeService {
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
 			for (final LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
-				GameCronServices.cronService().schedule(() -> limitedItem.setToDefault(), limitedItem.getSalesTime());
+				GameCronServices.cronService().schedule(limitedItem::setToDefault, limitedItem.getSalesTime());
 			}
 		}
 		log.info(I18n.get("log.5a5db961d623", limitedTradeNpcs.size()));

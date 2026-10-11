@@ -156,13 +156,13 @@ public class HTMLService {
 		List<Guide> guides = getInstance().guideDAO.loadGuides(player.getObjectId());
 
 		for (Guide guide : guides) {
-			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
+			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.title());
 			if (template != null) {
 				if (template.isActivated()) {
 					sendData(player, guide.getGuideId(), getHTMLTemplate(template));
 				}
 			} else {
-				log.warn(I18n.get("log.c8c7b640eacd", guide.getTitle()));
+				log.warn(I18n.get("log.c8c7b640eacd", guide.title()));
 			}
 		}
 	}
@@ -186,7 +186,7 @@ public class HTMLService {
 		Guide guide = getInstance().guideDAO.loadGuide(player.getObjectId(), messageId);
 
 		if (guide != null) {
-			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.getTitle());
+			GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(guide.title());
 			if (template == null) {
 				return;
 			}

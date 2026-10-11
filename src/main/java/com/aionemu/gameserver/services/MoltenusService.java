@@ -253,15 +253,7 @@ public class MoltenusService {
 		return activeMoltenus.containsKey(id);
 	}
 
-	/**
-	 * 获取当前激活的熔岩领主战斗映射。
-	 * Returns the map of active Moltenus fights.
-	 * active fights
-	 */
-	public Map<Integer, MoltenusFight<?>> getActiveMoltenus() {
-		return activeMoltenus;
-	}
-
+	
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.

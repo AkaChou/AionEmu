@@ -50,7 +50,7 @@ public class KamarBattlefieldService {
 		if (AutoGroupConfig.KAMAR_ENABLED) {
 			log.info(I18n.get("log.f91ec0a50ddc"));
 			// 卡玛尔战场 周五 23:00–00:00 / Kamar Battlefield FRI "11PM-0AM"
-            GameCronServices.cronService().schedule(() -> startKamarRegistration(), AutoGroupConfig.KAMAR_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startKamarRegistration, AutoGroupConfig.KAMAR_SCHEDULE_MIDNIGHT);
 		}
 	}
 

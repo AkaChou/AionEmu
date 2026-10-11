@@ -80,6 +80,7 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
+		int apReward ;
 		if (!validateBuyItems(npc, tradeList, player)) {
 			PacketSendUtility.sendMessage(player, "Some items are not allowed to be sold by this npc.");
 			return false;
@@ -325,6 +326,7 @@ public class TradeService {
 		if (!RestrictionsManager.canTrade(player)) {
 			return false;
 		}
+		Item repurchaseItem;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
 			Item item = inventory.getItemByObjId(tradeItem.getItemId());
 			if (item == null) {
@@ -335,7 +337,6 @@ public class TradeService {
 						new SM_SYSTEM_MESSAGE(1300344, new DescriptionId(item.getNameId())));
 				return false;
 			}
-			Item repurchaseItem = null;
 			long sellReward = PricesService.getKinahForSell(item.getItemTemplate().getPrice(), player.getRace());
 			long realReward = sellReward * tradeItem.getCount();
 			if (!PlayerLimitService.updateSellLimit(player, realReward)) {
@@ -478,36 +479,7 @@ public class TradeService {
 		return true;
 	}
 
-	/**
-	 * 出售损坏物品以回收 AP。
-	 * Sells broken items to reclaim AP.
-	 * 玩家 / player
-	 * 交易列表 / trade list
-	 * whether successful
-	 */
-	public static boolean performSellBrokenAPItems(Player player, TradeList tradeList) {
-		int apReward = 0;
-		if (!RestrictionsManager.canTrade(player)) {
-			return false;
-		}
-		Storage inventory = player.getInventory();
-		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			int itemObjectId = tradeItem.getItemId();
-			long count = tradeItem.getCount();
-			Item item = inventory.getItemByObjId(itemObjectId);
-			if (item == null) {
-				return false;
-			}
-			int itemId = item.getItemId();
-			if (inventory.decreaseByItemId(itemId, count)) {
-				int templateAP = (item.getItemTemplate().getAcquisition().getRequiredAp() * (int) count) / 5;
-				apReward += templateAP;
-			}
-		}
-		AbyssPointsService.addAp(player, apReward);
-		return true;
-	}
-
+	
 		/**
 	 * 按模板配置向商店出售物品换取基纳。
 	 * Sells items to a shop for Kinah using trade template pricing.

@@ -223,12 +223,12 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
 						itemPacked, newId, 0, itemPacked, requireLevel, unSeal, isEnhance, enhanceSkillId,
 						enhanceSkillEnchant);
-				if (manastones.size() > 0) {
+				if (!manastones.isEmpty()) {
 					for (int[] stone : manastones) {
 						ItemSocketService.addManaStone(item, stone[0], stone[1]);
 					}
 				}
-				if (fusions.size() > 0) {
+				if (!fusions.isEmpty()) {
 					for (int[] stone : fusions) {
 						ItemSocketService.addFusionStone(item, stone[0], stone[1]);
 					}
@@ -310,12 +310,12 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
 						itemPacked, newId, 0, itemPacked, requireLevel, unSeal, isEnhance, enhanceSkillId,
 						enhanceSkillEnchant);
-				if (manastones.size() > 0) {
+				if (!manastones.isEmpty()) {
 					for (int[] stone : manastones) {
 						ItemSocketService.addManaStone(item, stone[0], stone[1]);
 					}
 				}
-				if (fusions.size() > 0) {
+				if (!fusions.isEmpty()) {
 					for (int[] stone : fusions) {
 						ItemSocketService.addFusionStone(item, stone[0], stone[1]);
 					}
@@ -415,7 +415,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		cnt = readD();
 		textLog.info("PlayerSkillList:" + cnt);
 		player.setSkillList(new PlayerSkillList());
-		boolean rsCheck = rsList.size() > 0;
+		boolean rsCheck = !rsList.isEmpty();
 		for (int a = 0; a < cnt; a++) { // skills
 			int skillId = readD();
 			int skillLvl = readD();

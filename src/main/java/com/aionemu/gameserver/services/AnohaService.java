@@ -336,15 +336,7 @@ public class AnohaService {
 		return activeAnoha.containsKey(id);
 	}
 
-	/**
-	 * 返回当前活跃的阿诺哈活动映射。
-	 * Return the map of currently active Anoha events.
-	 * @return 地点 ID → 活动实例 / location id to event instance
-	 */
-	public Map<Integer, BerserkAnoha<?>> getActiveAnoha() {
-		return activeAnoha;
-	}
-
+	
 	/**
 	 * 返回阿诺哈活动持续时长（小时，来自配置）。
 	 * Return Anoha event duration in hours (from config).

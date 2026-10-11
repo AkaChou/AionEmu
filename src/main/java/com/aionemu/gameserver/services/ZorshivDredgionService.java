@@ -336,15 +336,7 @@ public class ZorshivDredgionService {
 		return activeZorshivDredgion.containsKey(id);
 	}
 
-	/**
-	 * 获取进行中的无畏舰实例映射。
-	 * Returns the map of active dredgion instances.
-	 * @return 活动实例映射 / active instances map
-	 */
-	public Map<Integer, ZorshivDredgion<?>> getActiveZorshivDredgion() {
-		return activeZorshivDredgion;
-	}
-
+	
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.

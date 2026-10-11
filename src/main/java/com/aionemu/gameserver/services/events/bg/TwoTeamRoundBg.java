@@ -122,7 +122,7 @@ public abstract class TwoTeamRoundBg extends Battleground {
 	public void onLeave(Player player, boolean isLogout, boolean isAfk) {
 		super.onLeaveDefault(player, isLogout, isAfk);
 		for (PlayerGroup group : super.getGroups()) {
-			if (group.size() < 1) {
+			if (group.isEmpty()) {
 				endTwoTeamMatch(false);
 				break;
 			}
@@ -158,7 +158,7 @@ public abstract class TwoTeamRoundBg extends Battleground {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			endCalled = false;
 			for (PlayerGroup group : getGroups()) {
-				if (group.size() < 1) {
+				if (group.isEmpty()) {
 					endTwoTeamMatch(false);
 				}
 			}

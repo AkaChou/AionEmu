@@ -34,7 +34,7 @@ public class DebugService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final DebugService getInstance() {
+	public static DebugService getInstance() {
 		ObjectProvider<DebugService> provider = instanceProvider;
 		DebugService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -59,7 +59,7 @@ public class DebugService {
 	 * Starts the periodic player-health check task.
 	 */
 	public DebugService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> analyzeWorldPlayers(), ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::analyzeWorldPlayers, ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
 		log.info(I18n.get("log.c0807adf5cd7", ANALYZE_PLAYERS_INTERVAL));
 	}
 

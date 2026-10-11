@@ -84,7 +84,7 @@ public class ShugoSweepService {
 	public void initShugoSweep() {
 		log.info(I18n.get("log.a06db47829be"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(() -> playerShugoSweepDAO.delete(), weekly);
+		GameCronServices.cronService().schedule(playerShugoSweepDAO::delete, weekly);
 	}
 
 	/**

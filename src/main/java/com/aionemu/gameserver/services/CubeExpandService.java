@@ -149,7 +149,7 @@ public class CubeExpandService {
 			if (qs.getQuestState(q) != null && qs.getQuestState(q).getStatus().equals(QuestStatus.COMPLETE))
 				result++;
 		}
-		return result > 2 ? 2 : result;
+		return Math.min(result, 2);
 	}
 
 	/**

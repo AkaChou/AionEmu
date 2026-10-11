@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -24,7 +23,6 @@ import com.aionemu.gameserver.services.conquerors.Conqueror;
 import com.aionemu.gameserver.services.conquerors.ConquerorBuffs;
 import com.aionemu.gameserver.services.protectors.Protector;
 import com.aionemu.gameserver.services.protectors.ProtectorBuffs;
-import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Map;
@@ -81,7 +79,7 @@ public class ProtectorConquerorService {
 			WorldType type = worldType > 0 ? worldType > 1 ? WorldType.ASMODIANS : WorldType.ELYOS : WorldType.USEALL;
 			handledWorlds.put(worldId, type);
 		}
-			refreshTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> decayProtectorConquerorRanks(), CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
+			refreshTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::decayProtectorConquerorRanks, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
 		}
 
 	void decayProtectorConquerorRanks() {
@@ -391,30 +389,7 @@ public class ProtectorConquerorService {
 				: kills > CustomConfig.PROTECTOR_CONQUEROR_1ST_RANK_KILLS ? 1 : 0;
 	}
 
-	/**
-	 * 击杀守护者/征服者时对附近同阵营施加增益。
-	 * Applies a nearby same-race buff when a protector/conqueror is killed.
-	 * killer
-	 * victim
-	 */
-	public void onKillProtectorConqueror(final Player killer, final Player victim) {
-		if (!isEnemyWorld(victim)) {
-			final Protector info = victim.getProtectorInfo();
-			victim.getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
-				if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-					GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, info), player, player, 0);
-				}
-			});
-		} else if (isEnemyWorld(victim)) {
-			final Conqueror conqueror = victim.getConquerorInfo();
-			victim.getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
-				if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-					GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, conqueror), player, player, 0);
-				}
-			});
-		}
-	}
-
+	
 	/**
 	 * 判断世界是否受守护者/征服者系统管理。
 	 * Checks whether the world is handled by this system.

@@ -151,15 +151,7 @@ public class IdianDepthsService {
 		return activeIdianDepths.containsKey(id);
 	}
 
-	/**
-	 * 获取当前激活的伊迪安深渊映射。
-	 * Returns the map of active Idian Depths instances.
-	 * active instances
-	 */
-	public Map<Integer, IdianDepths<?>> getActiveIdianDepths() {
-		return activeIdianDepths;
-	}
-
+	
 	/**
 	 * 返回配置的持续时长（小时）。
 	 * Returns configured duration in hours.

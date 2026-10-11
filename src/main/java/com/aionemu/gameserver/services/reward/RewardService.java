@@ -94,7 +94,7 @@ public class RewardService {
 	 */
 	public void verify(Player player) {
 		List<RewardEntryItem> list = dao.getAvailable(player.getObjectId());
-		if (list.size() == 0 || player.getMailbox() == null) {
+		if (list.isEmpty() || player.getMailbox() == null) {
 			return;
 		}
 		List<Integer> rewarded = new ArrayList<>();
@@ -116,7 +116,7 @@ public class RewardService {
 				continue;
 			}
 		}
-		if (rewarded.size() > 0) {
+		if (!rewarded.isEmpty()) {
 			dao.uncheckAvailable(rewarded);
 			list.clear();
 		}

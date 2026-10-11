@@ -218,7 +218,7 @@ public class SystemMailService {
 		recipientMailbox = getLoadedMailbox(recipient);
 		if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
-			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE(recipientMailbox));
+			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE());
 			recipientMailbox.isMailListUpdateRequired = true;
 			if (recipientMailbox.mailBoxState != 0) {
 				boolean isPostman = (recipientMailbox.mailBoxState
@@ -311,7 +311,7 @@ public class SystemMailService {
 			recipientMailbox.putLetterToMailbox(newLetter);
 			PacketSendUtility.sendPacket(onlineRecipient,
 					new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters()));
-			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE(recipientMailbox));
+			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE());
 			// 快递邮件已到达。 / Express mail has arrived.
 			if (type == LetterType.EXPRESS || type == LetterType.BLACKCLOUD) {
 				PacketSendUtility.sendPacket(onlineRecipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);

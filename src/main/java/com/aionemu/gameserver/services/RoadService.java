@@ -34,7 +34,7 @@ public class RoadService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final RoadService getInstance() {
+	public static RoadService getInstance() {
 		ObjectProvider<RoadService> provider = instanceProvider;
 		RoadService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -53,8 +53,7 @@ public class RoadService {
 		for (RoadTemplate rt : DataManager.ROAD_DATA.getRoadTemplates()) {
 			Road r = new Road(rt);
 			r.spawn();
-			log.debug("Added " + r.getName() + " at m=" + r.getWorldId() + ",x=" + r.getX() + ",y=" + r.getY() + ",z="
-					+ r.getZ());
+			log.debug("Added {} at m={},x={},y={},z={}", r.getName(), r.getWorldId(), r.getX(), r.getY(), r.getZ());
 		}
 	}
 }

@@ -50,9 +50,9 @@ public class EngulfedOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_ENABLED) {
 			log.info(I18n.get("log.cc3f8b52924a"));
 			// 被吞没的奥菲丹桥 二/四/六 12:00–13:00 / Engulfed Ophidan Bridge TUE-THU-SAT "12PM-1PM"
-			GameCronServices.cronService().schedule(() -> startOphidanRegistration(), AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
+			GameCronServices.cronService().schedule(this::startOphidanRegistration, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
 			// 被吞没的奥菲丹桥 二/四/六 23:00–00:00 / Engulfed Ophidan Bridge TUE-THU-SAT "11PM-0AM"
-            GameCronServices.cronService().schedule(() -> startOphidanRegistration(), AutoGroupConfig.OPHIDAN_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startOphidanRegistration, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDNIGHT);
 		}
 	}
 

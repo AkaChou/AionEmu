@@ -43,11 +43,11 @@ public class AsyunatarService {
 		if (AutoGroupConfig.ASHUNATAL_ENABLED) {
 			log.info(I18n.get("log.a77e6c7b475a"));
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-2PM"
-            GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
+            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI "8PM-10PM"
-            GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
+            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
 			// 阿舒纳塔尔战舰 周六/日 23:00–00:00 / Ashunatal Dredgion SAT-SUN "11PM-00PM"
-            GameCronServices.cronService().schedule(() -> startAsyunatarRegistration(), AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
 		}
 	}
 

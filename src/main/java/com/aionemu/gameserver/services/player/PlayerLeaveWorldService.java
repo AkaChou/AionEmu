@@ -95,7 +95,7 @@ public class PlayerLeaveWorldService {
 			long prisonTimer = System.currentTimeMillis() - player.getStartPrison();
 			prisonTimer = player.getPrisonTimer() - prisonTimer;
 			player.setPrisonTimer(prisonTimer);
-			log.debug("Update prison timer to " + prisonTimer / 1000 + " seconds !");
+			log.debug("Update prison timer to {} seconds !", prisonTimer / 1000);
 		}
 		PlayerService.daos().playerEffectsDAO().storePlayerEffects(player);
 		PlayerService.daos().playerCooldownsDAO().storePlayerCooldowns(player);

@@ -160,7 +160,7 @@ public class HousingBidService extends AbstractCronTask {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final HousingBidService getInstance() {
+	public static HousingBidService getInstance() {
 		ObjectProvider<HousingBidService> provider = instanceProvider;
 		HousingBidService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -171,13 +171,6 @@ public class HousingBidService extends AbstractCronTask {
 		return provided;
 	}
 
-    private static HousingBidService createLegacyInstance() {
-		try {
-			return new HousingBidService(HousingConfig.HOUSE_AUCTION_TIME);
-		} catch (ParseException pe) {
-			return null;
-		}
-	}
 
 	@Override
 	protected long getRunDelay() {
@@ -294,7 +287,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		int entryIndex = 1;
 		for (PlayerHouseBid playerBid : sortedBids) {
-			House house = housesById.get(playerBid.getHouseId());
+			House house = housesById.get(playerBid.houseId());
 			if (house == null) {
 				continue;
 			}
@@ -306,12 +299,12 @@ public class HousingBidService extends AbstractCronTask {
 			} else if (entry.getBidPrice() < playerBid.getBidOffer()) {
 				entry.setBidPrice(playerBid.getBidOffer());
 			}
-			if (playerBid.getPlayerId() != 0) {
+			if (playerBid.playerId() != 0) {
 				HouseBidEntry playerEntry = (HouseBidEntry) entry.Clone();
 				playerEntry.setBidPrice(playerBid.getBidOffer());
-				playerBids.put(playerBid.getPlayerId(), playerEntry);
-				entry.setLastBiddingPlayer(playerBid.getPlayerId());
-				entry.setLastBidTime(playerBid.getTime().getTime());
+				playerBids.put(playerBid.playerId(), playerEntry);
+				entry.setLastBiddingPlayer(playerBid.playerId());
+				entry.setLastBidTime(playerBid.time().getTime());
 				entry.incrementBidCount();
 			}
 		}
@@ -515,12 +508,8 @@ public class HousingBidService extends AbstractCronTask {
 	 * seconds left
 	 */
 	public int getSecondsTillAuction() {
-		int left = (int) (getRunTime() - System.currentTimeMillis() / 1000);
-		left += timeProlonged * 60;
-		if (left < 0) {
-			return 0;
-		}
-		return left;
+		int left = (int) (getRunTime() - System.currentTimeMillis() / 1000) + timeProlonged * 60;
+		return Math.max(left, 0);
 	}
 
 	/**
@@ -636,7 +625,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		house.setStatus(HouseStatus.SELL_WAIT);
 		int maxIndex = 1;
-		HouseBidEntry bidEntry = null;
+		HouseBidEntry bidEntry;
 		synchronized (bidsByIndex) {
 			for (Integer index : bidsByIndex.keySet()) {
 				if (index > maxIndex) {
@@ -669,9 +658,9 @@ public class HousingBidService extends AbstractCronTask {
 			return false;
 		}
 
-		HouseBidEntry bidEntry = null;
-		HouseBidEntry playerBid = null;
-		Integer lastPlayer = null;
+		HouseBidEntry bidEntry;
+		HouseBidEntry playerBid;
+		Integer lastPlayer;
 
 		synchronized (houseBids) {
 			bidEntry = houseBids.remove(house.getObjectId());
@@ -686,7 +675,7 @@ public class HousingBidService extends AbstractCronTask {
 			bidsByIndex.remove(bidEntry.getEntryIndex());
 		}
 
-		PlayerCommonData pcd = null;
+		PlayerCommonData pcd;
 		if (house.getOwnerId() != 0) {
 			if (house.isInGracePeriod()) {
 				house.setSellStarted(null);
@@ -902,7 +891,7 @@ public class HousingBidService extends AbstractCronTask {
 	private static int getMinBidLevel(Player player, int mapId, int landId) {
 		HousingLand land = DataManager.HOUSE_DATA.getLand(landId);
 		Sale saleOptions = land.getSaleOptions();
-		HouseType houseType = HouseType.fromValue(land.getBuildings().get(0).getSize());
+		HouseType houseType = HouseType.fromValue(land.getBuildings().getFirst().getSize());
 		if (player.getRace() == Race.ELYOS) {
 			if (mapId == WorldMapType.HEIRON.getId()) {
 				return saleOptions.getMinLevel();

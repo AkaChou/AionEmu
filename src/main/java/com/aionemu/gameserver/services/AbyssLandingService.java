@@ -553,23 +553,7 @@ public class AbyssLandingService {
 		GameLocationBootstrapServices.abyssLandingSpecialService().onSave(lsl);
 	}
 
-		/**
-	 * 指挥官相关奖励积分入账。
-	 * Apply commander reward points for the given race/location.
-	 * 阵营 / race
-	 * @param id 地点 ID / location id
-	 * points
-	 */
-	public void onRewardCommander(Race race, int id, int points) {
-		if (race == Race.ASMODIANS) {
-			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
-		} else {
-			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
-			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
-		}
-	}
-
+		
 	/**
 	 * 指挥官阵亡时的积分处理。
 	 * Apply commander-death point changes for the given race/location.

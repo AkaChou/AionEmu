@@ -60,7 +60,7 @@ public class ItemService {
 	 * @param itemList item collection
 	 */
 	public static void loadItemStones(Collection<Item> itemList) {
-		if (itemList != null && itemList.size() > 0) {
+		if (itemList != null && !itemList.isEmpty()) {
 			ItemSocketService.itemStoneListDAO().load(itemList);
 		}
 	}

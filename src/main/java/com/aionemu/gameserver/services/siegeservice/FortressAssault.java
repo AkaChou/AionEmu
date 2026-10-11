@@ -53,7 +53,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 */
 	@Override
 	protected void scheduleAssault(int delay) {
-		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnAttackers(), Rnd.get(240, 300) * 1000L), delay * 1000L);
+		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTask = GameThreadPoolServices.threadPoolManager().schedule(this::spawnAttackers, Rnd.get(240, 300) * 1000L), delay * 1000L);
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 				x1 = (float) (Math.cos(minRadian + interval * (i - amount / 2)) * radius2);
 				y1 = (float) (Math.sin(minRadian + interval * (i - amount / 2)) * radius2);
 			}
-			templateId = (i <= commanderCount) ? idList.get(0) : idList.get(Rnd.get(1, idList.size() - 1));
+			templateId = (i <= commanderCount) ? idList.getFirst() : idList.get(Rnd.get(1, idList.size() - 1));
 			Npc attaker;
 			if ((i > amount / 3) && !spawnLocations.isEmpty()) {
 				float[] coords = spawnLocations.get(Rnd.get(spawnLocations.size()));

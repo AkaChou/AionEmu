@@ -176,7 +176,7 @@ public class RiftService {
 		} finally {
 			closing.unlock();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> closeRifts(), (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::closeRifts, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

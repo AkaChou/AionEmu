@@ -138,7 +138,7 @@ public class FindGroupService {
 	 * group type
 	 */
 	public void addFindGroupList(Player player, int action, String message, int groupType) {
-		AionObject object = null;
+		AionObject object ;
 		if (player.isInTeam()) {
 			object = player.getCurrentTeam();
 		} else {
@@ -331,7 +331,7 @@ public class FindGroupService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final FindGroupService getInstance() {
+	public static FindGroupService getInstance() {
 		ObjectProvider<FindGroupService> provider = instanceProvider;
 		FindGroupService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

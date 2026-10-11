@@ -984,23 +984,23 @@ public class TeleportService2 {
 	 * Teleports the player to a resolved NPC spawn spot, keeping map markers and GM teleport targets consistent.
 	 */
 	public static void teleportToNpc(Player player, SpawnSearchResult searchResult) {
-		if (player == null || searchResult == null || searchResult.getSpot() == null) {
+		if (player == null || searchResult == null || searchResult.spot() == null) {
 			return;
 		}
 
-		SpawnSpotTemplate spot = searchResult.getSpot();
-		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(searchResult.getWorldId());
+		SpawnSpotTemplate spot = searchResult.spot();
+		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(searchResult.worldId());
 		WorldMapInstance newInstance = null;
 
 		if (worldTemplate.isInstance()) {
-			newInstance = InstanceService.getNextAvailableInstance(searchResult.getWorldId());
+			newInstance = InstanceService.getNextAvailableInstance(searchResult.worldId());
 		}
 
 		if (newInstance != null) {
 			InstanceService.registerPlayerWithInstance(newInstance, player);
-			teleportTo(player, searchResult.getWorldId(), newInstance.getInstanceId(), spot.getX(), spot.getY(), spot.getZ());
+			teleportTo(player, searchResult.worldId(), newInstance.getInstanceId(), spot.getX(), spot.getY(), spot.getZ());
 		} else {
-			teleportTo(player, searchResult.getWorldId(), spot.getX(), spot.getY(), spot.getZ());
+			teleportTo(player, searchResult.worldId(), spot.getX(), spot.getY(), spot.getZ());
 		}
 	}
 

@@ -379,9 +379,9 @@ public class CreativityEssenceService {
 		a.add(404);
 		a.add(406);
 		a.add(408);
-		for (int i = 0; i < a.size(); i++) {
-			onSkillsApply(player, 0, 0, a.get(i), 0);
-		}
+        for (Integer integer : a) {
+            onSkillsApply(player, 0, 0, integer, 0);
+        }
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(player.getCreativityPoint(), player.getCPStep(), 0, false));
 	}

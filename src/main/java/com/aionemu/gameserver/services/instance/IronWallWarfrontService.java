@@ -51,7 +51,7 @@ public class IronWallWarfrontService {
 		log.info(I18n.get("log.578bb9df9c44"));
 		if (AutoGroupConfig.BASTION_ENABLED) {
 			// 铁壁战线 周五 23:00–00:00 / Iron Wall Warfront FRI "11PM-0AM"
-            GameCronServices.cronService().schedule(() -> startBastionRegistration(), AutoGroupConfig.BASTION_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startBastionRegistration, AutoGroupConfig.BASTION_SCHEDULE_MIDNIGHT);
 		}
 	}
 

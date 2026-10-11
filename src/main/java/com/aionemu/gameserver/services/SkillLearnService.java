@@ -67,30 +67,7 @@ public class SkillLearnService {
 		}
 	}
 
-	/**
-	 * 4P 场景下补全玩家缺失技能（逻辑与 {@link #addMissingSkills} 相同）。
-	 * Fills missing skills in the 4P path (same logic as {@link #addMissingSkills}).
-	 * @param player 玩家 / player
-	 */
-	public static void addMissingSkills4P(Player player) {
-		int level = player.getCommonData().getLevel();
-		PlayerClass playerClass = player.getCommonData().getPlayerClass();
-		Race playerRace = player.getRace();
-		for (int i = 0; i <= level; i++) {
-			addSkills(player, i, playerClass, playerRace);
-		}
-		if (!playerClass.isStartingClass()) {
-			PlayerClass startinClass = PlayerClass.getStartingClassFor(playerClass);
-			for (int i = 1; i < 10; i++) {
-				addSkills(player, i, startinClass, playerRace);
-			}
-			PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
-			for (PlayerSkillEntry stigmaSkill : player.getSkillList().getStigmaSkills()) {
-				PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, stigmaSkill));
-			}
-		}
-	}
-
+	
 	/**
 	 * 按职业/等级/种族模板向玩家添加可学技能。
 	 * Adds learnable skills to the player from class/level/race templates.
@@ -145,7 +122,7 @@ public class SkillLearnService {
 	 * @param skillId skill id
 	 */
 	public static void learnSkillBook(Player player, int skillId) {
-		SkillLearnTemplate[] skillTemplates = null;
+		SkillLearnTemplate[] skillTemplates ;
 		int maxLevel = 0;
 		SkillTemplate passiveSkill = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		for (int i = 1; i <= player.getLevel(); i++) {
@@ -215,7 +192,7 @@ public class SkillLearnService {
 	 */
 	public static int getSkillLearnLevel(int skillId, int playerLevel, int wantedSkillLevel) {
 		SkillLearnTemplate[] skillTemplates = DataManager.SKILL_TREE_DATA.getTemplatesForSkill(skillId);
-		int learnFinishes = 0;
+		int learnFinishes ;
 		int maxLevel = 0;
 		for (SkillLearnTemplate template : skillTemplates) {
 			if (maxLevel < template.getSkillLevel()) {

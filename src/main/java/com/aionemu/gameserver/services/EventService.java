@@ -81,7 +81,7 @@ public class EventService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final EventService getInstance() {
+	public static EventService getInstance() {
 		ObjectProvider<EventService> provider = instanceProvider;
 		EventService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -111,8 +111,8 @@ public class EventService {
 	public void onPlayerLogin(Player player) {
 		List<Integer> activeStartQuests = new ArrayList<>();
 		List<Integer> activeMaintainQuests = new ArrayList<>();
-		Map<Integer, List<EventTemplate>> map1 = null;
-		Map<Integer, List<EventTemplate>> map2 = null;
+		Map<Integer, List<EventTemplate>> map2 ;
+		Map<Integer, List<EventTemplate>> map1 ;
 
 		synchronized (activeEvents) {
 			for (EventTemplate et : activeEvents) {
@@ -171,7 +171,7 @@ public class EventService {
 			if (matchesEventQuestMetadata(player, metadata, eligibility)) {
 				if (qs != null) {
 					if (qs.getCompleteTime() != null || status == QuestStatus.COMPLETE) {
-						ZonedDateTime completed = null;
+						ZonedDateTime completed ;
 						if (qs.getCompleteTime() == null) {
 							completed = ZonedDateTime.now().withYear(1970).withMonth(1).withDayOfMonth(1).withHour(0).withMinute(0);
 						} else {
@@ -236,7 +236,7 @@ public class EventService {
 		}
 		isStarted = true;
 
-		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> checkEvents(), 0, CHECK_TIME_PERIOD);
+		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::checkEvents, 0, CHECK_TIME_PERIOD);
 	}
 
 	/**

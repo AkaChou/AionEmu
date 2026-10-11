@@ -58,11 +58,7 @@ final class LegionMembers {
 		return service.allCachedLegionMembers();
 	}
 
-	/** 军团缓存（宿主提供）。 / legion cache, provided by the hosting service. */
-	private LegionContainer allCachedLegions() {
-		return service.allCachedLegions();
-	}
-
+	
 	/**
 	 * 将军团成员数据存入数据库，或保存新成员。
 	 * Stores legion member data into db or saves a new one

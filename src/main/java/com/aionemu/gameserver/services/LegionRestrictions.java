@@ -281,7 +281,7 @@ final class LegionRestrictions {
 		} else if (legion.isDisbanding()) {
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_ALREADY_REQUESTED);
 			return false;
-		} else if (legion.getLegionWarehouse().size() > 0) {
+		} else if (!legion.getLegionWarehouse().isEmpty()) {
 			PacketSendUtility.sendPacket(activePlayer,
 					SM_SYSTEM_MESSAGE.STR_GUILD_DISPERSE_CANT_DISPERSE_GUILD_STORE_ITEM_IN_WAREHOUSE);
 			return false;

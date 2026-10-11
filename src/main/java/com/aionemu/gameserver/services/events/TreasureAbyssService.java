@@ -76,7 +76,7 @@ public class TreasureAbyssService {
 	 * Schedules the Treasure Abyss event from configured cron.
 	 */
 	public static void ScheduleCron() {
-		GameCronServices.cronService().schedule(() -> startEvent(), ABYSS_EVENT_SCHEDULE);
+		GameCronServices.cronService().schedule(TreasureAbyssService::startEvent, ABYSS_EVENT_SCHEDULE);
 		log.info(I18n.get("log.ef71d9caa077", EventsConfig.ABYSS_EVENT_SCHEDULE));
 	}
 
@@ -90,7 +90,7 @@ public class TreasureAbyssService {
 		}
 		announceAll("[Event] Balaur treasure chest start location quickly follow to take the prize!");
 		initPig();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> endEvent(), 30 * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(TreasureAbyssService::endEvent, 30 * 60 * 1000);
 	}
 
 	/**

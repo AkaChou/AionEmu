@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class PlayerLimitService {
 
-	private static ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	/**
@@ -64,7 +64,7 @@ public class PlayerLimitService {
 	 * Schedules limit update.
 	 */
 	public void scheduleUpdate() {
-        GameCronServices.cronService().schedule(() -> sellLimit.clear(), CustomConfig.LIMITS_UPDATE, true);
+        GameCronServices.cronService().schedule(sellLimit::clear, CustomConfig.LIMITS_UPDATE, true);
 	}
 
 	/**

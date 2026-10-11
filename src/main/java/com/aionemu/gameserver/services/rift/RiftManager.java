@@ -52,7 +52,7 @@ public class RiftManager {
 	 */
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
 		if (spawn.hasPool()) {
-			SpawnTemplate template = spawn.getSpawnTemplates().get(0);
+			SpawnTemplate template = spawn.getSpawnTemplates().getFirst();
 			riftGroups.put(template.getAnchor(), template);
 		}
 		else {

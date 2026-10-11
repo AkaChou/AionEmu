@@ -50,7 +50,7 @@ public class IdgelDomeLandmarkService {
 		if (AutoGroupConfig.IDGEL_DOME_LANDMARK_ENABLED) {
 			log.info(I18n.get("log.27a2c41e1650"));
 			// 伊杰尔穹顶地标 一/三 23:00–00:00 / Idgel Dome Landmark MON-WED "11PM-00AM"
-            GameCronServices.cronService().schedule(() -> startLandmarkRegistration(), AutoGroupConfig.IDGEL_DOME_LANDMARK_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startLandmarkRegistration, AutoGroupConfig.IDGEL_DOME_LANDMARK_SCHEDULE_MIDNIGHT);
 		}
 	}
 

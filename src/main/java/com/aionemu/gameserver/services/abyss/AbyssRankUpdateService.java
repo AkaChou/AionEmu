@@ -272,7 +272,7 @@ public class AbyssRankUpdateService {
 	private void updateAllRanksGpForRace(Race race, int gpLimit, int activeAfterDays) {
 		Map<Integer, Integer> playerGpMap = abyssRankDAO.loadPlayersGp(race, gpLimit, activeAfterDays);
 		List<Entry<Integer, Integer>> playerGpEntries = new ArrayList<>(playerGpMap.entrySet());
-		Collections.sort(playerGpEntries, new PlayerGpComparator<>());
+		playerGpEntries.sort( new PlayerGpComparator<>());
 		selectGpRank(AbyssRankEnum.SUPREME_COMMANDER, playerGpEntries);
 		selectGpRank(AbyssRankEnum.COMMANDER, playerGpEntries);
 		selectGpRank(AbyssRankEnum.GREAT_GENERAL, playerGpEntries);
@@ -300,7 +300,7 @@ public class AbyssRankUpdateService {
 				return;
 			}
 			// 检查列表中下一名玩家 / check next player in list
-			Entry<Integer, Integer> playerGp = playerGpEntries.get(0);
+			Entry<Integer, Integer> playerGp = playerGpEntries.getFirst();
 			// 检查地图中是否还有玩家 / check if there are some players left in map
 			if (playerGp == null) {
 				return;

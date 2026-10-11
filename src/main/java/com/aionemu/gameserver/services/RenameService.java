@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Iterator;
-import java.util.Objects;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;

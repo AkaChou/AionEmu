@@ -323,15 +323,7 @@ public class SvsService {
 		return activeSvs.containsKey(id);
 	}
 
-	/**
-	 * 获取进行中的 SvS 实例映射。
-	 * Returns the map of active SvS instances.
-	 * @return 活动实例映射 / active instances map
-	 */
-	public Map<Integer, Panesterra<?>> getActiveSvs() {
-		return activeSvs;
-	}
-
+	
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.

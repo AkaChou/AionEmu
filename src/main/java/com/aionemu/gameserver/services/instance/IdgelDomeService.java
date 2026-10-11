@@ -51,9 +51,9 @@ public class IdgelDomeService {
 		if (AutoGroupConfig.IDGEL_ENABLED) {
 			log.info(I18n.get("log.770479d27791"));
 			// 伊杰尔穹顶 一/三/五 12:00–13:00 / Idgel Dome MON-WED-FRI "12PM-1PM"
-            GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
+            GameCronServices.cronService().schedule(this::startIdgelRegistration, AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
 			// 伊杰尔穹顶 一/三/五 23:00–00:00 / Idgel Dome MON-WED-FRI "11PM-0PM"
-            GameCronServices.cronService().schedule(() -> startIdgelRegistration(), AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
+            GameCronServices.cronService().schedule(this::startIdgelRegistration, AutoGroupConfig.IDGEL_SCHEDULE_MIDNIGHT);
 		}
 	}
 

@@ -380,9 +380,7 @@ public class CraftSkillUpdateService {
 	 */
 	static int getTotalExpertCraftingSkills(Player player) {
 		int mastered = 0;
-		Iterator<Integer> it = craftingSkillIds.iterator();
-		while (it.hasNext()) {
-			int skillId = it.next();
+		for (int skillId : craftingSkillIds) {
 			int skillLvl = 0;
 			if (player.getSkillList().isSkillPresent(skillId)) {
 				skillLvl = player.getSkillList().getSkillLevel(skillId);
@@ -402,9 +400,7 @@ public class CraftSkillUpdateService {
 	 */
 	static int getTotalMasterCraftingSkills(Player player) {
 		int mastered = 0;
-		Iterator<Integer> it = craftingSkillIds.iterator();
-		while (it.hasNext()) {
-			int skillId = it.next();
+		for (int skillId : craftingSkillIds) {
 			int skillLvl = 0;
 			if (player.getSkillList().isSkillPresent(skillId)) {
 				skillLvl = player.getSkillList().getSkillLevel(skillId);

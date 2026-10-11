@@ -76,13 +76,13 @@ public class AdminService {
 	 * Reloads the restricted item list from the configuration file.
 	 */
 	public void reload() {
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			list.clear();
 		}
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(new FileReader(Config.configFile("administration/item.restriction.txt")));
-			String line = null;
+			String line ;
 			while ((line = br.readLine()) != null) {
 				if (line.startsWith("#") || line.trim().length() == 0) {
 					continue;

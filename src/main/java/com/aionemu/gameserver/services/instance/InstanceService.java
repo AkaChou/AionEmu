@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
-import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.InstanceConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -59,22 +58,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 @Slf4j
 
 public class InstanceService {
-	/** 映射 IDwhereinstancemobsuseaggro / Map IDs where instance mobs use aggro */
-	private static final List<Integer> instanceAggro = new ArrayList<>();
 	/** 待空副本重置的实例集合（弱引用）。 / Instances pending empty-reset (weak refs). */
 	private static final Set<WorldMapInstance> pendingResets = Collections
 			.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
-
-	/**
-	 * 加载副本仇恨地图配置。
-	 * Loads instance aggro map configuration.
-	 */
-	public static void load() {
-		instanceAggro.clear();
-		for (String s : CustomConfig.INSTANCES_MOB_AGGRO.split(",")) {
-			instanceAggro.add(Integer.parseInt(s));
-		}
-	}
 
 	/**
 	 * 创建下一可用副本实例（可指定所有者）。
@@ -158,16 +144,6 @@ public class InstanceService {
 	}
 
 	/**
-	 * 重置指定玩家拥有的全部单人副本（兼容旧接口）。
-	 * Resets all solo instances owned by the given player (compatibility alias).
-	 * @param player 拥有者 / owner
-	 * @return 已销毁的副本数量 / number of destroyed instances
-	 */
-	public synchronized static int resetPlayerSoloInstances(Player player) {
-		return resetPlayerInstances(player);
-	}
-
-	/**
 	 * 判断实例是否属于指定玩家个人或其当前所在的队伍/联盟。
 	 * Whether the instance belongs to the player personally or to their current group/alliance/league.
 	 * @param instance 待检查副本 / instance to inspect
@@ -210,10 +186,8 @@ public class InstanceService {
 		// 4. 玩家当前所在军团联盟登记的副本 / Instances registered to player's current league
 		if (player.isInLeague() && instance.getRegistredLeague() != null) {
 			League league = player.getPlayerAlliance2().getLeague();
-			if (league != null && (league.equals(instance.getRegistredLeague())
-					|| (league.getObjectId() != null && league.getObjectId().equals(instance.getRegistredLeague().getObjectId())))) {
-				return true;
-			}
+			return league.equals(instance.getRegistredLeague())
+				|| (league.getObjectId() != null && league.getObjectId().equals(instance.getRegistredLeague().getObjectId()));
 		}
 
 		return false;
@@ -267,7 +241,7 @@ public class InstanceService {
 				VisibleObject obj = it.next();
 				if (obj instanceof Player player) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(SystemMessageId.LEAVE_INSTANCE_NOT_PARTY));
-					moveToExitPoint((Player) obj);
+					moveToExitPoint(player);
 				} else {
 					obj.getController().onDelete();
 				}
@@ -334,14 +308,33 @@ public class InstanceService {
 	 * @return 已注册副本，未找到则为 null / registered instance, or null
 	 */
 	public static WorldMapInstance getRegisteredInstance(int worldId, int objectId) {
-		Iterator<WorldMapInstance> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
-		while (iterator.hasNext()) {
-			WorldMapInstance instance = iterator.next();
+		Iterator<WorldMapInstance> instanceIter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
+		while (instanceIter.hasNext()) {
+			WorldMapInstance instance = instanceIter.next();
 			if (instance.isRegistered(objectId)) {
 				return instance;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 解析玩家在指定地图应进入的实例 ID：玩家已在该地图时优先复用其注册实例，否则分配新实例并注册。
+	 * Resolves the instance id the player should enter on the given map: reuses the player's registered instance when already on that map, otherwise allocates and registers a new one.
+	 * @param worldId 世界地图 ID / world map id
+	 * @param player 待传送的玩家 / player being teleported
+	 * @return 应进入的实例 ID / the instance id to enter
+	 */
+	public static int resolveInstanceId(int worldId, Player player) {
+		if (player.getWorldId() == worldId) {
+			WorldMapInstance registeredInstance = getRegisteredInstance(worldId, player.getObjectId());
+			if (registeredInstance != null) {
+				return registeredInstance.getInstanceId();
+			}
+		}
+		WorldMapInstance newInstance = getNextAvailableInstance(worldId);
+		registerPlayerWithInstance(newInstance, player);
+		return newInstance.getInstanceId();
 	}
 
 	/**
@@ -355,9 +348,9 @@ public class InstanceService {
 		if (ownerId == 0) {
 			return null;
 		}
-		Iterator<WorldMapInstance> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
-		while (iterator.hasNext()) {
-			WorldMapInstance instance = iterator.next();
+		Iterator<WorldMapInstance> instanceIter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
+		while (instanceIter.hasNext()) {
+			WorldMapInstance instance = instanceIter.next();
 			if (instance.isPersonal() && instance.getOwnerId() == ownerId) {
 				return instance;
 			}
@@ -388,7 +381,7 @@ public class InstanceService {
 	 */
 	private static int getLastRegisteredId(Player player) {
 		int lookupId;
-		boolean isPersonal = WorldMapType.getWorld(player.getWorldId()).isPersonal();
+		boolean isPersonal = isPersonalWorld(player.getWorldId());
 		if (player.isInGroup2()) {
 			lookupId = player.getPlayerGroup2().getTeamId();
 		} else if (player.isInAlliance2()) {
@@ -402,6 +395,17 @@ public class InstanceService {
 			lookupId = player.getObjectId();
 		}
 		return lookupId;
+	}
+
+	/**
+	 * 判断地图是否为个人实例世界（未知地图按非个人处理）。
+	 * Whether the map is a personal-instance world (unknown maps are treated as non-personal).
+	 * @param worldId 世界地图 ID / world map id
+	 * @return 是否为个人实例世界 / whether it is a personal-instance world
+	 */
+	private static boolean isPersonalWorld(int worldId) {
+		WorldMapType world = WorldMapType.getWorld(worldId);
+		return world != null && world.isPersonal();
 	}
 
 	/**
@@ -419,7 +423,7 @@ public class InstanceService {
 		}
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
 		if (worldTemplate.isInstance()) {
-			boolean isPersonal = WorldMapType.getWorld(player.getWorldId()).isPersonal();
+			boolean isPersonal = isPersonalWorld(player.getWorldId());
 			WorldMapInstance registeredInstance = isPersonal ? getPersonalInstance(worldId, lookupId)
 					: getRegisteredInstance(worldId, lookupId);
 			if (isPersonal) {
@@ -620,16 +624,6 @@ public class InstanceService {
 	 */
 	public static void onLeaveZone(Player player, ZoneInstance zone) {
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onLeaveZone(player, zone);
-	}
-
-	/**
-	 * 判断地图是否启用副本仇恨。
-	 * Whether the map uses instance-mob aggro.
-	 * @param mapId 地图 ID / map id
-	 * @return 是否启用仇恨 / whether aggro is enabled
-	 */
-	public static boolean isAggro(int mapId) {
-		return instanceAggro.contains(mapId);
 	}
 
 	/**

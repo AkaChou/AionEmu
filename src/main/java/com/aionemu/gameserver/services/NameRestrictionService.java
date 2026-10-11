@@ -30,7 +30,7 @@ public class NameRestrictionService {
 	}
 
 	private static boolean isForbiddenByClient(String name) {
-		if (!NameConfig.NAME_FORBIDDEN_ENABLE || NameConfig.NAME_FORBIDDEN_CLIENT.equals("")) {
+		if (!NameConfig.NAME_FORBIDDEN_ENABLE || NameConfig.NAME_FORBIDDEN_CLIENT.isEmpty()) {
 			return false;
 		}
 		for (String s : NameConfig.NAME_FORBIDDEN_CLIENT.split(",")) {
@@ -42,7 +42,7 @@ public class NameRestrictionService {
 	}
 
 	private static boolean isForbiddenBySequence(String name) {
-		if (NameConfig.NAME_SEQUENCE_FORBIDDEN.equals("")) {
+		if (NameConfig.NAME_SEQUENCE_FORBIDDEN.isEmpty()) {
 			return false;
 		}
 		for (String s : NameConfig.NAME_SEQUENCE_FORBIDDEN.toLowerCase().split(",")) {

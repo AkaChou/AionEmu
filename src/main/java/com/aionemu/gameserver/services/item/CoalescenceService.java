@@ -58,7 +58,7 @@ public class CoalescenceService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_ENCHANT_ITEM);
 			return;
 		}
-		if (material_item_object_id_collection.size() == 0) {
+		if (material_item_object_id_collection.isEmpty()) {
 			AuditLogger.info(player.getName(), player.getObjectId(), "Possible hack Coalescence. His material equals 0");
 			return;
 		}
@@ -80,12 +80,12 @@ public class CoalescenceService {
 		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
 			player.getObserveController().removeObserver(observer);
 			player.getInventory().delete(core_item, ItemDeleteType.COALESCENCE);
-			for (int i = 0; i < material_item_object_id_collection.size(); i++) {
-				final Item mats = player.getInventory().getItemByObjId(material_item_object_id_collection.get(i));
+			for (Integer materialItemId : material_item_object_id_collection) {
+				final Item mats = player.getInventory().getItemByObjId(materialItemId);
 				player.getInventory().delete(mats, ItemDeleteType.COALESCENCE);
 			}
 			List<Integer> ids_collections = new ArrayList<>();
-			int item_id_taken = 0;
+			int item_id_taken ;
 			int bonus_item_id_taken = 0;
 			int bonus_item_count = 0;
 			Map<Integer, ItemTemplate> item_templates = DataManager.ITEM_DATA.getAllItems();
@@ -95,7 +95,7 @@ public class CoalescenceService {
 				}
 			}
 			Collections.shuffle(ids_collections);
-			item_id_taken = ids_collections.get(0);
+			item_id_taken = ids_collections.getFirst();
 			if (item_id_taken == 0) {
 				return;
 			}

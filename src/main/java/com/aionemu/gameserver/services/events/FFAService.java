@@ -315,11 +315,11 @@ public class FFAService {
 	 * @return 是否成功切换到新地图 / whether a new map was selected
 	 */
 	public boolean pickArenaMap() {
-		if (maps.size() == 0) {
+		if (maps.isEmpty()) {
 			return false;
 		}
 		if (maps.size() == 1) {
-			activeMap = maps.get(0);
+			activeMap = maps.getFirst();
 			analyseInstanceBalance();
 			return false;
 		}
@@ -342,7 +342,7 @@ public class FFAService {
 
 	/** 返回当前活跃地图的世界地图对象。 / Returns the world map for the active arena map. */
 	private WorldMap getWorldMap() {
-		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(activeMap.getMapId());
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(activeMap.mapId());
 	}
 
 	/** 向场内玩家播报当前人数。 / Announces the current player count to arena players. */
@@ -529,7 +529,7 @@ public class FFAService {
 	 */
 	public boolean isInArena(Player player) {
 		for (ArenaMap arenaMap : maps) {
-			if (arenaMap.getMapId() == player.getWorldId()) {
+			if (arenaMap.mapId() == player.getWorldId()) {
 				return true;
 			}
 		}
@@ -613,17 +613,17 @@ public class FFAService {
 
 	/** 从当前地图随机取一个出生点坐标。 / Picks a random spawn coordinate from the active map. */
 	private Float[] getRandomSpawn() {
-		return activeMap.getSpawns().get(Rnd.get(activeMap.getSpawns().size()));
+		return activeMap.spawns().get(Rnd.get(activeMap.spawns().size()));
 	}
 
 	/** 选择人数未满的实例；若皆满则创建新战场实例。 / Picks an under-cap instance or creates a new BG instance. */
 	private void analyseInstanceBalance() {
 		for (WorldMapInstance instance : getWorldMap().getInstances()) {
-			if (instance.getPlayersInside().size() < activeMap.getPlayerCap()) {
+			if (instance.getPlayersInside().size() < activeMap.playerCap()) {
 				activeInstance = instance;
 			}
 		}
-		if (activeInstance == null || activeInstance.getPlayersInside().size() >= activeMap.getPlayerCap()) {
+		if (activeInstance == null || activeInstance.getPlayersInside().size() >= activeMap.playerCap()) {
 			activeInstance = InstanceService.getNextBgInstance(getWorldMap().getMapId());
 		}
 	}
@@ -690,40 +690,31 @@ public class FFAService {
 		FFAService.instanceProvider = instanceProvider;
 	}
 
-	/**
-	 * FFA 竞技场地图定义（地图 ID、人数上限、出生点）。
-	 * FFA arena map definition (map id, player cap, spawn points).
-	 */
-	@Getter
-	public static class ArenaMap {
-		/** 映射 ID / Map id
-		 * -- GETTER --
-		 *  map id
-		 */
-		private final int mapId;
-		/** 出生点坐标列表。 / Spawn coordinate list.
-		 * -- GETTER --
-		 */
-		private final List<Float[]> spawns;
-		/** 单实例人数上限。 / Per-instance player cap.
-		 * -- GETTER --
-		 *  player cap
-		 */
-		private final int playerCap;
+    /**
+     * FFA 竞技场地图定义（地图 ID、人数上限、出生点）。
+     * FFA arena map definition (map id, player cap, spawn points).
+     *
+     * @param mapId     映射 ID / Map id
+     *                  -- GETTER --
+     *                  map id
+     * @param spawns    出生点坐标列表。 / Spawn coordinate list.
+     *                  -- GETTER --
+     * @param playerCap 单实例人数上限。 / Per-instance player cap.
+     *                  -- GETTER --
+     *                  player cap
+     */
+    public record ArenaMap(int mapId, List<Float[]> spawns, int playerCap) {
+        /**
+         * 构造竞技场地图。
+         * Constructs an arena map.
+         * map id
+         * player cap
+         * spawns
+         */
+        public ArenaMap(int mapId, int playerCap, List<Float[]> spawns) {
+            this(mapId, spawns, playerCap);
+        }
 
-		/**
-		 * 构造竞技场地图。
-		 * Constructs an arena map.
-		 * map id
-		 * player cap
-		 * spawns
-		 */
-		public ArenaMap(int mapId, int playerCap, List<Float[]> spawns) {
-			this.mapId = mapId;
-			this.playerCap = playerCap;
-			this.spawns = spawns;
-		}
-
-	}
+    }
 
 }

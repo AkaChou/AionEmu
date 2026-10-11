@@ -198,21 +198,7 @@ public class TowerOfEternityService {
 		}
 	}
 
-	/**
-	 * 停止指定 ID 的永恒之塔活动。
-	 * Stops the Tower of Eternity event for the given id.
-	 * @param id 地点 ID / location id
-	 */
-	public void stopTowerOfEternity(int id) {
-		synchronized (towerTransitionLock) {
-			TowerOfEternity<?> tower = activeTowerOfEternity.remove(id);
-			if (tower == null || tower.isClosed()) {
-				return;
-			}
-			tower.stop();
-		}
-	}
-
+	
 	/**
 	 * 仅当指定实例仍注册在该地点时才停止，避免持续时间计时器误停同 ID 的新实例。
 	 * Stops only when the expected instance is still registered for the location, so a duration timer
@@ -347,35 +333,9 @@ public class TowerOfEternityService {
 				});
 	}
 
-	/**
-	 * 判断指定永恒之塔是否进行中。
-	 * Checks whether the tower with the given id is in progress.
-	 * @param id 地点 ID / location id
-	 * @return 是否进行中 / whether in progress
-	 */
-	public boolean isTowerOfEternityInProgress(int id) {
-		return activeTowerOfEternity.containsKey(id);
-	}
-
-	/**
-	 * 获取进行中的永恒之塔实例映射。
-	 * Returns the map of active tower instances.
-	 * @return 活动实例映射 / active instances map
-	 */
-	public Map<Integer, TowerOfEternity<?>> getActiveTowerOfEternity() {
-		return activeTowerOfEternity;
-	}
-
-	/**
-	 * 按 ID 获取进行中的永恒之塔实例。
-	 * Returns the active tower instance by id.
-	 * @param id 地点 ID / location id
-	 * tower instance
-	 */
-	public TowerOfEternity<?> getActiveTowerOfEternity(int id) {
-		return activeTowerOfEternity.get(id);
-	}
-
+	
+	
+	
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.

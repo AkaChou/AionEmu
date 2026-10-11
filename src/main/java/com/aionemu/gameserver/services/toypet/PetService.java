@@ -144,7 +144,7 @@ public class PetService {
 	 */
 	public void onPlayerLogin(Player player) {
 		Collection<PetCommonData> playerPets = player.getPetList().getPets();
-		if (playerPets != null && playerPets.size() > 0) {
+		if (playerPets != null && !playerPets.isEmpty()) {
 			PacketSendUtility.sendPacket(player, new SM_PET(0, playerPets));
 		}
 	}
@@ -193,7 +193,7 @@ public class PetService {
 			PetFunction func = pet.getPetTemplate().getPetFunction(PetFunctionType.FOOD);
 			PetFlavour flavour = DataManager.PET_FEED_DATA.getFlavourById(func.getId());
 			FoodType foodType = flavour.getFoodType(item.getItemId());
-			PetFeedResult reward = null;
+			PetFeedResult reward;
 			if (flavour.isLovedFood(foodType, item.getItemId()) && progress.getLovedFoodRemaining() == 0) {
 				foodType = null;
 			}
@@ -280,7 +280,7 @@ public class PetService {
 			action = 0;
 		} else if (action == 3) {
 			List<Item> items = player.getInventory().getItemsByItemId(itemId);
-			Item useItem = items.get(0);
+			Item useItem = items.getFirst();
 			ItemActions itemActions = useItem.getItemTemplate().getActions();
 			ItemUseLimits limit = new ItemUseLimits();
 			int useDelay = player.getItemCooldown(useItem.getItemTemplate()) / 3;
@@ -313,9 +313,9 @@ public class PetService {
 		itemId = pet.getCommonData().getDopingBag().getDrinkItem();
 		totalDopes += player.getInventory().getItemCountByItemId(itemId);
 		int[] scrollBag = pet.getCommonData().getDopingBag().getScrollsUsed();
-		for (int i = 0; i < scrollBag.length; i++) {
-			if (scrollBag[i] != 0) {
-				totalDopes += player.getInventory().getItemCountByItemId(scrollBag[i]);
+		for (int scrollId : scrollBag) {
+			if (scrollId != 0) {
+				totalDopes += player.getInventory().getItemCountByItemId(scrollId);
 			}
 		}
 		if (totalDopes == 0) {

@@ -180,7 +180,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * Schedules the next assault after a random delay.
 	 */
 	private void delayedAssault() {
-		startAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> chooseAttackersRace(), Rnd.get(120, 180) * 60000L);
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(this::chooseAttackersRace, Rnd.get(120, 180) * 60000L);
 	}
 
 	/**

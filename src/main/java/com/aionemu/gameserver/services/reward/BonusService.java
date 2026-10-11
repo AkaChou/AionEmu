@@ -164,7 +164,7 @@ public class BonusService {
 			return null;
 		}
 		// 仅一 / Only one
-		QuestBonuses bonus = bonuses.get(0);
+		QuestBonuses bonus = bonuses.getFirst();
 		if (bonus.getType() == BonusType.NONE) {
 			return null;
 		}
@@ -213,8 +213,7 @@ public class BonusService {
 		}
 		List<ItemRaceEntry> finalList = new ArrayList<>();
 
-		for (int i = 0; i < allRewards.length; i++) {
-			ItemRaceEntry r = allRewards[i];
+		for (ItemRaceEntry r : allRewards) {
 			if (!r.checkRace(player.getCommonData().getRace())) {
 				continue;
 			}
@@ -244,7 +243,7 @@ public class BonusService {
 	QuestItems getMedalBonus(Player player, QuestTemplate template) {
 		BonusItemGroup[] groups = itemGroups.getMedalGroups();
 		MedalGroup group = (MedalGroup) getRandomGroup(groups);
-		int bonusLevel = template.getBonus().get(0).getLevel();
+		int bonusLevel = template.getBonus().getFirst().getLevel();
 
 		MedalItem finalReward = null;
 
@@ -282,8 +281,7 @@ public class BonusService {
 		ManastoneGroup group = (ManastoneGroup) getRandomGroup(BonusType.MANASTONE);
 		ItemRaceEntry[] allRewards = group.getRewards();
 		List<ItemRaceEntry> finalList = new ArrayList<>();
-		for (int i = 0; i < allRewards.length; i++) {
-			ItemRaceEntry r = allRewards[i];
+		for (ItemRaceEntry r : allRewards) {
 			ItemTemplate template = DataManager.ITEM_DATA.getItemTemplate(r.getId());
 			if (bonus.getLevel() != template.getLevel()) {
 				continue;

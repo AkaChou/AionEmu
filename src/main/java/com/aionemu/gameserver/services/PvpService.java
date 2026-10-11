@@ -61,7 +61,7 @@ public class PvpService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final PvpService getInstance() {
+	public static PvpService getInstance() {
 		PvpService resolved = resolvedInstance;
 		if (resolved != null) {
 			return resolved;
@@ -109,12 +109,7 @@ public class PvpService {
 
 
 	private void addKillFor(int winnerId, int victimId) {
-		KillList winnerKillList = pvpKillLists.get(winnerId);
-		if (winnerKillList == null) {
-			winnerKillList = new KillList();
-			pvpKillLists.put(winnerId, winnerKillList);
-		}
-		winnerKillList.addKillFor(victimId);
+		pvpKillLists.computeIfAbsent(winnerId, _ -> new KillList()).addKillFor(victimId);
 	}
 
 	/**
@@ -196,8 +191,8 @@ public class PvpService {
 			}
 		}
 		if (winner.getLevel() - victim.getLevel() <= PvPConfig.MAX_AUTHORIZED_LEVEL_DIFF) {
-			if (getKillsFor(winner.getObjectId().intValue(),
-					victim.getObjectId().intValue()) < PvPConfig.CHAIN_KILL_NUMBER_RESTRICTION) {
+			if (getKillsFor(winner.getObjectId(),
+					victim.getObjectId()) < PvPConfig.CHAIN_KILL_NUMBER_RESTRICTION) {
 				if (PvPConfig.ENABLE_MEDAL_REWARDING) {
 					if (Rnd.get() * 100 < PvPRewardService.getMedalRewardChance(winner, victim)) {
 						int medalId = PvPRewardService.getRewardId(winner, victim, false);
@@ -247,7 +242,7 @@ public class PvpService {
 			}
 		}
 		int playerDamage = 0;
-		boolean success = false;
+		boolean success ;
 
 		// 向造成伤害的小队与玩家分配 AP。 / Distribute AP to groups and players that had damage.
 		for (AggroInfo aggro : victim.getAggroList().getFinalDamageList(true)) {

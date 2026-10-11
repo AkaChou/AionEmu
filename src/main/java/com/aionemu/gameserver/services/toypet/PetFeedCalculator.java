@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.toypet;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -58,9 +57,8 @@ public final class PetFeedCalculator {
 
 		fullCounts = new short[counts.size()];
 		int i = 0;
-		Iterator<Short> countIter = counts.iterator();
-		while (countIter.hasNext()) {
-			fullCounts[i++] = countIter.next();
+		for (short count : counts) {
+			fullCounts[i++] = count;
 		}
 		itemLevels = new byte[ITEM_MAX_LEVEL / 5];
 		itemLevels[0] = 5;
@@ -203,7 +201,7 @@ public final class PetFeedCalculator {
 	 */
 	public static PetFeedResult getReward(int fullCount, PetRewards rewardGroup, PetFeedProgress progress,
 			int playerLevel) {
-		if (progress.getHungryLevel() != PetHungryLevel.FULL || rewardGroup.getResults().size() == 0) {
+		if (progress.getHungryLevel() != PetHungryLevel.FULL || rewardGroup.getResults().isEmpty()) {
 			return null;
 		}
 		int pointsIndex = ArrayUtils.indexOf(fullCounts, (short) fullCount);
@@ -212,7 +210,7 @@ public final class PetFeedCalculator {
 		}
 		if (progress.isLovedFeeded()) { // for cash feed
 			if (rewardGroup.getResults().size() == 1) {
-				return rewardGroup.getResults().get(0);
+				return rewardGroup.getResults().getFirst();
 			}
 			List<PetFeedResult> validRewards = new ArrayList<>();
 			int maxLevel = 0;
@@ -226,11 +224,11 @@ public final class PetFeedCalculator {
 				}
 				validRewards.add(result);
 			}
-			if (validRewards.size() == 0) {
+			if (validRewards.isEmpty()) {
 				return null;
 			}
 			if (validRewards.size() == 1) {
-				return validRewards.get(0);
+				return validRewards.getFirst();
 			}
 			return validRewards.get(Rnd.get(validRewards.size()));
 		}

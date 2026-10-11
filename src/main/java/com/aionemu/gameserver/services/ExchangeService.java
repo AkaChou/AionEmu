@@ -60,7 +60,7 @@ public class ExchangeService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final ExchangeService getInstance() {
+	public static ExchangeService getInstance() {
 		ObjectProvider<ExchangeService> provider = instanceProvider;
 		ExchangeService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -164,17 +164,7 @@ public class ExchangeService {
 		}
 	}
 
-	/**
-	 * 获取对方视角下的交易会话。
-	 * Returns the partner's exchange session for this player.
-	 * @param player 玩家 / player
-	 * @return 对方交易会话 / partner exchange session
-	 */
-	public Exchange getCurrentParnterExchange(Player player) {
-		Player partner = getCurrentParter(player);
-		return partner != null ? getCurrentExchange(partner) : null;
-	}
-
+	
 	/**
 	 * 判断玩家是否处于交易中。
 	 * Returns whether the player is currently in an exchange.
@@ -205,7 +195,7 @@ public class ExchangeService {
 		// 统计已加入交易的数量 / count amount that was already added to exchange
 		availableCount -= currentExchange.getKinahCount();
 
-		long countToAdd = availableCount > itemCount ? itemCount : availableCount;
+		long countToAdd = Math.min(itemCount, availableCount);
 
 		if (countToAdd > 0) {
 			Player partner = getCurrentParter(activePlayer);
@@ -262,11 +252,11 @@ public class ExchangeService {
 			return;
 		}
 		ExchangeItem exchangeItem = currentExchange.getItems().get(item.getObjectId());
+		long actuallAddCount ;
 
-		long actuallAddCount = 0;
 		// 物品先前未添加 / item was not added previosly
 		if (exchangeItem == null) {
-			Item newItem = null;
+			Item newItem ;
 			if (itemCount < item.getItemCount()) {
 				newItem = ItemFactory.newItem(item.getItemId(), itemCount);
 			} else {
@@ -284,7 +274,7 @@ public class ExchangeService {
 				return;
 			}
 			long possibleToAdd = item.getItemCount() - exchangeItem.getItemCount();
-			actuallAddCount = itemCount > possibleToAdd ? possibleToAdd : itemCount;
+			actuallAddCount = Math.min(itemCount, possibleToAdd);
 			exchangeItem.addCount(actuallAddCount);
 		}
 

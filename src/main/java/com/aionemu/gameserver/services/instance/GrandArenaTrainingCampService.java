@@ -50,7 +50,7 @@ public class GrandArenaTrainingCampService {
 		if (AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_ENABLED) {
 			log.info(I18n.get("log.5e476c3f89e2"));
 			// IDTM_LobbyP01 SAT-SUN "6PM-0AM"
-            GameCronServices.cronService().schedule(() -> startGrandArenaTrainingCampRegistration(), AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING);
+            GameCronServices.cronService().schedule(this::startGrandArenaTrainingCampRegistration, AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING);
 		}
 	}
 

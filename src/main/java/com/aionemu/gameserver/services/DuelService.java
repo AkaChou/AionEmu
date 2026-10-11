@@ -58,7 +58,7 @@ public class DuelService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final DuelService getInstance() {
+	public static DuelService getInstance() {
 		ObjectProvider<DuelService> provider = instanceProvider;
 		DuelService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -262,26 +262,7 @@ public class DuelService {
 		removeDuel(player.getObjectId(), opponnentId);
 	}
 
-	/**
-	 * 竞技场决斗失败时的轻量清理（不广播普通决斗结果）。
-	 * Lightweight arena duel loss cleanup without normal duel result broadcast.
-	 * losing player
-	 */
-	public void loseArenaDuel(Player player) {
-		if (!isDueling(player.getObjectId())) {
-			return;
-		}
-		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
-		player.getController().cancelCurrentSkill();
-		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
-		if (opponent != null) {
-			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
-			opponent.getController().cancelCurrentSkill();
-		}
-		removeDuel(player.getObjectId(), opponnentId);
-	}
-
+	
 	/**
 	 * 创建 5 分钟决斗超时任务。
 	 * Creates a 5-minute duel timeout task.

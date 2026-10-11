@@ -167,15 +167,7 @@ public class DynamicRiftService {
 		return activeDynamicRift.containsKey(id);
 	}
 
-	/**
-	 * 获取当前激活的动态裂隙映射。
-	 * Returns the map of active dynamic rifts.
-	 * active rifts
-	 */
-	public Map<Integer, DynamicRift<?>> getActiveDynamicRift() {
-		return activeDynamicRift;
-	}
-
+	
 	/**
 	 * 返回配置的动态裂隙持续时长（小时）。
 	 * Returns configured dynamic-rift duration in hours.

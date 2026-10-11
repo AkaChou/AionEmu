@@ -62,7 +62,7 @@ public class RespawnService {
 	 * visible object
 	 * @return 重生任务句柄 / respawn task handle
 	 */
-	public static final Future<?> scheduleRespawnTask(VisibleObject visibleObject) {
+	public static Future<?> scheduleRespawnTask(VisibleObject visibleObject) {
 		final int interval = visibleObject.getSpawn().getRespawnTime();
 		SpawnTemplate spawnTemplate = visibleObject.getSpawn();
 		int instanceId = visibleObject.getInstanceId();
@@ -74,23 +74,22 @@ public class RespawnService {
 	 * Performs a single respawn in the given instance.
 	 * @param spawnTemplate spawn template
 	 * @param instanceId instance id
-	 * @return 重生后的可见对象，不可重生时为 null / respawned object, or null if not allowed
 	 */
-	private static final VisibleObject respawn(SpawnTemplate spawnTemplate, final int instanceId) {
+	private static void respawn(SpawnTemplate spawnTemplate, final int instanceId) {
 		if (spawnTemplate.isTemporarySpawn() && !spawnTemplate.getTemporarySpawn().canSpawn()
 				&& !spawnTemplate.getTemporarySpawn().isInSpawnTime()) {
-			return null;
+			return;
 		}
 		int worldId = spawnTemplate.getWorldId();
 		boolean instanceExists = InstanceService.isInstanceExist(worldId, instanceId);
 		if (spawnTemplate.isNoRespawn() || !instanceExists) {
-			return null;
+			return;
 		}
 
 		if (spawnTemplate.hasPool()) {
 			spawnTemplate = spawnTemplate.changeTemplate(instanceId);
 		}
-		return SpawnEngine.spawnObject(spawnTemplate, instanceId);
+		SpawnEngine.spawnObject(spawnTemplate, instanceId);
 	}
 
 	/**

@@ -24,7 +24,6 @@ import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -201,12 +200,7 @@ public class HousingService {
 				}
 				customHouse.spawn(instanceId);
 				spawnedCounter++;
-				List<House> housesForMap = housesByMapId.get(worldId);
-				if (housesForMap == null) {
-					housesForMap = new ArrayList<>();
-					housesByMapId.put(worldId, housesForMap);
-				}
-				housesForMap.add(customHouse);
+				housesByMapId.computeIfAbsent(worldId, _ -> new ArrayList<>()).add(customHouse);
 			}
 		}
 		if (spawnedCounter > 0) {
@@ -261,22 +255,7 @@ public class HousingService {
 		return 0;
 	}
 
-	/**
-	 * 重置房屋自定义装饰外观。
-	 * Resets custom decorative parts of the house.
-	 *
-	 * @param house 目标房屋 / target house
-	 */
-	public void resetAppearance(House house) {
-		List<HouseDecoration> customParts = house.getRegistry().getCustomParts();
-		for (HouseDecoration deco : customParts) {
-			deco.setPersistentState(PersistentState.DELETED);
-		}
-		for (HouseDecoration deco : customParts) {
-			house.getRegistry().removeCustomPart(deco.getObjectId());
-		}
-	}
-
+	
 	/**
 	 * 按名称查找自定义房屋。
 	 * Finds a custom house by name.
@@ -360,16 +339,7 @@ public class HousingService {
 		}
 	}
 
-	/**
-	 * 为玩家注册（创建）工作室。
-	 * Registers (creates) a studio for the player.
-	 *
-	 * @param player 玩家 / player
-	 */
-	public void registerPlayerStudio(Player player) {
-		createStudio(player);
-	}
-
+	
 	/**
 	 * 扣费后重新创建玩家工作室。
 	 * Recreates the player's studio after charging the land fee.
@@ -398,7 +368,7 @@ public class HousingService {
 			return;
 		}
 		HousingLand land = DataManager.HOUSE_DATA.getLand(player.getRace() == Race.ELYOS ? 329001 : 339001);
-		House studio = new House(land.getDefaultBuilding(), land.getAddresses().get(0));
+		House studio = new House(land.getDefaultBuilding(), land.getAddresses().getFirst());
 		studio.setOwnerId(player.getObjectId());
 		synchronized (studios) {
 			studios.put(player.getObjectId(), studio);

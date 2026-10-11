@@ -81,6 +81,6 @@ public class SiegeCounter {
 	public SiegeRaceCounter getWinnerRaceCounter() {
 		List<SiegeRaceCounter> list = Lists.newArrayList(siegeRaceCounters.values());
 		Collections.sort(list);
-		return list.get(0);
+		return list.getFirst();
 	}
 }

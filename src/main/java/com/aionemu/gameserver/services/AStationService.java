@@ -13,7 +13,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SERVER_IDS;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.services.transfers.AStation;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.WorldType;
 
 /**
  * A-Station（快速通道）跨服服务，处理授权、迁入迁出与账号占用校验。
@@ -129,23 +128,6 @@ public class AStationService {
 	public void aStationBonus(Player player, boolean off) {
 	}
 
-	/**
-	 * 判断是否为 PvP 类型地图。
-	 * Returns whether the world type is a PvP zone.
-	 * @param wt 世界类型 / world type
-	 * whether PvP zone
-	 */
-	public boolean isPvPZone(WorldType wt) {
-		return wt == WorldType.BALAUREA || wt == WorldType.PANESTERRA || wt == WorldType.ABYSS;
-	}
-
-	/**
-	 * 判断是否为普通大陆地图。
-	 * Returns whether the world type is a normal continent zone.
-	 * @param wt 世界类型 / world type
-	 * @return 是否普通区 / whether normal zone
-	 */
-	public boolean isNormalZone(WorldType wt) {
-		return wt == WorldType.ASMODAE || wt == WorldType.ELYSEA || wt == WorldType.NONE;
-	}
+	
+	
 }

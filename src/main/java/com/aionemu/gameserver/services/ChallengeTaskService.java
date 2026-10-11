@@ -71,7 +71,7 @@ public class ChallengeTaskService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final ChallengeTaskService getInstance() {
+	public static ChallengeTaskService getInstance() {
 		ObjectProvider<ChallengeTaskService> provider = instanceProvider;
 		ChallengeTaskService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -312,10 +312,7 @@ public class ChallengeTaskService {
 					Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberObjId);
 					if (member != null) {
 						int score = member.getLegionMember().getChallengeScore();
-						if (winnersByPoints.get(score) == null) {
-							winnersByPoints.put(score, new ArrayList<>());
-						}
-						winnersByPoints.get(score).add(member.getObjectId());
+						winnersByPoints.computeIfAbsent(score, _ -> new ArrayList<>()).add(member.getObjectId());
 						member.getLegionMember().setChallengeScore(0);
 						continue;
 					} else {
@@ -325,10 +322,7 @@ public class ChallengeTaskService {
 						if (score <= 0) {
 							continue;
 						}
-						if (winnersByPoints.get(score) == null) {
-							winnersByPoints.put(score, new ArrayList<>());
-						}
-						winnersByPoints.get(score).add(legionMember.getObjectId());
+						winnersByPoints.computeIfAbsent(score, _ -> new ArrayList<>()).add(legionMember.getObjectId());
 						legionMember.setChallengeScore(0);
 						this.legionMemberDAO.storeLegionMember(memberObjId, legionMember);
 					}

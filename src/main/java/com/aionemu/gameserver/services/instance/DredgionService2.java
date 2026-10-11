@@ -49,11 +49,11 @@ public class DredgionService2 {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
 			log.info(I18n.get("log.e829b9492ce7"));
 			// 战舰 周一至周日 12:00–13:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
-			GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
+			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
 			// 战舰 周一至周日 20:00–21:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
-			GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
+			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
 			// 战舰 周一至周日 23:00–00:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
-			GameCronServices.cronService().schedule(() -> startDredgionRegistration(), AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
+			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
 		}
 	}
 

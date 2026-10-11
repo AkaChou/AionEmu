@@ -650,7 +650,7 @@ public abstract class Battleground {
 	 */
 	protected void scheduleGroupDisband(final PlayerGroup group) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			while (group.size() > 0) {
+			while (!group.isEmpty()) {
 				PlayerGroupService.removePlayer((Player) group.getMembers().toArray()[0]);
 			}
 		}, 2000);
@@ -664,7 +664,7 @@ public abstract class Battleground {
 	 */
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance) {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			while (alliance.size() > 0) {
+			while (!alliance.isEmpty()) {
 				PlayerAllianceService.removePlayer(((Player) alliance.getMembers().toArray()[0]));
 			}
 		}, 2000);
@@ -1334,7 +1334,7 @@ public abstract class Battleground {
 		 * 获取静态门 ID 列表。
 		 * Returns static door ids.
 		 */
-		private List<Integer> staticDoors = null;
+		private final List<Integer> staticDoors = null;
 		/**
 		 * Kill Z threshold / Kill Z threshold
 		 * -- GETTER --

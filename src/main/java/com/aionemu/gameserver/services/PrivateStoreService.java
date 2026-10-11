@@ -96,7 +96,7 @@ public class PrivateStoreService {
 				decreaseKinahAmount(buyer, price);
 				increaseKinahAmount(seller, price);
 
-				if (store.getSoldItems().size() == 0) {
+				if (store.getSoldItems().isEmpty()) {
 					closePrivateStore(seller);
 				}
 			}
@@ -160,11 +160,11 @@ public class PrivateStoreService {
 				return;
 			}
 
-			for (int i = 0; i < tradePSItems.length; i++) {
-				Item item = getItemByObjId(activePlayer, tradePSItems[i].getItemObjId());
+			for (TradePSItem tradePSItem : tradePSItems) {
+				Item item = getItemByObjId(activePlayer, tradePSItem.getItemObjId());
 				if (item != null && item.isTradeable(activePlayer)) {
-					if (validateItem(store, item, tradePSItems[i])) {
-						store.addItemToSell(tradePSItems[i].getItemObjId(), tradePSItems[i]);
+					if (validateItem(store, item, tradePSItem)) {
+						store.addItemToSell(tradePSItem.getItemObjId(), tradePSItem);
 					}
 				}
 			}

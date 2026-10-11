@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.commons.utils.Rnd;
@@ -45,8 +44,8 @@ public class PvPRewardService {
         };
         if (rewardString != null) {
 			String[] parts = rewardString.split(",");
-			for (int i = 0; i < parts.length; i++) {
-				rewardList.add(Integer.valueOf(Integer.parseInt(parts[i])));
+			for (String part : parts) {
+				rewardList.add(Integer.parseInt(part));
 			}
 		} else {
 			log.warn(I18n.get("log.0efb21e8756c", pc.toString()));
@@ -74,7 +73,7 @@ public class PvPRewardService {
 			}
 		} else {
 			List<Integer> abyssItemsList = getAdvancedReward(winner);
-			itemId = abyssItemsList.get(Rnd.get(abyssItemsList.size())).intValue();
+			itemId = abyssItemsList.get(Rnd.get(abyssItemsList.size()));
 		}
 		return itemId;
 	}
@@ -202,8 +201,7 @@ public class PvPRewardService {
 	private static List<Integer> getFilteredRewardList(PlayerClass pc, int minLevel, int maxLevel) {
 		List<Integer> filteredRewardList = new ArrayList<>();
 		List<Integer> rewardList = getRewardList(pc);
-		for (Iterator<Integer> i = rewardList.iterator(); i.hasNext();) {
-			int id = i.next();
+		for (int id : rewardList) {
 			ItemTemplate itemTemp = DataManager.ITEM_DATA.getItemTemplate(id);
 			if (itemTemp == null) {
 				log.warn(I18n.get("log.55ee25a26830", id, pc.toString()));
@@ -213,6 +211,6 @@ public class PvPRewardService {
 				filteredRewardList.add(id);
 			}
 		}
-		return filteredRewardList.size() > 0 ? filteredRewardList : new ArrayList<>();
+		return !filteredRewardList.isEmpty() ? filteredRewardList : new ArrayList<>();
 	}
 }

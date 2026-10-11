@@ -81,7 +81,7 @@ public class MailService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final MailService getInstance() {
+	public static MailService getInstance() {
 		MailService resolved = resolvedInstance;
 		if (resolved != null) {
 			return resolved;
@@ -197,7 +197,6 @@ public class MailService {
 		}
 		InventorySnapshot inventorySnapshot = InventorySnapshot.capture(senderInventory);
 		Item attachedItem = null;
-		boolean createdAttachedItem = false;
 		int finalAttachedKinahCount = 0;
 		int finaAttachedApCount = 0;
 
@@ -215,7 +214,6 @@ public class MailService {
 				return;
 			}
 			float qualityPriceRate = switch (senderItem.getItemTemplate().getItemQuality()) {
-				case JUNK, COMMON -> 0.02f;
 				case RARE -> 0.03f;
 				case LEGEND, UNIQUE -> 0.04f;
 				case MYTHIC, EPIC -> 0.05f;
@@ -250,15 +248,11 @@ public class MailService {
 				attachedItem = senderItem;
 			} else if (senderItem.getItemCount() > attachedItemCount) {
 				attachedItem = ItemFactory.newItem(senderItem.getItemTemplate().getTemplateId(), attachedItemCount);
-				createdAttachedItem = attachedItem != null;
 				senderInventory.decreaseItemCount(senderItem, attachedItemCount);
 			}
 
 			if (attachedItem == null) {
 				inventorySnapshot.restore();
-				if (createdAttachedItem && attachedItem != null) {
-					ItemService.releaseItemId(attachedItem);
-				}
 				return;
 			}
 			attachedItem.setEquipped(false);
@@ -285,7 +279,7 @@ public class MailService {
 		} else {
 			AuditLogger.info(sender, "Mail kinah exploit.");
 			inventorySnapshot.restore();
-			if (createdAttachedItem && attachedItem != null) {
+			if (attachedItem != null) {
 				ItemService.releaseItemId(attachedItem);
 			}
 			return;
@@ -300,7 +294,7 @@ public class MailService {
 		if (!storeSentMail(sender, recipientCommonData, recipientMailbox, attachedItem, newLetter, time)) {
 			inventorySnapshot.restore();
 			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
-			if (createdAttachedItem && attachedItem != null) {
+			if (attachedItem != null) {
 				ItemService.releaseItemId(attachedItem);
 			}
 			return;
@@ -310,7 +304,7 @@ public class MailService {
 			recipientMailbox.putLetterToMailbox(newLetter);
 
 			// 收件人的数据包 / packets for recipient
-			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE(recipientMailbox));
+			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE());
 			recipientMailbox.isMailListUpdateRequired = true;
 
 			// 若收件人已打开邮件列表则应更新 / if recipient have opened mail list we should update it
@@ -335,18 +329,16 @@ public class MailService {
 		Integer legionId = sender.getLegion() == null ? null : sender.getLegion().getLegionId();
 		int mailboxLetters = recipientCommonData.getMailboxLetters() + 1;
 
-		InventoryDAO invDAO = inventoryDAO;
-		MailDAO mDAO = mailDAO;
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {
-				invDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
+				inventoryDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
 				if (attachedItem != null) {
-					invDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
 				}
-				mDAO.storeLetterInTransaction(con, time, letter);
+				mailDAO.storeLetterInTransaction(con, time, letter);
 				if (recipientMailbox == null) {
-					mDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
+					mailDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
 				}
 				con.commit();
 			} catch (SQLException e) {
@@ -358,10 +350,10 @@ public class MailService {
 			return false;
 		}
 
-		invDAO.markStored(senderItems);
+		inventoryDAO.markStored(senderItems);
 		sender.markDirtyItemContainersStored();
 		if (attachedItem != null) {
-			invDAO.markStored(List.of(attachedItem));
+			inventoryDAO.markStored(List.of(attachedItem));
 		}
 		letter.setPersistState(com.aionemu.gameserver.model.gameobjects.PersistentState.UPDATED);
 		if (recipientMailbox == null) {
@@ -478,16 +470,14 @@ public class MailService {
 	}
 
 	private boolean storeClaimedAttachment(Player player, Letter letter, List<Item> items, AbyssRank abyssRank) {
-		InventoryDAO invDAO = inventoryDAO;
-		MailDAO mDAO = mailDAO;
 		try (Connection con = DatabaseFactory.getConnection()) {
 			con.setAutoCommit(false);
 			try {
-				invDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
+				inventoryDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
 				if (abyssRank != null) {
 					abyssRankDAO.storeInTransaction(con, player.getObjectId(), abyssRank);
 				}
-				mDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
+				mailDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
 				con.commit();
 			} catch (SQLException e) {
 				con.rollback();
@@ -497,7 +487,7 @@ public class MailService {
 			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId()), e);
 			return false;
 		}
-		invDAO.markStored(items);
+		inventoryDAO.markStored(items);
 		letter.setPersistState(PersistentState.UPDATED);
 		return true;
 	}
@@ -537,7 +527,6 @@ public class MailService {
 				return false;
 			}
 			float qualityPriceRate = switch (senderItem.getItemTemplate().getItemQuality()) {
-                case JUNK, COMMON -> 0.02f;
                 case RARE -> 0.03f;
                 case LEGEND, UNIQUE -> 0.04f;
                 case MYTHIC, EPIC -> 0.05f;
@@ -614,7 +603,7 @@ public class MailService {
 	 * @param player 玩家 / player
 	 */
 	public void refreshMail(Player player) {
-		PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
+		PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE());
 		PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player, player.getMailbox().getLetters(), false));
 	}
 
@@ -644,7 +633,7 @@ public class MailService {
 		@Override
 		public void run() {
 			player.setMailbox(mailDAO.loadPlayerMailbox(player));
-			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
+			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE());
 			GameHousingServices.housingBidService().onPlayerLogin(player);
 		}
 	}

@@ -199,7 +199,7 @@ public class PortalService {
 					return;
 				} else {
 					reenter = true;
-					log.debug(player.getName() + "has been in intance and also have cd, can reenter.");
+					log.debug("{}has been in intance and also have cd, can reenter.", player.getName());
 				}
 			}
 		} else {

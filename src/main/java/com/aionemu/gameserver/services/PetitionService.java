@@ -46,7 +46,7 @@ public class PetitionService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *         when no provider or bean is available
 	 */
-	public static final PetitionService getInstance() {
+	public static PetitionService getInstance() {
 		ObjectProvider<PetitionService> provider = instanceProvider;
 		PetitionService provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {
@@ -154,26 +154,7 @@ public class PetitionService {
 		}
 	}
 
-	/**
-	 * 注册新请愿并通知在线 GM。
-	 * Registers a new petition and notifies online GMs.
-	 * sender
-	 * type id
-	 * title
-	 * content text
-	 * additional data
-	 * created petition
-	 */
-	public synchronized Petition registerPetition(Player sender, int typeId, String title, String contentText,
-			String additionalData) {
-		int id = petitionDAO.getNextAvailableId();
-		Petition ptt = new Petition(id, sender.getObjectId(), typeId, title, contentText, additionalData, 0);
-		petitionDAO.insertPetition(ptt);
-		registeredPetitions.put(ptt.petitionId(), ptt);
-		broadcastMessageToGM(sender, ptt.petitionId());
-		return ptt;
-	}
-
+	
 	/**
 	 * 向所有仍有请愿的在线玩家重发队列状态。
 	 * Rebroadcasts queue status to all online players with active petitions.
@@ -246,15 +227,7 @@ public class PetitionService {
 		return null;
 	}
 
-	/**
-	 * 获取下一个可用请愿 ID（当前实现固定返回 0）。
-	 * Returns the next available petition id (current implementation always returns 0).
-	 * petition id
-	 */
-	public synchronized int getNextAvailablePetitionId() {
-		return 0;
-	}
-
+	
 	/**
 	 * 计算该玩家前方排队人数。
 	 * Counts how many petitioners are waiting ahead of this player.

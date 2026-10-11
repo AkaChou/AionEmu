@@ -553,7 +553,7 @@ public class DropService {
 
 	private void resendDropList(Player player, int npcId, DropNpc dropNpc, Set<DropItem> dropItems) {
 		Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
-		if (dropItems.size() != 0) {
+		if (!dropItems.isEmpty()) {
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(dropNpc, dropItems, player));
 			}

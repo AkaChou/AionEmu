@@ -34,7 +34,7 @@ public class BoostEventService implements StatOwner {
 	 */
 	public void onStart() {
 		Map<Integer, BoostEvents> raw = DataManager.BOOST_EVENT_DATA.getAll();
-		if (raw.size() != 0) {
+		if (!raw.isEmpty()) {
 			getBoostEvent(raw);
 		}
 	}

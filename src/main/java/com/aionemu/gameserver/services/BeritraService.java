@@ -498,16 +498,7 @@ public class BeritraService {
 		return activeInvasions.containsKey(id);
 	}
 
-	/**
-	 * 返回当前活跃的入侵映射。
-	 * Return the map of currently active invasions.
-	 *
-	 * @return 地点 ID → 入侵实例 / location id to invasion instance
-	 */
-	public Map<Integer, BeritraInvasion<?>> getActiveInvasions() {
-		return activeInvasions;
-	}
-
+	
 	/**
 	 * 返回入侵持续时长（小时，来自配置）。
 	 * Return invasion duration in hours (from config).

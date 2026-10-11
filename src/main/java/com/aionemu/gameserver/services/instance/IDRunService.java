@@ -50,7 +50,7 @@ public class IDRunService {
 		if (AutoGroupConfig.IDRUN_ENABLED) {
 			log.info(I18n.get("log.d139cc6b9301"));
 			// IDRun ？？？？ / IDRun ????
-            GameCronServices.cronService().schedule(() -> startIDRunRegistration(), AutoGroupConfig.IDRUN_SCHEDULE);
+            GameCronServices.cronService().schedule(this::startIDRunRegistration, AutoGroupConfig.IDRUN_SCHEDULE);
 		}
 	}
 

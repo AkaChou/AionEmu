@@ -1,28 +1,25 @@
 package com.aionemu.gameserver.model.guide;
 
-import lombok.Getter;
-import lombok.AllArgsConstructor;
 
 /**
  * 指南模型。
  * Guide model.
+ *
+ * @param title 获取称号。 / Returns the title.
  * @author xTz
  */
-@Getter
-@AllArgsConstructor
-public class Guide {
+public record Guide(int guide_id, int player_id, String title) {
 
-	private final int guide_id;
-	private final int player_id;
-	/** 获取称号。 / Returns the title. */
-	private final String title;
-
-	/** 返回引导 ID / Returns the guide id */
+	/**
+	 * 返回引导 ID / Returns the guide id
+	 */
 	public int getGuideId() {
 		return guide_id;
 	}
 
-	/** 返回玩家 ID / Returns the player id */
+	/**
+	 * 返回玩家 ID / Returns the player id
+	 */
 	public int getPlayerId() {
 		return player_id;
 	}

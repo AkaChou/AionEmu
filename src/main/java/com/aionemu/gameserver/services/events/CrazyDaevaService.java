@@ -55,7 +55,7 @@ public class CrazyDaevaService {
 		}
 		String[] times = EventsConfig.CRAZY_TIMES.split("\\|");
 		for (String cron : times) {
-			Runnable schedule = () -> checkStart();
+			Runnable schedule = this::checkStart;
 			schedules.add(schedule);
 			GameCronServices.cronService().schedule(schedule, cron);
 			log.info(I18n.get("log.22a3e7a99e76", cron, EventsConfig.CRAZY_ENDTIME));

@@ -188,15 +188,7 @@ public class NightmareCircusService {
 		return activeNightmareCircus.containsKey(id);
 	}
 
-	/**
-	 * 获取进行中的马戏团实例映射。
-	 * Returns the map of active circus instances.
-	 * @return 活动实例映射 / active instances map
-	 */
-	public Map<Integer, CircusInstance<?>> getActiveNightmareCircus() {
-		return activeNightmareCircus;
-	}
-
+	
 	/**
 	 * 获取活动持续时长（小时）。
 	 * Returns the event duration in hours.
