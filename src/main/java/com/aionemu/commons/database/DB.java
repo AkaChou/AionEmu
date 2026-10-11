@@ -2,6 +2,7 @@ package com.aionemu.commons.database;
 
 
 import com.aionemu.boot.i18n.I18n;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,295 +26,280 @@ import lombok.AccessLevel;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class DB {
 
-    /**
-     * 执行查询操作
-     * Execute a select query
-     * @param query 查询 SQL 语句 / The SQL query statement
-     * @param reader 结果集处理器 / The result set handler
-     * @return 查询是否成功 / Whether the query was successful
-     */
-    public static boolean select(String query, ReadStH reader) {
-        return select(query, reader, null);
-    }
+	/**
+	 * 执行查询操作
+	 * Execute a select query
+	 *
+	 * @param query  查询 SQL 语句 / The SQL query statement
+	 * @param reader 结果集处理器 / The result set handler
+	 * @return 查询是否成功 / Whether the query was successful
+	 */
+	public static boolean select(String query, ReadStH reader) {
+		return select(query, reader, null);
+	}
 
-    /**
-     * 执行查询操作，支持错误消息
-     * Execute a select query with error message support
-     * @param query 查询 SQL 语句 / The SQL query statement
-     * @param reader 结果集处理器 / The result set handler
-     * @param errMsg 错误消息 / Error message
-     * @return 查询是否成功 / Whether the query was successful
-     */
-    public static boolean select(String query, ReadStH reader, String errMsg) {
-        Connection con = null;
-        PreparedStatement stmt = null;
+	/**
+	 * 执行查询操作，支持错误消息
+	 * Execute a select query with error message support
+	 *
+	 * @param query  查询 SQL 语句 / The SQL query statement
+	 * @param reader 结果集处理器 / The result set handler
+	 * @param errMsg 错误消息 / Error message
+	 * @return 查询是否成功 / Whether the query was successful
+	 */
+	public static boolean select(String query, ReadStH reader, String errMsg) {
 
-        try {
-            con = DatabaseFactory.getConnection();
-            stmt = con.prepareStatement(query);
-            if (reader instanceof ParamReadStH) {
-                ((ParamReadStH)reader).setParams(stmt);
-            }
+		try (Connection con = DatabaseFactory.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+			try {
+				if (reader instanceof ParamReadStH) {
+					((ParamReadStH) reader).setParams(stmt);
+				}
 
-            ResultSet rset = stmt.executeQuery();
-            reader.handleRead(rset);
-            return true;
-        } catch (Exception var17) {
-            if (errMsg == null) {
-                log.warn(I18n.get("log.47cff7ac9cfa", query), var17);
-            } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
-            }
-            return false;
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (Exception var16) {
-                log.warn(I18n.get("log.687eec966cd6"), var16);
-            }
-        }
-    }
+				ResultSet rset = stmt.executeQuery();
+				reader.handleRead(rset);
+				return true;
+			} catch (Exception var17) {
+				if (errMsg == null) {
+					log.warn(I18n.get("log.47cff7ac9cfa", query), var17);
+				} else {
+					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
+				}
+				return false;
+			}
+		} catch (Exception var16) {
+			log.warn(I18n.get("log.687eec966cd6"), var16);
+			return false;
+		}
+	}
 
-    /**
-     * 调用存储过程
-     * Call a stored procedure
-     * @param query 存储过程调用语句 / The stored procedure call statement
-     * @param reader 结果集处理器 / The result set handler
-     * @return 调用是否成功 / Whether the call was successful
-     */
-    public static boolean call(String query, ReadStH reader) {
-        return call(query, reader, null);
-    }
+	/**
+	 * 调用存储过程
+	 * Call a stored procedure
+	 *
+	 * @param query  存储过程调用语句 / The stored procedure call statement
+	 * @param reader 结果集处理器 / The result set handler
+	 * @return 调用是否成功 / Whether the call was successful
+	 */
+	public static boolean call(String query, ReadStH reader) {
+		return call(query, reader, null);
+	}
 
-    /**
-     * 调用存储过程，支持错误消息
-     * Call a stored procedure with error message support
-     * @param query 存储过程调用语句 / The stored procedure call statement
-     * @param reader 结果集处理器 / The result set handler
-     * @param errMsg 错误消息 / Error message
-     * @return 调用是否成功 / Whether the call was successful
-     */
-    public static boolean call(String query, ReadStH reader, String errMsg) {
-        Connection con = null;
-        CallableStatement stmt = null;
+	/**
+	 * 调用存储过程，支持错误消息
+	 * Call a stored procedure with error message support
+	 *
+	 * @param query  存储过程调用语句 / The stored procedure call statement
+	 * @param reader 结果集处理器 / The result set handler
+	 * @param errMsg 错误消息 / Error message
+	 * @return 调用是否成功 / Whether the call was successful
+	 */
+	public static boolean call(String query, ReadStH reader, String errMsg) {
 
-        try {
-            con = DatabaseFactory.getConnection();
-            stmt = con.prepareCall(query);
-            if (reader instanceof CallReadStH) {
-                ((CallReadStH)reader).setParams(stmt);
-            }
+		try (Connection con = DatabaseFactory.getConnection(); CallableStatement stmt = con.prepareCall(query)) {
+			try {
+				if (reader instanceof CallReadStH) {
+					((CallReadStH) reader).setParams(stmt);
+				}
 
-            ResultSet rset = stmt.executeQuery();
-            reader.handleRead(rset);
-            return true;
-        } catch (Exception var17) {
-            if (errMsg == null) {
-                log.warn(I18n.get("log.7e2c163a97cb", query), var17);
-            } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
-            }
-            return false;
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (Exception var16) {
-                log.warn(I18n.get("log.687eec966cd6"), var16);
-            }
-        }
-    }
+				ResultSet rset = stmt.executeQuery();
+				reader.handleRead(rset);
+				return true;
+			} catch (Exception var17) {
+				if (errMsg == null) {
+					log.warn(I18n.get("log.7e2c163a97cb", query), var17);
+				} else {
+					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
+				}
+				return false;
+			}
+		} catch (Exception var16) {
+			log.warn(I18n.get("log.687eec966cd6"), var16);
+			return false;
+		}
+	}
 
-    /**
-     * 执行插入或更新操作
-     * Execute an insert or update operation
-     * @param query 查询 SQL 语句 / The SQL statement
-     * @return 操作是否成功 / Whether the operation was successful
-     */
-    public static boolean insertUpdate(String query) {
-        return insertUpdate(query, null, null);
-    }
+	/**
+	 * 执行插入或更新操作
+	 * Execute an insert or update operation
+	 *
+	 * @param query 查询 SQL 语句 / The SQL statement
+	 * @return 操作是否成功 / Whether the operation was successful
+	 */
+	public static boolean insertUpdate(String query) {
+		return insertUpdate(query, null, null);
+	}
 
-    /**
-     * 执行插入或更新操作，支持错误消息
-     * Execute an insert or update operation with error message support
-     * @param query 查询 SQL 语句 / The SQL statement
-     * @param errMsg 错误消息 / Error message
-     * @return 操作是否成功 / Whether the operation was successful
-     */
-    public static boolean insertUpdate(String query, String errMsg) {
-        return insertUpdate(query, null, errMsg);
-    }
+	/**
+	 * 执行插入或更新操作，支持错误消息
+	 * Execute an insert or update operation with error message support
+	 *
+	 * @param query  查询 SQL 语句 / The SQL statement
+	 * @param errMsg 错误消息 / Error message
+	 * @return 操作是否成功 / Whether the operation was successful
+	 */
+	public static boolean insertUpdate(String query, String errMsg) {
+		return insertUpdate(query, null, errMsg);
+	}
 
-    /**
-     * 执行插入或更新操作，支持批处理
-     * Execute an insert or update operation with batch support
-     * @param query 查询 SQL 语句 / The SQL statement
-     * @param batch 批处理处理器 / The batch handler
-     * @return 操作是否成功 / Whether the operation was successful
-     */
-    public static boolean insertUpdate(String query, IUStH batch) {
-        return insertUpdate(query, batch, null);
-    }
+	/**
+	 * 执行插入或更新操作，支持批处理
+	 * Execute an insert or update operation with batch support
+	 *
+	 * @param query 查询 SQL 语句 / The SQL statement
+	 * @param batch 批处理处理器 / The batch handler
+	 * @return 操作是否成功 / Whether the operation was successful
+	 */
+	public static boolean insertUpdate(String query, IUStH batch) {
+		return insertUpdate(query, batch, null);
+	}
 
-    /**
-     * 执行插入或更新操作，支持批处理和错误消息
-     * Execute an insert or update operation with batch and error message support
-     * @param query 查询 SQL 语句 / The SQL statement
-     * @param batch 批处理处理器 / The batch handler
-     * @param errMsg 错误消息 / Error message
-     * @return 操作是否成功 / Whether the operation was successful
-     */
-    public static boolean insertUpdate(String query, IUStH batch, String errMsg) {
-        Connection con = null;
-        PreparedStatement stmt = null;
+	/**
+	 * 执行插入或更新操作，支持批处理和错误消息
+	 * Execute an insert or update operation with batch and error message support
+	 *
+	 * @param query  查询 SQL 语句 / The SQL statement
+	 * @param batch  批处理处理器 / The batch handler
+	 * @param errMsg 错误消息 / Error message
+	 * @return 操作是否成功 / Whether the operation was successful
+	 */
+	public static boolean insertUpdate(String query, IUStH batch, String errMsg) {
 
-        try {
-            con = DatabaseFactory.getConnection();
-            stmt = con.prepareStatement(query);
-            if (batch != null) {
-                batch.handleInsertUpdate(stmt);
-            } else {
-                stmt.executeUpdate();
-            }
-            return true;
-        } catch (Exception var16) {
-            if (errMsg == null) {
-                log.warn(I18n.get("log.b9dc77234b58", query), var16);
-            } else {
-                log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var16);
-            }
-            return false;
-        } finally {
-            try {
-                if (con != null) {
-                    con.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (Exception var15) {
-                log.warn(I18n.get("log.687eec966cd6"), var15);
-            }
-        }
-    }
+		try (Connection con = DatabaseFactory.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
+			try {
+				if (batch != null) {
+					batch.handleInsertUpdate(stmt);
+				} else {
+					stmt.executeUpdate();
+				}
+				return true;
+			} catch (Exception var16) {
+				if (errMsg == null) {
+					log.warn(I18n.get("log.b9dc77234b58", query), var16);
+				} else {
+					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var16);
+				}
+				return false;
+			}
+		} catch (Exception var15) {
+			log.warn(I18n.get("log.687eec966cd6"), var15);
+			return false;
+		}
+	}
 
-    /**
-     * 开始一个新的事务
-     * Begin a new transaction
-     * @return 事务对象 / Transaction object
-     * @throws SQLException 如果创建事务失败 / If creating transaction fails
-     */
-    public static Transaction beginTransaction() throws SQLException {
-        Connection con = DatabaseFactory.getConnection();
-        return new Transaction(con);
-    }
+	/**
+	 * 开始一个新的事务
+	 * Begin a new transaction
+	 *
+	 * @return 事务对象 / Transaction object
+	 * @throws SQLException 如果创建事务失败 / If creating transaction fails
+	 */
+	public static Transaction beginTransaction() throws SQLException {
+		Connection con = DatabaseFactory.getConnection();
+		return new Transaction(con);
+	}
 
-    /**
-     * 创建预处理语句
-     * Create a prepared statement
-     * @param sql 查询 SQL 语句 / The SQL statement
-     * @return 预处理语句对象 / PreparedStatement object
-     */
-    public static PreparedStatement prepareStatement(String sql) {
-        return prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-    }
+	/**
+	 * 创建预处理语句
+	 * Create a prepared statement
+	 *
+	 * @param sql 查询 SQL 语句 / The SQL statement
+	 * @return 预处理语句对象 / PreparedStatement object
+	 */
+	public static PreparedStatement prepareStatement(String sql) {
+		return prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+	}
 
-    /**
-     * 创建预处理语句，支持结果集类型和并发性设置
-     * Create a prepared statement with result set type and concurrency settings
-     * @param sql 查询 SQL 语句 / The SQL statement
-     * @param resultSetType 结果集类型 / Result set type
-     * @param resultSetConcurrency 结果集并发性 / Result set concurrency
-     * @return 预处理语句对象 / PreparedStatement object
-     */
-    public static PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) {
-        Connection c = null;
-        PreparedStatement ps = null;
+	/**
+	 * 创建预处理语句，支持结果集类型和并发性设置
+	 * Create a prepared statement with result set type and concurrency settings
+	 *
+	 * @param sql                  查询 SQL 语句 / The SQL statement
+	 * @param resultSetType        结果集类型 / Result set type
+	 * @param resultSetConcurrency 结果集并发性 / Result set concurrency
+	 * @return 预处理语句对象 / PreparedStatement object
+	 */
+	public static PreparedStatement prepareStatement(String sql, int resultSetType, int resultSetConcurrency) {
+		Connection c = null;
+		PreparedStatement ps = null;
 
-        try {
-            c = DatabaseFactory.getConnection();
-            ps = c.prepareStatement(sql, resultSetType, resultSetConcurrency);
-        } catch (Exception var8) {
-            log.error(I18n.get("log.077dab038e28", sql), var8);
-            if (c != null) {
-                try {
-                    c.close();
-                } catch (SQLException var7) {
-                    log.error(I18n.get("log.9a42eb3319dc"), var7);
-                }
-            }
-        }
+		try {
+			c = DatabaseFactory.getConnection();
+			ps = c.prepareStatement(sql, resultSetType, resultSetConcurrency);
+		} catch (Exception var8) {
+			log.error(I18n.get("log.077dab038e28", sql), var8);
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException var7) {
+					log.error(I18n.get("log.9a42eb3319dc"), var7);
+				}
+			}
+		}
 
-        return ps;
-    }
+		return ps;
+	}
 
-    /**
-     * 执行更新操作
-     * Execute an update operation
-     * @param statement 预处理语句对象 / PreparedStatement object
-     * @return 更新的记录数，失败返回-1 / Number of records updated, -1 if failed
-     */
-    public static int executeUpdate(PreparedStatement statement) {
-        try {
-            return statement.executeUpdate();
-        } catch (Exception var2) {
-            log.error(I18n.get("log.bfed240a7aa7"), var2);
-            return -1;
-        }
-    }
+	/**
+	 * 执行更新操作
+	 * Execute an update operation
+	 *
+	 * @param statement 预处理语句对象 / PreparedStatement object
+	 * @return 更新的记录数，失败返回-1 / Number of records updated, -1 if failed
+	 */
+	public static int executeUpdate(PreparedStatement statement) {
+		try {
+			return statement.executeUpdate();
+		} catch (Exception var2) {
+			log.error(I18n.get("log.bfed240a7aa7"), var2);
+			return -1;
+		}
+	}
 
-    /**
-     * 执行更新操作并关闭语句
-     * Execute an update operation and close the statement
-     * @param statement 预处理语句对象 / PreparedStatement object
-     */
-    public static void executeUpdateAndClose(PreparedStatement statement) {
-        executeUpdate(statement);
-        close(statement);
-    }
+	/**
+	 * 执行更新操作并关闭语句
+	 * Execute an update operation and close the statement
+	 *
+	 * @param statement 预处理语句对象 / PreparedStatement object
+	 */
+	public static void executeUpdateAndClose(PreparedStatement statement) {
+		executeUpdate(statement);
+		close(statement);
+	}
 
-    /**
-     * 执行查询操作
-     * Execute a query operation
-     * @param statement 预处理语句对象 / PreparedStatement object
-     * @return 结果集对象 / ResultSet object
-     */
-    public static ResultSet executeQuerry(PreparedStatement statement) {
-        ResultSet rs = null;
-        try {
-            rs = statement.executeQuery();
-        } catch (Exception var3) {
-            log.error(I18n.get("log.85a2b5d243d2"), var3);
-        }
-        return rs;
-    }
+	/**
+	 * 执行查询操作
+	 * Execute a query operation
+	 *
+	 * @param statement 预处理语句对象 / PreparedStatement object
+	 * @return 结果集对象 / ResultSet object
+	 */
+	public static ResultSet executeQuerry(PreparedStatement statement) {
+		ResultSet rs = null;
+		try {
+			rs = statement.executeQuery();
+		} catch (Exception var3) {
+			log.error(I18n.get("log.85a2b5d243d2"), var3);
+		}
+		return rs;
+	}
 
-    /**
-     * 关闭预处理语句
-     * Close the prepared statement
-     * @param statement 预处理语句对象 / PreparedStatement object
-     */
-    public static void close(PreparedStatement statement) {
-        try {
-            if (statement.isClosed()) {
-                log.warn(I18n.get("log.dd9382c5d293"), new Exception());
-                return;
-            }
-            Connection c = statement.getConnection();
-            statement.close();
-            c.close();
-        } catch (Exception var2) {
-            log.error(I18n.get("log.a3f261348388"), var2);
-        }
-    }
+	/**
+	 * 关闭预处理语句
+	 * Close the prepared statement
+	 *
+	 * @param statement 预处理语句对象 / PreparedStatement object
+	 */
+	public static void close(PreparedStatement statement) {
+		try {
+			if (statement.isClosed()) {
+				log.warn(I18n.get("log.dd9382c5d293"), new Exception());
+				return;
+			}
+			Connection c = statement.getConnection();
+			statement.close();
+			c.close();
+		} catch (Exception var2) {
+			log.error(I18n.get("log.a3f261348388"), var2);
+		}
+	}
 }
