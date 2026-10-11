@@ -153,7 +153,7 @@ public class MotionLoggingService {
 			ammoTime = Math.round(distance / sk.getAmmoSpeed() * 1000);// checked with client
 		}
 		// 按弹药速度调整 / adjusting with ammospeed
-		baseTime -= ammoTime;
+		baseTime = (int) (baseTime - ammoTime);
 
 		// 若播放速度不是 100 则调整 clientTime / adjust clientTime if play speed is not 100
 		if (motion.getSpeed() != 100) {
@@ -236,19 +236,19 @@ public class MotionLoggingService {
 					case ASMODIANS:
 						if (st.getGender() == Gender.MALE) {
 							weaponTimeAm.add(weapon,
-									this.recalculate("base", weapon, st.getAttackSpeed(), st.getClientTime()));
+									this.recalculate(weapon, st.getAttackSpeed(), st.getClientTime()));
 						} else {
 							weaponTimeAf.add(weapon,
-									this.recalculate("base", weapon, st.getAttackSpeed(), st.getClientTime()));
+									this.recalculate(weapon, st.getAttackSpeed(), st.getClientTime()));
 						}
 						break;
 					case ELYOS:
 						if (st.getGender() == Gender.MALE) {
 							weaponTimeEm.add(weapon,
-									this.recalculate("base", weapon, st.getAttackSpeed(), st.getClientTime()));
+									this.recalculate(weapon, st.getAttackSpeed(), st.getClientTime()));
 						} else {
 							weaponTimeEf.add(weapon,
-									this.recalculate("base", weapon, st.getAttackSpeed(), st.getClientTime()));
+									this.recalculate(weapon, st.getAttackSpeed(), st.getClientTime()));
 						}
 						break;
 					}
@@ -298,7 +298,7 @@ public class MotionLoggingService {
 						sb.append((map.containsKey(weapon) ? map.get(weapon) : "0"));
 						first = false;
 					} else {
-						sb.append("," + (map.containsKey(weapon) ? map.get(weapon) : "0"));
+						sb.append(",").append(map.containsKey(weapon) ? map.get(weapon) : "0");
 					}
 				}
 
@@ -345,10 +345,9 @@ public class MotionLoggingService {
 	}
 
 	/**
-	 * 按基础值/上限/给定攻速重算时间。 / method used to recalculate time to base, cap or given attackspeed.
+	 * 按基础攻速重算时间。 / Recalculate time to base attack speed.
 	 */
-	private int recalculate(String method, WeaponTypeWrapper weapon, int attackSpeed, int time) {
-		int finalTime ;
+	private int recalculate(WeaponTypeWrapper weapon, int attackSpeed, int time) {
 		TreeMap<WeaponType, float[]> list = new TreeMap<>();
 
 		float[] mace1h = { 750f, 1500f };
@@ -380,27 +379,12 @@ public class MotionLoggingService {
 		list.put(WeaponType.HARP_2H, sword_bow_keyblade_harp);
 		list.put(WeaponType.KEYBLADE_2H, sword_bow_keyblade_harp);
 
-		float speed = 0;
-		if (method.equalsIgnoreCase("base")) {
-			speed = list.get(weapon.mainHand())[1];
-			if (weapon.offHand() != null) {
-				speed += (list.get(weapon.offHand())[1] * 0.25);
-			}
-		} else if (method.equalsIgnoreCase("cap")) {
-			speed = list.get(weapon.mainHand())[0];
-			if (weapon.offHand() != null) {
-				speed += (list.get(weapon.offHand())[0] * 0.25);
-			}
-		} else {
-			try {
-				speed = Float.parseFloat(method);
-			} catch (Exception e) {
-				// 日志 / log
-			}
+		// 调用点恒按基础值（原 method="base" 分支）计算 / call sites always use the base branch
+		float speed = list.get(weapon.mainHand())[1];
+		if (weapon.offHand() != null) {
+			speed = (float) (speed + (list.get(weapon.offHand())[1] * 0.25));
 		}
-		finalTime = Math.round((float) time / (float) attackSpeed * speed);
-
-		return finalTime;
+		return Math.round((float) time / (float) attackSpeed * speed);
 	}
 
 	// 保存到 SQL / save to sql
@@ -504,14 +488,6 @@ public class MotionLoggingService {
 		} finally {
 			DatabaseFactory.close(con);
 		}
-	}
-
-	
-	private void clearMotions() {
-		for (MotionLog mLog : this.motionsMap.values()) {
-			mLog.getMotionLog().clear();
-		}
-		this.motionsMap.clear();
 	}
 
 	private boolean isPresent(String motionName, WeaponTypeWrapper weapon, int skillId, int currentAttackSpeed,
@@ -639,12 +615,7 @@ public class MotionLoggingService {
 
 		@Override
 		public int compareTo(SkillTime o) {
-			if (skillId < o.getSkillId())
-				return -1;
-			else if (skillId > o.getSkillId())
-				return 1;
-			else
-				return 0;
+			return Integer.compare(skillId, o.getSkillId());
 		}
 
 		/*
