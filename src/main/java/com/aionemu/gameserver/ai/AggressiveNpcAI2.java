@@ -24,31 +24,12 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 {
 
 	/**
-	 * 处理死亡事件。
-	 * Handle death.
-	 */
-	@Override
-	protected void handleDied() {
-		DiedEventHandler.onDie(this);
-	}
-
-	/**
 	 * 处理消失事件。
 	 * Handle despawn.
 	 */
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
-	}
-
-	/**
-	 * 处理受到攻击事件。
-	 * Handle being attacked.
-	 * @param creature 攻击者 / attacker
-	 */
-	@Override
-	protected void handleAttack(Creature creature) {
-		AttackEventHandler.onAttack(this, creature);
 	}
 
     /**
@@ -81,24 +62,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 		AggroEventHandler.onAggro(this, creature);
 	}
 
-	/**
-	 * 处理结束攻击事件。
-	 * Handle finish-attack.
-	 */
-	@Override
-	protected void handleFinishAttack() {
-		AttackEventHandler.onFinishAttack(this);
-	}
-
-	/**
-	 * 处理单次攻击完成事件。
-	 * Handle attack-complete.
-	 */
-	@Override
-	protected void handleAttackComplete() {
-		AttackEventHandler.onAttackComplete(this);
-	}
-
     /**
      * 处理放弃目标事件。
      * Handle target give-up.
@@ -127,17 +90,6 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	@Override
 	protected boolean handleGuardAgainstAttacker(Creature attacker) {
 		return attacker != null && AggroEventHandler.onGuardAgainstAttacker(this, attacker);
-	}
-
-	/**
-	 * 处理盟友需要支援事件。
-	 * Handle ally needs-support.
-	 * @param creature 盟友 / ally
-	 * @return 是否已处理 / whether handled
-	 */
-	@Override
-	protected boolean handleCreatureNeedsSupport(Creature creature) {
-		return AggroEventHandler.onCreatureNeedsSupport(this, creature);
 	}
 
 	/**
@@ -7481,14 +7433,8 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
 		return switch (question) {
-			case CAN_SPAWN_ON_DAYTIME_CHANGE -> AIAnswers.POSITIVE;
-			case SHOULD_DECAY -> AIAnswers.POSITIVE;
-			case SHOULD_RESPAWN -> AIAnswers.POSITIVE;
-			case SHOULD_REWARD -> AIAnswers.POSITIVE;
-			case SHOULD_REWARD_AP -> AIAnswers.POSITIVE;
-			case SHOULD_REWARD_GP -> AIAnswers.POSITIVE;
-			case CAN_RESIST_ABNORMAL -> AIAnswers.POSITIVE;
-			case CAN_ATTACK_PLAYER -> AIAnswers.POSITIVE;
+			case CAN_SPAWN_ON_DAYTIME_CHANGE, SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD, SHOULD_REWARD_AP,
+					SHOULD_REWARD_GP, CAN_RESIST_ABNORMAL, CAN_ATTACK_PLAYER -> AIAnswers.POSITIVE;
 			default -> null;
 		};
 	}

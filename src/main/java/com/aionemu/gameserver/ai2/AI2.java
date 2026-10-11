@@ -223,13 +223,6 @@ public interface AI2 {
 	boolean isLogging();
 
 	/**
-	 * 获取剩余时间（例如限时 AI 行为）。
-	 * Returns remaining time (e.g. for timed AI behaviors).
-	 * @return 剩余时间 / remaining time
-	 */
-	long getRemainigTime();
-
-	/**
 	 * 修改对自身造成的伤害值。
 	 * Modifies incoming damage dealt to this AI's owner.
 	 * @param damage 原始伤害 / original damage

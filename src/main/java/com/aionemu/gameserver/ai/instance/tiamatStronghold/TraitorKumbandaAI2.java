@@ -129,15 +129,15 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleStop() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> timeStop(), 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::timeStop, 5000);
 	}
 
 	private void scheduleRush() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> timeRush(), 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::timeRush, 5000);
 	}
 
 	private void scheduleSlow() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> timeSlow(), 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::timeSlow, 5000);
 	}
 
 	@Override

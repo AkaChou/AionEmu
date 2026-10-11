@@ -135,7 +135,7 @@ public class FollowSummonTaskAI implements Runnable {
 		if (npcSkillTemplates == null || npcSkillTemplates.getNpcSkills() == null || npcSkillTemplates.getNpcSkills().isEmpty()) {
 			return DEFAULT_TARGET_RANGE;
 		}
-		NpcSkillTemplate npcSkill = npcSkillTemplates.getNpcSkills().get(0);
+		NpcSkillTemplate npcSkill = npcSkillTemplates.getNpcSkills().getFirst();
 		if (npcSkill == null) {
 			return DEFAULT_TARGET_RANGE;
 		}

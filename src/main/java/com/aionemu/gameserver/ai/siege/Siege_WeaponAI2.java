@@ -25,58 +25,54 @@ public class Siege_WeaponAI2 extends AISummon
 	private int skill;
 	private int skillLvl;
 	private int duration;
-	
+
 	@Override
 	protected void handleSpawned() {
 		this.setStateIfNot(AIState.IDLE);
 		SummonsService.doMode(SummonMode.GUARD, getOwner());
-		NpcSkillTemplate skillTemplate = getNpcSkillTemplates().getNpcSkills().get(0);
+		NpcSkillTemplate skillTemplate = getNpcSkillTemplates().getNpcSkills().getFirst();
 		skill = skillTemplate.getSkillid();
 		skillLvl = skillTemplate.getSkillLevel();
 		duration = DataManager.SKILL_DATA.getSkillTemplate(this.skill).getDuration();
 	}
-	
+
 	@Override
 	protected void handleFollowMe(Creature creature) {
 		this.setStateIfNot(AIState.FOLLOWING);
 	}
-	
-	@Override
-	protected void handleCreatureMoved(Creature creature) {
-	}
-	
+
 	@Override
 	protected void handleStopFollowMe(Creature creature) {
 		this.setStateIfNot(AIState.IDLE);
 		this.getOwner().getMoveController().abortMove();
 	}
-	
+
 	@Override
 	protected void handleTargetTooFar() {
 		getOwner().getMoveController().moveToDestination();
 	}
-	
+
 	@Override
 	protected void handleMoveArrived() {
 		this.getOwner().getController().onMove();
 		this.getOwner().getMoveController().abortMove();
 	}
-	
+
 	@Override
 	protected void handleMoveValidate() {
 		this.getOwner().getController().onMove();
 		getMoveController().moveToTargetObject();
 	}
-	
+
 	@Override
 	protected SiegeWeaponController getController() {
 		return (SiegeWeaponController) super.getController();
 	}
-	
+
 	private NpcSkillTemplates getNpcSkillTemplates() {
 		return getController().getNpcSkillTemplates();
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		if (creature == null) {

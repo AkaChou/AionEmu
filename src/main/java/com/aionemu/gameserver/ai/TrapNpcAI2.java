@@ -22,10 +22,8 @@ import java.util.concurrent.Future;
 @AIName("trap")
 public class TrapNpcAI2 extends NpcAI2
 {
-	private int sensoryRange = 0;
 	private Future<?> despawnTask;
-	public static int EVENT_SET_TRAP_RANGE = 1;
-	
+
 	/**
 	 * 处理看见生物事件。
 	 * Handle seeing a creature.
@@ -58,66 +56,6 @@ public class TrapNpcAI2 extends NpcAI2
 				return;
 			}
 			explode(creature);
-		}
-	}
-	
-	/**
-	 * 处理自定义事件。
-	 * Handle custom event.
-	 * @param eventId 事件 ID / event id
-	 * @param args 附加参数 / extra args
-	 */
-	@Override
-	protected void handleCustomEvent(int eventId, Object... args) {
-		if (eventId == EVENT_SET_TRAP_RANGE) {
-			String ownerName = getObjectTemplate().getName().toLowerCase();
-			if (ownerName.equals("snare trap")
-			    || ownerName.equals("caltrop")
-				|| ownerName.equals("spike trap")
-				|| ownerName.equals("shock trap")
-				|| ownerName.equals("sleep trap")
-				|| ownerName.equals("blazing trap")
-				|| ownerName.equals("explosion trap")
-				|| ownerName.equals("specter's trap")
-		        || ownerName.equals("explosive trap")
-				|| ownerName.equals("poisoning trap")
-				|| ownerName.equals("sandstorm trap")
-				|| ownerName.equals("trap of slowing")
-				|| ownerName.equals("trap of silence")
-				|| ownerName.equals("propelling trap")
-				|| ownerName.equals("spike bite trap")
-				|| ownerName.equals("ev_ra_n_light_sleepingtrap_g1_npc")
-				|| ownerName.equals("ev_ra_n_dark_sleepingtrap_g1_npc")) {
-				sensoryRange = 4;
-			} else if (ownerName.equals("trap")
-				|| ownerName.equals("web trap")
-				|| ownerName.equals("ice trap")
-				|| ownerName.equals("storm mine")
-				|| ownerName.equals("swamp trap")
-				|| ownerName.equals("flame trap")
-				|| ownerName.equals("sticky trap")
-				|| ownerName.equals("skybound trap")
-				|| ownerName.equals("paralyze trap")
-				|| ownerName.equals("protect symbol")
-				|| ownerName.equals("drakan net trap")
-				|| ownerName.equals("thornburst trap")
-				|| ownerName.equals("thorntwist trap")
-				|| ownerName.equals("drakan mine trap")
-				|| ownerName.equals("symbol of spirit")
-				|| ownerName.equals("destruction trap")
-				|| ownerName.equals("unidentified trap")
-				|| ownerName.equals("symbol of solidity")
-				|| ownerName.equals("symbol of recovery")
-				|| ownerName.equals("symbol of protection")
-				|| ownerName.equals("trap of clairvoyance")
-				|| ownerName.equals("symbol of castle wall")
-				|| ownerName.equals("scrapped mechanisms")
-				|| ownerName.equals("trap of infernal blaze")
-				|| ownerName.equals("highdeva_fire_npc_l_g1")
-				|| ownerName.equals("highdeva_fire_npc_d_g1")
-				|| ownerName.equals("idevent_solo_paralyze_npc")) {
-				sensoryRange = 10;
-			}
 		}
 	}
 	

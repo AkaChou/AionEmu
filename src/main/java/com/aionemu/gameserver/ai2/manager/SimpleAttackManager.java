@@ -83,7 +83,6 @@ public class SimpleAttackManager {
     /**
      * 判断目标是否在攻击射程内（含存活、可见与几何范围）。
      * Returns whether the target is in attack range (alive, visible, and within geometric range).
-     * @return 攻击 NPC / attacking NPC
      * @return 在射程内为 {@code true} / {@code true} if in attack range
      */
     public static boolean isTargetInAttackRange(Npc npc) {
@@ -108,6 +107,7 @@ public class SimpleAttackManager {
             float distance = npc.getDistanceToTarget();
             AI2Logger.info((AbstractAI) npc.getAi2(), "isTargetInAttackRange: " + distance);
         } catch (Exception e) {
+            // 仅调试日志的距离计算失败可安全忽略 / distance calculation for debug logging may safely fail
         }
     }
 
@@ -185,7 +185,7 @@ public class SimpleAttackManager {
 	 * 普通攻击动作：到时执行实际攻击。
 	 * Simple attack action: runs the actual attack when due.
 	 */
-	private final static class SimpleAttackAction implements Runnable {
+	private static final class SimpleAttackAction implements Runnable {
 		private NpcAI2 npcAI;
 		SimpleAttackAction(NpcAI2 npcAI) {
 			this.npcAI = npcAI;
@@ -202,7 +202,7 @@ public class SimpleAttackManager {
 	 * 带检查的攻击动作：执行前再次确认是否已调度，防止重复攻击。
 	 * Checked attack action: re-checks whether an attack is already scheduled before hitting.
 	 */
-	private final static class SimpleCheckedAttackAction implements Runnable {
+	private static final class SimpleCheckedAttackAction implements Runnable {
 		private NpcAI2 npcAI;
 		SimpleCheckedAttackAction(NpcAI2 npcAI) {
 			this.npcAI = npcAI;

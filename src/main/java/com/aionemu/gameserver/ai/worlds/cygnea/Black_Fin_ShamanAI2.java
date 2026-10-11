@@ -59,18 +59,12 @@ public class Black_Fin_ShamanAI2 extends AggressiveNpcAI2
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
-					if (players.size() < 1) {
-						for (Player p: players) {
-							spawnSharkSpecies(p);
+					int count = Rnd.get(1, size);
+					for (int i = 0; i < count; i++) {
+						if (players.isEmpty()) {
+							break;
 						}
-					} else {
-						int count = Rnd.get(1, size);
-						for (int i = 0; i < count; i++) {
-							if (players.isEmpty()) {
-								break;
-							}
-							spawnSharkSpecies(players.get(Rnd.get(players.size())));
-						}
+						spawnSharkSpecies(players.get(Rnd.get(players.size())));
 					}
 				}
 			}

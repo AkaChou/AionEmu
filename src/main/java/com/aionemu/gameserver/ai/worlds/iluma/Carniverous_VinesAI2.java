@@ -22,10 +22,6 @@ public class Carniverous_VinesAI2 extends NpcAI2
 	private final AtomicBoolean startedEvent = new AtomicBoolean(false);
 
 	@Override
-	public void think() {
-	}
-
-	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {

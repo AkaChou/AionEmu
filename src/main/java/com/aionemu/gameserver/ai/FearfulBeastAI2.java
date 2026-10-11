@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.ai2.handler.ReturningEventHandler;
+import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.EmotionType;
@@ -94,7 +95,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
         
         npc.unsetState(CreatureState.WALKING);
         npc.setState(CreatureState.WEAPON_EQUIPPED);
-        PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, 0));
+        EmoteManager.emoteStartReturning(npc);
         PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.NEUTRALMODE, 0, 0));
         
         float x = npc.getX();

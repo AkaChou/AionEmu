@@ -31,15 +31,16 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50 && isDone.compareAndSet(false, true)) {
 			getPosition().getWorldMapInstance().getInstanceHandler().onChangeStage(StageType.START_STAGE_6_ROUND_5);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> resurrectAllies(), 2000);
+			GameThreadPoolServices.threadPoolManager().schedule(this::resurrectAllies, 2000);
 		}
 	}
 
 	private void resurrectAllies() {
 		for (VisibleObject obj : getKnownList().getKnownObjectsSnapshot()) {
 			if (obj instanceof Npc npc) {
-				if (npc == null || NpcActions.isAlreadyDead(npc))
-				continue;
+				if (NpcActions.isAlreadyDead(npc)) {
+					continue;
+				}
 				switch (npc.getNpcId()) {
 					case 205413:
 						spawn(217576, npc.getX(), npc.getY(), npc.getZ(), npc.getHeading());

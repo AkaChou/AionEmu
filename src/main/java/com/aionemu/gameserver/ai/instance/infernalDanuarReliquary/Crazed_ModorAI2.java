@@ -178,7 +178,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void VengefullOrbEvent() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
 		GameEngineServices.skillEngine().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawnSorcererQueenModor(), 11000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::spawnSorcererQueenModor, 11000);
 	}
 
 	private void spawnSorcererQueenModor() {

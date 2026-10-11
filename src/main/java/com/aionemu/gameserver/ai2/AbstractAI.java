@@ -91,14 +91,6 @@ public abstract class AbstractAI implements AI2 {
 		aiDeathListeners.remove(listener);
 	}
 
-	public void addListener(AiDeathListener listener) {
-		addAiDeathListener(listener);
-	}
-
-	public void removeListener(AiDeathListener listener) {
-		removeAiDeathListener(listener);
-	}
-
 	/**
 	 * 获取 AI 所有者生物（NpcAI2 以下可隐藏更具体类型）。
 	 * Returns the AI owner creature (more specific types are hidden below NpcAI2).
@@ -221,20 +213,15 @@ public abstract class AbstractAI implements AI2 {
 	 * @return 是否可处理 / whether handleable
 	 */
 	protected boolean canHandleEvent(AIEventType eventType) {
-		switch (this.currentState) {
-		case DESPAWNED:
-			return StateEvents.DESPAWN_EVENTS.hasEvent(eventType);
-		case DIED:
-			return StateEvents.DEAD_EVENTS.hasEvent(eventType);
-		case CREATED:
-			return StateEvents.CREATED_EVENTS.hasEvent(eventType);
-		default:
-			break;
-		}
-		return switch (eventType) {
-			case DIALOG_START, DIALOG_FINISH -> isNonFightingState();
-			case CREATURE_MOVED -> getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
-			default -> true;
+		return switch (this.currentState) {
+			case DESPAWNED -> StateEvents.DESPAWN_EVENTS.hasEvent(eventType);
+			case DIED -> StateEvents.DEAD_EVENTS.hasEvent(eventType);
+			case CREATED -> StateEvents.CREATED_EVENTS.hasEvent(eventType);
+			default -> switch (eventType) {
+				case DIALOG_START, DIALOG_FINISH -> isNonFightingState();
+				case CREATURE_MOVED -> getName().equals("trap") || currentState != AIState.FIGHT && isNonFightingState();
+				default -> true;
+			};
 		};
 	}
 
@@ -786,16 +773,6 @@ public abstract class AbstractAI implements AI2 {
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		return false;
-	}
-
-	/**
-	 * 获取剩余时间，默认 0。
-	 * Returns remaining time; 0 by default.
-	 * @return 剩余时间 / remaining time
-	 */
-	@Override
-	public long getRemainigTime() {
-		return 0;
 	}
 
 	/**

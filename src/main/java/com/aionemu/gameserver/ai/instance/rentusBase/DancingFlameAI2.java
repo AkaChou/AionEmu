@@ -69,7 +69,7 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 	}
 
 	private void starLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> despawn(), 4000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::despawn, 4000);
 	}
 
 	private void despawn() {

@@ -145,7 +145,6 @@ public class SkillAttackManager {
 	/**
 	 * 选择下一个就绪技能；施法中、沉默/束缚/恐惧或 CD 未好时返回 {@code null}。
 	 * Chooses the next ready skill; returns {@code null} while casting, silenced/bound/feared, or on cooldown.
-	 * @return NPC AI 实例 / NPC AI instance
 	 * @return 下一个技能条目，无可用时为 {@code null} / next skill entry, or {@code null} if none
 	 */
 	public static NpcSkillEntry chooseNextSkill(NpcAI2 npcAI) {
@@ -156,7 +155,7 @@ public class SkillAttackManager {
 		}
 		Npc owner = npcAI.getOwner();
 		NpcSkillList skillList = owner.getSkillList();
-		if (skillList == null || skillList.size() == 0) {
+		if (skillList == null || skillList.isEmpty()) {
 			return null;
 		}
 		if (owner.getGameStats().canUseNextSkill()) {

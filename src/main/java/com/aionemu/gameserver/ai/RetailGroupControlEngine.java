@@ -359,9 +359,9 @@ public final class RetailGroupControlEngine {
 		}
 
 		private void pruneTeams() {
-			groups.removeIf(group -> group.size() == 0);
-			alliances.removeIf(alliance -> alliance.size() == 0);
-			leagues.removeIf(league -> league.size() == 0);
+			groups.removeIf(PlayerGroup::isEmpty);
+			alliances.removeIf(PlayerAlliance::isEmpty);
+			leagues.removeIf(League::isEmpty);
 		}
 
 		private void close() {

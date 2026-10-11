@@ -42,9 +42,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		/** raid 任务 / raid task */
 		private Future<?> raidTask;
 		/** keybox 任务 / key box task */
-		private Future<?> keyBoxTask;
 		/** prison 任务 / prison task */
-		private Future<?> prisonTask;
 		/**
 		 * whether timer1 started
 		 */
@@ -163,7 +161,6 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 219980: //Sheban Espionage Cavalry.
 			case 219981: //Sheban Espionage Combatant.
@@ -191,7 +188,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		sendMsgByRace(1402805, Race.PC_ALL, 300000);
 		// 图书馆内所有怪物与钥匙箱将在 1 分钟后消失。 / All monsters and key boxes in the library will disappear in 1 minute.
 		this.sendMessage(1402802, 4 * 60 * 1000);
-		keyBoxTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -244,21 +241,21 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		this.sendMessage(1402812, 3 * 60 * 1000);
 		// 所有怪物将在 1 分钟后消失。 / All monsters will disappear in 1 minute.
 		this.sendMessage(1402813, 4 * 60 * 1000);
-		prisonTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
 			 */
 			@Override
 			public void run() {
-				TestSubject48012C.get(0).getController().onDelete();
-				TestSubject48013C.get(0).getController().onDelete();
-				TestSubject48015C.get(0).getController().onDelete();
-				TestSubject48023B.get(0).getController().onDelete();
-				TestSubject48025B.get(0).getController().onDelete();
-				TestSubject48027B.get(0).getController().onDelete();
-				TestSubject48039A.get(0).getController().onDelete();
-				TestSubject48123A.get(0).getController().onDelete();
+				TestSubject48012C.getFirst().getController().onDelete();
+				TestSubject48013C.getFirst().getController().onDelete();
+				TestSubject48015C.getFirst().getController().onDelete();
+				TestSubject48023B.getFirst().getController().onDelete();
+				TestSubject48025B.getFirst().getController().onDelete();
+				TestSubject48027B.getFirst().getController().onDelete();
+				TestSubject48039A.getFirst().getController().onDelete();
+				TestSubject48123A.getFirst().getController().onDelete();
 				spawn(702717, 331.80203f, 495.63107f, 147.172f, (byte) 44); //Sealed Danuar Mysticarium Exit.
 			}
 		}, 300000); //5 Minute.
@@ -809,19 +806,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		raidMysticarium((Npc)spawn(219987, 494.27405f, 491.4183f, 100.36539f, (byte) 106));
 	}
 
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

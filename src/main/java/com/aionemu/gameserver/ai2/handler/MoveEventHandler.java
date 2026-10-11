@@ -15,7 +15,7 @@ public class MoveEventHandler {
 	 * Validates movement: notifies controller of move and checks if the target is too far.
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
-	public static final void onMoveValidate(NpcAI2 npcAI) {
+	public static void onMoveValidate(NpcAI2 npcAI) {
 		npcAI.getOwner().getController().onMove();
 		if (npcAI.getState() != AIState.FOLLOWING) {
 			TargetEventHandler.onTargetTooFar(npcAI);
@@ -27,7 +27,7 @@ public class MoveEventHandler {
 	 * Handles arrival: notifies controller of move and processes target reached.
 	 * @param npcAI NPC AI 实例 / NPC AI instance
 	 */
-	public static final void onMoveArrived(NpcAI2 npcAI) {
+	public static void onMoveArrived(NpcAI2 npcAI) {
 		npcAI.getOwner().getController().onMove();
 		TargetEventHandler.onTargetReached(npcAI);
 	}

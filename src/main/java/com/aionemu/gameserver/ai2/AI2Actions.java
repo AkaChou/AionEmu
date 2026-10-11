@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import java.util.Collection;
 
 import com.aionemu.gameserver.controllers.observer.DialogObserver;
-import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -79,19 +78,6 @@ public class AI2Actions {
 	}
 
 	/**
-	 * 对 AI 所有者自身应用技能效果。
-	 * Applies a skill effect to the AI owner itself.
-	 * @param ai2 AI 实例 / AI instance
-	 * @param skillId 技能 ID / skill id
-	 */
-	public static void applyEffectSelf(AbstractAI ai2, int skillId) {
-		SkillTemplate st = DataManager.SKILL_DATA.getSkillTemplate(skillId);
-		Effect effect = new Effect(ai2.getOwner(), ai2.getOwner(), st, 1, st.getEffectsDuration(skillId));
-		effect.initialize();
-		effect.applyEffect();
-	}
-
-	/**
 	 * 将目标设为自身。
 	 * Sets the target to self.
 	 * @param ai2 AI 实例 / AI instance
@@ -119,26 +105,6 @@ public class AI2Actions {
 	public static void handleUseItemFinish(AbstractAI ai2, Player player) {
 		ai2.getPosition().getWorldMapInstance().getInstanceHandler().handleUseItemFinish(player,
 				((Npc) ai2.getOwner()));
-	}
-
-	/**
-	 * 向目标 NPC 触发个体事件。
-	 * Fires an individual NPC event on the target.
-	 * @param ai2 AI 实例 / AI instance
-	 * @param target 目标 NPC / target NPC
-	 */
-	public static void fireIndividualEvent(AbstractAI ai2, Npc target) {
-		target.getAi2().onIndividualNpcEvent(ai2.getOwner());
-	}
-
-	/**
-	 * 触发副本内 NPC 死亡事件。
-	 * Fires an instance NPC-kill event.
-	 * @param ai2 AI 实例 / AI instance
-	 * @param player 相关玩家 / related player
-	 */
-	public static void fireNpcKillInstanceEvent(AbstractAI ai2, Player player) {
-		ai2.getPosition().getWorldMapInstance().getInstanceHandler().onDie((Npc) ai2.getOwner());
 	}
 
 	/**

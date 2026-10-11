@@ -195,13 +195,13 @@ public class SummonerAI2 extends AggressiveNpcAI2
 
 	protected void spawnHelpers(SummonGroup summonGroup) {
 		if (!isAlreadyDead() && checkBeforeSpawn()) {
-			int count = 0;
+			int count;
 			if (summonGroup.getCount() != 0) {
 				count = summonGroup.getCount();
 			} else {
 				count = Rnd.get(summonGroup.getMinCount(), summonGroup.getMaxCount());
 			} for (int i = 0; i < count; i++) {
-				SpawnTemplate summon = null;
+				SpawnTemplate summon;
 				if (summonGroup.getDistance() != 0) {
 					summon = rndSpawnInRange(summonGroup.getNpcId(), summonGroup.getDistance());
 				} else {

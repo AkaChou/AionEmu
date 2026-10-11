@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.commons.utils.Rnd;
@@ -111,7 +110,7 @@ public final class ShoutEventHandler {
 				ShoutEventType.DIED)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(owner.getPosition().getMapId(),
 					owner.getNpcId(), ShoutEventType.DIED, null, 0);
-			if (shouts.size() > 0) {
+			if (!shouts.isEmpty()) {
 				GameFeatureServices.npcShoutsService().shout(owner, (Creature) owner.getTarget(), shouts, 0, false);
 			}
 			shouts.clear();
@@ -189,9 +188,8 @@ public final class ShoutEventHandler {
 	 * All such shouts must be of type SAY.
 	 * </p>
 	 * @param npcAI NPC AI 实例 / NPC AI instance
-	 * @param target 被攻击目标 / attack target
 	 */
-	public static void onEnemyAttack(NpcAI2 npcAI, Creature target) {
+	public static void onEnemyAttack(NpcAI2 npcAI) {
 		final Npc npc = npcAI.getOwner();
 		if (!DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(),
 				ShoutEventType.ATTACKED)) {
@@ -207,7 +205,7 @@ public final class ShoutEventHandler {
 			}
 		}
 
-		if (finalShouts.size() == 0) {
+		if (finalShouts.isEmpty()) {
 			return;
 		}
 		int randomShout = Rnd.get(finalShouts.size());
@@ -219,9 +217,7 @@ public final class ShoutEventHandler {
 			return;
 		}
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			Iterator<Player> iter = npc.getKnownList().getKnownPlayers().values().iterator();
-			while (iter.hasNext()) {
-				Player kObj = iter.next();
+			for (Player kObj : npc.getKnownList().getKnownPlayers().values()) {
 				if (kObj.getLifeStats().isAlreadyDead()) {
 					return;
 				}
@@ -274,14 +270,13 @@ public final class ShoutEventHandler {
 			}
 		}
 
-		if (validShouts.size() == 0) {
-			validShouts.clear();
+		if (validShouts.isEmpty()) {
 			validShouts = nonNumberedShouts;
 		} else {
 			nonNumberedShouts.clear();
 		}
 
-		if (validShouts.size() > 0) {
+		if (!validShouts.isEmpty()) {
 			GameFeatureServices.npcShoutsService().shout(owner, creature, validShouts, 0, false);
 		}
 

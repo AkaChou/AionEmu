@@ -25,7 +25,7 @@ public class PortalRequestAI2 extends PortalAI2
 	@Override
 	protected void handleUseItemFinish(final Player player) {
 		if (teleportTemplate != null) {
-			final TeleportLocation loc = teleportTemplate.getTeleLocIdData().getTelelocations().get(0);
+			final TeleportLocation loc = teleportTemplate.getTeleLocIdData().getTelelocations().getFirst();
 			if (loc != null) {
 				TelelocationTemplate locationTemplate = DataManager.TELELOCATION_DATA.getTelelocationTemplate(loc.getLocId());
 				RequestResponseHandler portal = new RequestResponseHandler(player) {

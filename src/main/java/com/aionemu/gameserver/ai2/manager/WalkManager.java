@@ -184,7 +184,7 @@ public class WalkManager {
 
 		if (owner.getWalkerGroup() != null) {
 			if (owner.getWalkerGroup().getGroupStep() < 2) {
-				nextStep = route.get(0);
+				nextStep = route.getFirst();
 			} else {
 				nextStep = route.get(owner.getWalkerGroup().getGroupStep() - 1);
 			}
@@ -369,7 +369,6 @@ public class WalkManager {
 					}
 
 					if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
-						BoundRadius radius = owner.getObjectTemplate().getBoundRadius();
 						byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId() | CollisionIntention.WALK.getId());
 						Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
 
@@ -477,7 +476,7 @@ public class WalkManager {
 			return;
 		}
 
-		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> performZCheck(), Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
+		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(WalkManager::performZCheck, Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
 	}
 
 	private static void performZCheck() {
@@ -522,7 +521,7 @@ public class WalkManager {
 
 				float zDiff = Math.abs(currentZ - geoZ);
 				if (zDiff > Z_TOLERANCE) {
-					correctNpcZ(npc, currentX, currentY, geoZ);
+					correctNpcZ(npc, geoZ);
 				}
 
 			} catch (Exception e) {
@@ -572,7 +571,7 @@ public class WalkManager {
 		lastCheckPositions.put(npcId + 1000000, currentY);
 	}
 
-	private static void correctNpcZ(Npc npc, float x, float y, float correctZ) {
+	private static void correctNpcZ(Npc npc, float correctZ) {
 		npc.getPosition().setZ(correctZ);
 		PacketSendUtility.broadcastPacket(npc, new SM_MOVE(npc));
 	}

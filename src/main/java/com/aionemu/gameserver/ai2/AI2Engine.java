@@ -187,17 +187,6 @@ public class AI2Engine implements GameEngine {
 	}
 
 	/**
-	 * 使用 {@link AiNames} 枚举为 NPC 装配 AI。
-	 * Sets up AI for an NPC using an {@link AiNames} enum value.
-	 *
-	 * @param aiName AI 名称枚举 / AI name enum
-	 * @param owner  目标 NPC / target NPC
-	 */
-	public void setupAI(AiNames aiName, Npc owner) {
-		setupAI(aiName.getName(), owner);
-	}
-
-	/**
 	 * 校验 NPC 模板中引用的 AI 名称是否均已注册。
 	 * Validates that all AI names referenced by NPC templates are registered.
 	 */
@@ -251,7 +240,7 @@ public class AI2Engine implements GameEngine {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *                               when no provider or bean is available
 	 */
-	public static final AI2Engine getInstance() {
+	public static AI2Engine getInstance() {
 		ObjectProvider<AI2Engine> provider = instanceProvider;
 		AI2Engine provided = provider == null ? null : provider.getIfAvailable();
 		if (provided == null) {

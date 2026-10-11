@@ -76,15 +76,6 @@ public class AttackEventHandler {
 	}
 
 	/**
-	 * 对当前目标强制发起攻击（复用 {@link #onAttack}）。
-	 * Forces an attack against the current target (delegates to {@link #onAttack}).
-	 * @param npcAI NPC AI 实例 / NPC AI instance
-	 */
-	public static void onForcedAttack(NpcAI2 npcAI) {
-		onAttack(npcAI, (Creature) npcAI.getOwner().getTarget());
-	}
-
-	/**
 	 * 单次攻击动作完成：刷新攻击时间并调度下一次攻击。
 	 * Completes a single attack action: renews attack time and schedules the next attack.
 	 * @param npcAI NPC AI 实例 / NPC AI instance

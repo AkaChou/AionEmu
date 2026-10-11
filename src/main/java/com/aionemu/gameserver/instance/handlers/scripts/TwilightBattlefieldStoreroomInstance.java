@@ -94,7 +94,6 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 215216: //Treasurer Karpasha.
 			case 215217: //Treasurer Pasikar.
@@ -160,7 +159,6 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215189: //Ranx Scout Captain.
 			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
@@ -295,7 +293,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 				public void run() {
 					StartTimer2();
 					sendMsg(1400245);
-					twilightBattlefieldChest.get(0).getController().onDelete();
+					twilightBattlefieldChest.getFirst().getController().onDelete();
 				}
 			}, 300000);
 		}

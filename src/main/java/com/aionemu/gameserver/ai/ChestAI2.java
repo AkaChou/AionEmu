@@ -98,13 +98,13 @@ public class ChestAI2 extends ActionItemNpcAI2
 				if (item.getItemCount() != keyItem.getQuantity()) {
 					int _i = 0;
 					for (Item findedItem : player.getInventory().getItemsByItemId(keyItem.getItemId())) {
-						_i += findedItem.getItemCount();
-					} if (_i < keyItem.getQuantity()) {
+						_i = (int) (_i + findedItem.getItemCount());
+					}
+					if (_i < keyItem.getQuantity()) {
 						return false;
 					}
 				}
 				i++;
-				continue;
 			} else {
 				return false;
 			}

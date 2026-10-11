@@ -24,51 +24,7 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 			case 1:
 				spawnLF6EventDoor();
 			break;
-			case 2:
-			break;
-			case 3:
-			break;
-			case 4:
-			break;
-			case 5:
-			break;
-			case 6:
-			break;
-			case 7:
-			break;
-			case 8:
-			break;
-			case 9:
-			break;
-			case 10:
-			break;
-			case 11:
-			break;
-			case 12:
-			break;
-			case 13:
-			break;
-			case 14:
-			break;
-			case 15:
-			break;
-			case 16:
-			break;
-			case 17:
-			break;
-			case 18:
-			break;
-			case 19:
-			break;
-			case 20:
-			break;
-			case 21:
-			break;
-			case 22:
-			break;
-			case 23:
-			break;
-			case 24:
+			case 2, 3, 4, 5, 6, 7, 24, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23:
 			break;
 		}
 		super.handleDied();
@@ -117,14 +73,13 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 				spawn(240889, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Scout.
 			break;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			despawnNpc(241053); //传送门。 / Portal.
-		}, 60000);
+		//传送门。 / Portal.
+		GameThreadPoolServices.threadPoolManager().schedule(this::despawnNpc, 60000);
 	}
 
-	private void despawnNpc(int npcId) {
-		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
-			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
+	private void despawnNpc() {
+		if (getPosition().getWorldMapInstance().getNpcs(241053) != null) {
+			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(241053);
 			for (Npc npc: npcs) {
 				npc.getController().onDelete();
 			}

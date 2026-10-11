@@ -103,7 +103,6 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	 */
 	@Override
 	public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 215795: //Debilkarim The Maker.
 			    chestUdasTempleTask.cancel(true);
@@ -178,7 +177,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 				public void run() {
 					StartTimer2();
 					sendMsg(1400245);
-					udasTempleChest.get(0).getController().onDelete();
+					udasTempleChest.getFirst().getController().onDelete();
 				}
 			}, 300000);
 		}
@@ -562,17 +561,5 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 		storage.decreaseByItemId(185000087, storage.getItemCountByItemId(185000087)); //Shadowy Prison Key.
 	}
 
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<>() {
-            /**
-             * 处理 visit。
-             * Handle visit.
-             * @param player 玩家 / player
-             */
-            @Override
-            public void visit(Player player) {
-                PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-            }
-        });
-	}
+
 }

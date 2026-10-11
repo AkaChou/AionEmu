@@ -75,13 +75,13 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 
 	private void scheduleDelayStage2(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage2, delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
 		}
 	}
 

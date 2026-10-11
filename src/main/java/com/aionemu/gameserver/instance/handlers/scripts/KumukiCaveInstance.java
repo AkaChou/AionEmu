@@ -40,7 +40,6 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 		/** poppy saved / poppy saved */
 		private int poppySaved;
 		/** 副本时间戳 / instance timestamp */
-		private long instanceTime;
 	/** 副本是否已销毁 / whether the instance is destroyed */
 	private boolean isInstanceDestroyed;
 	/** 门映射 / door map */
@@ -117,7 +116,6 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	 */
 
 	protected void startInstanceTask() {
-    	instanceTime = System.currentTimeMillis();
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             /**
              * 处理 run。
@@ -163,7 +161,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				sendMsgByRace(1404016, Race.PC_ALL, 0);
 				// 库穆基们正在享用烤波比！ / The Kumukis are enjoying their barbecued Poppy!
 				sendMsgByRace(1403993, Race.PC_ALL, 3000);
-				Poppy.get(0).getController().onDelete();
+				Poppy.getFirst().getController().onDelete();
             }
         }, 225000));
 		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

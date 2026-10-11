@@ -78,7 +78,6 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 
 	private void stage2() {
-		int delay = 10000;
 		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500774);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
@@ -124,19 +123,19 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void scheduleDelayStage4(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage4(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage4, delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage3(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage3, delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
 		}
 	}
 

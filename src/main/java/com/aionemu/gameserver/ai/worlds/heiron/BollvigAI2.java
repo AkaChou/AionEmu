@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.ai.worlds.heiron;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import com.aionemu.gameserver.ai.AggressiveFirstSkillAI2;
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai.AggressiveFirstSkillAI2;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -108,12 +106,12 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 			if (75 >= hpPercent && hpPercent > 50) {
 				useSkill(18025);
 				firstSkill();
-			} else if (50 >= hpPercent) {
-				useSkill(18025);
-				firstSkill();
 			} else if (25 >= hpPercent) {
 				useSkill(18027);
 				lastTask = GameThreadPoolServices.threadPoolManager().schedule(this::skillThree, 11000);
+			} else if (50 >= hpPercent) {
+				useSkill(18025);
+				firstSkill();
 			}
 		}, 5000);
 	}

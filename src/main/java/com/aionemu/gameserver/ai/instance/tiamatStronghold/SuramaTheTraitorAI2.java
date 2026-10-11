@@ -43,7 +43,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(651, 1319, 487);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startDialog(), 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startDialog, 10000);
 	}
 
 	private void startDialog() {

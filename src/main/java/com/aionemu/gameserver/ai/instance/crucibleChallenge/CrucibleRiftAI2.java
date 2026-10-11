@@ -37,9 +37,9 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 730459: // 试炼裂隙 / Crucible Rift.
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift1(), 2000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift2(), 6000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> announceCrucibleRift3(), 10000);
+			    GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift1, 2000);
+				GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift2, 6000);
+				GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift3, 10000);
 			break;
 		}
 		super.handleSpawned();

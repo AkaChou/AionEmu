@@ -38,7 +38,7 @@ public class VirhanaTheGreatAI2 extends AggressiveNpcAI2
 			return;
 		}
 		AI2Actions.useSkill(this, 19121); // 反射封印 / Seal Of Reflection.
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startRage(), 70000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startRage, 70000);
 	}
 
 	private void startRage() {
@@ -47,7 +47,7 @@ public class VirhanaTheGreatAI2 extends AggressiveNpcAI2
 		} if (count < 12) {
 			AI2Actions.useSkill(this, 18897); // 大地惩戒 / Earthly Retribution.
 			count++;
-			GameThreadPoolServices.threadPoolManager().schedule(() -> startRage(), 10000);
+			GameThreadPoolServices.threadPoolManager().schedule(this::startRage, 10000);
 		} else {
 			count = 0;
 			scheduleRage();

@@ -28,7 +28,7 @@ public class FlameSmashAI2 extends NpcAI2
 	}
 
 	private void starLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> despawn(), 7000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::despawn, 7000);
 	}
 
 	private void despawn() {

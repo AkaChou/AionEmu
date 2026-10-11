@@ -21,7 +21,7 @@ public class EmoteManager {
 	 * Starts attack emote: clears walking state, equips weapon, and broadcasts attack-mode emotions.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStartAttacking(Npc owner) {
+	public static void emoteStartAttacking(Npc owner) {
 		Creature target = (Creature) owner.getTarget();
         if (target == null) {
         // log.warn(I18n.get("log.72559eb3cf63", owner.getObjectId()));
@@ -41,7 +41,7 @@ public class EmoteManager {
 	 * can still see the NPC.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStopAttacking(Npc owner) {
+	public static void emoteStopAttacking(Npc owner) {
 		owner.unsetState(CreatureState.WEAPON_EQUIPPED);
 		if (owner.getTarget() instanceof Player playerTarget && canSeeDisengagingNpc(owner, playerTarget)) {
 			PacketSendUtility.sendPacket(playerTarget,
@@ -76,10 +76,9 @@ public class EmoteManager {
 	 * Starts follow emote: clears walking and broadcasts neutral-mode emotions.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStartFollowing(Npc owner) {
+	public static void emoteStartFollowing(Npc owner) {
 		owner.unsetState(CreatureState.WALKING);
-		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.START_EMOTE2, 0, 0));
-		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.NEUTRALMODE, 0, 0));
+		emoteStartReturning(owner);
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class EmoteManager {
 	 * Starts walk emote: sets walking state and broadcasts walk emotion.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStartWalking(Npc owner) {
+	public static void emoteStartWalking(Npc owner) {
 		owner.setState(CreatureState.WALKING);
 		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.WALK));
 	}
@@ -97,7 +96,7 @@ public class EmoteManager {
 	 * Stops walk emote: clears walking state.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStopWalking(Npc owner) {
+	public static void emoteStopWalking(Npc owner) {
 		owner.unsetState(CreatureState.WALKING);
 	}
 
@@ -106,7 +105,7 @@ public class EmoteManager {
 	 * Starts return emote: broadcasts neutral-mode emotions.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStartReturning(Npc owner) {
+	public static void emoteStartReturning(Npc owner) {
 		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.START_EMOTE2, 0, 0));
 		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.NEUTRALMODE, 0, 0));
 	}
@@ -116,9 +115,8 @@ public class EmoteManager {
 	 * Starts idle emote: sets walking state and broadcasts neutral-mode emotions.
 	 * @param owner NPC 实例 / NPC instance
 	 */
-	public static final void emoteStartIdling(Npc owner) {
+	public static void emoteStartIdling(Npc owner) {
 		owner.setState(CreatureState.WALKING);
-		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.START_EMOTE2, 0, 0));
-		PacketSendUtility.broadcastPacket(owner, new SM_EMOTION(owner, EmotionType.NEUTRALMODE, 0, 0));
+		emoteStartReturning(owner);
 	}
 }

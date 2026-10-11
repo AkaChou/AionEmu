@@ -73,10 +73,6 @@ public class ArtifactAI2 extends NpcAI2
 		}, loc);
 	}
 
-	@Override
-	protected void handleDialogFinish(Player player) {
-	}
-
 	public void onActivate(final Player player) {
 		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		ArtifactActivation activation = loc.getTemplate().getActivation();

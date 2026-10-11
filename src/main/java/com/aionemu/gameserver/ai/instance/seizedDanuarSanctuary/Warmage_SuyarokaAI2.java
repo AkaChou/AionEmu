@@ -22,7 +22,6 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 {
 	private int stage = 0;
 	private boolean isStart = false;
-	private Future<?> enrageTask;
 
 	@Override
 	protected void handleCreatureAggro(Creature creature) {
@@ -59,7 +58,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 
 	private void ShebanMysticalTyrhund() {
 	    if (!isAlreadyDead()) {
-		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
 					spawn(284455, 1062.1957f, 694.9131f, 282.0391f, (byte) 51); // Sheban Mystical Tyrhund 召唤兽。 / Sheban Mystical Tyrhund.
@@ -70,7 +69,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage1(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
 		}
 	}
 

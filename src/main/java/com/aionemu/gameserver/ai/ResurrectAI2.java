@@ -45,7 +45,7 @@ public class ResurrectAI2 extends NpcAI2
      */
 	@Override
     protected void handleCreatureSee(Creature creature) {
-        checkDistance(this, creature);
+        checkDistance(creature);
     }
 
 	/**
@@ -55,11 +55,11 @@ public class ResurrectAI2 extends NpcAI2
 	 */
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
-		checkDistance(this, creature);
+		checkDistance(creature);
 	}
 
-	private void checkDistance(NpcAI2 ai, Creature creature) {
-        if (creature instanceof Player player && !creature.getLifeStats().isAlreadyDead()) {
+	private void checkDistance(Creature creature) {
+        if (creature instanceof Player && !creature.getLifeStats().isAlreadyDead()) {
 			if (MathUtil.isIn3dRange(getOwner(), creature, 20)) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 点击方尖碑可在此绑定。 / You can bind here by clicking the Obelisk.
@@ -125,7 +125,6 @@ public class ResurrectAI2 extends NpcAI2
 						TeleportService2.sendSetBindPoint(responder);
 						PacketSendUtility.broadcastPacket(responder, new SM_LEVEL_UPDATE(responder.getObjectId(), 2, responder.getCommonData().getLevel()), true);
 						PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_DEATH_REGISTER_RESURRECT_POINT(""));
-						old = null;
 					} else {
 					   responder.setBindPoint(old);
 				    }
@@ -156,7 +155,6 @@ public class ResurrectAI2 extends NpcAI2
 						TeleportService2.sendSetBindPoint(responder);
 						PacketSendUtility.broadcastPacket(responder, new SM_LEVEL_UPDATE(responder.getObjectId(), 2, responder.getCommonData().getLevel()), true);
 						PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_DEATH_REGISTER_RESURRECT_POINT(""));
-						old = null;
 					} else {
 					   responder.setBindPoint(old);
 				    }

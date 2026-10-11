@@ -27,16 +27,14 @@ public class AI2HandlerClassListener implements ClassListener {
 	public void postLoad(Class<?>[] classes) {
 		for (Class<?> c : classes) {
 			if (log.isDebugEnabled()) {
-				log.debug("Load class " + c.getName());
+				log.debug("Load class {}", c.getName());
 			}
 			if (!isValidClass(c)) {
 				continue;
 			}
 			if (ClassUtils.isSubclass(c, AbstractAI.class)) {
 				Class<? extends AbstractAI> tmp = (Class<? extends AbstractAI>) c;
-				if (tmp != null) {
-					GameEngineServices.ai2Engine().registerAI(tmp);
-				}
+				GameEngineServices.ai2Engine().registerAI(tmp);
 			}
 		}
 	}
@@ -50,7 +48,7 @@ public class AI2HandlerClassListener implements ClassListener {
 	public void preUnload(Class<?>[] classes) {
 		if (log.isDebugEnabled()) {
 			for (Class<?> c : classes) {
-				log.debug("Unload class " + c.getName());
+				log.debug("Unload class {}", c.getName());
 			}
 		}
 	}

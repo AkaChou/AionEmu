@@ -44,10 +44,8 @@ public class Exploding_PearlAI2 extends AggressiveNpcAI2
 	@Override
 	protected AIAnswer pollInstance(AIQuestion question) {
         return switch (question) {
-            case SHOULD_DECAY -> AIAnswers.NEGATIVE;
-            case SHOULD_RESPAWN -> AIAnswers.NEGATIVE;
-            case SHOULD_REWARD -> AIAnswers.NEGATIVE;
-            default -> null;
+            case SHOULD_DECAY, SHOULD_RESPAWN, SHOULD_REWARD -> AIAnswers.NEGATIVE;
+			default -> null;
         };
 	}
 

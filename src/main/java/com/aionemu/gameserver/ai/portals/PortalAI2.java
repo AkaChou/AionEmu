@@ -43,7 +43,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 			case 802221: //Advance Corridor [Umbral Fortress].
 			case 802223: //Advance Corridor [Eternum Fortress].
 			case 802225: //Advance Corridor [Skyclash Fortress].
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
+			    GameThreadPoolServices.threadPoolManager().schedule(this::startLifeTask, 1000);
 			break;
         }
 	}
@@ -74,7 +74,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 				PortalService.port(portalPath, player, getObjectId());
 			}
 		} else if (teleportTemplate != null) {
-			TeleportLocation loc = teleportTemplate.getTeleLocIdData().getTelelocations().get(0);
+			TeleportLocation loc = teleportTemplate.getTeleLocIdData().getTelelocations().getFirst();
 			if (loc != null) {
 				TeleportService2.teleport(teleportTemplate, loc.getLocId(), player, getOwner(), TeleportAnimation.BEAM_ANIMATION);
 			}

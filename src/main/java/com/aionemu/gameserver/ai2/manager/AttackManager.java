@@ -270,7 +270,6 @@ public class AttackManager {
 	/**
 	 * 按真实 NPC 数据检查是否停止追击。
 	 * Checks whether chase should stop according to retail NPC data.
-	 * @return NPC AI 实例 / NPC AI instance
 	 * @return 应放弃目标时为 {@code true} / {@code true} if the target should be given up
 	 */
 	private static boolean checkStopChase(NpcAI2 npcAI) {

@@ -21,7 +21,7 @@ public class AI2Logger {
 	 * @param ai AI 实例 / AI instance
 	 * @param message 日志消息 / log message
 	 */
-	public static final void info(AbstractAI ai, String message) {
+	public static void info(AbstractAI ai, String message) {
 		if (ai.isLogging()) {
 			log.info(I18n.get("log.25ad741e4183", ai.getOwner().getObjectId(), message));
 		}
@@ -33,7 +33,7 @@ public class AI2Logger {
 	 * @param ai AI 实例 / AI instance
 	 * @param message 日志消息 / log message
 	 */
-	public static final void info(AI2 ai, String message) {
+	public static void info(AI2 ai, String message) {
 		info((AbstractAI) ai, message);
 	}
 

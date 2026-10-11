@@ -21,7 +21,7 @@ public class Dalia_WatcherAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startLifeTask, 1000);
 	}
 
 	private void startLifeTask() {

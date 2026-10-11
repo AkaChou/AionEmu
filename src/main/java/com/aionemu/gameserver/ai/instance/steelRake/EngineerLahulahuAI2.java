@@ -86,7 +86,7 @@ public class EngineerLahulahuAI2 extends AggressiveNpcAI2
 	}
 
 	private void doSchedule() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> useSkills(), 10000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::useSkills, 10000);
 	}
 
 	/**

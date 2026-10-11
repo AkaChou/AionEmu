@@ -4,8 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.ai.ActionItemNpcAI2;
-
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Actions.SelectDialogResult;
 import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;

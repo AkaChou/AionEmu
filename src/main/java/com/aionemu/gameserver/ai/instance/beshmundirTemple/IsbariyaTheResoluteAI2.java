@@ -132,8 +132,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void spawnSouls() {
-	    List<Point3D> points = new ArrayList<>();
-	    points.addAll(soulLocations);
+	    List<Point3D> points = new ArrayList<>(soulLocations);
 		int count = Rnd.get(3, 6);
 		for(int i = 0; i < count; i++) {
 			if (!points.isEmpty()) {
@@ -154,7 +153,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleSpecial(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> launchSpecial(), delay);
+		GameThreadPoolServices.threadPoolManager().schedule(this::launchSpecial, delay);
 	}
 
 	private SpawnTemplate rndSpawnInRange(int npcId) {

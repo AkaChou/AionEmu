@@ -23,7 +23,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class Live_Party_Concert_HallAI2 extends NpcAI2
 {
 	private final int CANCEL_DIALOG_METERS = 10;
-	
+
 	@Override
 	protected void handleDialogStart(Player player) {
 		if (player.getLevel() >= 10) {
@@ -50,9 +50,5 @@ public class Live_Party_Concert_HallAI2 extends NpcAI2
 		} else {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
 		}
-	}
-	
-	@Override
-	protected void handleDialogFinish(Player player) {
 	}
 }

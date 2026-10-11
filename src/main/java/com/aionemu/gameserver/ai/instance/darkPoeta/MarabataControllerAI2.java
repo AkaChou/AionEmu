@@ -16,13 +16,12 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 public class MarabataControllerAI2 extends NpcAI2
 {
 	private Npc getBoss() {
-		Npc npc = switch (getNpcId()) {
+		return switch (getNpcId()) {
 			case 700443, 700444, 700442 -> getPosition().getWorldMapInstance().getNpc(214850);
 			case 700446, 700447, 700445 -> getPosition().getWorldMapInstance().getNpc(214851);
 			case 700440, 700441, 700439 -> getPosition().getWorldMapInstance().getNpc(214849);
 			default -> null;
 		};
-		return npc;
 	}
 
 	private void applyEffect(boolean remove) {
@@ -65,7 +64,7 @@ public class MarabataControllerAI2 extends NpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		applyEffect(false);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> useSkill(), 2000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::useSkill, 2000);
 	}
 
 	private void useSkill() {

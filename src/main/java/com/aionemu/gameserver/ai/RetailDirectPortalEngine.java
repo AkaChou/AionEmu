@@ -138,7 +138,7 @@ public final class RetailDirectPortalEngine {
 	static DirectPortalPoint selectPoint(DirectPortalEndpoint endpoint) {
 		int totalWeight = endpoint.groups().stream().mapToInt(DirectPortalGroup::weight).sum();
 		int roll = totalWeight > 0 ? Rnd.get(totalWeight) : Rnd.get(endpoint.groups().size());
-		DirectPortalGroup selected = endpoint.groups().get(endpoint.groups().size() - 1);
+		DirectPortalGroup selected = endpoint.groups().getLast();
 		if (totalWeight > 0) {
 			for (DirectPortalGroup group : endpoint.groups()) {
 				roll -= group.weight();

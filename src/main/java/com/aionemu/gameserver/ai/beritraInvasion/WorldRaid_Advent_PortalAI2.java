@@ -17,7 +17,7 @@ public class WorldRaid_Advent_PortalAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startLifeTask, 1000);
 	}
 
 	private void startLifeTask() {

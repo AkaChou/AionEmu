@@ -1446,8 +1446,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		// The rule list is an ImmutableCollections ListN: for-each allocated a ListItr per event
 		// (6.4MB/300s at this site in play-12), so iterate by index instead.
 		List<Rule> rules = pattern.event(event);
-		for (int ruleIndex = 0, ruleCount = rules.size(); ruleIndex < ruleCount; ruleIndex++) {
-			Rule rule = rules.get(ruleIndex);
+		for (Rule rule : rules) {
 			if (matches(rule, timer, eventTarget, message, eventSkill, eventAbnormalState, attackStatus)) {
 				if (isLogging() && SPAWNER_END_EVENTS.contains(event)) {
 					AI2Logger.info(this, "Terminal event " + event + " rule priority=" + rule.priority()
@@ -1705,10 +1704,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				eventTarget;
 			case "OBJI_CASTER" ->
 				message != null && message.paramObject() != null ? message.paramObject() : eventTarget;
-			case "OBJI_MESSAGE_SENDER" -> message == null ? null : message.sender();
-			case "OBJI_MESSAGE_PARAM" -> message == null ? null : message.paramObject();
-			case "OBJI_FRIEND" -> message == null ? null : message.paramObject();
-			case "OBJI_PARTY_MEMBER" -> message == null ? null : message.sender();
+			case "OBJI_MESSAGE_SENDER", "OBJI_PARTY_MEMBER" -> message == null ? null : message.sender();
+			case "OBJI_MESSAGE_PARAM", "OBJI_FRIEND" -> message == null ? null : message.paramObject();
 			default -> null;
 		};
 	}
@@ -1807,10 +1804,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 					handler.onChangeStage(stageType);
 				}
 				break;
-			case "display_system_message":
-				displaySystemMessage(action);
-				break;
-			case "send_system_msg":
+			case "display_system_message", "send_system_msg":
 				displaySystemMessage(action);
 				break;
 			case "system_message_to_all_by_obj_indicator_param":
@@ -3097,12 +3091,11 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& integerInRange(condition, "less_than", 0, 100);
 			case "is_battle_timer_indicator" -> !value(condition, "btimer_indicator").isBlank();
 			case "test_probability" -> integerInRange(condition, "percent", 0, 100);
-			case "set_flag_var" -> !value(condition, "flagvar_indicator").isBlank();
-			case "unset_flag_var" -> !value(condition, "flagvar_indicator").isBlank();
+			case "set_flag_var", "set_world_flag_var", "unset_world_flag_var", "unset_flag_var" -> !value(condition, "flagvar_indicator").isBlank();
 			case "is_skill_count_left" -> isSkillIndex(condition);
 			case "is_message" -> integerInRange(condition, "message_type", 1, Integer.MAX_VALUE);
 			case "is_user", "is_npc" -> supportsObject(event, value(condition, "obj_indicator"));
-			case "is_enemy" -> supportsObject(event, value(condition, "who"));
+			case "is_enemy", "is_my_curent_target" -> supportsObject(event, value(condition, "who"));
 			case "is_event_skill_id" -> Set.of("on_spelled", "on_damaged", "on_friend_spelling", "on_friend_spelled",
 				"on_see_master_spelling", "on_see_master_spelled", "on_casted", "on_see_spell").contains(event)
 				&& !value(condition, "skill_id").isBlank();
@@ -3128,7 +3121,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				.contains(value(condition, "state"));
 			case "is_user_class" -> supportsUser(event, value(condition, "user"))
 				&& isRetailPlayerClass(value(condition, "class"));
-			case "set_world_flag_var", "unset_world_flag_var" -> !value(condition, "flagvar_indicator").isBlank();
 			case "is_in_abnormal_state" -> retailAbnormalMask(value(condition, "abnormal_state")) != null;
 			case "is_obj_in_abnormal_state" -> supportsObject(event, value(condition, "obj"))
 				&& retailAbnormalMask(value(condition, "abnormal_state")) != null;
@@ -3153,7 +3145,6 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				|| integer(condition, "level_min") <= integer(condition, "level_max"));
 			case "is_user_gender" -> supportsUser(event, value(condition, "user"))
 				&& Set.of("GENDERI_MALE", "GENDERI_FEMALE").contains(value(condition, "gender"));
-			case "is_my_curent_target" -> supportsObject(event, value(condition, "who"));
 			case "is_world_flag_var" -> !value(condition, "flagvar_indicator").isBlank()
 				&& Set.of("TRUE", "FALSE").contains(value(condition, "flag_expected"));
 			case "sub_intvar" -> !value(condition, "intvar_indicator").isBlank()
@@ -3276,12 +3267,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				&& isInteger(action, "param1") && isInteger(action, "param2")
 				&& supportsNpcPartyMessageObject(event, value(action, "param_obj"));
 			case "say" -> supportsUser(event, value(action, "user")) && !value(action, "string_id").isBlank();
-			case "say_to_all", "shout_to_all" -> !value(action, "string_id").isBlank();
+			case "say_to_all", "shout_to_all", "display_system_message", "send_system_msg" -> !value(action, "string_id").isBlank();
 			case "say_to_all_str" -> !value(action, "string").isBlank();
 			case "change_world_scene_status" -> isInteger(action, "scenestatus")
 				&& retailStageType(integer(action, "scenestatus")) != null;
-			case "display_system_message" -> !value(action, "string_id").isBlank();
-			case "send_system_msg" -> !value(action, "string_id").isBlank();
 			case "reset_hatepoints" -> Set.of("TRUE", "FALSE").contains(value(action, "is_except_most_hating"))
 				&& Set.of("TRUE", "FALSE").contains(value(action, "volatile_hatepoint_only"));
 			case "control_door" -> integerInRange(action, "id", 1, Integer.MAX_VALUE)

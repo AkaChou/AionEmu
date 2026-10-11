@@ -552,7 +552,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			return player;
 		}
 		List<Player> players = instance.getPlayersInside();
-		return players.size() == 1 ? players.get(0) : null;
+		return players.size() == 1 ? players.getFirst() : null;
 	}
 
 	private void spawnClassTreasure(Player player, float x, float y, float z, byte heading) {

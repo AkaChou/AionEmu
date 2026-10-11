@@ -17,7 +17,7 @@ public class Anoha_Sword_EffectAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startLifeTask(), 1000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::startLifeTask, 1000);
 	}
 
 	private void startLifeTask() {

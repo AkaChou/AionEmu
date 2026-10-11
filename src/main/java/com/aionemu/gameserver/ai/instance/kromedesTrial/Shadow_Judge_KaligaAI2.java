@@ -95,7 +95,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
-					if (players.size() < 1) {
+					if (players.isEmpty()) {
 						for (Player p: players) {
 							spawnKaligaBloodwing(p);
 						}

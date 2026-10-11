@@ -66,6 +66,7 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 
 	@Override
 	protected void handleDialogFinish(Player player) {
+		super.handleDialogFinish(player);
 	}
 
 	public void onActivate(Player player) {

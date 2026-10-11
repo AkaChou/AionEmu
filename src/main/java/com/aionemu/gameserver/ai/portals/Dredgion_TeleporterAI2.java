@@ -9,7 +9,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import com.aionemu.gameserver.world.WorldMap;
-import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.services.instance.InstanceService;
 
 /*
@@ -90,7 +89,7 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
 		if (destinationMap.isInstanceType()) {
 
-			TeleportService2.teleportTo(player, worldId, getInstanceId(worldId, player), x, y, z);
+			TeleportService2.teleportTo(player, worldId, InstanceService.resolveInstanceId(worldId, player), x, y, z);
 
 		} else {
 
@@ -98,25 +97,6 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
 		}
 
-	}
-
-	private static int getInstanceId(int worldId, Player player) {
-
-		if (player.getWorldId() == worldId) {
-
-			WorldMapInstance registeredInstance = InstanceService.getRegisteredInstance(worldId, player.getObjectId());
-
-			if (registeredInstance != null) {
-
-				return registeredInstance.getInstanceId();
-
-			}
-
-		}
-
-		WorldMapInstance newInstance = InstanceService.getNextAvailableInstance(worldId);
-		InstanceService.registerPlayerWithInstance(newInstance, player);
-		return newInstance.getInstanceId();
 	}
 
 }

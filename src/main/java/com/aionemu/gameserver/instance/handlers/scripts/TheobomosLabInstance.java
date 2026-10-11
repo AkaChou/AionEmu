@@ -209,7 +209,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 				public void run() {
 					// 元素封印石已消失。 / The Element Sealing Stone has disappeared.
 					sendMsg(1403062);
-					elementSealingStone.get(0).getController().onDelete();
+					elementSealingStone.getFirst().getController().onDelete();
 				}
 			}, 180000);
 		}
@@ -222,7 +222,6 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 237253: //Fiery Sealing Stone.
 				elementSealingStoneTask.cancel(true);
@@ -291,19 +290,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 		}
 	}
 
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

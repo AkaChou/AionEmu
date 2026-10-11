@@ -178,7 +178,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 				public void run() {
 					// 可疑罐子已消失。 / The Suspicious Pot has disappeared.
 					sendMsg(1403060);
-					suspiciousPot.get(0).getController().onDelete();
+					suspiciousPot.getFirst().getController().onDelete();
 				}
 			}, 180000);
 		}
@@ -191,7 +191,6 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 237245: //Suspicious Pot.
 				suspiciousPotTask.cancel(true);
@@ -278,19 +277,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 		}
 	}
 
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
+
 	/**
 	 * 处理 sendMsgByRace。
 	 * Handle sendMsgByRace.

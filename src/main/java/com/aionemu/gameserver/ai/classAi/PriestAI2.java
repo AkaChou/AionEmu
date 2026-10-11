@@ -71,7 +71,7 @@ public class PriestAI2 extends AggressiveNpcAI2
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
-						if (players.size() < 1) {
+						if (players.isEmpty()) {
 							for (Player p: players) {
 								spawnServant(p);
 							}
@@ -117,9 +117,6 @@ public class PriestAI2 extends AggressiveNpcAI2
 		return canThink;
 	}
 
-	private void sendMsg(int msg) {
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
-	}
 
 	private List<Player> getLifedPlayers() {
 		List<Player> players = new ArrayList<>();

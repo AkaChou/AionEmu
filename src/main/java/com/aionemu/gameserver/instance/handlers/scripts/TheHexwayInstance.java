@@ -57,7 +57,6 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 		/** 是否启动计时器12 / is start timer12 */
 		private boolean isStartTimer12 = false;
 		/** chesthexway 任务 / chest the hexway task */
-		private Future<?> chestTheHexwayTask;
 	/** 门映射 / door map */
 	private Map<Integer, StaticDoor> doors;
 		/** the hexway treasure box / the hexway treasure box */
@@ -83,7 +82,6 @@ public class TheHexwayInstance extends GeneralInstanceHandler
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 219609: //Captain Jarka.
 				switch (Rnd.get(1, 6)) {
@@ -117,7 +115,6 @@ public class TheHexwayInstance extends GeneralInstanceHandler
      */
     @Override
     public void onDie(Npc npc) {
-        Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
             case 219617: //Balaur Barricade.
 			    despawnNpc(npc);
@@ -152,7 +149,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					theHexwayTreasureBox.add((Npc) spawn(701664, 197.46051f, 471.78418f, 365.32578f, (byte) 82));
 					theHexwayTreasureBox.add((Npc) spawn(701664, 223.41487f, 409.03143f, 365.01053f, (byte) 26));
 					theHexwayTreasureBox.add((Npc) spawn(701664, 213.39343f, 425.5012f, 366.57892f, (byte) 8));
-					chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -161,7 +158,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 						public void run() {
 							StartTimer2();
 							sendMsg(1400245);
-							theHexwayTreasureBox.get(0).getController().onDelete();
+							theHexwayTreasureBox.getFirst().getController().onDelete();
 						}
 					}, 300000);
 				}
@@ -186,7 +183,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -218,7 +215,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -250,7 +247,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -282,7 +279,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -314,7 +311,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -346,7 +343,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -378,7 +375,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -410,7 +407,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -442,7 +439,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -474,7 +471,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -506,7 +503,7 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestTheHexwayTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -521,19 +518,6 @@ public class TheHexwayInstance extends GeneralInstanceHandler
 		}
 	}
 
-	private void sendMsg(final String str) {
-		instance.doOnAllPlayers(new Visitor<>() {
-			/**
-			 * 处理 visit。
-			 * Handle visit.
-			 * @param player 玩家 / player
-			 */
-			@Override
-			public void visit(Player player) {
-				PacketSendUtility.sendWhiteMessageOnCenter(player, str);
-			}
-		});
-	}
 
 	private void despawnNpc(Npc npc) {
 		if (npc != null) {

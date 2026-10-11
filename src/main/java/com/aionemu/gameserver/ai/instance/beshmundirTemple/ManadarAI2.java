@@ -60,6 +60,6 @@ public class ManadarAI2 extends AggressiveNpcAI2
 	}
 
 	private void doSchedule() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> check(), 6000);
+		GameThreadPoolServices.threadPoolManager().schedule(this::check, 6000);
 	}
 }

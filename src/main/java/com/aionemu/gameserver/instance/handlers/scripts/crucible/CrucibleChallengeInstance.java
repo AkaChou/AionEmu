@@ -354,7 +354,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 					public void run() {
 						Player player = null;
 						if (!instance.getPlayersInside().isEmpty()) {
-							player = instance.getPlayersInside().get(0);
+							player = instance.getPlayersInside().getFirst();
 						}
 						despawnNpc(npc);
 						if (player != null) {
@@ -779,7 +779,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 		int npcId = 0, barrelId = 0;
 		Player player = null;
 		if (!instance.getPlayersInside().isEmpty()) {
-			player = instance.getPlayersInside().get(0);
+			player = instance.getPlayersInside().getFirst();
 		} switch (stageType) {
 			case START_STAGE_1_ROUND_1:
 				//第 %0 轮开始！ / Round %0 begins!
@@ -922,7 +922,6 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
-		int itemId = 0;
 		Integer object = instance.getSoloPlayerObj();
 		switch (npcId) {
 			case 217758: //Worthiness Ticket Box (Fin Stage 1)
@@ -1050,7 +1049,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				rewardCount++;
 				Player player = null;
 				if (!instance.getPlayersInside().isEmpty()) {
-					player = instance.getPlayersInside().get(0);
+					player = instance.getPlayersInside().getFirst();
 				} if (player != null) {
 					if (player.isInsideZone(ZoneName.get("TRAINING_ROOM_04B_300320000"))) {
 						setEvent(StageType.PASS_STAGE_4, 0);

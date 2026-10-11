@@ -58,7 +58,6 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 	}
 
 	private void stage1() {
-		int delay = 0;
 		if (!isAlreadyDead() && isStart) {
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); // 鲜血祝福 / Blessing of Blood.
 		}
@@ -74,7 +73,7 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 
 	private void scheduleDelayStage2(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stage2(), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(this::stage2, delay);
 		}
 	}
 

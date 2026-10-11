@@ -80,7 +80,7 @@ public class Vanktrist_SpacetwineAI2 extends AggressiveNpcAI2
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
-					if (players.size() < 1) {
+					if (players.isEmpty()) {
 						for (Player p: players) {
 							spawnWeakenedDimensionalVortex(p);
 						}
@@ -159,7 +159,5 @@ public class Vanktrist_SpacetwineAI2 extends AggressiveNpcAI2
 		}
 	}
 
-	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
-	}
+
 }
