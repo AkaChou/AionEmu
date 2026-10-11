@@ -105,7 +105,7 @@ public class WalkerData {
 	 * @param routeId 用于命名输出文件的路线 ID / route id used to name the output file
 	 */
 	public void saveData(String routeId) {
-		Schema schema = null;
+		Schema schema;
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		try {

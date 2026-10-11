@@ -7,14 +7,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -30,14 +26,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.housing.LBox;
 
 /**
@@ -48,8 +41,6 @@ import com.aionemu.gameserver.model.templates.housing.LBox;
 @XmlRootElement(name = "lboxes")
 @Slf4j
 public class HouseScriptData {
-	private static Marshaller marshaller;
-
 	@XmlElement(name = "lbox", required = true)
 	protected List<LBox> scriptData;
 
@@ -77,51 +68,12 @@ public class HouseScriptData {
 	}
 
 	/**
-	 * 基于默认脚本模板生成指定位置与图标的脚本 XML 片段。
-	 * Builds a script XML fragment for the given position and icon from a default script template.
-	 * @param scriptId 默认脚本模板 ID / default script template id
-	 * @param position 脚本位置 ID / script position id
-	 * @param iconId 图标 ID / icon id
-	 * @return 格式化后的脚本 XML 字符串 / formatted script XML string
-	 */
-	public String createScript(int scriptId, int position, int iconId) {
-		LBox template = defaultTemplates.get(scriptId);
-		LBox result = (LBox) template.clone();
-		result.setId(position);
-		result.setIcon(iconId);
-		HouseScriptData fragment = new HouseScriptData();
-		fragment.scriptData = new ArrayList<>();
-		fragment.scriptData.add(result);
-		Writer writer = new StringWriter();
-		try {
-			marshaller.marshal(fragment, writer);
-		} catch (JAXBException e) {
-		}
-		return XmlFormatter.format(writer.toString());
-	}
-
-	/**
 	 * 返回默认脚本模板数量。
 	 * Returns the number of default script templates.
 	 * @return 默认脚本模板数量 / Returns the number of default script templates.
 	 */
 	public int size() {
 		return defaultTemplates.size();
-	}
-
-	static {
-		SchemaFactory sf = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
-		Schema schema = null;
-		JAXBContext jc = null;
-		try {
-			schema = sf.newSchema(Config.dataFile("./data/static_data/housing/scripts.xsd"));
-			jc = JAXBContext.newInstance(HouseScriptData.class);
-			marshaller = jc.createMarshaller();
-			marshaller.setSchema(schema);
-			marshaller.setProperty("jaxb.encoding", "UTF-8");
-		} catch (Exception e) {
-			log.error(I18n.get("log.6cadba7ab22f"), e);
-		}
 	}
 
 	/**
@@ -150,8 +102,9 @@ public class HouseScriptData {
 				transformer.transform(new DOMSource(document), new StreamResult(out));
 				return out.toString();
 			} catch (TransformerException e) {
+				log.error(I18n.get("log.housing.script_format_failed"), e);
+				return null;
 			}
-			return null;
 		}
 
 		/**
@@ -164,9 +117,7 @@ public class HouseScriptData {
 			try {
 				InputSource is = new InputSource(new StringReader(in));
 				return db.parse(is);
-			} catch (SAXException e) {
-				throw new RuntimeException(e);
-			} catch (IOException e) {
+			} catch (SAXException | IOException e) {
 				throw new RuntimeException(e);
 			}
 		}

@@ -239,6 +239,6 @@ public class NpcShoutData {
 			}
 		}
 		shouts.clear();
-		return result.size() > 0 ? result : null;
+		return !result.isEmpty() ? result : null;
 	}
 }

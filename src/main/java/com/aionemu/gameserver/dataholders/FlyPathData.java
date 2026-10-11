@@ -43,14 +43,4 @@ public class FlyPathData {
 	public int size() {
 		return loctlistData.size();
 	}
-
-	/**
-	 * 按路径 ID 获取飞行路径模板。
-	 * Returns the fly path template for the given path id.
-	 * @param i 路径 ID / path id
-	 * @return 飞行路径条目，不存在则为 null / fly path entry, or null if absent
-	 */
-	public FlyPathEntry getPathTemplate(byte i) {
-		return loctlistData.get((short) i);
-	}
 }

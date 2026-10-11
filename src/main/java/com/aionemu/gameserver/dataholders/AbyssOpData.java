@@ -53,16 +53,6 @@ public class AbyssOpData {
 	}
 
 	/**
-	 * 按 ID 获取欧比斯行动模板。
-	 * Returns the abyss operation template for the given id.
-	 * @param id 行动 ID / operation id
-	 * @return 模板，不存在则为 null / template or null
-	 */
-	public AbyssOp getAbyssOpId(int id) {
-		return opData.get(id);
-	}
-
-	/**
 	 * 返回全部欧比斯行动映射。
 	 * Returns the full abyss operation map.
 	 * @return ID 到模板的映射 / map of id to template

@@ -27,21 +27,14 @@ public class AutoGroupData {
 	protected List<AutoGroup> autoGroup;
 	@XmlTransient
 	private final IntObjectHashMap<AutoGroup> autoGroupByInstanceId = new IntObjectHashMap<>();
-	@XmlTransient
-	private final IntObjectHashMap<AutoGroup> autoGroupByNpcId = new IntObjectHashMap<>();
 
 	/**
-	 * JAXB 反序列化完成后，按实例 ID 与 NPC ID 建立双索引并释放列表。
-	 * After JAXB unmarshalling, dual-indexes by instance id and NPC id, then clears the list.
+	 * JAXB 反序列化完成后，按实例 ID 建立索引并释放列表。
+	 * After JAXB unmarshalling, indexes by instance id, then clears the list.
 	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (AutoGroup ag : autoGroup) {
 			autoGroupByInstanceId.put(ag.getId(), ag);
-			if (!ag.getNpcIds().isEmpty()) {
-				for (int npcId : ag.getNpcIds()) {
-					autoGroupByNpcId.put(npcId, ag);
-				}
-			}
 		}
 		autoGroup.clear();
 		autoGroup = null;

@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -199,7 +200,7 @@ public class NpcDropData {
 		}
 		Set<Integer> newItemIds = newGroups.stream()
 			.map(DropGroup::getDrop)
-			.filter(drops -> drops != null)
+			.filter(Objects::nonNull)
 			.flatMap(List::stream)
 			.map(Drop::getItemId)
 			.collect(Collectors.toSet());

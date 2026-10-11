@@ -65,15 +65,6 @@ public class AtreianBestiaryData {
 	}
 
 	/**
-	 * 返回按 NPC ID 索引的条目数量。
-	 * Returns the number of entries indexed by NPC id.
-	 * @return 按 NPC ID 索引的条目数量 / Returns the number of entries indexed by NPC id.
-	 */
-	public int sizeByNpcId() {
-		return npcIdsHolder.size();
-	}
-
-	/**
 	 * 按 NPC ID 获取图鉴模板。
 	 * Returns the bestiary template for the given NPC id.
 	 * @param id NPC ID / npc id

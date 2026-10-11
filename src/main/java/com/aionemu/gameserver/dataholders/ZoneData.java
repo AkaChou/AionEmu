@@ -3,12 +3,14 @@ package com.aionemu.gameserver.dataholders;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.XMLConstants;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -19,6 +21,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
+
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -41,6 +44,7 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * 区域数据容器，按地图 ID 索引区域信息，并维护天气区域序号。
  * Zone data holder, indexing zone info by map id and tracking weather-zone order numbers.
+ *
  * @author ATracer
  */
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -71,32 +75,30 @@ public class ZoneData {
 		int weatherZoneId = 1;
 		for (ZoneTemplate zone : zoneList) {
 			Area area = switch (zone.getAreaType()) {
-                case POLYGON -> buildPolygonArea(zone);
-                case CYLINDER -> new CylinderArea(zone.getName(), zone.getMapid(), zone.getCylinder().getX(),
-                        zone.getCylinder().getY(), zone.getCylinder().getR(), zone.getCylinder().getBottom(),
-                        zone.getCylinder().getTop());
-                case SPHERE ->
-                        new SphereArea(zone.getName(), zone.getMapid(), zone.getSphere().getX(), zone.getSphere().getY(),
-                                zone.getSphere().getZ(), zone.getSphere().getR());
-                case SEMISPHERE -> new SemisphereArea(zone.getName(), zone.getMapid(), zone.getSemisphere().getX(),
-                        zone.getSemisphere().getY(), zone.getSemisphere().getZ(), zone.getSemisphere().getR());
-            };
-            if (area != null) {
-				List<ZoneInfo> zones = zoneNameMap.get(zone.getMapid());
-				if (zones == null) {
-					zones = new ArrayList<>();
-					zoneNameMap.put(zone.getMapid(), zones);
-				}
-				if (zone.getZoneType() == ZoneClassName.WEATHER) {
-					if (lastMapId != zone.getMapid()) {
-						lastMapId = zone.getMapid();
-						weatherZoneId = 1;
-					}
-					weatherZoneIds.put(zone, weatherZoneId++);
-				}
-				zones.add(new ZoneInfo(area, zone));
-				count++;
+				case POLYGON -> buildPolygonArea(zone);
+				case CYLINDER -> new CylinderArea(zone.getName(), zone.getMapid(), zone.getCylinder().getX(),
+					zone.getCylinder().getY(), zone.getCylinder().getR(), zone.getCylinder().getBottom(),
+					zone.getCylinder().getTop());
+				case SPHERE ->
+					new SphereArea(zone.getName(), zone.getMapid(), zone.getSphere().getX(), zone.getSphere().getY(),
+						zone.getSphere().getZ(), zone.getSphere().getR());
+				case SEMISPHERE -> new SemisphereArea(zone.getName(), zone.getMapid(), zone.getSemisphere().getX(),
+					zone.getSemisphere().getY(), zone.getSemisphere().getZ(), zone.getSemisphere().getR());
+			};
+			List<ZoneInfo> zones = zoneNameMap.get(zone.getMapid());
+			if (zones == null) {
+				zones = new ArrayList<>();
+				zoneNameMap.put(zone.getMapid(), zones);
 			}
+			if (zone.getZoneType() == ZoneClassName.WEATHER) {
+				if (lastMapId != zone.getMapid()) {
+					lastMapId = zone.getMapid();
+					weatherZoneId = 1;
+				}
+				weatherZoneIds.put(zone, weatherZoneId++);
+			}
+			zones.add(new ZoneInfo(area, zone));
+			count++;
 		}
 		zoneList.clear();
 		zoneList = null;
@@ -124,6 +126,7 @@ public class ZoneData {
 	/**
 	 * 返回按地图 ID 分组的区域信息映射。
 	 * Returns the zone-info map keyed by map id.
+	 *
 	 * @return 区域信息映射 / zone-info map
 	 */
 	public IntObjectHashMap<List<ZoneInfo>> getZones() {
@@ -133,6 +136,7 @@ public class ZoneData {
 	/**
 	 * 返回已加载的区域数量。
 	 * Returns the number of loaded zones.
+	 *
 	 * @return 已加载的区域数量 / Returns the number of loaded zones.
 	 */
 	public int size() {
@@ -142,6 +146,7 @@ public class ZoneData {
 	/**
 	 * 获取天气区域序号（从 1 开始）；模板未登记时返回 0。
 	 * Returns the weather-zone order number (starting from 1), or 0 if the template is unregistered.
+	 *
 	 * @param template 区域模板 / zone template
 	 * @return 天气区域序号，未登记则为 0 / weather-zone id or 0
 	 */
@@ -158,7 +163,7 @@ public class ZoneData {
 	 * Marshals the current zone data to generated_zones.xml after XSD validation.
 	 */
 	public void saveData() {
-		Schema schema = null;
+		Schema schema;
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
 		try {

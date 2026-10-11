@@ -175,9 +175,6 @@ public final class DataManager {
     public static SkillSkinData SKILL_SKIN_DATA;
     public static RepeatedAbnormalStatusImmuneData REPEATED_ABNORMAL_STATUS_IMMUNE_DATA;
 
-    /** XML 加载器实例 / XML data loader instance */
-    private XmlDataLoader loader;
-
     /**
      * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
      * Returns the instance, which must be supplied by Spring.
@@ -252,7 +249,7 @@ public final class DataManager {
             try {
                 Util.printSection(I18n.get("console.section.static_data"));
                 log.info(I18n.get("log.821c9082e891"));
-                this.loader = GameStaticDataServices.xmlDataLoader();
+                XmlDataLoader loader = GameStaticDataServices.xmlDataLoader();
                 long start = System.currentTimeMillis();
                 LoadedStaticData loadedData = loadStaticData(loader);
                 StaticData data = loadedData.staticData();
@@ -482,7 +479,7 @@ public final class DataManager {
     }
 
     private static void appendThreadDump(StringBuilder report, ThreadMXBean threads, Thread thread) {
-        ThreadInfo info = threads.getThreadInfo(thread.getId(), STALL_WATCHDOG_MAX_FRAMES);
+        ThreadInfo info = threads.getThreadInfo(thread.threadId(), STALL_WATCHDOG_MAX_FRAMES);
         if (info != null) {
             report.append(info).append(System.lineSeparator());
         }

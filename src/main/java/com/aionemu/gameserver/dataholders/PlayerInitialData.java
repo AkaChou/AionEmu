@@ -98,9 +98,6 @@ public class PlayerInitialData {
 		@XmlElement(name = "items")
 		private ItemsType itemsType;
 
-		// @XmlElement(name="shortcuts")
-		// private ShortcutType shortcutData;
-
 		PlayerClass getRequiredPlayerClass() {
 			return requiredPlayerClass;
 		}
@@ -149,17 +146,12 @@ public class PlayerInitialData {
 
 			@Override
 			public String toString() {
-				String sb = "ItemType" +
+				return "ItemType" +
 					"{templateId=" + templateId +
 					", count=" + count +
 					'}';
-				return sb;
 			}
 		}
-		// public static class ShortcutType
-		// {
-		// public List<Shortcut> shortcuts;
-		// }
 	}
 
 	/**

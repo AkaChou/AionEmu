@@ -41,13 +41,6 @@ public abstract class ReloadableData {
 	public abstract void reload(Player admin);
 
 	/**
-	 * 返回当前持有的数据列表（子类实现）。
-	 * Returns the currently held data list (implemented by subclasses).
-	 * @return 当前持有的数据列表（由子类实现） / Returns the currently held data list (implemented by subclasses).
-	 */
-	protected abstract List<?> getData();
-
-	/**
 	 * 用新列表替换当前数据（子类实现）。
 	 * Replaces the current data with the given list (implemented by subclasses).
 	 * @param data 新数据列表 / new data list
@@ -61,14 +54,12 @@ public abstract class ReloadableData {
 	 * @return Schema 实例 / schema instance
 	 */
 	protected Schema getSchema(String xml_schema) {
-		Schema schema = null;
 		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		try {
-			schema = sf.newSchema(Config.dataFile(xml_schema));
+			return sf.newSchema(Config.dataFile(xml_schema));
 		} catch (SAXException saxe) {
 			throw new Error("Error while getting schema", saxe);
 		}
-		return schema;
 	}
 
 	/**

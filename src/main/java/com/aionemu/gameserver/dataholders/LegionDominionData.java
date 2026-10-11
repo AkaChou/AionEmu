@@ -48,12 +48,4 @@ public class LegionDominionData {
 		return legionDominion.size();
 	}
 
-	/**
-	 * 返回全部军团领地地点映射。
-	 * Returns the full legion dominion location map.
-	 * @return 领地 ID 到地点的映射 / map of dominion id to location
-	 */
-	public Map<Integer, LegionDominionLocation> getLegionDominionLocations() {
-		return legionDominion;
-	}
 }

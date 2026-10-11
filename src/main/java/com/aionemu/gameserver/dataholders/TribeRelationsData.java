@@ -46,35 +46,7 @@ public class TribeRelationsData {
 		return tribeNameMap.size();
 	}
 
-	/**
-	 * 判断该种族是否配置了攻击性关系。
-	 * Returns whether the tribe has any aggressive relations configured.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在攻击性关系则为 true / true if aggressive relations exist
-	 */
-	public boolean hasAggressiveRelations(TribeClass tribeName) {
-		Tribe tribe = tribeNameMap.get(tribeName);
-		if (tribe == null) {
-			return false;
-		}
-		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
-		return !tribe.getAggressive().isEmpty() || (baseTribe != null && !baseTribe.getAggressive().isEmpty());
-	}
 
-	/**
-	 * 判断该种族是否配置了敌对关系。
-	 * Returns whether the tribe has any hostile relations configured.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在敌对关系则为 true / true if hostile relations exist
-	 */
-	public boolean hasHostileRelations(TribeClass tribeName) {
-		Tribe tribe = tribeNameMap.get(tribeName);
-		if (tribe == null) {
-			return false;
-		}
-		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
-		return !tribe.getHostile().isEmpty() || (baseTribe != null && !baseTribe.getHostile().isEmpty());
-	}
 
 	/**
 	 * 判断该种族是否配置了支援关系。
@@ -91,50 +63,8 @@ public class TribeRelationsData {
 		return !tribe.getSupport().isEmpty() || (baseTribe != null && !baseTribe.getSupport().isEmpty());
 	}
 
-	/**
-	 * 判断该种族是否配置了友好关系。
-	 * Returns whether the tribe has any friendly relations configured.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在友好关系则为 true / true if friendly relations exist
-	 */
-	public boolean hasFriendRelations(TribeClass tribeName) {
-		Tribe tribe = tribeNameMap.get(tribeName);
-		if (tribe == null) {
-			return false;
-		}
-		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
-		return !tribe.getFriendly().isEmpty() || (baseTribe != null && !baseTribe.getFriendly().isEmpty());
-	}
 
-	/**
-	 * 判断该种族是否配置了无关系。
-	 * Returns whether the tribe has any none relations configured.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在无关系配置则为 true / true if none relations exist
-	 */
-	public boolean hasNoneRelations(TribeClass tribeName) {
-		Tribe tribe = tribeNameMap.get(tribeName);
-		if (tribe == null) {
-			return false;
-		}
-		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
-		return !tribe.getNone().isEmpty() || (baseTribe != null && !baseTribe.getNone().isEmpty());
-	}
 
-	/**
-	 * 判断该种族是否配置了中立关系。
-	 * Returns whether the tribe has any neutral relations configured.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在中立关系则为 true / true if neutral relations exist
-	 */
-	public boolean hasNeutralRelations(TribeClass tribeName) {
-		Tribe tribe = tribeNameMap.get(tribeName);
-		if (tribe == null) {
-			return false;
-		}
-		Tribe baseTribe = tribe.isBasic() ? tribeNameMap.get(tribe.getBase()) : null;
-		return !tribe.getNeutral().isEmpty() || (baseTribe != null && !baseTribe.getNeutral().isEmpty());
-	}
 
 	/**
 	 * 判断种族 1 对种族 2 是否为攻击性关系（友好优先排除）。
@@ -190,22 +120,6 @@ public class TribeRelationsData {
 				|| tribe2.isBasic() && tribe1.getFriendly().contains(tribe2.getBase());
 	}
 
-	/**
-	 * 判断种族 1 对种族 2 是否为中立关系。
-	 * Returns whether tribe1 is neutral toward tribe2.
-	 * @param tribeName1 源种族 / source tribe
-	 * @param tribeName2 目标种族 / target tribe
-	 * @return 中立关系则为 true / true if neutral
-	 */
-	public boolean isNeutralRelation(TribeClass tribeName1, TribeClass tribeName2) {
-		Tribe tribe1 = tribeNameMap.get(tribeName1);
-		Tribe tribe2 = tribeNameMap.get(tribeName2);
-		if (tribe1 == null || tribe2 == null) {
-			return false;
-		}
-		return tribe1.getNeutral().contains(tribeName2)
-				|| tribe2.isBasic() && tribe1.getNeutral().contains(tribe2.getBase());
-	}
 
 	/**
 	 * 判断种族 1 对种族 2 是否为无关系。
@@ -240,22 +154,4 @@ public class TribeRelationsData {
 				|| tribe2.isBasic() && tribe1.getHostile().contains(tribe2.getBase());
 	}
 
-	/**
-	 * 判断是否存在任意种族支援指定种族。
-	 * Returns whether any tribe is configured as a supporter of the given tribe.
-	 * @param tribeName 种族名 / tribe name
-	 * @return 存在支援者则为 true / true if any supporter exists
-	 */
-	public boolean hasAnySupporter(TribeClass tribeName) {
-		Tribe tribe1 = tribeNameMap.get(tribeName);
-		if (tribe1 == null) {
-			return false;
-		}
-		for (TribeClass tribe2 : tribeNameMap.keySet()) {
-			if (isSupportRelation(tribe2, tribeName)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

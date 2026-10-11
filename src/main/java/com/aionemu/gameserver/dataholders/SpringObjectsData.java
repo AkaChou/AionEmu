@@ -33,8 +33,7 @@ public class SpringObjectsData {
 	 * After JAXB unmarshalling, copies spring templates into the runtime list.
 	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-		for (SpringTemplate template : springObject)
-			springObjects.add(template);
+		springObjects.addAll(springObject);
 	}
 
 	/**

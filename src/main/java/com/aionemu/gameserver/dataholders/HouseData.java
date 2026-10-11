@@ -51,14 +51,9 @@ public class HouseData {
 			for (HouseAddress address : land.getAddresses()) {
 				Integer exitMapId = address.getExitMapId();
 				if (exitMapId == null) {
-					exitMapId = Integer.valueOf(address.getMapId());
+					exitMapId = address.getMapId();
 				}
-				Set<HousingLand> landList = landsByEntryWorldId.get(exitMapId);
-				if (landList == null) {
-					landList = new HashSet<>();
-					landsByEntryWorldId.put(exitMapId, landList);
-				}
-				landList.add(land);
+				landsByEntryWorldId.computeIfAbsent(exitMapId, k -> new HashSet<>()).add(land);
 			}
 		}
 		lands.clear();
@@ -73,28 +68,6 @@ public class HouseData {
 	 */
 	public Set<HousingLand> getLandsForWorldId(int worldId) {
 		return landsByEntryWorldId.get(worldId);
-	}
-
-	/**
-	 * 在指定世界中按房屋类型尺寸查找匹配地块。
-	 * Finds a land in the given world that matches the house size type.
-	 * @param worldId 入口世界 ID / entry world id
-	 * @param houseSize 房屋类型尺寸 / house size type
-	 * @return 匹配地块，不存在则为 null / matching land, or null if absent
-	 */
-	public HousingLand getLandForHouse(int worldId, HouseType houseSize) {
-		Set<HousingLand> worldHouseAreas = landsByEntryWorldId.get(worldId);
-		if (worldHouseAreas == null) {
-			return null;
-		}
-		for (HousingLand land : worldHouseAreas) {
-			for (Building building : land.getBuildings()) {
-				if (houseSize.value().equals(building.getSize())) {
-					return land;
-				}
-			}
-		}
-		return null;
 	}
 
 	/**

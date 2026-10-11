@@ -19,7 +19,7 @@ import lombok.AccessLevel;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class StaticDataLoadRepro {
 
-	static void main(String[] args) throws Exception {
+	static void main(String[] args) {
 		System.setProperty("aion.game.data.dir", "src/main/resources/aion/data");
 		System.setProperty("aion.game.definitions.dir", "src/main/resources/aion/definitions");
 		System.setProperty("aion.game.geo.dir", "src/main/resources/aion/geo");
@@ -92,7 +92,7 @@ public final class StaticDataLoadRepro {
 		System.err.println("===== REPRO STACK DUMP at +" + at + "ms =====");
 		for (Map.Entry<Thread, StackTraceElement[]> entry : Thread.getAllStackTraces().entrySet()) {
 			Thread thread = entry.getKey();
-			ThreadInfo info = threads.getThreadInfo(thread.getId());
+			ThreadInfo info = threads.getThreadInfo(thread.threadId());
 			System.err.println("\"" + thread.getName() + "\" state=" + thread.getState()
 				+ (info != null && info.getLockName() != null ? " waiting on " + info.getLockName()
 					+ (info.getLockOwnerName() != null ? " held by " + info.getLockOwnerName() : "") : ""));

@@ -96,11 +96,9 @@ public class EventData {
 	 * @return 全部活动模板 / all event templates
 	 */
 	public List<EventTemplate> getAllEvents() {
-		List<EventTemplate> result = new ArrayList<>();
 		synchronized (allEvents) {
-			result.addAll(allEvents.values());
+			return new ArrayList<>(allEvents.values());
 		}
-		return result;
 	}
 
 	/**
@@ -133,12 +131,9 @@ public class EventData {
 	 * @return 激活活动模板 / active event templates
 	 */
 	public List<EventTemplate> getActiveEvents() {
-		List<EventTemplate> result = new ArrayList<>();
 		synchronized (activeEvents) {
-			result.addAll(activeEvents.values());
+			return new ArrayList<>(activeEvents.values());
 		}
-
-		return result;
 	}
 
 	/**

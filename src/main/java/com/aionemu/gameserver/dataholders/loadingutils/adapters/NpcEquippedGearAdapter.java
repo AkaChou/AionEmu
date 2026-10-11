@@ -18,7 +18,7 @@ public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEqui
 	 * @return 始终为 null / always null
 	 */
 	@Override
-	public NpcEquipmentList marshal(NpcEquippedGear v) throws Exception {
+	public NpcEquipmentList marshal(NpcEquippedGear v) {
 		return null;
 	}
 
@@ -29,7 +29,7 @@ public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEqui
 	 * @return 运行时装备 / runtime gear
 	 */
 	@Override
-	public NpcEquippedGear unmarshal(NpcEquipmentList v) throws Exception {
+	public NpcEquippedGear unmarshal(NpcEquipmentList v) {
 		return new NpcEquippedGear(v);
 	}
 }

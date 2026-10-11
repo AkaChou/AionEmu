@@ -74,31 +74,6 @@ public class QuestsData {
 		return questData.get(id);
 	}
 
-	/**
-	 * 返回指定 NPC 势力下、玩家当前可接取的任务列表。
-	 * Returns faction quests the player can currently start.
-	 * @param npcFactionId NPC 势力 ID / NPC faction id
-	 * @param player 玩家 / player
-	 * @return 可接任务列表 / startable quest list
-	 */
-	public List<QuestTemplate> getQuestsByNpcFaction(int npcFactionId, Player player) {
-		List<QuestTemplate> factionQuests = sortedByFactionId.get(npcFactionId);
-		List<QuestTemplate> quests = new ArrayList<>();
-		QuestEnv questEnv = new QuestEnv(null, player, 0, 0);
-		for (QuestTemplate questTemplate : factionQuests) {
-			if (!GameEngineServices.questEngine().isHaveHandler(questTemplate.getId())) {
-				continue;
-			}
-			if (questTemplate.getMinlevelPermitted() != 0 && player.getLevel() < questTemplate.getMinlevelPermitted()) {
-				continue;
-			}
-			questEnv.setQuestId(questTemplate.getId());
-			if (QuestService.checkStartConditions(questEnv, false)) {
-				quests.add(questTemplate);
-			}
-		}
-		return quests;
-	}
 
 	/**
 	 * 返回已加载的任务模板数量。

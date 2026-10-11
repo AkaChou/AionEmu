@@ -33,9 +33,7 @@ public class CuringObjectsData {
 	 * After JAXB unmarshalling, copies templates into the runtime list.
 	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-		for (CuringTemplate template : curingObject) {
-			curingObjects.add(template);
-		}
+		curingObjects.addAll(curingObject);
 	}
 
 	/**

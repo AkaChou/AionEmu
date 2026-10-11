@@ -40,7 +40,7 @@ public class InstanceExitData {
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (InstanceExit exit : instanceExit) {
 			instanceExits.add(exit);
-			exitsByWorldId.computeIfAbsent(exit.getInstanceId(), k -> new ArrayList<>()).add(exit);
+			exitsByWorldId.computeIfAbsent(exit.getInstanceId(), _ -> new ArrayList<>()).add(exit);
 		}
 		instanceExit.clear();
 		instanceExit = null;

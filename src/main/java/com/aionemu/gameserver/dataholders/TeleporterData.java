@@ -61,13 +61,4 @@ public class TeleporterData {
 		return null;
 	}
 
-	/**
-	 * 按传送 ID 获取传送员模板。
-	 * Returns the teleporter template for the given teleport id.
-	 * @param teleportId 传送 ID / teleport id
-	 * @return 传送员模板，不存在则为 null / teleporter template or null
-	 */
-	public TeleporterTemplate getTeleporterTemplateByTeleportId(int teleportId) {
-		return npctlistData.get(teleportId);
-	}
 }

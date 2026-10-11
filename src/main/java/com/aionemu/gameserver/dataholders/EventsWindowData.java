@@ -54,16 +54,6 @@ public class EventsWindowData {
 	}
 
 	/**
-	 * 按 ID 获取事件窗口模板。
-	 * Returns the event window template for the given id.
-	 * @param id 事件窗口 ID / event window id
-	 * @return 事件窗口模板，不存在则为 null / event window template, or null if absent
-	 */
-	public EventsWindow getEventWindowId(int id) {
-		return eventData.get(id);
-	}
-
-	/**
 	 * 返回全部事件窗口映射。
 	 * Returns the map of all event windows.
 	 * @return ID 到事件窗口的映射 / map of id to event window

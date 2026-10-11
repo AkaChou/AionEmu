@@ -123,7 +123,7 @@ public class GuideHtmlData {
 		if (generalTemplates != null) {
 			guideTemplate.addAll(generalTemplates);
 		}
-		return guideTemplate.toArray(new GuideTemplate[guideTemplate.size()]);
+		return guideTemplate.toArray(GuideTemplate[]::new);
 	}
 
 	/**

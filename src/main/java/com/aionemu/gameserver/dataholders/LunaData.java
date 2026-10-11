@@ -76,14 +76,6 @@ public class LunaData {
 		return lunaData.get(id);
 	}
 
-	/**
-	 * 返回全部露娜配方映射。
-	 * Returns the full Luna template map.
-	 * @return ID 到配方模板的映射 / map of id to recipe template
-	 */
-	public IntObjectHashMap<LunaTemplate> getLunaTemplates() {
-		return lunaData;
-	}
 
 	/**
 	 * 返回已加载的露娜配方数量。

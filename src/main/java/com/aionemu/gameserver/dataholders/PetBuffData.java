@@ -61,13 +61,4 @@ public class PetBuffData {
 		return templates.get(buffId);
 	}
 
-	/**
-	 * 按食物计数获取宠物增益属性。
-	 * Returns the pet bonus attribute for the given food count.
-	 * @param count 食物计数 / food count
-	 * @return 增益属性，不存在则为 null / bonus attribute or null
-	 */
-	public PetBonusAttr getFoodCount(int count) {
-		return templates.get(count);
-	}
 }

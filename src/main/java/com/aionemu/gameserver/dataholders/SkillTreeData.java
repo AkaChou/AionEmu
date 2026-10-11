@@ -97,7 +97,7 @@ public class SkillTreeData {
 		if (generalTemplates != null) {
 			newSkills.addAll(generalTemplates);
 		}
-		return newSkills.toArray(new SkillLearnTemplate[newSkills.size()]);
+		return newSkills.toArray(SkillLearnTemplate[]::new);
 	}
 
 	/**
@@ -113,18 +113,9 @@ public class SkillTreeData {
 		if (byId != null) {
 			searchSkills.addAll(byId);
 		}
-		return searchSkills.toArray(new SkillLearnTemplate[searchSkills.size()]);
+		return searchSkills.toArray(SkillLearnTemplate[]::new);
 	}
 
-	/**
-	 * 判断技能是否出现在技能树中（可学习）。
-	 * Returns whether the skill appears in the skill tree (is learnable).
-	 * @param skillId 技能 ID / skill id
-	 * @return 是否可学习 / whether it is a learned skill
-	 */
-	public boolean isLearnedSkill(int skillId) {
-		return templatesById.get(skillId) != null;
-	}
 
 	/**
 	 * 返回全部学习模板条目总数。

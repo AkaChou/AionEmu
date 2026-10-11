@@ -74,7 +74,7 @@ public class ItemRandomBonusData {
 		int number = 0;
 		for (int i = 0; i < modifiersGroup.size(); i++) {
 			ModifiersTemplate modifiers = modifiersGroup.get(i);
-			current += modifiers.getChance() * 100;
+			current += (int) (modifiers.getChance() * 100);
 			if (current >= chance) {
 				template = modifiers;
 				number = i + 1;

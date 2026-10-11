@@ -85,14 +85,4 @@ public class ChargeSkillData {
 	public ChargeSkillTemplate getChargeSkillTemplate1st(int skillId) {
 		return firstTemplates.get(skillId);
 	}
-
-	/**
-	 * 按任意阶段技能 ID 获取蓄力技能模板。
-	 * Returns the charge skill template for any stage skill id.
-	 * @param skillId 技能 ID / skill id
-	 * @return 模板，不存在则为 null / template or null
-	 */
-	public ChargeSkillTemplate getChargeSkillTemplateTotal(int skillId) {
-		return totalTemplates.get(skillId);
-	}
 }

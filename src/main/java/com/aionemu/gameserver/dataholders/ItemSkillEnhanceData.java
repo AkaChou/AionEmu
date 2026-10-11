@@ -69,7 +69,7 @@ public class ItemSkillEnhanceData {
 		enhanceSkillsByIdAndClass.clear();
 		for (ItemSkillEnhance enhance : skillEnhances) {
 			enhanceSkillsById.put(enhance.getId(), enhance);
-			enhanceSkillsByIdAndClass.computeIfAbsent(enhance.getId(), id -> new EnumMap<>(PlayerClass.class))
+			enhanceSkillsByIdAndClass.computeIfAbsent(enhance.getId(), _ -> new EnumMap<>(PlayerClass.class))
 					.put(enhance.getClassId(), enhance);
 		}
 		skillEnhances.clear();

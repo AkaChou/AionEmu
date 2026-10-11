@@ -34,9 +34,7 @@ public class ReviveWorldStartPointsData {
 	 * After JAXB unmarshalling, copies start points into the runtime list and releases the XML list.
 	 */
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-		for (WorldReviveStartPoints exit : WorldStartPoints) {
-			StartPointsList.add(exit);
-		}
+		StartPointsList.addAll(WorldStartPoints);
 		WorldStartPoints.clear();
 		WorldStartPoints = null;
 	}

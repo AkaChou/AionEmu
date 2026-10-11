@@ -660,31 +660,14 @@ public class SpawnsData2 {
 	 * key set never changes again.
 	 */
 	private void freezeIndexTables() {
-		allSpawnMaps.freeze();
-		normalSpawnVariants.freeze();
-		customs.freeze();
-		siegeSpawnMaps.freeze();
-		baseSpawnMaps.freeze();
-		vortexSpawnMaps.freeze();
-		riftSpawnMaps.freeze();
-		beritraSpawnMaps.freeze();
-		agentSpawnMaps.freeze();
-		anohaSpawnMaps.freeze();
-		rvrSpawnMaps.freeze();
-		svsSpawnMaps.freeze();
-		iuSpawnMaps.freeze();
-		dynamicRiftSpawnMaps.freeze();
-		instanceRiftSpawnMaps.freeze();
-		idianDepthsSpawnMaps.freeze();
-		nightmareCircusSpawnMaps.freeze();
-		legionDominionSpawnMaps.freeze();
-		zorshivDredgionSpawnMaps.freeze();
-		moltenusSpawnMaps.freeze();
-		conquestSpawnMaps.freeze();
-		landingSpawnMaps.freeze();
-		landingSpecialSpawnMaps.freeze();
-		towerOfEternitySpawnMaps.freeze();
-		outpostSpawnMaps.freeze();
+		for (FrozenIntObjectTable<?> index : List.of(allSpawnMaps, normalSpawnVariants, customs, siegeSpawnMaps,
+			baseSpawnMaps, vortexSpawnMaps, riftSpawnMaps, beritraSpawnMaps, agentSpawnMaps, anohaSpawnMaps,
+			rvrSpawnMaps, svsSpawnMaps, iuSpawnMaps, dynamicRiftSpawnMaps, instanceRiftSpawnMaps,
+			idianDepthsSpawnMaps, nightmareCircusSpawnMaps, legionDominionSpawnMaps, zorshivDredgionSpawnMaps,
+			moltenusSpawnMaps, conquestSpawnMaps, landingSpawnMaps, landingSpecialSpawnMaps,
+			towerOfEternitySpawnMaps, outpostSpawnMaps)) {
+			index.freeze();
+		}
 	}
 
 	/**
@@ -735,15 +718,6 @@ public class SpawnsData2 {
 		return siegeSpawnMaps.get(siegeId);
 	}
 
-	/**
-	 * 按地点 ID 获取军团领地刷怪组列表。
-	 * Returns legion dominion spawn groups for the given location id.
-	 * @param legionDominionId 军团领地 ID / legion dominion id
-	 * @return 刷怪组列表，可能为 null / spawn groups or null
-	 */
-	public List<SpawnGroup2> getLegionDominionSpawnsByLocId(int legionDominionId) {
-		return legionDominionSpawnMaps.get(legionDominionId);
-	}
 
 	/**
 	 * 按地点 ID 获取基地刷怪组列表。
@@ -765,15 +739,6 @@ public class SpawnsData2 {
 		return outpostSpawnMaps.get(id);
 	}
 
-	/**
-	 * 按地点 ID 获取裂隙刷怪组列表。
-	 * Returns rift spawn groups for the given location id.
-	 * @param id 裂隙 ID / rift id
-	 * @return 刷怪组列表，可能为 null / spawn groups or null
-	 */
-	public List<SpawnGroup2> getRiftSpawnsByLocId(int id) {
-		return riftSpawnMaps.get(id);
-	}
 
 	/**
 	 * 按地点 ID 获取次元漩涡刷怪组列表。
@@ -951,10 +916,9 @@ public class SpawnsData2 {
 	 * @param admin 操作管理员 / admin player
 	 * @param visibleObject 目标可见对象 / target visible object
 	 * @param delete true 表示删除点位 / true to delete the spot
-	 * @return 是否保存成功 / whether the save succeeded
 	 * @throws IOException 文件读写失败 / on file I/O failure
 	 */
-	public synchronized boolean saveSpawn(Player admin, VisibleObject visibleObject, boolean delete)
+	public synchronized void saveSpawn(Player admin, VisibleObject visibleObject, boolean delete)
 			throws IOException {
 		SpawnTemplate spawn = visibleObject.getSpawn();
 		Spawn oldGroup = DataManager.SPAWNS_DATA2.getSpawnsForNpc(visibleObject.getWorldId(), spawn.getNpcId());
@@ -983,7 +947,7 @@ public class SpawnsData2 {
 			} catch (Exception e) {
 				log.error(e.getMessage());
 				PacketSendUtility.sendMessage(admin, "Could not load old XML file!");
-				return false;
+				return;
 			} finally {
 				if (fin != null) {
 					fin.close();
@@ -1033,7 +997,7 @@ public class SpawnsData2 {
 					oldSpot = s;
 					break;
 				} else {
-					return false; // nothing to change
+					return; // nothing to change
 				}
 			} else if (changeX && s.getY() == spot.getY() && s.getZ() == spot.getZ()
 					&& s.getHeading() == spot.getHeading()
@@ -1069,7 +1033,7 @@ public class SpawnsData2 {
 		}
 		FileOutputStream fos = null;
 		try {
-			xml.getParentFile().mkdir();
+			Files.createDirectories(xml.getParentFile().toPath());
 			fos = new FileOutputStream(xml);
 			Marshaller marshaller = jc.createMarshaller();
 			marshaller.setSchema(schema);
@@ -1082,13 +1046,11 @@ public class SpawnsData2 {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			PacketSendUtility.sendMessage(admin, "Could not save XML file!");
-			return false;
 		} finally {
 			if (fos != null) {
 				fos.close();
 			}
 		}
-		return true;
 	}
 
 	/**
@@ -1100,9 +1062,6 @@ public class SpawnsData2 {
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
-		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.RIFT) {
-			path = "Rifts";
-		}
 		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.VOLATILE_RIFT) {
 			path = "Volatile Rifts";
 		} else if (visibleObject instanceof Gatherable) {
@@ -1198,6 +1157,9 @@ public class SpawnsData2 {
 			}
 			SimpleEntry<SpawnGroup2, Spawn> entry = allSpawnMaps.get(visObj.getWorldId())
 					.get(visObj.getObjectTemplate().getTemplateId());
+			if (entry == null) {
+				continue;
+			}
 			if (!entry.getValue().isEventSpawn()) {
 				continue;
 			}

@@ -81,34 +81,9 @@ public class ItemData extends ReloadableData {
 					itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
 				}
 				allItems.put(it.getTemplateId(), it);
-				// if (it.getCategory().equals(ItemCategory.MANASTONE)) {
-				// int level = it.getLevel();
-				// if (!manastones.containsKey(level)) {
-				// manastones.put(level, new ArrayList<ItemTemplate>());
-				// }
-				// manastones.get(level).add(it);
-				// }
-				if (it.getActions() == null) {
-					continue;
-				}
 			}
 		}
 		its = null;
-	}
-
-	/**
-	 * 以分片结果装配物品数据：分片按序合并，自定义模板按 ID 覆盖或新增，最后一次性重建全部索引。
-	 * Assembles item data from shard results: shards merge in order, custom templates override or
-	 * append by id, then all indexes are rebuilt in a single pass.
-	 * @param shards 分片加载结果 / shard load results
-	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
-	 */
-	public void assembleFrom(List<ItemData> shards, ItemData customOverrides) {
-		Map<Integer, ItemTemplate> merged = new LinkedHashMap<>();
-		for (ItemData shard : shards) {
-			merged.putAll(shard.getItemData());
-		}
-		assembleFromMerged(merged, customOverrides);
 	}
 
 	/**
@@ -189,16 +164,6 @@ public class ItemData extends ReloadableData {
 	}
 
 	/**
-	 * 按宠物 ID 获取宠物蛋模板。
-	 * Returns the pet-egg template for the given pet id.
-	 * @param petId 宠物 ID / pet id
-	 * @return 宠物蛋模板或 null / pet-egg template or null
-	 */
-	public ItemTemplate getPetEggTemplate(int petId) {
-		return petEggs.get(petId);
-	}
-
-	/**
 	 * 通过分片并行路径热重载物品模板并通知管理员。
 	 * Hot-reloads item templates via the parallel shard path and notifies the admin.
 	 * @param admin 触发重载的管理员 / admin who triggered the reload
@@ -217,46 +182,11 @@ public class ItemData extends ReloadableData {
 		}
 	}
 
-	@Override
-	protected List<ItemTemplate> getData() {
-		return its;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void setData(List<?> data) {
 		this.its = (List<ItemTemplate>) data;
 		this.afterUnmarshal(null, null);
-	}
-
-	/**
-	 * 按描述字符串查找匹配的物品描述（忽略大小写）。
-	 * Finds a matching item description by string (case-insensitive).
-	 * @param descr 物品描述 / item description
-	 * @return 匹配的描述，未找到则为空串 / matched description or empty string
-	 */
-	public String getItemDescr(String descr) {
-		for (ItemTemplate it : items.values()) {
-			if (descr.equalsIgnoreCase(it.getDescr())) {
-				return it.getDescr();
-			}
-		}
-		return "";
-	}
-
-	/**
-	 * 按描述字符串返回对应物品 ID。
-	 * Returns the item id matching the given description.
-	 * @param descr 物品描述 / item description
-	 * @return 物品 ID，未找到则为 0 / item id or 0
-	 */
-	public int giveItemIdOf(String descr) {
-		for (ItemTemplate it : items.values()) {
-			if (descr.equalsIgnoreCase(it.getDescr())) {
-				return it.getTemplateId();
-			}
-		}
-		return 0;
 	}
 
 	/**

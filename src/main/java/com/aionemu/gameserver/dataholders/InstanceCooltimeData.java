@@ -75,20 +75,6 @@ public class InstanceCooltimeData {
 	}
 
 	/**
-	 * 按同步 ID 计算玩家下次可进入副本的时间戳。
-	 * Computes the next entry timestamp for the player by sync id.
-	 * @param player 玩家 / player
-	 * @param syncId 同步 ID / sync id
-	 * @return 下次进入时间（毫秒），不存在则为 0 / next entry time in ms or 0
-	 */
-	public long getInstanceEntranceCooltimeById(Player player, int syncId) {
-		if (!syncIdToMapId.containsKey(syncId)) {
-			return 0;
-		}
-		return getInstanceEntranceCooltime(player, syncIdToMapId.get(syncId));
-	}
-
-	/**
 	 * 按世界 ID 返回每日最大进入次数。
 	 * Returns the max daily entry count for the given world id.
 	 * @param worldId 世界 ID / world id
@@ -145,12 +131,6 @@ public class InstanceCooltimeData {
 				case 302350000: // Windy Gorge 5.5
 				case 302370000: // 5.6
 				case 302420000: // 5.6
-					ZonedDateTime now = ZonedDateTime.now();
-					ZonedDateTime repeatDate = now.withHour(9).withMinute(0).withSecond(0).withNano(0);
-					if (now.isAfter(repeatDate)) {
-						repeatDate = repeatDate.plusDays(1);
-					}
-					instanceCoolTime = repeatDate.toInstant().toEpochMilli();
 					// 注意：原版有两种计算，为兼容性保留两者。 / Note: The original had both calculations, keeping both for compatibility
 					instanceCoolTime = System.currentTimeMillis() + ((long) clt.getEntCoolTime() * 60 * 1000);
 					break;

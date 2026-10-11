@@ -48,22 +48,5 @@ public class LunaDiceData {
 		return diceItemList.size();
 	}
 
-	/**
-	 * 按表 ID 获取骰子奖励物品列表。
-	 * Returns the dice reward item list for the given table id.
-	 * @param id 表 ID / table id
-	 * @return 奖励物品列表或 null / reward item list or null
-	 */
-	public List<LunaDiceItem> getLunaDiceTabById(int id) {
-		return diceItemList.get(id);
-	}
 
-	/**
-	 * 返回全部骰子表模板列表。
-	 * Returns the full list of dice table templates.
-	 * @return 骰子表列表 / dice table list
-	 */
-	public List<LunaDiceTable> getLunaDiceTabs() {
-		return lunaDiceTabTemplate;
-	}
 }

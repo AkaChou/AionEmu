@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.dataholders;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +29,11 @@ public class HousePartsData {
 	protected List<HousePart> houseParts;
 
 	@XmlTransient
-	Map<String, List<HousePart>> partsByTags = new HashMap<>(5);
-
-	@XmlTransient
 	Map<Integer, HousePart> partsById = new HashMap<>();
 
 	/**
-	 * JAXB 反序列化完成后，按部件 ID 与标签建立索引并释放原始列表。
-	 * After JAXB unmarshalling, indexes parts by id and tags, then releases the raw list.
+	 * JAXB 反序列化完成后，按部件 ID 建立索引并释放原始列表。
+	 * After JAXB unmarshalling, indexes parts by id, then releases the raw list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (houseParts == null) {
@@ -46,16 +41,6 @@ public class HousePartsData {
 		}
 		for (HousePart part : houseParts) {
 			partsById.put(part.getId(), part);
-			Iterator<String> iterator = part.getTags().iterator();
-			while (iterator.hasNext()) {
-				String tag = iterator.next();
-				List<HousePart> parts = partsByTags.get(tag);
-				if (parts == null) {
-					parts = new ArrayList<>();
-					partsByTags.put(tag, parts);
-				}
-				parts.add(part);
-			}
 		}
 
 		houseParts.clear();
@@ -70,16 +55,6 @@ public class HousePartsData {
 	 */
 	public HousePart getPartById(int partId) {
 		return partsById.get(partId);
-	}
-
-	/**
-	 * 按建筑的部件匹配标签获取可用部件列表。
-	 * Returns the parts matching the building's parts-match tag.
-	 * @param building 房屋建筑 / building
-	 * @return 匹配部件列表，不存在则为 null / matching part list, or null if absent
-	 */
-	public List<HousePart> getPartsForBuilding(Building building) {
-		return partsByTags.get(building.getPartsMatchTag());
 	}
 
 	/**

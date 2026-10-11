@@ -281,7 +281,7 @@ public class ItemGroupsData {
 	}
 
 	void MapCraftReward(Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder, CraftReward reward) {
-		int lowerBound = 0, upperBound = 0;
+		int lowerBound, upperBound;
 		if (reward instanceof CraftRecipe recipe) {
 			lowerBound = recipe.getLevel();
 			upperBound = lowerBound + RECIPE_UPPER;
@@ -311,321 +311,61 @@ public class ItemGroupsData {
 		items.add(reward);
 	}
 
-	/**
-	 * 按技能 ID 获取制作材料奖励。
-	 * Returns craft material rewards for the given skill id.
-	 * @param skillId 技能 ID / skill id
-	 * @return 制作材料奖励集合 / craft material rewards
-	 */
-	public Collection<CraftReward> getCraftMaterials(int skillId) {
-		if (craftMaterialsBySkill.containsKey(skillId)) {
-			return Collections.emptyList();
-		}
-		List<CraftReward> result = new ArrayList<>();
-		for (List<CraftReward> items : craftMaterialsBySkill.get(skillId).values()) {
-			result.addAll(items);
-		}
-		return result;
-	}
 
-	/**
-	 * 返回制作材料组掉落概率。
-	 * Returns the craft materials group chance.
-	 * @return 制作材料组概率 / Returns the craft materials group chance.
-	 */
-	public float getCraftMaterialsChance() {
-		return craftMaterials.getChance();
-	}
 
-	/**
-	 * 按技能 ID 获取制作商店物品奖励。
-	 * Returns craft shop item rewards for the given skill id.
-	 * @param skillId 技能 ID / skill id
-	 * @return 制作商店物品奖励集合 / craft shop item rewards
-	 */
-	public Collection<CraftReward> getCraftShopItems(int skillId) {
-		if (craftShopBySkill.containsKey(skillId)) {
-			return Collections.emptyList();
-		}
-		List<CraftReward> result = new ArrayList<>();
-		for (List<CraftReward> items : craftShopBySkill.get(skillId).values()) {
-			result.addAll(items);
-		}
-		return result;
-	}
 
-	/**
-	 * 返回制作商店物品组掉落概率。
-	 * Returns the craft shop items group chance.
-	 * @return 制作商店物品组概率 / Returns the craft shop items group chance.
-	 */
-	public float getCraftShopItemsChance() {
-		return craftShop.getChance();
-	}
 
-	/**
-	 * 按技能 ID 获取制作礼包奖励。
-	 * Returns craft bundle rewards for the given skill id.
-	 * @param skillId 技能 ID / skill id
-	 * @return 制作礼包奖励集合 / craft bundle rewards
-	 */
-	public Collection<CraftReward> getCraftBundles(int skillId) {
-		if (craftBundlesBySkill.containsKey(skillId)) {
-			return Collections.emptyList();
-		}
-		List<CraftReward> result = new ArrayList<>();
-		for (List<CraftReward> items : craftBundlesBySkill.get(skillId).values()) {
-			result.addAll(items);
-		}
-		return result;
-	}
 
-	/**
-	 * 返回制作礼包组掉落概率。
-	 * Returns the craft bundles group chance.
-	 * @return 制作捆绑包组概率 / Returns the craft bundles group chance.
-	 */
-	public float getCraftBundlesChance() {
-		return craftBundles.getChance();
-	}
 
-	/**
-	 * 按技能 ID 获取制作配方奖励。
-	 * Returns craft recipe rewards for the given skill id.
-	 * @param skillId 技能 ID / skill id
-	 * @return 制作配方奖励集合 / craft recipe rewards
-	 */
-	public Collection<CraftReward> getCraftRecipes(int skillId) {
-		if (craftRecipesBySkill.containsKey(skillId)) {
-			return Collections.emptyList();
-		}
-		List<CraftReward> result = new ArrayList<>();
-		for (List<CraftReward> items : craftRecipesBySkill.get(skillId).values()) {
-			result.addAll(items);
-		}
-		return result;
-	}
 
-	/**
-	 * 返回制作配方组掉落概率。
-	 * Returns the craft recipes group chance.
-	 * @return 制作配方组概率 / Returns the craft recipes group chance.
-	 */
-	public float getCraftRecipesChance() {
-		return craftRecipes.getChance();
-	}
 
-	/** 普通魔石 / common 魔石 */
-	public Collection<ItemRaceEntry> getManastonesCommon() {
-		return manastonesCommon.getItems();
-	}
 
-	/** 普通魔石概率 / common 魔石 chance */
-	public float getManastonesCommonChance() {
-		return manastonesCommon.getChance();
-	}
 
-	/** 稀有魔石 / rare 魔石 */
-	public Collection<ItemRaceEntry> getManastonesRare() {
-		return manastonesRare.getItems();
-	}
 
-	/** 稀有魔石概率 / rare 魔石 chance */
-	public float getManastonesRareChance() {
-		return manastonesRare.getChance();
-	}
 
-	/** 传颂魔石 / legend 魔石 */
-	public Collection<ItemRaceEntry> getManastonesLegend() {
-		return manastonesLegend.getItems();
-	}
 
-	/** 传颂魔石概率 / legend 魔石 chance */
-	public float getManastonesLegendChance() {
-		return manastonesLegend.getChance();
-	}
 
-	/** 史诗魔石 / epic 魔石 */
-	public Collection<ItemRaceEntry> getManastonesEpic() {
-		return manastonesEpic.getItems();
-	}
 
-	/** 史诗魔石概率 / epic 魔石 chance */
-	public float getManastonesEpicChance() {
-		return manastonesEpic.getChance();
-	}
 
-	/** 普通食物 / common food */
-	public Collection<IdLevelReward> getFoodCommon() {
-		return foodCommon.getItems();
-	}
 
-	/** 普通食物概率 / common food chance */
-	public float getFoodCommonChance() {
-		return foodCommon.getChance();
-	}
 
-	/** 稀有食物 / rare food */
-	public Collection<IdLevelReward> getFoodRare() {
-		return foodRare.getItems();
-	}
 
-	/** 稀有食物概率 / rare food chance */
-	public float getFoodRareChance() {
-		return foodRare.getChance();
-	}
 
-	/** 传说食物 / legendary food */
-	public Collection<IdLevelReward> getFoodLegendary() {
-		return foodLegendary.getItems();
-	}
 
-	/** 传说食物概率 / legendary food chance */
-	public float getFoodLegendaryChance() {
-		return foodLegendary.getChance();
-	}
 
-	/** 普通药品 / common medicine */
-	public Collection<IdLevelReward> getMedicineCommon() {
-		return medicineCommon.getItems();
-	}
 
-	/** 普通药品概率 / common medicine chance */
-	public float getMedicineCommonChance() {
-		return medicineCommon.getChance();
-	}
 
-	/** 稀有药品 / rare medicine */
-	public Collection<IdLevelReward> getMedicineRare() {
-		return medicineRare.getItems();
-	}
 
-	/** 稀有药品概率 / rare medicine chance */
-	public float getMedicineRareChance() {
-		return medicineRare.getChance();
-	}
 
-	/** 传说药品 / legendary medicine */
-	public Collection<IdLevelReward> getMedicineLegendary() {
-		return medicineLegendary.getItems();
-	}
 
-	/** 传说药品概率 / legendary medicine chance */
-	public float getMedicineLegendaryChance() {
-		return medicineLegendary.getChance();
-	}
 
 	// 矿石。 / Ores.
-	/** 稀有矿石 / rare ores */
-	public Collection<ItemRaceEntry> getOresRare() {
-		return oresRare.getItems();
-	}
 
-	/** 稀有矿石概率 / rare ores chance */
-	public float getOresRareChance() {
-		return oresRare.getChance();
-	}
 
-	/** 唯一矿石 / unique ores */
-	public Collection<ItemRaceEntry> getOresUnique() {
-		return oresUnique.getItems();
-	}
 
-	/** 唯一矿石概率 / unique ores chance */
-	public float getOresUniqueChance() {
-		return oresUnique.getChance();
-	}
 
-	/** 传说矿石 / legendary ores */
-	public Collection<ItemRaceEntry> getOresLegendary() {
-		return oresLegendary.getItems();
-	}
 
-	/** 传说矿石概率 / legendary ores chance */
-	public float getOresLegendaryChance() {
-		return oresLegendary.getChance();
-	}
 
-	/** 史诗矿石 / epic ores */
-	public Collection<ItemRaceEntry> getOresEpic() {
-		return oresEpic.getItems();
-	}
 
-	/** 史诗矿石概率 / epic ores chance */
-	public float getOresEpicChance() {
-		return oresEpic.getChance();
-	}
 
 	// 可采集。 / Gatherable.
-	/** 普通采集物 / common 采集物 */
-	public Collection<ItemRaceEntry> getGatherCommon() {
-		return gatherCommon.getItems();
-	}
 
-	/** 普通采集物概率 / common 采集物 chance */
-	public float getGatherCommonChance() {
-		return gatherCommon.getChance();
-	}
 
-	/** 稀有采集物 / rare 采集物 */
-	public Collection<ItemRaceEntry> getGatherRare() {
-		return gatherRare.getItems();
-	}
 
-	/** 稀有采集物概率 / rare 采集物 chance */
-	public float getGatherRareChance() {
-		return gatherRare.getChance();
-	}
 
-	/** 唯一采集物 / Unique gathering items */
-	public Collection<ItemRaceEntry> getGatherUnique() {
-		return gatherUnique.getItems();
-	}
 
-	/** 唯一采集物概率 / 唯一采集物 chance */
-	public float getGatherUniqueChance() {
-		return gatherUnique.getChance();
-	}
 
-	/** 传说采集物 / legendary 采集物 */
-	public Collection<ItemRaceEntry> getGatherLegendary() {
-		return gatherLegendary.getItems();
-	}
 
-	/** 传说采集物概率 / legendary 采集物 chance */
-	public float getGatherLegendaryChance() {
-		return gatherLegendary.getChance();
-	}
 
-	/** 史诗采集物 / epic 采集物 */
-	public Collection<ItemRaceEntry> getGatherEpic() {
-		return gatherEpic.getItems();
-	}
 
-	/** 史诗采集物概率 / epic 采集物 chance */
-	public float getGatherEpicChance() {
-		return gatherEpic.getChance();
-	}
 
 	/** 强化物品 / enchant items */
 	public Collection<IdLevelReward> getEnchants() {
 		return enchants.getItems();
 	}
 
-	/** 强化物品概率 / enchant items chance */
-	public float getEnchantsChance() {
-		return enchants.getChance();
-	}
 
-	/** 首领掉落物品 / boss drop items */
-	public Collection<ItemRaceEntry> getBoss() {
-		return boss.getItems();
-	}
 
-	/** 首领掉落概率 / boss drop chance */
-	public float getBossChance() {
-		return boss.getChance();
-	}
 
 	/**
 	 * 判断物品是否属于指定宠物饲料类型（排除黑名单与臭食）。
@@ -647,28 +387,13 @@ public class ItemGroupsData {
 			food = petFood.get(foodType);
 			return food.contains(itemId);
 		}
-		food = petFood.get(FoodType.ARMOR);
-		if (food.contains(itemId)) {
-			return true;
+		for (FoodType miscType : List.of(FoodType.ARMOR, FoodType.BALAUR_SCALES, FoodType.BONES, FoodType.FLUIDS,
+			FoodType.SOULS, FoodType.THORNS)) {
+			if (petFood.get(miscType).contains(itemId)) {
+				return true;
+			}
 		}
-		food = petFood.get(FoodType.BALAUR_SCALES);
-		if (food.contains(itemId)) {
-			return true;
-		}
-		food = petFood.get(FoodType.BONES);
-		if (food.contains(itemId)) {
-			return true;
-		}
-		food = petFood.get(FoodType.FLUIDS);
-		if (food.contains(itemId)) {
-			return true;
-		}
-		food = petFood.get(FoodType.SOULS);
-		if (food.contains(itemId)) {
-			return true;
-		}
-		food = petFood.get(FoodType.THORNS);
-		return food.contains(itemId);
+		return false;
 	}
 
 	private List<ItemRaceEntry> getPetFood(FoodType foodType) {

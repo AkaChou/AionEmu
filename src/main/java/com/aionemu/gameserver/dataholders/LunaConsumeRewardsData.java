@@ -67,15 +67,6 @@ public class LunaConsumeRewardsData {
 		return lunaData.get(id);
 	}
 
-	/**
-	 * 按累计消费点数获取露娜消费奖励模板。
-	 * Returns the Luna consume-reward template for the given cumulative point total.
-	 * @param point 累计消费点数 / cumulative consume points
-	 * @return 奖励模板或 null / reward template or null
-	 */
-	public LunaConsumeRewardsTemplate getLunaConsumeRewardsBypoint(int point) {
-		return lunaConsumeCountData.get(point);
-	}
 
 	/**
 	 * 返回全部露娜消费奖励映射。

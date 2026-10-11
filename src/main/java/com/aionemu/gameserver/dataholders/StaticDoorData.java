@@ -66,14 +66,4 @@ public class StaticDoorData {
 	public StaticDoorWorld getStaticDoorWorlds(int world) {
 		return staticDoorData.get(world);
 	}
-
-	/**
-	 * 设置静态门世界列表并重建索引。
-	 * Sets the static-door world list and rebuilds the index.
-	 * @param staticDorWorlds 静态门世界列表 / static-door world list
-	 */
-	public void setStaticDorWorlds(List<StaticDoorWorld> staticDorWorlds) {
-		this.staticDorWorlds = staticDorWorlds;
-		afterUnmarshal(null, null);
-	}
 }

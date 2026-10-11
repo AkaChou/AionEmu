@@ -99,15 +99,6 @@ public class Portal2Data {
 		return null;
 	}
 
-	/**
-	 * 判断指定 NPC 是否为传送门 NPC。
-	 * Returns whether the given NPC is a portal NPC.
-	 * @param npcId NPC ID / npc id
-	 * @return 是否为传送门 / whether it is a portal NPC
-	 */
-	public boolean isPortalNpc(int npcId) {
-		return portalUses.get(npcId) != null || portalDialogs.get(npcId) != null;
-	}
 
 	/**
 	 * 按 NPC ID 获取使用型传送门配置。

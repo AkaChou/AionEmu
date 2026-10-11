@@ -53,16 +53,6 @@ public class GameExperienceData {
 	}
 
 	/**
-	 * 按 ID 获取游戏体验物品模板。
-	 * Returns the game experience template for the given id.
-	 * @param id 体验物品 ID / game experience id
-	 * @return 体验物品模板，不存在则为 null / game experience template, or null if absent
-	 */
-	public GameExperience getGameExperienceId(int id) {
-		return experienceData.get(id);
-	}
-
-	/**
 	 * 返回全部体验物品映射。
 	 * Returns the map of all game experience items.
 	 * @return ID 到体验物品的映射 / map of id to game experience

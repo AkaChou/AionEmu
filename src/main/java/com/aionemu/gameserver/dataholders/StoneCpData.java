@@ -52,15 +52,6 @@ public class StoneCpData {
 		return stoneData.size();
 	}
 
-	/**
-	 * 按石 ID 获取 CP 石模板。
-	 * Returns the CP-stone template for the given stone id.
-	 * @param id 石 ID / stone id
-	 * @return CP 石模板，不存在则为 null / CP-stone template or null
-	 */
-	public StoneCP getStoneCpId(int id) {
-		return stoneData.get(id);
-	}
 
 	/**
 	 * 返回全部 CP 石模板映射。

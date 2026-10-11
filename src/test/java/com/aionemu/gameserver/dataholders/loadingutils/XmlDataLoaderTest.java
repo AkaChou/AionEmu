@@ -201,7 +201,7 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void staticDataUnmarshallerCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
+	void staticDataUnmarshallerCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() {
 		Thread thread = Thread.currentThread();
 		ClassLoader originalClassLoader = thread.getContextClassLoader();
 		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());

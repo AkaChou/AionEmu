@@ -76,7 +76,7 @@ class IndependentLegacySpawnSurfaceTest {
 			"550.456421,393.938049,404.152008")));
 
 	@Test
-	void eachNpcKeepsOnlyTheRetailVariantSurface() throws Exception {
+	void eachNpcKeepsOnlyTheRetailVariantSurface() {
 		Map<Path, Document> documents = new HashMap<>();
 		for (ExpectedSpawn expected : EXPECTED) {
 			Path file = INSTANCES.resolve(expected.file());
