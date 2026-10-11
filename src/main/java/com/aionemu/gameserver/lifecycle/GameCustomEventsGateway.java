@@ -120,11 +120,12 @@ public class GameCustomEventsGateway {
      * Resolve FFA service: prefer Spring, otherwise fall back via runtime bridge.
      * @return 服务实例 / Service instance
      */
-    private FFAService ffaService() {
+    private void ffaService() {
         if (ffaServiceProvider == null) {
-            return runtimeBridge().ffaService();
+            runtimeBridge().ffaService();
+    	return;
         }
-        return ffaServiceProvider.getIfAvailable(() -> runtimeBridge().ffaService());
+        ffaServiceProvider.getIfAvailable(() -> runtimeBridge().ffaService());
     }
 
     /**
@@ -132,11 +133,12 @@ public class GameCustomEventsGateway {
      * Resolve ladder service.
      * @return 服务实例 / Service instance
      */
-    private LadderService ladderService() {
+    private void ladderService() {
         if (ladderServiceProvider == null) {
-            return runtimeBridge().ladderService();
+            runtimeBridge().ladderService();
+    	return;
         }
-        return ladderServiceProvider.getIfAvailable(() -> runtimeBridge().ladderService());
+        ladderServiceProvider.getIfAvailable(() -> runtimeBridge().ladderService());
     }
 
     /**
@@ -144,11 +146,12 @@ public class GameCustomEventsGateway {
      * Resolve BG service.
      * @return 服务实例 / Service instance
      */
-    private BGService bgService() {
+    private void bgService() {
         if (bgServiceProvider == null) {
-            return runtimeBridge().bgService();
+            runtimeBridge().bgService();
+    	return;
         }
-        return bgServiceProvider.getIfAvailable(() -> runtimeBridge().bgService());
+        bgServiceProvider.getIfAvailable(() -> runtimeBridge().bgService());
     }
 
     /**

@@ -440,7 +440,6 @@ public class GameRuntimeServicesGateway {
         influence();
         exchangeService();
         petitionService();
-        runtimeServiceBridge().loadInstances();
         flyRingService();
         curingZoneService();
         springZoneService();
@@ -457,37 +456,37 @@ public class GameRuntimeServicesGateway {
     /**
      * 解析周期存档服务。
      * Resolve the periodic-save service.
-     * @return 周期存档服务 / Periodic-save service
      */
-    private PeriodicSaveService periodicSaveService() {
+    private void periodicSaveService() {
         if (periodicSaveServiceProvider == null) {
-            return runtimeServiceBridge().periodicSaveService();
+            runtimeServiceBridge().periodicSaveService();
+            return;
         }
-        return periodicSaveServiceProvider.getIfAvailable(() -> runtimeServiceBridge().periodicSaveService());
+        periodicSaveServiceProvider.getIfAvailable(() -> runtimeServiceBridge().periodicSaveService());
     }
 
     /**
      * 解析管理服务。
      * Resolve the admin service.
-     * @return 管理服务 / Admin service
      */
-    private AdminService adminService() {
+    private void adminService() {
         if (adminServiceProvider == null) {
-            return runtimeServiceBridge().adminService();
+            runtimeServiceBridge().adminService();
+            return;
         }
-        return adminServiceProvider.getIfAvailable(() -> runtimeServiceBridge().adminService());
+        adminServiceProvider.getIfAvailable(() -> runtimeServiceBridge().adminService());
     }
 
     /**
      * 解析角色转移服务。
      * Resolve the player-transfer service.
-     * @return 角色转移服务 / Player-transfer service
      */
-    private PlayerTransferService playerTransferService() {
+    private void playerTransferService() {
         if (playerTransferServiceProvider == null) {
-            return runtimeServiceBridge().playerTransferService();
+            runtimeServiceBridge().playerTransferService();
+            return;
         }
-        return playerTransferServiceProvider.getIfAvailable(() -> runtimeServiceBridge().playerTransferService());
+        playerTransferServiceProvider.getIfAvailable(() -> runtimeServiceBridge().playerTransferService());
     }
 
     /**
@@ -505,145 +504,145 @@ public class GameRuntimeServicesGateway {
     /**
      * 解析游戏时间服务。
      * Resolve the game-time service.
-     * @return 游戏时间服务 / Game-time service
      */
-    private GameTimeService gameTimeService() {
+    private void gameTimeService() {
         if (gameTimeServiceProvider == null) {
-            return runtimeServiceBridge().gameTimeService();
+            runtimeServiceBridge().gameTimeService();
+            return;
         }
-        return gameTimeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().gameTimeService());
+        gameTimeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().gameTimeService());
     }
 
     /**
      * 解析公告服务。
      * Resolve the announcement service.
-     * @return 公告服务 / Announcement service
      */
-    private AnnouncementService announcementService() {
+    private void announcementService() {
         if (announcementServiceProvider == null) {
-            return runtimeServiceBridge().announcementService();
+            runtimeServiceBridge().announcementService();
+            return;
         }
-        return announcementServiceProvider.getIfAvailable(() -> runtimeServiceBridge().announcementService());
+        announcementServiceProvider.getIfAvailable(() -> runtimeServiceBridge().announcementService());
     }
 
     /**
      * 解析调试服务。
      * Resolve the debug service.
-     * @return 调试服务 / Debug service
      */
-    private DebugService debugService() {
+    private void debugService() {
         if (debugServiceProvider == null) {
-            return runtimeServiceBridge().debugService();
+            runtimeServiceBridge().debugService();
+            return;
         }
-        return debugServiceProvider.getIfAvailable(() -> runtimeServiceBridge().debugService());
+        debugServiceProvider.getIfAvailable(() -> runtimeServiceBridge().debugService());
     }
 
     /**
      * 解析天气服务。
      * Resolve the weather service.
-     * @return 天气服务 / Weather service
      */
-    private WeatherService weatherService() {
+    private void weatherService() {
         if (weatherServiceProvider == null) {
-            return runtimeServiceBridge().weatherService();
+            runtimeServiceBridge().weatherService();
+            return;
         }
-        return weatherServiceProvider.getIfAvailable(() -> runtimeServiceBridge().weatherService());
+        weatherServiceProvider.getIfAvailable(() -> runtimeServiceBridge().weatherService());
     }
 
     /**
      * 解析寄售服务。
      * Resolve the broker service.
-     * @return 寄售服务 / Broker service
      */
-    private BrokerService brokerService() {
+    private void brokerService() {
         if (brokerServiceProvider == null) {
-            return runtimeServiceBridge().brokerService();
+            runtimeServiceBridge().brokerService();
+            return;
         }
-        return brokerServiceProvider.getIfAvailable(() -> runtimeServiceBridge().brokerService());
+        brokerServiceProvider.getIfAvailable(() -> runtimeServiceBridge().brokerService());
     }
 
     /**
      * 解析军团服务。
      * Resolve the legion service.
-     * @return 军团服务 / Legion service
      */
-    private LegionService legionService() {
+    private void legionService() {
         if (legionServiceProvider == null) {
-            return runtimeServiceBridge().legionService();
+            runtimeServiceBridge().legionService();
+            return;
         }
-        return legionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().legionService());
+        legionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().legionService());
     }
 
     /**
      * 解析影响力。
      * Resolve influence.
-     * @return 影响力 / Influence
      */
-    private Influence influence() {
+    private void influence() {
         if (influenceProvider == null) {
-            return runtimeServiceBridge().influence();
+            runtimeServiceBridge().influence();
+            return;
         }
-        return influenceProvider.getIfAvailable(() -> runtimeServiceBridge().influence());
+        influenceProvider.getIfAvailable(() -> runtimeServiceBridge().influence());
     }
 
     /**
      * 解析交易服务。
      * Resolve the exchange service.
-     * @return 交易服务 / Exchange service
      */
-    private ExchangeService exchangeService() {
+    private void exchangeService() {
         if (exchangeServiceProvider == null) {
-            return runtimeServiceBridge().exchangeService();
+            runtimeServiceBridge().exchangeService();
+            return;
         }
-        return exchangeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().exchangeService());
+        exchangeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().exchangeService());
     }
 
     /**
      * 解析请愿服务。
      * Resolve the petition service.
-     * @return 请愿服务 / Petition service
      */
-    private PetitionService petitionService() {
+    private void petitionService() {
         if (petitionServiceProvider == null) {
-            return runtimeServiceBridge().petitionService();
+            runtimeServiceBridge().petitionService();
+            return;
         }
-        return petitionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().petitionService());
+        petitionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().petitionService());
     }
 
     /**
      * 解析飞行环服务。
      * Resolve the fly-ring service.
-     * @return 飞行环服务 / Fly-ring service
      */
-    private FlyRingService flyRingService() {
+    private void flyRingService() {
         if (flyRingServiceProvider == null) {
-            return runtimeServiceBridge().flyRingService();
+            runtimeServiceBridge().flyRingService();
+            return;
         }
-        return flyRingServiceProvider.getIfAvailable(() -> runtimeServiceBridge().flyRingService());
+        flyRingServiceProvider.getIfAvailable(() -> runtimeServiceBridge().flyRingService());
     }
 
     /**
      * 解析治愈区服务。
      * Resolve the curing-zone service.
-     * @return 治愈区服务 / Curing-zone service
      */
-    private CuringZoneService curingZoneService() {
+    private void curingZoneService() {
         if (curingZoneServiceProvider == null) {
-            return runtimeServiceBridge().curingZoneService();
+            runtimeServiceBridge().curingZoneService();
+            return;
         }
-        return curingZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().curingZoneService());
+        curingZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().curingZoneService());
     }
 
     /**
      * 解析泉水区服务。
      * Resolve the spring-zone service.
-     * @return 泉水区服务 / Spring-zone service
      */
-    private SpringZoneService springZoneService() {
+    private void springZoneService() {
         if (springZoneServiceProvider == null) {
-            return runtimeServiceBridge().springZoneService();
+            runtimeServiceBridge().springZoneService();
+            return;
         }
-        return springZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().springZoneService());
+        springZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().springZoneService());
     }
 
     /**
@@ -661,13 +660,13 @@ public class GameRuntimeServicesGateway {
     /**
      * 解析 DB 任务管理器。
      * Resolve the DB task manager.
-     * @return DB 任务管理器 / DB task manager
      */
-    private TaskManagerFromDB taskManagerFromDB() {
+    private void taskManagerFromDB() {
         if (taskManagerFromDBProvider == null) {
-            return runtimeServiceBridge().taskManagerFromDB();
+            runtimeServiceBridge().taskManagerFromDB();
+            return;
         }
-        return taskManagerFromDBProvider.getIfAvailable(() -> runtimeServiceBridge().taskManagerFromDB());
+        taskManagerFromDBProvider.getIfAvailable(() -> runtimeServiceBridge().taskManagerFromDB());
     }
 
     /**
@@ -685,49 +684,49 @@ public class GameRuntimeServicesGateway {
     /**
      * 解析 Web 商城服务。
      * Resolve the webshop service.
-     * @return Web 商城服务 / Webshop service
      */
-    private WebshopService webshopService() {
+    private void webshopService() {
         if (webshopServiceProvider == null) {
-            return runtimeServiceBridge().webshopService();
+            runtimeServiceBridge().webshopService();
+            return;
         }
-        return webshopServiceProvider.getIfAvailable(() -> runtimeServiceBridge().webshopService());
+        webshopServiceProvider.getIfAvailable(() -> runtimeServiceBridge().webshopService());
     }
 
     /**
      * 解析问卷服务。
      * Resolve the survey service.
-     * @return 问卷服务 / Survey service
      */
-    private SurveyService surveyService() {
+    private void surveyService() {
         if (surveyServiceProvider == null) {
-            return runtimeServiceBridge().surveyService();
+            runtimeServiceBridge().surveyService();
+            return;
         }
-        return surveyServiceProvider.getIfAvailable(() -> runtimeServiceBridge().surveyService());
+        surveyServiceProvider.getIfAvailable(() -> runtimeServiceBridge().surveyService());
     }
 
     /**
      * 解析寻找队伍服务。
      * Resolve the find-group service.
-     * @return 寻找队伍服务 / Find-group service
      */
-    private FindGroupService findGroupService() {
+    private void findGroupService() {
         if (findGroupServiceProvider == null) {
-            return runtimeServiceBridge().findGroupService();
+            runtimeServiceBridge().findGroupService();
+            return;
         }
-        return findGroupServiceProvider.getIfAvailable(() -> runtimeServiceBridge().findGroupService());
+        findGroupServiceProvider.getIfAvailable(() -> runtimeServiceBridge().findGroupService());
     }
 
     /**
      * 解析商城服务。
      * Resolve the in-game shop.
-     * @return 商城服务 / In-game shop
      */
-    private InGameShopEn inGameShopEn() {
+    private void inGameShopEn() {
         if (inGameShopEnProvider == null) {
-            return runtimeServiceBridge().inGameShopEn();
+            runtimeServiceBridge().inGameShopEn();
+            return;
         }
-        return inGameShopEnProvider.getIfAvailable(() -> runtimeServiceBridge().inGameShopEn());
+        inGameShopEnProvider.getIfAvailable(() -> runtimeServiceBridge().inGameShopEn());
     }
 
     /**

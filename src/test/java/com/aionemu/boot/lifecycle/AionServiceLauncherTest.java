@@ -76,7 +76,7 @@ class AionServiceLauncherTest {
     }
 
     @Test
-    void stopsAServiceWhoseStartupFailed() throws Exception {
+    void stopsAServiceWhoseStartupFailed() {
         List<String> events = new ArrayList<>();
         AionServiceLauncher launcher = new AionServiceLauncher(
             new AionServicesProperties(),
@@ -194,7 +194,7 @@ class AionServiceLauncherTest {
     }
 
     @Test
-    void gracefulShutdownRequestRunsOnlyOnce() throws Exception {
+    void gracefulShutdownRequestRunsOnlyOnce() {
         AtomicInteger requests = new AtomicInteger();
         AionServiceLauncher launcher = new AionServiceLauncher(
             new AionServicesProperties(),

@@ -117,7 +117,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         AionRuntimeMode.enableBootEmbeddedMode();
         AionEmbeddedFailureHandler.register(embeddedFailureHandler);
         AionEmbeddedShutdownHandler.register(embeddedShutdownHandler);
-        String[] sourceArgs = args.getSourceArgs();
         boolean loginEnabled = services.getLogin().isEnabled();
         boolean chatEnabled = services.getChat().isEnabled();
         boolean gameEnabled = services.getGame().isEnabled();

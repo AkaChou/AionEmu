@@ -33,15 +33,13 @@ public interface AionServiceLifecycle {
      * 启动服务。
      * Starts the service.
      * @param args 应用启动参数 / application arguments
-     * @throws Exception 启动失败时抛出 / if startup fails
-     */
-    void start(ApplicationArguments args) throws Exception;
+	 */
+    void start(ApplicationArguments args);
 
     /**
      * 停止服务；默认空实现。
      * Stops the service; default is a no-op.
-     * @throws Exception 停止失败时抛出 / if stop fails
      */
-    default void stop() throws Exception {
+    default void stop() {
     }
 }

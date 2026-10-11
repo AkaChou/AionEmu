@@ -1526,7 +1526,7 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
-    void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
+    void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() {
         LegionService legionService = instance(LegionService.class);
         WebshopService webshopService = instance(WebshopService.class);
         InGameShopEn inGameShopEn = instance(InGameShopEn.class);

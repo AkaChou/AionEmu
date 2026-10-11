@@ -71,27 +71,27 @@ public class GameCleaningGateway {
     }
 
     /**
-     * 解析数据库清理服务：优先 Spring，否则经运行时桥回退。
-     * Resolve database cleaning service: prefer Spring, otherwise fall back via runtime bridge.
-     * @return 服务实例 / Service instance
+     * 触发数据库清理服务解析：优先 Spring，否则经运行时桥回退。
+     * Trigger database cleaning service resolution: prefer Spring, otherwise fall back via runtime bridge.
      */
-    private DatabaseCleaningService databaseCleaningService() {
+    private void databaseCleaningService() {
         if (databaseCleaningServiceProvider == null) {
-            return runtimeBridge().databaseCleaningService();
+            runtimeBridge().databaseCleaningService();
+            return;
         }
-        return databaseCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().databaseCleaningService());
+        databaseCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().databaseCleaningService());
     }
 
     /**
-     * 解析欧比斯排名清理服务。
-     * Resolve abyss-rank cleaning service.
-     * @return 服务实例 / Service instance
+     * 触发欧比斯排名清理服务解析。
+     * Trigger abyss-rank cleaning service resolution.
      */
-    private AbyssRankCleaningService abyssRankCleaningService() {
+    private void abyssRankCleaningService() {
         if (abyssRankCleaningServiceProvider == null) {
-            return runtimeBridge().abyssRankCleaningService();
+            runtimeBridge().abyssRankCleaningService();
+            return;
         }
-        return abyssRankCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankCleaningService());
+        abyssRankCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankCleaningService());
     }
 
     /**
