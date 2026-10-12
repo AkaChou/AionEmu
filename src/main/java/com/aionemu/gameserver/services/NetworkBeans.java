@@ -9,6 +9,9 @@ import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
 import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
+import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -64,8 +67,9 @@ public class NetworkBeans {
 
     @Bean
     @Lazy
-    public LoginServer loginServer() {
-        return new LoginServer();
+    public LoginServer loginServer(GsPacketHandlerFactory loginPacketFactory, SvstatsDao loginSvstatsDao,
+            ThreadPoolManager loginThreadPoolManager) {
+        return new LoginServer(loginPacketFactory, loginSvstatsDao, loginThreadPoolManager);
     }
 
     @Bean

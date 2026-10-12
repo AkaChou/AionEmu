@@ -1,7 +1,7 @@
 package com.aionemu.loginserver.network.aion.clientpackets;
 
-import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
+import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.network.aion.AionAuthResponse;
 import com.aionemu.loginserver.network.aion.AionClientPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
@@ -17,6 +17,8 @@ import java.nio.ByteBuffer;
  * @author -Nemesiss-
  */
 public class CM_PLAY extends AionClientPacket {
+
+    private final GameServerTable gameServerTable;
 
     /**
      * 会话密钥中的 accountId，用于安全校验。
@@ -40,8 +42,9 @@ public class CM_PLAY extends AionClientPacket {
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
-    public CM_PLAY(ByteBuffer buf, LoginConnection client) {
+    public CM_PLAY(ByteBuffer buf, LoginConnection client, GameServerTable gameServerTable) {
         super(buf, client, 0x02);
+        this.gameServerTable = gameServerTable;
     }
 
     /**
@@ -64,7 +67,7 @@ public class CM_PLAY extends AionClientPacket {
         LoginConnection con = getConnection();
         SessionKey key = con.getSessionKey();
         if (key.checkLogin(accountId, loginOk)) {
-            GameServerInfo gsi = GameServerTable.getGameServerInfo(servId);
+            GameServerInfo gsi = gameServerTable.getGameServerInfo(servId);
             if (gsi == null || !gsi.isOnline()) {
                 con.sendPacket(new SM_PLAY_FAIL(AionAuthResponse.SERVER_DOWN));
             } // else if(serv gm only)

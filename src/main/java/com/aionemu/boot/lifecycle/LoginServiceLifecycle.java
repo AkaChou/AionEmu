@@ -2,21 +2,34 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyLoginConfigOverrides;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.loginserver.lifecycle.LoginStartupSequence;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 /**
- * 内嵌登录服生命周期：配置路径、应用遗留覆盖并委托网关启停。
- * Embedded login-service lifecycle: configures paths, applies legacy overrides, and delegates start/stop.
+ * 内嵌登录服生命周期：配置路径、应用遗留覆盖并驱动登录服启动序列。
+ * Embedded login-service lifecycle: configures paths, applies legacy overrides, and drives the
+ * login-server startup sequence.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class LoginServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
     private final LegacyLoginConfigOverrides legacyConfigOverrides;
-    private final LoginServerLifecycleGateway loginServerLifecycleGateway;
+    /**
+     * 启动序列提供者：以 {@link ObjectProvider} 延迟解析，避免非 Boot 上下文在无数据源时被迫实例化整条持久层链。
+     * Startup-sequence provider: resolved lazily through {@link ObjectProvider} so non-Boot contexts without a
+     * DataSource do not force the whole persistence chain to instantiate.
+     */
+    private final ObjectProvider<LoginStartupSequence> loginStartupSequenceProvider;
     private boolean started;
 
     /**
@@ -53,10 +66,12 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
         AionServicePaths.configureLogin();
         try {
             legacyConfigOverrides.applyToLoginConfig();
-            loginServerLifecycleGateway.start(args.getSourceArgs());
+            LoginStartupSequence startupSequence = loginStartupSequenceProvider.getObject();
+            startupSequence.start();
+            log.info(I18n.get("log.23ddf7057872", startupSequence.getLoadTimeMillis() / 1000));
             started = true;
         } catch (RuntimeException | Error e) {
-            loginServerLifecycleGateway.stop();
+            loginStartupSequenceProvider.ifAvailable(LoginStartupSequence::stop);
             throw e;
         }
     }
@@ -70,7 +85,7 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
         if (!started) {
             return;
         }
-        loginServerLifecycleGateway.stop();
+        loginStartupSequenceProvider.ifAvailable(LoginStartupSequence::stop);
         started = false;
     }
 }

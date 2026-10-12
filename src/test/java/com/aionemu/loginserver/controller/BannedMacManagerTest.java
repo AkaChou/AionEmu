@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
+import com.aionemu.loginserver.persistence.dao.BannedMacDao;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -18,9 +20,9 @@ class BannedMacManagerTest {
 
     @Test
     void banAddsEntryToMapAndPersistsIt() throws Exception {
-        FakeBannedMacDAO dao = new FakeBannedMacDAO();
+        AtomicReference<BannedMacEntry> updatedEntry = new AtomicReference<>();
         Map<String, BannedMacEntry> bannedList = new HashMap<>();
-        BannedMacManager manager = manager(dao, bannedList);
+        BannedMacManager manager = manager(fakeDao(updatedEntry, null), bannedList);
         long banTime = System.currentTimeMillis() + 60_000;
 
         manager.ban("00:11:22:33:44:55", banTime, "test");
@@ -29,37 +31,37 @@ class BannedMacManagerTest {
         assertEquals("00:11:22:33:44:55", entry.getMac());
         assertEquals(banTime, entry.getTime().getTime());
         assertEquals("test", entry.getDetails());
-        assertSame(entry, dao.updatedEntry);
+        assertSame(entry, updatedEntry.get());
     }
 
     @Test
     void unbanRemovesKnownEntryAndPersistsRemoval() throws Exception {
-        FakeBannedMacDAO dao = new FakeBannedMacDAO();
+        AtomicReference<String> removedAddress = new AtomicReference<>();
         Map<String, BannedMacEntry> bannedList = new HashMap<>();
         bannedList.put("00:11:22:33:44:66", new BannedMacEntry("00:11:22:33:44:66", System.currentTimeMillis() + 60_000));
-        BannedMacManager manager = manager(dao, bannedList);
+        BannedMacManager manager = manager(fakeDao(null, removedAddress), bannedList);
 
         manager.unban("00:11:22:33:44:66", "test");
 
         assertFalse(bannedList.containsKey("00:11:22:33:44:66"));
-        assertEquals("00:11:22:33:44:66", dao.removedAddress);
+        assertEquals("00:11:22:33:44:66", removedAddress.get());
     }
 
     @Test
     void unbanIgnoresUnknownEntry() throws Exception {
-        FakeBannedMacDAO dao = new FakeBannedMacDAO();
+        AtomicReference<String> removedAddress = new AtomicReference<>();
         Map<String, BannedMacEntry> bannedList = new HashMap<>();
-        BannedMacManager manager = manager(dao, bannedList);
+        BannedMacManager manager = manager(fakeDao(null, removedAddress), bannedList);
 
         manager.unban("00:11:22:33:44:77", "test");
 
         assertTrue(bannedList.isEmpty());
-        assertNull(dao.removedAddress);
+        assertNull(removedAddress.get());
     }
 
-    private static BannedMacManager manager(BannedMacDAO dao, Map<String, BannedMacEntry> bannedList) throws Exception {
+    private static BannedMacManager manager(BannedMacDao dao, Map<String, BannedMacEntry> bannedList) throws Exception {
         BannedMacManager manager = new ObjenesisStd().newInstance(BannedMacManager.class);
-        setField(manager, "dao", dao);
+        setField(manager, "bannedMacDao", dao);
         setField(manager, "bannedList", bannedList);
         return manager;
     }
@@ -70,35 +72,28 @@ class BannedMacManagerTest {
         field.set(target, value);
     }
 
-    private static final class FakeBannedMacDAO extends BannedMacDAO {
-
-        private BannedMacEntry updatedEntry;
-        private String removedAddress;
-
-        @Override
-        public boolean update(BannedMacEntry entry) {
-            updatedEntry = entry;
-            return true;
-        }
-
-        @Override
-        public boolean remove(String address) {
-            removedAddress = address;
-            return true;
-        }
-
-        @Override
-        public Map<String, BannedMacEntry> load() {
-            return new HashMap<>();
-        }
-
-        @Override
-        public void cleanExpiredBans() {
-        }
-
-        @Override
-        public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-            return true;
-        }
+    /**
+     * 仅实现用例所需方法的动态代理 DAO 桩。
+     * Dynamic-proxy DAO stub implementing only the methods these cases need.
+     */
+    private static BannedMacDao fakeDao(AtomicReference<BannedMacEntry> updatedEntry, AtomicReference<String> removedAddress) {
+        return (BannedMacDao) Proxy.newProxyInstance(BannedMacDao.class.getClassLoader(),
+            new Class<?>[] { BannedMacDao.class }, (proxy, method, args) -> switch (method.getName()) {
+                case "update" -> {
+                    if (updatedEntry != null) {
+                        updatedEntry.set((BannedMacEntry) args[0]);
+                    }
+                    yield true;
+                }
+                case "remove" -> {
+                    if (removedAddress != null) {
+                        removedAddress.set((String) args[0]);
+                    }
+                    yield true;
+                }
+                case "load" -> new HashMap<String, BannedMacEntry>();
+                case "cleanExpiredBans" -> null;
+                default -> throw new UnsupportedOperationException(method.getName());
+            });
     }
 }

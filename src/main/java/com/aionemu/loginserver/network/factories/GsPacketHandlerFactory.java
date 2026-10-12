@@ -4,6 +4,14 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 
+import org.springframework.stereotype.Service;
+
+import com.aionemu.loginserver.GameServerTable;
+import com.aionemu.loginserver.controller.AccountController;
+import com.aionemu.loginserver.controller.AccountTimeController;
+import com.aionemu.loginserver.controller.BannedIpController;
+import com.aionemu.loginserver.controller.BannedMacManager;
+import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsConnection.State;
@@ -21,15 +29,34 @@ import com.aionemu.loginserver.network.gameserver.clientpackets.CM_MAC;
 import com.aionemu.loginserver.network.gameserver.clientpackets.CM_MACBAN_CONTROL;
 import com.aionemu.loginserver.network.gameserver.clientpackets.CM_PREMIUM_CONTROL;
 import com.aionemu.loginserver.network.gameserver.clientpackets.CM_PTRANSFER_CONTROL;
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
+import com.aionemu.loginserver.persistence.dao.AccountTimeDao;
+import com.aionemu.loginserver.service.PlayerTransferService;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
+
+import lombok.RequiredArgsConstructor;
 
 /**
- * 登录服游戏服包工厂：按 GS 连接状态与 opcode 分发游戏服客户端包。
- * Login-server game-server packet factory: dispatches GS client packets by state and opcode.
+ * 登录服游戏服包工厂：按 GS 连接状态与 opcode 分发游戏服客户端包，并注入各包所需服务。
+ * Login-server game-server packet factory: dispatches GS client packets by state and opcode,
+ * injecting each packet with the services it needs.
  * @author -Nemesiss-
  */
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class GsPacketHandlerFactory {
 
+    private final GameServerTable gameServerTable;
+    private final AccountController accountController;
+    private final AccountTimeController accountTimeController;
+    private final AccountTimeDao accountTimeDao;
+    private final AccountDataDao accountDataDao;
+    private final BannedIpController bannedIpController;
+    private final BannedMacManager bannedMacManager;
+    private final PremiumController premiumController;
+    private final PlayerTransferService playerTransferService;
+    private final ThreadPoolManager threadPoolManager;
 
     /**
      * 从 ByteBuffer 读取并构造一个游戏服客户端包。
@@ -39,7 +66,7 @@ public class GsPacketHandlerFactory {
      * @return 解析出的 GsClientPacket，未知包返回 null
      *         Parsed GsClientPacket, or null for unknown packets
      */
-    public static GsClientPacket handle(ByteBuffer data, GsConnection client) {
+    public GsClientPacket handle(ByteBuffer data, GsConnection client) {
         GsClientPacket msg = null;
         State state = client.getState();
         int id = data.get() & 0xff;
@@ -48,10 +75,10 @@ public class GsPacketHandlerFactory {
             case CONNECTED: {
                 switch (id) {
                     case 0:
-                        msg = new CM_GS_AUTH();
+                        msg = new CM_GS_AUTH(gameServerTable, bannedMacManager, threadPoolManager);
                         break;
                     case 13:
-                        msg = new CM_MAC();
+                        msg = new CM_MAC(accountController);
                         break;
                     default:
                         unknownPacket(state, id);
@@ -61,43 +88,44 @@ public class GsPacketHandlerFactory {
             case AUTHED: {
                 switch (id) {
                     case 1:
-                        msg = new CM_ACCOUNT_AUTH();
+                        msg = new CM_ACCOUNT_AUTH(accountController);
                         break;
                     case 2:
-                        msg = new CM_ACCOUNT_RECONNECT_KEY();
+                        msg = new CM_ACCOUNT_RECONNECT_KEY(accountController);
                         break;
                     case 3:
-                        msg = new CM_ACCOUNT_DISCONNECTED();
+                        msg = new CM_ACCOUNT_DISCONNECTED(accountTimeController);
                         break;
                     case 4:
-                        msg = new CM_ACCOUNT_LIST();
+                        msg = new CM_ACCOUNT_LIST(accountController, gameServerTable);
                         break;
                     case 5:
-                        msg = new CM_LS_CONTROL();
+                        msg = new CM_LS_CONTROL(accountDataDao);
                         break;
                     case 6:
-                        msg = new CM_BAN();
+                        msg = new CM_BAN(accountTimeDao, accountDataDao, bannedIpController, accountController,
+                            gameServerTable);
                         break;
                     case 8:
-                        msg = new CM_GS_CHARACTER();
+                        msg = new CM_GS_CHARACTER(accountController);
                         break;
                     case 9:
-                        msg = new CM_ACCOUNT_TOLL_INFO();
+                        msg = new CM_ACCOUNT_TOLL_INFO(accountDataDao);
                         break;
                     case 10:
-                        msg = new CM_MACBAN_CONTROL();
+                        msg = new CM_MACBAN_CONTROL(bannedMacManager);
                         break;
                     case 11:
-                        msg = new CM_PREMIUM_CONTROL();
+                        msg = new CM_PREMIUM_CONTROL(premiumController);
                         break;
                     case 12:
-                        msg = new CM_GS_PONG();
+                        msg = new CM_GS_PONG(gameServerTable);
                         break;
                     case 13:
-                        msg = new CM_MAC();
+                        msg = new CM_MAC(accountController);
                         break;
                     case 14:
-                        msg = new CM_PTRANSFER_CONTROL();
+                        msg = new CM_PTRANSFER_CONTROL(playerTransferService);
                         break;
                     default:
                         unknownPacket(state, id);

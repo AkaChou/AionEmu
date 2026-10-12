@@ -1,21 +1,23 @@
 package com.aionemu.loginserver;
 
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.commons.utils.NetworkUtils;
-import com.aionemu.loginserver.dao.GameServersDAO;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
+import com.aionemu.loginserver.persistence.dao.GameserversDao;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,8 +26,12 @@ import lombok.extern.slf4j.Slf4j;
  * @author -Nemesiss-
  */
 @Slf4j
-@UtilityClass
+@Service
+@Lazy
+@RequiredArgsConstructor
 public class GameServerTable {
+
+    private final GameserversDao gameserversDao;
 
     /**
      * 游戏服映射 Map&lt;Id, GameServerInfo&gt;。
@@ -47,7 +53,7 @@ public class GameServerTable {
      * Load GameServers from database.
      */
     public void load() {
-        gameservers = getDAO().getAllGameServers();
+        gameservers = gameserversDao.getAllGameServers();
         log.info(I18n.get("log.f7d64efdf7a8", gameservers.size()));
     }
 
@@ -131,15 +137,6 @@ public class GameServerTable {
                 break;
             }
         }
-    }
-
-    /**
-     * 获取 {@link GameServersDAO} 快捷方法。
-     * Shortcut for {@link GameServersDAO}.
-     * @return DAO 实例 / DAO instance
-     */
-    private GameServersDAO getDAO() {
-        return LoginDaosHolder.daos().gameServersDAO();
     }
 
     /**

@@ -54,6 +54,11 @@ public final class FlexCodeGenerator {
 		dataSource.setPassword(env("AION_DB_PASSWORD", "123456"));
 
 		List<String> tables = tableNames(dataSource);
+		String filter = env("AION_TABLES", "");
+		if (!filter.isEmpty()) {
+			Set<String> wanted = new LinkedHashSet<>(List.of(filter.split(",")));
+			tables = tables.stream().filter(wanted::contains).toList();
+		}
 		List<String> gsTables = tables.stream().filter(table -> !table.startsWith(LS_TABLE_PREFIX)).toList();
 		List<String> lsTables = tables.stream().filter(table -> table.startsWith(LS_TABLE_PREFIX)).toList();
 		System.out.println("gameserver tables: " + gsTables.size() + ", loginserver tables: " + lsTables.size());
@@ -109,8 +114,7 @@ public final class FlexCodeGenerator {
 		System.out.println("Generated " + generated.size() + " tables into " + basePackage);
 	}
 
-	/** 规范化属性名：is_ 前缀布尔列去掉 is（避免 Lombok/Bean 的 is 前缀语义冲突），
-	 * Java 关键字列名加下划线后缀；改名后的 @Column 映射由生成器自动补齐。 */
+	/** 规范化属性：is_ 前缀布尔列去 is、关键字列名加 _、tinyint(1) 统一 Integer（本库按小整数读写，非纯布尔）。 */
 	private static void normalizeProperties(Table table) {
 		for (Column column : table.getColumns()) {
 			String property = column.getProperty();
@@ -122,6 +126,12 @@ public final class FlexCodeGenerator {
 				property = property + "_";
 			}
 			column.setProperty(property);
+			String rawType = column.getRawType() == null ? "" : column.getRawType().toLowerCase();
+			// MySQL 驱动把 tinyint(1) 报告为 BIT(1)；is_ 前缀列保持 Boolean（真布尔），
+			// 其余按小整数读写（如 status=2/3、activated 档位）。
+			if ("bit".equals(rawType) && column.getRawLength() == 1 && !column.getName().startsWith("is_")) {
+				column.setPropertyType("java.lang.Integer");
+			}
 		}
 	}
 

@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -9,7 +11,10 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * GS→LS: ask whether the account session key is still valid on LoginServer.
  * @author -Nemesiss-
  */
+@RequiredArgsConstructor
 public class CM_ACCOUNT_AUTH extends GsClientPacket {
+
+    private final AccountController accountController;
 
     /**
      * 待校验的会话密钥。
@@ -37,6 +42,6 @@ public class CM_ACCOUNT_AUTH extends GsClientPacket {
      */
     @Override
     protected void runImpl() {
-        AccountController.checkAuth(sessionKey, this.getConnection());
+        accountController.checkAuth(sessionKey, this.getConnection());
     }
 }

@@ -4,21 +4,42 @@ import com.aionemu.commons.network.NettyServer;
 import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.configs.Config;
+import com.aionemu.loginserver.controller.AccountController;
+import com.aionemu.loginserver.controller.AccountTimeController;
 import com.aionemu.loginserver.network.aion.LoginClientConnectionFactory;
+import com.aionemu.loginserver.network.factories.AionPacketHandlerFactory;
+import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.utils.FloodProtector;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.network.gameserver.GameServerConnectionFactory;
 import java.util.function.Supplier;
-import lombok.experimental.UtilityClass;
+
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 /**
- * 登录服网络传输生命周期门面：创建、获取与关闭 GS/Aion 监听。
- * Login-server network transport lifecycle facade: create, obtain and shut down GS/Aion listeners.
+ * 登录服网络传输生命周期：按配置创建、获取与关闭 GS/Aion 监听。
+ * Login-server network transport lifecycle: create, obtain and shut down GS/Aion listeners.
  * @author KID
  */
-@UtilityClass
+@Service
+@Lazy
+@RequiredArgsConstructor
 public class NetConnector {
 
+    private final GsPacketHandlerFactory gsPacketFactory;
+    private final AionPacketHandlerFactory aionPacketFactory;
+    private final AccountController accountController;
+    private final AccountTimeController accountTimeController;
+    private final FloodProtector floodProtector;
+    private final SvstatsDao svstatsDao;
+    private final ThreadPoolManager threadPoolManager;
+
     private final Object lifecycleLock = new Object();
-    private Supplier<ServerTransport> transportFactory = NetConnector::createTransport;
+    private Supplier<ServerTransport> transportFactory = this::createTransport;
     private ServerTransport transport;
     private boolean initialized;
 
@@ -29,8 +50,8 @@ public class NetConnector {
      */
     private ServerTransport createTransport() {
         return new NettyServer(
-            new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GameServerConnectionFactory()),
-            new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new LoginClientConnectionFactory())
+            new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GameServerConnectionFactory(gsPacketFactory, svstatsDao, threadPoolManager)),
+            new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new LoginClientConnectionFactory(aionPacketFactory, accountController, accountTimeController, floodProtector))
         );
     }
 
@@ -47,17 +68,6 @@ public class NetConnector {
             initialized = true;
             return transport;
         }
-    }
-
-    /**
-     * 兼容旧调用，等同 {@link #currentTransport()}。
-     * Legacy alias of {@link #currentTransport()}.
-     * @return 服务器传输实例 / Server transport instance
-     * Prefer {@link #currentTransport()}。
-     */
-    @Deprecated(since = "boot-migration")
-    public ServerTransport getInstance() {
-        return currentTransport();
     }
 
     /**
@@ -100,6 +110,6 @@ public class NetConnector {
      * Test helper: restore the default transport factory.
      */
     void resetTransportFactory() {
-        useTransportFactory(NetConnector::createTransport);
+        useTransportFactory(this::createTransport);
     }
 }

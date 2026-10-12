@@ -1,43 +1,27 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.VipConfig;
-import com.aionemu.loginserver.dao.VipDAO;
+import com.aionemu.loginserver.persistence.dao.AccountVipDao;
 import com.aionemu.loginserver.model.Vip;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.AllArgsConstructor;
 
 /**
  * 账号 VIP 状态服务：查询、自动启用与缺失账号同步。
  * Account VIP service: lookup, auto-enable and missing-account sync.
  */
 @Slf4j
-@AllArgsConstructor
-public final class VipService {
+@Service
+@Lazy
+@RequiredArgsConstructor
+public class VipService {
 
-    private final VipDAO dao;
-
-    /** 默认构造：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。 / Default constructor: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor. */
-    public VipService() {
-        this(safeVipDao());
-    }
-
-    /**
-     * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
-     * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
-     */
-    private static VipDAO safeVipDao() {
-        if (DAOManager.isInitialized()) {
-            try {
-                return DAOManager.getDAO(VipDAO.class);
-            } catch (Exception e) {
-                // 离线兜底路径，退回实现类无参构造。 / offline fallback, use the no-arg impl constructor
-            }
-        }
-        return new com.aionemu.loginserver.dao.impl.VipDAO();
-    }
+    private final AccountVipDao vipDao;
 
     /**
      * 按账号 ID 查询 VIP 记录。
@@ -49,7 +33,7 @@ public final class VipService {
         if (accountId <= 0) {
             throw new IllegalArgumentException("accountId must be positive");
         }
-        return dao.findByAccountId(accountId);
+        return vipDao.findByAccountId(accountId);
     }
 
     /**
@@ -62,7 +46,7 @@ public final class VipService {
             return 0;
         }
         VipConfig.validate();
-        int synchronizedAccounts = dao.syncMissingAccounts(VipConfig.AUTO_ENABLE_LEVEL);
+        int synchronizedAccounts = vipDao.syncMissingAccounts(VipConfig.AUTO_ENABLE_LEVEL);
         log.info(I18n.get("log.b4e1738c5a20", synchronizedAccounts, VipConfig.AUTO_ENABLE_LEVEL));
         return synchronizedAccounts;
     }
@@ -81,6 +65,6 @@ public final class VipService {
             return false;
         }
         VipConfig.validate();
-        return dao.insertIfAbsent(accountId, VipConfig.AUTO_ENABLE_LEVEL);
+        return vipDao.insertIfAbsent(accountId, VipConfig.AUTO_ENABLE_LEVEL);
     }
 }

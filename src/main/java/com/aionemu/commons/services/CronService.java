@@ -29,6 +29,7 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.spi.JobFactory;
 import org.slf4j.LoggerFactory;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
@@ -125,13 +126,26 @@ public final class CronService {
 	 * @throws CronServiceException 如果服务已初始化 if service is already initialized
 	 */
 	public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner) {
+		return initSingleton(runableRunner, null);
+	}
+
+	/**
+	 * 初始化 CronService 单例，并指定 Quartz 的 JobFactory。
+	 * Initialize the CronService singleton with a custom Quartz JobFactory.
+	 *
+	 * @param runableRunner 任务执行器类 / Task executor class
+	 * @param jobFactory 创建 Job 实例的工厂，null 表示使用 Quartz 默认反射工厂
+	 *                   / factory creating Job instances; null keeps Quartz's reflective default
+	 * @return CronService 单例 / CronService singleton
+	 */
+	public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner, JobFactory jobFactory) {
 		String context = ServiceContext.current();
 		if (instances.containsKey(context)) {
 			throw new CronServiceException("CronService is already initialized");
 		} else {
 			CronService cs = new CronService();
 			cs.context = context;
-			cs.init(runableRunner);
+			cs.init(runableRunner, jobFactory);
 			instances.put(context, cs);
 			return cs;
 		}
@@ -145,6 +159,19 @@ public final class CronService {
 	 * @throws CronServiceException 初始化失败时 when initialization fails
 	 */
 	public synchronized void init(Class<? extends RunnableRunner> runnableRunner) {
+		init(runnableRunner, null);
+	}
+
+	/**
+	 * 初始化调度器，并指定 Quartz 的 JobFactory。
+	 * Initialize the scheduler with a custom Quartz JobFactory.
+	 *
+	 * @param runnableRunner 任务执行器类 / Task executor class
+	 * @param jobFactory 创建 Job 实例的工厂，null 表示使用 Quartz 默认反射工厂
+	 *                   / factory creating Job instances; null keeps Quartz's reflective default
+	 * @throws CronServiceException 初始化失败时 / when initialization fails
+	 */
+	public synchronized void init(Class<? extends RunnableRunner> runnableRunner, JobFactory jobFactory) {
 		if (this.scheduler == null) {
 			if (runnableRunner == null) {
 				throw new CronServiceException("RunnableRunner class must be defined");
@@ -159,6 +186,9 @@ public final class CronService {
 
 				try {
 					this.scheduler = (new StdSchedulerFactory(properties)).getScheduler();
+					if (jobFactory != null) {
+						this.scheduler.setJobFactory(jobFactory);
+					}
 					this.scheduler.start();
 				} catch (SchedulerException var4) {
 					throw new CronServiceException("Failed to initialize CronService", var4);

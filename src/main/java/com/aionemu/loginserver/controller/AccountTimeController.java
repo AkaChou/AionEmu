@@ -1,22 +1,29 @@
 package com.aionemu.loginserver.controller;
 
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 
-
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
+import com.aionemu.loginserver.persistence.dao.AccountPlaytimeDao;
+import com.aionemu.loginserver.persistence.dao.AccountTimeDao;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 账号在线/休息时间控制；部分游戏内功能依赖累计在线时长。
  * Account time controller. Some in-game features depend on accumulated online time.
  * @author EvilSpirit
  */
-@UtilityClass
+@Service
+@Lazy
+@RequiredArgsConstructor
 public class AccountTimeController {
+
+    private final AccountPlaytimeDao accountPlaytimeDao;
+    private final AccountTimeDao accountTimeDao;
 
     /**
      * 角色登录时更新账号时间：LastLoginTime、RestTime 等。
@@ -35,7 +42,7 @@ public class AccountTimeController {
         int returnday = getDays(accountTime.getLastLoginTime().getTime() + 30L * 24 * 60 * 60 * 1000);
 
 		if (lastLoginDay < currentDay) {
-            LoginDaosHolder.daos().accountPlayTimeDAO().update(account.getId(), accountTime);
+            accountPlaytimeDao.update(account.getId(), accountTime);
             accountTime.setAccumulatedOnlineTime(0);
             accountTime.setAccumulatedRestTime(0);
         } else {
@@ -46,7 +53,7 @@ public class AccountTimeController {
 
         accountTime.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 
-        LoginDaosHolder.daos().accountTimeDAO().updateAccountTime(account.getId(), accountTime);
+        accountTimeDao.updateAccountTime(account.getId(), accountTime);
         account.setAccountTime(accountTime);
 
         if (currentDay >= returnday && account.getReturn() == 0) {
@@ -70,7 +77,7 @@ public class AccountTimeController {
 
         accountTime.setSessionDuration(System.currentTimeMillis() - accountTime.getLastLoginTime().getTime());
         accountTime.setAccumulatedOnlineTime(accountTime.getAccumulatedOnlineTime() + accountTime.getSessionDuration());
-        LoginDaosHolder.daos().accountTimeDAO().updateAccountTime(account.getId(), accountTime);
+        accountTimeDao.updateAccountTime(account.getId(), accountTime);
         account.setAccountTime(accountTime);
     }
 

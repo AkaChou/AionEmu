@@ -6,13 +6,11 @@ import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.Shutdown;
-import com.aionemu.loginserver.service.LoginShutdownServices;
+import com.aionemu.loginserver.taskmanager.TaskRuntime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.ObjectProvider;
 
 class LoginTaskShutdownHandlerTest {
 
@@ -20,13 +18,12 @@ class LoginTaskShutdownHandlerTest {
     void resetEmbeddedMode() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         AionEmbeddedShutdownHandler.clear();
-        LoginShutdownServices.resetForTests();
     }
 
     @Test
     void embeddedShutdownTaskRequestsBootShutdown() {
         AionRuntimeMode.enableBootEmbeddedMode();
-        AtomicReference<AionEmbeddedShutdownMode> requestedMode = new AtomicReference<>();
+        var requestedMode = new java.util.concurrent.atomic.AtomicReference<AionEmbeddedShutdownMode>();
         AionEmbeddedShutdownHandler.register(requestedMode::set);
 
         ShutdownHandler handler = new ShutdownHandler();
@@ -39,7 +36,7 @@ class LoginTaskShutdownHandlerTest {
     @Test
     void embeddedRestartTaskRequestsBootShutdown() {
         AionRuntimeMode.enableBootEmbeddedMode();
-        AtomicReference<AionEmbeddedShutdownMode> requestedMode = new AtomicReference<>();
+        var requestedMode = new java.util.concurrent.atomic.AtomicReference<AionEmbeddedShutdownMode>();
         AionEmbeddedShutdownHandler.register(requestedMode::set);
 
         RestartHandler handler = new RestartHandler();
@@ -50,46 +47,25 @@ class LoginTaskShutdownHandlerTest {
     }
 
     @Test
-    void shutdownTaskUsesShutdownProviderOutsideBootEmbeddedMode() {
+    void shutdownTaskUsesRuntimeShutdownOutsideBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
-        LoginShutdownServices.setShutdownProvider(provider(new RecordingShutdown(events)));
-
         ShutdownHandler handler = new ShutdownHandler();
         handler.setTaskId(3);
+        handler.setRuntime(new TaskRuntime(null, null, new RecordingShutdown(events)));
         handler.trigger();
 
         assertEquals(List.of("restartOnly:false", "start"), events);
     }
 
     @Test
-    void restartTaskUsesShutdownProviderOutsideBootEmbeddedMode() {
+    void restartTaskUsesRuntimeShutdownOutsideBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
-        LoginShutdownServices.setShutdownProvider(provider(new RecordingShutdown(events)));
-
         RestartHandler handler = new RestartHandler();
         handler.setTaskId(4);
+        handler.setRuntime(new TaskRuntime(null, null, new RecordingShutdown(events)));
         handler.trigger();
 
         assertEquals(List.of("restartOnly:true", "start"), events);
-    }
-
-    private static ObjectProvider<Shutdown> provider(Shutdown shutdown) {
-        return new ObjectProvider<>() {
-            @Override
-            public Shutdown getObject(Object... args) {
-                return shutdown;
-            }
-
-            @Override
-            public Shutdown getIfAvailable() {
-                return shutdown;
-            }
-
-            @Override
-            public Shutdown getObject() {
-                return shutdown;
-            }
-        };
     }
 
     private static final class RecordingShutdown extends Shutdown {
@@ -97,6 +73,7 @@ class LoginTaskShutdownHandlerTest {
         private final List<String> events;
 
         private RecordingShutdown(List<String> events) {
+            super(null, null, null, null);
             this.events = events;
         }
 

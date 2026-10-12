@@ -17,7 +17,7 @@ class FloodProtectorTest {
             Config.FAST_RECONNECTION_TIME = 60;
             Config.WRONG_LOGIN_BAN_TIME = 1;
             Config.EXCLUDED_IP = "";
-            FloodProtector protector = new FloodProtector();
+            FloodProtector protector = new FloodProtector(null);
 
             assertFalse(protector.tooFast("192.0.2.11"));
             assertTrue(protector.tooFast("192.0.2.11"));
@@ -32,7 +32,7 @@ class FloodProtectorTest {
         ConfigSnapshot snapshot = ConfigSnapshot.of(Config.class, "EXCLUDED_IP");
         try {
             Config.EXCLUDED_IP = "192.0.2.12";
-            FloodProtector protector = new FloodProtector();
+            FloodProtector protector = new FloodProtector(null);
 
             assertFalse(protector.tooFast("192.0.2.12"));
             assertFalse(protector.tooFast("192.0.2.12"));

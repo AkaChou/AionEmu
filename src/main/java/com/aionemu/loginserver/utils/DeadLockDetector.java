@@ -11,7 +11,6 @@ import java.lang.management.ThreadMXBean;
 import java.util.function.IntConsumer;
 
 import com.aionemu.commons.utils.ExitCode;
-import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 
 /**
  * 死锁检测线程：周期性扫描 JVM 死锁，发现后记录日志并可按策略重启进程。
@@ -47,17 +46,6 @@ public class DeadLockDetector extends Thread {
      */
     private final byte doWhenDL;
     private final IntConsumer exitHandler;
-
-    /**
-     * 使用默认退出桥创建死锁检测器（已弃用构造）。
-     * Create a detector with the default exit bridge (deprecated constructor).
-     * @param sleepTime 检测间隔（秒） / check interval in seconds
-     * @param doWhenDL 死锁处理策略 / action on deadlock
-     */
-    @Deprecated(since = "1.0", forRemoval = false)
-    public DeadLockDetector(int sleepTime, byte doWhenDL) {
-        this(sleepTime, doWhenDL, status -> new LoginProcessRuntimeBridge().exit(status));
-    }
 
     /**
      * 使用自定义退出处理器创建死锁检测器。

@@ -3,6 +3,9 @@ package com.aionemu.gameserver.network.loginserver;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
+import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -27,17 +30,21 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
     /**
      * 打开进程内双向通道并触发 GS 认证。
      * Opens the in-process bidirectional channel and starts GS authentication.
+     * @param packetFactory GS 封包工厂 / GS packet factory
+     * @param svstatsDao 服务器统计 DAO / server-stats DAO
+     * @param threadPoolManager 登录服线程池 / login-server thread pool
      * @return 直连通道 / direct channel
      * @throws IllegalStateException 连接创建失败 / connection creation failed
      */
-    public static DirectMemoryLoginChannel open() {
+    public static DirectMemoryLoginChannel open(GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+            ThreadPoolManager threadPoolManager) {
         DirectGsConnection loginServerSide;
         DirectLoginServerConnection gameServerSide;
         try (ServiceContext.Scope ignored = ServiceContext.use("game")) {
             gameServerSide = new DirectLoginServerConnection(new DirectTransport("127.0.0.1"));
         }
         try (ServiceContext.Scope ignored = ServiceContext.use("login")) {
-            loginServerSide = new DirectGsConnection(new DirectTransport("127.0.0.1"));
+            loginServerSide = new DirectGsConnection(new DirectTransport("127.0.0.1"), packetFactory, svstatsDao, threadPoolManager);
         }
         gameServerSide.transportBridge().connectTo(gameServerSide, loginServerSide);
         loginServerSide.transportBridge().connectTo(loginServerSide, gameServerSide);
@@ -199,8 +206,9 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      */
     private static final class DirectGsConnection extends GsConnection implements DirectEndpoint {
 
-        DirectGsConnection(ConnectionTransport transport) {
-            super(transport);
+        DirectGsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+                ThreadPoolManager threadPoolManager) {
+            super(transport, packetFactory, svstatsDao, threadPoolManager);
         }
 
         void initializeDirect() {

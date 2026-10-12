@@ -1,10 +1,11 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 
+import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.boot.i18n.I18n;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.ReconnectingAccount;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -16,7 +17,10 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_RECON
  * @author -Nemesiss-
  */
 @Slf4j
+@RequiredArgsConstructor
 public class CM_ACCOUNT_RECONNECT_KEY extends GsClientPacket {
+
+    private final AccountController accountController;
 
     /**
      * 即将重连的账号 ID。
@@ -44,7 +48,7 @@ public class CM_ACCOUNT_RECONNECT_KEY extends GsClientPacket {
         if (acc == null) {
             log.info(I18n.get("log.35c23b6ec7d5"));
         } else {
-            AccountController.addReconnectingAccount(new ReconnectingAccount(acc, reconectKey));
+            accountController.addReconnectingAccount(new ReconnectingAccount(acc, reconectKey));
         }
         sendPacket(new SM_ACCOUNT_RECONNECT_KEY(accountId, reconectKey));
     }

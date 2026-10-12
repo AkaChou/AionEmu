@@ -1,10 +1,11 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 
+import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.boot.i18n.I18n;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
 /**
@@ -13,7 +14,10 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * @author nrg
  */
 @Slf4j
+@RequiredArgsConstructor
 public class CM_MAC extends GsClientPacket {
+
+    private final AccountController accountController;
 
     /**
      * 账号 ID。
@@ -42,7 +46,7 @@ public class CM_MAC extends GsClientPacket {
      */
     @Override
     protected void runImpl() {
-        if (!AccountController.refreshAccountsLastMac(accountId, address)) {
+        if (!accountController.refreshAccountsLastMac(accountId, address)) {
             log.error(I18n.get("log.816eb08301ce", accountId));
         }
     }

@@ -15,6 +15,9 @@ import java.nio.ByteBuffer;
  */
 public class CM_SERVER_LIST extends AionClientPacket {
 
+    private final AccountController accountController;
+    private final GameServerTable gameServerTable;
+
     /**
      * 会话密钥中的 accountId，用于安全校验。
      * accountId part of session key for security checks.
@@ -32,8 +35,10 @@ public class CM_SERVER_LIST extends AionClientPacket {
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
-    public CM_SERVER_LIST(ByteBuffer buf, LoginConnection client) {
+    public CM_SERVER_LIST(ByteBuffer buf, LoginConnection client, AccountController accountController, GameServerTable gameServerTable) {
         super(buf, client, 0x05);
+        this.accountController = accountController;
+        this.gameServerTable = gameServerTable;
     }
 
     /**
@@ -55,10 +60,10 @@ public class CM_SERVER_LIST extends AionClientPacket {
     protected void runImpl() {
         LoginConnection con = getConnection();
         if (con.getSessionKey().checkLogin(accountId, loginOk)) {
-            if (GameServerTable.getGameServers().isEmpty()) {
+            if (gameServerTable.getGameServers().isEmpty()) {
                 con.close(new SM_LOGIN_FAIL(AionAuthResponse.NO_GS_REGISTERED), false);
             } else {
-                AccountController.loadGSCharactersCount(accountId);
+                accountController.loadGSCharactersCount(accountId);
             }
         } else {
             con.close(new SM_LOGIN_FAIL(AionAuthResponse.SYSTEM_ERROR), false);

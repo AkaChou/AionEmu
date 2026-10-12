@@ -6,78 +6,65 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.network.ServerTransport;
-import com.aionemu.loginserver.service.LoginNetworkServices;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class NetConnectorTest {
 
-    @AfterEach
-    void resetTransportFactory() {
-        NetConnector.resetTransportFactory();
-    }
+	private NetConnector connector() {
+		return new NetConnector(null, null, null, null, null, null, null);
+	}
 
-    @Test
-    void shutdownIfInitializedDoesNotCreateTransport() {
-        AtomicInteger createdTransports = new AtomicInteger();
-        NetConnector.useTransportFactory(() -> {
-            createdTransports.incrementAndGet();
-            return new RecordingTransport();
-        });
+	@AfterEach
+	void resetTransportFactory() {
+		connector().resetTransportFactory();
+	}
 
-        assertFalse(NetConnector.shutdownIfInitialized());
-        assertEquals(0, createdTransports.get());
-    }
+	@Test
+	void shutdownIfInitializedDoesNotCreateTransport() {
+		AtomicInteger createdTransports = new AtomicInteger();
+		NetConnector netConnector = connector();
+		netConnector.useTransportFactory(() -> {
+			createdTransports.incrementAndGet();
+			return new RecordingTransport();
+		});
 
-    @Test
-    void shutdownClearsTransportForNextLifecycle() {
-        AtomicInteger shutdowns = new AtomicInteger();
-        NetConnector.useTransportFactory(() -> new RecordingTransport(shutdowns));
+		assertFalse(netConnector.shutdownIfInitialized());
+		assertEquals(0, createdTransports.get());
+	}
 
-        ServerTransport firstTransport = NetConnector.currentTransport();
-        assertTrue(NetConnector.shutdownIfInitialized());
-        ServerTransport secondTransport = NetConnector.currentTransport();
+	@Test
+	void shutdownClearsTransportForNextLifecycle() {
+		AtomicInteger shutdowns = new AtomicInteger();
+		NetConnector netConnector = connector();
+		netConnector.useTransportFactory(() -> new RecordingTransport(shutdowns));
 
-        assertEquals(1, shutdowns.get());
-        assertNotSame(firstTransport, secondTransport);
-    }
+		ServerTransport firstTransport = netConnector.currentTransport();
+		assertTrue(netConnector.shutdownIfInitialized());
+		ServerTransport secondTransport = netConnector.currentTransport();
 
-    @Test
-    void loginNetworkFallbackUsesCurrentTransportAfterShutdown() {
-        AtomicInteger shutdowns = new AtomicInteger();
-        NetConnector.useTransportFactory(() -> new RecordingTransport(shutdowns));
-        new LoginNetworkServices(null);
+		assertEquals(1, shutdowns.get());
+		assertNotSame(firstTransport, secondTransport);
+	}
 
-        try {
-            ServerTransport firstTransport = LoginNetworkServices.serverTransport();
-            assertTrue(NetConnector.shutdownIfInitialized());
-            ServerTransport secondTransport = LoginNetworkServices.serverTransport();
+	private record RecordingTransport(AtomicInteger shutdowns) implements ServerTransport {
+		private RecordingTransport() {
+			this(new AtomicInteger());
+		}
 
-            assertEquals(1, shutdowns.get());
-            assertNotSame(firstTransport, secondTransport);
-        } finally {
-            new LoginNetworkServices(null).destroy();
-        }
-    }
+		@Override
+		public void connect() {
+		}
 
-    private record RecordingTransport(AtomicInteger shutdowns) implements ServerTransport {
-            private RecordingTransport() {
-                this(new AtomicInteger());
-            }
+		@Override
+		public void shutdown() {
+			shutdowns.incrementAndGet();
+		}
 
-        @Override
-            public void connect() {
-            }
-
-            @Override
-            public void shutdown() {
-                shutdowns.incrementAndGet();
-            }
-
-            @Override
-            public int getActiveConnections() {
-                return 0;
-            }
-        }
+		@Override
+		public int getActiveConnections() {
+			return 0;
+		}
+	}
 }

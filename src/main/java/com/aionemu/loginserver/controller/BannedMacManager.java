@@ -1,11 +1,12 @@
 package com.aionemu.loginserver.controller;
 
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import com.aionemu.loginserver.dao.BannedMacDAO;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.aionemu.loginserver.persistence.dao.BannedMacDao;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
 
 import lombok.Getter;
@@ -15,34 +16,27 @@ import lombok.Getter;
  * MAC ban manager: in-memory cache with database persistence.
  * @author KID
  */
+@Service("loginBannedMacManager")
+@Lazy
 public class BannedMacManager {
 
-    private final BannedMacDAO dao = LoginDaosHolder.daos().bannedMacDAO();
+    private final BannedMacDao bannedMacDao;
 
     /**
      * 当前封禁 MAC 映射。
      * Current banned MAC map.
      */
     @Getter
-    private Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
-
-    /**
-     * 获取单例（遗留入口，启动迁移后弃用）。
-     * Returns singleton (legacy entry, deprecated after boot migration).
-     * @return 管理器实例 / Manager instance
-     * @deprecated 优先使用注入 / prefer injection
-     */
-    @Deprecated(since = "boot-migration")
-    public static BannedMacManager getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
+    private final Map<String, BannedMacEntry> bannedList;
 
     /**
      * 构造并加载全部 MAC 封禁。
      * Constructs manager and loads all MAC bans.
+     * @param bannedMacDao MAC 封禁 DAO / banned MAC DAO
      */
-    public BannedMacManager() {
-        bannedList = dao.load();
+    public BannedMacManager(BannedMacDao bannedMacDao) {
+        this.bannedMacDao = bannedMacDao;
+        this.bannedList = bannedMacDao.load();
     }
 
     /**
@@ -54,7 +48,7 @@ public class BannedMacManager {
     public void unban(String address, String details) {
         if (bannedList.containsKey(address)) {
             bannedList.remove(address);
-            dao.remove(address);
+            bannedMacDao.remove(address);
         }
     }
 
@@ -68,7 +62,7 @@ public class BannedMacManager {
     public void ban(String address, long time, String details) {
         BannedMacEntry mac = new BannedMacEntry(address, new Timestamp(time), details);
         this.bannedList.put(address, mac);
-        this.dao.update(mac);
+        this.bannedMacDao.update(mac);
     }
 
     /**
@@ -78,10 +72,5 @@ public class BannedMacManager {
      */
     public final Map<String, BannedMacEntry> getMap() {
         return this.bannedList;
-    }
-
-    private static final class SingletonHolder {
-
-        private static final BannedMacManager INSTANCE = new BannedMacManager();
     }
 }

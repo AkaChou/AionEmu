@@ -3,10 +3,12 @@ package com.aionemu.loginserver;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import com.aionemu.commons.database.dao.DAOManager;
+import java.lang.reflect.Proxy;
+
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
 import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -23,31 +25,34 @@ class PingPongThreadTest {
 	@Test
 	void closeMeAllowsUnauthenticatedConnection() {
 		SvStatsConfig.SVSTATS_ENABLE = true;
-		PingPongThread pingPongThread = new PingPongThread(new GsConnection(new StubTransport()));
+		PingPongThread pingPongThread = new PingPongThread(connection(statsDao()));
 
 		assertDoesNotThrow(pingPongThread::closeMe);
 		assertFalse(pingPongThread.uptime);
 	}
 
 	@Test
-	void svStatsUpdatesAreSkippedWhenTheDaoRegistryIsGone() {
-		// 同一进程内 login 服先关闭会清空 DAO 注册表，而 game 服的断开清理可能在其之后执行：
-		// 这里必须跳过而不是抛 DAONotFoundException（旧行为会让 GsConnection.onDisconnect() 的剩余清理中断）。
+	void closeMeSurvivesUnavailableStatsDataSource() {
+		// 关闭流程中数据源可能已不可用（login 服的关闭早于 game 服侧的断开清理）：
+		// 统计失败必须被吞掉，否则会让 GsConnection.onDisconnect() 的剩余清理中断。
 		SvStatsConfig.SVSTATS_ENABLE = true;
-		assertFalse(DAOManager.isInitialized(), "测试 JVM 不应注册 DAO，否则本用例失去意义");
+		GsConnection connection = connection((SvstatsDao) Proxy.newProxyInstance(
+			SvstatsDao.class.getClassLoader(), new Class<?>[] { SvstatsDao.class },
+			(proxy, method, args) -> {
+				throw new IllegalStateException("data source closed");
+			}));
+		connection.setGameServerInfo(new GameServerInfo((byte) 1, "127.0.0.1", "password"));
 
-		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOffline(1));
-		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOnline(1, 0, 0));
+		assertDoesNotThrow(new PingPongThread(connection)::closeMe);
 	}
 
-	@Test
-	void svStatsUpdatesAreSkippedWhenTheFeatureIsDisabled() {
-		// 直接关闭开关，保证用例与执行顺序无关。
-		// Disable the switch directly so the case does not depend on execution order.
-		SvStatsConfig.SVSTATS_ENABLE = false;
+	private static GsConnection connection(SvstatsDao svstatsDao) {
+		return new GsConnection(new StubTransport(), null, svstatsDao, null);
+	}
 
-		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOffline(1));
-		assertDoesNotThrow(() -> PingPongThread.updateSvStatsOnline(1, 0, 0));
+	private static SvstatsDao statsDao() {
+		return (SvstatsDao) Proxy.newProxyInstance(SvstatsDao.class.getClassLoader(),
+			new Class<?>[] { SvstatsDao.class }, (proxy, method, args) -> null);
 	}
 
 	private static final class StubTransport implements ConnectionTransport {

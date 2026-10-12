@@ -22,6 +22,9 @@ import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_L2AUTH_LOGIN_CHECK;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RECONNECT_KEY;
+import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_AUTH;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_DISCONNECTED;
@@ -43,6 +46,14 @@ public class LoginServer {
 	 * Spring ObjectProvider used to override the static singleton.
 	 */
 	private static volatile ObjectProvider<LoginServer> instanceProvider;
+
+	/**
+	 * 内嵌模式进程内直连通道所需的登录服网络组件。
+	 * Login network components required by the in-process direct channel in embedded mode.
+	 */
+	private final GsPacketHandlerFactory loginPacketFactory;
+	private final SvstatsDao loginSvstatsDao;
+	private final ThreadPoolManager loginThreadPoolManager;
 
 	/**
 	 * 等待登录服响应的账号连接表（accountId → AionConnection）。
@@ -122,11 +133,17 @@ public class LoginServer {
 	}
 
 	/**
-	 * 默认构造。
-	 * Default constructor.
+	 * 构造并绑定登录服网络依赖包。
+	 * Constructs the client and binds the login network dependency bundle.
+	 * @param loginPacketFactory GS 封包工厂 / GS packet factory
+	 * @param loginSvstatsDao 服务器统计 DAO / server-stats DAO
+	 * @param loginThreadPoolManager 登录服线程池 / login-server thread pool
 	 */
-	public LoginServer() {
-
+	public LoginServer(GsPacketHandlerFactory loginPacketFactory, SvstatsDao loginSvstatsDao,
+			ThreadPoolManager loginThreadPoolManager) {
+		this.loginPacketFactory = loginPacketFactory;
+		this.loginSvstatsDao = loginSvstatsDao;
+		this.loginThreadPoolManager = loginThreadPoolManager;
 	}
 
 	/**
@@ -194,7 +211,7 @@ public class LoginServer {
 		loginServer = null;
 		if (AionRuntimeMode.isBootEmbedded()) {
 			try {
-				DirectMemoryLoginChannel channel = DirectMemoryLoginChannel.open();
+				DirectMemoryLoginChannel channel = DirectMemoryLoginChannel.open(loginPacketFactory, loginSvstatsDao, loginThreadPoolManager);
 				loginServer = channel.gameServerConnection();
 				dispatcher = channel;
 				log.info(I18n.get("log.0548078e4933", "in-memory"));

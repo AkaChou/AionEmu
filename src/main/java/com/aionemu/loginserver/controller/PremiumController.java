@@ -1,11 +1,13 @@
 package com.aionemu.loginserver.controller;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.loginserver.service.LoginDaosHolder;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
-import com.aionemu.loginserver.dao.PremiumDAO;
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
+import com.aionemu.loginserver.persistence.dao.AccountRewardsDao;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPONSE;
 
 /**
@@ -14,6 +16,8 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPO
  * @author KID
  */
 @Slf4j(topic = "PREMIUM_CTRL")
+@Service
+@Lazy
 public class PremiumController {
 
     /**
@@ -40,25 +44,21 @@ public class PremiumController {
      */
     public static byte RESULT_ADD = 4;
 
-    private final PremiumDAO dao;
-
-    /**
-     * 获取单例（遗留入口，启动迁移后弃用）。
-     * Returns singleton (legacy entry, deprecated after boot migration).
-     * @return 控制器实例 / Controller instance
-     * @deprecated 优先使用注入 / prefer injection
-     */
-    @Deprecated(since = "boot-migration")
-    public static PremiumController getController() {
-        return SingletonHolder.CONTROLLER;
-    }
+    private final AccountDataDao dao;
+    private final AccountRewardsDao rewardsDao;
+    private final GameServerTable gameServerTable;
 
     /**
      * 构造并初始化 Premium DAO。
      * Constructs controller and initializes Premium DAO.
+     * @param dao 账号 DAO / account DAO
+     * @param rewardsDao 奖励 DAO / rewards DAO
+     * @param gameServerTable 游戏服表 / GameServer table
      */
-    public PremiumController() {
-        dao = LoginDaosHolder.daos().premiumDAO();
+    public PremiumController(AccountDataDao dao, AccountRewardsDao rewardsDao, GameServerTable gameServerTable) {
+        this.dao = dao;
+        this.rewardsDao = rewardsDao;
+        this.gameServerTable = gameServerTable;
         log.info(I18n.get("log.f446666082da"));
     }
 
@@ -71,10 +71,10 @@ public class PremiumController {
      * @param serverId 游戏服 ID / GameServer id
      */
     public void requestBuy(int accountId, int requestId, long cost, byte serverId) {
-        long points = this.dao.getPoints(accountId);
+        long points = this.dao.getToll(accountId) + this.rewardsDao.claimPendingRewards(accountId);
         long luna = this.dao.getLuna(accountId);
 
-        GameServerInfo server = GameServerTable.getGameServerInfo(serverId);
+        GameServerInfo server = gameServerTable.getGameServerInfo(serverId);
         if (server == null || server.getConnection() == null || !server.isAccountOnGameServer(accountId)) {
             log.error(I18n.get("log.d07fbea7e8f2", accountId, requestId, serverId));
             return;
@@ -100,10 +100,5 @@ public class PremiumController {
             server.getConnection().sendPacket(new SM_PREMIUM_RESPONSE(requestId, RESULT_FAIL, points, luna));
             log.info(I18n.get("log.50f36dc349ef", accountId, requestId, cost, serverId));
         }
-    }
-
-    private static final class SingletonHolder {
-
-        private static final PremiumController CONTROLLER = new PremiumController();
     }
 }

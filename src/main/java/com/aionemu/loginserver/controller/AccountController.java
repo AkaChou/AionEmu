@@ -4,7 +4,6 @@ import com.aionemu.commons.utils.Base64;
 
 import com.aionemu.boot.i18n.I18n;
 
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -12,13 +11,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.configs.VipConfig;
-import com.aionemu.loginserver.dao.AccountDAO;
-import com.aionemu.loginserver.dao.AccountTimeDAO;
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
+import com.aionemu.loginserver.persistence.dao.AccountRewardsDao;
+import com.aionemu.loginserver.persistence.dao.AccountTimeDao;
+import com.aionemu.loginserver.persistence.dao.AccountVipDao;
 
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.ReconnectingAccount;
@@ -33,10 +37,8 @@ import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_AUTH_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_CHARACTER_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
-import com.aionemu.loginserver.service.LoginProtectionServices;
-import com.aionemu.loginserver.service.VipService;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,8 +48,18 @@ import lombok.extern.slf4j.Slf4j;
  * @author SoulKeeper
  */
 @Slf4j
-@UtilityClass
+@Service
+@Lazy
+@RequiredArgsConstructor
 public class AccountController {
+
+    private final AccountDataDao accountDao;
+    private final AccountTimeDao accountTimeDao;
+    private final AccountVipDao accountVipDao;
+    private final AccountRewardsDao accountRewardsDao;
+    private final AccountTimeController accountTimeController;
+    private final GameServerTable gameServerTable;
+    private final BannedIpController bannedIpController;
 
     /**
      * 当前在登录服上、或已加入游戏服但尚未完成认证的账号连接。
@@ -94,11 +106,11 @@ public class AccountController {
             gsi.addAccountToGameServer(acc);
 
             acc.setLastServer(gsi.getId());
-            getAccountDAO().updateLastServer(acc.getId(), acc.getLastServer());
+            accountDao.updateLastServer(acc.getId(), acc.getLastServer());
 
-            long toll = LoginDaosHolder.daos().premiumDAO().getPoints(acc.getId());
-            long luna = LoginDaosHolder.daos().premiumDAO().getLuna(acc.getId());
-            Vip vip = new VipService().findByAccountId(acc.getId());
+            long toll = accountDao.getToll(acc.getId()) + accountRewardsDao.claimPendingRewards(acc.getId());
+            long luna = accountDao.getLuna(acc.getId());
+            Vip vip = accountVipDao.findByAccountId(acc.getId());
             long now = System.currentTimeMillis() / 1000L;
             boolean vipActive = vip != null && vip.isActive(now);
             int vipLevel = vipActive ? vip.level() : 0;
@@ -160,7 +172,7 @@ public class AccountController {
      */
     public AionAuthResponse login(String name, String password, LoginConnection connection) {
         // 若 IP 被封禁 / if ip is banned
-        if (LoginProtectionServices.bannedIpService().isBanned(connection.getIP())) {
+        if (bannedIpController.isBanned(connection.getIP())) {
             return AionAuthResponse.BAN_IP;
         }
 
@@ -191,12 +203,12 @@ public class AccountController {
         }
 
         // 若账号过期 / If account expired
-        if (AccountTimeController.isAccountExpired(account)) {
+        if (accountTimeController.isAccountExpired(account)) {
             return AionAuthResponse.TIME_EXPIRED;
         }
 
         // 若账号被封禁 / if account is banned
-        if (AccountTimeController.isAccountPenaltyActive(account)) {
+        if (accountTimeController.isAccountPenaltyActive(account)) {
             return AionAuthResponse.BAN_IP;
         }
 
@@ -209,8 +221,8 @@ public class AccountController {
 
         // 不允许同一账号重复登录 / Do not allow to login two times with same account
         synchronized (AccountController.class) {
-            if (GameServerTable.isAccountOnAnyGameServer(account)) {
-                GameServerTable.kickAccountFromGameServer(account);
+            if (gameServerTable.isAccountOnAnyGameServer(account)) {
+                gameServerTable.kickAccountFromGameServer(account);
                 return AionAuthResponse.ALREADY_LOGGED_IN;
             }
 
@@ -225,12 +237,12 @@ public class AccountController {
             accountsOnLS.put(account.getId(), connection);
         }
 
-        AccountTimeController.updateOnLogin(account);
+        accountTimeController.updateOnLogin(account);
 
         // 若一切正常 / if everything was OK
-        getAccountDAO().updateLastIp(account.getId(), connection.getIP());
+        accountDao.updateLastIp(account.getId(), connection.getIP());
         // 收到游戏服务器数据包后更新 last mac / last mac is updated after receiving packet from gameserver
-        getAccountDAO().updateMembership(account.getId());
+        accountDao.updateMembership(account.getId());
 
         return AionAuthResponse.AUTHED;
     }
@@ -242,7 +254,7 @@ public class AccountController {
      */
     public void kickAccount(int accountId) {
         synchronized (AccountController.class) {
-            for (GameServerInfo gsi : GameServerTable.getGameServers()) {
+            for (GameServerInfo gsi : gameServerTable.getGameServers()) {
                 if (gsi.isAccountOnGameServer(accountId)) {
                     gsi.getConnection().sendPacket(new SM_REQUEST_KICK_ACCOUNT(accountId));
                     break;
@@ -263,7 +275,7 @@ public class AccountController {
      * @return 是否刷新成功 / Whether refresh succeeded
      */
     public boolean refreshAccountsLastMac(int accountId, String address) {
-        return getAccountDAO().updateLastMac(accountId, address);
+        return accountDao.updateLastMac(accountId, address);
     }
 
     /**
@@ -273,9 +285,9 @@ public class AccountController {
      * @return 已加载账号，或 null / Loaded account or null
      */
     public Account loadAccount(String name) {
-        Account account = getAccountDAO().getAccount(name);
+        Account account = accountDao.getAccount(name);
         if (account != null) {
-            account.setAccountTime(getAccountTimeDAO().getAccountTime(account.getId()));
+            account.setAccountTime(accountTimeDao.getAccountTime(account.getId()));
         }
         return account;
     }
@@ -287,9 +299,9 @@ public class AccountController {
      * @return 已加载账号，或 null / Loaded account or null
      */
     public Account loadAccount(int id) {
-        Account account = getAccountDAO().getAccount(id);
+        Account account = accountDao.getAccount(id);
         if (account != null) {
-            account.setAccountTime(getAccountTimeDAO().getAccountTime(id));
+            account.setAccountTime(accountTimeDao.getAccountTime(id));
         }
         return account;
     }
@@ -313,31 +325,13 @@ public class AccountController {
         account.setReturn((byte) 0);
         account.setReturnEnd(new Timestamp(System.currentTimeMillis()));
 
-        if (getAccountDAO().insertAccount(account)) {
+        if (accountDao.insertAccount(account)) {
             if (VipConfig.AUTO_ENABLE) {
-                new VipService().insertIfAbsent(account.getId());
+                accountVipDao.insertIfAbsent(account.getId(), VipConfig.AUTO_ENABLE_LEVEL);
             }
             return account;
         }
         return null;
-    }
-
-    /**
-     * 获取 {@link AccountDAO} 快捷方法。
-     * Shortcut for {@link AccountDAO}.
-     * @return AccountDAO 实例 / Account DAO
-     */
-    private AccountDAO getAccountDAO() {
-        return LoginDaosHolder.daos().accountDAO();
-    }
-
-    /**
-     * 获取 {@link AccountTimeDAO} 快捷方法。
-     * Shortcut for {@link AccountTimeDAO}.
-     * @return AccountTimeDAO 实例 / Account time DAO
-     */
-    private AccountTimeDAO getAccountTimeDAO() {
-        return LoginDaosHolder.daos().accountTimeDAO();
     }
 
     /**
@@ -350,7 +344,7 @@ public class AccountController {
         Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<>();
         accountsGSCharacterCounts.put(accountId, accountCharacterCount);
 
-        for (GameServerInfo gsi : GameServerTable.getGameServers()) {
+        for (GameServerInfo gsi : gameServerTable.getGameServers()) {
             gsc = gsi.getConnection();
 
             if (gsc != null) {
@@ -375,7 +369,7 @@ public class AccountController {
         Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
 
         if (characterCount != null) {
-			return characterCount.size() == GameServerTable.getGameServers().size();
+			return characterCount.size() == gameServerTable.getGameServers().size();
         }
 
         return false;
@@ -389,7 +383,9 @@ public class AccountController {
     public void sendServerListFor(int accountId) {
         LoginConnection connection = accountsOnLS.get(accountId);
         if (connection != null) {
-            connection.sendPacket(new SM_SERVER_LIST());
+            Map<Integer, Integer> characterCounts = getGSCharacterCountsFor(accountId);
+            connection.sendPacket(new SM_SERVER_LIST(gameServerTable.getGameServers(),
+                characterCounts == null ? Map.of() : characterCounts));
         }
     }
 

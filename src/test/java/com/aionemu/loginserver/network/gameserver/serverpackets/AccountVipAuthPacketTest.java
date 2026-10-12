@@ -23,7 +23,7 @@ class AccountVipAuthPacketTest {
 		account.setAccountTime(new AccountTime());
 		GameServerInfo gameServer = new GameServerInfo((byte) 1, "127.0.0.1", "test");
 		gameServer.addAccountToGameServer(account);
-		GsConnection connection = new GsConnection(new NoopTransport());
+		GsConnection connection = new GsConnection(new NoopTransport(), null, null, null);
 		connection.setGameServerInfo(gameServer);
 
 		ByteBuffer buffer = ByteBuffer.allocate(128).order(ByteOrder.LITTLE_ENDIAN);

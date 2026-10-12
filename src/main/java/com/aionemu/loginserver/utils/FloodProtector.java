@@ -7,10 +7,14 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.service.LoginProtectionServices;
+import com.aionemu.loginserver.controller.BannedIpController;
 
 /**
  * 连接洪泛防护：限制同一 IP 过快重连，必要时写入封禁。
@@ -19,21 +23,15 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
  * @author Mr. Poke
  */
 @Slf4j(topic = "com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN")
+@Component
+@Lazy
+@RequiredArgsConstructor
 public class FloodProtector {
 
 	private final Map<String, Long> flood = new ConcurrentHashMap<>();
 	private final Map<String, Long> ban = new ConcurrentHashMap<>();
 
-	/**
-	 * 获取单例实例（已弃用，请走 boot 注入）。
-	 * Returns the singleton instance (deprecated; prefer boot injection).
-	 *
-	 * @return 单例实例 / singleton instance
-	 */
-	@Deprecated(since = "boot-migration")
-	public static FloodProtector getInstance() {
-		return SingletonHolder.instance;
-	}
+	private final BannedIpController bannedIpController;
 
 	/**
 	 * 旧版 IP 洪泛检测：过快重连则写入 BannedIp 表（已弃用）。
@@ -50,9 +48,9 @@ public class FloodProtector {
 			return false;
 		}
 		Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
-		if (!LoginProtectionServices.bannedIpService().isBanned(ip)) {
+		if (!bannedIpController.isBanned(ip)) {
 			log.info(I18n.get("log.63a8519d9835", ip, Config.WRONG_LOGIN_BAN_TIME));
-			return LoginProtectionServices.bannedIpService().banIp(ip, newTime);
+			return bannedIpController.banIp(ip, newTime);
 		}
 		// 此种情况下该 IP 已被封禁。 / in this case this ip is already banned
 
@@ -95,11 +93,5 @@ public class FloodProtector {
 				return false;
 			}
 		}
-	}
-
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-
-		protected static final FloodProtector instance = new FloodProtector();
 	}
 }

@@ -1,14 +1,19 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
+import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
-import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  * GS→LS：MAC 封禁/解封控制。
  * GS→LS: MAC ban/unban control.
  * @author KID
  */
+@RequiredArgsConstructor
 public class CM_MACBAN_CONTROL extends GsClientPacket {
+
+    private final BannedMacManager bannedMacManager;
 
     /**
      * 操作类型：0=解封，1=封禁。
@@ -51,10 +56,10 @@ public class CM_MACBAN_CONTROL extends GsClientPacket {
     protected void runImpl() {
         if (type == 0) {
         	//解除 MAC 封禁 / unban
-        	LoginProtectionServices.bannedMacManager().unban(address, details);
+        	bannedMacManager.unban(address, details);
         } else if (type == 1) {
         	//执行 MAC 封禁 / ban
-        	LoginProtectionServices.bannedMacManager().ban(address, time, details);
+        	bannedMacManager.ban(address, time, details);
         }
     }
 }

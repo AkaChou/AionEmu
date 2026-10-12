@@ -38,9 +38,12 @@ class TransactionSafetyTest {
 
 	@Test
 	void accountActivationAndLadderInitializationAreAtomic() throws IOException {
-		String account = source("loginserver/dao/impl/AccountDAO.java");
+		String account = source("loginserver/persistence/dao/impl/AccountDataDaoImpl.java");
+		String accountMapper = source("loginserver/persistence/mapper/AccountDataMapper.java");
 		String ladder = source("gameserver/dao/impl/LadderDAO.java");
-		assertTrue(account.contains("activated = ?"));
+		assertTrue(accountMapper.contains("membership = old_membership"));
+		assertTrue(account.contains("po.setActivated((int) account.getActivated())"),
+			"account activation must round-trip through the persistence entity");
 		assertTrue(ladder.contains("ON DUPLICATE KEY UPDATE"));
 		assertFalse(ladder.contains("checkExists("));
 	}

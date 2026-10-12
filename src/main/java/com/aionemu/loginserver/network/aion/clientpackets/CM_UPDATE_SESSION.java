@@ -12,6 +12,8 @@ import java.nio.ByteBuffer;
  */
 public class CM_UPDATE_SESSION extends AionClientPacket {
 
+    private final AccountController accountController;
+
     /**
      * 会话密钥中的 accountId，用于安全校验。
      * accountId part of session key for security checks.
@@ -34,8 +36,9 @@ public class CM_UPDATE_SESSION extends AionClientPacket {
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
-    public CM_UPDATE_SESSION(ByteBuffer buf, LoginConnection client) {
+    public CM_UPDATE_SESSION(ByteBuffer buf, LoginConnection client, AccountController accountController) {
         super(buf, client, 0x08);
+        this.accountController = accountController;
     }
 
     /**
@@ -55,6 +58,6 @@ public class CM_UPDATE_SESSION extends AionClientPacket {
      */
     @Override
     protected void runImpl() {
-        AccountController.authReconnectingAccount(accountId, loginOk, reconnectKey, getConnection());
+        accountController.authReconnectingAccount(accountId, loginOk, reconnectKey, getConnection());
     }
 }

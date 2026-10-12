@@ -1,15 +1,18 @@
 package com.aionemu.loginserver.controller;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
 import com.aionemu.commons.utils.NetworkUtils;
-import com.aionemu.loginserver.dao.BannedIpDAO;
+import com.aionemu.loginserver.persistence.dao.BannedIpDao;
 import com.aionemu.loginserver.model.BannedIP;
-import lombok.experimental.UtilityClass;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,8 +21,12 @@ import lombok.extern.slf4j.Slf4j;
  * @author SoulKeeper
  */
 @Slf4j
-@UtilityClass
+@Service
+@Lazy
+@RequiredArgsConstructor
 public class BannedIpController {
+
+    private final BannedIpDao bannedIpDao;
 
     /**
      * 当前封禁 IP / 掩码集合。
@@ -41,7 +48,7 @@ public class BannedIpController {
      * Cleans expired bans from database.
      */
     private void clean() {
-        getDAO().cleanExpiredBans();
+        bannedIpDao.cleanExpiredBans();
     }
 
     /**
@@ -58,7 +65,7 @@ public class BannedIpController {
      */
     public void reload() {
         // 不会每分钟都做 IP 封禁，可适当简化并发代码。 / we are not going to make ip ban every minute, so it's ok to simplify a concurrent code a bit
-        banList = getDAO().getAllBans();
+        banList = bannedIpDao.getAllBans();
         log.info(I18n.get("log.28d603c6c74b", banList.size()));
     }
 
@@ -104,7 +111,7 @@ public class BannedIpController {
         ipBan.setTimeEnd(expireTime);
         banList.add(ipBan);
         try {
-            getDAO().insert(ipBan);
+            bannedIpDao.insert(ipBan);
             return true;
         } catch (Exception e) {
             log.warn(I18n.get("log.79fba389e8b1", ip));
@@ -120,13 +127,13 @@ public class BannedIpController {
      */
     public boolean addOrUpdateBan(BannedIP ipBan) {
         if (ipBan.getId() == null) {
-            if (getDAO().insert(ipBan)) {
+            if (bannedIpDao.insert(ipBan)) {
                 banList.add(ipBan);
                 return true;
             }
             return false;
         }
-        return getDAO().update(ipBan);
+        return bannedIpDao.update(ipBan);
     }
 
     /**
@@ -140,7 +147,7 @@ public class BannedIpController {
         while (it.hasNext()) {
             BannedIP ipBan = it.next();
             if (ipBan.getMask().equals(ip)) {
-                if (getDAO().remove(ipBan)) {
+                if (bannedIpDao.remove(ipBan)) {
                     it.remove();
                     return true;
                 }
@@ -148,14 +155,5 @@ public class BannedIpController {
             }
         }
         return false;
-    }
-
-    /**
-     * 获取 {@link BannedIpDAO} 快捷方法。
-     * Shortcut for {@link BannedIpDAO}.
-     * @return BannedIpDAO 实例 / Banned IP DAO
-     */
-    private BannedIpDAO getDAO() {
-        return LoginDaosHolder.daos().bannedIpDAO();
     }
 }

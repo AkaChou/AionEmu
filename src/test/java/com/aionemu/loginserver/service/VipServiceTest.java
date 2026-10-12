@@ -5,12 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Proxy;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.loginserver.configs.VipConfig;
-import com.aionemu.loginserver.dao.VipDAO;
+import com.aionemu.loginserver.persistence.dao.AccountVipDao;
 import com.aionemu.loginserver.model.Vip;
 
 class VipServiceTest {
@@ -25,28 +27,28 @@ class VipServiceTest {
 
     @Test
     void disabledAutoEnableDoesNotWrite() {
-        FakeVipDAO dao = new FakeVipDAO();
+        FakeVipState state = new FakeVipState();
         VipConfig.AUTO_ENABLE = false;
 
-        VipService service = new VipService(dao);
+        VipService service = new VipService(fakeDao(state));
 
         assertEquals(0, service.syncMissingAccounts());
         assertFalse(service.insertIfAbsent(42));
-        assertEquals(0, dao.writeCalls);
+        assertEquals(0, state.writeCalls);
     }
 
     @Test
     void enabledAutoEnableUsesConfiguredLevel() {
-        FakeVipDAO dao = new FakeVipDAO();
+        FakeVipState state = new FakeVipState();
         VipConfig.AUTO_ENABLE = true;
         VipConfig.AUTO_ENABLE_LEVEL = 4;
 
-        VipService service = new VipService(dao);
+        VipService service = new VipService(fakeDao(state));
 
         assertEquals(3, service.syncMissingAccounts());
         assertTrue(service.insertIfAbsent(42));
-        assertEquals(4, dao.lastLevel);
-        assertEquals(42, dao.lastAccountId);
+        assertEquals(4, state.lastLevel);
+        assertEquals(42, state.lastAccountId);
     }
 
     @Test
@@ -66,47 +68,46 @@ class VipServiceTest {
 
     @Test
     void synchronizationFailureIsNotHiddenAsZeroChanges() {
-        FakeVipDAO dao = new FakeVipDAO();
-        dao.failSync = true;
+        FakeVipState state = new FakeVipState();
+        state.failSync = true;
         VipConfig.AUTO_ENABLE = true;
         VipConfig.AUTO_ENABLE_LEVEL = 1;
 
+        AccountVipDao dao = fakeDao(state);
         assertThrows(IllegalStateException.class, () -> new VipService(dao).syncMissingAccounts());
     }
 
-    private static final class FakeVipDAO extends VipDAO {
+    /**
+     * 仅实现用例所需方法的动态代理 DAO 桩。
+     * Dynamic-proxy DAO stub implementing only the methods these cases need.
+     */
+    private static AccountVipDao fakeDao(FakeVipState state) {
+        return (AccountVipDao) Proxy.newProxyInstance(AccountVipDao.class.getClassLoader(),
+            new Class<?>[] { AccountVipDao.class }, (proxy, method, args) -> switch (method.getName()) {
+                case "findByAccountId" -> null;
+                case "syncMissingAccounts" -> {
+                    if (state.failSync) {
+                        throw new IllegalStateException("database unavailable");
+                    }
+                    state.writeCalls++;
+                    state.lastLevel = (int) args[0];
+                    yield 3;
+                }
+                case "insertIfAbsent" -> {
+                    state.writeCalls++;
+                    state.lastAccountId = (int) args[0];
+                    state.lastLevel = (int) args[1];
+                    yield true;
+                }
+                default -> throw new UnsupportedOperationException(method.getName());
+            });
+    }
+
+    private static final class FakeVipState {
 
         private int writeCalls;
         private int lastAccountId;
         private int lastLevel;
         private boolean failSync;
-
-        @Override
-        public Vip findByAccountId(int accountId) {
-            return null;
-        }
-
-        @Override
-        public int syncMissingAccounts(int level) {
-            if (failSync) {
-                throw new IllegalStateException("database unavailable");
-            }
-            writeCalls++;
-            lastLevel = level;
-            return 3;
-        }
-
-        @Override
-        public boolean insertIfAbsent(int accountId, int level) {
-            writeCalls++;
-            lastAccountId = accountId;
-            lastLevel = level;
-            return true;
-        }
-
-        @Override
-        public boolean supports(String database, int majorVersion, int minorVersion) {
-            return true;
-        }
     }
 }

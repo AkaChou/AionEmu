@@ -1,26 +1,28 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.boot.i18n.I18n;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import lombok.extern.slf4j.Slf4j;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
-import com.aionemu.loginserver.dao.AccountDAO;
-import com.aionemu.loginserver.dao.PlayerTransferDAO;
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
+import com.aionemu.loginserver.persistence.dao.PlayerTransfersDao;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PTRANSFER_RESPONSE;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferRequest;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferResultStatus;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferStatus;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 
 /**
  * 玩家跨服转移服务：轮询待处理任务，协调源/目标游戏服完成角色迁移。
@@ -29,31 +31,38 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
  * @author KID
  */
 @Slf4j
+@Service
+@Lazy
 public class PlayerTransferService {
 
-
-    /**
-     * 兼容旧入口的单例访问（已弃用，请走 Spring / {@link LoginTransferServices}）。
-     * Legacy singleton access (deprecated; prefer Spring / {@link LoginTransferServices}).
-     * @return 单例实例 / service instance
-     * @deprecated 启动迁移后改用服务定位器 / use the service locator after boot migration
-     */
-    @Deprecated(since = "boot-migration")
-    public static PlayerTransferService getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
     private final Map<Integer, PlayerTransferRequest> transfers = new ConcurrentHashMap<>();
     private final Map<Integer, PlayerTransferTask> tasks = new ConcurrentHashMap<>();
     private final Future<?> veryfyTask;
-    private final PlayerTransferDAO dao;
+    private final PlayerTransfersDao dao;
+    private final AccountDataDao accountDao;
+    private final GameServerTable gameServerTable;
+    private final AccountController accountController;
+    private final TransactionTemplate transactionTemplate;
 
     /**
-     * 构造服务：启动周期校验任务并解析 DAO。
-     * Construct the service: start the periodic verify task and resolve the DAO.
+     * 构造服务：启动周期校验任务。
+     * Construct the service: start the periodic verify task.
+     * @param dao 转移任务 Dao / transfer-task Dao
+     * @param accountDao 账号 Dao / account Dao
+     * @param gameServerTable 游戏服表 / game-server table
+     * @param accountController 账号控制器 / account controller
+     * @param transactionManager 事务管理器 / transaction manager
+     * @param threadPoolManager 登录服线程池 / login thread pool
      */
-    public PlayerTransferService() {
-        veryfyTask = LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::verifyNewTasks, 10000, 7 * 60000);
-        this.dao = LoginDaosHolder.daos().playerTransferDAO();
+    public PlayerTransferService(PlayerTransfersDao dao, AccountDataDao accountDao, GameServerTable gameServerTable,
+            AccountController accountController, PlatformTransactionManager transactionManager,
+            ThreadPoolManager threadPoolManager) {
+        this.dao = dao;
+        this.accountDao = accountDao;
+        this.gameServerTable = gameServerTable;
+        this.accountController = accountController;
+        this.transactionTemplate = new TransactionTemplate(transactionManager);
+        this.veryfyTask = threadPoolManager.scheduleAtFixedRate(this::verifyNewTasks, 10000, 7 * 60000);
         log.info(I18n.get("log.78b004f6b3cd"));
     }
 
@@ -67,13 +76,13 @@ public class PlayerTransferService {
             log.info(I18n.get("log.f885228ec5ae", tasksNew.size()));
         }
         for (PlayerTransferTask task : tasksNew) {
-            GameServerInfo server = GameServerTable.getGameServerInfo(task.sourceServerId);
+            GameServerInfo server = gameServerTable.getGameServerInfo(task.sourceServerId);
             if (server == null || server.getConnection() == null) {
                 log.error(I18n.get("log.5d40181b390e", task.id, task.sourceServerId));
                 continue;
             }
 
-            GameServerInfo targetServer = GameServerTable.getGameServerInfo(task.targetServerId);
+            GameServerInfo targetServer = gameServerTable.getGameServerInfo(task.targetServerId);
             if (targetServer == null || targetServer.getConnection() == null) {
                 log.error(I18n.get("log.1309353dab7e", task.id, task.targetServerId));
                 continue;
@@ -114,13 +123,13 @@ public class PlayerTransferService {
      */
     public void requestTransfer(int taskId, String name, byte[] db) {
         PlayerTransferTask task = this.tasks.get(taskId);
-        GameServerInfo targetServer = GameServerTable.getGameServerInfo(task.targetServerId);
+        GameServerInfo targetServer = gameServerTable.getGameServerInfo(task.targetServerId);
         if (targetServer == null || targetServer.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", task.targetServerId));
             return;
         }
 
-        GameServerInfo server = GameServerTable.getGameServerInfo(task.sourceServerId);
+        GameServerInfo server = gameServerTable.getGameServerInfo(task.sourceServerId);
         if (server == null || server.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", task.sourceServerId));
             return;
@@ -138,8 +147,8 @@ public class PlayerTransferService {
             return;
         }
 
-        Account account = AccountController.loadAccount(task.targetAccountId);
-        Account saccount = AccountController.loadAccount(task.sourceAccountId);
+        Account account = accountController.loadAccount(task.targetAccountId);
+        Account saccount = accountController.loadAccount(task.sourceAccountId);
 
         PlayerTransferRequest request = new PlayerTransferRequest(PlayerTransferStatus.STEP1);
         request.serverId = task.sourceServerId;
@@ -211,7 +220,7 @@ public class PlayerTransferService {
         this.transfers.remove(taskId);
         this.tasks.remove(taskId);
 
-        GameServerInfo targetServer = GameServerTable.getGameServerInfo(request.targetServerId);
+        GameServerInfo targetServer = gameServerTable.getGameServerInfo(request.targetServerId);
         if (targetServer == null || targetServer.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", request.targetServerId));
             return;
@@ -250,7 +259,7 @@ public class PlayerTransferService {
         this.tasks.remove(taskId);
         log.info(I18n.get("log.98edc435b70d", taskId));
 
-        GameServerInfo sourceServer = GameServerTable.getGameServerInfo(request.serverId);
+        GameServerInfo sourceServer = gameServerTable.getGameServerInfo(request.serverId);
         if (sourceServer == null || sourceServer.getConnection() == null) {
             log.error(I18n.get("log.5bb70795354e", request.serverId));
             return;
@@ -266,34 +275,21 @@ public class PlayerTransferService {
 	 * @return 是否成功 / whether the write succeeded
 	 */
 	private boolean persist(PlayerTransferTask task, Account... accounts) {
-		AccountDAO accountDAO = LoginDaosHolder.daos().accountDAO();
-		try (Connection con = DatabaseFactory.getConnection()) {
-			con.setAutoCommit(false);
-			try {
+		try {
+			transactionTemplate.executeWithoutResult(tx -> {
 				if (task != null) {
-					this.dao.updateInTransaction(con, task);
+					this.dao.update(task);
 				}
 				for (Account account : accounts) {
-					accountDAO.updateInTransaction(con, account);
+					if (!accountDao.updateAccount(account)) {
+						throw new IllegalStateException("No account row changed for " + account.getId());
+					}
 				}
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
+			});
 			return true;
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.e0628bfd2f2b", task == null ? 0 : task.id), e);
 			return false;
 		}
 	}
-
-    /**
-     * 兼容旧单例的静态持有者。
-     * Static holder for the legacy singleton.
-     */
-    private static final class SingletonHolder {
-
-        private static final PlayerTransferService INSTANCE = new PlayerTransferService();
-    }
 }

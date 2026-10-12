@@ -2,16 +2,21 @@ package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 
 
+import lombok.RequiredArgsConstructor;
+
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
-import com.aionemu.loginserver.service.LoginDaosHolder;
 
 /**
  * GS→LS：同步账号 toll / luna 点数。
  * luna points.
  * @author xTz
  */
+@RequiredArgsConstructor
 public class CM_ACCOUNT_TOLL_INFO extends GsClientPacket {
+
+    private final AccountDataDao accountDataDao;
     /**
      * Toll 点数。
      * Toll points.
@@ -45,11 +50,11 @@ public class CM_ACCOUNT_TOLL_INFO extends GsClientPacket {
      */
     @Override
     protected void runImpl() {
-        Account account = LoginDaosHolder.daos().accountDAO().getAccount(accountName);
+        Account account = accountDataDao.getAccount(accountName);
 
         if (account != null) {
-            LoginDaosHolder.daos().premiumDAO().updatePoints(account.getId(), toll, 0);
-            LoginDaosHolder.daos().premiumDAO().updateLuna(account.getId(), luna);
+            accountDataDao.updatePoints(account.getId(), toll, 0);
+            accountDataDao.updateLuna(account.getId(), luna);
         }
     }
 }

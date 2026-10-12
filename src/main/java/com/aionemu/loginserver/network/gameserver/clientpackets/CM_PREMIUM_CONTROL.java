@@ -1,14 +1,19 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
+import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
-import com.aionemu.loginserver.service.LoginPremiumServices;
 
 /**
  * GS→LS：请求消耗 premium 点数购买。
  * GS→LS: request premium-point purchase/deduction.
  * @author KID
  */
+@RequiredArgsConstructor
 public class CM_PREMIUM_CONTROL extends GsClientPacket {
+
+    private final PremiumController premiumController;
 
     /**
      * 账号 ID。
@@ -49,6 +54,6 @@ public class CM_PREMIUM_CONTROL extends GsClientPacket {
      */
     @Override
     protected void runImpl() {
-        LoginPremiumServices.premiumController().requestBuy(accountId, requestId, requiredCost, serverId);
+        premiumController.requestBuy(accountId, requestId, requiredCost, serverId);
     }
 }

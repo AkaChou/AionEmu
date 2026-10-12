@@ -1,14 +1,17 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import com.aionemu.loginserver.service.LoginDaosHolder;
 import java.sql.Timestamp;
 
-import com.aionemu.loginserver.GameServerInfo;
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
+import com.aionemu.loginserver.controller.BannedIpController;
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
+import com.aionemu.loginserver.persistence.dao.AccountTimeDao;
+import com.aionemu.loginserver.GameServerInfo;
 
 
-import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -19,7 +22,14 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_BAN_RESPONSE;
  * GS→LS: universal account/IP ban (or unban) request.
  * @author Watson
  */
+@RequiredArgsConstructor
 public class CM_BAN extends GsClientPacket {
+
+    private final AccountTimeDao accountTimeDao;
+    private final AccountDataDao accountDataDao;
+    private final BannedIpController bannedIpController;
+    private final AccountController accountController;
+    private final GameServerTable gameServerTable;
 
     /**
      * 封禁类型：1=账号，2=IP，3=账号+IP。
@@ -73,7 +83,7 @@ public class CM_BAN extends GsClientPacket {
             Account account = null;
 
             // 在游戏服务器上查找账号 / Find account on GameServers
-            for (GameServerInfo gsi : GameServerTable.getGameServers()) {
+            for (GameServerInfo gsi : gameServerTable.getGameServers()) {
                 if (gsi.isAccountOnGameServer(accountId)) {
                     account = gsi.getAccountFromGameServer(accountId);
                     break;
@@ -92,9 +102,9 @@ public class CM_BAN extends GsClientPacket {
                 account.setAccountTime(accountTime);
                 result = true;
             } else {
-                AccountTime accountTime = LoginDaosHolder.daos().accountTimeDAO().getAccountTime(accountId);
+                AccountTime accountTime = accountTimeDao.getAccountTime(accountId);
                 accountTime.setPenaltyEnd(newTime);
-                result = LoginDaosHolder.daos().accountTimeDAO().updateAccountTime(accountId, accountTime);
+                result = accountTimeDao.updateAccountTime(accountId, accountTime);
             }
         }
 
@@ -102,28 +112,28 @@ public class CM_BAN extends GsClientPacket {
         if (type == 2 || type == 3) {
             if (accountId != 0) // 有账号 ID 则封禁其最后 IP / If we got account ID, then ban last IP
             {
-                String newip = LoginDaosHolder.daos().accountDAO().getLastIp(accountId);
+                String newip = accountDataDao.getLastIp(accountId);
                 if (!newip.isEmpty()) {
                     ip = newip;
                 }
             }
             if (!ip.isEmpty()) {
                 // 先解封。封禁需要更新时间 / Unban first. For banning it needs to update time
-                if (LoginProtectionServices.bannedIpService().isBanned(ip)) {
+                if (bannedIpController.isBanned(ip)) {
                     // 解封请求的结果集 / Result set for unban request
-                    result = LoginProtectionServices.bannedIpService().unbanIp(ip);
+                    result = bannedIpController.unbanIp(ip);
                 }
                 if (time >= 0) // 执行封禁 / Ban
                 {
                     Timestamp newTime = time != 0 ? new Timestamp(System.currentTimeMillis() + time * 60000L) : null;
-                    result = LoginProtectionServices.bannedIpService().banIp(ip, newTime);
+                    result = bannedIpController.banIp(ip, newTime);
                 }
             }
         }
 
         // 现在踢出账号 / Now kick account
         if (accountId != 0) {
-            AccountController.kickAccount(accountId);
+            accountController.kickAccount(accountId);
         }
 
         // 响应游戏服务器 / Respond to GS

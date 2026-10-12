@@ -1,20 +1,22 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 
+import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.GameServerTable;
+import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.boot.i18n.I18n;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.commons.network.IPRange;
-import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsConnection.State;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_AUTH_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_MACBAN_LIST;
-import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
 /**
  * GS→LS：游戏服向登录服注册并鉴权。
@@ -22,7 +24,12 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
  * @author -Nemesiss-
  */
 @Slf4j
+@RequiredArgsConstructor
 public class CM_GS_AUTH extends GsClientPacket {
+
+    private final GameServerTable gameServerTable;
+    private final BannedMacManager bannedMacManager;
+    private final ThreadPoolManager threadPoolManager;
 
     /**
      * 鉴权密码。
@@ -91,17 +98,17 @@ public class CM_GS_AUTH extends GsClientPacket {
     protected void runImpl() {
         final GsConnection client = this.getConnection();
 
-        GsAuthResponse resp = GameServerTable.registerGameServer(client, gameServerId, defaultAddress, ipRanges, port, maxPlayers, password);
+        GsAuthResponse resp = gameServerTable.registerGameServer(client, gameServerId, defaultAddress, ipRanges, port, maxPlayers, password);
         switch (resp) {
             case AUTHED:
                 log.info(I18n.get("log.8317d73f1707", gameServerId));
                 client.setState(State.AUTHED);
-                client.sendPacket(new SM_GS_AUTH_RESPONSE(resp));
-                LoginThreadPoolServices.threadPoolManager().schedule(() -> client.sendPacket(new SM_MACBAN_LIST()), 500);
+                client.sendPacket(new SM_GS_AUTH_RESPONSE(gameServerTable, resp));
+                threadPoolManager.schedule(() -> client.sendPacket(new SM_MACBAN_LIST(bannedMacManager)), 500);
                 break;
 
             default:
-                client.close(new SM_GS_AUTH_RESPONSE(resp), false);
+                client.close(new SM_GS_AUTH_RESPONSE(gameServerTable, resp), false);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.aionemu.loginserver.taskmanager.trigger;
 
+import com.aionemu.loginserver.taskmanager.TaskRuntime;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,12 @@ public abstract class TaskFromDBTrigger implements Runnable {
     @Getter
     @Setter
     protected String[] params = {""};
+    /**
+     * 运行时依赖上下文，由 {@link com.aionemu.loginserver.taskmanager.TaskFromDBManager} 装配。
+     * Runtime dependency context injected by {@link com.aionemu.loginserver.taskmanager.TaskFromDBManager}.
+     */
+    @Setter
+    protected TaskRuntime runtime;
 
     /**
      * 获取关联任务 ID。

@@ -1,7 +1,9 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import com.aionemu.loginserver.GameServerInfo;
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.controller.AccountController;
+import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
 /**
@@ -9,7 +11,10 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * GS→LS: report character count of an account on this GameServer.
  * @author cura
  */
+@RequiredArgsConstructor
 public class CM_GS_CHARACTER extends GsClientPacket {
+
+    private final AccountController accountController;
 
     /**
      * 账号 ID。
@@ -40,10 +45,10 @@ public class CM_GS_CHARACTER extends GsClientPacket {
     protected void runImpl() {
         GameServerInfo gsi = this.getConnection().getGameServerInfo();
 
-        AccountController.addGSCharacterCountFor(accountId, gsi.getId(), characterCount);
+        accountController.addGSCharacterCountFor(accountId, gsi.getId(), characterCount);
 
-        if (AccountController.hasAllGSCharacterCounts(accountId)) {
-            AccountController.sendServerListFor(accountId);
+        if (accountController.hasAllGSCharacterCounts(accountId)) {
+            accountController.sendServerListFor(accountId);
         }
     }
 }

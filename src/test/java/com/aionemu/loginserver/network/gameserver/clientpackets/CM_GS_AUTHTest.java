@@ -11,7 +11,7 @@ class CM_GS_AUTHTest {
 
 	@Test
 	void skipsMalformedIpRangeAndConsumesPacket() {
-		CM_GS_AUTH packet = new CM_GS_AUTH();
+		CM_GS_AUTH packet = new CM_GS_AUTH(null, null, null);
 		ByteBuffer buffer = ByteBuffer.allocate(64).order(ByteOrder.LITTLE_ENDIAN);
 		buffer.put((byte) 1);
 		buffer.put((byte) 4).put(new byte[] { 127, 0, 0, 1 });

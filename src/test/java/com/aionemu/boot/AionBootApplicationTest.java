@@ -19,8 +19,7 @@ import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.ChatServerRuntimeBridge;
 import com.aionemu.boot.lifecycle.ChatServiceLifecycle;
 import com.aionemu.boot.lifecycle.GameServiceLifecycle;
-import com.aionemu.boot.lifecycle.LoginServerLifecycleGateway;
-import com.aionemu.boot.lifecycle.LoginServerRuntimeBridge;
+import com.aionemu.loginserver.lifecycle.LoginStartupSequence;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
@@ -126,9 +125,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.services.AdminService;
-import com.aionemu.loginserver.LoginServer;
-import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
-import com.aionemu.loginserver.lifecycle.LoginStartupRuntimeBridge;
 import com.aionemu.commons.utils.AionRuntimeMode;
 
 import java.io.IOException;
@@ -139,7 +135,9 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 
+import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -148,9 +146,30 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 class AionBootApplicationTest {
+
+	/**
+	 * 装配审计上下文的 JDBC 自动配置排除清单；{@code JdbcClientAutoConfiguration} 也必须排除，
+	 * 否则它会经由 {@code dataSourceScriptDatabaseInitializer} 拉起数据源解析。
+	 * JDBC auto-configurations excluded from assembly-audit contexts; {@code JdbcClientAutoConfiguration}
+	 * must be listed too, or it drags in DataSource resolution through
+	 * {@code dataSourceScriptDatabaseInitializer}.
+	 */
+	private static final String JDBC_AUTO_CONFIGURATION_EXCLUSIONS = String.join(",",
+		"org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
+		"org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration",
+		"org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration",
+		"org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration",
+		"org.springframework.boot.jdbc.autoconfigure.JdbcClientAutoConfiguration");
 
 	@AfterEach
 	void clearBootRuntimeFlags() {
@@ -160,7 +179,6 @@ class AionBootApplicationTest {
 	@Test
 	void bootApplicationIsTheOnlyServerEntrypoint() {
 		assertTrue(hasPublicStaticMain(AionBootApplication.class));
-		assertFalse(hasPublicStaticMain(LoginServer.class));
 		assertFalse(hasPublicStaticMain(ChatServer.class));
 		assertFalse(hasPublicStaticMain(GameServer.class));
 	}
@@ -202,7 +220,7 @@ class AionBootApplicationTest {
 
 	@Test
 	void bootApplicationScansGameLifecycleBeans() {
-		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+		try (AnnotationConfigApplicationContext context = bootContextWithoutDataSource()) {
 			assertTrue(context.containsBean("aionServiceLauncher"));
 			assertTrue(context.containsBean("gameStartupSequenceLifecycle"));
 		}
@@ -210,7 +228,7 @@ class AionBootApplicationTest {
 
 	@Test
 	void bootApplicationScansGameLegacyBeansWithEagerRuntimeBridgeWiring() {
-		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+		try (AnnotationConfigApplicationContext context = bootContextWithoutDataSource()) {
 			assertEquals(AdminService.class, context.getType("adminService"));
 			assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
 			assertEquals(GameCoreServicesRuntimeBridge.class, context.getType("gameCoreServicesRuntimeBridge"));
@@ -248,16 +266,10 @@ class AionBootApplicationTest {
 
 	@Test
 	void bootApplicationScansServerRuntimeBridgeBeansLazily() {
-		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
-			assertEquals(LoginServerRuntimeBridge.class, context.getType("loginServerRuntimeBridge"));
+		try (AnnotationConfigApplicationContext context = bootContextWithoutDataSource()) {
 			assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
-			assertEquals(LoginStartupRuntimeBridge.class, context.getType("loginStartupRuntimeBridge"));
-			assertEquals(LoginProcessRuntimeBridge.class, context.getType("loginProcessRuntimeBridge"));
 			assertEquals(AionProcessRuntimeBridge.class, context.getType("aionProcessRuntimeBridge"));
-			assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
 			assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
-			assertLazy(context.getBeanFactory(), "loginStartupRuntimeBridge");
-			assertLazy(context.getBeanFactory(), "loginProcessRuntimeBridge");
 			assertLazy(context.getBeanFactory(), "aionProcessRuntimeBridge");
 		}
 	}
@@ -269,6 +281,8 @@ class AionBootApplicationTest {
 			.bannerMode(org.springframework.boot.Banner.Mode.OFF)
 			.run(
 				"--boot-smoke=true",
+				"--spring.autoconfigure.exclude=" + JDBC_AUTO_CONFIGURATION_EXCLUSIONS,
+				"--spring.flyway.enabled=false",
 				"--aion.services.login.enabled=false",
 				"--aion.services.chat.enabled=false",
 				"--aion.services.game.enabled=false"
@@ -280,7 +294,7 @@ class AionBootApplicationTest {
 
 	@Test
 	void chatRuntimeBeansStayOptionalByDefault() {
-		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+		try (AnnotationConfigApplicationContext context = bootContextWithoutDataSource()) {
 			assertHasBean(context, ChatServiceLifecycle.class);
 			assertHasBean(context, ChatServerLifecycleGateway.class);
 			assertDoesNotHaveBean(context, ChatProcessRuntimeBridge.class);
@@ -454,7 +468,8 @@ class AionBootApplicationTest {
 			context.registerBean(GameChatServerOverrideLifecycle.class);
 			context.registerBean(GameThreadPoolGateway.class);
 			context.registerBean(GameThreadPoolLifecycle.class);
-			context.registerBean(LoginServerLifecycleGateway.class);
+			context.registerBean(LoginStartupSequence.class,
+				() -> new LoginStartupSequence(null, null, null, null, null, null, null));
 			context.registerBean(LoginServiceLifecycle.class);
 			context.registerBean(ChatServerLifecycleGateway.class);
 			context.registerBean(ChatServiceLifecycle.class);
@@ -514,13 +529,74 @@ class AionBootApplicationTest {
 		Assertions.assertFalse(beanFactory.getBeanDefinition(beanName).isLazyInit(), beanName + " should be eager");
 	}
 
+	/**
+	 * 装配审计上下文的属性：排除全部 JDBC 自动配置，避免无库环境下解析数据源。
+	 * Properties for assembly-audit contexts: every JDBC auto-configuration is excluded so no
+	 * DataSource is resolved.
+	 */
+	private static final Map<String, Object> ASSEMBLY_TEST_PROPERTIES = Map.of(
+		"spring.autoconfigure.exclude", JDBC_AUTO_CONFIGURATION_EXCLUSIONS);
+
+	private static AnnotationConfigApplicationContext bootContextWithoutDataSource() {
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+		context.getEnvironment().getPropertySources().addFirst(new MapPropertySource(
+			"bootAssemblyTestProperties",
+			ASSEMBLY_TEST_PROPERTIES
+		));
+		context.register(AionBootApplication.class, NoAccessJdbcBeans.class);
+		context.refresh();
+		return context;
+	}
+
+	/**
+	 * 装配审计用的离线 JDBC Bean：游戏服 DAO 尚未迁移到 Flex，仍需注入 {@link JdbcClient} 等；
+	 * 未池化数据源只暴露 URL 供 MyBatis-Flex 探测方言，不建立连接，任何真实 SQL 调用都会立即失败。
+	 * Offline JDBC beans for assembly audits: the game-server DAOs are not yet migrated to Flex and
+	 * still require {@link JdbcClient} and friends. The unpooled data source only exposes its URL so
+	 * MyBatis-Flex can detect the dialect; no connection is opened, so any real SQL call fails at once.
+	 */
+	@Configuration(proxyBeanMethods = false)
+	static class NoAccessJdbcBeans {
+
+		@Bean
+		DataSource noAccessDataSource() {
+			UnpooledDataSource dataSource = new UnpooledDataSource();
+			dataSource.setDriver("com.mysql.cj.jdbc.Driver");
+			dataSource.setUrl("jdbc:mysql://127.0.0.1:3306/aion_emu");
+			return dataSource;
+		}
+
+		@Bean
+		JdbcClient jdbcClient(DataSource noAccessDataSource) {
+			return JdbcClient.create(noAccessDataSource);
+		}
+
+		@Bean
+		JdbcTemplate jdbcTemplate(DataSource noAccessDataSource) {
+			return new JdbcTemplate(noAccessDataSource);
+		}
+
+		@Bean
+		PlatformTransactionManager transactionManager(DataSource noAccessDataSource) {
+			return new JdbcTransactionManager(noAccessDataSource);
+		}
+
+		@Bean
+		TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager) {
+			return new TransactionTemplate(transactionManager);
+		}
+	}
+
 	private static AnnotationConfigApplicationContext chatEnabledBootContext() {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 		context.getEnvironment().getPropertySources().addFirst(new MapPropertySource(
 			"chatEnabledTestProperties",
-			Map.of("aion.services.chat.enabled", "true")
+			Map.of(
+				"aion.services.chat.enabled", "true",
+				"spring.autoconfigure.exclude", JDBC_AUTO_CONFIGURATION_EXCLUSIONS
+			)
 		));
-		context.register(AionBootApplication.class);
+		context.register(AionBootApplication.class, NoAccessJdbcBeans.class);
 		context.refresh();
 		return context;
 	}

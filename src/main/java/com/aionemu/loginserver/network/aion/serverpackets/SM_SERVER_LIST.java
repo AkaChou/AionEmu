@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.aionemu.loginserver.GameServerInfo;
-import com.aionemu.loginserver.GameServerTable;
-import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.network.aion.AionServerPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
 
@@ -16,20 +14,24 @@ import com.aionemu.loginserver.network.aion.LoginConnection;
  */
 public class SM_SERVER_LIST extends AionServerPacket {
 
-    public SM_SERVER_LIST() {
+    private final Collection<GameServerInfo> servers;
+    private final Map<Integer, Integer> charactersCountOnServer;
+
+    /**
+     * 以游戏服列表与角色数快照构造包。
+     * Construct the packet from the game-server list and character-count snapshot.
+     * @param servers 游戏服集合 / game-server collection
+     * @param charactersCountOnServer 各服角色数 / per-server character counts
+     */
+    public SM_SERVER_LIST(Collection<GameServerInfo> servers, Map<Integer, Integer> charactersCountOnServer) {
         super(0x04);
+        this.servers = servers;
+        this.charactersCountOnServer = charactersCountOnServer;
     }
 
     @Override
     protected void writeImpl(LoginConnection con) {
-        Collection<GameServerInfo> servers = GameServerTable.getGameServers();
-        Map<Integer, Integer> charactersCountOnServer;
-
-        int accountId = con.getAccount().getId();
-        //int accessLevel = con.getAccount().getAccessLevel();
         int maxId = 0;
-
-        charactersCountOnServer = AccountController.getGSCharacterCountsFor(accountId);
 
         writeC(servers.size());// 服务器数量 / servers
         writeC(con.getAccount().getLastServer());// 上次登录服务器 / last server

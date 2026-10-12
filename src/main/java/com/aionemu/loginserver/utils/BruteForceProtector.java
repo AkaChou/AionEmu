@@ -3,7 +3,11 @@ package com.aionemu.loginserver.utils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+
 import com.aionemu.loginserver.configs.Config;
+
 import lombok.Getter;
 
 /**
@@ -12,6 +16,8 @@ import lombok.Getter;
  *
  * @author Mr. Poke
  */
+@Component
+@Lazy
 public class BruteForceProtector {
 
 	private final Map<String, FailedLoginInfo> failedConnections = new ConcurrentHashMap<>();
@@ -21,7 +27,7 @@ public class BruteForceProtector {
 	 * Failed-login statistics for a single IP.
 	 */
 	@Getter
-	class FailedLoginInfo {
+	static class FailedLoginInfo {
 
 		private int count;
 		private final long time;
@@ -40,17 +46,6 @@ public class BruteForceProtector {
 			count++;
 		}
 
-	}
-
-	/**
-	 * 获取单例实例（已弃用，请走 boot 注入）。
-	 * Returns the singleton instance (deprecated; prefer boot injection).
-	 *
-	 * @return 单例实例 / singleton instance
-	 */
-	@Deprecated(since = "boot-migration")
-	public static BruteForceProtector getInstance() {
-		return SingletonHolder.instance;
 	}
 
 	/**
@@ -73,11 +68,5 @@ public class BruteForceProtector {
 			}
 		}
 		return false;
-	}
-
-	@SuppressWarnings("synthetic-access")
-	private static class SingletonHolder {
-
-		protected static final BruteForceProtector instance = new BruteForceProtector();
 	}
 }

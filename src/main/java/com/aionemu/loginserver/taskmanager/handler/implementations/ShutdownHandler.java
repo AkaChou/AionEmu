@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.loginserver.service.LoginShutdownRequest;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 
 /**
@@ -39,11 +38,12 @@ public class ShutdownHandler extends TaskFromDBHandler {
         if (AionRuntimeMode.isBootEmbedded()) {
             if (!AionEmbeddedShutdownHandler.requestShutdown()) {
                 log.warn(I18n.get("log.a611a5bc648e"));
-                LoginShutdownRequest.shutdownWithoutHalt();
+                runtime.shutdown().shutdown(false);
             }
             return;
         }
 
-        LoginShutdownRequest.startShutdown(false);
+        runtime.shutdown().setRestartOnly(false);
+        runtime.shutdown().start();
     }
 }

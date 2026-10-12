@@ -35,9 +35,14 @@ public class VipConfig {
 
 	/**
 	 * 自动启用 VIP 的等级。 / Level granted when auto-enabling VIP.
+	 * <p>显式初值而非默认 0：{@code getLevel()} 回读本字段，而 JSR-380 校验发生在绑定写入之前，
+	 * 0 会被 {@code @Min(1)} 判为越界并使装配上下文绑定失败。
+	 * Seeded to 1 instead of the default 0: {@code getLevel()} reads this field back and JSR-380
+	 * validation runs before the bound value is written, so 0 fails {@code @Min(1)} and aborts
+	 * binding in assembly contexts.</p>
 	 */
 	@Property(key = "loginserver.vip.auto-enable.level", defaultValue = "1")
-	public static int AUTO_ENABLE_LEVEL;
+	public static int AUTO_ENABLE_LEVEL = 1;
 
 	@Valid
 	private final AutoEnableProperties autoEnable = new AutoEnableProperties();

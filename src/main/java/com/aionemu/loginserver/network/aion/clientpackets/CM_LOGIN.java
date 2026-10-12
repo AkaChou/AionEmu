@@ -1,7 +1,9 @@
 package com.aionemu.loginserver.network.aion.clientpackets;
 
-import com.aionemu.loginserver.configs.Config;
+import com.aionemu.loginserver.utils.BruteForceProtector;
+import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.controller.AccountController;
+import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.aion.AionAuthResponse;
 import com.aionemu.loginserver.network.aion.AionClientPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
@@ -9,7 +11,6 @@ import com.aionemu.loginserver.network.aion.LoginConnection.State;
 import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_OK;
-import com.aionemu.loginserver.service.LoginProtectionServices;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.sql.Timestamp;
@@ -24,6 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CM_LOGIN extends AionClientPacket {
 
+    private final AccountController accountController;
+    private final BannedIpController bannedIpController;
+    private final BruteForceProtector bruteForceProtector;
+
     /**
      * 加密的登录名与密码字节数组。
      * Encrypted login and password bytes.
@@ -36,8 +41,11 @@ public class CM_LOGIN extends AionClientPacket {
      * @param buf 包体数据 / Packet data
      * @param client 登录连接 / Login connection
      */
-    public CM_LOGIN(ByteBuffer buf, LoginConnection client) {
+    public CM_LOGIN(ByteBuffer buf, LoginConnection client, AccountController accountController, BannedIpController bannedIpController, BruteForceProtector bruteForceProtector) {
         super(buf, client, 0x0b);
+        this.accountController = accountController;
+        this.bannedIpController = bannedIpController;
+        this.bruteForceProtector = bruteForceProtector;
     }
 
     /**
@@ -81,7 +89,7 @@ public class CM_LOGIN extends AionClientPacket {
         ncotp |= decrypted[0x7f] << 24;
 
         LoginConnection client = getConnection();
-        AionAuthResponse response = AccountController.login(user, password, client);
+        AionAuthResponse response = accountController.login(user, password, client);
         switch (response) {
             case AUTHED:
                 client.setState(State.AUTHED_LOGIN);
@@ -92,9 +100,9 @@ public class CM_LOGIN extends AionClientPacket {
             case INVALID_PASSWORD:
                 if (Config.ENABLE_BRUTEFORCE_PROTECTION) {
                     String ip = client.getIP();
-                    if (LoginProtectionServices.bruteForceProtector().addFailedConnect(ip)) {
+                    if (bruteForceProtector.addFailedConnect(ip)) {
                         Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000L);
-                        LoginProtectionServices.bannedIpService().banIp(ip, newTime);
+                        bannedIpController.banIp(ip, newTime);
                         log.debug("{} on {} banned for {} min. bruteforce", user, ip, Config.WRONG_LOGIN_BAN_TIME);
                         client.close(new SM_LOGIN_FAIL(AionAuthResponse.BAN_IP), false);
                     } else {

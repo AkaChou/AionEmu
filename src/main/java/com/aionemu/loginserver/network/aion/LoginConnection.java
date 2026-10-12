@@ -106,12 +106,31 @@ public class LoginConnection extends AConnection {
     }
 
     /**
+     * 封包工厂：解析入站包并注入其所需服务。
+     * Packet factory: parses inbound packets and injects the services they need.
+     */
+    private final AionPacketHandlerFactory packetFactory;
+    /**
+     * 断线清理所需的账号与时间服务。
+     * Account and time services used by disconnect cleanup.
+     */
+    private final AccountController accountController;
+    private final AccountTimeController accountTimeController;
+
+    /**
      * 基于传输创建登录连接。
      * Create a login connection on the given transport.
      * @param transport 连接传输 / Connection transport
+     * @param packetFactory 封包工厂 / packet factory
+     * @param accountController 账号控制器 / account controller
+     * @param accountTimeController 账号时间控制器 / account-time controller
      */
-    public LoginConnection(ConnectionTransport transport) {
+    public LoginConnection(ConnectionTransport transport, AionPacketHandlerFactory packetFactory,
+            AccountController accountController, AccountTimeController accountTimeController) {
         super(transport, 8192 * 2, 8192 * 2);
+        this.packetFactory = packetFactory;
+        this.accountController = accountController;
+        this.accountTimeController = accountTimeController;
     }
 
     /**
@@ -126,7 +145,7 @@ public class LoginConnection extends AConnection {
             return false;
         }
 
-        AionClientPacket pck = AionPacketHandlerFactory.handle(data, this);
+        AionClientPacket pck = packetFactory.handle(data, this);
 
 		if ((pck != null) && pck.read()) {
             processor.executePacket(pck);
@@ -171,8 +190,8 @@ public class LoginConnection extends AConnection {
     @Override
     protected final void onDisconnect() {
 		if ((account != null) && !joinedGs) {
-            AccountController.removeAccountOnLS(account);
-            AccountTimeController.updateOnLogout(account);
+            accountController.removeAccountOnLS(account);
+            accountTimeController.updateOnLogout(account);
         }
     }
 

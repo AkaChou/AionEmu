@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.model.Account;
@@ -11,7 +13,11 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_
  * GS→LS: report the list of account names currently logged into this GameServer.
  * @author SoulKeeper
  */
+@RequiredArgsConstructor
 public class CM_ACCOUNT_LIST extends GsClientPacket {
+
+    private final AccountController accountController;
+    private final GameServerTable gameServerTable;
 
     /**
      * 当前在线账号名数组。
@@ -38,8 +44,8 @@ public class CM_ACCOUNT_LIST extends GsClientPacket {
     @Override
     protected void runImpl() {
         for (String s : accountNames) {
-            Account a = AccountController.loadAccount(s);
-            if (GameServerTable.isAccountOnAnyGameServer(a)) {
+            Account a = accountController.loadAccount(s);
+            if (gameServerTable.isAccountOnAnyGameServer(a)) {
                 this.getConnection().sendPacket(new SM_REQUEST_KICK_ACCOUNT(a.getId()));
                 continue;
             }

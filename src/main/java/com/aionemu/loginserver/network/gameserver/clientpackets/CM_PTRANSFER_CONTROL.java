@@ -1,14 +1,19 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
+import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
-import com.aionemu.loginserver.service.LoginTransferServices;
 
 /**
  * GS→LS：角色转移任务控制（请求/错误/成功/停止）。
  * GS→LS: player-transfer task control (request/error/ok/stop).
  * @author KID
  */
+@RequiredArgsConstructor
 public class CM_PTRANSFER_CONTROL extends GsClientPacket {
+
+    private final PlayerTransferService playerTransferService;
 
     /**
      * 动作 ID：1=请求转移，2=错误，3=成功，4=停止任务。
@@ -30,28 +35,28 @@ public class CM_PTRANSFER_CONTROL extends GsClientPacket {
                 String name = readS();
                 int bytes = this.getRemainingBytes();
                 byte[] db = this.readB(bytes);
-                LoginTransferServices.playerTransferService().requestTransfer(taskId, name, db);
+                playerTransferService.requestTransfer(taskId, name, db);
             }
             break;
             case 2: // 转移出错 / ERROR
             {
                 int taskId = readD();
                 String reason = readS();
-                LoginTransferServices.playerTransferService().onError(taskId, reason);
+                playerTransferService.onError(taskId, reason);
             }
             break;
             case 3: // 转移成功 / ok
             {
                 int taskId = readD();
                 int playerId = readD();
-                LoginTransferServices.playerTransferService().onOk(taskId, playerId);
+                playerTransferService.onOk(taskId, playerId);
             }
             break;
             case 4: // 任务停止 / Task stop
             {
                 int taskId = readD();
                 String reason = readS();
-                LoginTransferServices.playerTransferService().onTaskStop(taskId, reason);
+                playerTransferService.onTaskStop(taskId, reason);
             }
         }
     }

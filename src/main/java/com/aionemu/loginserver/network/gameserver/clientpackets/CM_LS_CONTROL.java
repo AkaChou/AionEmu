@@ -1,17 +1,22 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 
+import lombok.RequiredArgsConstructor;
+
+import com.aionemu.loginserver.persistence.dao.AccountDataDao;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_LS_CONTROL_RESPONSE;
-import com.aionemu.loginserver.service.LoginDaosHolder;
 
 /**
  * GS→LS：修改账号权限等级或会员等级。
  * GS→LS: change account access level or membership level.
  * @author Aionchs-Wylovech
  */
+@RequiredArgsConstructor
 public class CM_LS_CONTROL extends GsClientPacket {
+
+    private final AccountDataDao accountDataDao;
 
     /**
      * 账号名。
@@ -65,7 +70,7 @@ public class CM_LS_CONTROL extends GsClientPacket {
     @Override
     protected void runImpl() {
 
-        Account account = LoginDaosHolder.daos().accountDAO().getAccount(accountName);
+        Account account = accountDataDao.getAccount(accountName);
         if (account == null) {
             sendPacket(new SM_LS_CONTROL_RESPONSE(type, false, playerName, 0, param, adminName));
             return;
@@ -75,7 +80,7 @@ public class CM_LS_CONTROL extends GsClientPacket {
         } else if (type == 2) {
         	account.setMembership((byte) param);
         }
-        result = LoginDaosHolder.daos().accountDAO().updateAccount(account);
+        result = accountDataDao.updateAccount(account);
         sendPacket(new SM_LS_CONTROL_RESPONSE(type, result, playerName, account.getId(), param, adminName));
     }
 }

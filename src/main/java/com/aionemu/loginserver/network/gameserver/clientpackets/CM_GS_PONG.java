@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
 
@@ -8,7 +10,10 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * GS→LS: GameServer heartbeat pong.
  * @author KID
  */
+@RequiredArgsConstructor
 public class CM_GS_PONG extends GsClientPacket {
+
+    private final GameServerTable gameServerTable;
 
     /**
      * 游戏服 ID。
@@ -37,6 +42,6 @@ public class CM_GS_PONG extends GsClientPacket {
      */
     @Override
     protected void runImpl() {
-        GameServerTable.pong(serverId, pid);
+        gameServerTable.pong(serverId, pid);
     }
 }

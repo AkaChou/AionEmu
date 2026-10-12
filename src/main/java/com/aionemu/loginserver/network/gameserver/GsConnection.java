@@ -7,11 +7,12 @@ import java.util.Deque;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
+import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.PingPongThread;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -73,12 +74,35 @@ public class GsConnection extends AConnection {
     private PingPongThread pingThread;
 
     /**
+     * 封包工厂：解析入站包并注入其所需服务。
+     * Packet factory: parses inbound packets and injects the services they need.
+     */
+    @Getter
+    private final GsPacketHandlerFactory packetFactory;
+
+    /**
+     * 心跳上报所需的统计 DAO 与线程池。
+     * Stats DAO and thread pool used by the heartbeat reporter.
+     */
+    @Getter
+    private final SvstatsDao svstatsDao;
+    @Getter
+    private final ThreadPoolManager threadPoolManager;
+
+    /**
      * 基于传输层创建 GS 连接。
      * Create a GS connection over the given transport.
      * @param transport 连接传输 / Connection transport
+     * @param packetFactory 封包工厂 / packet factory
+     * @param svstatsDao 服务器统计 DAO / server-stats DAO
+     * @param threadPoolManager 登录服线程池 / login-server thread pool
      */
-    public GsConnection(ConnectionTransport transport) {
+    public GsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+            ThreadPoolManager threadPoolManager) {
         super(transport, 8192 * 8, 8192 * 8);
+        this.packetFactory = packetFactory;
+        this.svstatsDao = svstatsDao;
+        this.threadPoolManager = threadPoolManager;
     }
 
     /**
@@ -89,10 +113,10 @@ public class GsConnection extends AConnection {
      */
     @Override
     public boolean processData(ByteBuffer data) {
-        GsClientPacket pck = GsPacketHandlerFactory.handle(data, this);
+        GsClientPacket pck = packetFactory.handle(data, this);
 
         if (pck != null && pck.read()) {
-            LoginThreadPoolServices.threadPoolManager().executeLsPacket(pck);
+            threadPoolManager.executeLsPacket(pck);
         }
 
         return true;
@@ -203,7 +227,7 @@ public class GsConnection extends AConnection {
         this.state = state;
         if (state == State.AUTHED) {
             if (Config.ENABLE_PINGPONG) {
-                LoginThreadPoolServices.threadPoolManager().schedule(pingThread, 5000);
+                threadPoolManager.schedule(pingThread, 5000);
             }
         }
     }

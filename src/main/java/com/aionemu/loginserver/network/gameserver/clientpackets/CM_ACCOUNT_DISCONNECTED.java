@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.RequiredArgsConstructor;
+
 import com.aionemu.loginserver.controller.AccountTimeController;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -9,7 +11,10 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * GS→LS: inform LoginServer that an account disconnected from GameServer.
  * @author -Nemesiss-
  */
+@RequiredArgsConstructor
 public class CM_ACCOUNT_DISCONNECTED extends GsClientPacket {
+
+    private final AccountTimeController accountTimeController;
 
     /**
      * 已断开账号 ID。
@@ -39,7 +44,7 @@ public class CM_ACCOUNT_DISCONNECTED extends GsClientPacket {
 
         // 若玩家从 GS 登出，account 可能为 null（见 CM_ACCOUNT_RECONNECT_KEY） / account can be null if a player logged out from gs (see CM_ACCOUNT_RECONNECT_KEY)
         if (account != null) {
-            AccountTimeController.updateOnLogout(account);
+            accountTimeController.updateOnLogout(account);
         }
     }
 }

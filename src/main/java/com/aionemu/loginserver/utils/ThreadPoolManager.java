@@ -3,6 +3,8 @@ package com.aionemu.loginserver.utils;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
@@ -17,7 +19,9 @@ import java.util.concurrent.*;
  * @author -Nemesiss-, NB4L1, MrPoke, lord_rex
  */
 @Slf4j
-public final class ThreadPoolManager {
+@Component("loginThreadPoolManager")
+@Lazy
+public class ThreadPoolManager {
 
     /**
      * 任务运行超过该毫秒数时发出警告。
@@ -319,18 +323,4 @@ public final class ThreadPoolManager {
         return false;
     }
 
-    private static final class SingletonHolder {
-
-        private static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
-    }
-
-    /**
-     * 获取单例实例（已弃用，请走 boot 注入）。
-     * Returns the singleton instance (deprecated; prefer boot injection).
-     * @return 单例实例 / singleton instance
-     */
-    @Deprecated(since = "boot-migration")
-    public static ThreadPoolManager getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
 }

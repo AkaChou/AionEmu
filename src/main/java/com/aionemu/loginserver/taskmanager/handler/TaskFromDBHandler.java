@@ -1,5 +1,7 @@
 package com.aionemu.loginserver.taskmanager.handler;
 
+import com.aionemu.loginserver.taskmanager.TaskRuntime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +26,12 @@ public abstract class TaskFromDBHandler {
     @Getter
     @Setter
     protected String[] params = {""};
+    /**
+     * 运行时依赖上下文，由 {@link com.aionemu.loginserver.taskmanager.TaskFromDBManager} 装配。
+     * Runtime dependency context injected by {@link com.aionemu.loginserver.taskmanager.TaskFromDBManager}.
+     */
+    @Setter
+    protected TaskRuntime runtime;
 
     /**
      * 检查任务参数是否有效。

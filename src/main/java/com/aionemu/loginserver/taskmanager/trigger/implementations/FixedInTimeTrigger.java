@@ -3,7 +3,6 @@ package com.aionemu.loginserver.taskmanager.trigger.implementations;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
-import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import java.util.Calendar;
 
 /**
@@ -58,6 +57,6 @@ public class FixedInTimeTrigger extends TaskFromDBTrigger {
             delay += DAY_IN_MSEC;
         }
 
-        LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, delay, DAY_IN_MSEC);
+        runtime.threadPoolManager().scheduleAtFixedRate(this, delay, DAY_IN_MSEC);
     }
 }
