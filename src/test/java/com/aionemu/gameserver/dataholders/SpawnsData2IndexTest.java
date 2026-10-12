@@ -71,7 +71,7 @@ class SpawnsData2IndexTest {
 
 		assertTrue(source.contains("private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId)"));
 		assertTrue(source.contains(
-			"private List<SpawnGroup2> spawnGroupsFor(FrozenIntObjectTable<List<SpawnGroup2>> spawnMaps, int id)"));
+			"private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id)"));
 		assertFalse(afterUnmarshal.contains("allSpawnMaps.get(mapId)"));
 		assertFalse(afterUnmarshal.contains(".containsKey(id)"));
 		assertFalse(afterUnmarshal.contains(".get(id).add(spawnGroup)"));

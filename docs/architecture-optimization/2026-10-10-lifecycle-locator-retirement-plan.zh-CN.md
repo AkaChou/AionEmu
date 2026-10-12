@@ -63,5 +63,5 @@ L3 Fallbacks（11 个 GameXxxFallbacks，约 800 行：离线/降级懒加载单
 
 - **JSR-380 配置校验（Phase 4.1 深化）**：基础设施已落地（`spring-boot-starter-validation` 依赖 + `VipConfig` 试点 `@Validated`/`@Valid`/`@Min`/`@Max`，`LoginConfigBindingTest.validatorRejectsOutOfRangeVipLevel` 验证；遗留直写路径仍由手写 `validate()` 守护）。后续按批次为数值范围型配置字段补约束注解，逐类验证，严禁批量套模板。
 - **Tick 调度与 JDBC 阻塞 IO 物理隔离（Phase 3 遗留）**：#8（`PeriodicSaveService` 收拢）与 #10（脏标记短路）已消除周期存盘主通道；#17（8 分片条带化）已解包调度锁。剩余风险为散点任务（`scheduledPool` 上的非周期任务、cron 任务内的同步 JDBC）在逻辑线程直连数据库。**处置：先以 JFR 运行期采样取证（注意与 JRebel 冲突，需二选一），拿到阻塞热点证据后再定改造清单，禁止无证据重构并发架构。**
-- **密集只读表二分（Phase 2 补充）**：已完成（2026-10-10）——`FrozenIntObjectTable`（构建期原始哈希 / 冻结后升序数组二分，冻结后写操作 fail-fast）+ `SpawnsData2` 25 张索引表冻结化，专项 4 项 + 索引 5 项测试全绿。
+- **密集只读表二分（Phase 2 补充）**：已回退（2026-10-12）——冻结前提「运行期外层键集不变」不成立（`//spawn` 保存写 `customs`、事件注入刷怪地图写世界键），冻结后 `//reload_spawn` 之后的保存与事件会抛 `IllegalStateException`；同时冻结容器破坏多源分区反射合并、导致启动丢失地点刷怪索引。现 `SpawnsData2` 25 张索引表回退 `IntObjectHashMap`，`FrozenIntObjectTable` 及其专项测试一并删除；多源合并改由显式 `merge(SpawnsData2)` 承载。
 - **`QuestRuntimeComposition` 8 处**：quest 线活跃域，待其收敛后按 bind 桥模式（参照 `TransformPanelSync`）收口。

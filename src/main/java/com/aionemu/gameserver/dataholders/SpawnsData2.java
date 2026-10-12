@@ -65,7 +65,7 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMap;
 
-import com.aionemu.commons.utils.collections.FrozenIntObjectTable;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
@@ -73,11 +73,6 @@ import lombok.Getter;
 /**
  * 刷怪数据容器：按地图与活动类型索引 {@link SpawnGroup2}，并支持管理员运行时保存。
  * Spawn data holder that indexes {@link SpawnGroup2} by map and event type, with admin runtime save support.
- * <p>索引表在运行期仍会新增外层键（//spawn 保存自定义刷怪写 customs、事件注入刷怪地图写世界键），
- * 因此一律保持构建模式、不得冻结，否则 //reload_spawn 之后的保存与事件会抛 IllegalStateException。
- * The index tables still receive new outer keys at runtime (custom spawn saves via //spawn write
- * {@code customs}, event-injected spawn maps write world keys), so they always stay in build mode and
- * must not be frozen, or saves and events after //reload_spawn would throw IllegalStateException.</p>
  */
 @Getter
 @XmlRootElement(name = "spawns")
@@ -93,31 +88,31 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private final FrozenIntObjectTable<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> siegeSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> baseSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> vortexSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> riftSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> beritraSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> agentSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> anohaSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> rvrSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> svsSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> iuSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> dynamicRiftSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> instanceRiftSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> idianDepthsSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> nightmareCircusSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> legionDominionSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> moltenusSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> conquestSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> landingSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> landingSpecialSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> towerOfEternitySpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<List<SpawnGroup2>> outpostSpawnMaps = new FrozenIntObjectTable<>();
-	private final FrozenIntObjectTable<Spawn> customs = new FrozenIntObjectTable<>();
+	private final IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<Map<Integer, List<SpawnGroup2>>> normalSpawnVariants = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<>();
+	private final IntObjectHashMap<Spawn> customs = new IntObjectHashMap<>();
 
 	private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId) {
 		Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = allSpawnMaps.get(mapId);
@@ -137,7 +132,7 @@ public class SpawnsData2 {
 		return variants;
 	}
 
-	private List<SpawnGroup2> spawnGroupsFor(FrozenIntObjectTable<List<SpawnGroup2>> spawnMaps, int id) {
+	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
 		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
 		if (spawnGroups == null) {
 			spawnGroups = new ArrayList<>();
@@ -160,14 +155,12 @@ public class SpawnsData2 {
 	 * 合并另一份刷怪数据：把对方的原始模板并入本实例并增量建立索引。
 	 * Merges another spawn data instance: folds its raw templates into this instance and
 	 * incrementally indexes them.
-	 * <p>静态数据加载器逐个源文件反序列化后按字段反射合并同一分区，而
-	 * {@link FrozenIntObjectTable} 不是 {@link Map}，反射合并会静默跳过全部索引表；
-	 * 因此多源合并必须走本显式方法，否则除首个源文件外的刷怪索引（含漩涡、裂隙等地点刷怪）都会丢失。
+	 * <p>静态数据加载器逐源文件反序列化后按字段反射合并各分区，其反射合并仅覆盖 Map/Collection
+	 * 字段，索引表一旦换成自定义容器便会被静默跳过；本方法让多源合并与容器类型解耦（加载器优先调用同名 merge）。
 	 * The static-data loader unmarshals each source file separately and then merges a section field by
-	 * field, but a {@link FrozenIntObjectTable} is not a {@link Map}, so the reflective merge would
-	 * silently skip every index table; multi-source merging must therefore go through this explicit
-	 * method, or every spawn index beyond the first source file (including vortex/rift location
-	 * spawns) is lost.</p>
+	 * field, but its reflective merge only covers Map/Collection fields and would silently skip the
+	 * index tables if they ever switch to a custom container; this explicit method, which the loader
+	 * prefers, decouples multi-source merging from the container type.</p>
 	 * @param other 另一份刷怪数据 / other spawn data
 	 */
 	public void merge(SpawnsData2 other) {
