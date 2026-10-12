@@ -77,11 +77,14 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
  		if (npcId == 216945) {
  			//Enos Watcher.
- 			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000104, 1));
+ 			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000104, 1));
  		}
 	}
 

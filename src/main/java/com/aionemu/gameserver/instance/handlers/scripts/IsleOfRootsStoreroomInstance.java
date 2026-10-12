@@ -93,7 +93,11 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
+		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 215130: //Treasurer Wasukani.
 			case 215131: //Treasurer Baruna.
@@ -101,19 +105,19 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215133: //Treasurer Hittite.
 				switch (Rnd.get(1, 3)) {
 					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000056, 1)); //Krotan Armory Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000056, 1)); //Krotan Armory Key.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000057, 1)); //Krotan Supply Base Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000057, 1)); //Krotan Supply Base Key.
 					break;
 					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000058, 1)); //Krotan Operations Room Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000058, 1)); //Krotan Operations Room Key.
 					break;
 				}
 			break;
 			case 215135: //Weakened Krotan Lord.
 			case 215136: //Awakened Krotan Lord.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000060, 1)); //Krotan Gold Room Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000060, 1)); //Krotan Gold Room Key.
 			break;
         }
     }

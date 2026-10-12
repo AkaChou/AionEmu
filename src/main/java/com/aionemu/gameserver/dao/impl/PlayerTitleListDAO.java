@@ -70,7 +70,7 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
 	@Override
 	public TitleList loadTitleList(int playerId) {
 		TitleList titleList = new TitleList();
-		long currentTime = System.currentTimeMillis();
+		int currentTime = (int) (System.currentTimeMillis() / 1000);
 
 		try {
 			jdbcClient.sql(LOAD_QUERY)

@@ -271,8 +271,12 @@ public class HousingBidService extends AbstractCronTask {
 	private int getBidsCountByType(Race race, HouseType type) {
 		int count = 0;
 		for (HouseBidEntry entry : houseBids.values()) {
-			HousingLand land = DataManager.HOUSE_DATA.getLand(entry.getLandId());
-			Race entryRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()).getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
+			HousingLand land = DataManager.HOUSE_DATA != null ? DataManager.HOUSE_DATA.getLand(entry.getLandId()) : null;
+			if (land == null) {
+				continue;
+			}
+			var template = DataManager.NPC_DATA != null ? DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()) : null;
+			Race entryRace = template != null && template.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
 			if (entryRace == race && entry.getHouseType() == type) {
 				count++;
 			}
@@ -864,8 +868,12 @@ public class HousingBidService extends AbstractCronTask {
 		synchronized (houseBids) {
 			List<HouseBidEntry> bids = new ArrayList<>();
 			for (HouseBidEntry bid : houseBids.values()) {
-				HousingLand land = DataManager.HOUSE_DATA.getLand(bid.getLandId());
-				boolean isEly = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()).getTribe() == TribeClass.GENERAL;
+				HousingLand land = DataManager.HOUSE_DATA != null ? DataManager.HOUSE_DATA.getLand(bid.getLandId()) : null;
+				if (land == null) {
+					continue;
+				}
+				var template = DataManager.NPC_DATA != null ? DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()) : null;
+				boolean isEly = template != null && template.getTribe() == TribeClass.GENERAL;
 				if (isEly && playerRace == Race.ELYOS) {
 					bids.add(bid);
 				} else if (!isEly && playerRace == Race.ASMODIANS) {

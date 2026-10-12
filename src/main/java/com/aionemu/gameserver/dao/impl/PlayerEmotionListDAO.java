@@ -73,7 +73,7 @@ public class PlayerEmotionListDAO extends com.aionemu.gameserver.dao.PlayerEmoti
 	@Override
 	public void loadEmotions(Player player) {
 		EmotionList emotions = new EmotionList(player);
-		long currentTime = System.currentTimeMillis();
+		int currentTime = (int) (System.currentTimeMillis() / 1000);
 
 		try {
 			jdbcClient.sql(SELECT_QUERY)

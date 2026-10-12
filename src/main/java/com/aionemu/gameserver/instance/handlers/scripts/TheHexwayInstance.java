@@ -107,27 +107,31 @@ public class TheHexwayInstance extends GeneralInstanceHandler {
 	@Override
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
+		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 219609: //Captain Jarka.
 				switch (Rnd.get(1, 6)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000130, 1)); //Balaur Warehouse No.1 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000130, 1)); //Balaur Warehouse No.1 Key.
 						break;
 					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000131, 1)); //Balaur Warehouse No.2 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000131, 1)); //Balaur Warehouse No.2 Key.
 						break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000132, 1)); //Balaur Warehouse No.3 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000132, 1)); //Balaur Warehouse No.3 Key.
 						break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000133, 1)); //Balaur Warehouse No.4 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000133, 1)); //Balaur Warehouse No.4 Key.
 						break;
 					case 5:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000134, 1)); //Balaur Warehouse No.5 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000134, 1)); //Balaur Warehouse No.5 Key.
 						break;
 					case 6:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000135, 1)); //Balaur Warehouse No.6 Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000135, 1)); //Balaur Warehouse No.6 Key.
 						break;
 				}
 				break;

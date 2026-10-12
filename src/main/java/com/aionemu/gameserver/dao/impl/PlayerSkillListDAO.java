@@ -46,6 +46,7 @@ public class PlayerSkillListDAO extends com.aionemu.gameserver.dao.PlayerSkillLi
 	public static final String INSERT_QUERY = "INSERT INTO `player_skills` (`player_id`, `skill_id`, `skill_level`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `skill_level` = VALUES(`skill_level`)";
 
 	/**
+	 * 幂等任务授予技能：重试时绝不降级已独立提升的技能等级。
 	 * Idempotent quest grant: retries never downgrade a skill that advanced independently.
 	 */
 	private static final String GRANT_QUERY = "INSERT INTO `player_skills` (`player_id`, `skill_id`, `skill_level`) "

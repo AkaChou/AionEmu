@@ -146,9 +146,12 @@ public record PetitionService(PetitionDAO petitionDAO) {
 	 * @param petitionId petition id
 	 */
 	public void setPetitionReplied(int petitionId) {
-		int playerObjId = registeredPetitions.get(petitionId).playerObjId();
+		Petition petition = registeredPetitions.remove(petitionId);
+		if (petition == null) {
+			return;
+		}
+		int playerObjId = petition.playerObjId();
 		petitionDAO.setReplied(petitionId);
-		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
 		if (playerObjId > 0 && GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
 			Player p = GameWorldBootstrapServices.world().findPlayer(playerObjId);

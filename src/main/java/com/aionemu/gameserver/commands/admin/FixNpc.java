@@ -172,6 +172,10 @@ public class FixNpc extends AdminCommand
 	private static void respawnAndSave(Player admin, int worldId, int npcId, float x, float y, float z, byte heading, int respawnTime, Creature oldNpc) {
 		SpawnTemplate spawn2 = SpawnEngine.addNewSpawn(worldId, npcId, x, y, z, heading, respawnTime);
 		VisibleObject visibleObject = SpawnEngine.spawnObject(spawn2, admin.getInstanceId());
+		if (visibleObject == null) {
+			PacketSendUtility.sendMessage(admin, "Could not spawn object");
+			return;
+		}
 		oldNpc.getController().delete();
 		try {
 			DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
