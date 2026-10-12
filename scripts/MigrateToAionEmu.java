@@ -38,8 +38,8 @@ public final class MigrateToAionEmu {
 		String dst = env("DST_DB", "aion_emu");
 		Path v1Sql = Path.of(env("V1_SQL", "src/main/resources/db/migration/V1__init.sql"));
 
-		String url = "jdbc:mysql://%s:%d/?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
-			+ "&allowPublicKeyRetrieval=true&allowMultiQueries=true".formatted(host, port);
+		String url = ("jdbc:mysql://%s:%d/?useUnicode=true&characterEncoding=UTF-8&useSSL=false"
+			+ "&allowPublicKeyRetrieval=true&allowMultiQueries=true").formatted(host, port);
 		System.out.println("Migrating " + srcGs + " + " + srcLs + " -> " + dst + " on " + host + ":" + port);
 
 		try (Connection connection = DriverManager.getConnection(url, user, password)) {
@@ -59,6 +59,7 @@ public final class MigrateToAionEmu {
 		}
 		System.out.println("Applying schema from " + v1Sql + " ...");
 		try (Statement statement = connection.createStatement()) {
+			statement.execute("USE `" + dst + "`");
 			for (String block : splitSql(Files.readString(v1Sql))) {
 				statement.execute(block);
 			}

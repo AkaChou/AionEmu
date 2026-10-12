@@ -56,8 +56,6 @@ public final class DatabaseFactory {
             throw new Error("DB Driver doesnt exist!");
         }
 
-        DatabaseSchemaInitializer.initializeIfMissing();
-
         HikariConfig config = new HikariConfig();
         config.setDriverClassName(DatabaseConfig.DATABASE_DRIVER);
         config.setJdbcUrl(DatabaseConfig.DATABASE_URL);
