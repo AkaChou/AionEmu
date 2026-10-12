@@ -340,10 +340,12 @@ public class SiegeService {
 		if (siege.getSiegeLocation().getSiegeDuration() == -1) {
 			return -1;
 		}
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.SECOND, siege.getSiegeLocation().getSiegeDuration());
-		int result = (int) ((calendar.getTimeInMillis() - System.currentTimeMillis()) / 1000);
-		return Math.max(result, 0);
+		if (siege.getStartTime() == null) {
+			return siege.getSiegeLocation().getSiegeDuration();
+		}
+		long elapsedSeconds = (System.currentTimeMillis() - siege.getStartTime().getTime()) / 1000;
+		long remaining = siege.getSiegeLocation().getSiegeDuration() - elapsedSeconds;
+		return (int) Math.max(remaining, 0);
 	}
 
 

@@ -908,9 +908,12 @@ public class HousingBidService extends AbstractCronTask {
 	}
 
 	private static int getMinBidLevel(Player player, int mapId, int landId) {
-		HousingLand land = DataManager.HOUSE_DATA.getLand(landId);
+		HousingLand land = DataManager.HOUSE_DATA != null ? DataManager.HOUSE_DATA.getLand(landId) : null;
+		if (land == null || land.getSaleOptions() == null) {
+			return HousingConfig.HOUSE_MIN_BID_LEVEL > 0 ? HousingConfig.HOUSE_MIN_BID_LEVEL : 1;
+		}
 		Sale saleOptions = land.getSaleOptions();
-		HouseType houseType = HouseType.fromValue(land.getBuildings().getFirst().getSize());
+		HouseType houseType = land.getBuildings().isEmpty() ? HouseType.HOUSE : HouseType.fromValue(land.getBuildings().getFirst().getSize());
 		if (player.getRace() == Race.ELYOS) {
 			if (mapId == WorldMapType.HEIRON.getId()) {
 				return saleOptions.getMinLevel();

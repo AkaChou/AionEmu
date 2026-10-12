@@ -162,13 +162,13 @@ public class MailService {
 	public void sendMail(Player sender, String recipientName, String title, String message, int attachedItemObjId,
 			int attachedItemCount, int attachedKinahCount, int attachedApCount, LetterType letterType) {
 
-		if (letterType == LetterType.BLACKCLOUD || recipientName.length() > 16) {
+		if (letterType == LetterType.BLACKCLOUD || recipientName == null || recipientName.length() > 16) {
 			return;
 		}
-		if (title.length() > 20) {
+		if (title != null && title.length() > 20) {
 			title = title.substring(0, 20);
 		}
-		if (message.length() > 1000) {
+		if (message != null && message.length() > 1000) {
 			message = message.substring(0, 1000);
 		}
 		PlayerCommonData recipientCommonData = playerDAO.loadPlayerCommonDataByName(recipientName);

@@ -93,7 +93,11 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	@Override
     public void onDropRegistered(Npc npc) {
         Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
+		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 215216: //Treasurer Karpasha.
 			case 215217: //Treasurer Pasikar.
@@ -101,19 +105,19 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			case 215219: //Treasurer Mahirwa.
 				switch (Rnd.get(1, 3)) {
 					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000066, 1)); //Miren Armory Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000066, 1)); //Miren Armory Key.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000067, 1)); //Miren Supply Base Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000067, 1)); //Miren Supply Base Key.
 					break;
 					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000068, 1)); //Miren Operations Room Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000068, 1)); //Miren Operations Room Key.
 					break;
 				}
 			break;
 			case 215221: //Weakened Miren Prince.
 			case 215222: //Awakened Miren Prince.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000070, 1)); //Miren Gold Room Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000070, 1)); //Miren Gold Room Key.
 			break;
         }
     }

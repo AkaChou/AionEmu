@@ -520,6 +520,9 @@ public class AbyssLandingService {
 	 */
 	public void onRewardMonuments(Race race, int id, int points) {
 		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
+		if (lsl == null) {
+			return;
+		}
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, true);
 			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
@@ -540,6 +543,9 @@ public class AbyssLandingService {
 	 */
 	public void onDieMonuments(Race race, int id, int points) {
 		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
+		if (lsl == null) {
+			return;
+		}
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, false);

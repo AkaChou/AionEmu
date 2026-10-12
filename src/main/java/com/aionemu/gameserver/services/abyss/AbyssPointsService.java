@@ -237,7 +237,7 @@ public class AbyssPointsService {
 	 * @param player 玩家 / Player
 	 */
 	public static void AbyssRankCheck(Player player) {
-		if (player == null) {
+		if (player == null || player.getAbyssRank() == null) {
 			return;
 		}
 		if (player.getAbyssRank().getGp() < AbyssRankEnum.STAR1_OFFICER.getGpRequired()) {

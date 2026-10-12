@@ -1011,10 +1011,13 @@ public class VisibleObjectSpawner {
 		Npc npc;
 		int spawnId = spawn.getId();
 		LandingSpecialLocation loc = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(spawnId);
+		if (loc == null) {
+			return null;
+		}
 		if (loc.isActive() && spawnId == loc.getId() && spawn.isSpecialLandingActive()) {
 			npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
 			npc.setKnownlist(new NpcKnownList(npc));
-		} else if (!loc.isActive() && spawnId == loc.getId() && spawn.isSpecialLandingActive()) {
+		} else if (!loc.isActive() && spawnId == loc.getId() && spawn.isSpecialLandingNoActive()) {
 			npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
 			npc.setKnownlist(new NpcKnownList(npc));
 		} else {

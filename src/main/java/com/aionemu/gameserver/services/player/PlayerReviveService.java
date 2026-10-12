@@ -283,7 +283,7 @@ public class PlayerReviveService {
 							  int resurrectionSkill) {
 		player.getKnownList().doOnAllPlayers(visitor -> {
 			VisibleObject target = visitor.getTarget();
-			if (target != null && target.getObjectId() == player.getObjectId()
+			if (target != null && player.getObjectId().equals(target.getObjectId())
 				&& (visitor.getRace() != player.getRace())) {
 				visitor.setTarget(null);
 				PacketSendUtility.sendPacket(visitor, new SM_TARGET_SELECTED(null));

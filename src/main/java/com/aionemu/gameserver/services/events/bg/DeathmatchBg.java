@@ -818,7 +818,7 @@ public class DeathmatchBg extends Battleground {
 			super.specAnnounce(player.getName() + "'s killing ended!");
 		}
 		player.setKillStreak(0);
-		if (lastAttacker instanceof Player killer && lastAttacker.getObjectId() != player.getObjectId()) {
+		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
 			killer.setKillStreak(killer.getKillStreak() + 1);
 			if (killer.getKillStreak() > 1) {
 				for (Player pl : super.getPlayers()) {

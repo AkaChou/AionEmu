@@ -165,7 +165,9 @@ public class AbyssRankUpdateService {
 		long startTime = System.currentTimeMillis();
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			AbyssPointsService.AbyssRankCheck(player);
-			player.getAbyssRank().doUpdate();
+			if (player.getAbyssRank() != null) {
+				player.getAbyssRank().doUpdate();
+			}
 			abyssRankDAO.storeAbyssRank(player);
 		});
 		updateLimitedGpRanks();

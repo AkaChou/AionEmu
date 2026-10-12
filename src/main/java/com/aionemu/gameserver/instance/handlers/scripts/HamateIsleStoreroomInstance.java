@@ -80,6 +80,9 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {

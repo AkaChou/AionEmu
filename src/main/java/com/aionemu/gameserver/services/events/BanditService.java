@@ -188,7 +188,9 @@ public class BanditService {
 				player.setAdminNeutral(0);
 				player.clearKnownlist();
 				morphBandit(player, true);
-				sendDieAnnounce(player, (Player) lastAttacker);
+				if (lastAttacker instanceof Player killer) {
+					sendDieAnnounce(player, killer);
+				}
 				PacketSendUtility.sendPacket(player, new SM_PLAYER_INFO(player, false));
 				PacketSendUtility.sendPacket(player,
 					new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));

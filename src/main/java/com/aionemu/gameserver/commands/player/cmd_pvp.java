@@ -98,12 +98,8 @@ public class cmd_pvp extends PlayerCommand {
             if(player.getWorldId() == 220040000){
                 return;
             }
-        }else if(PvPMap.equalsIgnoreCase("tuePvP")){
-            if(player.getWorldId() == 210040000){
-                return;
-            }
         }else if(PvPMap.equalsIgnoreCase("wedPvP")){
-            if(player.getWorldId() == 220040000){
+            if(player.getWorldId() == 210040000){
                 return;
             }
         }
