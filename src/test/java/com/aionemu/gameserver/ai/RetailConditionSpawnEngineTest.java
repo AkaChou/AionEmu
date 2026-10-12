@@ -250,6 +250,10 @@ class RetailConditionSpawnEngineTest {
 	}
 
 	private static final class TestIdFactory extends IDFactory {
+		private TestIdFactory() {
+			super(java.util.List.of());
+		}
+
 		@Override
 		public int nextId() {
 			return 1;
