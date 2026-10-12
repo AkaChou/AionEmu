@@ -7,7 +7,7 @@ import java.util.Deque;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.PingPongThread;
@@ -85,7 +85,7 @@ public class GsConnection extends AConnection {
      * Stats DAO and thread pool used by the heartbeat reporter.
      */
     @Getter
-    private final SvstatsDao svstatsDao;
+    private final SvstatDao svstatsDao;
     @Getter
     private final ThreadPoolManager threadPoolManager;
 
@@ -97,7 +97,7 @@ public class GsConnection extends AConnection {
      * @param svstatsDao 服务器统计 DAO / server-stats DAO
      * @param threadPoolManager 登录服线程池 / login-server thread pool
      */
-    public GsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+    public GsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatDao svstatsDao,
             ThreadPoolManager threadPoolManager) {
         super(transport, 8192 * 8, 8192 * 8);
         this.packetFactory = packetFactory;

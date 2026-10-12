@@ -24,7 +24,7 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.PlayerVarsDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerVarDao;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RepeatedAbnormalStatusImmuneData;
 import com.aionemu.gameserver.model.Gender;
@@ -298,7 +298,7 @@ public class Player extends Creature {
 	public WorldPosition prevPos;
 	public long prevPosUT;
 	public byte prevMoveType;
-	private final PlayerVarsDAO daoVars = PlayerService.daos().playerVarsDAO();
+	private final PlayerVarDao daoVars = PlayerService.daos().playerVarsDAO();
 	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
 	private int robotId = 0;

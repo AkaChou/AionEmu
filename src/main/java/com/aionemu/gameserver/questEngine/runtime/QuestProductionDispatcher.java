@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.DatabaseFactory;
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
@@ -98,7 +98,7 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		Objects.requireNonNull(composition, "composition");
 		return new QuestProductionDispatcher(catalog, new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			composition.eventPort(), composition.actionPort(), composition.statePort(),
-			composition.afterCommitPort(), DatabaseFactory::getConnection,
+			composition.afterCommitPort(), DatabaseAccess::getConnection,
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 
@@ -116,7 +116,7 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		Objects.requireNonNull(composition, "composition");
 		Objects.requireNonNull(coordinator, "coordinator");
 		return new QuestProductionDispatcher(catalog, coordinator, composition.eventPort(), composition.actionPort(),
-			composition.statePort(), composition.afterCommitPort(), DatabaseFactory::getConnection,
+			composition.statePort(), composition.afterCommitPort(), DatabaseAccess::getConnection,
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 

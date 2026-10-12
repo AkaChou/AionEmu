@@ -13,9 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
@@ -34,7 +33,7 @@ public class DatabaseCleaningService {
     @Setter
     private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
 	/** 玩家 DAO / Player DAO */
-	private final PlayerDAO dao;
+	private final PlayerDao dao;
 
 	/** 安全最小清理周期（天）。 / Security minimum cleaning period in days. */
 	private static final int SECURITY_MINIMUM_PERIOD = 30;
@@ -52,29 +51,11 @@ public class DatabaseCleaningService {
 	 * Constructs the service with given PlayerDAO and runs cleaning when enabled.
 	 * @param dao 玩家数据访问对象 / player DAO
 	 */
-	public DatabaseCleaningService(@NonNull PlayerDAO dao) {
+	public DatabaseCleaningService(@NonNull PlayerDao dao) {
 		this.dao = dao;
 		if (CleaningConfig.CLEANING_ENABLE) {
 			runCleaning();
 		}
-	}
-
-	/**
-	 * 构造服务；若启用清理则立即执行。
-	 * Constructs the service and runs cleaning when enabled.
-	 */
-	public DatabaseCleaningService() {
-		this(safePlayerDao());
-	}
-
-	private static PlayerDAO safePlayerDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(PlayerDAO.class);
-			} catch (Exception ignored) {
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.PlayerDAO();
 	}
 
 	/**

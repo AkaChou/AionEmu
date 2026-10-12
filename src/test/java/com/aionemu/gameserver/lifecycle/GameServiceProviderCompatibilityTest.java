@@ -1328,12 +1328,12 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
             assertNotSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
             assertNotSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
-            assertNotSame(outpostService, GameLocationBootstrapServices.outpostService());
             assertNotSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
             assertNotSame(moltenusService, GameLocationBootstrapServices.moltenusService());
             assertNotSame(riftService, GameLocationBootstrapServices.riftService());
             assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
             assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::outpostService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingSpecialService);
         }

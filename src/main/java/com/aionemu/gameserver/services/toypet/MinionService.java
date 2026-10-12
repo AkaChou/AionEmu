@@ -20,11 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -44,6 +41,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerMinionDao;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
@@ -74,8 +73,8 @@ public class MinionService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<MinionService> instanceProvider;
-	private final PlayerMinionsDAO playerMinionsDAO;
-	private final PlayerDAO playerDAO;
+	private final PlayerMinionDao playerMinionsDAO;
+	private final PlayerDao playerDAO;
 	private MinionBuff minionbuff;
 	private final Set<Integer> minionSkillIds = new HashSet<>();
 
@@ -86,29 +85,9 @@ public class MinionService {
 	 * @param playerMinionsDAO 守护灵 DAO / player minions DAO
 	 * @param playerDAO 玩家 DAO / player DAO
 	 */
-	public MinionService(@NonNull PlayerMinionsDAO playerMinionsDAO, @NonNull PlayerDAO playerDAO) {
+	public MinionService(@NonNull PlayerMinionDao playerMinionsDAO, @NonNull PlayerDao playerDAO) {
 		this.playerMinionsDAO = Objects.requireNonNull(playerMinionsDAO, "playerMinionsDAO must not be null");
 		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
-	}
-
-	/**
-	 * 构造守护灵服务（使用 safeDao 解析依赖）。
-	 * Constructs the minion service with safeDao resolution.
-	 */
-	public MinionService() {
-		this(safeDao(PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

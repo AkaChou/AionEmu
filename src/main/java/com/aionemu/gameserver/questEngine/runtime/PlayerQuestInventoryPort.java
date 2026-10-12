@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
@@ -18,24 +18,24 @@ import java.util.function.BiFunction;
 
 /**
  * 真实 {@link QuestInventoryPort}：从在线玩家背包移除所需物品并发放任务工作物品，
- * 通过 {@link InventoryDAO} 的调用方连接事务内钩子持久化脏物品，使变更与任务状态原子提交。
+ * 通过 {@link InventoryDao} 的调用方连接事务内钩子持久化脏物品，使变更与任务状态原子提交。
  * Real {@link QuestInventoryPort}: removes required items from and grants quest
  * work items to the live player inventory, persisting dirty items through
- * {@link InventoryDAO}'s transaction-in-progress hook on the caller-owned
+ * {@link InventoryDao}'s transaction-in-progress hook on the caller-owned
  * connection so the mutations commit atomically with the quest state.
  * <p>Preflight fails closed when the snapshot did not capture inventory facts:
  * unknown counts are never guessed as zero.</p>
  */
 public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 	private final QuestPlayerPort players;
-	private final InventoryDAO inventoryDao;
+	private final InventoryDao inventoryDao;
 	private final BiFunction<Player, List<QuestItems>, Boolean> itemAdder;
 
-	public PlayerQuestInventoryPort(QuestPlayerPort players, InventoryDAO inventoryDao) {
+	public PlayerQuestInventoryPort(QuestPlayerPort players, InventoryDao inventoryDao) {
 		this(players, inventoryDao, ItemService::addQuestItems);
 	}
 
-	PlayerQuestInventoryPort(QuestPlayerPort players, InventoryDAO inventoryDao,
+	PlayerQuestInventoryPort(QuestPlayerPort players, InventoryDao inventoryDao,
 			BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.inventoryDao = Objects.requireNonNull(inventoryDao, "inventoryDao");

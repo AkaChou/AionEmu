@@ -110,8 +110,43 @@ public final class FlexCodeGenerator {
 		Generator generator = new Generator(dataSource, config);
 		List<Table> generated = generator.getTables();
 		generated.forEach(FlexCodeGenerator::normalizeProperties);
-		generator.generate(generated);
+		generator.generate(generated.stream().map(FlexCodeGenerator::singularize).toList());
 		System.out.println("Generated " + generated.size() + " tables into " + basePackage);
+	}
+
+	/**
+	 * 将表名派生的类名单数化：players→Player、blocks→Block、houses→House。
+	 * 规则为去掉一个尾 s；词尾为 ss/us/is 时不动（如 abyss、status）。当前库内表名均为规则复数，
+	 * 无该陷阱；若将来出现不规则复数表，在此补映射。
+	 * Singularizes the table-derived class name by dropping one trailing {@code s}, leaving words ending in
+	 * {@code ss}/{@code us}/{@code is} untouched. Every current table name is a regular plural, so no
+	 * irregular form exists today; add a mapping here if one appears.
+	 */
+	private static Table singularize(Table table) {
+		SingularTable copy = new SingularTable();
+		copy.setGlobalConfig(table.getGlobalConfig());
+		copy.setTableConfig(table.getTableConfig());
+		copy.setEntityConfig(table.getEntityConfig());
+		copy.setSchema(table.getSchema());
+		copy.setName(table.getName());
+		copy.setComment(table.getComment());
+		copy.setColumns(table.getColumns());
+		copy.setPrimaryKeys(table.getPrimaryKeys());
+		return copy;
+	}
+
+	/** 覆写类名派生，仅单数化 CamelCase 类名，{@code @Table} 注解仍用真实表名。 */
+	private static final class SingularTable extends Table {
+
+		@Override
+		public String getEntityJavaFileName() {
+			String camel = super.getEntityJavaFileName();
+			if (camel.length() > 1 && camel.endsWith("s")
+				&& !camel.endsWith("ss") && !camel.endsWith("us") && !camel.endsWith("is")) {
+				return camel.substring(0, camel.length() - 1);
+			}
+			return camel;
+		}
 	}
 
 	/** 规范化属性：is_ 前缀布尔列去 is、关键字列名加 _、tinyint(1) 统一 Integer（本库按小整数读写，非纯布尔）。 */

@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.persistence.dao.AccountDataDao;
-import com.aionemu.loginserver.persistence.dao.AccountRewardsDao;
+import com.aionemu.loginserver.persistence.dao.AccountRewardDao;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPONSE;
 
 /**
@@ -45,7 +45,7 @@ public class PremiumController {
     public static byte RESULT_ADD = 4;
 
     private final AccountDataDao dao;
-    private final AccountRewardsDao rewardsDao;
+    private final AccountRewardDao rewardsDao;
     private final GameServerTable gameServerTable;
 
     /**
@@ -55,7 +55,7 @@ public class PremiumController {
      * @param rewardsDao 奖励 DAO / rewards DAO
      * @param gameServerTable 游戏服表 / GameServer table
      */
-    public PremiumController(AccountDataDao dao, AccountRewardsDao rewardsDao, GameServerTable gameServerTable) {
+    public PremiumController(AccountDataDao dao, AccountRewardDao rewardsDao, GameServerTable gameServerTable) {
         this.dao = dao;
         this.rewardsDao = rewardsDao;
         this.gameServerTable = gameServerTable;

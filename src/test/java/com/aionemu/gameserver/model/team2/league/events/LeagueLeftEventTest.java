@@ -48,6 +48,10 @@ class LeagueLeftEventTest {
 	}
 
 	private static final class FakeIDFactory extends IDFactory {
+		private FakeIDFactory() {
+			super(java.util.List.of());
+		}
+
 		private int nextId;
 
 		@Override

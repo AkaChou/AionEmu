@@ -13,9 +13,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CraftConfig;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
@@ -30,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEARN_RECIPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerRecipeDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,7 +50,7 @@ public class CraftSkillUpdateService {
 	/**
 	 * 玩家配方 DAO / player recipes DAO
 	 */
-	private final PlayerRecipesDAO playerRecipesDAO;
+	private final PlayerRecipeDao playerRecipesDAO;
 
 	/**
 	 * NPC → 可学制作技能模板映射 / NPC to craft-learn template mapping
@@ -67,32 +66,13 @@ public class CraftSkillUpdateService {
 	private static final List<Integer> craftingSkillIds = new ArrayList<>();
 
 	/**
-	 * 构造服务（使用 safeDao 解析依赖）。
-	 * Constructs the service with safeDao resolution.
-	 */
-	public CraftSkillUpdateService() {
-		this(safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
-	}
-
-	/**
 	 * 使用指定 DAO 依赖构造服务：初始化魔/天族 NPC 技能映射、升级费用与制作技能 ID 列表。
 	 * Constructs the service with given DAO dependency: initializes Asmodian/Elyos NPC skill maps,
 	 * upgrade costs and craft skill id list.
 	 *
 	 * @param playerRecipesDAO 玩家配方 DAO / player recipes DAO
 	 */
-	public CraftSkillUpdateService(@NonNull PlayerRecipesDAO playerRecipesDAO) {
+	public CraftSkillUpdateService(@NonNull PlayerRecipeDao playerRecipesDAO) {
 		this.playerRecipesDAO = Objects.requireNonNull(playerRecipesDAO, "playerRecipesDAO must not be null");
 		initCraftMappings();
 	}

@@ -76,6 +76,12 @@ public class GameRuntimeServiceBridge {
     private ObjectProvider<GameTimeService> gameTimeServiceProvider;
 
     /**
+     * 服务器变量 DAO 提供者。
+     * Server-variables DAO provider.
+     */
+    private ObjectProvider<com.aionemu.gameserver.persistence.dao.ServerVariableDao> serverVariableDaoProvider;
+
+    /**
      * 公告服务提供者。
      * Announcement service provider.
      */
@@ -191,6 +197,16 @@ public class GameRuntimeServiceBridge {
     @Autowired(required = false)
     void setPeriodicSaveServiceProvider(ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider) {
         this.periodicSaveServiceProvider = periodicSaveServiceProvider;
+    }
+
+    /**
+     * 注入服务器变量 DAO 提供者（供游戏时间管理器启动绑定）。
+     * Inject the server-variables DAO provider (bound at game-time-manager startup).
+     * @param serverVariableDaoProvider 服务器变量 DAO 提供者 / Server-variables DAO provider
+     */
+    @Autowired(required = false)
+    void setServerVariableDaoProvider(ObjectProvider<com.aionemu.gameserver.persistence.dao.ServerVariableDao> serverVariableDaoProvider) {
+        this.serverVariableDaoProvider = serverVariableDaoProvider;
     }
 
     /**
@@ -633,6 +649,12 @@ public class GameRuntimeServiceBridge {
      * Start the game-time clock.
      */
     public void startGameTimeClock() {
+        if (serverVariableDaoProvider != null) {
+            com.aionemu.gameserver.persistence.dao.ServerVariableDao dao = serverVariableDaoProvider.getIfAvailable();
+            if (dao != null) {
+                GameTimeManager.init(dao);
+            }
+        }
         GameTimeManager.startClock();
     }
 

@@ -10,13 +10,14 @@ import java.util.Map;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
+import com.aionemu.gameserver.persistence.dao.impl.AbyssRankDaoImpl;
 import org.junit.jupiter.api.Test;
 
 class AbyssRankingCacheTest {
 
 	@Test
 	void storesRankingsInJdkMaps() throws Exception {
-		AbyssRankingCache cache = new AbyssRankingCache();
+		AbyssRankingCache cache = new AbyssRankingCache(new AbyssRankDaoImpl());
 
 		Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = players(cache);
 		Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = legions(cache);

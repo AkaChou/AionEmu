@@ -20,7 +20,7 @@ import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.configs.VipConfig;
 import com.aionemu.loginserver.persistence.dao.AccountDataDao;
-import com.aionemu.loginserver.persistence.dao.AccountRewardsDao;
+import com.aionemu.loginserver.persistence.dao.AccountRewardDao;
 import com.aionemu.loginserver.persistence.dao.AccountTimeDao;
 import com.aionemu.loginserver.persistence.dao.AccountVipDao;
 
@@ -56,7 +56,7 @@ public class AccountController {
     private final AccountDataDao accountDao;
     private final AccountTimeDao accountTimeDao;
     private final AccountVipDao accountVipDao;
-    private final AccountRewardsDao accountRewardsDao;
+    private final AccountRewardDao accountRewardsDao;
     private final AccountTimeController accountTimeController;
     private final GameServerTable gameServerTable;
     private final BannedIpController bannedIpController;

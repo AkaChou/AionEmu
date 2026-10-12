@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.controllers.observer;
 
+import com.aionemu.gameserver.persistence.dao.impl.ServerVariableDaoImpl;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -13,11 +14,10 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import com.aionemu.commons.database.dao.DAO;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.observer.AbstractCollisionObserver.CheckType;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
+import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.scene.Node;
@@ -51,7 +51,6 @@ class CollisionMaterialActorTest {
 			assertNotSame(firstTask, restartedTask);
 		} finally {
 			actor.abort();
-			DAOManager.shutdown();
 		}
 	}
 
@@ -76,7 +75,6 @@ class CollisionMaterialActorTest {
 		} finally {
 			oldActor.abort();
 			currentActor.abort();
-			DAOManager.shutdown();
 		}
 	}
 
@@ -96,7 +94,6 @@ class CollisionMaterialActorTest {
 			assertNull(controller.getTask(TaskId.ZONE_MATERIAL_ACTION));
 		} finally {
 			actor.abort();
-			DAOManager.shutdown();
 		}
 	}
 
@@ -117,24 +114,11 @@ class CollisionMaterialActorTest {
 			assertSame(task, controller.getTask(TaskId.ZONE_MATERIAL_ACTION));
 		} finally {
 			actor.abort();
-			DAOManager.shutdown();
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void initializeGameTimeDao() throws Exception {
-		Field statesField = DAOManager.class.getDeclaredField("states");
-		statesField.setAccessible(true);
-		Map<String, Object> states = (Map<String, Object>) statesField.get(null);
-		Class<?> stateType = Class.forName(DAOManager.class.getName() + "$DaoState");
-		var constructor = stateType.getDeclaredConstructor();
-		constructor.setAccessible(true);
-		Object state = constructor.newInstance();
-		Field daoMapField = stateType.getDeclaredField("daoMap");
-		daoMapField.setAccessible(true);
-		Map<String, DAO> daoMap = (Map<String, DAO>) daoMapField.get(state);
-		daoMap.put(ServerVariablesDAO.class.getName(), new TestServerVariablesDAO());
-		states.put("default", state);
+	private static void initializeGameTimeDao() {
+		GameTimeManager.init(new TestServerVariablesDAO());
 	}
 
 	private static MaterialTemplate materialTemplate() throws Exception {
@@ -201,11 +185,7 @@ class CollisionMaterialActorTest {
 		}
 	}
 
-	private static final class TestServerVariablesDAO extends ServerVariablesDAO {
-		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
-		}
+	private static final class TestServerVariablesDAO extends ServerVariableDaoImpl {
 
 		@Override
 		public int load(String var) {

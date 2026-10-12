@@ -14,9 +14,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.OutpostDAO;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,6 +22,8 @@ import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_INFO;
+import com.aionemu.gameserver.persistence.dao.OutpostLocationDao;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.services.outpost.Outpost;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -41,8 +40,8 @@ public class OutpostService {
 	private final ConcurrentMap<Integer, Outpost<?>> active = new ConcurrentHashMap<>();
 	/** 前哨点位数据。 / Outpost location data. */
 	private Map<Integer, OutpostLocation> outposts;
-	private final OutpostDAO outpostDAO;
-	private final SiegeDAO siegeDAO;
+	private final OutpostLocationDao outpostDAO;
+	private final SiegeLocationDao siegeDAO;
 
 	/**
 	 * 使用指定的 DAO 集合构造前哨服务。
@@ -51,29 +50,9 @@ public class OutpostService {
 	 * @param outpostDAO 前哨数据访问对象 / Outpost DAO
 	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public OutpostService(@NonNull OutpostDAO outpostDAO, @NonNull SiegeDAO siegeDAO) {
+	public OutpostService(@NonNull OutpostLocationDao outpostDAO, @NonNull SiegeLocationDao siegeDAO) {
 		this.outpostDAO = outpostDAO;
 		this.siegeDAO = siegeDAO;
-	}
-
-	/**
-	 * 构造前哨服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the outpost service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public OutpostService() {
-		this(safeDao(OutpostDAO.class, com.aionemu.gameserver.dao.impl.OutpostDAO::new),
-				safeDao(SiegeDAO.class, com.aionemu.gameserver.dao.impl.SiegeDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -294,10 +273,13 @@ public class OutpostService {
 	 */
 	public static OutpostService getInstance() {
 		ObjectProvider<OutpostService> provider = instanceProvider;
-		if (provider == null) {
-			return OutpostServiceHolder.INSTANCE;
+		OutpostService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("OutpostService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provider.getIfAvailable(() -> OutpostServiceHolder.INSTANCE);
+		return provided;
 	}
 
 	/**
@@ -307,9 +289,5 @@ public class OutpostService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<OutpostService> instanceProvider) {
 		OutpostService.instanceProvider = instanceProvider;
-	}
-
-	private static class OutpostServiceHolder {
-		private static final OutpostService INSTANCE = new OutpostService();
 	}
 }

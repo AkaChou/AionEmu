@@ -5,8 +5,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
@@ -15,6 +13,7 @@ import com.aionemu.gameserver.model.templates.atreian_bestiary.AtreianBestiaryTe
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATREIAN_BESTIARY;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATREIAN_BESTIARY_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerAtreianBestiaryDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,7 +32,7 @@ public class AtreianBestiaryService {
      */
     @Setter
     private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
-	private final PlayerABDAO playerABDAO;
+	private final PlayerAtreianBestiaryDao playerABDAO;
 
 	/**
 	 * 使用指定的 PlayerABDAO 构造图鉴服务。
@@ -41,27 +40,8 @@ public class AtreianBestiaryService {
 	 *
 	 * @param playerABDAO 图鉴数据访问对象 / bestiary DAO
 	 */
-	public AtreianBestiaryService(@NonNull PlayerABDAO playerABDAO) {
+	public AtreianBestiaryService(@NonNull PlayerAtreianBestiaryDao playerABDAO) {
 		this.playerABDAO = playerABDAO;
-	}
-
-	/**
-	 * 构造图鉴服务。
-	 * Constructs the bestiary service.
-	 */
-	public AtreianBestiaryService() {
-		this(safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

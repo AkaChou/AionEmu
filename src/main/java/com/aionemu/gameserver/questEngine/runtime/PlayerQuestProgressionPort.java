@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
@@ -33,7 +33,7 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 	 * @param players 在线玩家查找端口 / online-player lookup port
 	 * @param playerDao 角色持久化 DAO / player persistence DAO
 	 */
-	public PlayerQuestProgressionPort(QuestPlayerPort players, PlayerDAO playerDao) {
+	public PlayerQuestProgressionPort(QuestPlayerPort players, PlayerDao playerDao) {
 		this(players, playerDao::promoteArchDaevaInTransaction,
 			() -> DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(ARCHDAEVA_LEVEL),
 			player -> player.getCommonData().setArchDaeva());

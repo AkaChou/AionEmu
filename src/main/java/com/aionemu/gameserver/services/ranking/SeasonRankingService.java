@@ -4,8 +4,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.Arena6V6Ranking;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.ArenaOfTenacityRank;
@@ -13,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.player.ranking.GoldArenaRank;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.TowerOfChallengeRank;
 import com.aionemu.gameserver.model.ranking.SeasonRankingEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MY_HISTORY;
+import com.aionemu.gameserver.persistence.dao.CompetitionRankingDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -30,7 +29,7 @@ public class SeasonRankingService {
 	@Setter
 	private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
 
-	private final SeasonRankingDAO seasonRankingDAO;
+	private final CompetitionRankingDao seasonRankingDAO;
 
 	/**
 	 * 使用指定的赛季排行 DAO 构造服务。
@@ -38,27 +37,8 @@ public class SeasonRankingService {
 	 *
 	 * @param seasonRankingDAO 赛季排行数据访问对象 / Season-ranking DAO
 	 */
-	public SeasonRankingService(@NonNull SeasonRankingDAO seasonRankingDAO) {
+	public SeasonRankingService(@NonNull CompetitionRankingDao seasonRankingDAO) {
 		this.seasonRankingDAO = seasonRankingDAO;
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public SeasonRankingService() {
-		this(safeDao(SeasonRankingDAO.class, com.aionemu.gameserver.dao.impl.SeasonRankingDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

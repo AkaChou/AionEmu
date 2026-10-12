@@ -1,11 +1,16 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.persistence.dao.impl.WebRewardDaoImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aionemu.gameserver.dao.RewardServiceDAO;
+import com.aionemu.gameserver.persistence.dao.WebRewardDao;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ItemStoneDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.MailDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -36,6 +41,7 @@ class WebshopServiceTest {
 		private LetterType letterType;
 
 		private RecordingSystemMailService(boolean result) {
+			super(new PlayerDaoImpl(), new InventoryDaoImpl(), new MailDaoImpl(new ItemStoneDaoImpl()));
 			this.result = result;
 		}
 
@@ -50,13 +56,8 @@ class WebshopServiceTest {
 		}
 	}
 
-	private static class FakeRewardServiceDAO extends RewardServiceDAO {
+	private static class FakeRewardServiceDAO extends WebRewardDaoImpl {
 		private int updatedUnique;
-
-		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
-		}
 
 		@Override
 		public List<RewardEntryItem> getAvailable(int playerId) {

@@ -1,9 +1,10 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.persistence.dao.impl.PlayerQuestDaoImpl;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
@@ -224,7 +225,11 @@ class Quest80487ProductionFlowTest {
 		}
 	}
 
-	private static final class RecordingDao extends PlayerQuestListDAO {
+	private static final class RecordingDao extends PlayerQuestDaoImpl {
+		private RecordingDao() {
+			super(new org.springframework.transaction.support.TransactionTemplate());
+		}
+
 		@Override
 		public QuestStateList load(Player player) {
 			return new QuestStateList();
@@ -242,11 +247,6 @@ class Quest80487ProductionFlowTest {
 
 		@Override
 		public void store(Connection connection, int playerId, Collection<QuestState> states) {
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 	}
 

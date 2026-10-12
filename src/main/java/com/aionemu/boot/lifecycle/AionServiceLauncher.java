@@ -194,7 +194,6 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     public void onApplicationEvent(ContextClosedEvent event) {
         boolean gameStarted = startedServices.stream().anyMatch(service -> "game".equals(service.getName()));
         if (gameStarted && !stopping.get()) {
-            // 须在游戏上下文运行：DAOManager/DatabaseFactory 按 ServiceContext 键控。 / Must run under game context: DAOManager/DatabaseFactory are keyed by ServiceContext.
             requestGracefulShutdown(() -> {
                 try (ServiceContext.Scope ignored = ServiceContext.use("game")) {
                     GameShutdownRequest.waitForPlayersToLeave(ShutdownConfig.HOOK_DELAY, ShutdownConfig.ANNOUNCE_INTERVAL);

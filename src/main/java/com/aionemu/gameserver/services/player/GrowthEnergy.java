@@ -8,12 +8,11 @@ import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -151,7 +150,7 @@ public class GrowthEnergy {
 	}
 
 	/** 玩家 DAO / Player DAO */
-	private final PlayerDAO playerDAO;
+	private final PlayerDao playerDAO;
 
 	/**
 	 * 使用指定 DAO 依赖构造成长能量服务。
@@ -159,27 +158,8 @@ public class GrowthEnergy {
 	 *
 	 * @param playerDAO 玩家 DAO / Player DAO
 	 */
-	public GrowthEnergy(@lombok.NonNull PlayerDAO playerDAO) {
+	public GrowthEnergy(@lombok.NonNull PlayerDao playerDAO) {
 		this.playerDAO = java.util.Objects.requireNonNull(playerDAO, "playerDAO must not be null");
-	}
-
-	/**
-	 * 构造成长能量服务（使用 safeDao 解析依赖）。
-	 * Constructs the growth energy service with safeDao resolution.
-	 */
-	public GrowthEnergy() {
-		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -188,7 +168,7 @@ public class GrowthEnergy {
 	 *
 	 * @return 玩家 DAO / Player DAO
 	 */
-	public PlayerDAO playerDAO() {
+	public PlayerDao playerDAO() {
 		return playerDAO;
 	}
 

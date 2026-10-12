@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -22,8 +22,8 @@ public class Online extends AdminCommand {
 	}
 
 	/**
-	 * 从 {@link PlayerDAO} 读取在线人数并回复管理员。
-	 * Read the online count from {@link PlayerDAO} and reply to the admin.
+	 * 从 {@link PlayerDao} 读取在线人数并回复管理员。
+	 * Read the online count from {@link PlayerDao} and reply to the admin.
 	 */
 	@Override
 	public void execute(Player admin, String... params) {

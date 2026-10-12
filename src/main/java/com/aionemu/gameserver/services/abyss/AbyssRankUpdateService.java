@@ -22,13 +22,12 @@ import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.RankingConfig;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
@@ -48,8 +47,8 @@ public class AbyssRankUpdateService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
-	private final AbyssRankDAO abyssRankDAO;
-	private final ServerVariablesDAO serverVariablesDAO;
+	private final AbyssRankDao abyssRankDAO;
+	private final ServerVariableDao serverVariablesDAO;
 	private Race rewardRace;
 	private final Runnable updateTask = this::performUpdate;
 	private Future<?> minuteUpdateTask;
@@ -61,29 +60,9 @@ public class AbyssRankUpdateService {
 	 * @param abyssRankDAO       欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 * @param serverVariablesDAO 服务器变量数据访问对象 / Server-variables DAO
 	 */
-	public AbyssRankUpdateService(@NonNull AbyssRankDAO abyssRankDAO, @NonNull ServerVariablesDAO serverVariablesDAO) {
+	public AbyssRankUpdateService(@NonNull AbyssRankDao abyssRankDAO, @NonNull ServerVariableDao serverVariablesDAO) {
 		this.abyssRankDAO = abyssRankDAO;
 		this.serverVariablesDAO = serverVariablesDAO;
-	}
-
-	/**
-	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
-	 * Default constructor: prefers the DAOManager-registered DAOs, falling back to the standalone implementations.
-	 */
-	public AbyssRankUpdateService() {
-		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
-			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

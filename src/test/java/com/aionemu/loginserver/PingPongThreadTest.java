@@ -8,7 +8,7 @@ import java.lang.reflect.Proxy;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -36,8 +36,8 @@ class PingPongThreadTest {
 		// 关闭流程中数据源可能已不可用（login 服的关闭早于 game 服侧的断开清理）：
 		// 统计失败必须被吞掉，否则会让 GsConnection.onDisconnect() 的剩余清理中断。
 		SvStatsConfig.SVSTATS_ENABLE = true;
-		GsConnection connection = connection((SvstatsDao) Proxy.newProxyInstance(
-			SvstatsDao.class.getClassLoader(), new Class<?>[] { SvstatsDao.class },
+		GsConnection connection = connection((SvstatDao) Proxy.newProxyInstance(
+			SvstatDao.class.getClassLoader(), new Class<?>[] { SvstatDao.class },
 			(proxy, method, args) -> {
 				throw new IllegalStateException("data source closed");
 			}));
@@ -46,13 +46,13 @@ class PingPongThreadTest {
 		assertDoesNotThrow(new PingPongThread(connection)::closeMe);
 	}
 
-	private static GsConnection connection(SvstatsDao svstatsDao) {
+	private static GsConnection connection(SvstatDao svstatsDao) {
 		return new GsConnection(new StubTransport(), null, svstatsDao, null);
 	}
 
-	private static SvstatsDao statsDao() {
-		return (SvstatsDao) Proxy.newProxyInstance(SvstatsDao.class.getClassLoader(),
-			new Class<?>[] { SvstatsDao.class }, (proxy, method, args) -> null);
+	private static SvstatDao statsDao() {
+		return (SvstatDao) Proxy.newProxyInstance(SvstatDao.class.getClassLoader(),
+			new Class<?>[] { SvstatDao.class }, (proxy, method, args) -> null);
 	}
 
 	private static final class StubTransport implements ConnectionTransport {

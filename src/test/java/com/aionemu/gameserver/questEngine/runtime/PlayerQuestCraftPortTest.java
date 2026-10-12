@@ -1,7 +1,9 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerSkillDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerRecipeDaoImpl;
+import com.aionemu.gameserver.persistence.dao.PlayerRecipeDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -197,7 +199,7 @@ class PlayerQuestCraftPortTest {
 		}
 	}
 
-	private static final class RecordingRecipesDao extends PlayerRecipesDAO {
+	private static final class RecordingRecipesDao extends PlayerRecipeDaoImpl {
 		private final List<Call> added = new ArrayList<>();
 		private final List<Call> deleted = new ArrayList<>();
 
@@ -225,14 +227,9 @@ class PlayerQuestCraftPortTest {
 		public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) {
 			deleted.add(new Call(connection, recipeId, 0));
 		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return true;
-		}
 	}
 
-	private static final class RecordingSkillsDao extends PlayerSkillListDAO {
+	private static final class RecordingSkillsDao extends PlayerSkillDaoImpl {
 		private final List<Call> stored = new ArrayList<>();
 
 		@Override
@@ -248,11 +245,6 @@ class PlayerQuestCraftPortTest {
 		@Override
 		public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) {
 			stored.add(new Call(connection, skillId, targetLevel));
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return true;
 		}
 	}
 }

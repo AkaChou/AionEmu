@@ -9,7 +9,7 @@ import com.aionemu.loginserver.controller.AccountTimeController;
 import com.aionemu.loginserver.network.aion.LoginClientConnectionFactory;
 import com.aionemu.loginserver.network.factories.AionPacketHandlerFactory;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.FloodProtector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.network.gameserver.GameServerConnectionFactory;
@@ -35,7 +35,7 @@ public class NetConnector {
     private final AccountController accountController;
     private final AccountTimeController accountTimeController;
     private final FloodProtector floodProtector;
-    private final SvstatsDao svstatsDao;
+    private final SvstatDao svstatsDao;
     private final ThreadPoolManager threadPoolManager;
 
     private final Object lifecycleLock = new Object();

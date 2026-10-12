@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -18,8 +19,14 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -44,11 +51,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Real {@link QuestInventoryPort}: removals run against the live inventory and
- * the dirty items are persisted through {@link InventoryDAO#storeInTransaction}
+ * the dirty items are persisted through {@link InventoryDao#storeInTransaction}
  * on the caller-owned connection, so the removal commits atomically with the
  * quest state. Preflight fails closed on uncaptured or insufficient facts.
  */
 class PlayerQuestInventoryPortTest {
+	private GameWorldBootstrapServices worldBootstrapServices;
+
+	@BeforeEach
+	void installIdFactory() {
+		// 全栈删除后 legacy 的 markStored 会经 ItemService 回收物品 ID，需要一个已注入的 IDFactory。
+		// Removing the whole stack reaches legacy markStored, which releases the item id via ItemService,
+		// so a wired IDFactory must be present.
+		IDFactory idFactory = new IDFactory(List.of());
+		idFactory.lockIds(List.of(ITEM_A));
+		worldBootstrapServices = new GameWorldBootstrapServices(provider(IDFactory.class, idFactory),
+			null, null, null, null);
+	}
+
+	@AfterEach
+	void clearIdFactory() {
+		if (worldBootstrapServices != null) {
+			worldBootstrapServices.destroy();
+		}
+	}
+
+	private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		beanFactory.registerSingleton(type.getName(), instance);
+		return beanFactory.getBeanProvider(type);
+	}
+
 	private static final int PLAYER_ID = 7;
 	private static final int QUEST_ID = 1001;
 	private static final int ITEM_A = 169001001;
@@ -430,7 +463,7 @@ class PlayerQuestInventoryPortTest {
 		return null;
 	}
 
-	private static final class RecordingDao extends InventoryDAO {
+	private static final class RecordingDao extends InventoryDaoImpl {
 		private record Transaction(Connection connection, List<Item> items) {
 		}
 
@@ -490,11 +523,6 @@ class PlayerQuestInventoryPortTest {
 		@Override
 		public void deleteAccountWH(int accountId) {
 			throw new AssertionError("unexpected deleteAccountWH");
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 
 		@Override

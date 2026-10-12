@@ -15,7 +15,7 @@ import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.persistence.dao.AccountDataDao;
-import com.aionemu.loginserver.persistence.dao.PlayerTransfersDao;
+import com.aionemu.loginserver.persistence.dao.PlayerTransferDao;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PTRANSFER_RESPONSE;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferRequest;
@@ -38,7 +38,7 @@ public class PlayerTransferService {
     private final Map<Integer, PlayerTransferRequest> transfers = new ConcurrentHashMap<>();
     private final Map<Integer, PlayerTransferTask> tasks = new ConcurrentHashMap<>();
     private final Future<?> veryfyTask;
-    private final PlayerTransfersDao dao;
+    private final PlayerTransferDao dao;
     private final AccountDataDao accountDao;
     private final GameServerTable gameServerTable;
     private final AccountController accountController;
@@ -54,7 +54,7 @@ public class PlayerTransferService {
      * @param transactionManager 事务管理器 / transaction manager
      * @param threadPoolManager 登录服线程池 / login thread pool
      */
-    public PlayerTransferService(PlayerTransfersDao dao, AccountDataDao accountDao, GameServerTable gameServerTable,
+    public PlayerTransferService(PlayerTransferDao dao, AccountDataDao accountDao, GameServerTable gameServerTable,
             AccountController accountController, PlatformTransactionManager transactionManager,
             ThreadPoolManager threadPoolManager) {
         this.dao = dao;

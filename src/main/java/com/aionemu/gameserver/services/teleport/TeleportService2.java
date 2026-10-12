@@ -1323,7 +1323,7 @@ public class TeleportService2 {
 	 *
 	 * @param dao 玩家变身 DAO / player-transform DAO
 	 */
-	public static void bindPlayerTransformDAO(com.aionemu.gameserver.dao.PlayerTransformDAO dao) {
+	public static void bindPlayerTransformDAO(com.aionemu.gameserver.persistence.dao.PlayerTransformDao dao) {
 		TransformPanelSync.bindPlayerTransformDAO(dao);
 	}
 }

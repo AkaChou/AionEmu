@@ -19,13 +19,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
-import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -55,6 +49,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_UPDATE_TITLE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_INFO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
+import com.aionemu.gameserver.persistence.dao.LegionDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
@@ -125,11 +124,11 @@ public class LegionService {
 		return provided;
 	}
 
-	private final LegionDAO legionDAO;
-	private final LegionMemberDAO legionMemberDAO;
-	private final InventoryDAO inventoryDAO;
-	private final ItemStoneListDAO itemStoneListDAO;
-	private final PlayerDAO playerDAO;
+	private final LegionDao legionDAO;
+	private final LegionMemberDao legionMemberDAO;
+	private final InventoryDao inventoryDAO;
+	private final ItemStoneDao itemStoneListDAO;
+	private final PlayerDao playerDAO;
 
 	/**
 	 * 使用指定 DAO 依赖构造军团服务。
@@ -141,11 +140,11 @@ public class LegionService {
 	 * @param itemStoneListDAO 道具魔石 DAO / Item stone list DAO
 	 * @param playerDAO        玩家 DAO / Player DAO
 	 */
-	public LegionService(@NonNull LegionDAO legionDAO,
-						 @NonNull LegionMemberDAO legionMemberDAO,
-						 @NonNull InventoryDAO inventoryDAO,
-						 @NonNull ItemStoneListDAO itemStoneListDAO,
-						 @NonNull PlayerDAO playerDAO) {
+	public LegionService(@NonNull LegionDao legionDAO,
+						 @NonNull LegionMemberDao legionMemberDAO,
+						 @NonNull InventoryDao inventoryDAO,
+						 @NonNull ItemStoneDao itemStoneListDAO,
+						 @NonNull PlayerDao playerDAO) {
 		this(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, playerDAO, safeWorld());
 	}
 
@@ -172,11 +171,11 @@ public class LegionService {
 	 * @param playerDAO        玩家 DAO / Player DAO
 	 * @param world            世界实例 / World instance
 	 */
-	public LegionService(@NonNull LegionDAO legionDAO,
-						 @NonNull LegionMemberDAO legionMemberDAO,
-						 @NonNull InventoryDAO inventoryDAO,
-						 @NonNull ItemStoneListDAO itemStoneListDAO,
-						 @NonNull PlayerDAO playerDAO,
+	public LegionService(@NonNull LegionDao legionDAO,
+						 @NonNull LegionMemberDao legionMemberDAO,
+						 @NonNull InventoryDao inventoryDAO,
+						 @NonNull ItemStoneDao itemStoneListDAO,
+						 @NonNull PlayerDao playerDAO,
 						 World world) {
 		this.legionDAO = Objects.requireNonNull(legionDAO, "legionDAO must not be null");
 		this.legionMemberDAO = Objects.requireNonNull(legionMemberDAO, "legionMemberDAO must not be null");
@@ -187,48 +186,25 @@ public class LegionService {
 	}
 
 	/**
-	 * 构造军团服务（使用 safeDao 解析依赖）。
-	 * Constructs the legion service with safeDao resolution.
-	 */
-	public LegionService() {
-		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new),
-			safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
-			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	/**
 	 * 返回军团 DAO，供伴生域持久化访问 / returns the legion DAO for companion domains.
 	 */
-	LegionDAO legionDAO() {
+	LegionDao legionDAO() {
 		return legionDAO;
 	}
 
 	/**
 	 * 返回军团成员 DAO，供伴生域持久化访问 / returns the member DAO for companion domains.
 	 */
-	LegionMemberDAO legionMemberDAO() {
+	LegionMemberDao legionMemberDAO() {
 		return legionMemberDAO;
 	}
 
 	/**
 	 * 返回玩家 DAO，供伴生域持久化访问 / returns the player DAO for companion domains.
 	 */
-	PlayerDAO playerDAO() {
+	PlayerDao playerDAO() {
 		return playerDAO;
 	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
-	}
-
 
 	/**
 	 * 将军团数据存入数据库。

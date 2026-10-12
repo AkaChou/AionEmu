@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.events.bg;
 
 import java.util.Collection;
 
-import com.aionemu.gameserver.dao.LadderDAO;
+import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.events.LadderService;
 
@@ -24,7 +24,7 @@ final class BattlegroundLadder {
 	 * Resolves the ladder DAO through the hosting {@link LadderService} static accessor (single ownership).
 	 * @return 天梯 DAO / ladder DAO
 	 */
-	static LadderDAO dao() {
+	static LadderPlayerDao dao() {
 		return LadderService.ladderDAO();
 	}
 
@@ -35,7 +35,7 @@ final class BattlegroundLadder {
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	static void playerWinMatch(Player player, int ratingChange) {
-		LadderDAO dao = dao();
+		LadderPlayerDao dao = dao();
 		dao.addWin(player);
 		dao.addRating(player, Math.round(ratingChange / (dao.getRating(player) * 0.0015f)));
 	}
@@ -47,7 +47,7 @@ final class BattlegroundLadder {
 	 * @param ratingChange 评分变化量 / rating delta
 	 */
 	static void playerLoseMatch(Player player, int ratingChange) {
-		LadderDAO dao = dao();
+		LadderPlayerDao dao = dao();
 		dao.addLoss(player);
 		dao.addRating(player, Math.round(ratingChange * (dao.getRating(player) * 0.0015f)));
 	}
@@ -59,7 +59,7 @@ final class BattlegroundLadder {
 	 * @param loser  败方玩家集合 / losers
 	 */
 	static void performLadderUpdate(Collection<Player> winner, Collection<Player> loser) {
-		LadderDAO dao = dao();
+		LadderPlayerDao dao = dao();
 		int avgWinnerRating = 0;
 		int avgLoserRating = 0;
 		for (Player pl : winner) {

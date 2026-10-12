@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerRecipeDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -31,15 +31,15 @@ import java.util.Set;
 @Slf4j
 public final class PlayerQuestCraftPort implements QuestCraftPort {
 	private final QuestPlayerPort players;
-	private final PlayerRecipesDAO recipesDao;
-	private final PlayerSkillListDAO skillsDao;
+	private final PlayerRecipeDao recipesDao;
+	private final PlayerSkillDao skillsDao;
 	private final RecipeResolver recipes;
 	private final AutoRecipeResolver autoRecipes;
 	private final CraftEligibility eligibility;
 	private final CraftPublisher publisher;
 
-	public PlayerQuestCraftPort(QuestPlayerPort players, PlayerRecipesDAO recipesDao,
-			PlayerSkillListDAO skillsDao) {
+	public PlayerQuestCraftPort(QuestPlayerPort players, PlayerRecipeDao recipesDao,
+			PlayerSkillDao skillsDao) {
 		this(players, recipesDao, skillsDao,
 			recipeId -> recipeSpec(DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId)),
 			(player, skillId, targetLevel) -> DataManager.RECIPE_DATA
@@ -49,7 +49,7 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 			PlayerQuestCraftPort::publish);
 	}
 
-	PlayerQuestCraftPort(QuestPlayerPort players, PlayerRecipesDAO recipesDao, PlayerSkillListDAO skillsDao,
+	PlayerQuestCraftPort(QuestPlayerPort players, PlayerRecipeDao recipesDao, PlayerSkillDao skillsDao,
 			RecipeResolver recipes, AutoRecipeResolver autoRecipes, CraftEligibility eligibility,
 			CraftPublisher publisher) {
 		this.players = Objects.requireNonNull(players, "players");

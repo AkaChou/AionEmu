@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.InventoryDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -19,7 +19,7 @@ import lombok.AccessLevel;
 final class QuestInventoryPersistenceStage {
 	private static final QuestInventoryPersistenceStage NONE = new QuestInventoryPersistenceStage();
 
-	private final InventoryDAO inventoryDao;
+	private final InventoryDao inventoryDao;
 	private final Player player;
 	private final List<Item> items;
 	private final Map<Item, PersistentState> originalStates;
@@ -35,7 +35,7 @@ final class QuestInventoryPersistenceStage {
 		return NONE;
 	}
 
-	static QuestInventoryPersistenceStage persist(InventoryDAO inventoryDao, Connection connection,
+	static QuestInventoryPersistenceStage persist(InventoryDao inventoryDao, Connection connection,
 			Player player, List<Item> dirty) throws SQLException {
 		Objects.requireNonNull(inventoryDao, "inventoryDao");
 		Objects.requireNonNull(connection, "connection");

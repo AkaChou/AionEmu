@@ -4,60 +4,52 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Iterator;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RENAME;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.LegionDao;
+import com.aionemu.gameserver.persistence.dao.OldNameDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * 重命名服务，处理角色与军团的改名（含优惠券消耗与广播）。
  * Rename service that handles character and legion renames (coupon consume and broadcast).
  */
-@RequiredArgsConstructor
 public class RenameService {
 
 	private static volatile RenameService instance;
 	@NonNull
-	private final OldNamesDAO oldNamesDAO;
+	private final OldNameDao oldNamesDAO;
 	@NonNull
-	private final PlayerDAO playerDAO;
+	private final PlayerDao playerDAO;
 	@NonNull
-	private final LegionDAO legionDAO;
+	private final LegionDao legionDAO;
 
-	public RenameService() {
-		this(safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			 safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
+	/**
+	 * 使用指定的 DAO 依赖构造改名服务。
+	 * Constructs the rename service with the given DAO dependencies.
+	 *
+	 * @param oldNamesDAO 旧名 DAO / old names DAO
+	 * @param playerDAO   玩家 DAO / player DAO
+	 * @param legionDAO   军团 DAO / legion DAO
+	 */
+	public RenameService(@NonNull OldNameDao oldNamesDAO, @NonNull PlayerDao playerDAO,
+						 @NonNull LegionDao legionDAO) {
+		this.oldNamesDAO = oldNamesDAO;
+		this.playerDAO = playerDAO;
+		this.legionDAO = legionDAO;
+		instance = this;
 	}
 
 	public static RenameService getInstance() {
 		RenameService current = instance;
 		if (current == null) {
-			synchronized (RenameService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = new RenameService();
-				}
-			}
+			throw new IllegalStateException("RenameService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return current;
 	}

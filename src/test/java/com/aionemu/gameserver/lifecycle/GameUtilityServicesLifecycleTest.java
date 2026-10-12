@@ -32,8 +32,6 @@ class GameUtilityServicesLifecycleTest {
             "config:load",
             "dateTime",
             "database:section",
-            "databaseFactory",
-            "dao",
             "threadConfig",
             "threadPool:start"
         ), events);
@@ -74,8 +72,6 @@ class GameUtilityServicesLifecycleTest {
             "config:load",
             "dateTime",
             "database:section",
-            "databaseFactory",
-            "dao",
             "threadConfig",
             "threadPool:start"
         ), events);
@@ -101,8 +97,6 @@ class GameUtilityServicesLifecycleTest {
         gateway.initializeCronService();
         gateway.loadConfig();
         gateway.initializeDateTime();
-        gateway.initializeDatabaseFactory();
-        gateway.initializeDaoManager();
         gateway.loadThreadConfig();
 
         assertEquals(List.of(
@@ -111,8 +105,6 @@ class GameUtilityServicesLifecycleTest {
             "cron",
             "config:load",
             "dateTime",
-            "databaseFactory",
-            "dao",
             "threadConfig"
         ), events);
     }
@@ -145,6 +137,7 @@ class GameUtilityServicesLifecycleTest {
         }
 
         private RecordingGameUtilityServicesGateway(List<String> events, RuntimeException configFailure) {
+            super();
             this.events = events;
             this.configFailure = configFailure;
         }
@@ -188,16 +181,6 @@ class GameUtilityServicesLifecycleTest {
         }
 
         @Override
-        public void initializeDatabaseFactory() {
-            events.add("databaseFactory");
-        }
-
-        @Override
-        public void initializeDaoManager() {
-            events.add("dao");
-        }
-
-        @Override
         public void loadThreadConfig() {
             events.add("threadConfig");
         }
@@ -213,6 +196,7 @@ class GameUtilityServicesLifecycleTest {
         private final List<String> events;
 
         private RecordingGameUtilityServicesRuntimeBridge(List<String> events) {
+            super();
             this.events = events;
         }
 
@@ -239,16 +223,6 @@ class GameUtilityServicesLifecycleTest {
         @Override
         public void initializeDateTime() {
             events.add("dateTime");
-        }
-
-        @Override
-        public void initializeDatabaseFactory() {
-            events.add("databaseFactory");
-        }
-
-        @Override
-        public void initializeDaoManager() {
-            events.add("dao");
         }
 
         @Override

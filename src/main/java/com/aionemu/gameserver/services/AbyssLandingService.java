@@ -14,9 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
@@ -35,6 +33,7 @@ import com.aionemu.gameserver.model.templates.spawns.landingspawns.LandingSpawnT
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_LANDING;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_LANDING_LEVEL;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.AbyssLandingDao;
 import com.aionemu.gameserver.services.abysslandingservice.AbyssLanding;
 import com.aionemu.gameserver.services.abysslandingservice.Landing;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -48,7 +47,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
-	private final AbyssLandingDAO abyssLandingDAO;
+	private final AbyssLandingDao abyssLandingDAO;
 	private static Map<Integer, LandingLocation> abyssLanding;
 	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<>();
 
@@ -58,27 +57,8 @@ public class AbyssLandingService {
 	 *
 	 * @param abyssLandingDAO 深渊登陆点数据访问对象 / Abyss landing DAO
 	 */
-	public AbyssLandingService(AbyssLandingDAO abyssLandingDAO) {
+	public AbyssLandingService(AbyssLandingDao abyssLandingDAO) {
 		this.abyssLandingDAO = Objects.requireNonNull(abyssLandingDAO, "abyssLandingDAO must not be null");
-	}
-
-	/**
-	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
-	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
-	 */
-	public AbyssLandingService() {
-		this(safeDao(AbyssLandingDAO.class, com.aionemu.gameserver.dao.impl.AbyssLandingDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

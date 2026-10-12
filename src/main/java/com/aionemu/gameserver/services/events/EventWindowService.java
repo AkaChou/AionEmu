@@ -16,8 +16,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
@@ -25,6 +23,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EVENT_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EVENT_WINDOW_ITEMS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -46,7 +45,7 @@ public class EventWindowService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
-	private final PlayerEventsWindowDAO playerEventsWindowDAO;
+	private final PlayerEventsWindowDao playerEventsWindowDAO;
 	private volatile Map<Integer, EventsWindow> allEvents;
 	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
 
@@ -74,27 +73,8 @@ public class EventWindowService {
 	 *
 	 * @param playerEventsWindowDAO 活动窗口数据访问对象 / event window DAO
 	 */
-	public EventWindowService(@NonNull PlayerEventsWindowDAO playerEventsWindowDAO) {
+	public EventWindowService(@NonNull PlayerEventsWindowDao playerEventsWindowDAO) {
 		this.playerEventsWindowDAO = playerEventsWindowDAO;
-	}
-
-	/**
-	 * 构造活动窗口服务。
-	 * Constructs the event window service.
-	 */
-	public EventWindowService() {
-		this(safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

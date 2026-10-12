@@ -1,0 +1,275 @@
+package com.aionemu.gameserver.persistence.dao;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.account.PlayerAccountData;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
+import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
+import com.aionemu.gameserver.persistence.entity.PlayerPo;
+import com.mybatisflex.core.service.IService;
+
+/**
+ * 玩家核心数据访问层，负责角色创建、加载、删除与在线状态等。
+ * Core player data access layer responsible for character creation, loading, deletion and online state.
+ */
+public interface PlayerDao extends IService<PlayerPo> {
+
+	/**
+	 * 判断角色名是否已被使用。
+	 * Checks whether the character name is already used.
+	 *
+	 * @param name 角色名 / character name
+	 * @return 是否已使用 / true if used
+	 */
+	boolean isNameUsed(String name);
+
+	/**
+	 * 批量获取玩家对象 ID 对应的角色名。
+	 * Returns a map of player object IDs to character names.
+	 *
+	 * @param playerObjectIds 玩家对象 ID 集合 / collection of player object ids
+	 * @return ID 到名称映射 / map of id to name
+	 */
+	Map<Integer, String> getPlayerNames(Collection<Integer> playerObjectIds);
+
+	/**
+	 * 将玩家数据写回数据库。
+	 * Stores player data back to the database.
+	 *
+	 * @param player 玩家 / player
+	 */
+	void storePlayer(Player player);
+
+	/**
+	 * 在调用方事务内持久化玩家公共数据的任务货币列（dp/creativity_point/abyss_favor）。
+	 * Persists the quest-currency columns of a player's common data inside the
+	 * caller-owned transaction, so currency rewards commit atomically with the
+	 * quest state. The caller must own and commit/rollback the connection.
+	 *
+	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * @param playerId   玩家 object id / player object id
+	 * @param pcd        玩家公共数据 / player common data
+	 */
+	void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException;
+
+	/**
+	 * 在调用方任务事务中保证角色至少拥有 66 级起始经验，并持久化高阶守护者标记。
+	 * Ensures at least level-66 start EXP and persists the ArchDaeva flag in the caller-owned quest transaction.
+	 *
+	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * @param playerId   玩家对象 ID / player object ID
+	 * @param minimumExp 66 级起始经验 / level-66 start EXP
+	 * @throws SQLException 晋升结果无法持久化 / if the promotion result cannot be persisted
+	 */
+	void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException;
+
+	/**
+	 * 保存新创建的角色。
+	 * Saves a newly created character.
+	 *
+	 * @param pcd         角色公共数据 / player common data
+	 * @param accountId   账号 ID / account id
+	 * @param accountName 账号名 / account name
+	 * @return 若成功则为 true / true if successful
+	 */
+	boolean saveNewPlayer(PlayerCommonData pcd, int accountId, String accountName);
+
+	/**
+	 * 按对象 ID 加载角色公共数据。
+	 * Loads player common data by object ID.
+	 *
+	 * @param playerObjId 玩家对象 ID / player object id
+	 * @return 公共数据 / common data
+	 */
+	PlayerCommonData loadPlayerCommonData(int playerObjId);
+
+	/**
+	 * 删除角色。
+	 * Deletes a player character.
+	 *
+	 * @param playerId 玩家 ID / player id
+	 */
+	void deletePlayer(int playerId);
+
+	/**
+	 * 更新角色删除时间。
+	 * Updates the character deletion timestamp.
+	 *
+	 * @param objectId     对象 ID / object id
+	 * @param deletionDate 删除时间戳 / deletion timestamp
+	 */
+	void updateDeletionTime(int objectId, Timestamp deletionDate);
+
+	/**
+	 * 存储角色创建时间。
+	 * Stores the character creation timestamp.
+	 *
+	 * @param objectId     对象 ID / object id
+	 * @param creationDate 创建时间戳 / creation timestamp
+	 */
+	void storeCreationTime(int objectId, Timestamp creationDate);
+
+	/**
+	 * 为账号数据填充创建/删除时间。
+	 * Fills creation/deletion times into account data.
+	 *
+	 * @param acData 账号角色数据 / player account data
+	 */
+	void setCreationDeletionTime(PlayerAccountData acData);
+
+	/**
+	 * 获取账号下全部角色对象 ID。
+	 * Returns all player object IDs on the account.
+	 *
+	 * @param accountId 账号 ID / account id
+	 * @return 对象 ID 列表 / list of object ids
+	 */
+	List<Integer> getPlayerOidsOnAccount(int accountId);
+
+	/**
+	 * 设置角色在线状态。
+	 * Sets the player's online flag.
+	 *
+	 * @param player 玩家 / player
+	 * @param online 在线状态 / online flag
+	 */
+	void onlinePlayer(Player player, boolean online);
+
+	/**
+	 * 批量设置全部角色在线状态（通常用于启动/关闭）。
+	 * Sets the online flag for all players (typically on startup/shutdown).
+	 *
+	 * @param online 在线状态 / online flag
+	 */
+	void setPlayersOffline(boolean online);
+
+	/**
+	 * 按角色名加载公共数据。
+	 * Loads player common data by character name.
+	 *
+	 * @param name 角色名 / character name
+	 * @return 公共数据 / common data
+	 */
+	PlayerCommonData loadPlayerCommonDataByName(String name);
+
+	/**
+	 * 按角色名获取账号 ID。
+	 * Returns the account ID for the given character name.
+	 *
+	 * @param name 角色名 / character name
+	 * @return 账号 ID / account id
+	 */
+	int getAccountIdByName(String name);
+
+	/**
+	 * 按对象 ID 获取角色名。
+	 * Returns the character name for the given object ID.
+	 *
+	 * @param playerObjId 玩家对象 ID / player object id
+	 * @return 角色名 / character name
+	 */
+	String getPlayerNameByObjId(int playerObjId);
+
+	/**
+	 * 按角色名获取玩家 ID。
+	 * Returns the player ID for the given character name.
+	 *
+	 * @param playerName 角色名 / character name
+	 * @return 玩家 ID / player id
+	 */
+	int getPlayerIdByName(String playerName);
+
+	/**
+	 * 存储角色名（如改名后写回）。
+	 * Stores the player name (e.g. after a rename).
+	 *
+	 * @param recipientCommonData 角色公共数据 / player common data
+	 */
+	void storePlayerName(PlayerCommonData recipientCommonData);
+
+	/**
+	 * 获取账号下角色数量。
+	 * Returns the character count on the account.
+	 *
+	 * @param accountId 账号 ID / account id
+	 * @return 角色数量 / character count
+	 */
+	int getCharacterCountOnAccount(int accountId);
+
+	/**
+	 * 获取指定种族的角色数量。
+	 * Returns the character count for the given race.
+	 *
+	 * @param race 阵营 / race
+	 * @return 角色数量 / character count
+	 */
+	int getCharacterCountForRace(Race race);
+
+	/**
+	 * 获取当前在线玩家数量。
+	 * Returns the current online player count.
+	 *
+	 * @return 在线数量 / online count
+	 */
+	int getOnlinePlayerCount();
+
+	/**
+	 * 获取待删除角色 ID 列表。
+	 * Returns the list of player IDs pending deletion.
+	 *
+	 * @param paramInt1 延迟参数 1 / delay parameter 1
+	 * @param paramInt2 延迟参数 2 / delay parameter 2
+	 * @return 玩家 ID 列表 / list of player ids
+	 */
+	List<Integer> getPlayersToDelete(int paramInt1, int paramInt2);
+
+	/**
+	 * 设置角色最后转服时间。
+	 * Sets the player's last server-transfer time.
+	 *
+	 * @param playerId 玩家 ID / player id
+	 * @param time     时间戳 / timestamp
+	 */
+	void setPlayerLastTransferTime(int playerId, long time);
+
+	/**
+	 * 返回本 DAO 已使用的全部角色 ID（IDFactory 初始化用）。
+	 * Returns all player IDs already used by this DAO (for IDFactory initialization).
+	 *
+	 * @return 已使用 ID 数组 / array of used ids
+	 */
+	int[] getUsedIDs();
+
+	/**
+	 * 更新军团加入申请状态。
+	 * Updates the legion join-request state.
+	 *
+	 * @param playerId 玩家 ID / player id
+	 * @param state    申请状态 / join-request state
+	 */
+	void updateLegionJoinRequestState(int playerId, LegionJoinRequestState state);
+
+	/**
+	 * 清除军团加入申请。
+	 * Clears the legion join request.
+	 *
+	 * @param playerId 玩家 ID / player id
+	 */
+	void clearJoinRequest(int playerId);
+
+	/**
+	 * 读取并填充玩家的军团加入申请状态。
+	 * Loads and fills the player's legion join-request state.
+	 *
+	 * @param player 玩家 / player
+	 */
+	void getJoinRequestState(Player player);
+
+}

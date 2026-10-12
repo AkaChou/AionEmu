@@ -9,9 +9,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
+import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.TaskId;
@@ -38,7 +37,7 @@ public class ItemSocketService {
 	/**
 	 * Spring 绑定的魔石列表 DAO / Spring-bound item-stone-list DAO.
 	 */
-	private static volatile ItemStoneListDAO boundItemStoneListDAO;
+	private static volatile ItemStoneDao boundItemStoneListDAO;
 
 	/**
 	 * 由 Spring 配置类在启动期绑定魔石列表 DAO。
@@ -46,35 +45,22 @@ public class ItemSocketService {
 	 *
 	 * @param dao 魔石列表 DAO / item stone list DAO
 	 */
-	public static void bindItemStoneListDAO(ItemStoneListDAO dao) {
+	public static void bindItemStoneListDAO(ItemStoneDao dao) {
 		boundItemStoneListDAO = Objects.requireNonNull(dao, "itemStoneListDAO must not be null");
 	}
 
 	/**
-	 * 返回魔石列表 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * 返回魔石列表 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
 	 * 包级开放，供同包 item 域静态类（如 {@link ItemService}）复用同一绑定。
-	 * Returns the item-stone-list DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * Returns the item-stone-list DAO; Spring must bind it at startup, otherwise it fails fast.
 	 * Package-visible so sibling static classes in the item domain reuse the same binding.
 	 *
 	 * @return 魔石列表 DAO / item stone list DAO
 	 */
-	static ItemStoneListDAO itemStoneListDAO() {
-		ItemStoneListDAO current = boundItemStoneListDAO;
+	static ItemStoneDao itemStoneListDAO() {
+		ItemStoneDao current = boundItemStoneListDAO;
 		if (current == null) {
-			synchronized (ItemSocketService.class) {
-				current = boundItemStoneListDAO;
-				if (current == null) {
-					if (DAOManager.isInitialized()) {
-						try {
-							boundItemStoneListDAO = current = DAOManager.getDAO(ItemStoneListDAO.class);
-						} catch (Exception ignored) {
-						}
-					}
-					if (current == null) {
-						boundItemStoneListDAO = current = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO();
-					}
-				}
-			}
+			throw new IllegalStateException("ItemStoneDao is not bound; Spring must bind it at startup");
 		}
 		return current;
 	}

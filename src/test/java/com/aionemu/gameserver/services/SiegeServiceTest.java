@@ -17,6 +17,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
+import com.aionemu.gameserver.persistence.dao.impl.SiegeLocationDaoImpl;
 import com.aionemu.gameserver.world.World;
 
 class SiegeServiceTest {
@@ -49,7 +50,7 @@ class SiegeServiceTest {
 		world.npcs = liveNpcs;
 		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
 
-		assertDoesNotThrow(() -> new SiegeService().deSpawnNpcs(1011));
+		assertDoesNotThrow(() -> new SiegeService(new SiegeLocationDaoImpl()).deSpawnNpcs(1011));
 		assertTrue(liveNpcs.isEmpty());
 	}
 

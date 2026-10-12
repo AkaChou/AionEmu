@@ -9,8 +9,7 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TaskFromDBDAO;
+import com.aionemu.gameserver.persistence.dao.TaskDao;
 import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
@@ -53,7 +52,7 @@ public class TaskManagerFromDB {
 	 *
 	 * @param dao 数据库任务 DAO / Task-from-DB DAO
 	 */
-	public TaskManagerFromDB(@NonNull TaskFromDBDAO dao) {
+	public TaskManagerFromDB(@NonNull TaskDao dao) {
 		this.handlers = new HashMap<>();
 
 		tasksList = dao.getAllTasks();
@@ -61,29 +60,6 @@ public class TaskManagerFromDB {
 
 		registerHandlers();
 		registerTasks();
-	}
-
-	/**
-	 * 构造管理器：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the manager: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor.
-	 */
-	public TaskManagerFromDB() {
-		this(safeTaskDao());
-	}
-
-	/**
-	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
-	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
-	 */
-	private static TaskFromDBDAO safeTaskDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(TaskFromDBDAO.class);
-			} catch (Exception e) {
-				log.debug("TaskFromDBDAO bean resolution failed, falling back to the no-arg impl constructor", e);
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.TaskFromDBDAO();
 	}
 
 	/**

@@ -60,14 +60,6 @@ public class GameUtilityServicesLifecycle {
             log.info(I18n.get("console.startup.config_loaded", configTime));
             utilityServicesGateway.initializeDateTime();
             utilityServicesGateway.printDatabaseSection();
-            long dbStart = utilityServicesGateway.currentTimeMillis();
-            utilityServicesGateway.initializeDatabaseFactory();
-            long dbInitTime = utilityServicesGateway.currentTimeMillis() - dbStart;
-            log.info(I18n.get("console.startup.db_factory_init", dbInitTime));
-            long daoStart = utilityServicesGateway.currentTimeMillis();
-            utilityServicesGateway.initializeDaoManager();
-            long daoTime = utilityServicesGateway.currentTimeMillis() - daoStart;
-            log.info(I18n.get("console.startup.dao_init", daoTime));
             utilityServicesGateway.loadThreadConfig();
             threadPoolLifecycle.start();
             loaded = true;

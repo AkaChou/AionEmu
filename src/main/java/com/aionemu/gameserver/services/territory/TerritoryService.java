@@ -9,14 +9,13 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import lombok.NonNull;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionTerritory;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STONESPEAR_SIEGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TERRITORY_LIST;
+import com.aionemu.gameserver.persistence.dao.LegionDao;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -27,7 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
-	private final LegionDAO legionDAO;
+	private final LegionDao legionDAO;
 
 	/**
 	 * 使用指定的 LegionDAO 构造领地服务。
@@ -35,27 +34,8 @@ public class TerritoryService {
 	 *
 	 * @param legionDAO 军团数据访问对象 / Legion DAO
 	 */
-	public TerritoryService(@NonNull LegionDAO legionDAO) {
+	public TerritoryService(@NonNull LegionDao legionDAO) {
 		this.legionDAO = legionDAO;
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public TerritoryService() {
-		this(safeDao(LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

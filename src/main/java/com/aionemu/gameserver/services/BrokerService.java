@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -24,13 +25,9 @@ import java.util.concurrent.Future;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.BrokerDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.broker.BrokerItemMask;
 import com.aionemu.gameserver.model.broker.BrokerMessages;
@@ -47,6 +44,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BROKER_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.BrokerDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -71,8 +70,8 @@ public class BrokerService {
 	private Future<?> expiredItemsTask;
 	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
-	private final BrokerDAO brokerDAO;
-	private final InventoryDAO inventoryDAO;
+	private final BrokerDao brokerDAO;
+	private final InventoryDao inventoryDAO;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -113,31 +112,11 @@ public class BrokerService {
 	 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
 	 * @param inventoryDAO 物品数据访问对象 / Inventory DAO
 	 */
-	public BrokerService(BrokerDAO brokerDAO, InventoryDAO inventoryDAO) {
+	public BrokerService(BrokerDao brokerDAO, InventoryDao inventoryDAO) {
 		this.brokerDAO = Objects.requireNonNull(brokerDAO, "brokerDAO must not be null");
 		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 		initBrokerService();
 		scheduleExpiredItemsTask();
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public BrokerService() {
-		this(safeDao(BrokerDAO.class, com.aionemu.gameserver.dao.impl.BrokerDAO::new),
-				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -1060,37 +1039,21 @@ public class BrokerService {
 	 * 经纪行操作后的批量落库任务（一次提交相关物品变更）。
 	 * Batch DB-save task used after any broker operation.
 	 */
-	public static final class BrokerOpSaveTask implements Runnable {
+	public final class BrokerOpSaveTask implements Runnable {
 
-		private final BrokerDAO brokerDAO;
-		private final InventoryDAO inventoryDAO;
 		private final List<BrokerItem> brokerItems;
 		private final List<InventorySave> inventorySaves;
 
 		/**
-		 * 显式注入构造器。
-		 * Constructs a save task with explicit DAO dependencies.
+		 * 构造落库任务，复用所属服务的 DAO 绑定。
+		 * Constructs a save task reusing the owning service's DAO bindings.
 		 *
-		 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
-		 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
 		 * @param brokerItems 待存经纪行物品集合 / broker items to save
 		 * @param inventorySaves 待存背包物品集合 / inventory items to save
 		 */
-		public BrokerOpSaveTask(BrokerDAO brokerDAO, InventoryDAO inventoryDAO, List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
-			this.brokerDAO = Objects.requireNonNull(brokerDAO, "brokerDAO must not be null");
-			this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
+		public BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
 			this.brokerItems = List.copyOf(brokerItems);
 			this.inventorySaves = List.copyOf(inventorySaves);
-		}
-
-		/**
-		 * 兼容回退构造器。
-		 * Legacy constructor resolving DAOs from DAOManager.
-		 */
-		public BrokerOpSaveTask(List<BrokerItem> brokerItems, List<InventorySave> inventorySaves) {
-			this(safeDao(BrokerDAO.class, com.aionemu.gameserver.dao.impl.BrokerDAO::new),
-				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new), brokerItems,
-				inventorySaves);
 		}
 
 		/**
@@ -1103,25 +1066,13 @@ public class BrokerService {
 			this(List.of(brokerItem), List.of());
 		}
 
-		/**
-		 * 显式注入单物品构造器。
-		 * Construct a save task for a single broker item with explicit DAOs.
-		 *
-		 * @param brokerDAO 经纪行数据访问对象 / Broker DAO
-		 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
-		 * @param brokerItem 经纪行物品 / broker item
-		 */
-		public BrokerOpSaveTask(BrokerDAO brokerDAO, InventoryDAO inventoryDAO, BrokerItem brokerItem) {
-			this(brokerDAO, inventoryDAO, List.of(brokerItem), List.of());
-		}
-
 		@Override
 		public void run() {
 			save();
 		}
 
 		private boolean save() {
-			try (Connection con = DatabaseFactory.getConnection()) {
+			try (Connection con = DatabaseAccess.getConnection()) {
 				con.setAutoCommit(false);
 				try {
 					for (InventorySave inventorySave : inventorySaves) {

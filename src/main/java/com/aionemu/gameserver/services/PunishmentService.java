@@ -5,55 +5,44 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Calendar;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CAPTCHA;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerPunishmentDao;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapType;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * 惩罚服务，处理角色封禁、监狱与采集限制（验证码）相关逻辑。
  * Punishment service handling character bans, prison, and gather restrictions (captcha).
  * @author lord_rex, Cura, nrg
  */
-@RequiredArgsConstructor
 public class PunishmentService {
 
 	private static volatile PunishmentService instance;
 	@NonNull
-	private final PlayerPunishmentsDAO playerPunishmentsDAO;
+	private final PlayerPunishmentDao playerPunishmentsDAO;
 
-	public PunishmentService() {
-		this(safePlayerPunishmentsDao());
-	}
-
-	private static PlayerPunishmentsDAO safePlayerPunishmentsDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(PlayerPunishmentsDAO.class);
-			} catch (Exception ignored) {
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO();
+	/**
+	 * 使用指定的惩罚 DAO 构造服务。
+	 * Constructs the punishment service with the given DAO.
+	 *
+	 * @param playerPunishmentsDAO 玩家惩罚数据访问对象 / player punishment DAO
+	 */
+	public PunishmentService(@NonNull PlayerPunishmentDao playerPunishmentsDAO) {
+		this.playerPunishmentsDAO = playerPunishmentsDAO;
+		instance = this;
 	}
 
 	public static PunishmentService getInstance() {
 		PunishmentService current = instance;
 		if (current == null) {
-			synchronized (PunishmentService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = new PunishmentService();
-				}
-			}
+			throw new IllegalStateException("PunishmentService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return current;
 	}

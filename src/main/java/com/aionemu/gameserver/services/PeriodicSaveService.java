@@ -2,15 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -18,6 +10,13 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.team.legion.Legion;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
+import com.aionemu.gameserver.persistence.dao.PlayerStigmasEquippedDao;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 
@@ -40,13 +39,13 @@ public class PeriodicSaveService {
 
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
 
-	private final AbyssRankDAO abyssRankDAO;
-	private final PlayerSkillListDAO playerSkillListDAO;
-	private final PlayerQuestListDAO playerQuestListDAO;
-	private final PlayerDAO playerDAO;
-	private final PlayerStigmasEquippedDAO playerStigmasEquippedDAO;
-	private final InventoryDAO inventoryDAO;
-	private final ItemStoneListDAO itemStoneListDAO;
+	private final AbyssRankDao abyssRankDAO;
+	private final PlayerSkillDao playerSkillListDAO;
+	private final PlayerQuestDao playerQuestListDAO;
+	private final PlayerDao playerDAO;
+	private final PlayerStigmasEquippedDao playerStigmasEquippedDAO;
+	private final InventoryDao inventoryDAO;
+	private final ItemStoneDao itemStoneListDAO;
 
 	private Future<?> legionWhUpdateTask;
 	private Future<?> playerGeneralUpdateTask;
@@ -87,10 +86,10 @@ public class PeriodicSaveService {
 	 * 使用指定的 DAO 集合构造并启动全局周期保存任务。
 	 * Constructs the service with given DAOs and starts global periodic save tasks.
 	 */
-	public PeriodicSaveService(@NonNull AbyssRankDAO abyssRankDAO, @NonNull PlayerSkillListDAO playerSkillListDAO,
-							   @NonNull PlayerQuestListDAO playerQuestListDAO, @NonNull PlayerDAO playerDAO,
-							   @NonNull PlayerStigmasEquippedDAO playerStigmasEquippedDAO,
-							   @NonNull InventoryDAO inventoryDAO, @NonNull ItemStoneListDAO itemStoneListDAO) {
+	public PeriodicSaveService(@NonNull AbyssRankDao abyssRankDAO, @NonNull PlayerSkillDao playerSkillListDAO,
+							   @NonNull PlayerQuestDao playerQuestListDAO, @NonNull PlayerDao playerDAO,
+							   @NonNull PlayerStigmasEquippedDao playerStigmasEquippedDAO,
+							   @NonNull InventoryDao inventoryDAO, @NonNull ItemStoneDao itemStoneListDAO) {
 		this.abyssRankDAO = abyssRankDAO;
 		this.playerSkillListDAO = playerSkillListDAO;
 		this.playerQuestListDAO = playerQuestListDAO;
@@ -99,30 +98,6 @@ public class PeriodicSaveService {
 		this.inventoryDAO = inventoryDAO;
 		this.itemStoneListDAO = itemStoneListDAO;
 		rescheduleAllTasks();
-	}
-
-	/**
-	 * 构造并启动全局周期保存任务（军团仓库、玩家常规数据、玩家物品数据）。
-	 * Constructs and starts global periodic save tasks (legion warehouse, player general, player items).
-	 */
-	public PeriodicSaveService() {
-		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
-			safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
-			safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
-			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

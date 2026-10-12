@@ -2,8 +2,7 @@ package com.aionemu.gameserver.model.templates.tasks;
 
 import java.util.Objects;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TaskFromDBDAO;
+import com.aionemu.gameserver.persistence.dao.TaskDao;
 import lombok.Setter;
 
 /**
@@ -16,7 +15,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	/**
 	 * Spring 绑定的数据库任务 DAO / Spring-bound task-from-DB DAO.
 	 */
-	private static volatile TaskFromDBDAO boundTaskFromDBDAO;
+	private static volatile TaskDao boundTaskFromDBDAO;
 
 	@Setter
 	protected int id;
@@ -34,32 +33,19 @@ public abstract class TaskFromDBHandler implements Runnable {
 	 * Binds the task-from-DB DAO from the Spring configuration at startup.
 	 * @param dao 数据库任务 DAO / task-from-DB DAO
 	 */
-	public static void bindTaskFromDBDAO(TaskFromDBDAO dao) {
+	public static void bindTaskFromDBDAO(TaskDao dao) {
 		boundTaskFromDBDAO = Objects.requireNonNull(dao, "taskFromDBDAO must not be null");
 	}
 
 	/**
-	 * 返回数据库任务 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
-	 * Returns the task-from-DB DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * 返回数据库任务 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
+	 * Returns the task-from-DB DAO; Spring must bind it at startup, otherwise it fails fast.
 	 * @return 数据库任务 DAO / task-from-DB DAO
 	 */
-	private static TaskFromDBDAO taskFromDBDAO() {
-		TaskFromDBDAO current = boundTaskFromDBDAO;
+	private static TaskDao taskFromDBDAO() {
+		TaskDao current = boundTaskFromDBDAO;
 		if (current == null) {
-			synchronized (TaskFromDBHandler.class) {
-				current = boundTaskFromDBDAO;
-				if (current == null) {
-					if (DAOManager.isInitialized()) {
-						try {
-							boundTaskFromDBDAO = current = DAOManager.getDAO(TaskFromDBDAO.class);
-						} catch (Exception ignored) {
-						}
-					}
-					if (current == null) {
-						boundTaskFromDBDAO = current = new com.aionemu.gameserver.dao.impl.TaskFromDBDAO();
-					}
-				}
-			}
+			throw new IllegalStateException("TaskDao is not bound; Spring must bind it at startup");
 		}
 		return current;
 	}

@@ -1,0 +1,11 @@
+package com.aionemu.gameserver.persistence.mapper;
+
+import com.aionemu.gameserver.persistence.entity.PlayerPassportPo;
+import com.mybatisflex.core.BaseMapper;
+
+/**
+ * 表 player_passports 的映射层。
+ * Mapper for table player_passports.
+ */
+public interface PlayerPassportMapper extends BaseMapper<PlayerPassportPo> {
+}

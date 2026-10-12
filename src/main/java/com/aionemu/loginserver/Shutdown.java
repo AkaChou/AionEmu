@@ -11,7 +11,7 @@ import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.network.NetConnector;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.service.LoginCronService;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 
@@ -32,7 +32,7 @@ public class Shutdown extends Thread {
     private final NetConnector netConnector;
     private final LoginCronService loginCronService;
     private final ThreadPoolManager threadPoolManager;
-    private final SvstatsDao svstatsDao;
+    private final SvstatDao svstatsDao;
 
     private final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**

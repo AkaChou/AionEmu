@@ -9,12 +9,11 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
+import com.aionemu.gameserver.persistence.dao.WebRewardDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 @Slf4j
 public class RewardService {
-	private final RewardServiceDAO dao;
+	private final WebRewardDao dao;
 	private static volatile ObjectProvider<RewardService> instanceProvider;
 
 	/**
@@ -64,27 +63,8 @@ public class RewardService {
 	 *
 	 * @param dao 奖励数据访问对象 / Reward DAO
 	 */
-	public RewardService(@NonNull RewardServiceDAO dao) {
+	public RewardService(@NonNull WebRewardDao dao) {
 		this.dao = dao;
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public RewardService() {
-		this(safeDao(RewardServiceDAO.class, com.aionemu.gameserver.dao.impl.RewardServiceDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

@@ -1,11 +1,12 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.persistence.dao.impl.PlayerQuestDaoImpl;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.account.Account;
@@ -259,7 +260,11 @@ class PlayerQuestStatePortTest {
 		return null;
 	}
 
-	private static final class RecordingDao extends PlayerQuestListDAO {
+	private static final class RecordingDao extends PlayerQuestDaoImpl {
+		private RecordingDao() {
+			super(new org.springframework.transaction.support.TransactionTemplate());
+		}
+
 		private final List<List<QuestState>> stores = new ArrayList<>();
 
 		@Override
@@ -280,11 +285,6 @@ class PlayerQuestStatePortTest {
 		@Override
 		public void store(Connection connection, int playerId, java.util.Collection<QuestState> states) {
 			stores.add(List.copyOf(states));
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 	}
 }

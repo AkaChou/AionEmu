@@ -12,11 +12,10 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.ranking.SeasonRankingEnum;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
+import com.aionemu.gameserver.persistence.dao.CompetitionRankingDao;
 
 /**
  * 赛季排行榜刷新服务，启动时预加载各榜单缓存包供客户端拉取。
@@ -29,7 +28,7 @@ public class SeasonRankingUpdateService {
 	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
 	private int lastUpdate;
 	private final Map<Integer, List<SM_SEASON_RANKING>> players = new HashMap<>();
-	private final SeasonRankingDAO seasonRankingDAO;
+	private final CompetitionRankingDao seasonRankingDAO;
 
 	/**
 	 * 使用指定的赛季排行 DAO 构造服务。
@@ -37,27 +36,8 @@ public class SeasonRankingUpdateService {
 	 *
 	 * @param seasonRankingDAO 赛季排行数据访问对象 / season ranking DAO
 	 */
-	public SeasonRankingUpdateService(@NonNull SeasonRankingDAO seasonRankingDAO) {
+	public SeasonRankingUpdateService(@NonNull CompetitionRankingDao seasonRankingDAO) {
 		this.seasonRankingDAO = seasonRankingDAO;
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public SeasonRankingUpdateService() {
-		this(safeDao(SeasonRankingDAO.class, com.aionemu.gameserver.dao.impl.SeasonRankingDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

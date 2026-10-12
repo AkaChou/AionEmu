@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -30,16 +30,16 @@ import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
  */
 public final class PlayerQuestStatePort implements QuestStatePort {
 	private final QuestPlayerPort players;
-	private final PlayerQuestListDAO questDao;
+	private final PlayerQuestDao questDao;
 	private final IntFunction<QuestMetadata> metadata;
 	private final Map<PendingKey, QuestState> pending = new ConcurrentHashMap<>();
 
-	public PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestListDAO questDao) {
+	public PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestDao questDao) {
 		this(players, questDao,
 			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
 	}
 
-	PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestListDAO questDao,
+	PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestDao questDao,
 			IntFunction<QuestMetadata> metadata) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.questDao = Objects.requireNonNull(questDao, "questDao");

@@ -9,11 +9,8 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -22,6 +19,8 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerSweep;
 import com.aionemu.gameserver.model.templates.shugosweep.ShugoSweepReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHUGO_SWEEP;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -40,8 +39,8 @@ public class ShugoSweepService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
-	private final PlayerShugoSweepDAO playerShugoSweepDAO;
-	private final PlayerDAO playerDAO;
+	private final PlayerShugoSweepDao playerShugoSweepDAO;
+	private final PlayerDao playerDAO;
 
 	/**
 	 * 当前棋盘 ID / Current board id
@@ -55,29 +54,9 @@ public class ShugoSweepService {
 	 * @param playerShugoSweepDAO 扫荡棋盘数据访问对象 / Shugo Sweep DAO
 	 * @param playerDAO           玩家数据访问对象 / player DAO
 	 */
-	public ShugoSweepService(@NonNull PlayerShugoSweepDAO playerShugoSweepDAO, @NonNull PlayerDAO playerDAO) {
+	public ShugoSweepService(@NonNull PlayerShugoSweepDao playerShugoSweepDAO, @NonNull PlayerDao playerDAO) {
 		this.playerShugoSweepDAO = playerShugoSweepDAO;
 		this.playerDAO = playerDAO;
-	}
-
-	/**
-	 * 构造术古扫荡服务。
-	 * Constructs the Shugo Sweep service.
-	 */
-	public ShugoSweepService() {
-		this(safeDao(PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

@@ -2,8 +2,7 @@ package com.aionemu.gameserver.services.teleport;
 
 import java.util.Objects;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerTransformDao;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRANSFORM;
@@ -25,39 +24,26 @@ final class TransformPanelSync {
 	/**
 	 * Spring 绑定的玩家变身 DAO / Spring-bound player-transform DAO.
 	 */
-	private static volatile PlayerTransformDAO boundPlayerTransformDAO;
+	private static volatile PlayerTransformDao boundPlayerTransformDAO;
 
 	/**
 	 * 由 Spring 配置类在启动期绑定玩家变身 DAO。
 	 * Binds the player-transform DAO from the Spring configuration at startup.
 	 * @param dao 玩家变身 DAO / player-transform DAO
 	 */
-	static void bindPlayerTransformDAO(PlayerTransformDAO dao) {
+	static void bindPlayerTransformDAO(PlayerTransformDao dao) {
 		boundPlayerTransformDAO = Objects.requireNonNull(dao, "playerTransformDAO must not be null");
 	}
 
 	/**
-	 * 返回玩家变身 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
-	 * Returns the player-transform DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * 返回玩家变身 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
+	 * Returns the player-transform DAO; Spring must bind it at startup, otherwise it fails fast.
 	 * @return 玩家变身 DAO / player-transform DAO
 	 */
-	private static PlayerTransformDAO playerTransformDAO() {
-		PlayerTransformDAO current = boundPlayerTransformDAO;
+	private static PlayerTransformDao playerTransformDAO() {
+		PlayerTransformDao current = boundPlayerTransformDAO;
 		if (current == null) {
-			synchronized (TransformPanelSync.class) {
-				current = boundPlayerTransformDAO;
-				if (current == null) {
-					if (DAOManager.isInitialized()) {
-						try {
-							boundPlayerTransformDAO = current = DAOManager.getDAO(PlayerTransformDAO.class);
-						} catch (Exception ignored) {
-						}
-					}
-					if (current == null) {
-						boundPlayerTransformDAO = current = new com.aionemu.gameserver.dao.impl.PlayerTransfoDAO();
-					}
-				}
-			}
+			throw new IllegalStateException("PlayerTransformDao is not bound; Spring must bind it at startup");
 		}
 		return current;
 	}

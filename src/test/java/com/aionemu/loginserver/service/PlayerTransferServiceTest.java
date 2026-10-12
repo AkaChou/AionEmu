@@ -3,7 +3,7 @@ package com.aionemu.loginserver.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import com.aionemu.loginserver.persistence.dao.PlayerTransfersDao;
+import com.aionemu.loginserver.persistence.dao.PlayerTransferDao;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -33,7 +33,7 @@ class PlayerTransferServiceTest {
         assertEquals(Map.of(), tasks);
     }
 
-    private static PlayerTransferService service(PlayerTransfersDao dao, Map<Integer, PlayerTransferTask> tasks) throws Exception {
+    private static PlayerTransferService service(PlayerTransferDao dao, Map<Integer, PlayerTransferTask> tasks) throws Exception {
         PlayerTransferService service = new ObjenesisStd().newInstance(PlayerTransferService.class);
         setField(service, "dao", dao);
         setField(service, "tasks", tasks);
@@ -50,9 +50,9 @@ class PlayerTransferServiceTest {
      * 仅实现用例所需方法的动态代理 DAO 桩。
      * Dynamic-proxy DAO stub implementing only the methods this case needs.
      */
-    private static PlayerTransfersDao fakeDao(AtomicReference<PlayerTransferTask> updated) {
-        return (PlayerTransfersDao) Proxy.newProxyInstance(PlayerTransfersDao.class.getClassLoader(),
-            new Class<?>[] { PlayerTransfersDao.class }, (proxy, method, args) -> switch (method.getName()) {
+    private static PlayerTransferDao fakeDao(AtomicReference<PlayerTransferTask> updated) {
+        return (PlayerTransferDao) Proxy.newProxyInstance(PlayerTransferDao.class.getClassLoader(),
+            new Class<?>[] { PlayerTransferDao.class }, (proxy, method, args) -> switch (method.getName()) {
                 case "getNew" -> new ArrayList<PlayerTransferTask>();
                 case "update" -> {
                     updated.set((PlayerTransferTask) args[0]);

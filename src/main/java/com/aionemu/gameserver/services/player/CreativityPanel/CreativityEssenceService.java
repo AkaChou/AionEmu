@@ -12,10 +12,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.ArchDaevaConfig;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.cp.PlayerCPEntry;
@@ -26,6 +23,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_APPLY;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerCpDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -45,10 +44,10 @@ public class CreativityEssenceService {
     private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
 	/** 玩家 creativitypointsDAO / Player creativity-points DAO */
-	private final PlayerCreativityPointsDAO cpDAO;
+	private final PlayerCpDao cpDAO;
 
 	/** 玩家 DAO / Player DAO */
-	private final PlayerDAO playerDAO;
+	private final PlayerDao playerDAO;
 
 	/**
 	 * 使用指定 DAO 依赖构造创造力精华服务。
@@ -57,29 +56,9 @@ public class CreativityEssenceService {
 	 * @param cpDAO 玩家创造力点 DAO / player creativity-points DAO
 	 * @param playerDAO 玩家 DAO / player DAO
 	 */
-	public CreativityEssenceService(@NonNull PlayerCreativityPointsDAO cpDAO, @NonNull PlayerDAO playerDAO) {
+	public CreativityEssenceService(@NonNull PlayerCpDao cpDAO, @NonNull PlayerDao playerDAO) {
 		this.cpDAO = Objects.requireNonNull(cpDAO, "cpDAO must not be null");
 		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
-	}
-
-	/**
-	 * 构造创造力精华服务（使用 safeDao 解析依赖）。
-	 * Constructs the creativity essence service with safeDao resolution.
-	 */
-	public CreativityEssenceService() {
-		this(safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/** Temporary CP calculation value / Temporary CP calculation value */

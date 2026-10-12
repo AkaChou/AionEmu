@@ -4,7 +4,7 @@ import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import java.nio.ByteBuffer;
@@ -36,7 +36,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      * @return 直连通道 / direct channel
      * @throws IllegalStateException 连接创建失败 / connection creation failed
      */
-    public static DirectMemoryLoginChannel open(GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+    public static DirectMemoryLoginChannel open(GsPacketHandlerFactory packetFactory, SvstatDao svstatsDao,
             ThreadPoolManager threadPoolManager) {
         DirectGsConnection loginServerSide;
         DirectLoginServerConnection gameServerSide;
@@ -206,7 +206,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      */
     private static final class DirectGsConnection extends GsConnection implements DirectEndpoint {
 
-        DirectGsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatsDao svstatsDao,
+        DirectGsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatDao svstatsDao,
                 ThreadPoolManager threadPoolManager) {
             super(transport, packetFactory, svstatsDao, threadPoolManager);
         }

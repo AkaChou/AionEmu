@@ -68,8 +68,9 @@ public class MaintenanceTask extends AbstractCronTask {
 		return provided;
 	}
 
-	public MaintenanceTask(String maintainTime) throws ParseException {
-		super(maintainTime);
+	public MaintenanceTask(String maintainTime, com.aionemu.gameserver.persistence.dao.ServerVariableDao serverVariablesDao)
+			throws ParseException {
+		super(maintainTime, serverVariablesDao);
 	}
 
 	@Override

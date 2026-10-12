@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.commons.database.DatabaseFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -83,7 +83,7 @@ public class Repairkit extends AdminCommand {
     private void removeItemFromDatabase(final Player admin, final int itemId){
         Connection con = null;
         try {
-            con = DatabaseFactory.getConnection();
+            con = DatabaseAccess.getConnection();
             PreparedStatement stmt = con.prepareStatement("DELETE FROM inventory WHERE item_id=?");
             stmt.setInt(1, itemId);
             stmt.execute();
@@ -91,7 +91,7 @@ public class Repairkit extends AdminCommand {
         } catch (Exception e) {
             log.error(I18n.get("log.f66c8c8d1e6d"));
         } finally {
-            DatabaseFactory.close(con);
+            DatabaseAccess.release(con);
         }
         PacketSendUtility.sendMessage(admin, "[item:"+itemId+"] ("+itemId+") has been successfully removed from all players!");
     }
@@ -122,7 +122,7 @@ public class Repairkit extends AdminCommand {
         }
 
         try {
-            con = DatabaseFactory.getConnection();
+            con = DatabaseAccess.getConnection();
             PreparedStatement stmt = con.prepareStatement("DELETE FROM inventory WHERE item_owner=? AND is_equiped = 0");
             stmt.setInt(1, playerID);
             stmt.execute();
@@ -130,7 +130,7 @@ public class Repairkit extends AdminCommand {
         } catch (Exception e) {
             log.error(I18n.get("log.9757aec268c2", admin.getName()));
         } finally {
-            DatabaseFactory.close(con);
+            DatabaseAccess.release(con);
         }
         PacketSendUtility.sendMessage(admin, "All items from the player has been removed except the Equiped ones!");
         log.error(I18n.get("log.b48fef936307", admin.getName(), playerToWipe));
@@ -162,7 +162,7 @@ public class Repairkit extends AdminCommand {
         }
 
         try {
-            con = DatabaseFactory.getConnection();
+            con = DatabaseAccess.getConnection();
             PreparedStatement stmt = con.prepareStatement("DELETE FROM inventory WHERE item_id=? AND item_owner=?");
             stmt.setInt(1, itemID);
             stmt.setInt(2, playerID);
@@ -172,7 +172,7 @@ public class Repairkit extends AdminCommand {
         } catch (Exception e){
             log.error(I18n.get("log.ab777d089876", admin.getName()));
         } finally {
-            DatabaseFactory.close(con);
+            DatabaseAccess.release(con);
         }
         PacketSendUtility.sendMessage(admin, "[item:"+itemID+"] ("+itemID+") successfully removed from '" + playerToRemoveFrom + "'");
         log.error(I18n.get("log.3a3cf03b9db4", admin.getName(), itemID, playerToRemoveFrom));
@@ -234,7 +234,7 @@ public class Repairkit extends AdminCommand {
         }
 
         try{
-            con = DatabaseFactory.getConnection();
+            con = DatabaseAccess.getConnection();
             PreparedStatement stmt = con.prepareStatement("UPDATE players SET x=?, y=?, z=?, heading=?, world_id=? WHERE id=?");
 
             stmt.setFloat(1, x);
@@ -249,7 +249,7 @@ public class Repairkit extends AdminCommand {
         } catch (Exception e) {
             log.error(I18n.get("log.1471af37e6dd", admin.getName()));
         } finally {
-            DatabaseFactory.close(con);
+            DatabaseAccess.release(con);
         }
         PacketSendUtility.sendMessage(admin, playerToReturn+" has been successfully moved to main city of '"+race+"'.");
         log.error(I18n.get("log.e5aa7080240f", admin.getName(), playerToReturn, race));

@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -35,18 +35,18 @@ import java.util.function.Consumer;
  */
 public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	private final QuestPlayerPort players;
-	private final InventoryDAO inventoryDao;
-	private final AbyssRankDAO abyssRankDao;
-	private final PlayerDAO playerDao;
+	private final InventoryDao inventoryDao;
+	private final AbyssRankDao abyssRankDao;
+	private final PlayerDao playerDao;
 	private final Consumer<Item> itemReleaser;
 
-	public PlayerQuestCurrencyPort(QuestPlayerPort players, InventoryDAO inventoryDao,
-			AbyssRankDAO abyssRankDao, PlayerDAO playerDao) {
+	public PlayerQuestCurrencyPort(QuestPlayerPort players, InventoryDao inventoryDao,
+			AbyssRankDao abyssRankDao, PlayerDao playerDao) {
 		this(players, inventoryDao, abyssRankDao, playerDao, ItemService::releaseItemId);
 	}
 
-	PlayerQuestCurrencyPort(QuestPlayerPort players, InventoryDAO inventoryDao,
-			AbyssRankDAO abyssRankDao, PlayerDAO playerDao, Consumer<Item> itemReleaser) {
+	PlayerQuestCurrencyPort(QuestPlayerPort players, InventoryDao inventoryDao,
+			AbyssRankDao abyssRankDao, PlayerDao playerDao, Consumer<Item> itemReleaser) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.inventoryDao = Objects.requireNonNull(inventoryDao, "inventoryDao");
 		this.abyssRankDao = Objects.requireNonNull(abyssRankDao, "abyssRankDao");

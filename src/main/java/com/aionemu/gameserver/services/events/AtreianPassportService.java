@@ -15,14 +15,13 @@ import java.util.Map;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPassportsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 import com.aionemu.gameserver.model.templates.event.AtreianPassportRewards;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATREIAN_PASSPORT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -44,7 +43,7 @@ public class AtreianPassportService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
-	private final PlayerPassportsDAO playerPassportsDAO;
+	private final PlayerPassportDao playerPassportsDAO;
 	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
 	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<>(1);
@@ -55,27 +54,8 @@ public class AtreianPassportService {
 	 *
 	 * @param playerPassportsDAO 通行证数据访问对象 / passport DAO
 	 */
-	public AtreianPassportService(@NonNull PlayerPassportsDAO playerPassportsDAO) {
+	public AtreianPassportService(@NonNull PlayerPassportDao playerPassportsDAO) {
 		this.playerPassportsDAO = playerPassportsDAO;
-	}
-
-	/**
-	 * 构造通行证服务。
-	 * Constructs the passport service.
-	 */
-	public AtreianPassportService() {
-		this(safeDao(PlayerPassportsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPassportsDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

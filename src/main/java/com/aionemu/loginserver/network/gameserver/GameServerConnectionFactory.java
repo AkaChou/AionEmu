@@ -5,7 +5,7 @@ import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.NettyConnectionFactory;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class GameServerConnectionFactory implements NettyConnectionFactory {
 
     private final GsPacketHandlerFactory packetFactory;
-    private final SvstatsDao svstatsDao;
+    private final SvstatDao svstatsDao;
     private final ThreadPoolManager threadPoolManager;
 
     /**

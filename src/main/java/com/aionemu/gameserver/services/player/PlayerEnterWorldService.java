@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.AStationConfig;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
@@ -43,7 +42,7 @@ import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerPasskeyDao;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.Race;
@@ -146,7 +145,7 @@ public final class PlayerEnterWorldService {
 	/**
 	 * Spring 绑定的二级密码 DAO / Spring-bound character-passkey DAO.
 	 */
-	private static volatile PlayerPasskeyDAO boundPlayerPasskeyDAO;
+	private static volatile PlayerPasskeyDao boundPlayerPasskeyDAO;
 
 	/**
 	 * 由 Spring 配置类在启动期绑定二级密码 DAO。
@@ -154,33 +153,20 @@ public final class PlayerEnterWorldService {
 	 *
 	 * @param dao 二级密码 DAO / character-passkey DAO
 	 */
-	public static void bindPlayerPasskeyDAO(PlayerPasskeyDAO dao) {
+	public static void bindPlayerPasskeyDAO(PlayerPasskeyDao dao) {
 		boundPlayerPasskeyDAO = java.util.Objects.requireNonNull(dao, "playerPasskeyDAO must not be null");
 	}
 
 	/**
-	 * 返回二级密码 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
-	 * Returns the character-passkey DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * 返回二级密码 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
+	 * Returns the character-passkey DAO; Spring must bind it at startup, otherwise it fails fast.
 	 *
 	 * @return 二级密码 DAO / character-passkey DAO
 	 */
-	private static PlayerPasskeyDAO playerPasskeyDAO() {
-		PlayerPasskeyDAO current = boundPlayerPasskeyDAO;
+	private static PlayerPasskeyDao playerPasskeyDAO() {
+		PlayerPasskeyDao current = boundPlayerPasskeyDAO;
 		if (current == null) {
-			synchronized (PlayerEnterWorldService.class) {
-				current = boundPlayerPasskeyDAO;
-				if (current == null) {
-					if (DAOManager.isInitialized()) {
-						try {
-							boundPlayerPasskeyDAO = current = DAOManager.getDAO(PlayerPasskeyDAO.class);
-						} catch (Exception ignored) {
-						}
-					}
-					if (current == null) {
-						boundPlayerPasskeyDAO = current = new com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO();
-					}
-				}
-			}
+			throw new IllegalStateException("PlayerPasskeyDao is not bound; Spring must bind it at startup");
 		}
 		return current;
 	}

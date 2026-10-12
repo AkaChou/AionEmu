@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.LadderDAO;
+import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -810,7 +810,7 @@ public abstract class Battleground {
 	 *
 	 * @return 天梯 DAO / ladder DAO
 	 */
-	protected static LadderDAO getLadderDAO() {
+	protected static LadderPlayerDao getLadderDAO() {
 		return BattlegroundLadder.dao();
 	}
 

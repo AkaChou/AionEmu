@@ -3,8 +3,7 @@ package com.aionemu.gameserver.utils.gametime;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,23 +28,30 @@ public class GameTimeManager {
 	 */
 	private static boolean clockStarted = false;
 
-	static {
-		instance = new GameTime(safeServerVariablesDao().load("time"));
+	/** Spring 绑定的服务器变量 DAO。 / Spring-bound server-variables DAO. */
+	private static volatile ServerVariableDao serverVariablesDao;
+
+	/**
+	 * 由 Spring 配置类在启动期绑定服务器变量 DAO 并加载当前游戏时间。
+	 * Binds the server-variables DAO from the Spring configuration at startup and loads the current game time.
+	 * @param dao 服务器变量 DAO / server-variables DAO
+	 */
+	public static void init(ServerVariableDao dao) {
+		serverVariablesDao = java.util.Objects.requireNonNull(dao, "serverVariablesDao must not be null");
+		instance = new GameTime(serverVariablesDao.load("time"));
 	}
 
 	/**
-	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
-	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
+	 * 返回服务器变量 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
+	 * Returns the server-variables DAO; Spring must bind it at startup, otherwise it fails fast.
+	 * @return 服务器变量 DAO / server-variables DAO
 	 */
-	private static ServerVariablesDAO safeServerVariablesDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(ServerVariablesDAO.class);
-			} catch (Exception e) {
-				log.debug("ServerVariablesDAO bean resolution failed, falling back to the no-arg impl constructor", e);
-			}
+	private static ServerVariableDao serverVariablesDao() {
+		ServerVariableDao current = serverVariablesDao;
+		if (current == null) {
+			throw new IllegalStateException("ServerVariableDao is not bound; Spring must bind it at startup");
 		}
-		return new com.aionemu.gameserver.dao.impl.ServerVariablesDAO();
+		return current;
 	}
 
 	/**
@@ -78,7 +84,7 @@ public class GameTimeManager {
 	 * @return 保存成功则为 true / True if stored
 	 */
 	public static void saveTime() {
-		safeServerVariablesDao().store("time", getGameTime().getTime());
+		serverVariablesDao().store("time", getGameTime().getTime());
 	}
 
 	/**

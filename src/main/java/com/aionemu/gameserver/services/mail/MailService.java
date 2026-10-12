@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.mail;
 
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -23,13 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -45,6 +40,10 @@ import com.aionemu.gameserver.model.templates.mail.MailMessage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.MailDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -64,10 +63,10 @@ public class MailService {
 	private static volatile ObjectProvider<MailService> instanceProvider;
 	private static volatile MailService resolvedInstance;
 
-	private final MailDAO mailDAO;
-	private final InventoryDAO inventoryDAO;
-	private final PlayerDAO playerDAO;
-	private final AbyssRankDAO abyssRankDAO;
+	private final MailDao mailDAO;
+	private final InventoryDao inventoryDAO;
+	private final PlayerDao playerDAO;
+	private final AbyssRankDao abyssRankDAO;
 
 	/** 新登录玩家队列（预留）。 / Queue of newly logged-in players (reserved). */
 	protected Queue<Player> newPlayers;
@@ -106,34 +105,12 @@ public class MailService {
 	 * @param playerDAO 玩家数据访问对象 / Player DAO
 	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss rank DAO
 	 */
-	public MailService(MailDAO mailDAO, InventoryDAO inventoryDAO, PlayerDAO playerDAO, AbyssRankDAO abyssRankDAO) {
+	public MailService(MailDao mailDAO, InventoryDao inventoryDAO, PlayerDao playerDAO, AbyssRankDao abyssRankDAO) {
 		this.mailDAO = Objects.requireNonNull(mailDAO, "mailDAO must not be null");
 		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
 		this.abyssRankDAO = Objects.requireNonNull(abyssRankDAO, "abyssRankDAO must not be null");
 		this.newPlayers = new ConcurrentLinkedQueue<>();
-	}
-
-	/**
-	 * 构造邮件服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the mail service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public MailService() {
-		this(safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new),
-				safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-				safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-				safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -329,7 +306,7 @@ public class MailService {
 		Integer legionId = sender.getLegion() == null ? null : sender.getLegion().getLegionId();
 		int mailboxLetters = recipientCommonData.getMailboxLetters() + 1;
 
-		try (Connection con = DatabaseFactory.getConnection()) {
+		try (Connection con = DatabaseAccess.getConnection()) {
 			con.setAutoCommit(false);
 			try {
 				inventoryDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
@@ -470,7 +447,7 @@ public class MailService {
 	}
 
 	private boolean storeClaimedAttachment(Player player, Letter letter, List<Item> items, AbyssRank abyssRank) {
-		try (Connection con = DatabaseFactory.getConnection()) {
+		try (Connection con = DatabaseAccess.getConnection()) {
 			con.setAutoCommit(false);
 			try {
 				inventoryDAO.storeInTransaction(con, items, player.getObjectId(), null, null);

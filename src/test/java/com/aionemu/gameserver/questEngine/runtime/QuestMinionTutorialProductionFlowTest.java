@@ -1,10 +1,11 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.persistence.dao.impl.PlayerQuestDaoImpl;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -347,7 +348,11 @@ class QuestMinionTutorialProductionFlowTest {
 		}
 	}
 
-	private static final class RecordingDao extends PlayerQuestListDAO {
+	private static final class RecordingDao extends PlayerQuestDaoImpl {
+		private RecordingDao() {
+			super(new org.springframework.transaction.support.TransactionTemplate());
+		}
+
 		private int questId;
 		private final List<QuestState> stored = new ArrayList<>();
 
@@ -372,11 +377,6 @@ class QuestMinionTutorialProductionFlowTest {
 			if (!stored.isEmpty()) {
 				questId = stored.getLast().getQuestId();
 			}
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 	}
 

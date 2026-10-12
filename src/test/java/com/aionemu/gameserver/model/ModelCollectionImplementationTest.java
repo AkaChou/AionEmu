@@ -141,7 +141,7 @@ class ModelCollectionImplementationTest {
 
 	@Test
 	void localUtilityListsUseJdkLists() throws Exception {
-		assertSourceOmits("src/main/java/com/aionemu/gameserver/dao/impl/InventoryDAO.java",
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/persistence/dao/impl/InventoryDaoImpl.java",
 				"FastList.newInstance()");
 		assertSourceOmits("src/main/java/com/aionemu/gameserver/geoEngine/collision/bih/BIHNode.java",
 				"FastList<BIHStackData>");

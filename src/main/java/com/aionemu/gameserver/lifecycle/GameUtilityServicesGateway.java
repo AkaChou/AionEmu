@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 工具服务网关：编排异常处理、配置、数据库、DAO 与线程配置初始化。
- * Utility-services gateway: orchestrates exception handler, config, DB, DAO and thread-config init.
+ * 工具服务网关：编排异常处理、配置与线程配置初始化。
+ * Utility-services gateway: orchestrates exception handler, config and thread-config init.
  */
 @Component
 public class GameUtilityServicesGateway {
@@ -83,22 +83,6 @@ public class GameUtilityServicesGateway {
      */
     public void printDatabaseSection() {
         Util.printSection(I18n.get("console.section.database"));
-    }
-
-    /**
-     * 初始化数据库工厂。
-     * Initialize the database factory.
-     */
-    public void initializeDatabaseFactory() {
-        runtimeBridge().initializeDatabaseFactory();
-    }
-
-    /**
-     * 初始化 DAO 管理器。
-     * Initialize the DAO manager.
-     */
-    public void initializeDaoManager() {
-        runtimeBridge().initializeDaoManager();
     }
 
     /**

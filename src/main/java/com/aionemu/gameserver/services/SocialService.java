@@ -1,10 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -13,50 +9,46 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BLOCK_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_NOTIFY;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_RESPONSE;
+import com.aionemu.gameserver.persistence.dao.BlockDao;
+import com.aionemu.gameserver.persistence.dao.FriendDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * 社交服务，处理好友与黑名单的增删改。
  * Social service that handles friend and block-list add/remove/update.
  */
-@RequiredArgsConstructor
 public class SocialService {
 
 	private static volatile SocialService instance;
 	@NonNull
-	private final BlockListDAO blockListDAO;
+	private final BlockDao blockListDAO;
 	@NonNull
-	private final FriendListDAO friendListDAO;
+	private final FriendDao friendListDAO;
 	@NonNull
-	private final PlayerDAO playerDAO;
+	private final PlayerDao playerDAO;
 
-	public SocialService() {
-		this(safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
-			safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
+	/**
+	 * 使用指定的 DAO 依赖构造社交服务。
+	 * Constructs the social service with the given DAO dependencies.
+	 *
+	 * @param blockListDAO  黑名单 DAO / block list DAO
+	 * @param friendListDAO 好友 DAO / friend list DAO
+	 * @param playerDAO     玩家 DAO / player DAO
+	 */
+	public SocialService(@NonNull BlockDao blockListDAO, @NonNull FriendDao friendListDAO,
+						 @NonNull PlayerDao playerDAO) {
+		this.blockListDAO = blockListDAO;
+		this.friendListDAO = friendListDAO;
+		this.playerDAO = playerDAO;
+		instance = this;
 	}
 
 	public static SocialService getInstance() {
 		SocialService current = instance;
 		if (current == null) {
-			synchronized (SocialService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = new SocialService();
-				}
-			}
+			throw new IllegalStateException("SocialService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return current;
 	}

@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -28,6 +27,7 @@ import com.aionemu.gameserver.model.templates.siegelocation.SiegeLegionReward;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeReward;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.mail.AbyssSiegeLevel;
 import com.aionemu.gameserver.services.mail.MailFormatter;
@@ -47,14 +47,14 @@ public class FortressSiege extends Siege<FortressLocation> {
 	/** 欧比斯点数监听器。 / Abyss points listener. */
 	private final AbyssPointsListener addAPListener = new AbyssPointsListener(this);
 	/** 攻城战数据访问对象（由宿主 SiegeService 注入）。 / Siege DAO injected by the owning SiegeService. */
-	private final SiegeDAO siegeDAO;
+	private final SiegeLocationDao siegeDAO;
 	/**
 	 * 为指定要塞据点创建攻城。
 	 * Creates a siege for the given fortress location.
 	 * @param fortress 要塞据点 / fortress location
 	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public FortressSiege(FortressLocation fortress, @NonNull SiegeDAO siegeDAO) {
+	public FortressSiege(FortressLocation fortress, @NonNull SiegeLocationDao siegeDAO) {
 		super(fortress);
 		this.siegeDAO = siegeDAO;
 	}

@@ -26,11 +26,9 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule.Fortress;
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -52,6 +50,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INFLUENCE_RATIO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHIELD_EFFECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.services.siegeservice.ArtifactSiege;
 import com.aionemu.gameserver.services.siegeservice.FortressSiege;
 import com.aionemu.gameserver.services.siegeservice.Siege;
@@ -77,8 +76,7 @@ public class SiegeService {
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	@Setter
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
-	private static final SiegeService instance = new SiegeService();
-	private final SiegeDAO siegeDAO;
+	private final SiegeLocationDao siegeDAO;
 	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<>();
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private SiegeSchedule siegeSchedule;
@@ -102,26 +100,8 @@ public class SiegeService {
 	 *
 	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public SiegeService(@NonNull SiegeDAO siegeDAO) {
+	public SiegeService(@NonNull SiegeLocationDao siegeDAO) {
 		this.siegeDAO = siegeDAO;
-	}
-
-	/**
-	 * 构造攻城战服务。
-	 * Constructs the siege service.
-	 */
-	public SiegeService() {
-		this(safeDao(SiegeDAO.class, com.aionemu.gameserver.dao.impl.SiegeDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -132,7 +112,12 @@ public class SiegeService {
 	public static SiegeService getInstance() {
 		ObjectProvider<SiegeService> provider = instanceProvider;
 		SiegeService provided = provider == null ? null : provider.getIfAvailable();
-		return provided != null ? provided : instance;
+		if (provided == null) {
+			throw new IllegalStateException("SiegeService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		return provided;
 	}
 
 	/**

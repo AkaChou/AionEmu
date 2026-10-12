@@ -11,8 +11,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -34,6 +32,7 @@ import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerPetDao;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -83,7 +82,7 @@ public class PetService {
 	/**
 	 * 玩家宠物 DAO / Player pets DAO
 	 */
-	private final PlayerPetsDAO playerPetsDAO;
+	private final PlayerPetDao playerPetsDAO;
 
 	/**
 	 * 使用指定 DAO 依赖构造宠物服务。
@@ -91,27 +90,8 @@ public class PetService {
 	 *
 	 * @param playerPetsDAO 玩家宠物 DAO / Player pets DAO
 	 */
-	public PetService(@NonNull PlayerPetsDAO playerPetsDAO) {
+	public PetService(@NonNull PlayerPetDao playerPetsDAO) {
 		this.playerPetsDAO = Objects.requireNonNull(playerPetsDAO, "playerPetsDAO must not be null");
-	}
-
-	/**
-	 * 构造宠物服务（使用 safeDao 解析依赖）。
-	 * Constructs the pet service with safeDao resolution.
-	 */
-	public PetService() {
-		this(safeDao(PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -120,7 +100,7 @@ public class PetService {
 	 *
 	 * @return 玩家宠物 DAO / Player pets DAO
 	 */
-	public PlayerPetsDAO playerPetsDAO() {
+	public PlayerPetDao playerPetsDAO() {
 		return playerPetsDAO;
 	}
 

@@ -16,12 +16,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 
 /**
  * 欧比斯排行榜缓存：按种族缓存玩家/军团排行数据包并支持全量刷新。
@@ -38,7 +37,7 @@ public class AbyssRankingCache {
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
 	@Getter
 	private int lastUpdate;
-	private final AbyssRankDAO abyssRankDAO;
+	private final AbyssRankDao abyssRankDAO;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
 	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new HashMap<>();
 
@@ -48,27 +47,8 @@ public class AbyssRankingCache {
 	 *
 	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 */
-	public AbyssRankingCache(@NonNull AbyssRankDAO abyssRankDAO) {
+	public AbyssRankingCache(@NonNull AbyssRankDao abyssRankDAO) {
 		this.abyssRankDAO = abyssRankDAO;
-	}
-
-	/**
-	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
-	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
-	 */
-	public AbyssRankingCache() {
-		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

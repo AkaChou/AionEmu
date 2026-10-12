@@ -16,9 +16,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,6 +24,7 @@ import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.SurveyDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,7 @@ public class SurveyService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
-	private final SurveyControllerDAO surveyControllerDAO;
+	private final SurveyDao surveyControllerDAO;
 	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
 	private Future<?> updateTask;
@@ -72,28 +71,10 @@ public class SurveyService {
 	 *
 	 * @param surveyControllerDAO 调查数据访问对象 / survey DAO
 	 */
-	public SurveyService(@NonNull SurveyControllerDAO surveyControllerDAO) {
+	public SurveyService(@NonNull SurveyDao surveyControllerDAO) {
 		this.surveyControllerDAO = surveyControllerDAO;
 		this.activeItems = new ConcurrentHashMap<>();
 		reload();
-	}
-
-	/**
-	 * 构造服务并启动周期刷新任务。
-	 * Constructs the service and starts the periodic update task.
-	 */
-	public SurveyService() {
-		this(safeSurveyControllerDao());
-	}
-
-	private static SurveyControllerDAO safeSurveyControllerDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(SurveyControllerDAO.class);
-			} catch (Exception ignored) {
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.SurveyControllerDAO();
 	}
 
 	/**

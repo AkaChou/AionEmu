@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.persistence.dao.AccountDataDao;
-import com.aionemu.loginserver.persistence.dao.TasksDao;
-import com.aionemu.loginserver.persistence.entity.TasksPo;
+import com.aionemu.loginserver.persistence.dao.TaskDao;
+import com.aionemu.loginserver.persistence.entity.TaskPo;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandlerHolder;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
@@ -38,10 +38,10 @@ public class TaskFromDBManager {
      * @param accountDao 账号 DAO / account DAO
      * @param shutdown 关机协调器 / shutdown coordinator
      */
-    public TaskFromDBManager(TasksDao tasksDao, ThreadPoolManager threadPoolManager, AccountDataDao accountDao,
+    public TaskFromDBManager(TaskDao tasksDao, ThreadPoolManager threadPoolManager, AccountDataDao accountDao,
             Shutdown shutdown) {
         TaskRuntime runtime = new TaskRuntime(threadPoolManager, accountDao, shutdown);
-        for (TasksPo po : tasksDao.getAllTasks()) {
+        for (TaskPo po : tasksDao.getAllTasks()) {
             TaskFromDBTrigger trigger = buildTrigger(po, runtime);
             if (trigger != null) {
                 tasksList.add(trigger);
@@ -59,7 +59,7 @@ public class TaskFromDBManager {
      * @param runtime 运行时依赖 / runtime dependencies
      * @return 触发器，或构建失败时为 null / trigger, or null when building fails
      */
-    private static TaskFromDBTrigger buildTrigger(TasksPo po, TaskRuntime runtime) {
+    private static TaskFromDBTrigger buildTrigger(TaskPo po, TaskRuntime runtime) {
         try {
             TaskFromDBTrigger trigger = TaskFromDBTriggerHolder.valueOf(po.getTriggerType())
                 .getTriggerClass()

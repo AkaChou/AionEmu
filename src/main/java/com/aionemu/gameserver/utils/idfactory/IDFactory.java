@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
 
 /**
@@ -53,50 +52,14 @@ public class IDFactory {
 	public IDFactory(List<Supplier<int[]>> usedIdSources) {
 		idList = new BitSet();
 		lock = new ReentrantLock();
-		lockIds(0);
-		// 此处应调用所有 IDFactoryAwareDAO 实现以初始化。 / Here should be calls to all IDFactoryAwareDAO implementations to initialize
-		// IDFactory 中使用的值 / used values in IDFactory
-		usedIdSources.forEach(source -> lockIds(source.get()));
-		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
-	}
-
-	/**
-	 * 构造并锁定数据库中已使用的 ID：DAOManager 已初始化时逐项解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs and locks used IDs: resolves each Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public IDFactory() {
-		this(defaultUsedIdSources());
-	}
-
-	/**
-	 * 组装默认已用 ID 来源：逐项经 safeDao 解析，容器未就绪（离线/单测）时退回实现类无参构造。
-	 * Assembles default used-ID sources: each resolved via safeDao, falling back to no-arg impl constructors when the container is not ready.
-	 */
-	private static List<Supplier<int[]>> defaultUsedIdSources() {
-		return List.of(
-			() -> safeDao(com.aionemu.gameserver.dao.PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.LegionDAO.class, com.aionemu.gameserver.dao.impl.LegionDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.GuideDAO.class, com.aionemu.gameserver.dao.impl.GuideDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new).getUsedIDs(),
-			() -> safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new).getUsedIDs());
-	}
-
-	/**
-	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
-	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
-	 */
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
+		lock.lock();
+		try {
+			doLockIds(0);
+			usedIdSources.forEach(source -> doLockIds(source.get()));
+		} finally {
+			lock.unlock();
 		}
-		return fallback.get();
+		log.info(I18n.get("log.b00d0337832b", getUsedCount()));
 	}
 
 	/**
@@ -169,24 +132,18 @@ public class IDFactory {
 	}
 
 	/**
-	 * 锁定给定 ID（已占用则抛错）。
-	 * Lock the given ids (throws if already taken).
+	 * 锁定给定 ID（无锁内核，调用方须已持有 {@link #lock}）。
+	 * Lock the given ids (lock-free core; the caller must already hold {@link #lock}).
 	 *
 	 * @param ids 要锁定的 ID / Ids to lock
 	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
-	private void lockIds(int... ids) {
-		try {
-			lock.lock();
-			for (int id : ids) {
-				boolean status = idList.get(id);
-				if (status) {
-					throw new IDFactoryError("ID " + id + " is already taken, fatal error!!!");
-				}
-				idList.set(id);
+	private void doLockIds(int... ids) {
+		for (int id : ids) {
+			if (idList.get(id)) {
+				throw new IDFactoryError("ID " + id + " is already taken, fatal error!!!");
 			}
-		} finally {
-			lock.unlock();
+			idList.set(id);
 		}
 	}
 
@@ -198,18 +155,32 @@ public class IDFactory {
 	 * @throws IDFactoryError 有 ID 已占用时 / If some ids were already locked
 	 */
 	public void lockIds(Iterable<Integer> ids) {
+		lock.lock();
 		try {
-			lock.lock();
 			for (int id : ids) {
-				boolean status = idList.get(id);
-				if (status) {
-					throw new IDFactoryError("ID " + id + " is already taken, fatal error!!!");
-				}
-				idList.set(id);
+				doLockIds(id);
 			}
 		} finally {
 			lock.unlock();
 		}
+	}
+
+	/**
+	 * 释放给定 ID（无锁内核，调用方须已持有 {@link #lock}）。
+	 * Release the given id (lock-free core; the caller must already hold {@link #lock}).
+	 *
+	 * @param id 要释放的 ID / Id to release
+	 * @return 是否成功释放（未占用返回 false）/ whether the id was released (false if it was not taken)
+	 */
+	private boolean release(int id) {
+		if (!idList.get(id)) {
+			return false;
+		}
+		idList.clear(id);
+		if (id < nextMinId || nextMinId == Integer.MIN_VALUE) {
+			nextMinId = id;
+		}
+		return true;
 	}
 
 	/**
@@ -220,15 +191,10 @@ public class IDFactory {
 	 * @throws IDFactoryError ID 未被占用时 / If the id was not taken
 	 */
 	public void releaseId(int id) {
+		lock.lock();
 		try {
-			lock.lock();
-			boolean status = idList.get(id);
-			if (!status) {
+			if (!release(id)) {
 				throw new IDFactoryError("ID " + id + " is not taken, can't release it.");
-			}
-			idList.clear(id);
-			if (id < nextMinId || nextMinId == Integer.MIN_VALUE) {
-				nextMinId = id;
 			}
 		} finally {
 			lock.unlock();
@@ -247,16 +213,11 @@ public class IDFactory {
 			return;
 		}
 
+		lock.lock();
 		try {
-			lock.lock();
 			for (Integer id : ids) {
-				boolean status = idList.get(id);
-				if (!status) {
+				if (!release(id)) {
 					throw new IDFactoryError("ID " + id + " is not taken, can't release it.");
-				}
-				idList.clear(id);
-				if (id < nextMinId || nextMinId == Integer.MIN_VALUE) {
-					nextMinId = id;
 				}
 			}
 		} finally {
@@ -271,8 +232,8 @@ public class IDFactory {
 	 * @return 已占用数量 / Used count
 	 */
 	public int getUsedCount() {
+		lock.lock();
 		try {
-			lock.lock();
 			return idList.cardinality();
 		} finally {
 			lock.unlock();

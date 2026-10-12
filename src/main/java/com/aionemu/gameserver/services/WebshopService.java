@@ -8,10 +8,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
+import com.aionemu.gameserver.persistence.dao.WebRewardDao;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class WebshopService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<WebshopService> instanceProvider;
-	private final RewardServiceDAO rewardServiceDAO;
+	private final WebRewardDao rewardServiceDAO;
 
 	/**
 	 * 使用指定的 RewardServiceDAO 构造服务并启动定时发放任务。
@@ -42,27 +41,9 @@ public class WebshopService {
 	 *
 	 * @param rewardServiceDAO 商城奖励数据访问对象 / reward service DAO
 	 */
-	public WebshopService(@NonNull RewardServiceDAO rewardServiceDAO) {
+	public WebshopService(@NonNull WebRewardDao rewardServiceDAO) {
 		this.rewardServiceDAO = rewardServiceDAO;
 		this.load();
-	}
-
-	/**
-	 * 构造服务并启动定时发放任务。
-	 * Constructs the service and starts the periodic delivery task.
-	 */
-	public WebshopService() {
-		this(safeDao(RewardServiceDAO.class, com.aionemu.gameserver.dao.impl.RewardServiceDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -115,7 +96,7 @@ public class WebshopService {
 	 * @param mailService   系统邮件服务 / system mail service
 	 * @return 发放成功返回 true / true if delivered
 	 */
-	static boolean deliverRewardMail(String recipientName, RewardEntryItem item, RewardServiceDAO rewardDao,
+	static boolean deliverRewardMail(String recipientName, RewardEntryItem item, WebRewardDao rewardDao,
 									 SystemMailService mailService) {
 		if (!rewardDao.setUpdate(item.unique)) {
 			return false;

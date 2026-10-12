@@ -10,7 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.landing.LandingPointsEnum;
@@ -21,6 +20,7 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -33,7 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class ArtifactSiege extends Siege<ArtifactLocation> {
 
 	/** 攻城战数据访问对象（由宿主 SiegeService 注入）。 / Siege DAO injected by the owning SiegeService. */
-	private final SiegeDAO siegeDAO;
+	private final SiegeLocationDao siegeDAO;
 
 	/**
 	 * 为指定神器据点创建攻城。
@@ -41,7 +41,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 	 * @param siegeLocation 神器据点 / artifact location
 	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public ArtifactSiege(ArtifactLocation siegeLocation, @NonNull SiegeDAO siegeDAO) {
+	public ArtifactSiege(ArtifactLocation siegeLocation, @NonNull SiegeLocationDao siegeDAO) {
 		super(siegeLocation);
 		this.siegeDAO = siegeDAO;
 	}

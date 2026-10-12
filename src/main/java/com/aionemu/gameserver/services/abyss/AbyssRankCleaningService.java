@@ -13,12 +13,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 
 /**
  * 欧比斯排行清理服务：按配置周期剔除长期未登录上榜玩家。
@@ -34,7 +33,7 @@ public class AbyssRankCleaningService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
-	private final AbyssRankDAO abyssRankDAO;
+	private final AbyssRankDao abyssRankDAO;
 
 
 	private long startTime;
@@ -45,30 +44,11 @@ public class AbyssRankCleaningService {
 	 *
 	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 */
-	public AbyssRankCleaningService(@NonNull AbyssRankDAO abyssRankDAO) {
+	public AbyssRankCleaningService(@NonNull AbyssRankDao abyssRankDAO) {
 		this.abyssRankDAO = abyssRankDAO;
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
 		}
-	}
-
-	/**
-	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
-	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
-	 */
-	public AbyssRankCleaningService() {
-		this(safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

@@ -24,13 +24,9 @@ import java.util.Set;
 import org.quartz.CronExpression;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.HouseBidsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -49,6 +45,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RECEIVE_BIDS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.HouseBidDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import com.aionemu.gameserver.services.mail.AuctionResult;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
@@ -73,9 +72,9 @@ public class HousingBidService extends AbstractCronTask {
 	 */
 	@Setter
 	private static volatile ObjectProvider<HousingBidService> instanceProvider;
-	private final HouseBidsDAO houseBidsDAO;
-	private final ServerVariablesDAO serverVariablesDAO;
-	private final PlayerDAO playerDAO;
+	private final HouseBidDao houseBidsDAO;
+	private final ServerVariableDao serverVariablesDAO;
+	private final PlayerDao playerDAO;
 	private static CronExpression registerDateExpr;
 	private static final Map<Integer, HouseBidEntry> houseBids;
 	private static final Map<Integer, HouseBidEntry> playerBids;
@@ -95,9 +94,9 @@ public class HousingBidService extends AbstractCronTask {
 	 * 使用指定 DAO 集合与配置拍卖时间构造服务。
 	 * Constructs the service with given DAOs and configured auction time.
 	 */
-	public HousingBidService(@NonNull HouseBidsDAO houseBidsDAO,
-							 @NonNull ServerVariablesDAO serverVariablesDAO,
-							 @NonNull PlayerDAO playerDAO) throws ParseException {
+	public HousingBidService(@NonNull HouseBidDao houseBidsDAO,
+							 @NonNull ServerVariableDao serverVariablesDAO,
+							 @NonNull PlayerDao playerDAO) throws ParseException {
 		this(HousingConfig.HOUSE_AUCTION_TIME != null ? HousingConfig.HOUSE_AUCTION_TIME : DEFAULT_AUCTION_TIME,
 			Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null"),
 			Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"),
@@ -109,47 +108,14 @@ public class HousingBidService extends AbstractCronTask {
 	 * Constructs the service with given auction time and DAOs.
 	 */
 	public HousingBidService(String auctionTime,
-							 @NonNull HouseBidsDAO houseBidsDAO,
-							 @NonNull ServerVariablesDAO serverVariablesDAO,
-							 @NonNull PlayerDAO playerDAO) throws ParseException {
+							 @NonNull HouseBidDao houseBidsDAO,
+							 @NonNull ServerVariableDao serverVariablesDAO,
+							 @NonNull PlayerDao playerDAO) throws ParseException {
 		super(auctionTime != null ? auctionTime : DEFAULT_AUCTION_TIME,
 			Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null"));
 		this.houseBidsDAO = Objects.requireNonNull(houseBidsDAO, "houseBidsDAO must not be null");
 		this.serverVariablesDAO = serverVariablesDAO;
 		this.playerDAO = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
-	}
-
-	/**
-	 * 构造服务（使用默认 safeDao 解析依赖）。
-	 * Constructs the service with safeDao resolution.
-	 */
-	public HousingBidService() throws ParseException {
-		this(safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
-			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	/**
-	 * 使用指定拍卖 cron 表达式初始化。
-	 * Initializes with the given auction cron expression.
-	 *
-	 * @param auctionTime 拍卖 cron 表达式 / auction cron expression
-	 */
-	public HousingBidService(String auctionTime) throws ParseException {
-		this(auctionTime,
-			safeDao(HouseBidsDAO.class, com.aionemu.gameserver.dao.impl.HouseBidsDAO::new),
-			safeDao(ServerVariablesDAO.class, com.aionemu.gameserver.dao.impl.ServerVariablesDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.mail;
 
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.Setter;
@@ -15,11 +16,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -34,6 +30,9 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.mail_reward.MailRewardTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.MailDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -59,9 +58,9 @@ public class SystemMailService {
 	@Setter
 	private static volatile ObjectProvider<SystemMailService> instanceProvider;
 
-	private final PlayerDAO playerDAO;
-	private final InventoryDAO inventoryDAO;
-	private final MailDAO mailDAO;
+	private final PlayerDao playerDAO;
+	private final InventoryDao inventoryDAO;
+	private final MailDao mailDAO;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -93,32 +92,11 @@ public class SystemMailService {
 	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
 	 * @param mailDAO      邮件数据访问对象 / Mail DAO
 	 */
-	public SystemMailService(@NonNull PlayerDAO playerDAO, @NonNull InventoryDAO inventoryDAO, @NonNull MailDAO mailDAO) {
+	public SystemMailService(@NonNull PlayerDao playerDAO, @NonNull InventoryDao inventoryDAO, @NonNull MailDao mailDAO) {
 		this.playerDAO = playerDAO;
 		this.inventoryDAO = inventoryDAO;
 		this.mailDAO = mailDAO;
 		log.info(I18n.get("log.156ce5bf14eb"));
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public SystemMailService() {
-		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -365,7 +343,7 @@ public class SystemMailService {
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
 			? recipient.getCommonData() : recipientCommonData;
 		int mailboxLetters = counterData.getMailboxLetters() + 1;
-		try (Connection con = DatabaseFactory.getConnection()) {
+		try (Connection con = DatabaseAccess.getConnection()) {
 			con.setAutoCommit(false);
 			try {
 				if (attachedItem != null) {

@@ -13,12 +13,11 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.AnnouncementDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.HashSet;
@@ -38,7 +37,7 @@ public class AnnouncementService {
 	@Setter
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
-	private final AnnouncementsDAO announcementsDAO;
+	private final AnnouncementDao announcementsDAO;
 	/**
 	 * 已加载的公告集合。 / Loaded announcements.
 	 */
@@ -54,27 +53,9 @@ public class AnnouncementService {
 	 *
 	 * @param announcementsDAO 系统公告数据访问对象 / Announcements DAO
 	 */
-	public AnnouncementService(@NonNull AnnouncementsDAO announcementsDAO) {
+	public AnnouncementService(@NonNull AnnouncementDao announcementsDAO) {
 		this.announcementsDAO = announcementsDAO;
 		this.load();
-	}
-
-	/**
-	 * 构造服务并加载公告。
-	 * Constructs the service and loads announcements.
-	 */
-	public AnnouncementService() {
-		this(safeDao(AnnouncementsDAO.class, com.aionemu.gameserver.dao.impl.AnnouncementsDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -203,7 +184,7 @@ public class AnnouncementService {
 	 * Shortcut to the announcements DAO.
 	 * DAO instance
 	 */
-	private AnnouncementsDAO getDAO() {
+	private AnnouncementDao getDAO() {
 		return announcementsDAO;
 	}
 }

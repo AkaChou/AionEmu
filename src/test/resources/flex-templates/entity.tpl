@@ -7,11 +7,13 @@ import java.io.Serial;
 
 import lombok.Data;
 
-#if(hasText(table.getComment()))
 /**
+#if(hasText(table.getComment()))
  * #(table.getComment())
- */
 #end
+ * 表 #(table.getName()) 的持久化实体。
+ * Persistence entity for table #(table.getName()).
+ */
 @Data
 #(table.buildTableAnnotation().trim())
 public class #(table.buildEntityClassName()) implements Serializable {

@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
+import com.aionemu.gameserver.persistence.dao.impl.CompetitionRankingDaoImpl;
 import org.junit.jupiter.api.Test;
 
 class SeasonRankingUpdateServiceTest {
 
 	@Test
 	void storesPlayersInJdkMap() throws Exception {
-		SeasonRankingUpdateService service = new SeasonRankingUpdateService();
+		SeasonRankingUpdateService service = new SeasonRankingUpdateService(new CompetitionRankingDaoImpl());
 
 		Map<Integer, List<SM_SEASON_RANKING>> players = players(service);
 

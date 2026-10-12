@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -15,9 +16,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,6 +27,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EXCHANGE_ADD_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EXCHANGE_ADD_KINAH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EXCHANGE_CONFIRMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EXCHANGE_REQUEST;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -48,7 +47,7 @@ public class ExchangeService {
 	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<>();
 
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
-	private final InventoryDAO inventoryDAO;
+	private final InventoryDao inventoryDAO;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -86,27 +85,8 @@ public class ExchangeService {
 	 *
 	 * @param inventoryDAO 背包物品数据访问对象 / Inventory DAO
 	 */
-	public ExchangeService(InventoryDAO inventoryDAO) {
+	public ExchangeService(InventoryDao inventoryDAO) {
 		this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public ExchangeService() {
-		this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -562,7 +542,7 @@ public class ExchangeService {
 	 */
 	public static final class ExchangeOpSaveTask implements Runnable {
 
-		private final InventoryDAO inventoryDAO;
+		private final InventoryDao inventoryDAO;
 		private final int player1Id;
 		private final int player2Id;
 		private final List<Item> player1Items;
@@ -578,26 +558,12 @@ public class ExchangeService {
 		 * @param player1Items 玩家1 待存物品 / player 1 items to store
 		 * @param player2Items 玩家2 待存物品 / player 2 items to store
 		 */
-		public ExchangeOpSaveTask(InventoryDAO inventoryDAO, int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
+		public ExchangeOpSaveTask(InventoryDao inventoryDAO, int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
 			this.inventoryDAO = Objects.requireNonNull(inventoryDAO, "inventoryDAO must not be null");
 			this.player1Id = player1Id;
 			this.player2Id = player2Id;
 			this.player1Items = player1Items;
 			this.player2Items = player2Items;
-		}
-
-		/**
-		 * 默认构造：从 DAOManager 动态解析 InventoryDAO。
-		 * Default constructor resolving InventoryDAO from DAOManager.
-		 *
-		 * @param player1Id 玩家1 ID / player 1 id
-		 * @param player2Id 玩家2 ID / player 2 id
-		 * @param player1Items 玩家1 待存物品 / player 1 items to store
-		 * @param player2Items 玩家2 待存物品 / player 2 items to store
-		 */
-		public ExchangeOpSaveTask(int player1Id, int player2Id, List<Item> player1Items, List<Item> player2Items) {
-			this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new), player1Id, player2Id,
-				player1Items, player2Items);
 		}
 
 		@Override
@@ -606,7 +572,7 @@ public class ExchangeService {
 		}
 
 		public boolean save() {
-			try (Connection con = DatabaseFactory.getConnection()) {
+			try (Connection con = DatabaseAccess.getConnection()) {
 				con.setAutoCommit(false);
 				try {
 					inventoryDAO.storeInTransaction(con, player1Items, player1Id, null, null);

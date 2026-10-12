@@ -12,13 +12,12 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_INFO;
+import com.aionemu.gameserver.persistence.dao.BaseLocationDao;
 import com.aionemu.gameserver.services.base.Base;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -31,7 +30,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class BaseService {
 	@Setter
 	private static volatile ObjectProvider<BaseService> instanceProvider;
-	private final BaseDAO baseDAO;
+	private final BaseLocationDao baseDAO;
 	/** 当前活跃据点实例。 / Currently active base instances. */
 	private final ConcurrentMap<Integer, Base<?>> active = new ConcurrentHashMap<>();
 	/** 据点位置映射。 / Base location map. */
@@ -43,26 +42,8 @@ public class BaseService {
 	 *
 	 * @param baseDAO 据点数据访问对象 / Base DAO
 	 */
-	public BaseService(@NonNull BaseDAO baseDAO) {
+	public BaseService(@NonNull BaseLocationDao baseDAO) {
 		this.baseDAO = baseDAO;
-	}
-
-	/**
-	 * 构造据点服务。
-	 * Constructs the base service.
-	 */
-	public BaseService() {
-		this(safeDao(BaseDAO.class, com.aionemu.gameserver.dao.impl.BaseDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**
@@ -292,7 +273,7 @@ public class BaseService {
 	 * Returns the base DAO.
 	 * DAO instance
 	 */
-	private BaseDAO getDAO() {
+	private BaseLocationDao getDAO() {
 		return this.baseDAO;
 	}
 }

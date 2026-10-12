@@ -17,10 +17,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -36,6 +33,8 @@ import com.aionemu.gameserver.model.templates.recipe.LunaTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LUNA_SHOP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LUNA_SHOP_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
+import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -66,8 +65,8 @@ public class LunaShopService {
      */
     @Setter
     private static volatile ObjectProvider<LunaShopService> instanceProvider;
-	private final PlayerLunaShopDAO playerLunaShopDAO;
-	private final PlayerWardrobeDAO playerWardrobeDAO;
+	private final PlayerLunaShopDao playerLunaShopDAO;
+	private final PlayerWardrobeDao playerWardrobeDAO;
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
 	private final List<Integer> DailyCraft = new ArrayList<>();
@@ -86,29 +85,9 @@ public class LunaShopService {
 	 * @param playerLunaShopDAO 露娜商店数据访问对象 / Luna shop DAO
 	 * @param playerWardrobeDAO 衣柜数据访问对象 / wardrobe DAO
 	 */
-	public LunaShopService(@NonNull PlayerLunaShopDAO playerLunaShopDAO, @NonNull PlayerWardrobeDAO playerWardrobeDAO) {
+	public LunaShopService(@NonNull PlayerLunaShopDao playerLunaShopDAO, @NonNull PlayerWardrobeDao playerWardrobeDAO) {
 		this.playerLunaShopDAO = playerLunaShopDAO;
 		this.playerWardrobeDAO = playerWardrobeDAO;
-	}
-
-	/**
-	 * 构造露娜商店服务。
-	 * Constructs the Luna shop service.
-	 */
-	public LunaShopService() {
-		this(safeDao(PlayerLunaShopDAO.class, com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO::new),
-			safeDao(PlayerWardrobeDAO.class, com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	public void init() {

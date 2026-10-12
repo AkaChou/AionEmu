@@ -16,9 +16,8 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.dao.LadderDAO;
+import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
 import com.aionemu.gameserver.eventEngine.Event;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -111,12 +110,12 @@ public class LadderService {
 	/**
 	 * 天梯 DAO。 / Ladder DAO.
 	 */
-	private final LadderDAO ladderDAO;
+	private final LadderPlayerDao ladderDAO;
 
 	/**
 	 * Spring 绑定的天梯 DAO（供子包战场域静态类复用）。 / Spring-bound ladder DAO reused by battleground-subpackage statics.
 	 */
-	private static volatile LadderDAO boundLadderDAO;
+	private static volatile LadderPlayerDao boundLadderDAO;
 
 	/**
 	 * 使用指定的天梯 DAO 构造服务并启动周期排名刷新。
@@ -124,7 +123,7 @@ public class LadderService {
 	 *
 	 * @param ladderDAO 天梯数据访问对象 / ladder DAO
 	 */
-	public LadderService(@NonNull LadderDAO ladderDAO) {
+	public LadderService(@NonNull LadderPlayerDao ladderDAO) {
 		this.ladderDAO = ladderDAO;
 		boundLadderDAO = ladderDAO;
 		int intervalMs = RANK_UPDATE_INTERVAL * 60 * 1000;
@@ -133,44 +132,19 @@ public class LadderService {
 	}
 
 	/**
-	 * 返回天梯 DAO；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
+	 * 返回天梯 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
 	 * 公开开放，供子包战场域静态类（如 {@code BattlegroundLadder}）复用同一绑定。
-	 * Returns the ladder DAO; falls back to safeDao construction when unbound (offline/unit tests).
+	 * Returns the ladder DAO; Spring must bind it at startup, otherwise it fails fast.
 	 * Public so the battleground subpackage statics reuse the same binding.
 	 *
 	 * @return 天梯 DAO / ladder DAO
 	 */
-	public static LadderDAO ladderDAO() {
-		LadderDAO current = boundLadderDAO;
+	public static LadderPlayerDao ladderDAO() {
+		LadderPlayerDao current = boundLadderDAO;
 		if (current == null) {
-			synchronized (LadderService.class) {
-				current = boundLadderDAO;
-				if (current == null) {
-					boundLadderDAO = current = safeDao(LadderDAO.class,
-						com.aionemu.gameserver.dao.impl.LadderDAO::new);
-				}
-			}
+			throw new IllegalStateException("LadderPlayerDao is not bound; Spring must bind it at startup");
 		}
 		return current;
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public LadderService() {
-		this(safeDao(LadderDAO.class, com.aionemu.gameserver.dao.impl.LadderDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

@@ -11,53 +11,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.controllers.FlyController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.CraftCooldownsDAO;
-import com.aionemu.gameserver.dao.EventItemsDAO;
-import com.aionemu.gameserver.dao.F2pDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
-import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
-import com.aionemu.gameserver.dao.HousesDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemCooldownsDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.MotionDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
-import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerBindPointDAO;
-import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEffectsDAO;
-import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
-import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
-import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
-import com.aionemu.gameserver.dao.PlayerSettingsDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
-import com.aionemu.gameserver.dao.PlayerVarsDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
-import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
@@ -119,87 +78,17 @@ public class PlayerService {
 	}
 
 	/**
-	 * 返回持久层依赖聚合；未绑定（离线/单测环境）时按 safeDao 兜底构建并缓存。
-	 * Returns the persistence dependency aggregate; falls back to safeDao construction when unbound (offline/unit tests).
+	 * 返回持久层依赖聚合；必须由 Spring 在启动期绑定，未绑定即失败。
+	 * Returns the persistence dependency aggregate; Spring must bind it at startup, otherwise it fails fast.
 	 *
 	 * @return 依赖聚合 / dependency aggregate
 	 */
 	public static PlayerServiceDaos daos() {
 		PlayerServiceDaos current = boundDaos;
 		if (current == null) {
-			synchronized (PlayerService.class) {
-				current = boundDaos;
-				if (current == null) {
-					boundDaos = current = buildOfflineDaos();
-				}
-			}
+			throw new IllegalStateException("PlayerServiceDaos is not bound; Spring must bind it at startup");
 		}
 		return current;
-	}
-
-	/**
-	 * 离线兜底构建依赖聚合：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Builds the aggregate offline: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	private static PlayerServiceDaos buildOfflineDaos() {
-		return new PlayerServiceDaos(
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			safeDao(OldNamesDAO.class, com.aionemu.gameserver.dao.impl.OldNamesDAO::new),
-			safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
-			safeDao(PlayerSkillListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillListDAO::new),
-			safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			safeDao(PlayerStigmasEquippedDAO.class, com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO::new),
-			safeDao(PlayerEquipmentSettingDAO.class, com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO::new),
-			safeDao(PlayerSettingsDAO.class, com.aionemu.gameserver.dao.impl.PlayerSettingsDAO::new),
-			safeDao(PlayerQuestListDAO.class, com.aionemu.gameserver.dao.impl.PlayerQuestListDAO::new),
-			safeDao(AbyssRankDAO.class, com.aionemu.gameserver.dao.impl.AbyssRankDAO::new),
-			safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
-			safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new),
-			safeDao(PlayerRegisteredItemsDAO.class, com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO::new),
-			safeDao(ItemStoneListDAO.class, com.aionemu.gameserver.dao.impl.ItemStoneListDAO::new),
-			safeDao(MailDAO.class, com.aionemu.gameserver.dao.impl.MailDAO::new),
-			safeDao(PortalCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PortalCooldownsDAO::new),
-			safeDao(CraftCooldownsDAO.class, com.aionemu.gameserver.dao.impl.CraftCooldownsDAO::new),
-			safeDao(PlayerNpcFactionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO::new),
-			safeDao(PlayerLunaShopDAO.class, com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO::new),
-			safeDao(EventItemsDAO.class, com.aionemu.gameserver.dao.impl.EventItemsDAO::new),
-			safeDao(PlayerMacrossesDAO.class, com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO::new),
-			safeDao(FriendListDAO.class, com.aionemu.gameserver.dao.impl.FriendListDAO::new),
-			safeDao(BlockListDAO.class, com.aionemu.gameserver.dao.impl.BlockListDAO::new),
-			safeDao(PlayerTitleListDAO.class, com.aionemu.gameserver.dao.impl.PlayerTitleListDAO::new),
-			safeDao(PlayerCreativityPointsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO::new),
-			safeDao(PlayerEventsWindowDAO.class, com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO::new),
-			safeDao(PlayerABDAO.class, com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO::new),
-			safeDao(PlayerWardrobeDAO.class, com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO::new),
-			safeDao(F2pDAO.class, com.aionemu.gameserver.dao.impl.F2pDAO::new),
-			safeDao(MotionDAO.class, com.aionemu.gameserver.dao.impl.MotionDAO::new),
-			safeDao(PlayerVarsDAO.class, com.aionemu.gameserver.dao.impl.PlayerVarsDAO::new),
-			safeDao(PlayerRecipesDAO.class, com.aionemu.gameserver.dao.impl.PlayerRecipesDAO::new),
-			safeDao(PlayerSkillSkinListDAO.class, com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO::new),
-			safeDao(PlayerEffectsDAO.class, com.aionemu.gameserver.dao.impl.PlayerEffectsDAO::new),
-			safeDao(PlayerCooldownsDAO.class, com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO::new),
-			safeDao(ItemCooldownsDAO.class, com.aionemu.gameserver.dao.impl.ItemCooldownsDAO::new),
-			safeDao(HouseObjectCooldownsDAO.class, com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO::new),
-			safeDao(PlayerBindPointDAO.class, com.aionemu.gameserver.dao.impl.PlayerBindPointDAO::new),
-			safeDao(PlayerLifeStatsDAO.class, com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO::new),
-			safeDao(PlayerEmotionListDAO.class, com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO::new),
-			safeDao(com.aionemu.gameserver.dao.PlayerPetsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPetsDAO::new),
-			safeDao(com.aionemu.gameserver.dao.PlayerMinionsDAO.class, com.aionemu.gameserver.dao.impl.PlayerMinionsDAO::new),
-			safeDao(com.aionemu.gameserver.dao.PlayerShugoSweepDAO.class, com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO::new),
-			safeDao(com.aionemu.gameserver.dao.HouseScriptsDAO.class, com.aionemu.gameserver.dao.impl.HouseScriptsDAO::new),
-			safeDao(com.aionemu.gameserver.dao.PlayerPasskeyDAO.class, com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO::new),
-			safeDao(com.aionemu.gameserver.dao.PlayerTransformDAO.class, com.aionemu.gameserver.dao.impl.PlayerTransfoDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

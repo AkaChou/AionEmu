@@ -8,15 +8,11 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CacheConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.account.AccountTime;
@@ -29,6 +25,11 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAppearanceDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPunishmentDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMap;
@@ -43,47 +44,48 @@ import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
 @RequiredArgsConstructor
 public class AccountService {
 
-	private static volatile AccountService instance;
+	private static volatile ObjectProvider<AccountService> instanceProvider;
 	@NonNull
-	private final InventoryDAO inventoryDAO;
+	private final InventoryDao inventoryDAO;
 	@NonNull
-	private final PlayerDAO playerDAO;
+	private final PlayerDao playerDAO;
 	@NonNull
-	private final PlayerAppearanceDAO playerAppearanceDAO;
+	private final PlayerAppearanceDao playerAppearanceDAO;
 	@NonNull
-	private final PlayerPunishmentsDAO playerPunishmentsDAO;
+	private final PlayerPunishmentDao playerPunishmentsDAO;
 	@NonNull
-	private final LegionMemberDAO legionMemberDAO;
+	private final LegionMemberDao legionMemberDAO;
 
-	public AccountService() {
-		this(safeDao(InventoryDAO.class, com.aionemu.gameserver.dao.impl.InventoryDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			 safeDao(PlayerAppearanceDAO.class, com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO::new),
-			 safeDao(PlayerPunishmentsDAO.class, com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO::new),
-			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
-	}
-
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
 	public static AccountService getInstance() {
-		AccountService current = instance;
-		if (current == null) {
-			synchronized (AccountService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = new AccountService();
-				}
-			}
+		ObjectProvider<AccountService> provider = instanceProvider;
+		AccountService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("AccountService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return current;
+		return provided;
+	}
+
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * @param instanceProvider Spring provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AccountService> instanceProvider) {
+		AccountService.instanceProvider = instanceProvider;
 	}
 
 
@@ -176,8 +178,8 @@ public class AccountService {
 	public static Account loadAccount(int accountId) {
 		Account account = new Account(accountId);
 
-		PlayerDAO playerDAO = getInstance().playerDAO;
-		PlayerAppearanceDAO appereanceDAO = getInstance().playerAppearanceDAO;
+		PlayerDao playerDAO = getInstance().playerDAO;
+		PlayerAppearanceDao appereanceDAO = getInstance().playerAppearanceDAO;
 
 		List<Integer> playerIdList = playerDAO.getPlayerOidsOnAccount(accountId);
 

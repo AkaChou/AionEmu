@@ -14,11 +14,10 @@ import java.util.Objects;
 import lombok.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -85,11 +84,11 @@ public class PlayerTransferService {
 	/**
 	 * 玩家 DAO / Player DAO
 	 */
-	private final PlayerDAO dao;
+	private final PlayerDao dao;
 	/**
 	 * 军团成员 DAO / Legion member DAO
 	 */
-	private final LegionMemberDAO legionMemberDAO;
+	private final LegionMemberDao legionMemberDAO;
 	private final Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private volatile List<Integer> rsList = List.of();
 
@@ -100,30 +99,10 @@ public class PlayerTransferService {
 	 * @param playerDAO       玩家 DAO / Player DAO
 	 * @param legionMemberDAO 军团成员 DAO / Legion member DAO
 	 */
-	public PlayerTransferService(@NonNull PlayerDAO playerDAO, @NonNull LegionMemberDAO legionMemberDAO) {
+	public PlayerTransferService(@NonNull PlayerDao playerDAO, @NonNull LegionMemberDao legionMemberDAO) {
 		this.dao = Objects.requireNonNull(playerDAO, "playerDAO must not be null");
 		this.legionMemberDAO = Objects.requireNonNull(legionMemberDAO, "legionMemberDAO must not be null");
 		reload();
-	}
-
-	/**
-	 * 构造玩家跨服转移服务（使用 safeDao 解析依赖）。
-	 * Constructs the player transfer service with safeDao resolution.
-	 */
-	public PlayerTransferService() {
-		this(safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new),
-			safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

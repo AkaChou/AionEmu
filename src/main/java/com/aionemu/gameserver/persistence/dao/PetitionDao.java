@@ -1,0 +1,57 @@
+package com.aionemu.gameserver.persistence.dao;
+
+import java.util.Set;
+
+import com.aionemu.gameserver.model.Petition;
+import com.aionemu.gameserver.persistence.entity.PetitionPo;
+import com.mybatisflex.core.service.IService;
+
+/**
+ * 玩家请愿/申诉数据访问层。
+ * Data access layer for player petitions.
+ */
+public interface PetitionDao extends IService<PetitionPo> {
+
+	/**
+	 * 获取下一个可用的请愿 ID。
+	 * Returns the next available petition ID.
+	 * @return 下一个可用 ID / next available id
+	 */
+	int getNextAvailableId();
+
+	/**
+	 * 插入一条请愿记录。
+	 * Inserts a petition record.
+	 * @param p 请愿对象 / petition
+	 */
+	void insertPetition(Petition p);
+
+	/**
+	 * 按玩家对象 ID 删除请愿。
+	 * Deletes petitions by player object ID.
+	 * @param playerObjId 玩家对象 ID / player object id
+	 */
+	void deletePetition(int playerObjId);
+
+	/**
+	 * 获取全部请愿集合。
+	 * Returns the set of all petitions.
+	 * @return 申诉集合 / set of petitions
+	 */
+	Set<Petition> getPetitions();
+
+	/**
+	 * 按请愿 ID 获取请愿。
+	 * Returns a petition by its ID.
+	 * @param petitionId 申诉 ID / petition id
+	 * @return 申诉 / petition
+	 */
+	Petition getPetitionById(int petitionId);
+
+	/**
+	 * 将请愿标记为已回复。
+	 * Marks the petition as replied.
+	 * @param petitionId 申诉 ID / petition id
+	 */
+	void setReplied(int petitionId);
+}

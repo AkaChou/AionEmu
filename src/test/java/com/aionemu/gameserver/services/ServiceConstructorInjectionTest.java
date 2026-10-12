@@ -1,5 +1,72 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.persistence.dao.impl.WebRewardDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.VeteranRewardDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.TownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.SurveyDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.SpecialLandingDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.SiegeLocationDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ServerVariableDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PortalCooldownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerWardrobeDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerTransformDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerTitleDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerStigmasEquippedDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerSkillSkinDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerSkillDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerShugoSweepDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerSettingDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerRegisteredItemDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerRecipeDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerQuestDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerPunishmentDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerPetDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerPassportDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerPasskeyDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerNpcFactionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerMotionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerMinionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerMacrosseDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerLunaShopDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerLifeStatDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerEventsWindowDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerEquipmentSettingDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerEmotionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerEffectDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerCpDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerCooldownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerBindPointDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerAtreianBestiaryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerAppearanceDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PetitionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.OutpostLocationDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.OldNameDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.MailDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.LimitedQuestCounterDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.LegionMemberDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.LegionDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.LadderPlayerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ItemStoneDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ItemCooldownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.HouseScriptDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.HouseObjectCooldownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.HouseDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.HouseBidDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.GuideDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.FriendDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.F2paccountDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.EventItemDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.CraftCooldownDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.CompetitionRankingDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ChallengeTaskDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.BrokerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.BlockDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.BaseLocationDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.AnnouncementDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.AbyssRankDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.AbyssLandingDaoImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,48 +85,48 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
-import com.aionemu.gameserver.dao.AnnouncementsDAO;
-import com.aionemu.gameserver.dao.BaseDAO;
-import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.BrokerDAO;
-import com.aionemu.gameserver.dao.ChallengeTasksDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
-import com.aionemu.gameserver.dao.GuideDAO;
-import com.aionemu.gameserver.dao.HouseBidsDAO;
-import com.aionemu.gameserver.dao.HousesDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
-import com.aionemu.gameserver.dao.LadderDAO;
-import com.aionemu.gameserver.dao.LegionDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.LimitedQuestDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
-import com.aionemu.gameserver.dao.OutpostDAO;
-import com.aionemu.gameserver.dao.PetitionDAO;
-import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerPassportsDAO;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
-import com.aionemu.gameserver.dao.RewardServiceDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
-import com.aionemu.gameserver.dao.SiegeDAO;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
-import com.aionemu.gameserver.dao.SurveyControllerDAO;
-import com.aionemu.gameserver.dao.TownDAO;
-import com.aionemu.gameserver.dao.VeteranRewardsDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssLandingDao;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.SpecialLandingDao;
+import com.aionemu.gameserver.persistence.dao.AnnouncementDao;
+import com.aionemu.gameserver.persistence.dao.BaseLocationDao;
+import com.aionemu.gameserver.persistence.dao.BlockDao;
+import com.aionemu.gameserver.persistence.dao.BrokerDao;
+import com.aionemu.gameserver.persistence.dao.ChallengeTaskDao;
+import com.aionemu.gameserver.persistence.dao.FriendDao;
+import com.aionemu.gameserver.persistence.dao.GuideDao;
+import com.aionemu.gameserver.persistence.dao.HouseBidDao;
+import com.aionemu.gameserver.persistence.dao.HouseDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
+import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
+import com.aionemu.gameserver.persistence.dao.LegionDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.LimitedQuestCounterDao;
+import com.aionemu.gameserver.persistence.dao.MailDao;
+import com.aionemu.gameserver.persistence.dao.OldNameDao;
+import com.aionemu.gameserver.persistence.dao.OutpostLocationDao;
+import com.aionemu.gameserver.persistence.dao.PetitionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAtreianBestiaryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAppearanceDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
+import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPetDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPunishmentDao;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
+import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
+import com.aionemu.gameserver.persistence.dao.PlayerStigmasEquippedDao;
+import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
+import com.aionemu.gameserver.persistence.dao.WebRewardDao;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
+import com.aionemu.gameserver.persistence.dao.CompetitionRankingDao;
+import com.aionemu.gameserver.persistence.dao.SurveyDao;
+import com.aionemu.gameserver.persistence.dao.TownDao;
+import com.aionemu.gameserver.persistence.dao.VeteranRewardDao;
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.Race;
@@ -112,7 +179,7 @@ class ServiceConstructorInjectionTest {
 		Town elyosTown = createTestTown(101, Race.ELYOS);
 		Town asmoTown = createTestTown(201, Race.ASMODIANS);
 
-		TownDAO stubTownDAO = new TownDAO() {
+		TownDao stubTownDAO = new TownDaoImpl() {
 			@Override
 			public Map<Integer, Town> load(Race race) {
 				Map<Integer, Town> map = new HashMap<>();
@@ -126,11 +193,6 @@ class ServiceConstructorInjectionTest {
 
 			@Override
 			public void store(Town town) {
-			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
 			}
 		};
 
@@ -159,7 +221,7 @@ class ServiceConstructorInjectionTest {
 
 	@Test
 	void announcementServiceConstructsWithInjectedDao() {
-		AnnouncementsDAO stubAnnouncementsDAO = new AnnouncementsDAO() {
+		AnnouncementDao stubAnnouncementsDAO = new AnnouncementDaoImpl() {
 			@Override
 			public Set<Announcement> getAnnouncements() {
 				return Collections.emptySet();
@@ -173,11 +235,6 @@ class ServiceConstructorInjectionTest {
 			public boolean delAnnouncement(int idAnnounce) {
 				return true;
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		AnnouncementService announcementService = new AnnouncementService(stubAnnouncementsDAO);
@@ -187,7 +244,7 @@ class ServiceConstructorInjectionTest {
 
 	@Test
 	void abyssLandingServiceConstructsWithInjectedDao() {
-		AbyssLandingDAO stubAbyssLandingDAO = new AbyssLandingDAO() {
+		AbyssLandingDao stubAbyssLandingDAO = new AbyssLandingDaoImpl() {
 			@Override
 			public void loadLandingLocations(Map<Integer, LandingLocation> locations) {
 				return;
@@ -201,11 +258,6 @@ class ServiceConstructorInjectionTest {
 			public boolean updateLandingLocation(LandingLocation location) {
 				return true;
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		AbyssLandingService service = new AbyssLandingService(stubAbyssLandingDAO);
@@ -214,7 +266,7 @@ class ServiceConstructorInjectionTest {
 
 	@Test
 	void abyssLandingSpecialServiceConstructsWithInjectedDao() {
-		AbyssSpecialLandingDAO stubAbyssSpecialLandingDAO = new AbyssSpecialLandingDAO() {
+		SpecialLandingDao stubAbyssSpecialLandingDAO = new SpecialLandingDaoImpl() {
 			@Override
 			public void loadLandingSpecialLocations(Map<Integer, LandingSpecialLocation> locations) {
 				return;
@@ -228,11 +280,6 @@ class ServiceConstructorInjectionTest {
 			public boolean updateLandingSpecialLocation(LandingSpecialLocation location) {
 				return true;
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		AbyssLandingSpecialService service = new AbyssLandingSpecialService(stubAbyssSpecialLandingDAO);
@@ -242,8 +289,8 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void abyssRankUpdateServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
-		ServerVariablesDAO serverVariablesDAO = new com.aionemu.gameserver.dao.impl.ServerVariablesDAO(client);
+		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
+		ServerVariableDao serverVariablesDAO = new ServerVariableDaoImpl();
 
 		AbyssRankUpdateService service = new AbyssRankUpdateService(abyssRankDAO, serverVariablesDAO);
 		assertNotNull(service);
@@ -255,7 +302,7 @@ class ServiceConstructorInjectionTest {
 		try {
 			CleaningConfig.ABYSS_CLEANING_ENABLE = false;
 			JdbcClient client = createNoAccessJdbcClient();
-			AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+			AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 
 			AbyssRankCleaningService service = new AbyssRankCleaningService(abyssRankDAO);
 			assertNotNull(service);
@@ -267,7 +314,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void abyssRankingCacheConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 
 		AbyssRankingCache service = new AbyssRankingCache(abyssRankDAO);
 		assertNotNull(service);
@@ -275,7 +322,7 @@ class ServiceConstructorInjectionTest {
 
 	@Test
 	void exchangeServiceConstructsWithInjectedDao() {
-		InventoryDAO concreteStubDao = new InventoryDAO() {
+		InventoryDao concreteStubDao = new InventoryDaoImpl() {
 			@Override
 			public Storage loadStorage(int playerId, StorageType storageType) {
 				return null;
@@ -329,11 +376,6 @@ class ServiceConstructorInjectionTest {
 			public int[] getUsedIDs() {
 				return new int[0];
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		ExchangeService service = new ExchangeService(concreteStubDao);
@@ -343,7 +385,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void petitionServiceConstructsWithInjectedDaoAndLoadsPetitions() {
 		Petition stubPetition = new Petition(501);
-		PetitionDAO stubPetitionDAO = new PetitionDAO() {
+		PetitionDao stubPetitionDAO = new PetitionDaoImpl() {
 			@Override
 			public Set<Petition> getPetitions() {
 				return Collections.singleton(stubPetition);
@@ -370,11 +412,6 @@ class ServiceConstructorInjectionTest {
 			public int getNextAvailableId() {
 				return 502;
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		PetitionService service = new PetitionService(stubPetitionDAO);
@@ -383,7 +420,7 @@ class ServiceConstructorInjectionTest {
 
 	@Test
 	void brokerServiceConstructsWithInjectedDaos() {
-		BrokerDAO stubBrokerDAO = new BrokerDAO() {
+		BrokerDao stubBrokerDAO = new BrokerDaoImpl(new ItemStoneDaoImpl()) {
 			@Override
 			public List<BrokerItem> loadBroker() {
 				return Collections.emptyList();
@@ -403,14 +440,9 @@ class ServiceConstructorInjectionTest {
 			public int[] getUsedIDs() {
 				return new int[0];
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
-		InventoryDAO stubInventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(createNoAccessJdbcClient());
+		InventoryDao stubInventoryDAO = new InventoryDaoImpl();
 
 		BrokerService brokerService = new BrokerService(stubBrokerDAO, stubInventoryDAO);
 		assertNotNull(brokerService);
@@ -420,11 +452,10 @@ class ServiceConstructorInjectionTest {
 	void mailServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
 
-		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client,
-			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client));
-		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
+		MailDao mailDAO = new MailDaoImpl(new ItemStoneDaoImpl());
+		InventoryDao inventoryDAO = new InventoryDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 
 		MailService mailService = new MailService(mailDAO, inventoryDAO, playerDAO, abyssRankDAO);
 		assertNotNull(mailService);
@@ -433,7 +464,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void punishmentServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerPunishmentsDAO dao = new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client);
+		PlayerPunishmentDao dao = new PlayerPunishmentDaoImpl();
 		PunishmentService service = new PunishmentService(dao);
 		assertNotNull(service);
 	}
@@ -441,9 +472,9 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void renameServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		OldNamesDAO oldNamesDAO = new com.aionemu.gameserver.dao.impl.OldNamesDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
+		OldNameDao oldNamesDAO = new OldNameDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		LegionDao legionDAO = new LegionDaoImpl(null, null, null, null, null, null, new org.springframework.transaction.support.TransactionTemplate());
 		RenameService service = new RenameService(oldNamesDAO, playerDAO, legionDAO);
 		assertNotNull(service);
 	}
@@ -451,7 +482,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void surveyServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SurveyControllerDAO dao = new com.aionemu.gameserver.dao.impl.SurveyControllerDAO(client);
+		SurveyDao dao = new SurveyDaoImpl();
 		SurveyService service = new SurveyService(dao);
 		assertNotNull(service);
 	}
@@ -459,7 +490,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void htmlServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		GuideDAO dao = new com.aionemu.gameserver.dao.impl.GuideDAO(client);
+		GuideDao dao = new GuideDaoImpl();
 		HTMLService service = new HTMLService(dao);
 		assertNotNull(service);
 	}
@@ -467,7 +498,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void databaseCleaningServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerDAO dao = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		PlayerDao dao = new PlayerDaoImpl();
 		DatabaseCleaningService service = new DatabaseCleaningService(dao);
 		assertNotNull(service);
 	}
@@ -475,11 +506,11 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void accountServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		PlayerAppearanceDAO playerAppearanceDAO = new com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO(client);
-		PlayerPunishmentsDAO playerPunishmentsDAO = new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client);
-		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+		InventoryDao inventoryDAO = new InventoryDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		PlayerAppearanceDao playerAppearanceDAO = new PlayerAppearanceDaoImpl();
+		PlayerPunishmentDao playerPunishmentsDAO = new PlayerPunishmentDaoImpl();
+		LegionMemberDao legionMemberDAO = new LegionMemberDaoImpl();
 
 		AccountService service = new AccountService(inventoryDAO, playerDAO, playerAppearanceDAO, playerPunishmentsDAO, legionMemberDAO);
 		assertNotNull(service);
@@ -488,9 +519,9 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void socialServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		BlockListDAO blockListDAO = new com.aionemu.gameserver.dao.impl.BlockListDAO(client, playerDAO);
-		FriendListDAO friendListDAO = new com.aionemu.gameserver.dao.impl.FriendListDAO(client, playerDAO);
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		BlockDao blockListDAO = new BlockDaoImpl(new PlayerDaoImpl());
+		FriendDao friendListDAO = new FriendDaoImpl(new PlayerDaoImpl());
 
 		SocialService service = new SocialService(blockListDAO, friendListDAO, playerDAO);
 		assertNotNull(service);
@@ -499,7 +530,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void limitedQuestServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		LimitedQuestDAO dao = new com.aionemu.gameserver.dao.impl.LimitedQuestDAO(client);
+		LimitedQuestCounterDao dao = new LimitedQuestCounterDaoImpl();
 		LimitedQuestService service = new LimitedQuestService(dao);
 		assertNotNull(service);
 	}
@@ -507,13 +538,13 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void periodicSaveServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		AbyssRankDAO abyssRankDAO = new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client);
-		PlayerSkillListDAO playerSkillListDAO = new com.aionemu.gameserver.dao.impl.PlayerSkillListDAO(client);
-		PlayerQuestListDAO playerQuestListDAO = new com.aionemu.gameserver.dao.impl.PlayerQuestListDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		PlayerStigmasEquippedDAO playerStigmasEquippedDAO = new com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO(client);
-		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		ItemStoneListDAO itemStoneListDAO = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client);
+		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
+		PlayerSkillDao playerSkillListDAO = new PlayerSkillDaoImpl();
+		PlayerQuestDao playerQuestListDAO = new PlayerQuestDaoImpl(new org.springframework.transaction.support.TransactionTemplate());
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		PlayerStigmasEquippedDao playerStigmasEquippedDAO = new PlayerStigmasEquippedDaoImpl();
+		InventoryDao inventoryDAO = new InventoryDaoImpl();
+		ItemStoneDao itemStoneListDAO = new ItemStoneDaoImpl();
 
 		PeriodicSaveService service = new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
 				playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO);
@@ -523,7 +554,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void webshopServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		RewardServiceDAO dao = new com.aionemu.gameserver.dao.impl.RewardServiceDAO(client);
+		WebRewardDao dao = new WebRewardDaoImpl();
 		WebshopService service = new WebshopService(dao);
 		assertNotNull(service);
 	}
@@ -531,10 +562,10 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void challengeTaskServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		ChallengeTasksDAO challengeTasksDAO = new com.aionemu.gameserver.dao.impl.ChallengeTasksDAO(client);
-		TownDAO townDAO = new com.aionemu.gameserver.dao.impl.TownDAO(client);
-		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		ChallengeTaskDao challengeTasksDAO = new ChallengeTaskDaoImpl();
+		TownDao townDAO = new TownDaoImpl();
+		LegionMemberDao legionMemberDAO = new LegionMemberDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
 		ChallengeTaskService service = new ChallengeTaskService(challengeTasksDAO, townDAO, legionMemberDAO, playerDAO);
 		assertNotNull(service);
 	}
@@ -542,7 +573,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void baseServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		BaseDAO dao = new com.aionemu.gameserver.dao.impl.BaseDAO(client);
+		BaseLocationDao dao = new BaseLocationDaoImpl();
 		BaseService service = new BaseService(dao);
 		assertNotNull(service);
 	}
@@ -550,7 +581,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void siegeServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SiegeDAO dao = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		SiegeLocationDao dao = new SiegeLocationDaoImpl();
 		SiegeService service = new SiegeService(dao);
 		assertNotNull(service);
 	}
@@ -558,9 +589,9 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void housingBidServiceConstructsWithInjectedDaos() throws Exception {
 		JdbcClient client = createNoAccessJdbcClient();
-		HouseBidsDAO houseBidsDAO = new com.aionemu.gameserver.dao.impl.HouseBidsDAO(client);
-		ServerVariablesDAO serverVariablesDAO = new com.aionemu.gameserver.dao.impl.ServerVariablesDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		HouseBidDao houseBidsDAO = new HouseBidDaoImpl();
+		ServerVariableDao serverVariablesDAO = new ServerVariableDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
 		HousingBidService service = new HousingBidService(houseBidsDAO, serverVariablesDAO, playerDAO);
 		assertNotNull(service);
 	}
@@ -568,7 +599,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void housingServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		HousesDAO dao = new com.aionemu.gameserver.dao.impl.HousesDAO(client);
+		HouseDao dao = new HouseDaoImpl();
 		HousingService service = new HousingService(dao);
 		assertNotNull(service);
 	}
@@ -576,14 +607,14 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void armsfusionServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		InventoryDAO dao = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
+		InventoryDao dao = new InventoryDaoImpl();
 		ArmsfusionService service = new ArmsfusionService(dao);
 		assertNotNull(service);
 	}
 
 	@Test
 	void atreianPassportServiceConstructsWithInjectedDao() {
-		PlayerPassportsDAO stubPassportsDAO = new PlayerPassportsDAO() {
+		PlayerPassportDao stubPassportsDAO = new PlayerPassportDaoImpl() {
 			@Override
 			public List<Integer> getPassports(int accountId) {
 				return Collections.emptyList();
@@ -606,11 +637,6 @@ class ServiceConstructorInjectionTest {
 			@Override
 			public void updatePassport(int accountId, int passportId, int stamps, boolean reset, Timestamp lastStamp) {
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		AtreianPassportService service = new AtreianPassportService(stubPassportsDAO);
@@ -620,8 +646,8 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void shugoSweepServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerShugoSweepDAO shugoSweepDAO = new com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		PlayerShugoSweepDao shugoSweepDAO = new PlayerShugoSweepDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
 		ShugoSweepService service = new ShugoSweepService(shugoSweepDAO, playerDAO);
 		assertNotNull(service);
 	}
@@ -629,7 +655,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void eventWindowServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerEventsWindowDAO dao = new com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO(client);
+		PlayerEventsWindowDao dao = new PlayerEventsWindowDaoImpl();
 		EventWindowService service = new EventWindowService(dao);
 		assertNotNull(service);
 	}
@@ -637,15 +663,15 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void lunaShopServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerLunaShopDAO lunaShopDAO = new com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO(client);
-		PlayerWardrobeDAO wardrobeDAO = new com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO(client);
+		PlayerLunaShopDao lunaShopDAO = new PlayerLunaShopDaoImpl();
+		PlayerWardrobeDao wardrobeDAO = new PlayerWardrobeDaoImpl();
 		LunaShopService service = new LunaShopService(lunaShopDAO, wardrobeDAO);
 		assertNotNull(service);
 	}
 
 	@Test
 	void atreianBestiaryServiceConstructsWithInjectedDao() {
-		PlayerABDAO stubBestiaryDAO = new PlayerABDAO() {
+		PlayerAtreianBestiaryDao stubBestiaryDAO = new PlayerAtreianBestiaryDaoImpl() {
 			@Override
 			public PlayerABList load(Player player) {
 				return null;
@@ -675,11 +701,6 @@ class ServiceConstructorInjectionTest {
 			public int getClaimRewardById(int playerObjId, int id) {
 				return 0;
 			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
 		};
 
 		AtreianBestiaryService service = new AtreianBestiaryService(stubBestiaryDAO);
@@ -689,11 +710,11 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void legionServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
-		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
-		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		ItemStoneListDAO itemStoneListDAO = new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client);
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		LegionDao legionDAO = new LegionDaoImpl(null, null, null, null, null, null, new org.springframework.transaction.support.TransactionTemplate());
+		LegionMemberDao legionMemberDAO = new LegionMemberDaoImpl();
+		InventoryDao inventoryDAO = new InventoryDaoImpl();
+		ItemStoneDao itemStoneListDAO = new ItemStoneDaoImpl();
+		PlayerDao playerDAO = new PlayerDaoImpl();
 		LegionService service = new LegionService(legionDAO, legionMemberDAO, inventoryDAO, itemStoneListDAO, playerDAO);
 		assertNotNull(service);
 	}
@@ -702,52 +723,55 @@ class ServiceConstructorInjectionTest {
 	void playerServiceDaosConstructWithInjectedImplsAndBind() {
 		JdbcClient client = createNoAccessJdbcClient();
 		PlayerServiceDaos daos = new PlayerServiceDaos(
-			new com.aionemu.gameserver.dao.impl.PlayerDAO(client),
-			new com.aionemu.gameserver.dao.impl.OldNamesDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerAppearanceDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerSkillListDAO(client),
-			new com.aionemu.gameserver.dao.impl.InventoryDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerStigmasEquippedDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerEquipmentSettingDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerSettingsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerQuestListDAO(client),
-			new com.aionemu.gameserver.dao.impl.AbyssRankDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerPunishmentsDAO(client),
-			new com.aionemu.gameserver.dao.impl.HousesDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerRegisteredItemsDAO(client),
-			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client),
-			new com.aionemu.gameserver.dao.impl.MailDAO(client, new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client)),
-			new com.aionemu.gameserver.dao.impl.PortalCooldownsDAO(client),
-			new com.aionemu.gameserver.dao.impl.CraftCooldownsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerNpcFactionsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerLunaShopDAO(client),
-			new com.aionemu.gameserver.dao.impl.EventItemsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerMacrossesDAO(client),
-			new com.aionemu.gameserver.dao.impl.FriendListDAO(client, new com.aionemu.gameserver.dao.impl.PlayerDAO(client)),
-			new com.aionemu.gameserver.dao.impl.BlockListDAO(client, new com.aionemu.gameserver.dao.impl.PlayerDAO(client)),
-			new com.aionemu.gameserver.dao.impl.PlayerTitleListDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerCreativityPointsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerEventsWindowDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerAtreianBestiaryDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerWardrobeDAO(client),
-			new com.aionemu.gameserver.dao.impl.F2pDAO(client),
-			new com.aionemu.gameserver.dao.impl.MotionDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerVarsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerRecipesDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerSkillSkinListDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerEffectsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerCooldownsDAO(client),
-			new com.aionemu.gameserver.dao.impl.ItemCooldownsDAO(client),
-			new com.aionemu.gameserver.dao.impl.HouseObjectCooldownsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerBindPointDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerLifeStatsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerEmotionListDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerPetsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerMinionsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerShugoSweepDAO(client),
-			new com.aionemu.gameserver.dao.impl.HouseScriptsDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerPasskeyDAO(client),
-			new com.aionemu.gameserver.dao.impl.PlayerTransfoDAO(client));
+			new PlayerDaoImpl(),
+			new OldNameDaoImpl(),
+			new PlayerAppearanceDaoImpl(),
+			new PlayerSkillDaoImpl(),
+			new InventoryDaoImpl(),
+			new PlayerStigmasEquippedDaoImpl(),
+			new PlayerEquipmentSettingDaoImpl(),
+			new PlayerSettingDaoImpl(),
+			new PlayerQuestDaoImpl(new org.springframework.transaction.support.TransactionTemplate()),
+			new AbyssRankDaoImpl(),
+			new PlayerPunishmentDaoImpl(),
+			new HouseDaoImpl(),
+			new PlayerRegisteredItemDaoImpl(),
+			new ItemStoneDaoImpl(),
+			new MailDaoImpl(new ItemStoneDaoImpl()),
+			new PortalCooldownDaoImpl(),
+			new CraftCooldownDaoImpl(),
+			new PlayerNpcFactionDaoImpl(),
+			new PlayerLunaShopDaoImpl(),
+			new EventItemDaoImpl(),
+			new PlayerMacrosseDaoImpl(),
+			new FriendDaoImpl(new PlayerDaoImpl()),
+			new BlockDaoImpl(new PlayerDaoImpl()),
+			new PlayerTitleDaoImpl(),
+			new PlayerCpDaoImpl(),
+			new PlayerEventsWindowDaoImpl(),
+			new PlayerAtreianBestiaryDaoImpl(),
+			new PlayerWardrobeDaoImpl(),
+			new F2paccountDaoImpl(),
+			new PlayerMotionDaoImpl(),
+			com.aionemu.gameserver.persistence.dao.PlayerVarDao.class.cast(java.lang.reflect.Proxy.newProxyInstance(
+				ServiceConstructorInjectionTest.class.getClassLoader(),
+				new Class<?>[]{com.aionemu.gameserver.persistence.dao.PlayerVarDao.class},
+				(proxy, method, args) -> null)),
+			new PlayerRecipeDaoImpl(),
+			new PlayerSkillSkinDaoImpl(),
+			new PlayerEffectDaoImpl(),
+			new PlayerCooldownDaoImpl(),
+			new ItemCooldownDaoImpl(),
+			new HouseObjectCooldownDaoImpl(),
+			new PlayerBindPointDaoImpl(),
+			new PlayerLifeStatDaoImpl(),
+			new PlayerEmotionDaoImpl(),
+			new PlayerPetDaoImpl(),
+			new PlayerMinionDaoImpl(),
+			new PlayerShugoSweepDaoImpl(),
+			new HouseScriptDaoImpl(),
+			new PlayerPasskeyDaoImpl(),
+			new PlayerTransformDaoImpl());
 		PlayerService.bindDaos(daos);
 		assertSame(daos, PlayerService.daos());
 		assertNotNull(daos.playerDAO());
@@ -766,7 +790,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void growthEnergyConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+		PlayerDao playerDAO = new PlayerDaoImpl();
 		GrowthEnergy service = new GrowthEnergy(playerDAO);
 		assertNotNull(service);
 		assertSame(playerDAO, service.playerDAO());
@@ -775,7 +799,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void petServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerPetsDAO playerPetsDAO = new com.aionemu.gameserver.dao.impl.PlayerPetsDAO(client);
+		PlayerPetDao playerPetsDAO = new PlayerPetDaoImpl();
 		PetService service = new PetService(playerPetsDAO);
 		assertNotNull(service);
 		assertSame(playerPetsDAO, service.playerPetsDAO());
@@ -784,8 +808,8 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void playerTransferServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		LegionMemberDAO legionMemberDAO = new com.aionemu.gameserver.dao.impl.LegionMemberDAO(client);
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		LegionMemberDao legionMemberDAO = new LegionMemberDaoImpl();
 		String previousRemoveSkillList = PlayerTransferConfig.REMOVE_SKILL_LIST;
 		try {
 			PlayerTransferConfig.REMOVE_SKILL_LIST = "*";
@@ -804,8 +828,8 @@ class ServiceConstructorInjectionTest {
 					com.aionemu.commons.services.CronService.initSingleton(TestRunnableRunner.class);
 			try {
 				JdbcClient client = createNoAccessJdbcClient();
-				VeteranRewardsDAO veteranRewardsDAO = new com.aionemu.gameserver.dao.impl.VeteranRewardsDAO(client);
-				PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
+				VeteranRewardDao veteranRewardsDAO = new VeteranRewardDaoImpl();
+				PlayerDao playerDAO = new PlayerDaoImpl();
 				VeteranRewardsService service = new VeteranRewardsService(veteranRewardsDAO, playerDAO);
 				assertNotNull(service);
 			} finally {
@@ -817,7 +841,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void seasonRankingServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SeasonRankingDAO seasonRankingDAO = new com.aionemu.gameserver.dao.impl.SeasonRankingDAO(client);
+		CompetitionRankingDao seasonRankingDAO = new CompetitionRankingDaoImpl();
 		SeasonRankingService service = new SeasonRankingService(seasonRankingDAO);
 		assertNotNull(service);
 	}
@@ -825,7 +849,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void territoryServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		LegionDAO legionDAO = new com.aionemu.gameserver.dao.impl.LegionDAO(client);
+		LegionDao legionDAO = new LegionDaoImpl(null, null, null, null, null, null, new org.springframework.transaction.support.TransactionTemplate());
 		TerritoryService service = new TerritoryService(legionDAO);
 		assertNotNull(service);
 	}
@@ -833,7 +857,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void rewardServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		RewardServiceDAO dao = new com.aionemu.gameserver.dao.impl.RewardServiceDAO(client);
+		WebRewardDao dao = new WebRewardDaoImpl();
 		RewardService service = new RewardService(dao);
 		assertNotNull(service);
 	}
@@ -841,7 +865,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void ladderServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		LadderDAO ladderDAO = new com.aionemu.gameserver.dao.impl.LadderDAO(client);
+		LadderPlayerDao ladderDAO = new LadderPlayerDaoImpl();
 		LadderService service = new LadderService(ladderDAO);
 		assertNotNull(service);
 	}
@@ -849,7 +873,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void seasonRankingUpdateServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SeasonRankingDAO seasonRankingDAO = new com.aionemu.gameserver.dao.impl.SeasonRankingDAO(client);
+		CompetitionRankingDao seasonRankingDAO = new CompetitionRankingDaoImpl();
 		SeasonRankingUpdateService service = new SeasonRankingUpdateService(seasonRankingDAO);
 		assertNotNull(service);
 	}
@@ -870,10 +894,9 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void systemMailServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		PlayerDAO playerDAO = new com.aionemu.gameserver.dao.impl.PlayerDAO(client);
-		InventoryDAO inventoryDAO = new com.aionemu.gameserver.dao.impl.InventoryDAO(client);
-		MailDAO mailDAO = new com.aionemu.gameserver.dao.impl.MailDAO(client,
-			new com.aionemu.gameserver.dao.impl.ItemStoneListDAO(client));
+		PlayerDao playerDAO = new PlayerDaoImpl();
+		InventoryDao inventoryDAO = new InventoryDaoImpl();
+		MailDao mailDAO = new MailDaoImpl(new ItemStoneDaoImpl());
 		SystemMailService service = new SystemMailService(playerDAO, inventoryDAO, mailDAO);
 		assertNotNull(service);
 	}
@@ -881,8 +904,8 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void outpostServiceConstructsWithInjectedDaos() {
 		JdbcClient client = createNoAccessJdbcClient();
-		OutpostDAO outpostDAO = new com.aionemu.gameserver.dao.impl.OutpostDAO(client);
-		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		OutpostLocationDao outpostDAO = new OutpostLocationDaoImpl();
+		SiegeLocationDao siegeDAO = new SiegeLocationDaoImpl();
 		OutpostService service = new OutpostService(outpostDAO, siegeDAO);
 		assertNotNull(service);
 	}
@@ -890,7 +913,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void fortressSiegeConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		SiegeLocationDao siegeDAO = new SiegeLocationDaoImpl();
 		FortressLocation location = new org.objenesis.ObjenesisStd().newInstance(FortressLocation.class);
 		FortressSiege siege = new FortressSiege(location, siegeDAO);
 		assertNotNull(siege);
@@ -899,7 +922,7 @@ class ServiceConstructorInjectionTest {
 	@Test
 	void artifactSiegeConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
-		SiegeDAO siegeDAO = new com.aionemu.gameserver.dao.impl.SiegeDAO(client);
+		SiegeLocationDao siegeDAO = new SiegeLocationDaoImpl();
 		ArtifactLocation location = new org.objenesis.ObjenesisStd().newInstance(ArtifactLocation.class);
 		ArtifactSiege siege = new ArtifactSiege(location, siegeDAO);
 		assertNotNull(siege);

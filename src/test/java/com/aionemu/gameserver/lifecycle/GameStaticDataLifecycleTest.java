@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import aionemu.testkit.StubPersistenceDaos;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
@@ -92,7 +94,8 @@ class GameStaticDataLifecycleTest {
         try {
             assertDoesNotThrow(() -> {
                 try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-                    context.register(GameLegacyServiceBridgeConfiguration.class, GameMovementLoopServices.class);
+                    context.register(GameLegacyServiceBridgeConfiguration.class,
+                            StubPersistenceDaos.class, GameMovementLoopServices.class);
                     context.refresh();
                 }
             });

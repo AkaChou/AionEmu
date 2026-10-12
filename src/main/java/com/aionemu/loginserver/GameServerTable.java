@@ -15,7 +15,7 @@ import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.network.gameserver.GsAuthResponse;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
-import com.aionemu.loginserver.persistence.dao.GameserversDao;
+import com.aionemu.loginserver.persistence.dao.GameserverDao;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class GameServerTable {
 
-    private final GameserversDao gameserversDao;
+    private final GameserverDao gameserversDao;
 
     /**
      * 游戏服映射 Map&lt;Id, GameServerInfo&gt;。

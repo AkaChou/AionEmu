@@ -17,10 +17,9 @@ import java.util.TreeMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
-import com.aionemu.gameserver.dao.InGameShopDAO;
+import com.aionemu.gameserver.persistence.dao.IngameshopDao;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -46,7 +45,7 @@ public class InGameShopEn {
 	@Setter
 	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
-	private final InGameShopDAO dao;
+	private final IngameshopDao dao;
 	private volatile InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
 	private final List<IGRequest> activeRequests = new ArrayList<>();
@@ -81,32 +80,9 @@ public class InGameShopEn {
 	 *
 	 * @param dao 游戏内商城 DAO / in-game-shop DAO
 	 */
-	public InGameShopEn(@NonNull InGameShopDAO dao) {
+	public InGameShopEn(@NonNull IngameshopDao dao) {
 		this.dao = dao;
 		reload();
-	}
-
-	/**
-	 * 构造引擎：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the engine: resolves the Spring bean when DAOManager is initialized, else falls back to the no-arg impl constructor.
-	 */
-	public InGameShopEn() {
-		this(safeDao());
-	}
-
-	/**
-	 * DAO 解析兜底：容器未就绪（离线/单测）时退回实现类无参构造。
-	 * DAO resolution fallback: falls back to the no-arg impl constructor when the container is not ready (offline/unit tests).
-	 */
-	private static InGameShopDAO safeDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(InGameShopDAO.class);
-			} catch (Exception e) {
-				log.debug("InGameShopDAO bean resolution failed, falling back to the no-arg impl constructor", e);
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.InGameShopDAO();
 	}
 
 	/**
@@ -115,7 +91,7 @@ public class InGameShopEn {
 	 *
 	 * @return 游戏内商城 DAO / in-game-shop DAO
 	 */
-	public InGameShopDAO inGameShopDAO() {
+	public IngameshopDao inGameShopDAO() {
 		return dao;
 	}
 

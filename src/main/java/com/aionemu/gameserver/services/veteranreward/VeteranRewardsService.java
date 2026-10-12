@@ -12,10 +12,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.VeteranRewardsDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -23,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.veteranrewards.VeteranRewards;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.VeteranRewardDao;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.Util;
 
@@ -36,8 +35,8 @@ import java.util.HashSet;
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
 
-	private final VeteranRewardsDAO veteranRewardsDAO;
-	private final PlayerDAO playerDAO;
+	private final VeteranRewardDao veteranRewardsDAO;
+	private final PlayerDao playerDAO;
 
 	/**
 	 * 奖励接收方类型，按种族或指定玩家过滤。
@@ -75,30 +74,10 @@ public class VeteranRewardsService {
 	 * @param veteranRewardsDAO 老兵奖励数据访问对象 / Veteran-rewards DAO
 	 * @param playerDAO         玩家数据访问对象 / Player DAO
 	 */
-	public VeteranRewardsService(@NonNull VeteranRewardsDAO veteranRewardsDAO, @NonNull PlayerDAO playerDAO) {
+	public VeteranRewardsService(@NonNull VeteranRewardDao veteranRewardsDAO, @NonNull PlayerDao playerDAO) {
 		this.veteranRewardsDAO = veteranRewardsDAO;
 		this.playerDAO = playerDAO;
 		Init_VeteranRewardStatusLoop();
-	}
-
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public VeteranRewardsService() {
-		this(safeDao(VeteranRewardsDAO.class, com.aionemu.gameserver.dao.impl.VeteranRewardsDAO::new),
-			safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

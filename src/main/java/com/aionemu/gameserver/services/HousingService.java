@@ -16,12 +16,9 @@ import java.util.Set;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.gameserver.controllers.HouseController;
-import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -40,6 +37,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MARK_FRIENDLIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.HouseDao;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -60,7 +58,7 @@ public class HousingService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<HousingService> instanceProvider;
-	private final HousesDAO housesDAO;
+	private final HouseDao housesDAO;
 	/**
 	 * 地图 ID 到该图房屋 / Map id to houses on that map
 	 */
@@ -102,7 +100,7 @@ public class HousingService {
 	 *
 	 * @param housesDAO 房屋数据访问对象 / houses DAO
 	 */
-	public HousingService(@NonNull HousesDAO housesDAO) {
+	public HousingService(@NonNull HouseDao housesDAO) {
 		this.housesDAO = housesDAO;
 		log.info(I18n.get("log.f983a3184f1a"));
 		Map<Integer, House> loadedCustom = null;
@@ -118,24 +116,6 @@ public class HousingService {
 		this.customHouses = new ConcurrentHashMap<>(loadedCustom != null ? loadedCustom : Collections.emptyMap());
 		this.studios = new ConcurrentHashMap<>(loadedStudios != null ? loadedStudios : Collections.emptyMap());
 		log.info(I18n.get("log.2e7366eec746"));
-	}
-
-	/**
-	 * 从数据库加载自定义房屋与工作室。
-	 * Loads custom houses and studios from the database.
-	 */
-	public HousingService() {
-		this(safeDao(HousesDAO.class, com.aionemu.gameserver.dao.impl.HousesDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

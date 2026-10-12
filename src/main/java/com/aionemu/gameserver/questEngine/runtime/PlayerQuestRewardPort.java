@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerTitleDao;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -36,31 +36,31 @@ import java.util.function.IntPredicate;
  * store today ({@code EXTEND_INVENTORY}, {@code SELECTABLE_ITEM},
  * {@code EXTEND_STIGMA}) are rejected rather than guessed; their transactional
  * wiring is deferred to the retail-calibration batch.</p>
- * <p>TITLE 奖励在调用方连接上经 {@link PlayerTitleListDAO#storeInTransaction} 持久化，
+ * <p>TITLE 奖励在调用方连接上经 {@link PlayerTitleDao#storeInTransaction} 持久化，
  * 与任务状态同事务；重复领取幂等（已拥有则不重复发放）。
  * 获得称号消息和 TitleList 刷新仅在事务提交后发送。</p>
  */
 public final class PlayerQuestRewardPort implements QuestRewardPort {
 	private final QuestPlayerPort players;
-	private final InventoryDAO inventoryDao;
-	private final PlayerDAO playerDao;
-	private final PlayerTitleListDAO titleListDao;
+	private final InventoryDao inventoryDao;
+	private final PlayerDao playerDao;
+	private final PlayerTitleDao titleListDao;
 	private final BiFunction<Player, List<QuestItems>, Boolean> itemAdder;
 	private final Consumer<Item> itemReleaser;
 	private final IntPredicate randomPoolExists;
 	private final IntFunction<QuestItems> randomDraw;
 
-	public PlayerQuestRewardPort(QuestPlayerPort players, InventoryDAO inventoryDao, PlayerDAO playerDao,
-			BiFunction<Player, List<QuestItems>, Boolean> itemAdder, PlayerTitleListDAO titleListDao) {
+	public PlayerQuestRewardPort(QuestPlayerPort players, InventoryDao inventoryDao, PlayerDao playerDao,
+			BiFunction<Player, List<QuestItems>, Boolean> itemAdder, PlayerTitleDao titleListDao) {
 		this(players, inventoryDao, playerDao, itemAdder, ItemService::releaseItemId, titleListDao,
 			poolId -> DataManager.QUEST_RANDOM_REWARDS != null
 				&& DataManager.QUEST_RANDOM_REWARDS.containsPool(poolId),
 			poolId -> DataManager.QUEST_RANDOM_REWARDS.draw(poolId));
 	}
 
-	PlayerQuestRewardPort(QuestPlayerPort players, InventoryDAO inventoryDao, PlayerDAO playerDao,
+	PlayerQuestRewardPort(QuestPlayerPort players, InventoryDao inventoryDao, PlayerDao playerDao,
 			BiFunction<Player, List<QuestItems>, Boolean> itemAdder, Consumer<Item> itemReleaser,
-			PlayerTitleListDAO titleListDao, IntPredicate randomPoolExists, IntFunction<QuestItems> randomDraw) {
+			PlayerTitleDao titleListDao, IntPredicate randomPoolExists, IntFunction<QuestItems> randomDraw) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.inventoryDao = Objects.requireNonNull(inventoryDao, "inventoryDao");
 		this.playerDao = Objects.requireNonNull(playerDao, "playerDao");

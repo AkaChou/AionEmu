@@ -3,27 +3,24 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.lang.reflect.Proxy;
 import java.util.Collections;
 
-import javax.sql.DataSource;
-
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.simple.JdbcClient;
 
-import com.aionemu.gameserver.dao.impl.InventoryDAO;
-import com.aionemu.gameserver.dao.impl.ItemStoneListDAO;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ItemStoneDaoImpl;
 
 /**
  * 周期存盘脏标记防空转单元测试。
- * Unit tests verifying that clean entities bypass database connection checkout during periodic flush.
+ * Unit tests verifying that clean entities bypass database access during periodic flush.
+ * <p>空集合直接短路返回，不做任何 Mapper 交互，因此无需装配 Mapper 即可断言。</p>
+ * <p>Empty collections short-circuit before any Mapper interaction, so the assertion holds without wired mappers.</p>
  */
 class PeriodicSaveDirtyFlushTest {
 
 	@Test
 	void emptyItemListBypassesDatabaseCheckoutInInventoryDAO() {
-		DataSource noAccessDataSource = createNoAccessDataSource();
-		InventoryDAO dao = new InventoryDAO(JdbcClient.create(noAccessDataSource));
+		InventoryDaoImpl dao = new InventoryDaoImpl();
 
 		assertDoesNotThrow(() -> {
 			boolean result = dao.store(Collections.emptyList(), 12345, null, null);
@@ -33,25 +30,11 @@ class PeriodicSaveDirtyFlushTest {
 
 	@Test
 	void emptyItemStoneListBypassesDatabaseCheckoutInItemStoneListDAO() {
-		DataSource noAccessDataSource = createNoAccessDataSource();
-		ItemStoneListDAO dao = new ItemStoneListDAO(JdbcClient.create(noAccessDataSource));
+		ItemStoneDaoImpl dao = new ItemStoneDaoImpl();
 
 		assertDoesNotThrow(() -> {
 			dao.save(Collections.emptyList());
 			dao.storeManaStones(Collections.emptySet());
 		});
-	}
-
-	private static DataSource createNoAccessDataSource() {
-		return (DataSource) Proxy.newProxyInstance(
-			PeriodicSaveDirtyFlushTest.class.getClassLoader(),
-			new Class<?>[]{DataSource.class},
-			(proxy, method, args) -> {
-				if ("getConnection".equals(method.getName())) {
-					throw new AssertionError("对干净/未变动实体执行存盘时不应尝试获取数据库连接！");
-				}
-				return null;
-			}
-		);
 	}
 }

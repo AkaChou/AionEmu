@@ -14,7 +14,6 @@ import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.ItemSkillEnhanceData;
 import com.aionemu.gameserver.model.PlayerClass;

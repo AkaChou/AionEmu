@@ -1,15 +1,17 @@
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.MailDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.ItemStoneDaoImpl;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.aionemu.commons.database.dao.DAO;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.ServiceContext;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.MailDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -48,8 +49,9 @@ class SystemMailServiceTest {
 			PlayerCommonData daoRecipientData = recipientData(1, "Recipient", 4);
 			PlayerCommonData onlineRecipientData = recipientData(1, "Recipient", 4);
 			Player onlineRecipient = playerWithCommonData(onlineRecipientData);
+			FakePlayerDAO playerDao = new FakePlayerDAO(daoRecipientData);
+			FakeInventoryDAO inventoryDao = new FakeInventoryDAO();
 			FakeMailDAO mailDao = new FakeMailDAO();
-			installDaos(new FakePlayerDAO(daoRecipientData), mailDao, new FakeInventoryDAO());
 
 			FakeWorld world = OBJENESIS.newInstance(FakeWorld.class);
 			world.player = onlineRecipient;
@@ -57,7 +59,7 @@ class SystemMailServiceTest {
 			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
-				SystemMailService service = service();
+				SystemMailService service = service(playerDao, inventoryDao, mailDao);
 
 				assertDoesNotThrow(() -> service.sendMail("$$TEST", "Recipient", "Title", "Body", 0, 0, 0, 0,
 						LetterType.NORMAL));
@@ -69,7 +71,6 @@ class SystemMailServiceTest {
 				assertEquals("Recipient", mailDao.updatedRecipientName);
 			} finally {
 				bootstrapServices.destroy();
-				DAOManager.shutdown();
 			}
 		}
 	}
@@ -81,8 +82,9 @@ class SystemMailServiceTest {
 			PlayerCommonData onlineRecipientData = recipientData(1, "Recipient", 4);
 			Player onlineRecipient = playerWithCommonData(onlineRecipientData);
 			onlineRecipient.setMailbox(new Mailbox(onlineRecipient));
+			FakePlayerDAO playerDao = new FakePlayerDAO(daoRecipientData);
+			FakeInventoryDAO inventoryDao = new FakeInventoryDAO();
 			FakeMailDAO mailDao = new FakeMailDAO();
-			installDaos(new FakePlayerDAO(daoRecipientData), mailDao, new FakeInventoryDAO());
 
 			FakeWorld world = OBJENESIS.newInstance(FakeWorld.class);
 			world.findResults = new Player[] { null, onlineRecipient };
@@ -90,7 +92,7 @@ class SystemMailServiceTest {
 			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
-				SystemMailService service = service();
+				SystemMailService service = service(playerDao, inventoryDao, mailDao);
 
 				assertDoesNotThrow(() -> service.sendSystemMail("$$TEST", "Title", "Body", "Recipient", item(182400001),
 						0, 0, LetterType.EXPRESS));
@@ -99,7 +101,6 @@ class SystemMailServiceTest {
 				assertEquals(1, onlineRecipient.getMailbox().size());
 			} finally {
 				bootstrapServices.destroy();
-				DAOManager.shutdown();
 			}
 		}
 	}
@@ -112,17 +113,16 @@ class SystemMailServiceTest {
 		return data;
 	}
 
-	private static SystemMailService service() {
-		return new SystemMailService() {
+	private static SystemMailService service(FakePlayerDAO playerDao, FakeInventoryDAO inventoryDao, FakeMailDAO mailDao) {
+		return new SystemMailService(playerDao, inventoryDao, mailDao) {
 			@Override
 			protected boolean storeMail(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox,
 					Item attachedItem, Letter letter, Timestamp time) {
 				if (attachedItem != null
-						&& !DAOManager.getDAO(InventoryDAO.class).store(attachedItem, recipientCommonData.getPlayerObjId())) {
+						&& !inventoryDao.store(attachedItem, recipientCommonData.getPlayerObjId())) {
 					return false;
 				}
-				MailDAO mailDAO = DAOManager.getDAO(MailDAO.class);
-				if (!mailDAO.storeLetter(time, letter)) {
+				if (!mailDao.storeLetter(time, letter)) {
 					return false;
 				}
 				letter.setPersistState(PersistentState.UPDATED);
@@ -130,7 +130,7 @@ class SystemMailServiceTest {
 					PlayerCommonData counterData = recipient != null && recipient.getCommonData() != null
 							? recipient.getCommonData() : recipientCommonData;
 					counterData.setMailboxLetters(counterData.getMailboxLetters() + 1);
-					mailDAO.updateOfflineMailCounter(counterData);
+					mailDao.updateOfflineMailCounter(counterData);
 					recipientCommonData.setMailboxLetters(counterData.getMailboxLetters());
 				}
 				return true;
@@ -162,26 +162,6 @@ class SystemMailServiceTest {
 		field.set(target, value);
 	}
 
-	@SuppressWarnings("unchecked")
-	private static void installDaos(DAO... daos) throws ReflectiveOperationException {
-		Field statesField = DAOManager.class.getDeclaredField("states");
-		statesField.setAccessible(true);
-		Map<String, Object> states = (Map<String, Object>) statesField.get(null);
-
-		Class<?> daoStateClass = Class.forName("com.aionemu.commons.database.dao.DAOManager$DaoState");
-		Constructor<?> constructor = daoStateClass.getDeclaredConstructor();
-		constructor.setAccessible(true);
-		Object state = constructor.newInstance();
-
-		Field daoMapField = daoStateClass.getDeclaredField("daoMap");
-		daoMapField.setAccessible(true);
-		Map<String, DAO> daoMap = (Map<String, DAO>) daoMapField.get(state);
-		for (DAO dao : daos) {
-			daoMap.put(dao.getClassName(), dao);
-		}
-		states.put(ServiceContext.current(), state);
-	}
-
 	private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		beanFactory.registerSingleton(type.getName(), instance);
@@ -203,13 +183,17 @@ class SystemMailServiceTest {
 	}
 
 	private static final class FakeIDFactory extends IDFactory {
+		private FakeIDFactory() {
+			super(java.util.List.of());
+		}
+
 		@Override
 		public int nextId() {
 			return 9001;
 		}
 	}
 
-	private static final class FakePlayerDAO extends PlayerDAO {
+	private static final class FakePlayerDAO extends PlayerDaoImpl {
 		private final PlayerCommonData recipientData;
 
 		private FakePlayerDAO(PlayerCommonData recipientData) {
@@ -219,11 +203,6 @@ class SystemMailServiceTest {
 		@Override
 		public PlayerCommonData loadPlayerCommonDataByName(String name) {
 			return recipientData;
-		}
-
-		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
 		}
 
 		@Override
@@ -355,10 +334,14 @@ class SystemMailServiceTest {
 
 	}
 
-	private static final class FakeMailDAO extends MailDAO {
+	private static final class FakeMailDAO extends MailDaoImpl {
 		private int storedLetters;
 		private int updatedMailboxLetters;
 		private String updatedRecipientName;
+
+		private FakeMailDAO() {
+			super(new ItemStoneDaoImpl());
+		}
 
 		@Override
 		public boolean storeLetter(Timestamp time, Letter letter) {
@@ -393,17 +376,12 @@ class SystemMailServiceTest {
 		}
 
 		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
-		}
-
-		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
 		}
 	}
 
-	private static final class FakeInventoryDAO extends InventoryDAO {
+	private static final class FakeInventoryDAO extends InventoryDaoImpl {
 		@Override
 		public Storage loadStorage(int playerId, StorageType storageType) {
 			throw unsupported();
@@ -452,11 +430,6 @@ class SystemMailServiceTest {
 		@Override
 		public void deleteAccountWH(int accountId) {
 			throw unsupported();
-		}
-
-		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
 		}
 
 		@Override

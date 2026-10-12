@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerTitleDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.AbyssRankDaoImpl;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerTitleDao;
 import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -394,8 +398,8 @@ class PlayerQuestCurrencyPortTest {
 		assertTrue(playerDao.calls.isEmpty());
 	}
 
-	private static PlayerQuestCurrencyPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
-												AbyssRankDAO abyssRankDao, PlayerDAO playerDao) {
+	private static PlayerQuestCurrencyPort port(QuestPlayerPort players, InventoryDao inventoryDao,
+												AbyssRankDao abyssRankDao, PlayerDao playerDao) {
 		return new PlayerQuestCurrencyPort(players, inventoryDao, abyssRankDao, playerDao, item -> {
 		});
 	}
@@ -504,7 +508,7 @@ class PlayerQuestCurrencyPortTest {
 		return null;
 	}
 
-	private static final class RecordingInventoryDao extends InventoryDAO {
+	private static final class RecordingInventoryDao extends InventoryDaoImpl {
 		private record Transaction(Connection connection, List<Item> items) {
 		}
 
@@ -580,17 +584,12 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
-		}
-
-		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
 		}
 	}
 
-	private static final class NoOpTitleListDao extends PlayerTitleListDAO {
+	private static final class NoOpTitleListDao extends PlayerTitleDaoImpl {
 		@Override
 		public TitleList loadTitleList(int playerId) {
 			throw new AssertionError("unexpected loadTitleList");
@@ -610,14 +609,9 @@ class PlayerQuestCurrencyPortTest {
 		public void removeTitle(int playerId, int titleId) {
 			throw new AssertionError("unexpected removeTitle");
 		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
-		}
 	}
 
-	private static final class RecordingAbyssRankDao extends AbyssRankDAO {
+	private static final class RecordingAbyssRankDao extends AbyssRankDaoImpl {
 		private final List<Connection> calls = new ArrayList<>();
 		private int lastPlayerId;
 		private AbyssRank lastRank;
@@ -674,14 +668,9 @@ class PlayerQuestCurrencyPortTest {
 		public void removePlayer(List<Player> listP) {
 			throw new AssertionError("unexpected removePlayer");
 		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
-		}
 	}
 
-	private static final class RecordingPlayerDao extends PlayerDAO {
+	private static final class RecordingPlayerDao extends PlayerDaoImpl {
 		private final List<Connection> calls = new ArrayList<>();
 		private final boolean failOnStore;
 		private int lastPlayerId;
@@ -831,12 +820,6 @@ class PlayerQuestCurrencyPortTest {
 		@Override
 		public void getJoinRequestState(Player player) {
 			throw new AssertionError("unexpected getJoinRequestState");
-		}
-
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 
 		@Override

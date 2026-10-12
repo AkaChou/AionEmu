@@ -17,22 +17,21 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import java.text.ParseException;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import com.aionemu.gameserver.dao.AbyssLandingDAO;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
-import com.aionemu.gameserver.dao.BaseDAO;
-import com.aionemu.gameserver.dao.ChallengeTasksDAO;
-import com.aionemu.gameserver.dao.HouseBidsDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.OutpostDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.SeasonRankingDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
-import com.aionemu.gameserver.dao.SiegeDAO;
-import com.aionemu.gameserver.dao.TownDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssLandingDao;
+import com.aionemu.gameserver.persistence.dao.SpecialLandingDao;
+import com.aionemu.gameserver.persistence.dao.BaseLocationDao;
+import com.aionemu.gameserver.persistence.dao.ChallengeTaskDao;
+import com.aionemu.gameserver.persistence.dao.HouseBidDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.OutpostLocationDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.CompetitionRankingDao;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
+import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
+import com.aionemu.gameserver.persistence.dao.TownDao;
 
 /**
  * SiegeBattlefieldBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -43,45 +42,28 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public HousingBidService housingBidService(ObjectProvider<HouseBidsDAO> houseBidsDaoProvider,
-                                               ObjectProvider<ServerVariablesDAO> serverVariablesDaoProvider,
-                                               ObjectProvider<PlayerDAO> playerDaoProvider) throws ParseException {
-        HouseBidsDAO houseBidsDAO = houseBidsDaoProvider.getIfAvailable();
-        ServerVariablesDAO serverVariablesDAO = serverVariablesDaoProvider.getIfAvailable();
-        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
-        if (houseBidsDAO != null && serverVariablesDAO != null && playerDAO != null) {
-            return new HousingBidService(houseBidsDAO, serverVariablesDAO, playerDAO);
-        }
-        return new HousingBidService();
+    public HousingBidService housingBidService(HouseBidDao houseBidsDAO, ServerVariableDao serverVariablesDAO,
+                                               PlayerDao playerDAO) throws ParseException {
+        return new HousingBidService(houseBidsDAO, serverVariablesDAO, playerDAO);
     }
 
     @Bean
     @Lazy
-    public MaintenanceTask maintenanceTask() throws ParseException {
-        return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
+    public MaintenanceTask maintenanceTask(ServerVariableDao serverVariablesDao) throws ParseException {
+        return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME, serverVariablesDao);
     }
 
     @Bean
     @Lazy
-    public TownService townService(ObjectProvider<TownDAO> townDaoProvider) {
-        TownDAO dao = townDaoProvider.getIfAvailable();
-        return dao != null ? new TownService(dao) : new TownService();
+    public TownService townService(TownDao dao) {
+        return new TownService(dao);
     }
 
     @Bean
     @Lazy
-    public ChallengeTaskService challengeTaskService(ObjectProvider<ChallengeTasksDAO> challengeTasksDaoProvider,
-                                                     ObjectProvider<TownDAO> townDaoProvider,
-                                                     ObjectProvider<LegionMemberDAO> legionMemberDaoProvider,
-                                                     ObjectProvider<PlayerDAO> playerDaoProvider) {
-        ChallengeTasksDAO challengeTasksDAO = challengeTasksDaoProvider.getIfAvailable();
-        TownDAO townDAO = townDaoProvider.getIfAvailable();
-        LegionMemberDAO legionMemberDAO = legionMemberDaoProvider.getIfAvailable();
-        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
-        if (challengeTasksDAO != null && townDAO != null && legionMemberDAO != null && playerDAO != null) {
-            return new ChallengeTaskService(challengeTasksDAO, townDAO, legionMemberDAO, playerDAO);
-        }
-        return new ChallengeTaskService();
+    public ChallengeTaskService challengeTaskService(ChallengeTaskDao challengeTasksDAO, TownDao townDAO,
+                                                     LegionMemberDao legionMemberDAO, PlayerDao playerDAO) {
+        return new ChallengeTaskService(challengeTasksDAO, townDAO, legionMemberDAO, playerDAO);
     }
 
     @Bean
@@ -146,12 +128,8 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public OutpostService outpostService(ObjectProvider<OutpostDAO> outpostDaoProvider,
-            ObjectProvider<SiegeDAO> siegeDaoProvider) {
-        OutpostDAO outpostDao = outpostDaoProvider.getIfAvailable();
-        SiegeDAO siegeDao = siegeDaoProvider.getIfAvailable();
-        return outpostDao != null && siegeDao != null ? new OutpostService(outpostDao, siegeDao)
-                : new OutpostService();
+    public OutpostService outpostService(OutpostLocationDao outpostDao, SiegeLocationDao siegeDao) {
+        return new OutpostService(outpostDao, siegeDao);
     }
 
     @Bean
@@ -174,9 +152,8 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public SeasonRankingUpdateService seasonRankingUpdateService(ObjectProvider<SeasonRankingDAO> seasonRankingDaoProvider) {
-        SeasonRankingDAO dao = seasonRankingDaoProvider.getIfAvailable();
-        return dao != null ? new SeasonRankingUpdateService(dao) : new SeasonRankingUpdateService();
+    public SeasonRankingUpdateService seasonRankingUpdateService(CompetitionRankingDao dao) {
+        return new SeasonRankingUpdateService(dao);
     }
 
     @Bean
@@ -187,16 +164,14 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public SiegeService siegeService(ObjectProvider<SiegeDAO> siegeDaoProvider) {
-        SiegeDAO dao = siegeDaoProvider.getIfAvailable();
-        return dao != null ? new SiegeService(dao) : new SiegeService();
+    public SiegeService siegeService(SiegeLocationDao dao) {
+        return new SiegeService(dao);
     }
 
     @Bean
     @Lazy
-    public BaseService baseService(ObjectProvider<BaseDAO> baseDaoProvider) {
-        BaseDAO dao = baseDaoProvider.getIfAvailable();
-        return dao != null ? new BaseService(dao) : new BaseService();
+    public BaseService baseService(BaseLocationDao dao) {
+        return new BaseService(dao);
     }
 
     @Bean
@@ -297,9 +272,8 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public AbyssLandingService abyssLandingService(ObjectProvider<AbyssLandingDAO> abyssLandingDaoProvider) {
-        AbyssLandingDAO dao = abyssLandingDaoProvider.getIfAvailable();
-        return dao != null ? new AbyssLandingService(dao) : new AbyssLandingService();
+    public AbyssLandingService abyssLandingService(AbyssLandingDao dao) {
+        return new AbyssLandingService(dao);
     }
 
     @Bean
@@ -310,8 +284,7 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public AbyssLandingSpecialService abyssLandingSpecialService(ObjectProvider<AbyssSpecialLandingDAO> abyssSpecialLandingDaoProvider) {
-        AbyssSpecialLandingDAO dao = abyssSpecialLandingDaoProvider.getIfAvailable();
-        return dao != null ? new AbyssLandingSpecialService(dao) : new AbyssLandingSpecialService();
+    public AbyssLandingSpecialService abyssLandingSpecialService(SpecialLandingDao dao) {
+        return new AbyssLandingSpecialService(dao);
     }
 }

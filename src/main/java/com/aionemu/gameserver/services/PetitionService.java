@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import lombok.NonNull;
 import lombok.Setter;
@@ -15,15 +14,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.function.Supplier;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PETITION;
+import com.aionemu.gameserver.persistence.dao.PetitionDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,7 +30,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author zdead
  */
 @Slf4j
-public record PetitionService(PetitionDAO petitionDAO) {
+public record PetitionService(PetitionDao petitionDAO) {
 
 	@Setter
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
@@ -68,11 +65,11 @@ public record PetitionService(PetitionDAO petitionDAO) {
 	 * @return 请愿数据访问对象 / Petition DAO
 	 */
 	@Override
-	public PetitionDAO petitionDAO() {
+	public PetitionDao petitionDAO() {
 		return petitionDAO;
 	}
 
-	public PetitionService(@NonNull PetitionDAO petitionDAO) {
+	public PetitionService(@NonNull PetitionDao petitionDAO) {
 		this.petitionDAO = petitionDAO;
 		log.info(I18n.get("log.f495913b1078"));
 		try {
@@ -86,24 +83,6 @@ public record PetitionService(PetitionDAO petitionDAO) {
 			log.warn(I18n.get("log.62e2494fabb4", e.getMessage()), e);
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
-	}
-
-	/**
-	 * 从数据库加载已有请愿工单。
-	 * Loads existing petition tickets from the database.
-	 */
-	public PetitionService() {
-		this(safeDao(PetitionDAO.class, com.aionemu.gameserver.dao.impl.PetitionDAO::new));
-	}
-
-	private static <T extends DAO> T safeDao(Class<T> daoClass, Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

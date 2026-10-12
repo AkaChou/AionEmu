@@ -46,10 +46,11 @@ class MinionServiceTest {
 
 	@Test
 	void persistsInitialGrowthPoints() throws Exception {
-		String dao = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/dao/impl/PlayerMinionsDAO.java"));
+		String dao = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/persistence/dao/impl/PlayerMinionDaoImpl.java"));
+		String mapper = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/persistence/mapper/PlayerMinionMapper.java"));
 
-		assertTrue(dao.contains("INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints"));
-		assertTrue(dao.contains(".param(minionCommonData.getMinionGrowthPoint())"));
+		assertTrue(mapper.contains("INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints"));
+		assertTrue(dao.contains("getMinionGrowthPoint()"));
 	}
 
 	@Test

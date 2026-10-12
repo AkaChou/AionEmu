@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -14,6 +12,7 @@ import com.aionemu.gameserver.model.templates.housing.HouseAddress;
 import com.aionemu.gameserver.model.templates.housing.HousingLand;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TOWNS_LIST;
+import com.aionemu.gameserver.persistence.dao.TownDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -38,7 +37,7 @@ public class TownService {
 	 */
 	@Setter
 	private static volatile ObjectProvider<TownService> instanceProvider;
-	private final TownDAO townDAO;
+	private final TownDao townDAO;
 	private final Map<Integer, Town> elyosTowns;
 	private final Map<Integer, Town> asmosTowns;
 
@@ -70,7 +69,7 @@ public class TownService {
 	 *
 	 * @param townDAO 城镇数据访问对象 / town DAO
 	 */
-	public TownService(@NonNull TownDAO townDAO) {
+	public TownService(@NonNull TownDao townDAO) {
 		this.townDAO = townDAO;
 		Map<Integer, Town> elyos = null;
 		Map<Integer, Town> asmos = null;
@@ -107,24 +106,6 @@ public class TownService {
 		}
 		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));
 		log.info(I18n.get("log.2ede9f09c843", asmosTowns.size()));
-	}
-
-	/**
-	 * 从数据库加载城镇；若为空则根据房屋地块初始化并持久化。
-	 * Loads towns from DB; if empty, initializes from housing lands and persists them.
-	 */
-	public TownService() {
-		this(safeDao(TownDAO.class, com.aionemu.gameserver.dao.impl.TownDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

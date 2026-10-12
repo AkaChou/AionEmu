@@ -12,8 +12,6 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -23,6 +21,7 @@ import com.aionemu.gameserver.model.landing_special.LandingSpecialStateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.landingspecialspawns.LandingSpecialSpawnTemplate;
+import com.aionemu.gameserver.persistence.dao.SpecialLandingDao;
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SPLanding;
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -34,7 +33,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 @Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
-	private final AbyssSpecialLandingDAO abyssSpecialLandingDAO;
+	private final SpecialLandingDao abyssSpecialLandingDAO;
 	/**
 	 * 特殊登陆点 ID → 位置。 / Special landing id → location.
 	 */
@@ -50,27 +49,8 @@ public class AbyssLandingSpecialService {
 	 *
 	 * @param abyssSpecialLandingDAO 特殊登陆点数据访问对象 / Special landing DAO
 	 */
-	public AbyssLandingSpecialService(@NonNull AbyssSpecialLandingDAO abyssSpecialLandingDAO) {
+	public AbyssLandingSpecialService(@NonNull SpecialLandingDao abyssSpecialLandingDAO) {
 		this.abyssSpecialLandingDAO = abyssSpecialLandingDAO;
-	}
-
-	/**
-	 * 默认构造器：优先取 DAOManager 中已注册的 DAO，未初始化时回退到独立实现。
-	 * Default constructor: prefers the DAOManager-registered DAO, falling back to the standalone implementation.
-	 */
-	public AbyssLandingSpecialService() {
-		this(safeDao(AbyssSpecialLandingDAO.class, com.aionemu.gameserver.dao.impl.AbyssSpecialLandingDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-			java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

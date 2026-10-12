@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerStigmasEquippedDao;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,11 +26,11 @@ import java.util.Objects;
  */
 public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 	private final QuestPlayerPort players;
-	private final InventoryDAO inventoryDao;
-	private final PlayerStigmasEquippedDAO stigmaDao;
+	private final InventoryDao inventoryDao;
+	private final PlayerStigmasEquippedDao stigmaDao;
 
-	public PlayerQuestEquipmentPort(QuestPlayerPort players, InventoryDAO inventoryDao,
-		PlayerStigmasEquippedDAO stigmaDao) {
+	public PlayerQuestEquipmentPort(QuestPlayerPort players, InventoryDao inventoryDao,
+		PlayerStigmasEquippedDao stigmaDao) {
 		this.players = Objects.requireNonNull(players, "players");
 		this.inventoryDao = Objects.requireNonNull(inventoryDao, "inventoryDao");
 		this.stigmaDao = Objects.requireNonNull(stigmaDao, "stigmaDao");

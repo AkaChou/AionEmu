@@ -2,107 +2,107 @@ package com.aionemu.gameserver.services.player;
 
 import java.util.Objects;
 
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.BlockListDAO;
-import com.aionemu.gameserver.dao.CraftCooldownsDAO;
-import com.aionemu.gameserver.dao.EventItemsDAO;
-import com.aionemu.gameserver.dao.F2pDAO;
-import com.aionemu.gameserver.dao.FriendListDAO;
-import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
-import com.aionemu.gameserver.dao.HouseScriptsDAO;
-import com.aionemu.gameserver.dao.HousesDAO;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.ItemCooldownsDAO;
-import com.aionemu.gameserver.dao.ItemStoneListDAO;
-import com.aionemu.gameserver.dao.MailDAO;
-import com.aionemu.gameserver.dao.MotionDAO;
-import com.aionemu.gameserver.dao.OldNamesDAO;
-import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerAppearanceDAO;
-import com.aionemu.gameserver.dao.PlayerBindPointDAO;
-import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerEffectsDAO;
-import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
-import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
-import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
-import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
-import com.aionemu.gameserver.dao.PlayerPunishmentsDAO;
-import com.aionemu.gameserver.dao.PlayerQuestListDAO;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
-import com.aionemu.gameserver.dao.PlayerSettingsDAO;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
-import com.aionemu.gameserver.dao.PlayerSkillListDAO;
-import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
-import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
-import com.aionemu.gameserver.dao.PlayerVarsDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
-import com.aionemu.gameserver.dao.PortalCooldownsDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.BlockDao;
+import com.aionemu.gameserver.persistence.dao.CraftCooldownDao;
+import com.aionemu.gameserver.persistence.dao.EventItemDao;
+import com.aionemu.gameserver.persistence.dao.F2paccountDao;
+import com.aionemu.gameserver.persistence.dao.FriendDao;
+import com.aionemu.gameserver.persistence.dao.HouseDao;
+import com.aionemu.gameserver.persistence.dao.HouseObjectCooldownDao;
+import com.aionemu.gameserver.persistence.dao.HouseScriptDao;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.ItemCooldownDao;
+import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
+import com.aionemu.gameserver.persistence.dao.MailDao;
+import com.aionemu.gameserver.persistence.dao.OldNameDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAppearanceDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAtreianBestiaryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerBindPointDao;
+import com.aionemu.gameserver.persistence.dao.PlayerCooldownDao;
+import com.aionemu.gameserver.persistence.dao.PlayerCpDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEffectDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEmotionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEquipmentSettingDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
+import com.aionemu.gameserver.persistence.dao.PlayerLifeStatDao;
+import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
+import com.aionemu.gameserver.persistence.dao.PlayerMacrosseDao;
+import com.aionemu.gameserver.persistence.dao.PlayerMinionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerMotionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerNpcFactionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPasskeyDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPetDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPunishmentDao;
+import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
+import com.aionemu.gameserver.persistence.dao.PlayerRecipeDao;
+import com.aionemu.gameserver.persistence.dao.PlayerRegisteredItemDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSettingDao;
+import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
+import com.aionemu.gameserver.persistence.dao.PlayerSkillSkinDao;
+import com.aionemu.gameserver.persistence.dao.PlayerStigmasEquippedDao;
+import com.aionemu.gameserver.persistence.dao.PlayerTitleDao;
+import com.aionemu.gameserver.persistence.dao.PlayerTransformDao;
+import com.aionemu.gameserver.persistence.dao.PlayerVarDao;
+import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
+import com.aionemu.gameserver.persistence.dao.PortalCooldownDao;
+
 
 /**
  * 玩家核心服务的持久层依赖聚合：不可变 record，由 Spring 配置类声明式构造器注入装配，
- * 并对全部 46 个 DAO 依赖执行及早失败判空，彻底取代 {@code DAOManager.getDAO} 静态查表。
+ * 并对全部 DAO 依赖执行及早失败判空。
  * Aggregated persistence dependencies of the core player service: an immutable record wired
- * declaratively via Spring constructor injection, with fail-fast validation of all 46 DAO
- * dependencies, fully replacing {@code DAOManager.getDAO} static table lookups.
+ * declaratively via Spring constructor injection, with fail-fast validation of every DAO dependency.
  */
 public record PlayerServiceDaos(
-		PlayerDAO playerDAO,
-		OldNamesDAO oldNamesDAO,
-		PlayerAppearanceDAO playerAppearanceDAO,
-		PlayerSkillListDAO playerSkillListDAO,
-		InventoryDAO inventoryDAO,
-		PlayerStigmasEquippedDAO playerStigmasEquippedDAO,
-		PlayerEquipmentSettingDAO playerEquipmentSettingDAO,
-		PlayerSettingsDAO playerSettingsDAO,
-		PlayerQuestListDAO playerQuestListDAO,
-		AbyssRankDAO abyssRankDAO,
-		PlayerPunishmentsDAO playerPunishmentsDAO,
-		HousesDAO housesDAO,
-		PlayerRegisteredItemsDAO playerRegisteredItemsDAO,
-		ItemStoneListDAO itemStoneListDAO,
-		MailDAO mailDAO,
-		PortalCooldownsDAO portalCooldownsDAO,
-		CraftCooldownsDAO craftCooldownsDAO,
-		PlayerNpcFactionsDAO playerNpcFactionsDAO,
-		PlayerLunaShopDAO playerLunaShopDAO,
-		EventItemsDAO eventItemsDAO,
-		PlayerMacrossesDAO playerMacrossesDAO,
-		FriendListDAO friendListDAO,
-		BlockListDAO blockListDAO,
-		PlayerTitleListDAO playerTitleListDAO,
-		PlayerCreativityPointsDAO playerCreativityPointsDAO,
-		PlayerEventsWindowDAO playerEventsWindowDAO,
-		PlayerABDAO playerABDAO,
-		PlayerWardrobeDAO playerWardrobeDAO,
-		F2pDAO f2pDAO,
-		MotionDAO motionDAO,
-		PlayerVarsDAO playerVarsDAO,
-		PlayerRecipesDAO playerRecipesDAO,
-		PlayerSkillSkinListDAO playerSkillSkinListDAO,
-		PlayerEffectsDAO playerEffectsDAO,
-		PlayerCooldownsDAO playerCooldownsDAO,
-		ItemCooldownsDAO itemCooldownsDAO,
-		HouseObjectCooldownsDAO houseObjectCooldownsDAO,
-		PlayerBindPointDAO playerBindPointDAO,
-		PlayerLifeStatsDAO playerLifeStatsDAO,
-		PlayerEmotionListDAO playerEmotionListDAO,
-		PlayerPetsDAO playerPetsDAO,
-		PlayerMinionsDAO playerMinionsDAO,
-		PlayerShugoSweepDAO playerShugoSweepDAO,
-		HouseScriptsDAO houseScriptsDAO,
-		PlayerPasskeyDAO playerPasskeyDAO,
-		PlayerTransformDAO playerTransformDAO) {
+		PlayerDao playerDAO,
+		OldNameDao oldNamesDAO,
+		PlayerAppearanceDao playerAppearanceDAO,
+		PlayerSkillDao playerSkillListDAO,
+		InventoryDao inventoryDAO,
+		PlayerStigmasEquippedDao playerStigmasEquippedDAO,
+		PlayerEquipmentSettingDao playerEquipmentSettingDAO,
+		PlayerSettingDao playerSettingsDAO,
+		PlayerQuestDao playerQuestListDAO,
+		AbyssRankDao abyssRankDAO,
+		PlayerPunishmentDao playerPunishmentsDAO,
+		HouseDao housesDAO,
+		PlayerRegisteredItemDao playerRegisteredItemsDAO,
+		ItemStoneDao itemStoneListDAO,
+		MailDao mailDAO,
+		PortalCooldownDao portalCooldownsDAO,
+		CraftCooldownDao craftCooldownsDAO,
+		PlayerNpcFactionDao playerNpcFactionsDAO,
+		PlayerLunaShopDao playerLunaShopDAO,
+		EventItemDao eventItemsDAO,
+		PlayerMacrosseDao playerMacrossesDAO,
+		FriendDao friendListDAO,
+		BlockDao blockListDAO,
+		PlayerTitleDao playerTitleListDAO,
+		PlayerCpDao playerCreativityPointsDAO,
+		PlayerEventsWindowDao playerEventsWindowDAO,
+		PlayerAtreianBestiaryDao playerABDAO,
+		PlayerWardrobeDao playerWardrobeDAO,
+		F2paccountDao f2pDAO,
+		PlayerMotionDao motionDAO,
+		PlayerVarDao playerVarsDAO,
+		PlayerRecipeDao playerRecipesDAO,
+		PlayerSkillSkinDao playerSkillSkinListDAO,
+		PlayerEffectDao playerEffectsDAO,
+		PlayerCooldownDao playerCooldownsDAO,
+		ItemCooldownDao itemCooldownsDAO,
+		HouseObjectCooldownDao houseObjectCooldownsDAO,
+		PlayerBindPointDao playerBindPointDAO,
+		PlayerLifeStatDao playerLifeStatsDAO,
+		PlayerEmotionDao playerEmotionListDAO,
+		PlayerPetDao playerPetsDAO,
+		PlayerMinionDao playerMinionsDAO,
+		PlayerShugoSweepDao playerShugoSweepDAO,
+		HouseScriptDao houseScriptsDAO,
+		PlayerPasskeyDao playerPasskeyDAO,
+		PlayerTransformDao playerTransformDAO) {
 
 	/**
 	 * 紧凑构造器：对全部持久层依赖执行及早失败判空。

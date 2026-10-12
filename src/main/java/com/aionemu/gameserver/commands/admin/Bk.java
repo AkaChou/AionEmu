@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.commands.admin;
 
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.commons.database.DB;
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.ParamReadStH;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.ChatUtil;
@@ -17,7 +15,6 @@ import com.aionemu.gameserver.world.WorldMapType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -65,16 +62,10 @@ public class Bk extends AdminCommand {
 					final int char_id = player.getObjectId();
 					final int world_id = player.getWorldId();
 
-					DB.insertUpdate("INSERT INTO bookmark (" + "`name`,`char_id`, `x`, `y`, `z`,`world_id` )" + " VALUES "
-						+ "(?, ?, ?, ?, ?, ?)", ps -> {
-						ps.setString(1, bookmark_name);
-						ps.setInt(2, char_id);
-						ps.setFloat(3, x);
-						ps.setFloat(4, y);
-						ps.setFloat(5, z);
-						ps.setInt(6, world_id);
-						ps.execute();
-					});
+					DatabaseAccess.jdbcClient()
+						.sql("INSERT INTO bookmark (`name`,`char_id`, `x`, `y`, `z`,`world_id` ) VALUES (?, ?, ?, ?, ?, ?)")
+						.param(bookmark_name).param(char_id).param(x).param(y).param(z).param(world_id)
+						.update();
 
 					PacketSendUtility
 						.sendMessage(player, "Bookmark " + bookmark_name + " sucessfully added to your bookmark list!");
@@ -88,7 +79,7 @@ public class Bk extends AdminCommand {
 				Connection con = null;
 				try {
 					bookmark_name = params[1].toLowerCase();
-					con = DatabaseFactory.getConnection();
+					con = DatabaseAccess.getConnection();
 
 					PreparedStatement statement = con.prepareStatement("DELETE FROM bookmark WHERE name = ?");
 					statement.setString(1, bookmark_name);
@@ -97,7 +88,7 @@ public class Bk extends AdminCommand {
 				} catch (Exception e) {
 					PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
 				} finally {
-					DatabaseFactory.close(con);
+					DatabaseAccess.release(con);
 					PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name
 						+ " sucessfully removed from your bookmark list!");
 					updateInfo(player.getObjectId());
@@ -148,25 +139,13 @@ public class Bk extends AdminCommand {
 	public void updateInfo(final int objId) {
 		bookmarks.clear();
 
-		DB.select("SELECT * FROM `bookmark` where char_id= ?", new ParamReadStH() {
-
-			@Override
-			public void setParams(PreparedStatement stmt) throws SQLException {
-				stmt.setInt(1, objId);
-			}
-
-			@Override
-			public void handleRead(ResultSet rset) throws SQLException {
-				while (rset.next()) {
-					String name = rset.getString("name");
-					float x = rset.getFloat("x");
-					float y = rset.getFloat("y");
-					float z = rset.getFloat("z");
-					int world_id = rset.getInt("world_id");
-					bookmarks.add(new Bookmark(x, y, z, world_id, name));
-				}
-			}
-		});
+		DatabaseAccess.jdbcClient()
+			.sql("SELECT * FROM `bookmark` where char_id= ?")
+			.param(objId)
+			.query((rset, rowNum) -> new Bookmark(rset.getFloat("x"), rset.getFloat("y"), rset.getFloat("z"),
+				rset.getInt("world_id"), rset.getString("name")))
+			.list()
+			.forEach(bookmarks::add);
 	}
 
 	/**
@@ -193,7 +172,7 @@ public class Bk extends AdminCommand {
 		Connection con = null;
 		int bkcount = 0;
 		try {
-			con = DatabaseFactory.getConnection();
+			con = DatabaseAccess.getConnection();
 			PreparedStatement statement = con
 				.prepareStatement("SELECT count(id) as bkcount FROM bookmark WHERE ? = name AND char_id = ?");
 			statement.setString(1, bk_name);
@@ -208,7 +187,7 @@ public class Bk extends AdminCommand {
 			log.error(I18n.get("log.0de52ee75b14"), e);
 		}
 		finally {
-			DatabaseFactory.close(con);
+			DatabaseAccess.release(con);
 		}
 		return bkcount > 0;
 	}

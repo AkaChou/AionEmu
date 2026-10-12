@@ -14,12 +14,7 @@ import lombok.NonNull;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.dao.ChallengeTasksDAO;
-import com.aionemu.gameserver.dao.LegionMemberDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.challenge.ChallengeQuest;
 import com.aionemu.gameserver.model.challenge.ChallengeTask;
@@ -32,6 +27,10 @@ import com.aionemu.gameserver.model.templates.challenge.ContributionReward;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHALLENGE_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.ChallengeTaskDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.TownDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
@@ -52,10 +51,10 @@ public class ChallengeTaskService {
      */
     @Setter
     private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
-	private final ChallengeTasksDAO challengeTasksDAO;
-	private final TownDAO townDAO;
-	private final LegionMemberDAO legionMemberDAO;
-	private final PlayerDAO playerDAO;
+	private final ChallengeTaskDao challengeTasksDAO;
+	private final TownDao townDAO;
+	private final LegionMemberDao legionMemberDAO;
+	private final PlayerDao playerDAO;
 	/** 城镇 ID → 挑战任务映射。 / Town id → challenge task map. */
 	private final Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	/** 军团 ID → 挑战任务映射。 / Legion id → challenge task map. */
@@ -86,10 +85,10 @@ public class ChallengeTaskService {
 	 * 使用指定的 DAO 集合构造服务并初始化任务缓存。
 	 * Constructs the service with given DAOs and initializes task caches.
 	 */
-	public ChallengeTaskService(@NonNull ChallengeTasksDAO challengeTasksDAO,
-								@NonNull TownDAO townDAO,
-								@NonNull LegionMemberDAO legionMemberDAO,
-								@NonNull PlayerDAO playerDAO) {
+	public ChallengeTaskService(@NonNull ChallengeTaskDao challengeTasksDAO,
+								@NonNull TownDao townDAO,
+								@NonNull LegionMemberDao legionMemberDAO,
+								@NonNull PlayerDao playerDAO) {
 		this.challengeTasksDAO = challengeTasksDAO;
 		this.townDAO = townDAO;
 		this.legionMemberDAO = legionMemberDAO;
@@ -97,27 +96,6 @@ public class ChallengeTaskService {
 		this.cityTasks = new LinkedHashMap<>();
 		this.legionTasks = new LinkedHashMap<>();
 		log.info(I18n.get("log.e300214dba9a"));
-	}
-
-    /**
-	 * 构造服务并初始化任务缓存。
-	 * Constructs the service and initializes task caches.
-	 */
-	public ChallengeTaskService() {
-		this(safeDao(ChallengeTasksDAO.class, com.aionemu.gameserver.dao.impl.ChallengeTasksDAO::new),
-			 safeDao(TownDAO.class, com.aionemu.gameserver.dao.impl.TownDAO::new),
-			 safeDao(LegionMemberDAO.class, com.aionemu.gameserver.dao.impl.LegionMemberDAO::new),
-			 safeDao(PlayerDAO.class, com.aionemu.gameserver.dao.impl.PlayerDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass, java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
 	}
 
 	/**

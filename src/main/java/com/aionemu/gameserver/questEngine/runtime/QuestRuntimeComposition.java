@@ -140,7 +140,7 @@ public final class QuestRuntimeComposition {
 		QuestRuntimeResources.cleanupAll();
 	}
 
-	/** DAOManager 由 bootstrap 初始化，之后 QuestEngine 才能在聚焦测试中构造。 / DAOManager is initialized by bootstrap after QuestEngine can be constructed in focused tests. */
+	/** 延迟构建生产动作端口，首次访问时经 Spring 服务定位器解析。 / Lazily builds the production action port, resolved via the Spring service locator on first access. */
 	private static final class LazyProductionActionPort implements QuestActionPort {
 		private final QuestPlayerPort players;
 		private volatile QuestActionPort delegate;

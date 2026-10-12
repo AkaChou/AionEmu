@@ -23,7 +23,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_L2AUTH_LOGIN_CHECK;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RECONNECT_KEY;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.persistence.dao.SvstatsDao;
+import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_AUTH;
@@ -52,7 +52,7 @@ public class LoginServer {
 	 * Login network components required by the in-process direct channel in embedded mode.
 	 */
 	private final GsPacketHandlerFactory loginPacketFactory;
-	private final SvstatsDao loginSvstatsDao;
+	private final SvstatDao loginSvstatsDao;
 	private final ThreadPoolManager loginThreadPoolManager;
 
 	/**
@@ -139,7 +139,7 @@ public class LoginServer {
 	 * @param loginSvstatsDao 服务器统计 DAO / server-stats DAO
 	 * @param loginThreadPoolManager 登录服线程池 / login-server thread pool
 	 */
-	public LoginServer(GsPacketHandlerFactory loginPacketFactory, SvstatsDao loginSvstatsDao,
+	public LoginServer(GsPacketHandlerFactory loginPacketFactory, SvstatDao loginSvstatsDao,
 			ThreadPoolManager loginThreadPoolManager) {
 		this.loginPacketFactory = loginPacketFactory;
 		this.loginSvstatsDao = loginSvstatsDao;

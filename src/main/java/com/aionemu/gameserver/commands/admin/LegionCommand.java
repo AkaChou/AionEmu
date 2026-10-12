@@ -4,7 +4,7 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.team.legion.Legion;
@@ -134,7 +134,7 @@ public class LegionCommand extends AdminCommand {
 			List<Integer> members = legion.getLegionMembers();
 			message.add("members: "+members.size());
 
-			PlayerDAO dao = null;
+			PlayerDao dao = null;
 			for(int memberId : members) {
 				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 				if(pl != null)

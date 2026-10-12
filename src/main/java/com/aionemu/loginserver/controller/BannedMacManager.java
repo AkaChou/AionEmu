@@ -6,6 +6,8 @@ import java.util.Map;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PostConstruct;
+
 import com.aionemu.loginserver.persistence.dao.BannedMacDao;
 import com.aionemu.loginserver.model.base.BannedMacEntry;
 
@@ -27,16 +29,24 @@ public class BannedMacManager {
      * Current banned MAC map.
      */
     @Getter
-    private final Map<String, BannedMacEntry> bannedList;
+    private final Map<String, BannedMacEntry> bannedList = new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
-     * 构造并加载全部 MAC 封禁。
-     * Constructs manager and loads all MAC bans.
+     * 构造 MAC 封禁管理器。
+     * Constructs the MAC ban manager.
      * @param bannedMacDao MAC 封禁 DAO / banned MAC DAO
      */
     public BannedMacManager(BannedMacDao bannedMacDao) {
         this.bannedMacDao = bannedMacDao;
-        this.bannedList = bannedMacDao.load();
+    }
+
+    /**
+     * 初始化时加载全部 MAC 封禁（延迟到容器装配后才访问数据库）。
+     * Loads all MAC bans once initialized, so no database access happens during bean construction.
+     */
+    @PostConstruct
+    void loadBannedMacs() {
+        bannedList.putAll(bannedMacDao.load());
     }
 
     /**

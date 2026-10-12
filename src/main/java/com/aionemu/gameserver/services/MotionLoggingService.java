@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 
+import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,6 @@ import jakarta.xml.bind.Marshaller;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.MotionData;
 import com.aionemu.gameserver.model.Gender;
@@ -398,7 +398,7 @@ public class MotionLoggingService {
 		final String INSERT_QUERY = "INSERT INTO skill_motions (motion_name, weapon_type, off_weapon_type, skill_id, attack_speed, race, gender, time) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE motion_name = ?";
 
 		try {
-			con = DatabaseFactory.getConnection();
+			con = DatabaseAccess.getConnection();
 			PreparedStatement stmt = con.prepareStatement(INSERT_QUERY);
 			for (Entry<String, MotionLog> entry : motionsMap.entrySet()) {
 				String motionName = entry.getKey();
@@ -439,7 +439,7 @@ public class MotionLoggingService {
 		} catch (SQLException e) {
 			log.error(I18n.get("log.59fa1e0145de"), e);
 		} finally {
-			DatabaseFactory.close(con);
+			DatabaseAccess.release(con);
 		}
 	}
 
@@ -453,7 +453,7 @@ public class MotionLoggingService {
 
 		final String SELECT_QUERY = "SELECT * FROM skill_motions";
 		try {
-			con = DatabaseFactory.getConnection();
+			con = DatabaseAccess.getConnection();
 			PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
 
 			ResultSet resultSet = stmt.executeQuery();
@@ -486,7 +486,7 @@ public class MotionLoggingService {
 		} catch (SQLException e) {
 			log.error(I18n.get("log.59fa1e0145de"), e);
 		} finally {
-			DatabaseFactory.close(con);
+			DatabaseAccess.release(con);
 		}
 	}
 

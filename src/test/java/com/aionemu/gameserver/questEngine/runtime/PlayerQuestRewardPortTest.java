@@ -1,13 +1,16 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
+import com.aionemu.gameserver.persistence.dao.impl.PlayerTitleDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
+import com.aionemu.gameserver.persistence.dao.impl.InventoryDaoImpl;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.dao.InventoryDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.PlayerTitleListDAO;
+import com.aionemu.gameserver.persistence.dao.InventoryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerTitleDao;
 import com.aionemu.gameserver.dataholders.TitleData;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -453,13 +456,13 @@ class PlayerQuestRewardPortTest {
 
 	private static int savedPlayerMaxLevel;
 
-	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
-											  PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
+	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDao inventoryDao,
+											  PlayerDao playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder) {
 		return port(players, inventoryDao, playerDao, itemAdder, new RecordingTitleListDao());
 	}
 
-	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDAO inventoryDao,
-											  PlayerDAO playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
+	private static PlayerQuestRewardPort port(QuestPlayerPort players, InventoryDao inventoryDao,
+											  PlayerDao playerDao, BiFunction<Player, List<QuestItems>, Boolean> itemAdder,
 											  RecordingTitleListDao titleListDao) {
 		return new PlayerQuestRewardPort(players, inventoryDao, playerDao, itemAdder, item -> {
 		}, titleListDao,
@@ -675,7 +678,7 @@ class PlayerQuestRewardPortTest {
 		}
 	}
 
-	private static final class RecordingInventoryDao extends InventoryDAO {
+	private static final class RecordingInventoryDao extends InventoryDaoImpl {
 		private record Transaction(Connection connection, List<Item> items) {
 		}
 
@@ -738,17 +741,12 @@ class PlayerQuestRewardPortTest {
 		}
 
 		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
-		}
-
-		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
 		}
 	}
 
-	private static final class RecordingPlayerDao extends PlayerDAO {
+	private static final class RecordingPlayerDao extends PlayerDaoImpl {
 		private final List<Connection> calls = new ArrayList<>();
 		private int lastPlayerId;
 		private PlayerCommonData lastPcd;
@@ -888,19 +886,13 @@ class PlayerQuestRewardPortTest {
 			throw new AssertionError("unexpected getJoinRequestState");
 		}
 
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
-		}
-
 		@Override
 		public int[] getUsedIDs() {
 			return new int[0];
 		}
 	}
 
-	private static final class RecordingTitleListDao extends PlayerTitleListDAO {
+	private static final class RecordingTitleListDao extends PlayerTitleDaoImpl {
 		private final List<Connection> calls = new ArrayList<>();
 		private int lastTitleId;
 
@@ -923,11 +915,6 @@ class PlayerQuestRewardPortTest {
 		@Override
 		public void removeTitle(int playerId, int titleId) {
 			throw new AssertionError("unexpected removeTitle");
-		}
-
-		@Override
-		public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-			return false;
 		}
 	}
 }

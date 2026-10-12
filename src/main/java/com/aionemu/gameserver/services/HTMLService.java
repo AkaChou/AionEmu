@@ -13,9 +13,10 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aionemu.commons.database.dao.DAOManager;
+import org.springframework.beans.factory.ObjectProvider;
+
+
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.guide.Guide;
@@ -23,6 +24,7 @@ import com.aionemu.gameserver.model.templates.Guides.GuideTemplate;
 import com.aionemu.gameserver.model.templates.Guides.SurveyTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTIONNAIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.persistence.dao.GuideDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -35,35 +37,40 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @RequiredArgsConstructor
 public class HTMLService {
 
-	private static volatile HTMLService instance;
+	private static volatile ObjectProvider<HTMLService> instanceProvider;
 	@NonNull
-	private final GuideDAO guideDAO;
+	private final GuideDao guideDAO;
 
-	public HTMLService() {
-		this(safeGuideDao());
-	}
-
-	private static GuideDAO safeGuideDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(GuideDAO.class);
-			} catch (Exception ignored) {
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.GuideDAO();
-	}
-
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
 	public static HTMLService getInstance() {
-		HTMLService current = instance;
-		if (current == null) {
-			synchronized (HTMLService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = new HTMLService();
-				}
-			}
+		ObjectProvider<HTMLService> provider = instanceProvider;
+		HTMLService provided = provider == null ? null : provider.getIfAvailable();
+		if (provided == null) {
+			throw new IllegalStateException("HTMLService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return current;
+		return provided;
+	}
+
+	/**
+	 * 注入 Spring ObjectProvider，供 getInstance 使用。
+	 * Inject the Spring ObjectProvider used by getInstance().
+	 *
+	 * @param instanceProvider Spring provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<HTMLService> instanceProvider) {
+		HTMLService.instanceProvider = instanceProvider;
 	}
 
 

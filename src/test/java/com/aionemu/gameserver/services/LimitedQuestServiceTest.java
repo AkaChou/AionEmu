@@ -1,9 +1,10 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.persistence.dao.impl.LimitedQuestCounterDaoImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.aionemu.gameserver.dao.LimitedQuestDAO;
+import com.aionemu.gameserver.persistence.dao.LimitedQuestCounterDao;
 import com.aionemu.gameserver.services.LimitedQuestService.Limit;
 import java.io.File;
 import java.net.URISyntaxException;
@@ -74,7 +75,7 @@ class LimitedQuestServiceTest {
 		assertEquals(new Limit(240, 2), limits.get(23816));
 	}
 
-	private static final class TestLimitedQuestDAO extends LimitedQuestDAO {
+	private static final class TestLimitedQuestDAO extends LimitedQuestCounterDaoImpl {
 		private final Map<Integer, AtomicInteger> remaining = new ConcurrentHashMap<>();
 
 		@Override
@@ -100,11 +101,6 @@ class LimitedQuestServiceTest {
 
 		int remaining(int questId) {
 			return remaining.get(questId).get();
-		}
-
-		@Override
-		public boolean supports(String database, int majorVersion, int minorVersion) {
-			return true;
 		}
 	}
 }

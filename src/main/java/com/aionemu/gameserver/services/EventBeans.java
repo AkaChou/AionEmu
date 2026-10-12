@@ -1,16 +1,16 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.LadderDAO;
-import com.aionemu.gameserver.dao.PlayerMinionsDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
-import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
-import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
-import com.aionemu.gameserver.dao.PlayerPassportsDAO;
-import com.aionemu.gameserver.dao.PlayerShugoSweepDAO;
-import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
+import com.aionemu.gameserver.persistence.dao.PlayerMinionDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
+import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
+import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
+import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
+import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -25,7 +25,6 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -57,13 +56,9 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public AbyssRankUpdateService abyssRankUpdateService(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider,
-            ObjectProvider<ServerVariablesDAO> serverVariablesDaoProvider) {
-        AbyssRankDAO abyssRankDao = abyssRankDaoProvider.getIfAvailable();
-        ServerVariablesDAO serverVariablesDao = serverVariablesDaoProvider.getIfAvailable();
-        return abyssRankDao != null && serverVariablesDao != null
-                ? new AbyssRankUpdateService(abyssRankDao, serverVariablesDao)
-                : new AbyssRankUpdateService();
+    public AbyssRankUpdateService abyssRankUpdateService(AbyssRankDao abyssRankDao,
+            ServerVariableDao serverVariablesDao) {
+        return new AbyssRankUpdateService(abyssRankDao, serverVariablesDao);
     }
 
     @Bean
@@ -86,9 +81,8 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public LadderService ladderService(ObjectProvider<LadderDAO> ladderDaoProvider) {
-        LadderDAO dao = ladderDaoProvider.getIfAvailable();
-        return dao != null ? new LadderService(dao) : new LadderService();
+    public LadderService ladderService(LadderPlayerDao dao) {
+        return new LadderService(dao);
     }
 
     @Bean
@@ -123,46 +117,32 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public LunaShopService lunaShopService(ObjectProvider<PlayerLunaShopDAO> lunaShopDaoProvider,
-            ObjectProvider<PlayerWardrobeDAO> wardrobeDaoProvider) {
-        PlayerLunaShopDAO lunaShopDao = lunaShopDaoProvider.getIfAvailable();
-        PlayerWardrobeDAO wardrobeDao = wardrobeDaoProvider.getIfAvailable();
-        return lunaShopDao != null && wardrobeDao != null ? new LunaShopService(lunaShopDao, wardrobeDao)
-                : new LunaShopService();
+    public LunaShopService lunaShopService(PlayerLunaShopDao lunaShopDao, PlayerWardrobeDao wardrobeDao) {
+        return new LunaShopService(lunaShopDao, wardrobeDao);
     }
 
     @Bean
     @Lazy
-    public MinionService minionService(ObjectProvider<PlayerMinionsDAO> minionsDaoProvider,
-            ObjectProvider<PlayerDAO> playerDaoProvider) {
-        PlayerMinionsDAO minionsDao = minionsDaoProvider.getIfAvailable();
-        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
-        return minionsDao != null && playerDao != null ? new MinionService(minionsDao, playerDao)
-                : new MinionService();
+    public MinionService minionService(PlayerMinionDao minionsDao, PlayerDao playerDao) {
+        return new MinionService(minionsDao, playerDao);
     }
 
     @Bean
     @Lazy
-    public ShugoSweepService shugoSweepService(ObjectProvider<PlayerShugoSweepDAO> shugoSweepDaoProvider,
-            ObjectProvider<PlayerDAO> playerDaoProvider) {
-        PlayerShugoSweepDAO shugoSweepDao = shugoSweepDaoProvider.getIfAvailable();
-        PlayerDAO playerDao = playerDaoProvider.getIfAvailable();
-        return shugoSweepDao != null && playerDao != null ? new ShugoSweepService(shugoSweepDao, playerDao)
-                : new ShugoSweepService();
+    public ShugoSweepService shugoSweepService(PlayerShugoSweepDao shugoSweepDao, PlayerDao playerDao) {
+        return new ShugoSweepService(shugoSweepDao, playerDao);
     }
 
     @Bean
     @Lazy
-    public AtreianPassportService atreianPassportService(ObjectProvider<PlayerPassportsDAO> passportsDaoProvider) {
-        PlayerPassportsDAO dao = passportsDaoProvider.getIfAvailable();
-        return dao != null ? new AtreianPassportService(dao) : new AtreianPassportService();
+    public AtreianPassportService atreianPassportService(PlayerPassportDao dao) {
+        return new AtreianPassportService(dao);
     }
 
     @Bean
     @Lazy
-    public EventWindowService eventWindowService(ObjectProvider<PlayerEventsWindowDAO> eventsWindowDaoProvider) {
-        PlayerEventsWindowDAO dao = eventsWindowDaoProvider.getIfAvailable();
-        return dao != null ? new EventWindowService(dao) : new EventWindowService();
+    public EventWindowService eventWindowService(PlayerEventsWindowDao dao) {
+        return new EventWindowService(dao);
     }
 
     @Bean

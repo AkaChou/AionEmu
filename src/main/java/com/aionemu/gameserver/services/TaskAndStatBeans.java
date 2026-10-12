@@ -28,16 +28,15 @@ import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import com.aionemu.gameserver.dao.AbyssRankDAO;
-import com.aionemu.gameserver.dao.PlayerABDAO;
-import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
-import com.aionemu.gameserver.dao.PlayerPetsDAO;
-import com.aionemu.gameserver.dao.PlayerRecipesDAO;
-import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.persistence.dao.PlayerAtreianBestiaryDao;
+import com.aionemu.gameserver.persistence.dao.PlayerCpDao;
+import com.aionemu.gameserver.persistence.dao.PlayerPetDao;
+import com.aionemu.gameserver.persistence.dao.PlayerRecipeDao;
+import com.aionemu.gameserver.persistence.dao.PlayerDao;
 
 /**
  * TaskAndStatBeans：从 GameLegacyServiceBridgeConfiguration 拆出的域内 Bean 装配。
@@ -54,9 +53,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public PetService petService(ObjectProvider<PlayerPetsDAO> playerPetsDaoProvider) {
-        PlayerPetsDAO dao = playerPetsDaoProvider.getIfAvailable();
-        return dao != null ? new PetService(dao) : new PetService();
+    public PetService petService(PlayerPetDao dao) {
+        return new PetService(dao);
     }
 
     @Bean
@@ -67,9 +65,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public AtreianBestiaryService atreianBestiaryService(ObjectProvider<PlayerABDAO> playerAbDaoProvider) {
-        PlayerABDAO dao = playerAbDaoProvider.getIfAvailable();
-        return dao != null ? new AtreianBestiaryService(dao) : new AtreianBestiaryService();
+    public AtreianBestiaryService atreianBestiaryService(PlayerAtreianBestiaryDao dao) {
+        return new AtreianBestiaryService(dao);
     }
 
     @Bean
@@ -80,9 +77,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public GrowthEnergy growthEnergy(ObjectProvider<PlayerDAO> playerDaoProvider) {
-        PlayerDAO dao = playerDaoProvider.getIfAvailable();
-        return dao != null ? new GrowthEnergy(dao) : new GrowthEnergy();
+    public GrowthEnergy growthEnergy(PlayerDao dao) {
+        return new GrowthEnergy(dao);
     }
 
     @Bean
@@ -111,14 +107,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public CreativityEssenceService creativityEssenceService(ObjectProvider<PlayerCreativityPointsDAO> cpDaoProvider,
-                                                             ObjectProvider<PlayerDAO> playerDaoProvider) {
-        PlayerCreativityPointsDAO cpDAO = cpDaoProvider.getIfAvailable();
-        PlayerDAO playerDAO = playerDaoProvider.getIfAvailable();
-        if (cpDAO != null && playerDAO != null) {
-            return new CreativityEssenceService(cpDAO, playerDAO);
-        }
-        return new CreativityEssenceService();
+    public CreativityEssenceService creativityEssenceService(PlayerCpDao cpDAO, PlayerDao playerDAO) {
+        return new CreativityEssenceService(cpDAO, playerDAO);
     }
 
     @Bean
@@ -183,9 +173,8 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public CraftSkillUpdateService craftSkillUpdateService(ObjectProvider<PlayerRecipesDAO> recipesDaoProvider) {
-        PlayerRecipesDAO recipesDAO = recipesDaoProvider.getIfAvailable();
-        return recipesDAO != null ? new CraftSkillUpdateService(recipesDAO) : new CraftSkillUpdateService();
+    public CraftSkillUpdateService craftSkillUpdateService(PlayerRecipeDao recipesDAO) {
+        return new CraftSkillUpdateService(recipesDAO);
     }
 
     @Bean
@@ -220,15 +209,13 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public DatabaseCleaningService databaseCleaningService(ObjectProvider<PlayerDAO> playerDaoProvider) {
-        PlayerDAO dao = playerDaoProvider.getIfAvailable();
-        return dao != null ? new DatabaseCleaningService(dao) : new DatabaseCleaningService();
+    public DatabaseCleaningService databaseCleaningService(PlayerDao dao) {
+        return new DatabaseCleaningService(dao);
     }
 
     @Bean
     @Lazy
-    public AbyssRankCleaningService abyssRankCleaningService(ObjectProvider<AbyssRankDAO> abyssRankDaoProvider) {
-        AbyssRankDAO dao = abyssRankDaoProvider.getIfAvailable();
-        return dao != null ? new AbyssRankCleaningService(dao) : new AbyssRankCleaningService();
+    public AbyssRankCleaningService abyssRankCleaningService(AbyssRankDao dao) {
+        return new AbyssRankCleaningService(dao);
     }
 }

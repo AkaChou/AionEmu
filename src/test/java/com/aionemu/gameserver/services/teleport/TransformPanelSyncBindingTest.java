@@ -8,7 +8,8 @@ import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.dao.PlayerTransformDAO;
+import com.aionemu.gameserver.persistence.dao.PlayerTransformDao;
+import com.aionemu.gameserver.persistence.dao.impl.PlayerTransformDaoImpl;
 
 /**
  * 传送域变身面板同步的静态绑定门面测试。
@@ -18,28 +19,9 @@ class TransformPanelSyncBindingTest {
 
 	@Test
 	void bindPlayerTransformDAOIsReachableThroughTeleportServiceFacade() {
-		PlayerTransformDAO stubDao = new PlayerTransformDAO() {
-			@Override
-			public void loadPlTransfo(com.aionemu.gameserver.model.gameobjects.player.Player player) {
-			}
+		PlayerTransformDao stubDao = new PlayerTransformDaoImpl();
 
-			@Override
-			public boolean storePlTransfo(int playerId, int panelId, int itemId) {
-				return true;
-			}
-
-			@Override
-			public boolean deletePlTransfo(int playerId) {
-				return true;
-			}
-
-			@Override
-			public boolean supports(String databaseName, int majorVersion, int minorVersion) {
-				return true;
-			}
-		};
-
-		PlayerTransformDAO previous = boundDao();
+		PlayerTransformDao previous = boundDao();
 		try {
 			TeleportService2.bindPlayerTransformDAO(stubDao);
 			assertSame(stubDao, boundDao());
@@ -54,30 +36,29 @@ class TransformPanelSyncBindingTest {
 	}
 
 	@Test
-	void unboundAccessorFallsBackWithoutError() throws ReflectiveOperationException {
-		PlayerTransformDAO previous = boundDao();
+	void unboundAccessorFailsFast() throws ReflectiveOperationException {
+		PlayerTransformDao previous = boundDao();
 		try {
 			restore(null);
-			// 触发兜底构建：离线环境应构造 PlayerTransfoDAO 实现（不抛异常）
 			java.lang.reflect.Method accessor = TransformPanelSync.class.getDeclaredMethod("playerTransformDAO");
 			accessor.setAccessible(true);
-			assertNotNull(accessor.invoke(null));
+			assertThrows(java.lang.reflect.InvocationTargetException.class, () -> accessor.invoke(null));
 		} finally {
 			restore(previous);
 		}
 	}
 
-	private static PlayerTransformDAO boundDao() {
+	private static PlayerTransformDao boundDao() {
 		try {
 			Field field = TransformPanelSync.class.getDeclaredField("boundPlayerTransformDAO");
 			field.setAccessible(true);
-			return (PlayerTransformDAO) field.get(null);
+			return (PlayerTransformDao) field.get(null);
 		} catch (ReflectiveOperationException e) {
 			throw new AssertionError(e);
 		}
 	}
 
-	private static void restore(PlayerTransformDAO dao) {
+	private static void restore(PlayerTransformDao dao) {
 		try {
 			Field field = TransformPanelSync.class.getDeclaredField("boundPlayerTransformDAO");
 			field.setAccessible(true);

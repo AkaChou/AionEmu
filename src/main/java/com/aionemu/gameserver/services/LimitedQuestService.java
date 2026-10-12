@@ -1,11 +1,10 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.dao.LimitedQuestDAO;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
+import com.aionemu.gameserver.persistence.dao.LimitedQuestCounterDao;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,33 +26,14 @@ public final class LimitedQuestService {
 	private static final String DEFINITIONS_FILE = "./definitions/compact/quests/limited-quests.xml";
 
 	private static volatile LimitedQuestService instance;
-	private final LimitedQuestDAO dao;
+	private final LimitedQuestCounterDao dao;
 	private final Map<Integer, Limit> limits;
 
-	public LimitedQuestService(LimitedQuestDAO dao) {
+	public LimitedQuestService(LimitedQuestCounterDao dao) {
 		this(dao, loadLimitsSafe());
 	}
 
-	/**
-	 * 构造服务：DAOManager 已初始化时优先解析 Spring Bean，否则退回实现类无参构造。
-	 * Constructs the service: resolves the Spring bean when DAOManager is initialized, else falls back to no-arg impl constructors.
-	 */
-	public LimitedQuestService() {
-		this(safeDao(LimitedQuestDAO.class, com.aionemu.gameserver.dao.impl.LimitedQuestDAO::new));
-	}
-
-	private static <T extends com.aionemu.commons.database.dao.DAO> T safeDao(Class<T> daoClass,
-																			  java.util.function.Supplier<T> fallback) {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(daoClass);
-			} catch (Exception ignored) {
-			}
-		}
-		return fallback.get();
-	}
-
-	LimitedQuestService(LimitedQuestDAO dao, Map<Integer, Limit> limits) {
+	LimitedQuestService(LimitedQuestCounterDao dao, Map<Integer, Limit> limits) {
 		this.dao = Objects.requireNonNull(dao, "dao must not be null");
 		this.limits = Map.copyOf(limits);
 		instance = this;
@@ -62,12 +42,7 @@ public final class LimitedQuestService {
 	public static LimitedQuestService getInstance() {
 		LimitedQuestService current = instance;
 		if (current == null) {
-			synchronized (LimitedQuestService.class) {
-				current = instance;
-				if (current == null) {
-					current = instance = Holder.INSTANCE;
-				}
-			}
+			throw new IllegalStateException("LimitedQuestService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
 		return current;
 	}
@@ -171,18 +146,6 @@ public final class LimitedQuestService {
 			if (maxCount <= 1 || recoverCount <= 0) {
 				throw new IllegalArgumentException("Invalid limited quest counts: " + maxCount + "/" + recoverCount);
 			}
-		}
-	}
-
-	private static final class Holder {
-		private static final LimitedQuestService INSTANCE = create();
-
-		private static LimitedQuestService create() {
-			File file = Config.definitionFile(DEFINITIONS_FILE);
-			Map<Integer, Limit> limits = loadLimits(file);
-			log.info(I18n.get("log.limited_quest.loaded", limits.size(), file.getPath()));
-			return new LimitedQuestService(safeDao(LimitedQuestDAO.class,
-				com.aionemu.gameserver.dao.impl.LimitedQuestDAO::new), limits);
 		}
 	}
 }

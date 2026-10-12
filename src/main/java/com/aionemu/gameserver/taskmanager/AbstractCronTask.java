@@ -6,11 +6,11 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Objects;
 
 import org.quartz.CronExpression;
 
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 
 import lombok.Getter;
 
@@ -106,32 +106,21 @@ public abstract class AbstractCronTask implements Runnable {
 	 * 服务器变量数据访问对象。
 	 * Server variables DAO.
 	 */
-	private final ServerVariablesDAO serverVariablesDAO;
+	private final ServerVariableDao serverVariablesDAO;
 
 	/**
-	 * 使用 Cron 表达式初始化任务并安排下次调度。
-	 * Initialize with a Cron expression and schedule the next run.
-	 * @param cronExpression Cron 表达式 / the Cron expression
-	 * @throws ParseException 表达式无效时 / when the expression is invalid
-	 * @throws NullPointerException 表达式为 null 时 / when the expression is null
-	 */
-	public AbstractCronTask(String cronExpression) throws ParseException {
-		this(cronExpression, safeServerVariablesDao());
-	}
-
-	/**
-	 * 使用 Cron 表达式与指定 ServerVariablesDAO 初始化任务。
-	 * Initialize with a Cron expression and specified ServerVariablesDAO.
+	 * 使用 Cron 表达式与指定 ServerVariableDao 初始化任务。
+	 * Initialize with a Cron expression and specified ServerVariableDao.
 	 * @param cronExpression Cron 表达式 / the Cron expression
 	 * @param serverVariablesDAO 服务器变量 DAO / server variables DAO
 	 * @throws ParseException 表达式无效时 / when the expression is invalid
 	 * @throws NullPointerException 表达式为 null 时 / when the expression is null
 	 */
-	public AbstractCronTask(String cronExpression, ServerVariablesDAO serverVariablesDAO) throws ParseException {
+	public AbstractCronTask(String cronExpression, ServerVariableDao serverVariablesDAO) throws ParseException {
 		if (cronExpression == null)
 			throw new NullPointerException("cronExpressionString");
 		this.cronExpressionString = cronExpression;
-		this.serverVariablesDAO = serverVariablesDAO != null ? serverVariablesDAO : safeServerVariablesDao();
+		this.serverVariablesDAO = Objects.requireNonNull(serverVariablesDAO, "serverVariablesDAO must not be null");
 		if (this.serverVariablesDAO != null) {
 			try {
 				runTime = this.serverVariablesDAO.load(getServerTimeVariable());
@@ -155,16 +144,6 @@ public abstract class AbstractCronTask implements Runnable {
 			}
 		}
 		scheduleNextRun();
-	}
-
-	private static ServerVariablesDAO safeServerVariablesDao() {
-		if (DAOManager.isInitialized()) {
-			try {
-				return DAOManager.getDAO(ServerVariablesDAO.class);
-			} catch (Exception ignored) {
-			}
-		}
-		return new com.aionemu.gameserver.dao.impl.ServerVariablesDAO();
 	}
 
 	/**
