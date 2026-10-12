@@ -21,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 的 reward 分支只 {@code setStatus(REWARD)}、**不写 nextStep**，所以领奖态真正落盘的 step 恒等于调用时的
  * {@code step}（也就是进入领奖时已有的 var0）；只有 {@code qs.setQuestVar(N)} /
  * {@code changeQuestStep(..., false)} / {@code setQuestVarById(0, N)} 之后的 {@code setStatus(REWARD)}
- * 才把 var0 写成 N。逐任务的取证见
- * {@code .agents/summary/quest-10527-reward-row/batch29-triage.tsv} 与 {@code batch29-evidence.tsv}：
+ * 才把 var0 写成 N。逐任务的取证见 {@code batch29-evidence.tsv}：
  * <ul>
  *   <li>1876/2876（Taranis / Votan Emergency Orders）：{@code changeQuestStep(env, 1, 2, false)} 写 2
  *       之后 {@code setStatus(REWARD)} → 落盘 2；旧 XML 投影写成 1，领奖时任务书停在行 1；</li>

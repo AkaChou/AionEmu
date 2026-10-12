@@ -1,5 +1,5 @@
 # Aion 5.8 retail quest fixed/selectable item contract snapshot
-# source: Quest_unpacked/quest.xml (regenerate: .agents/summary/quest-systemic-goal/build_item_selectable_contract_tsv.py)
+# source: Quest_unpacked/quest.xml
 # rows: production quests whose retail item names are all mappable; rows with unmapped names are EVIDENCE_BLOCKED and excluded.
 quest_id	retail_fixed_items	retail_selectable_ids	retail_extended
 1001	RETAIL_UNSET	114100806,114300816,114500778	-

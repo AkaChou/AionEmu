@@ -35,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * projection, or a missing `reward + QUEST_SELECT(31) -> DEFAULT_SUCCESS` entry page, leaves the player with the
  * generic end-dialog page after selecting the quest row.</p>
  * <p>基线 `src/test/resources/quest/external-reward-advance-baseline.tsv` 由只读审计脚本
- * `.agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py` 生成；新增引擎外写入方时先重跑
+ * 生成；新增引擎外写入方时先重跑
  * 脚本刷新基线，本测试会立刻要求新条目提供同样的入口页与自愈证据。
  * The baseline `src/test/resources/quest/external-reward-advance-baseline.tsv` is produced by the read-only audit
- * script `.agents/summary/quest-10522-reward-reentry/audit_external_reward_advance.py`; when a new engine-external
+ * script; when a new engine-external
  * writer appears, re-run that script and this test immediately demands the same entry page and recovery evidence.</p>
  */
 class ExternalRewardAdvanceReentryContractTest {

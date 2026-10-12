@@ -1,7 +1,7 @@
 # 非 IR 轴登记表·旧存档自愈边（LEGACY_SAVE_HEAL）——**规范位置，受 RetailNonIrAxisGateTest 门禁守**
-# P0c-11（2026-09-25）起从 .agents/summary/scriptdll-quest-driver/p0c6-legacy-save-normalization.tsv 迁入；
+# P0c-11（2026-09-25）起从 迁入；
 # 采纳切片移除 EnterWorld 自愈边时在本表追加（p0c9_retire_rows.py 落地器已指向本文件），
-# 随后重跑 python3 -B .agents/summary/scriptdll-quest-driver/p0c11_build_non_ir_registry.py 刷新统一登记表。
+# 随后重跑 python3 -B 刷新统一登记表。
 # 口径：原版驱动后 var0 是击杀计数（bit 0..5 = SECTION_0）、var5 是简报标志位（bit 30）；
 #       旧存档若停在旧 XML 的"行号/未听简报"形状，可按本表做一次性归一化（**可选**，不要求零进度损失）。
 # 列：quest_id / 旧源节点 / 旧目标节点 / 事件 / 被移除边的条件 / 被移除边的动作 / 原版形状

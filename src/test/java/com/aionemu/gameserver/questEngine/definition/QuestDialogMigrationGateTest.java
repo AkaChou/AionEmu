@@ -60,13 +60,6 @@ class QuestDialogMigrationGateTest {
 		}
 	}
 
-	@Test
-	void dialogEnumGeneratorDoesNotScanLegacySyntax() {
-		Path generator = Path.of(".agents/summary/quest/generate_quest_dialog_enums.py");
-		assertFalse(LEGACY_QUEST_XML_SYNTAX.stream().anyMatch(pattern -> pattern.matcher(read(generator)).find()),
-			() -> generator + " scans legacy quest-dialog syntax");
-	}
-
 	private static String read(Path path) {
 		try {
 			return Files.readString(path);

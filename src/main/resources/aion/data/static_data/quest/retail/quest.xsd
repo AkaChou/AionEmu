@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
-     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
-     .agents/summary/quest-engine-native/p0b/）：
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉：
      - 行 = <quest>（<id> 子元素必填、非负、全表唯一；name 全表唯一 = 装载器对非空重名
        fail-closed）；221 个子元素 = 观察全域清单；int 定型见生成器清单（= 元数据编译器
        integer() 解析点）；11 组 *_selectable_reward 容器 = 1..N 个
        <data>，每 data 恰 1 件 职业可选物品（观察形）。
      quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip). Mirrors the
-     loader fail-closed rules plus observed-universe shape pins (evidence + generator under
-     `.agents/summary/quest-engine-native/p0b/`):
+     loader fail-closed rules plus observed-universe shape pins:
      - Rows are <quest> (required unique non-negative <id> child; unique name = the loader fail-closes on
        duplicate non-blank names); the 221 child elements are the observed universe; int typing mirrors the
        metadata compiler integer() sites; the eleven *_selectable_reward containers hold 1..N <data>, each

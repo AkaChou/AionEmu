@@ -1,6 +1,6 @@
 # Aion 任务目录（中英对照）
 
-> 生成日期：2026-10-05（重建；生成器 `.agents/summary/quest-catalog-rebuild/build_quest_catalog.py`）。
+> 生成日期：2026-10-05（重建）。
 > 数据范围：客户端存在任务集（与 QuestWiki 索引一致，6222 条）；原版表中无客户端数据的任务不收录。
 > 中文名称：Aion 5.8 客户端字符串（与 display-name-id 精确匹配；经 QuestWiki 索引回填，不猜译）。
 > 英文名称：迁移前任务定义 `metadata/@name`（经 QuestWiki 索引回填；原版表仅存韩文 dev_name）。

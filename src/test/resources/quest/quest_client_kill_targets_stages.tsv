@@ -1,6 +1,6 @@
 # 逐段击杀目标登记表（多段 DD hunt 行的变体轴裁定；段号 = DD 计数槽 1..N）
 # source: Quest_unpacked/quest_monster.csv 每 SECTION 行的名字变体经 npc_template name_desc 解析
-# 生成脚本: .agents/summary/scriptdll-quest-driver/generate_stage_kill_targets.py
+# 生成脚本:
 # quest_id	stage	targets
 15546	1	240475 240476 241656 241657
 15546	2	240483 240484 241664 241665

@@ -27,4 +27,4 @@ globs: "**/*.java"
 2. 当 getter、setter 或构造器包含校验、类型转换、缓存、事件发布、同步控制、延迟初始化或其他副作用时，必须保留显式实现。Lombok 绝不能改变既有语义。
 3. 在移除手写样板代码前，必须验证方法签名、可见性、注解、序列化契约、反射访问以及框架构造要求是否与 Lombok 的生成行为完全吻合。
 4. 守护测试（guard tests）无法通过反射检测到 `@Data`：Lombok 注解使用 `CLASS` 保留策略，因此绝不会出现在 `RuntimeVisibleAnnotations` 中，`isAnnotationPresent` 会返回 `false`。必须通过源码文本进行检查。
-5. 留意 Lombok 的方法冲突规则：如果已存在同名且参数数量相同的方法，Lombok 会静默跳过生成（例如重载的 setter，如 `setState(int)` 与 `setState(CreatureState)`）。切勿指望删除其中一个重载后 Lombok 会重新生成它。参见 [.agents/memory-bank/patterns/build-and-env.md](../memory-bank/patterns/build-and-env.md)。
+5. 留意 Lombok 的方法冲突规则：如果已存在同名且参数数量相同的方法，Lombok 会静默跳过生成（例如重载的 setter，如 `setState(int)` 与 `setState(CreatureState)`）。切勿指望删除其中一个重载后 Lombok 会重新生成它。参见 Hindsight MCP（Bank ID: `AionEmu`）模式 `ENV-003`（build-and-env 域）。

@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@code 0x100} 状态推进不写轴，客户端 REWARD 态按自身 [%N] 门槛显示报告行（行 7）；
  * 领奖行批次曾误抬为 7，{@code REWARD + var0==7} 的坏档在进入世界时回滚到 6。
  * 中间阶梯（0..6 连续）与原版 {4,6} 集合的完整对照留待专项（见
- * {@code .agents/summary/quest-step-axis-fullscan/}）。
  * <p>
  * Locks the eight-row journal ladder of 24046 (rows 4 and 5 were collapsed into one step by the
  * legacy {@code changeQuestStep(3, 5)} jump). With the QE-054 close-out the reward projection is

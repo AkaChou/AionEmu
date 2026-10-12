@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <p>
  * 权威来源：Aion 5.8 原版服务端模板表 {@code Map/XML/Quest_SimpleHunt.xml} 的 {@code countN/monsterN}
  * （经 NPC {@code name_desc} 解析为 npc_id），快照由
- * {@code .agents/summary/scriptdll-quest-driver/reconcile_simple_hunt.py --emit-contract} 生成。
+ * {@code --emit-contract} 生成。
  * <p>
  * 每个计数器按快照里的 {@code model} 断言：
  * <ul>
@@ -221,7 +221,6 @@ class QuestSimpleHuntRetailContractTest {
 					return prefix + "expected a diverging counter-grid dimension but none found";
 				}
 				// 具体偏差（多算/少算/口径冲突）记录在
-				// .agents/summary/scriptdll-quest-driver/simple-hunt-reconciliation.tsv，
 				// 门禁此处只锁「仍是 counter-grid 形态」，避免静默改动。
 				parseIds(dimension.getAttribute("npc-ids"));
 				return null;

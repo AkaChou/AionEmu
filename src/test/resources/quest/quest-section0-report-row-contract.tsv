@@ -1,6 +1,6 @@
 # Aion 5.8 retail SECTION_0 report-row contract（击杀计数打满后任务说明行索引必须等于报告行）
 # source: Quest_unpacked/quest_monster.csv（SECTION_0==S; SECTION_n<N）+ Dialogs/quest_q*.html 的 quest_summary 报告步骤
-# 生成脚本: .agents/summary/quest-15001-multicounter-step/apply_section0_report_row_sweep.py（报告行合同由审计脚本核对）
+# 生成脚本: （报告行合同由审计脚本核对）
 quest_id	client_stage	report_row
 13945	1	2
 15041	0	1

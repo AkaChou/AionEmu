@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * <li>AP 服务端 4 倍版本倍率族（11279~11286、21281~21288、18849、18850、28849、28850，
  * 生产 = 原版 × 4，5.8 欧比斯点数版本倍率）。</li>
  * </ul>
- * 基线由 .agents/summary/quest-systemic-goal/build_reward_value_contract_tsv.py 再算。
+ * 基线由原版数据再算。
  */
 class QuestRewardValueGateTest {
 

@@ -9,7 +9,7 @@ globs: "src/main/resources/aion/data/static_data/quest/definitions/**/*.xml, src
 
 在处理任务问题之前，必须阅读：
 
-- `../memory-bank/patterns/quest-engine.md`
+- 通过 Hindsight MCP（Bank ID: `AionEmu`）检索 `quest-engine` 域模式（`QE-xxx`）
 - `../../docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md`
 - `../../docs/quest/repair-playbook/PATTERNS.zh-CN.md`
 - `../../docs/quest/repair-playbook/CASES.zh-CN.md`

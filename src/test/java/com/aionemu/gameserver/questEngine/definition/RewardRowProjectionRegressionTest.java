@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 判定依据（同 1361/11006/24021 根因）：原版 {@code 0x100} 状态推进不写轴（进 REWARD 轴保持玩法末值），
  * 客户端 REWARD 态按自身 [{%N}] 行门槛显示报告行；「客户端末行是领奖行 ⇒ 投影抬到末行索引」
  * 对玩法步后进 REWARD 的任务系统性不成立。逐任务取证见
- * {@code .agents/summary/quest-step-axis-fullscan/}。
  * <p>
  * Locks the QE-054 step-axis close-out for the 40 quests mislifted by the reward-row batch: the
  * reward projection equals the retail/legacy progress value and batch-corrupted saves are rolled

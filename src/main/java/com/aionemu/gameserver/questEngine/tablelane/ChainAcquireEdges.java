@@ -16,7 +16,7 @@ import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
  * DD 链式接取发放边表（`category_acquire_=none` 行的自动发放面，2026-10-08 缺口修复）。
  * <p>
  * 数据 = 本仓生成物 {@code quest/retail/quest_chain_acquire_edges.xml}（生成器
- * {@code .agents/summary/quest-chain-acquire-native/build_quest_chain_acquire_edges.py}；禁止手改）。
+ * 禁止手改）。
  * 每行 = 一个后继 quest + 其全部前序 + 证据轴（原版 {@code finished_quest_cond} / 退役定义 XML /
  * 退役 Java handler 的 {@code defaultOnLvlUpEvent}）。本类只做装载与良构校验，不碰语义：
  * 运行期只注册「被本车道接管 ∧ 可路由 ∧ 接取类别 none ∧ 非冻结」的后继（过滤在

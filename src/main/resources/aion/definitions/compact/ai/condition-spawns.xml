@@ -22175,7 +22175,7 @@
     <variable name="lichkey1"/>
     <variable name="lichkey2"/>
     <variable name="lichkey3"/>
-    <!-- Macunbello 条件刷（原版 world_N.xml territory 投影，见 .agents/summary/beshmundir-macunbello-conditional-spawn/condition-rows.tsv）。
+    <!-- Macunbello 条件刷（原版 world_N.xml territory 投影）。
          debufflich：每个"灵魂"（216206-216213，pattern on_die）或 Lichkey1（216583，on_die）死亡 +1；上限 36（灵魂全灭）。
          bt_page：工程页变量——0 = 普通页（N 套变体，当前实机默认）/ 1 = 困难页（H 套变体）；未来 BT 难度页的接入点（实例创建后 setVariable）。
          SpecialServer_Cond 故意不声明：无 pattern 写入 → 恒 0（普通服），仅在表达式里保留原版字面。

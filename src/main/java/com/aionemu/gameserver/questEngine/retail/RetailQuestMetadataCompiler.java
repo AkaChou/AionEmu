@@ -23,7 +23,7 @@ import java.util.TreeSet;
 /**
  * 原版 quest.xml 行 → {@link QuestMetadata} 的映射器（"原版元数据层"的编译核心）。
  * <p>
- * 关键映射口径（全部经全库对拍验证，见 .agents/summary/scriptdll-quest-driver/）：
+ * 关键映射口径（全部经全库对拍验证）：
  * <ul>
  * <li>name：原版只有 {@code Qxxxx} 符号名；英文名为在库人工资产且运行时无消费方（登记的全局口径分歧）；</li>
  * <li>displayNameId：客户端字符串表 id（{@code quest_name_string_ids.xml}，已验证与生产一致）；</li>

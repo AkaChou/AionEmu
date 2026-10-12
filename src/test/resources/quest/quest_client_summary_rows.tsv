@@ -1,6 +1,6 @@
 # Aion 5.8 客户端任务书行数登记（quest_id, rows）
 # 来源：data_unpacked/Dialogs/**/quest_q<id>.html 的 quest_summary 页 <step> 数量
-# 生成：.agents/summary/scriptdll-quest-driver/build_quest_client_summary_rows.py
+# 生成：
 # 语义：REWARD 节点 var0 投影 = rows - 1（末行行号）；客户端 visible 槽位 = 3 * 行号（QE-051）。
 1000	4
 1001	5

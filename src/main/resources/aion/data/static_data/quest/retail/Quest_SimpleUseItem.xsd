@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Quest_SimpleUseItem.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
-     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
-     .agents/summary/quest-engine-native/p0b/）：
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉：
      - use_item_name 与 reward_npc_name 为装载器必填（本族无接取 NPC
        列）；item_check 出现即恒 "1"。
      Quest_SimpleUseItem.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
-     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
-     `.agents/summary/quest-engine-native/p0b/`):
+     Mirrors the loader fail-closed rules plus observed-universe shape pins:
      - use_item_name and reward_npc_name are loader-mandatory (no accept-NPC column in this family);
        item_check is always "1" when present. -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">

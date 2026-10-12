@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 移植完成后该分支自动转为强制，门禁会立即要求补齐）；</li>
  * <li>未移植单分支任务保持 fail-open，但一旦依赖任务进入目录就必须补上前置。</li>
  * </ul>
- * 基线由 {@code .agents/summary/retail-template-reconciliation/build_prereq_contract_tsv.py} 从原版数据再算。
+ * 基线由原版数据再算。
  */
 class QuestPrerequisiteRetailContractTest {
 

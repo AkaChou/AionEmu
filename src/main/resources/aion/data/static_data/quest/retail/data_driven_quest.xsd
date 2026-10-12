@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- data_driven_quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
-     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
-     .agents/summary/quest-engine-native/p0b/）：
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉：
      - 行 = <quest_data_driven>（<id> 子元素必填 = 装载器 parseInt
        直解）；progress_info 内 data = 1..N 个进度步，每步
        category_progress_ 必填（8 kind 的大小写不敏感字母类模式 = 镜像装载端 lower
        归一）且 value0_progress_ 必填（载荷列，缺失 fail-
        closed）；列号合法性（含附加动作列）由装载器在运行期 fail-closed，XSD 1.0 不能表达。
      data_driven_quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
-     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
-     `.agents/summary/quest-engine-native/p0b/`):
+     Mirrors the loader fail-closed rules plus observed-universe shape pins:
      - Rows are <quest_data_driven> (required <id> = the loader parseInts it); each progress_info holds 1..N
        <data> steps whose category_progress_ is required (case-insensitive letter-class pattern mirroring
        the loader lower-casing) and value0_progress_ is required (payload column, missing = fail closed);

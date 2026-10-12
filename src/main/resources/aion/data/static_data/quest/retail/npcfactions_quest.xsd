@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- npcfactions_quest.xml 表 schema（quest retail 表门禁用，2026-10-03 DOCTYPE 剥离同批）。
-     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉（证据 + 生成器：
-     .agents/summary/quest-engine-native/p0b/）：
+     镜像口径 = 装载器 fail-closed 规则 ∪ 观察形全域钉：
      - 原版源件副本（本仓无运行时装载器；消费面 = 阵营合同台账生成）。行 = <quest_id
        quest_id>（属性必填、非负、全表唯一）；星期位 mon..sun ∈ {0,1}（全 0 =
        原版本征不轮换）。
      npcfactions_quest.xml schema (quest retail table gate, same batch as the 2026-10-03 DOCTYPE strip).
-     Mirrors the loader fail-closed rules plus observed-universe shape pins (evidence + generator under
-     `.agents/summary/quest-engine-native/p0b/`):
+     Mirrors the loader fail-closed rules plus observed-universe shape pins:
      - Retail source copy (no runtime loader in this repo; consumed by the contract ledger generation). Rows
        are <quest_id quest_id> (required unique non-negative attr); the weekday flags mon..sun are {0,1}
        (all-zero = the retail table itself does not rotate). -->

@@ -21,7 +21,6 @@ import java.util.Set;
  * <p>
  * 每个任务一行，形如 {@code <id id="1102"><count1>3</count1><monster1>CherubimL_1_n, …</monster1>…}；
  * {@code countN/monsterN} 就是 ScriptDLL64 注册点里的 {@code param_4/param_3} 来源
- * （见 .agents/summary/scriptdll-quest-driver/2026-09-22-phase2-driver-semantics.zh-CN.md）。
  * Read-only view of the retail SimpleHunt template table.
  */
 public final class RetailSimpleHuntTable {

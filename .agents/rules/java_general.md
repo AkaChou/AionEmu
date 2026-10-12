@@ -11,8 +11,8 @@ globs: "**/*.java"
 2. 获得验证授权后，先从范围最小的专项测试开始，仅在风险需要及用户要求时再逐步扩大验证范围。
 3. 切勿在不同的代码检出分支（checkout）之间混用 `../../target` 构建产物、运行中进程、配置或日志。
 4. 切勿手动直接编辑 `../../target` 目录或生成的 class/JAR 文件，不可将过期的构建产物作为当前源码树状态的依据。
-5. 在排查运行时差异、陈旧行为或环境异常时，请参考 [.agents/memory-bank/patterns/build-and-env.md](../memory-bank/patterns/build-and-env.md)（特别是 IDEA 中 target/classes 的 mtime 检查）。
-6. 在高频门面（facade）和热点路径上，避免使用裸露的动态 bean 查找或 `applicationContext.getIfAvailable(...)`；请参考 [.agents/memory-bank/patterns/architecture-runtime.md](../memory-bank/patterns/architecture-runtime.md)。
+5. 在排查运行时差异、陈旧行为或环境异常时，请通过 Hindsight MCP（Bank ID: `AionEmu`）检索 `build-and-env` 域模式（如 `ENV-001`：IDEA 中 target/classes 的 mtime 检查）。
+6. 在高频门面（facade）和热点路径上，避免使用裸露的动态 bean 查找或 `applicationContext.getIfAvailable(...)`；请通过 Hindsight MCP（Bank ID: `AionEmu`）检索 `architecture-runtime` 域模式（如 `AR-001`：缓存注入的 facade 引用）。
 
 ## 编码规范 (Coding Conventions)
 

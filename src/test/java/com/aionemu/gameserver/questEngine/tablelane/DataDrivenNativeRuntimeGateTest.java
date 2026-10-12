@@ -63,7 +63,6 @@ import com.aionemu.gameserver.world.WorldPosition;
  * 附加动作**（`*(entry+0x10)` = QuestProgressExtraInfo 对象；2026-10-06 修正步 f 的「步 0 动作」误读）；
  * CollectItem 拾取分支无执行器 ⇒ 排除）；④ 冻结面闭合（routed ∪ frozen = 切换集，互斥；ZONE_ABSENT 9
  * §10.3-#23 + ACTION_UNFACED 14〔col9/col10/c8d0 步 col6〕，证据
- * `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
  * <p>
  * P7 step 2d..f gate for the native DD progress runtime: the production singleton owns the whole
  * switch set (1444 routed / 23 frozen since step f), per-kind interest construction including the five
@@ -1349,7 +1348,7 @@ class DataDrivenNativeRuntimeGateTest {
 				Kind.ENTER_AREA, 153, Kind.ITEM_PLAY, 42, Kind.ENTER_WORLD, 34, Kind.TALK_FOBJ, 19), switchSteps,
 			"切换集逐类步数 = P7 步 1 契约");
 		// 已路由步数；2026-10-03 偏差修复第九批 col9 EnterInstance 落面后随 10034/20034 解冻重冻
-		// （离线镜像逐值一致，见 `.agents/summary/quest-engine-native/p7/tools/dd-planrow-e2-mirror.py`）。
+		// （离线镜像逐值一致）。
 		assertEquals(Map.of(Kind.HUNT, 820, Kind.COLLECT_ITEM, 345, Kind.PVP, 207, Kind.TALK, 395,
 				Kind.ENTER_AREA, 137, Kind.ITEM_PLAY, 40, Kind.ENTER_WORLD, 32, Kind.TALK_FOBJ, 18), routedSteps,
 			"已路由行的逐类步数冻结（col9 EnterInstance 落面后）");

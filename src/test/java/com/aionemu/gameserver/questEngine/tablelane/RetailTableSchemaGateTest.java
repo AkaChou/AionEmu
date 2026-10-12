@@ -22,9 +22,8 @@ import org.junit.jupiter.api.Test;
 /**
  * retail 表 schema 门（2026-10-03 DOCTYPE 剥离批 + 台账 XML 化批合并）：真资源对同目录 XSD 全文校验。
  * <p>
- * 承重面 = 每个 XSD 镜像其装载器的 fail-closed 规则 ∪ 观察形全域钉（口径与证据见
- * {@code .agents/summary/quest-engine-native/p0b/retail-doctype-xsd.zh-CN.md} 与
- * {@code .agents/summary/quest-engine-native/p0b/ledger-xml.zh-CN.md}）——schema 形漂移即红；
+ * 承重面 = 每个 XSD 镜像其装载器的 fail-closed 规则 ∪ 观察形全域钉（口径与证据见各表 XSD 头注释）；
+ * schema 形漂移即红；
  * 另两钉子：①二十表不得再出现 DOCTYPE（剥离批不得回退）；②正文实体引用只允许 XML 预定义五实体
  * （非预定义实体在无 DTD 时是未定义实体炸解析，且原版自名实体语义 = 字面量展开，见批证据
  * `&hellip;` → 字面 `hellip`）。十张自造台账（原 TSV + D1 的 Quest-AI 注册面证据表 + 链式接取发放边表）
@@ -32,8 +31,7 @@ import org.junit.jupiter.api.Test;
  * <p>
  * Gate for the retail tables (the 2026-10-03 DOCTYPE strip plus the ledger-XML batch): the real
  * resources must validate against their sibling XSDs, which mirror the loader fail-closed rules
- * plus observed-universe shape pins (evidence under
- * {@code .agents/summary/quest-engine-native/p0b/}). Two further pins: no DOCTYPE may reappear,
+ * plus observed-universe shape pins (evidence in each table's XSD header). Two further pins: no DOCTYPE may reappear,
  * and entity references in the bodies may only use the five XML predefined entities. The ten
  * self-made ledgers (formerly TSVs, plus the D1 Quest-AI registration evidence table and the
  * chain-acquire edge table) follow the same rules as the ten retail tables: same-stem xml/xsd

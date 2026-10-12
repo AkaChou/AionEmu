@@ -83,7 +83,6 @@ class RetailSimpleHuntTableTest {
 	 * 中文（CHS）客户端页 QUEST_Q1217.html 的摘要 `([%2]/7)` 与接取台词「清除掉 7 个」都是 7；原版表、
 	 * 客户端自身 quest_monster 门控（`SECTION_0<10`）与韩文原页都是 10。2026-10-07 实机验收：杀到 7 个
 	 * 即推进到报告步（完成态计数条曾显示 10/7 的客户端侧观感残留）。证据见
-	 * .agents/summary/quest-1217-kill-count/DIAGNOSIS.zh-CN.md。
 	 * Repository deviation pin: quest 1217 keeps the player-visible count of 7 (retail count1=10) so a
 	 * retail table re-import cannot silently revert it. The CHS client page shows 7 in both the summary
 	 * counter and the accept dialog, and the quest was accepted in game at seven kills.

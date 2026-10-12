@@ -1,5 +1,5 @@
 # Aion 5.8 retail quest tier-1 numeric reward contract snapshot
-# source: Quest_unpacked/quest.xml (regenerate: .agents/summary/quest-systemic-goal/build_reward_value_contract_tsv.py)
+# source: Quest_unpacked/quest.xml
 # RETAIL_UNSET means the retail field is absent (retail not configured; skip comparison). Existing values (including 0) are authoritative.
 quest_id	retail_exp1	retail_gold1	retail_abyss_point1	retail_glory_point1
 1000	1	0	RETAIL_UNSET	RETAIL_UNSET

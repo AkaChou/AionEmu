@@ -5,7 +5,6 @@
 #   loc_id refers to data/static_data/teleport_location.xml, which stays the single source of coordinates.
 # 来源 / Source: 国服 5.8 客户端 L10N/CHS/Data/data.pak → Strings/client_strings_level.xml 等字符串表，
 #               按 teleport_location.xml 的 name_id 连接；生成脚本见
-#               .agents/summary/chinese-gm-commands/generate_teleport_names_zh.py
 # 说明 / Notes: 无服务端坐标的条目是客户端飞行传送点，//移动 会明确提示不支持直接传送；
 #               手工补充别名（例如同一地点的其它叫法）可直接在本文件追加一行。
 #               Entries without server coordinates are client-side flight teleports; //移动 reports them

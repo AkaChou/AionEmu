@@ -59,7 +59,7 @@ class QuestMultistepChainContractTest {
 
 	/**
 	 * 已随 P3 SimpleTalk 切换批移出 IR 的原版行（10 个）：接取/交付 owner 与中继 NPC 取自原版表，
-	 * 步页取自客户端对话链；证据见 .agents/summary/quest-engine-native/p3/step5-anchor-evidence.tsv。
+	 * 步页取自客户端对话链。
 	 * Retail rows that left the IR lane with the P3 SimpleTalk switch batch (10 quests): owners and relay
 	 * NPCs come from the retail row, step pages from the client dialog chain.
 	 */

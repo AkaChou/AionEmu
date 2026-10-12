@@ -1,6 +1,6 @@
 # 客户端交付型对话页登记（quest_id, select_none, select1, check_user_item_ok, check_user_item_fail, select_success, ok_local_close）
 # 来源：docs/quest/client-dialog-mapping/quest-dialog-pages.csv（客户端任务书 HTML 页面索引）；ok_local_close 来自 quest-dialog-action-details.csv（ok 页可见按钮 ⊆ {FINISH_DIALOG(1008)}）
-# 生成：python3 -B .agents/summary/scriptdll-quest-driver/build_quest_client_handin_pages.py
+# 生成：python3 -B
 # 语义：五页齐备且页面集合 = 标准模板 → 该任务走「交付型」对话流；变体进 *_exceptions.tsv；ok_local_close=true 时交付成功分支直接开领奖窗（ok 页本地关闭，显示它会形成死端）
 3124	4762	1011	10000	10001	10002	true
 4121	4762	1011	10000	10001	10002	true

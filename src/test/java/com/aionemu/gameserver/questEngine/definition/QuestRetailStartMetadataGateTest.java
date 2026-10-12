@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * </ul>
  * 覆盖全部 catalog 条目：EXECUTABLE 取编译后 metadata，METADATA_ONLY 按其 resource
  * XML 解析 metadata（两类任务对玩家都生效接取资格）。
- * 基线由 .agents/summary/quest-systemic-goal/build_retail_contract_tsv.py 从原版数据再算。
+ * 从原版数据再算。
  */
 class QuestRetailStartMetadataGateTest {
 

@@ -3,7 +3,7 @@
 # 列 / columns: questId <TAB> distinctDropItems <TAB> per-monster chance histogram (chance:monsterCount, ...)
 # 语义 / semantics: 生产目录允许比基线多来源（>=），但不得少于基线的怪物数或丢失概率档；
 #                production must not offer fewer monsters per chance than retail (extra sources are allowed).
-# 生成脚本 / generator: .agents/summary/quest/twin-pair-scan/generate_drop_retail_contract.py
+# 生成脚本 / generator:
 1001	1	100:1
 1002	1	100:7
 1004	1	100:1

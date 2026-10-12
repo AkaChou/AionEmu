@@ -30,7 +30,6 @@ import org.w3c.dom.Document;
  * D1 常设门：XML 车道任务的对话/交付 NPC 绑定 vs 原版 Quest-AI 注册面。
  * <p>
  * 证据表 = {@code retail-quest-ai-registrations.xml}（生成器
- * {@code .agents/summary/quest-engine-native/p11-quest-ai-lane/emit_quest_ai_registrations.py}，
  * 度量 + 常量导出 {@code measure_binding_gate.py --emit-constants}）：原版
  * {@code FUN_180cb5920(L"name", questId)} 注册面（ScriptDLL 18787 个调用点 / 7043 个任务）
  * × 原版 {@code npcs.xml quest_ai_name} 展开的 npc id，名匹配按原版 {@code _wcsicmp}
@@ -55,7 +54,7 @@ import org.w3c.dom.Document;
  * <p>
  * D1 gate for the XML-lane dialog NPC bindings against the retail Quest-AI registration surface
  * (evidence table {@code retail-quest-ai-registrations.xml}, generator under
- * {@code .agents/summary/quest-engine-native/p11-quest-ai-lane/}). The evidence table must cover the
+ * . The evidence table must cover the
  * XML lane exactly (733 rows) with a self-consistent shape, and the dialog/complete NPC references
  * that hit the global Quest-AI id set must fall inside each quest's registration expansion — except
  * for two explicitly frozen lists (cross-quest same-NPC references, and quests with no retail Quest-AI

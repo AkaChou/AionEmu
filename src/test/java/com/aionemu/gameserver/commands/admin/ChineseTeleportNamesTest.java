@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
  * Chinese location table gate: every entry must point at an existing teleport_location.xml loc_id and the
  * well-known map anchors must not drift.
  * <p>
- * 表由 .agents/summary/chinese-gm-commands/generate_teleport_names_zh.py 依据国服客户端字符串表生成；
+ * 该表依据国服客户端字符串表生成；
  * 本用例覆盖"teleport_location.xml 改了 loc_id，但表没重新生成"的失效场景。
  * The table is generated from the CN client string tables by the script above; this test covers the failure
  * mode where teleport_location.xml changes loc ids without regenerating the table.

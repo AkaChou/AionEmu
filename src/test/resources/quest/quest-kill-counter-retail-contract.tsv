@@ -1,6 +1,6 @@
 # Aion 5.8 retail kill-counter contract snapshot（单计数器任务：客户端 SECTION_1 门控 = 完成所需击杀数）
 # source: Quest_unpacked/quest_monster.csv（SECTION_1<N 门控）
-# required_kills 由 QuestKillCounterSimulator 用生产 IR + 真实 planner 模拟击杀得出；重生成脚本见 .agents/summary/quest-counter-audit/
+# required_kills 由 QuestKillCounterSimulator 用生产 IR + 真实 planner 模拟击杀得出；重生成脚本
 quest_id	required_kills
 13758	5
 13759	5

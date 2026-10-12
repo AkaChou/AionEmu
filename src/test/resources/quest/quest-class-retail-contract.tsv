@@ -1,5 +1,5 @@
 # Aion 5.8 retail quest class contract snapshot
-# source: Quest_unpacked/quest.xml (regenerate: .agents/summary/quest-systemic-goal/build_class_contract_tsv.py)
+# source: Quest_unpacked/quest.xml
 # rows: production quests whose retail class_permitted is a non-empty proper subset of the 17 base/advanced tokens.
 # comparison: token->PlayerClass direct mapping; base classes are dead entries when min level >= 10.
 quest_id	retail_min_level	retail_class_tokens

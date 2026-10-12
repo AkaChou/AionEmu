@@ -50,8 +50,8 @@ class JournalRewardRowRepairContractTest {
 		50126, 50127, 51126, 51127,
 		/* QE-054 批次收口（2026-10-07 全量审计）：以下 5 行原属第三批领奖行修复，任务定义已由
 		 * 原版表车道合成（retention 清单 RETAIL_TABLE 行），无 XML 即无自愈边结构；旧 legacy 取证
-		 * 见 .agents/summary/quest-step-axis-fullscan/。领奖投影口径由表车道门承担。
-		 * 遗留问题 A 复核（2026-10-07，.agents/summary/quest-residuals-dabc/A-triage.zh-CN.md）：
+		 * 领奖投影口径由表车道门承担。
+		 * 遗留问题 A 复核（2026-10-07）：
 		 * 原生投影 = 表结构中继数/步数（15613=6、25023=3、25606=8、80020=3、80021=3），与退役壳
 		 * XML 及批次值一致，不属 QE-054 抬行模式——无需修复，A 组关闭。
 		 * Five more rows joined the retail-driven list with the QE-054 batch close-out (2026-10-07):
@@ -67,7 +67,7 @@ class JournalRewardRowRepairContractTest {
 		 * 索引」的判定对「玩法步后进 REWARD」的任务系统性不成立——原版 0x100 状态推进不写轴，客户端
 		 * REWARD 态按 [%N] 行门槛自行显示报告行；正确投影 = 原版/legacy 推进值（与 1361/11006/24021
 		 * 同根因）。40 行已回归权威值并反转自愈边，基线由 RewardRowProjectionRegressionTest 锁定；
-		 * 取证与逐任务证据见 .agents/summary/quest-step-axis-fullscan/。
+		 * 取证与逐任务。
 		 * QE-054 batch close-out (40 rows removed by the 2026-10-07 full audit): the batch rule
 		 * "client last row is the reward row => lift the projection to the last-row index" is
 		 * systematically wrong for quests entering REWARD right after a gameplay step — retail 0x100
@@ -75,7 +75,7 @@ class JournalRewardRowRepairContractTest {
 		 * gate, so the correct projection is the retail/legacy progress value (same root cause as
 		 * 1361/11006/24021). The 40 rows were rolled back to the authoritative values with reversed
 		 * healing edges, locked by RewardRowProjectionRegressionTest; per-quest evidence lives in
-		 * .agents/summary/quest-step-axis-fullscan/. */
+		 * */
 		new Contract(1218, 1, 0),
 		new Contract(1322, 1, 0),
 		new Contract(1324, 1, 0),

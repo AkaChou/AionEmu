@@ -7,11 +7,11 @@
 相关文档：
 
 - [任务 XML 编写指南](WRITING_GUIDE.zh-CN.md)：XML 状态图、领域积木和字段顺序。
-- [客户端映射迁出记录](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)：客户端页面/动作映射与无头客户端已迁出本仓库，记录迁出清单、SHA-256 与影响边界。
+- [客户端映射迁出记录](../../)：客户端页面/动作映射与无头客户端已迁出本仓库，记录迁出清单、SHA-256 与影响边界。
 - [无任务上下文 NPC 对话专项记录](NPC_DIALOG_CONTEXT.zh-CN.md)：关闭普通任务标记后 `questId==0` 的协议证据、分流边界和回归矩阵。
 - [Pattern 指纹与提交索引](repair-playbook/PATTERNS.zh-CN.md)：可检索故障指纹、第一检查点和具体代表测试方法。
 - [已验收代表案例](repair-playbook/CASES.zh-CN.md)：完整症状、根因、修复层、验证结果和复用边界。
-- [客户端与运行时验收记录模板](../../.agents/summary/quest-acceptance/README.zh-CN.md)：人工验收证据字段和附件哈希要求。
+- [客户端与运行时验收记录模板](../../)：人工验收证据字段和附件哈希要求。
 
 ## 1. Agent 合同
 
@@ -206,7 +206,7 @@ git log --all --oneline -- <path/to/legacy-handler.java>
 
 Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来源。当前任务缺少所需客户端文件、解包产物或抓包时，明确列出缺失项并向用户请求提供，在取得证据前不要猜测。优先使用：
 
-客户端映射数据（`quest-dialog-action-details.csv` 按钮动作、`quest-dialog-pages.csv` 页面存在性、`legacy-quest-dialog-contracts.csv` 旧模板合同）已迁出到本地 `aion-headless` 项目的 `data/client-dialog-mapping/`；本仓库内的入口是 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)。
+客户端映射数据（`quest-dialog-action-details.csv` 按钮动作、`quest-dialog-pages.csv` 页面存在性、`legacy-quest-dialog-contracts.csv` 旧模板合同）已迁出到本地 `aion-headless` 项目的 `data/client-dialog-mapping/`；本仓库内的入口是 [](../../)。
 - 客户端生命周期对齐与逐路径顺序审计都按需运行（`align_client_quest_dialog_lifecycle.py`、`QuestDialogOrderAudit`），**产物不入库**：两者都以任务 XML 的路径/哈希为键，退役或改写后立即失效。
 
 客户端页面只证明客户端可见合同，不能单独证明服务端状态和奖励副作用；服务端 IR 也不能单独证明页面按钮真的可达。
@@ -415,26 +415,13 @@ mvn -q -Dtest=Quest<id>RetailFlowAlignmentTest,QuestDefinitionCatalogManifestTes
 
 ### 7.4 客户端映射和顺序审计
 
-只有修改页面/动作合同或需要重新生成报告时才执行：
-
-```bash
-python3 .agents/summary/quest/generate_client_dialog_mapping.py --check
-python3 .agents/summary/quest/extract_legacy_quest_dialog_contracts.py --check
-python3 .agents/summary/quest/align_client_quest_dialog_lifecycle.py --check
-python3 .agents/summary/quest/generate_quest_dialog_enums.py --check
-```
-
-顺序审计应在测试编译完成后执行，命令和字段说明见迁出项目的 `README.zh-CN.md`（在库入口 [.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md](../../.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md)）。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
+客户端映射与顺序审计的生成/自检脚本已退役（见 git 历史）；如需重新执行，请从 git 历史取回对应脚本。`EVIDENCE_REQUIRED` 不是“已修复”，不能为了清零报告而猜测 page/action。
 
 ### 7.5 Playbook 结构和引用自检
 
-修改 Pattern 指纹、提交索引或代表案例后必须运行：
+修改 Pattern 指纹、提交索引或代表案例后应运行结构自检（脚本已退役，见 git 历史）。
 
-```bash
-python3 .agents/summary/quest/check_quest_repair_playbook.py
-```
-
-脚本聚合主 Playbook、Pattern 索引和代表案例文档，验证 Pattern ID 唯一、五列指纹完整、所有索引和详细案例的代表提交至少被一个 Pattern 覆盖、Git commit 可解析、代表测试类和方法存在，以及详细案例包含 Pattern ID、症状、根因、修复层、修改文件、验证结果、复用边界和 commit。该检查只验证 Playbook 的结构与引用闭环，不替代任务 focused test、production catalog/whitelist 或客户端/runtime 验收。
+该脚本聚合主 Playbook、Pattern 索引和代表案例文档，验证 Pattern ID 唯一、五列指纹完整、所有索引和详细案例的代表提交至少被一个 Pattern 覆盖、Git commit 可解析、代表测试类和方法存在，以及详细案例包含 Pattern ID、症状、根因、修复层、修改文件、验证结果、复用边界和 commit。该检查只验证 Playbook 的结构与引用闭环，不替代任务 focused test、production catalog/whitelist 或客户端/runtime 验收。
 
 ### 7.6 客户端对话契约批次治理模式（2026-09 治理轮）
 
@@ -454,8 +441,6 @@ java -cp "$CP" com.aionemu.gameserver.questEngine.definition.QuestDialogOrderAud
   <aion-headless>/data/client-dialog-mapping/quest-dialog-pages.csv \
   <aion-headless>/data/client-dialog-mapping/quest-dialog-action-details.csv \
   /tmp/quest-order-audit-current.csv   # 临时产物，不入库
-python3 .agents/summary/quest/test_extract_legacy_quest_dialog_contracts.py
-python3 .agents/summary/quest/test_align_client_quest_dialog_lifecycle.py
 ```
 
 ## 8. 模式指纹与代表案例
@@ -499,7 +484,7 @@ python3 .agents/summary/quest/test_align_client_quest_dialog_lifecycle.py
 
 新代表案例使用两个连续的本地提交。第一提交只包含修复源码、数据和测试；取得稳定哈希后写入 Playbook，第二提交只包含 Playbook。两者共同构成同一交付批次：中间不得夹入无关提交、push，或发送“验收完成”的最终交接。
 
-若任务复用已有 Pattern，仍先产生或复用修复 commit，再创建并提交 `../../.agents/summary/quest-acceptance/<quest-id>-<yyyy-mm-dd>-client-accepted.md`；该证据 commit 不修改 Pattern 索引或代表案例。若任务建立新 Pattern，则把验收记录与 Pattern/案例文档放入同一个第二提交。
+若任务复用已有 Pattern，仍先产生或复用修复 commit，再创建并提交 `../../<quest-id>-<yyyy-mm-dd>-client-accepted.md`；该证据 commit 不修改 Pattern 索引或代表案例。若任务建立新 Pattern，则把验收记录与 Pattern/案例文档放入同一个第二提交。
 
 先提交修复：
 
@@ -523,7 +508,6 @@ git add -f docs/quest/repair-playbook/CASES.zh-CN.md
 git diff --cached --name-status
 git diff --cached --check
 git diff --cached --stat
-python3 .agents/summary/quest/check_quest_repair_playbook.py
 git commit -m "docs(quest): record representative repair"
 git log -2 --oneline
 git status --short
@@ -553,7 +537,7 @@ commit：
 你在当前 checkout 的 quest 分支工作。
 请先阅读 docs/quest/QUEST_REPAIR_PLAYBOOK.zh-CN.md、docs/quest/repair-playbook/PATTERNS.zh-CN.md、
 docs/quest/repair-playbook/CASES.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
-.agents/summary/headless-client-extraction/MIGRATION.zh-CN.md、当前 checkout 的 AGENTS.md 和 `.agents/rules/` 规则。
+、当前 checkout 的 AGENTS.md 和 `.agents/rules/` 规则。
 使用当前环境可用的搜索、读取和编辑能力。
 
 任务：<quest-id>，症状：<玩家可复现步骤>。
@@ -568,7 +552,7 @@ docs/quest/repair-playbook/CASES.zh-CN.md、docs/quest/WRITING_GUIDE.zh-CN.md、
 7. 同时增加能证明完整行为合同的回归测试；涉及共享逻辑时增加生产目录级审计。
 8. 仅在用户明确要求运行构建或测试时，串行执行任务专用编译测试、生产 catalog/whitelist，必要时 clean verify；否则列出未执行项并保持 `PENDING`，不得请用户进入客户端复测。可执行不触发构建的 diff 检查。
 9. 客户端复测前确认启动日志没有 typed quest engine 初始化、quest compilation、ambiguous transition 或 production catalog compile failure；命中任一项时停止客户端层排查。
-10. 每次验收证据变化后以及提交前，重新执行 Playbook 代表案例门禁；旧的 `pending acceptance` 或去重判断不得沿用。修改 Pattern 索引或代表案例时运行 `python3 .agents/summary/quest/check_quest_repair_playbook.py`。
+10. 每次验收证据变化后以及提交前，重新执行 Playbook 代表案例门禁；旧的 `pending acceptance` 或去重判断不得沿用。修改 Pattern 索引或代表案例时运行 `python3 。
 11. 用户明确要求提交，或明确回复当前任务客户端验证/验收完成时，暂存本次路径并本地提交；后一种情况按 9.0 自动继续，不再请求一次提交确认。若形成新代表案例，按“修复 commit -> 引用其稳定哈希的 Playbook commit”连续提交，期间不得夹入无关提交或 push。
 
 最终报告必须列出：根因证据、改动、测试命令和结果、残余风险、commit hash。

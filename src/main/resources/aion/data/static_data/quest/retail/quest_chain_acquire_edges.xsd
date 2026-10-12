@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- quest_chain_acquire_edges.xml 表 schema（quest retail 表门禁用）。
-     镜像口径 = 装载器 fail-closed 规则 ∪ 生成器形状钉（证据 + 生成器：
-     .agents/summary/quest-chain-acquire-native/build_quest_chain_acquire_edges.py）：
+     镜像口径 = 装载器 fail-closed 规则 ∪ 生成器形状钉：
      - 行 = <edge>（successor 全表唯一；successor ≥ 1；predecessors = 空格分隔的正整数序列；
        source ∈ {retail-finished-cond, retired-xml, retired-handler}；evidence 非空）；
        自环（successor ∈ predecessors）与重复 successor 由装载器 fail-closed 兜底。

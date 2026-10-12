@@ -3,13 +3,13 @@
 # verdict: ADOPT_RETAIL（退役 XML，原版驱动）| KEEP_XML（原版无法表达，保留 XML）
 # basis: FACTION_GRANT_DAILY | FACTION_GRANT_DISABLED | AREA_GRANT | BRIEFING_STEP |
 #        QUEST_SPAWN_UNEXPRESSED（任务刷怪边是唯一生成路径，原版表无刷怪列）
-# 生成：.agents/summary/scriptdll-quest-driver/p0c3_build_hunt_sentinel_decisions.py（faction）
-#       .agents/summary/scriptdll-quest-driver/p0c4_register_area_grants.py（area）
-#       .agents/summary/scriptdll-quest-driver/p0c6_build_hunt_briefing_decisions.py（briefing）
-# 生成：.agents/summary/scriptdll-quest-driver/p0c8_recompute_gap_list.py（窄投影裁定）
-# 生成：.agents/summary/scriptdll-quest-driver/p0c8b_bucket_decisions.py（接取流偏差 + 领奖确认段）
-# 生成：.agents/summary/scriptdll-quest-driver/p0c8c_gap_decisions.py（P0c-8c 缺口表剩余行逐行裁定）
-# 生成：.agents/summary/scriptdll-quest-driver/p0c9_retire_rows.py（P0c-9 族收口：phase5-3 残留裁定 + 职业可选奖励归零）
+# 生成：（faction）
+# （area）
+# （briefing）
+# 生成：（窄投影裁定）
+# 生成：（接取流偏差 + 领奖确认段）
+# 生成：（P0c-8c 缺口表剩余行逐行裁定）
+# 生成：（P0c-9 族收口：phase5-3 残留裁定 + 职业可选奖励归零）
 1113	ADOPT_RETAIL	RETAIL_REWARD_CONFIRM_RANGE	XML_NARROW_CONFIRM_SET	XML 只声明 2 条确认路由（SELECTED_QUEST_REWARD1,SELECTED_QUEST_REWARD2）；原版下发完整确认段 8..23（16 条）；逐行断言 xmlOnlyTransitions="-" ⇒ 原版是 XML 的**严格超集**（采纳不丢语义）；语料 530/534 已证等价行用全段写法
 1120	ADOPT_RETAIL	RETAIL_REWARD_CONFIRM_RANGE	XML_NARROW_CONFIRM_SET	XML 只声明 2 条确认路由（SELECTED_QUEST_REWARD1,SELECTED_QUEST_REWARD2）；原版下发完整确认段 8..23（16 条）；逐行断言 xmlOnlyTransitions="-" ⇒ 原版是 XML 的**严格超集**（采纳不丢语义）；语料 530/534 已证等价行用全段写法
 1169	ADOPT_RETAIL	PACK_REBASE_LEGACY+LEGACY_NODE+BRIEFING_PAGE_LEGACY+ACCEPT_FLOW_LEGACY	-	客户端 1 怪（可达 1）；原版缺可达怪 []；类别 {'LEGACY_NODE': 1, 'PACK_REBASE_LEGACY': 1, 'BRIEFING_PAGE_LEGACY': 1, 'ACCEPT_FLOW_LEGACY': 1}
