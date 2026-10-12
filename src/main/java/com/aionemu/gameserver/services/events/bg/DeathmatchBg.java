@@ -888,7 +888,7 @@ public class DeathmatchBg extends Battleground {
 			for (Player pl : super.getPlayers()) {
 				super.scheduleAnnouncement(pl, winner.getName() + " win's the <Deathmatch> with "
 						+ winner.getTotalKills() + " kill's in total!", 0);
-				if (pl.getObjectId() == winner.getObjectId()) {
+				if (pl.getObjectId().equals(winner.getObjectId())) {
 					super.playerWinMatch(pl, super.K_VALUE / 2);
 					byte level = pl.getLevel();
 					// 若为“胜者”则奖励玩家 / Reward Player if "WINNER"

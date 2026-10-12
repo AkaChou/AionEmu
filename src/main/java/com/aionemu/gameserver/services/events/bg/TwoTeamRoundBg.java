@@ -84,7 +84,7 @@ public abstract class TwoTeamRoundBg extends Battleground {
 	public void onDie(final Player player, Creature lastAttacker) {
 		super.onDieDefault(player, lastAttacker);
 		if (lastAttacker instanceof Player killer && !killer.getObjectId().equals(player.getObjectId())) {
-			if (killer.getPlayerGroup2() != null) {
+			if (killer.getPlayerGroup2() != null && player.getPlayerGroup2() != null) {
 				int deadCounter = 0;
 				for (Player pl : player.getPlayerGroup2().getMembers()) {
 					if (pl.getLifeStats().isAlreadyDead() || pl.isAfk()) {

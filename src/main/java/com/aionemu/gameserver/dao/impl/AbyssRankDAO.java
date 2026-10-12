@@ -193,6 +193,10 @@ public class AbyssRankDAO extends com.aionemu.gameserver.dao.AbyssRankDAO {
 	@Override
 	public void storeAbyssRank(Player player) {
 		AbyssRank rank = player.getAbyssRank();
+		PersistentState state = rank.getPersistentState();
+		if (state != PersistentState.NEW && state != PersistentState.UPDATE_REQUIRED) {
+			return;
+		}
 		try (Connection con = DatabaseFactory.getConnection()) {
 			storeInTransaction(con, player.getObjectId(), rank);
 			rank.setPersistentState(PersistentState.UPDATED);

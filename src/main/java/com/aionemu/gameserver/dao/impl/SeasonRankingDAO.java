@@ -140,48 +140,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
         }
     }
 
-    
-
-    private boolean addGoldRank(final int objectId, final GoldArenaRank rank) {
-        try {
-            int affected = jdbcClient.sql(INSERT_QUERY)
-                .param(objectId)
-                .param(1)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.892315d315f0", objectId), e);
-            return false;
-        }
-    }
-
-    private boolean updateGoldRank(final int objectId, GoldArenaRank rank) {
-        try {
-            int affected = jdbcClient.sql(UPDATE_QUERY)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .param(objectId)
-                .param(1)
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.8025a55d13a2", objectId), e);
-            return false;
-        }
-    }
-
     /**
      * 按持久化状态保存玩家挑战之塔排行（table_id = 2）。
      * Stores the player's Tower of Challenge rank by persistent state (table_id = 2).
@@ -247,90 +205,6 @@ public class SeasonRankingDAO extends com.aionemu.gameserver.dao.SeasonRankingDA
             return affected > 0;
         } catch (DataAccessException e) {
             log.error(I18n.get("log.525c0a41a0d5", objectId), e);
-            return false;
-        }
-    }
-
-    
-
-    private boolean addTenacityRank(final int objectId, final ArenaOfTenacityRank rank) {
-        try {
-            int affected = jdbcClient.sql(INSERT_QUERY)
-                .param(objectId)
-                .param(541)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.1833d5239851", objectId), e);
-            return false;
-        }
-    }
-
-    private boolean updateTenacityRank(final int objectId, ArenaOfTenacityRank rank) {
-        try {
-            int affected = jdbcClient.sql(UPDATE_QUERY)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .param(objectId)
-                .param(541)
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.b547e9af94b6", objectId), e);
-            return false;
-        }
-    }
-
-    
-
-    private boolean add6v6Rank(final int objectId, final Arena6V6Ranking rank) {
-        try {
-            int affected = jdbcClient.sql(INSERT_QUERY)
-                .param(objectId)
-                .param(3)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.688e68aa0f83", objectId), e);
-            return false;
-        }
-    }
-
-    private boolean update6v6Rank(final int objectId, Arena6V6Ranking rank) {
-        try {
-            int affected = jdbcClient.sql(UPDATE_QUERY)
-                .param(rank.getRank())
-                .param(rank.getBestRank())
-                .param(rank.getPoints())
-                .param(rank.getLastPoints())
-                .param(rank.getHighPoints())
-                .param(rank.getLowPoints())
-                .param(rank.getPossitionMatch())
-                .param(objectId)
-                .param(3)
-                .update();
-            return affected > 0;
-        } catch (DataAccessException e) {
-            log.error(I18n.get("log.2027d7f241eb", objectId), e);
             return false;
         }
     }

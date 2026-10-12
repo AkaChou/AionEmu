@@ -339,6 +339,13 @@ public class EventsConfig {
 	@Getter
 	public static class EventPigProperties {
 		private final EventPigPoppyProperties poppy = new EventPigPoppyProperties();
+
+		/**
+		 * 兼容裸标量 gameserver.event.pig.poppy 经 valueOf 转换后的赋值（no-op）。
+		 * No-op setter for the valueOf-converted legacy scalar gameserver.event.pig.poppy.
+		 */
+		public void setPoppy(EventPigPoppyProperties poppy) {
+		}
 	}
 
 	/**

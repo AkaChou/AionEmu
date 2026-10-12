@@ -48,26 +48,21 @@ public final class DB {
 	 * @return 查询是否成功 / Whether the query was successful
 	 */
 	public static boolean select(String query, ReadStH reader, String errMsg) {
-
 		try (Connection con = DatabaseFactory.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
-			try {
-				if (reader instanceof ParamReadStH) {
-					((ParamReadStH) reader).setParams(stmt);
-				}
-
-				ResultSet rset = stmt.executeQuery();
-				reader.handleRead(rset);
-				return true;
-			} catch (Exception var17) {
-				if (errMsg == null) {
-					log.warn(I18n.get("log.47cff7ac9cfa", query), var17);
-				} else {
-					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
-				}
-				return false;
+			if (reader instanceof ParamReadStH) {
+				((ParamReadStH) reader).setParams(stmt);
 			}
-		} catch (Exception var16) {
-			log.warn(I18n.get("log.687eec966cd6"), var16);
+
+			try (ResultSet rset = stmt.executeQuery()) {
+				reader.handleRead(rset);
+			}
+			return true;
+		} catch (Exception e) {
+			if (errMsg == null) {
+				log.warn(I18n.get("log.47cff7ac9cfa", query), e);
+			} else {
+				log.warn(I18n.get("log.6b2012065d8f", errMsg, query), e);
+			}
 			return false;
 		}
 	}
@@ -94,26 +89,21 @@ public final class DB {
 	 * @return 调用是否成功 / Whether the call was successful
 	 */
 	public static boolean call(String query, ReadStH reader, String errMsg) {
-
 		try (Connection con = DatabaseFactory.getConnection(); CallableStatement stmt = con.prepareCall(query)) {
-			try {
-				if (reader instanceof CallReadStH) {
-					((CallReadStH) reader).setParams(stmt);
-				}
-
-				ResultSet rset = stmt.executeQuery();
-				reader.handleRead(rset);
-				return true;
-			} catch (Exception var17) {
-				if (errMsg == null) {
-					log.warn(I18n.get("log.7e2c163a97cb", query), var17);
-				} else {
-					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var17);
-				}
-				return false;
+			if (reader instanceof CallReadStH) {
+				((CallReadStH) reader).setParams(stmt);
 			}
-		} catch (Exception var16) {
-			log.warn(I18n.get("log.687eec966cd6"), var16);
+
+			try (ResultSet rset = stmt.executeQuery()) {
+				reader.handleRead(rset);
+			}
+			return true;
+		} catch (Exception e) {
+			if (errMsg == null) {
+				log.warn(I18n.get("log.7e2c163a97cb", query), e);
+			} else {
+				log.warn(I18n.get("log.6b2012065d8f", errMsg, query), e);
+			}
 			return false;
 		}
 	}
@@ -163,25 +153,19 @@ public final class DB {
 	 * @return 操作是否成功 / Whether the operation was successful
 	 */
 	public static boolean insertUpdate(String query, IUStH batch, String errMsg) {
-
 		try (Connection con = DatabaseFactory.getConnection(); PreparedStatement stmt = con.prepareStatement(query)) {
-			try {
-				if (batch != null) {
-					batch.handleInsertUpdate(stmt);
-				} else {
-					stmt.executeUpdate();
-				}
-				return true;
-			} catch (Exception var16) {
-				if (errMsg == null) {
-					log.warn(I18n.get("log.b9dc77234b58", query), var16);
-				} else {
-					log.warn(I18n.get("log.6b2012065d8f", errMsg, query), var16);
-				}
-				return false;
+			if (batch != null) {
+				batch.handleInsertUpdate(stmt);
+			} else {
+				stmt.executeUpdate();
 			}
-		} catch (Exception var15) {
-			log.warn(I18n.get("log.687eec966cd6"), var15);
+			return true;
+		} catch (Exception e) {
+			if (errMsg == null) {
+				log.warn(I18n.get("log.b9dc77234b58", query), e);
+			} else {
+				log.warn(I18n.get("log.6b2012065d8f", errMsg, query), e);
+			}
 			return false;
 		}
 	}

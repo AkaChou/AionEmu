@@ -22,6 +22,6 @@ public record PlayerHouseBid(int playerId, int houseId, long offer,
 	 */
 	@Override
 	public int compareTo(PlayerHouseBid o) {
-		return (int) (time.getTime() - o.time().getTime());
+		return time.compareTo(o.time());
 	}
 }

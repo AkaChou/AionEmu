@@ -174,6 +174,9 @@ public class SummonerAI2 extends AggressiveNpcAI2
 				int skill = percent.getSkillId();
 				if (skill != 0) {
 					AI2Actions.useSkill(this, skill);
+				}
+				if (percent.isIndividual()) {
+					handleIndividualSpawnedSummons(percent);
 				} else if (percent.getSummons() != null) {
 					for (SummonGroup summonGroup : percent.getSummons()) {
 						final SummonGroup sg = summonGroup;
@@ -214,5 +217,13 @@ public class SummonerAI2 extends AggressiveNpcAI2
 
 	protected boolean checkBeforeSpawn() {
 		return true;
+	}
+
+	/**
+	 * 按血量百分比分批生成召唤物。
+	 * Spawn individual summons by HP percent.
+	 * @param percent 血量百分比 / HP percent
+	 */
+	protected void handleIndividualSpawnedSummons(Percentage percent) {
 	}
 }

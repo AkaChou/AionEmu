@@ -336,9 +336,8 @@ public class CoreRuntimeServiceBeans {
      * at startup; falls back to the safeDao offline aggregate when any DAO is missing
      * (offline/unit-test contexts), preserving legacy behavior.
      */
-    @Bean
-    @Lazy
-    public PlayerServiceDaos playerServiceDaos(ConfigurableBeanFactory beanFactory) {
+	@Bean
+	public PlayerServiceDaos playerServiceDaos(ConfigurableBeanFactory beanFactory) {
         try {
             PlayerServiceDaos daos = new PlayerServiceDaos(
                 daoFrom(beanFactory, PlayerDAO.class),

@@ -72,12 +72,10 @@ public class AuraEffect extends EffectTemplate {
 					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
 						applyAuraTo(player);
 					}
-					applyAuraTo(effector);
 				}
 			}
-		} else {
-			applyAuraTo(effector);
 		}
+		applyAuraTo(effector);
 		PacketSendUtility.broadcastPacket(effector, new SM_MANTRA_EFFECT(effector, skillId), true);
 	}
 

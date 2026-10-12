@@ -29,7 +29,6 @@ public class LoginLegacyServiceBridgeConfiguration {
      * (offline/unit-test contexts), preserving legacy behavior.
      */
     @Bean
-    @Lazy
     public LoginDaos loginDaos(ConfigurableBeanFactory beanFactory) {
         try {
             LoginDaos daos = new LoginDaos(

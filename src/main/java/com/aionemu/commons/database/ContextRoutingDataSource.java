@@ -13,54 +13,54 @@ import javax.sql.DataSource;
  */
 public class ContextRoutingDataSource implements DataSource {
 
-    @Override
-    public Connection getConnection() throws SQLException {
-        return DatabaseFactory.getConnection();
-    }
+	@Override
+	public Connection getConnection() throws SQLException {
+		return DatabaseFactory.getDataSource().getConnection();
+	}
 
-    @Override
-    public Connection getConnection(String username, String password) throws SQLException {
-        return DatabaseFactory.getConnection();
-    }
+	@Override
+	public Connection getConnection(String username, String password) throws SQLException {
+		return DatabaseFactory.getDataSource().getConnection(username, password);
+	}
 
-    @Override
-    public PrintWriter getLogWriter() throws SQLException {
-        return DatabaseFactory.getDataSource().getLogWriter();
-    }
+	@Override
+	public PrintWriter getLogWriter() throws SQLException {
+		return DatabaseFactory.getDataSource().getLogWriter();
+	}
 
-    @Override
-    public void setLogWriter(PrintWriter out) throws SQLException {
-        DatabaseFactory.getDataSource().setLogWriter(out);
-    }
+	@Override
+	public void setLogWriter(PrintWriter out) throws SQLException {
+		DatabaseFactory.getDataSource().setLogWriter(out);
+	}
 
-    @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-        DatabaseFactory.getDataSource().setLoginTimeout(seconds);
-    }
+	@Override
+	public void setLoginTimeout(int seconds) throws SQLException {
+		DatabaseFactory.getDataSource().setLoginTimeout(seconds);
+	}
 
-    @Override
-    public int getLoginTimeout() throws SQLException {
-        return DatabaseFactory.getDataSource().getLoginTimeout();
-    }
+	@Override
+	public int getLoginTimeout() throws SQLException {
+		return DatabaseFactory.getDataSource().getLoginTimeout();
+	}
 
-    @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return DatabaseFactory.getDataSource().getParentLogger();
-    }
+	@Override
+	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+		return DatabaseFactory.getDataSource().getParentLogger();
+	}
 
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        if (iface.isInstance(this)) {
-            return iface.cast(this);
-        }
-        return DatabaseFactory.getDataSource().unwrap(iface);
-    }
+	@Override
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		if (iface.isInstance(this)) {
+			return iface.cast(this);
+		}
+		return DatabaseFactory.getDataSource().unwrap(iface);
+	}
 
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        if (iface.isInstance(this)) {
-            return true;
-        }
-        return DatabaseFactory.getDataSource().isWrapperFor(iface);
-    }
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		if (iface.isInstance(this)) {
+			return true;
+		}
+		return DatabaseFactory.getDataSource().isWrapperFor(iface);
+	}
 }

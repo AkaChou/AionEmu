@@ -1077,7 +1077,9 @@ public class SpawnsData2 {
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
 		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
-		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.VOLATILE_RIFT) {
+		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.RIFT) {
+			path = "Rifts";
+		} else if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.VOLATILE_RIFT) {
 			path = "Volatile Rifts";
 		} else if (visibleObject instanceof Gatherable) {
 			path = "Gather";

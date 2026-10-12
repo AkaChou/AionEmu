@@ -347,9 +347,9 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 	@Override
 	public boolean store(Item item, Player player) {
 		int playerId = player.getObjectId();
-		int accountId = player.getPlayerAccount().getId();
+		Integer accountId = player.getPlayerAccount() != null ? player.getPlayerAccount().getId() : null;
 		Integer legionId = player.getLegion() != null ? player.getLegion().getLegionId() : null;
-		return store(item, playerId, accountId, legionId);
+		return super.store(item, playerId, accountId, legionId);
 	}
 
 	/**
@@ -448,12 +448,6 @@ public class InventoryDAO extends com.aionemu.gameserver.dao.InventoryDAO {
 				}
 			}
 		}
-	}
-
-	private boolean store(Item item, int playerId, int accountId, Integer legionId) {
-		List<Item> items = new ArrayList<>();
-		items.add(item);
-		return store(items, playerId, accountId, legionId);
 	}
 
 	private int getItemOwnerId(Item item, Integer playerId, Integer accountId, Integer legionId) {

@@ -42,14 +42,6 @@ public class PlayerTitleListDAO extends com.aionemu.gameserver.dao.PlayerTitleLi
 	 * 删除指定玩家称号 / Delete a specific player title
 	 */
 	private static final String DELETE_QUERY = "DELETE FROM `player_titles` WHERE `player_id` = ? AND `title_id` = ?";
-	/**
-	 * 删除玩家全部称号 / Delete all titles of a player
-	 */
-	private static final String DELETE_ALL_QUERY = "DELETE FROM `player_titles` WHERE `player_id` = ?";
-	/**
-	 * 删除已过期称号 / Delete expired titles
-	 */
-	private static final String DELETE_EXPIRED_QUERY = "DELETE FROM `player_titles` WHERE `remaining` > 0 AND `remaining` < ?";
 
 	private final JdbcClient jdbcClient;
 	private final JdbcTemplate jdbcTemplate;
