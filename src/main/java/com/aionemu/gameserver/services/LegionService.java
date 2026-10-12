@@ -498,9 +498,9 @@ public class LegionService {
 	public void directAddPlayer(int legionId, Player player) {
 		Legion legion = getLegion(legionId);
 		if (legion == null) {
-return;
+			return;
 		}
-directAddPlayer(legion, player);
+		directAddPlayer(legion, player);
 	}
 
 	/**

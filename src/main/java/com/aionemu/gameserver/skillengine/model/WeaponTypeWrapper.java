@@ -1,9 +1,6 @@
 package com.aionemu.gameserver.skillengine.model;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
 import com.aionemu.gameserver.model.templates.item.WeaponType;
-import com.aionemu.gameserver.services.MotionLoggingService;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -33,8 +30,8 @@ public record WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) impleme
 	}
 
 	/**
-	 * 相等比较（主/副手与外层服务）。
-	 * Equality by main/off-hand and outer service.
+	 * 相等比较（主/副手）。
+	 * Equality by main/off-hand.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -48,9 +45,6 @@ public record WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) impleme
 			return false;
 		}
 		WeaponTypeWrapper other = (WeaponTypeWrapper) obj;
-		if (!getOuterType().equals(other.getOuterType())) {
-			return false;
-		}
 		if (mainHand != other.mainHand) {
 			return false;
 		}
@@ -75,7 +69,6 @@ public record WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) impleme
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + getOuterType().hashCode();
 		result = prime * result + ((mainHand == null) ? 0 : mainHand.hashCode());
 		result = prime * result + ((offHand == null) ? 0 : offHand.hashCode());
 		return result;
@@ -91,16 +84,14 @@ public record WeaponTypeWrapper(WeaponType mainHand, WeaponType offHand) impleme
 	public int compareTo(@NonNull WeaponTypeWrapper o) {
 		if (mainHand == null || o.mainHand() == null) {
 			return 0;
+		} else if (offHand != null && o.offHand() != null) {
+			return 0;
 		} else if (offHand != null) {
-			// 到达此处时 o.getOffHand() 必为 null（前分支已处理双非空） / o.getOffHand() is provably null here
 			return 1;
 		} else if (o.offHand() != null) {
 			return -1;
-		} else
+		} else {
 			return mainHand.toString().compareTo(o.mainHand().toString());
-	}
-
-	private MotionLoggingService getOuterType() {
-		return GameFeatureServices.motionLoggingService();
+		}
 	}
 }

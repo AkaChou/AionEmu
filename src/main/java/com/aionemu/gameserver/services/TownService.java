@@ -78,7 +78,7 @@ public class TownService {
 			elyos = this.townDAO.load(Race.ELYOS);
 			asmos = this.townDAO.load(Race.ASMODIANS);
 		} catch (Exception e) {
-			log.warn(I18n.get("log.bb988baa7cb4", e.getMessage()));
+			log.warn(I18n.get("log.bb988baa7cb4", e.getMessage()), e);
 		}
 		this.elyosTowns = elyos != null ? elyos : new HashMap<>();
 		this.asmosTowns = asmos != null ? asmos : new HashMap<>();
@@ -89,8 +89,8 @@ public class TownService {
 					for (HousingLand land : DataManager.HOUSE_DATA.getLands()) {
 						for (HouseAddress address : land.getAddresses()) {
 							if (address.getTownId() != 0) {
-								Race townRace = DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId())
-									.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
+								var npcTemplate = DataManager.NPC_DATA != null ? DataManager.NPC_DATA.getNpcTemplate(land.getManagerNpcId()) : null;
+								Race townRace = npcTemplate != null && npcTemplate.getTribe() == TribeClass.GENERAL ? Race.ELYOS : Race.ASMODIANS;
 								Map<Integer, Town> raceTowns = townRace == Race.ELYOS ? elyosTowns : asmosTowns;
 								if (!raceTowns.containsKey(address.getTownId())) {
 									Town town = new Town(address.getTownId(), townRace);
@@ -102,7 +102,7 @@ public class TownService {
 					}
 				}
 			} catch (Exception e) {
-				log.warn(I18n.get("log.c43d847b776a", e.getMessage()));
+				log.warn(I18n.get("log.c43d847b776a", e.getMessage()), e);
 			}
 		}
 		log.info(I18n.get("log.e7c70a17528c", elyosTowns.size()));

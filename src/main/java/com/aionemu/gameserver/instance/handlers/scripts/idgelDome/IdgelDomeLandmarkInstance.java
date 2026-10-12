@@ -107,14 +107,17 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 	@Override
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		if (dropItems == null) {
+			return;
+		}
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		if (npcId == 834168) {
 			//Bomb Support Box.
-			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000413, 1));
+			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 164000413, 1));
 		} else if (npcId == 834169) {
 			//Bomb Restraint Support Box.
-			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000414, 1));
+			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 164000414, 1));
 		}
 	}
 

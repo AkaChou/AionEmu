@@ -187,6 +187,10 @@ public class PlayerInfo extends AdminCommand {
 				}
 			}
 			case "knownlist" -> {
+				if (params.length < 3) {
+					PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> knownlist <info | add <id> | remove <id>>");
+					return;
+				}
 				switch (params[2]) {
 					case "info" -> {
 						PacketSendUtility.sendMessage(admin, "KnownList of " + target.getName());
@@ -195,6 +199,10 @@ public class PlayerInfo extends AdminCommand {
 						}
 					}
 					case "add" -> {
+						if (params.length < 4) {
+							PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> knownlist add <objectId>");
+							return;
+						}
 						int objId = Integer.parseInt(params[3]);
 						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
 						if (obj != null && !target.getKnownList().getKnownObjects().containsKey(objId)) {
@@ -202,6 +210,10 @@ public class PlayerInfo extends AdminCommand {
 						}
 					}
 					case "remove" -> {
+						if (params.length < 4) {
+							PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> knownlist remove <objectId>");
+							return;
+						}
 						int objId = Integer.parseInt(params[3]);
 						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
 						if (obj != null) {
@@ -211,6 +223,10 @@ public class PlayerInfo extends AdminCommand {
 				}
 			}
 			case "visual" -> {
+				if (params.length < 3) {
+					PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> visual <info | see <id> | notsee <id>>");
+					return;
+				}
 				switch (params[2]) {
 					case "info" -> {
 						PacketSendUtility.sendMessage(admin, "VisualList of " + target.getName());
@@ -219,14 +235,26 @@ public class PlayerInfo extends AdminCommand {
 						}
 					}
 					case "see" -> {
+						if (params.length < 4) {
+							PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> visual see <playerId>");
+							return;
+						}
 						int objId = Integer.parseInt(params[3]);
 						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
-						target.getController().see(player);
+						if (player != null) {
+							target.getController().see(player);
+						}
 					}
 					case "notsee" -> {
+						if (params.length < 4) {
+							PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> visual notsee <playerId>");
+							return;
+						}
 						int objId = Integer.parseInt(params[3]);
 						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
-						target.getController().notSee(player, true);
+						if (player != null) {
+							target.getController().notSee(player, true);
+						}
 					}
 				}
 			}
@@ -264,6 +292,6 @@ public class PlayerInfo extends AdminCommand {
 	 */
 	@Override
 	public void onFail(Player player, String message) {
-		PacketSendUtility.sendMessage(player, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars> ");
+		PacketSendUtility.sendMessage(player, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist | visual>");
 	}
 }

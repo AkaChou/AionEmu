@@ -132,6 +132,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 			}
 		}
 		if (!hasDirty) {
+			return;
 		}
 		try {
 			transactionTemplate.executeWithoutResult(_ -> {
@@ -144,6 +145,7 @@ public class PlayerStigmasEquippedDAO extends com.aionemu.gameserver.dao.PlayerS
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
+			return;
 		}
 		markStored(player);
 	}

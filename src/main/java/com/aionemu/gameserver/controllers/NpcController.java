@@ -311,7 +311,7 @@ public class NpcController extends CreatureController<Npc> {
 					long rewardXp = StatFunctions.calculateSoloExperienceReward(player, getOwner());
 					int rewardDp = StatFunctions.calculateSoloDPReward(player, getOwner());
 					float rewardAp = 1;
-					rewardXp = (int) (rewardXp * percentage);
+					rewardXp = (long) (rewardXp * percentage);
 					rewardDp = (int) (rewardDp * percentage);
 					rewardAp *= percentage;
 					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -337,13 +338,15 @@ public class PacketProcessor<T extends AConnection> {
 			// 全部分片暂时没有可用数据包，进入全局协调等待
 			this.lock.lock();
 			try {
-				if (this.totalPackets.get() == 0) {
-					this.waitingWorkers.incrementAndGet();
-					try {
+				this.waitingWorkers.incrementAndGet();
+				try {
+					if (this.totalPackets.get() == 0) {
 						this.notEmpty.await();
-					} finally {
-						this.waitingWorkers.decrementAndGet();
+					} else {
+						this.notEmpty.await(5, TimeUnit.MILLISECONDS);
 					}
+				} finally {
+					this.waitingWorkers.decrementAndGet();
 				}
 			} finally {
 				this.lock.unlock();

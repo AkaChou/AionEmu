@@ -66,6 +66,10 @@ public class CM_LS_CONTROL extends GsClientPacket {
     protected void runImpl() {
 
         Account account = LoginDaosHolder.daos().accountDAO().getAccount(accountName);
+        if (account == null) {
+            sendPacket(new SM_LS_CONTROL_RESPONSE(type, false, playerName, 0, param, adminName));
+            return;
+        }
         if (type == 1) {
         	account.setAccessLevel((byte) param);
         } else if (type == 2) {

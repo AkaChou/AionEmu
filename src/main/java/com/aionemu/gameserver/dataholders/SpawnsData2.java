@@ -1186,7 +1186,7 @@ public class SpawnsData2 {
 				continue;
 			}
 			if (entry.getValue().getEventTemplate().equals(visObj.getSpawn().getEventTemplate())) {
-				allSpawnMaps.get(visObj.getWorldId()).remove(entry);
+				allSpawnMaps.get(visObj.getWorldId()).remove(visObj.getObjectTemplate().getTemplateId());
 			}
 		}
 	}
