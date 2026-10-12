@@ -104,7 +104,7 @@ public class SurveyService {
 		try {
 			htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
 		} catch (Exception e) {
-			log.warn(I18n.get("log.9eb483d1f40b", e.getMessage()));
+			log.warn(I18n.get("log.9eb483d1f40b", e.getMessage()), e);
 		}
 		if (updateTask != null) {
 			updateTask.cancel(false);
@@ -113,7 +113,7 @@ public class SurveyService {
 			updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000L);
 		} catch (Exception e) {
-			log.warn(I18n.get("log.a6e3f040453a", e.getMessage()));
+			log.warn(I18n.get("log.a6e3f040453a", e.getMessage()), e);
 		}
 	}
 

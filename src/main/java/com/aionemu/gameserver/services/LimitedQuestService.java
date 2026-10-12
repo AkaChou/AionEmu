@@ -128,7 +128,7 @@ public final class LimitedQuestService {
 				return loadLimits(file);
 			}
 		} catch (Exception e) {
-			log.warn(I18n.get("log.4dfe90006810", e.getMessage()));
+			log.warn(I18n.get("log.4dfe90006810", e.getMessage()), e);
 		}
 		return Map.of();
 	}

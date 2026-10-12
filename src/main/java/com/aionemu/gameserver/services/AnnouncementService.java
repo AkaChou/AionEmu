@@ -163,7 +163,7 @@ public class AnnouncementService {
 				}, announce.getDelay() * 1000L, announce.getDelay() * 1000L));
 			}
 		} catch (Exception e) {
-			log.warn(I18n.get("log.a736bef37f9e", e.getMessage()));
+			log.warn(I18n.get("log.a736bef37f9e", e.getMessage()), e);
 		}
 		log.info(I18n.get("log.60ed3a14c1fd", announcements.size()));
 	}

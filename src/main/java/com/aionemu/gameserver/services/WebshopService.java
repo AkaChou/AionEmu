@@ -101,7 +101,7 @@ public class WebshopService {
 				}
 			}), 5 * 1000, 5 * 1000);
 		} catch (Exception e) {
-			log.warn(I18n.get("log.035caceb1de8", e.getMessage()));
+			log.warn(I18n.get("log.035caceb1de8", e.getMessage()), e);
 		}
 	}
 

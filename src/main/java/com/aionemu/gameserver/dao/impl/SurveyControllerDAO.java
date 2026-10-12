@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SurveyControllerDAO extends com.aionemu.gameserver.dao.SurveyControllerDAO {
 
 	/**
-	 * Mark survey as used SQL / Mark survey as used SQL
+	 * 标记问卷已使用 SQL / Mark survey as used SQL
 	 */
 	private static final String UPDATE_QUERY = "UPDATE `surveys` SET `used`=?, used_time=NOW() WHERE `unique_id`=?";
 	/**

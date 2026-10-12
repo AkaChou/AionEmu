@@ -31,11 +31,7 @@ public class GoTo extends AdminCommand
 			PacketSendUtility.sendMessage(player, "syntax //goto <location>");
 			return;
 		}
-		StringBuilder sbDestination = new StringBuilder();
-		for(String p: params) {
-			sbDestination.append(p).append(" ");
-		}
-		String destination = sbDestination.toString().trim();
+		String destination = String.join(" ", params);
 
 		for (Destination dest : DESTINATIONS) {
 			if (dest.matches(destination)) {

@@ -633,7 +633,7 @@ public class FFAService {
 	 * 从当前地图随机取一个出生点坐标。 / Picks a random spawn coordinate from the active map.
 	 */
 	private Float[] getRandomSpawn() {
-		return activeMap.spawns().get(Rnd.get(activeMap.spawns().size()));
+		return Rnd.get(activeMap.spawns());
 	}
 
 	/**

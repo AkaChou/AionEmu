@@ -14,6 +14,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * 冷却清除指令；清除目标玩家的技能/物品/房屋物品冷却，或指定副本冷却。
@@ -90,16 +91,9 @@ public class RemoveCd extends AdminCommand {
 					return;
 				if (params.length >= 2) {
 					if (params[1].equalsIgnoreCase("all")) {
-						List<Integer> mapIds = new ArrayList<>();
-						for (Entry<Integer, PortalCooldownItem> mapId : player.getPortalCooldownList().getPortalCoolDowns().entrySet()) {
-							mapIds.add(mapId.getKey());
-						}
-
-						for (Integer id : mapIds) {
+						for (Integer id : Set.copyOf(player.getPortalCooldownList().getPortalCoolDowns().keySet())) {
 							player.getPortalCooldownList().addPortalCooldown(id, 0, 0);
 						}
-
-						mapIds.clear();
 						if (player.equals(admin))
 							PacketSendUtility.sendMessage(admin, "Your instance cooldowns were removed");
 						else {

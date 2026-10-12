@@ -83,7 +83,7 @@ public record PetitionService(PetitionDAO petitionDAO) {
 				}
 			}
 		} catch (Exception e) {
-			log.warn(I18n.get("log.62e2494fabb4", e.getMessage()));
+			log.warn(I18n.get("log.62e2494fabb4", e.getMessage()), e);
 		}
 		log.info(I18n.get("log.2b3ade613951", registeredPetitions.size()));
 	}

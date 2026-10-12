@@ -9,6 +9,7 @@ import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -633,9 +634,10 @@ public class LunaShopService {
 		}
 
 		final HashMap<Integer, Long> mt = new HashMap<>();
-		for (int i = 0; i < 3; i++) {
-			List<Integer> keys = new ArrayList<>(hm.keySet());
-			int key = keys.get(new Random().nextInt(keys.size()));
+		List<Integer> keys = new ArrayList<>(hm.keySet());
+		Collections.shuffle(keys);
+		for (int i = 0; i < Math.min(3, keys.size()); i++) {
+			int key = keys.get(i);
 			mt.put(key, hm.get(key));
 		}
         GameThreadPoolServices.threadPoolManager().schedule(() -> {

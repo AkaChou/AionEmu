@@ -100,9 +100,7 @@ public class PlayerInfo extends AdminCommand {
 						strbld.append("    ")
 							.append(act.getItemCount())
 							.append("(s) of ")
-							.append("[item:")
-							.append(act.getItemTemplate().getTemplateId())
-							.append("]")
+							.append(ChatUtil.item(act.getItemTemplate().getTemplateId()))
 							.append("\n");
 					}
 				}

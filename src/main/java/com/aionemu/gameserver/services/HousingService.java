@@ -113,7 +113,7 @@ public class HousingService {
 				loadedStudios = this.housesDAO.loadHouses(DataManager.HOUSE_DATA.getLands(), true);
 			}
 		} catch (Exception e) {
-			log.warn(I18n.get("log.2db4e09a188b", e.getMessage()));
+			log.warn(I18n.get("log.2db4e09a188b", e.getMessage()), e);
 		}
 		this.customHouses = new ConcurrentHashMap<>(loadedCustom != null ? loadedCustom : Collections.emptyMap());
 		this.studios = new ConcurrentHashMap<>(loadedStudios != null ? loadedStudios : Collections.emptyMap());

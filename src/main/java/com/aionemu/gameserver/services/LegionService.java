@@ -490,10 +490,8 @@ public class LegionService {
 	/**
 	 * 按军团 ID 将玩家直接加入军团（不走邀请流程）。
 	 * Directly adds a player to the legion by id (bypasses invite flow).
-	 * Legion id
-	 * Target player
-	 *
-	 * @return 若 joined successfully 则为 true / True if joined successfully
+	 * @param legionId 军团 ID / Legion id
+	 * @param player 目标玩家 / Target player
 	 */
 	public void directAddPlayer(int legionId, Player player) {
 		Legion legion = getLegion(legionId);
