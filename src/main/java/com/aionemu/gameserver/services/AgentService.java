@@ -45,6 +45,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class AgentService {
 	private static volatile ObjectProvider<AgentService> instanceProvider;
+	private static volatile AgentService resolvedInstance;
 	private AgentSchedule agentSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, AgentLocation> agent;
@@ -323,16 +324,30 @@ public class AgentService {
 	}
 
 	/**
-	 * 获取 AgentService 单例（Spring 提供者优先，否则 holder）。
-	 * Return the AgentService singleton (Spring provider first, else holder).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static AgentService getInstance() {
-		ObjectProvider<AgentService> provider = instanceProvider;
-		if (provider == null) {
-			return AgentServiceHolder.INSTANCE;
+		AgentService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> AgentServiceHolder.INSTANCE);
+		ObjectProvider<AgentService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("AgentService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -343,10 +358,7 @@ public class AgentService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AgentService> instanceProvider) {
 		AgentService.instanceProvider = instanceProvider;
-	}
-
-	private static class AgentServiceHolder {
-		private static final AgentService INSTANCE = new AgentService();
+		resolvedInstance = null;
 	}
 
 	/**

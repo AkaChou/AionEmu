@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.ai.RetailAreaEngine;
 import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
 
@@ -159,7 +159,7 @@ public class PlayerReviveService {
 				return;
 			}
 			boolean isInvadeActiveVortex = false;
-			for (VortexLocation loc : GameLocationBootstrapServices.vortexService().getVortexLocations().values()) {
+			for (VortexLocation loc : VortexService.getInstance().getVortexLocations().values()) {
 				isInvadeActiveVortex = loc.isInsideActiveVortex(player)
 					&& player.getRace().equals(loc.getInvadersRace());
 				if (isInvadeActiveVortex) {

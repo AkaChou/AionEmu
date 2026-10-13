@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services.outpost;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.OutpostService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -207,8 +207,8 @@ public class Outpost<OL extends OutpostLocation> {
 	public void spawnAttackers(Race race) {
 		if (getFlag() != null && !getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				GameLocationBootstrapServices.outpostService().capture(getId(), race);
-				GameLocationBootstrapServices.outpostService().captureArtifact(getId(), race);
+				OutpostService.getInstance().capture(getId(), race);
+				OutpostService.getInstance().captureArtifact(getId(), race);
 			} else {
 				delayedAssault();
 			}

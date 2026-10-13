@@ -18,7 +18,7 @@ import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.VortexService;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -444,7 +444,7 @@ public final class PlayerEnterWorldService {
 			TeleportService2.onLogOutOppositeMap(player);
 			TeleportService2.sendSetBindPoint(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
-			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
+			VortexService.getInstance().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
 			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);

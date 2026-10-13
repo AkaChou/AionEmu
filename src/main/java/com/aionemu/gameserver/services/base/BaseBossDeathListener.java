@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services.base;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -72,10 +72,10 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 		}
 		if (base.getBaseLocation().getWorldId() == 400010000) {
 			if (race == Race.ASMODIANS && boss.getRace() == Race.ELYOS) {
-				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE, false);
+				AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE, false);
 			}
 			if (race == Race.ELYOS && boss.getRace() == Race.ASMODIANS) {
-				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE, false);
+				AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE, false);
 			}
 			landingWinBase(race);
 		}
@@ -191,10 +191,10 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	 */
 	public void landingWinBase(Race race) {
 		if (race == Race.ASMODIANS) {
-			GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE, true);
+			AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE, true);
 		}
 		if (race == Race.ELYOS) {
-			GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
+			AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
 		}
 	}
 }

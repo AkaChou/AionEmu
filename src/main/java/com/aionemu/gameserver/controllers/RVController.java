@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RiftService;
+import com.aionemu.gameserver.services.VortexService;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -99,8 +100,8 @@ public class RVController extends NpcController {
 		this.minLevel = riftTemplate.getMinLevel();
 		this.maxLevel = riftTemplate.getMaxLevel();
 		this.deSpawnedTime = ((int) (System.currentTimeMillis() / 1000))
-			+ (isVortex ? GameLocationBootstrapServices.vortexService().getDuration() * 3600
-			: GameLocationBootstrapServices.riftService().getDuration() * 3600);
+			+ (isVortex ? VortexService.getInstance().getDuration() * 3600
+			: RiftService.getInstance().getDuration() * 3600);
 		if (slave != null) {
 			this.slave = slave;
 			this.slaveSpawnTemplate = slave.getSpawn();
@@ -142,7 +143,7 @@ public class RVController extends NpcController {
 								PlayerAllianceService.removePlayer(responder);
 							}
 						}
-						VortexLocation loc = GameLocationBootstrapServices.vortexService().getLocationByRift(getOwner().getNpcId());
+						VortexLocation loc = VortexService.getInstance().getLocationByRift(getOwner().getNpcId());
 						TeleportService2.teleportTo(responder, loc.getStartPoint());
 						PacketSendUtility.playerSendPacketTime(responder,
 							SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_OPEN_NOTICE, 10000);

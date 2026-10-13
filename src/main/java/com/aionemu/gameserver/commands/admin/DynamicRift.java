@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.DynamicRiftService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,18 +53,18 @@ public class DynamicRift extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.dynamicRiftService().isDynamicRiftInProgress(dynamicRiftId)) {
+			if (DynamicRiftService.getInstance().isDynamicRiftInProgress(dynamicRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " started!");
-				GameLocationBootstrapServices.dynamicRiftService().startDynamicRift(dynamicRiftId);
+				DynamicRiftService.getInstance().startDynamicRift(dynamicRiftId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.dynamicRiftService().isDynamicRiftInProgress(dynamicRiftId)) {
+			if (!DynamicRiftService.getInstance().isDynamicRiftInProgress(dynamicRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " stopped!");
-				GameLocationBootstrapServices.dynamicRiftService().stopDynamicRift(dynamicRiftId);
+				DynamicRiftService.getInstance().stopDynamicRift(dynamicRiftId);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class DynamicRift extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidDynamicRiftLocationId(Player player, int dynamicRiftId) {
-		if (!GameLocationBootstrapServices.dynamicRiftService().getDynamicRiftLocations().containsKey(dynamicRiftId)) {
+		if (!DynamicRiftService.getInstance().getDynamicRiftLocations().containsKey(dynamicRiftId)) {
 			PacketSendUtility.sendMessage(player, "Id " + dynamicRiftId + " is invalid");
 			return false;
 		}

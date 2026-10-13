@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -44,9 +44,9 @@ public class Harbinger_EquilibriumAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 6000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 6000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 6000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 6000);
 }
 }
 		});
@@ -55,9 +55,9 @@ GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS,
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 10000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 10000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 10000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 10000);
 }
 }
 		});
@@ -66,9 +66,9 @@ GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS,
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 16000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 16000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 16000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 16000);
 }
 }
 		});
@@ -77,9 +77,9 @@ GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS,
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 30000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 30000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 30000);
+AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 30000);
 }
 }
 		});

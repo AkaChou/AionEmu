@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AgentService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -54,19 +54,19 @@ public class Agent extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.agentService().isFightInProgress(agentId)) {
+			if (AgentService.getInstance().isFightInProgress(agentId)) {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " started!");
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite));
-				GameLocationBootstrapServices.agentService().startAgentFight(agentId);
+				AgentService.getInstance().startAgentFight(agentId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.agentService().isFightInProgress(agentId)) {
+			if (!AgentService.getInstance().isFightInProgress(agentId)) {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " stopped!");
-				GameLocationBootstrapServices.agentService().stopAgentFight(agentId);
+				AgentService.getInstance().stopAgentFight(agentId);
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class Agent extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAgentLocationId(Player player, int agentId) {
-		if (!GameLocationBootstrapServices.agentService().getAgentLocations().containsKey(agentId)) {
+		if (!AgentService.getInstance().getAgentLocations().containsKey(agentId)) {
 			PacketSendUtility.sendMessage(player, "Id " + agentId + " is invalid");
 			return false;
 		}

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.rvr.asmodianWarshipInvasion;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RvrService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -43,7 +43,7 @@ public class Taina_ComanderAI2 extends AggressiveNpcAI2
 
 	@Override
 	protected void handleDied() {
-		GameLocationBootstrapServices.rvrService().stopRvr(3);
+		RvrService.getInstance().stopRvr(3);
 		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //次元漩涡。 / Dimensional Vortex.
 		super.handleDied();
 	}

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.BeritraService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,19 +53,19 @@ public class Beritra extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.beritraService().isInvasionInProgress(beritraId)) {
+			if (BeritraService.getInstance().isInvasionInProgress(beritraId)) {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " started!");
-				GameLocationBootstrapServices.beritraService().startBeritraInvasion(beritraId);
+				BeritraService.getInstance().startBeritraInvasion(beritraId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.beritraService().isInvasionInProgress(beritraId)) {
+			if (!BeritraService.getInstance().isInvasionInProgress(beritraId)) {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " is not start!");
 
 			} else {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " stopped!");
-				GameLocationBootstrapServices.beritraService().stopBeritraInvasion(beritraId);
+				BeritraService.getInstance().stopBeritraInvasion(beritraId);
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public class Beritra extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidBeritraLocationId(Player player, int beritraId) {
-		if (!GameLocationBootstrapServices.beritraService().getBeritraLocations().containsKey(beritraId)) {
+		if (!BeritraService.getInstance().getBeritraLocations().containsKey(beritraId)) {
 			PacketSendUtility.sendMessage(player, "Id " + beritraId + " is invalid");
 			return false;
 		}

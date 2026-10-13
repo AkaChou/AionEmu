@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -49,9 +49,9 @@ public class Siege_CommanderAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onDieCommander(Race.ASMODIANS, id, 15000);
+AbyssLandingService.getInstance().onDieCommander(Race.ASMODIANS, id, 15000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onDieCommander(Race.ELYOS, id, 15000);
+AbyssLandingService.getInstance().onDieCommander(Race.ELYOS, id, 15000);
 }
 }
 		});
@@ -60,9 +60,9 @@ GameLocationBootstrapServices.abyssLandingService().onDieCommander(Race.ELYOS, i
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onDieCommander(Race.ASMODIANS, id, 20000);
+AbyssLandingService.getInstance().onDieCommander(Race.ASMODIANS, id, 20000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onDieCommander(Race.ELYOS, id, 20000);
+AbyssLandingService.getInstance().onDieCommander(Race.ELYOS, id, 20000);
 }
 }
 		});

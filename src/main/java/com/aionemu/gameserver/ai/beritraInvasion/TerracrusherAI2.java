@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.beritraInvasion;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -52,7 +52,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				// %0 摧毁了 %0，登陆点已增强。 / %0 has destroyed %0 and the Landing is now enhanced.
-				GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
+				AbyssLandingService.getInstance().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
 			}
 		});
 	}
@@ -61,9 +61,9 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 24, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 24, 0);
 				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 12, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 12, 0);
 				}
 			}
 		});

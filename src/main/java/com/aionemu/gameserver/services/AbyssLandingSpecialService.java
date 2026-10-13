@@ -33,6 +33,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 @Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
+	private static volatile AbyssLandingSpecialService resolvedInstance;
 	private final SpecialLandingDao abyssSpecialLandingDAO;
 	/**
 	 * 特殊登陆点 ID → 位置。 / Special landing id → location.
@@ -163,14 +164,19 @@ public class AbyssLandingSpecialService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static AbyssLandingSpecialService getInstance() {
+		AbyssLandingSpecialService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AbyssLandingSpecialService> provider = instanceProvider;
-		AbyssLandingSpecialService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AbyssLandingSpecialService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -181,6 +187,7 @@ public class AbyssLandingSpecialService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingSpecialService> instanceProvider) {
 		AbyssLandingSpecialService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

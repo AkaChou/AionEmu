@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services.outpost;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.OutpostService;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.model.Race;
@@ -44,7 +44,7 @@ public class OutpostBossDeathListener implements AbstractAI.AiDeathListener {
 		} else {
 			outpost.setRace(Race.NPC);
 		}
-		GameLocationBootstrapServices.outpostService().capture(outpost.getId(), outpost.getRace());
+		OutpostService.getInstance().capture(outpost.getId(), outpost.getRace());
 	}
 
 	/**

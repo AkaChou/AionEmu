@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.InstanceRiftService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -43,6 +43,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class InstanceRiftService {
 	private static volatile ObjectProvider<InstanceRiftService> instanceProvider;
+	private static volatile InstanceRiftService resolvedInstance;
 	private InstanceSchedule instanceSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, InstanceRiftLocation> instanceRift;
@@ -88,7 +89,7 @@ public class InstanceRiftService {
 		if (instanceSchedule != null) {
 			for (Instance instance : instanceSchedule.getInstancesList()) {
 				for (String instanceTime : instance.getInstanceTimes()) {
-					Runnable task = new InstanceStartRunnable(instance.getId());
+					Runnable task = new InstanceStartRunnable(this, instance.getId());
 					scheduledTasks.add(task);
 					GameCronServices.cronService().schedule(task, instanceTime);
 				}
@@ -226,16 +227,30 @@ public class InstanceRiftService {
 	}
 
 	/**
-	 * 获取服务单例（优先 Spring ObjectProvider，否则 holder）。
-	 * Returns the service singleton (Spring ObjectProvider if set, else holder).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static InstanceRiftService getInstance() {
-		ObjectProvider<InstanceRiftService> provider = instanceProvider;
-		if (provider == null) {
-			return InstanceRiftServiceHolder.INSTANCE;
+		InstanceRiftService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> InstanceRiftServiceHolder.INSTANCE);
+		ObjectProvider<InstanceRiftService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("InstanceRiftService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -246,27 +261,24 @@ public class InstanceRiftService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<InstanceRiftService> instanceProvider) {
 		InstanceRiftService.instanceProvider = instanceProvider;
-	}
-
-	private static class InstanceRiftServiceHolder {
-		private static final InstanceRiftService INSTANCE = new InstanceRiftService();
+		resolvedInstance = null;
 	}
 
 	/**
 	 * 副本裂隙启动定时任务。
 	 * Start runnable for instance-rift events.
 	 */
-	private record InstanceStartRunnable(int id) implements Runnable {
+	private record InstanceStartRunnable(InstanceRiftService service, int id) implements Runnable {
 		/**
 		 * 查找匹配地点并启动裂隙。
 		 * Finds the matching location and starts the rift.
 		 */
 		@Override
 		public void run() {
-			Map<Integer, InstanceRiftLocation> locations = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations();
+			Map<Integer, InstanceRiftLocation> locations = service.getInstanceRiftLocations();
 			for (InstanceRiftLocation loc : locations.values()) {
 				if (loc.getId() == id) {
-					GameLocationBootstrapServices.instanceRiftService().startInstanceRift(loc.getId());
+					service.startInstanceRift(loc.getId());
 				}
 			}
 		}

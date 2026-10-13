@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RiftService;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -34,6 +34,7 @@ import com.aionemu.gameserver.services.rift.RiftInformer;
  */
 public class RiftService {
 	private static volatile ObjectProvider<RiftService> instanceProvider;
+	private static volatile RiftService resolvedInstance;
 	private RiftSchedule riftSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, RiftLocation> locations;
@@ -72,7 +73,7 @@ public class RiftService {
 		if (riftSchedule != null) {
 			for (Rift rift : riftSchedule.getRiftsList()) {
 				for (String openTimes : rift.getOpenTime()) {
-					Runnable task = new RiftOpenRunnable(rift.getWorldId());
+					Runnable task = new RiftOpenRunnable(this, rift.getWorldId());
 					scheduledTasks.add(task);
 					GameCronServices.cronService().schedule(task, openTimes);
 				}
@@ -239,16 +240,30 @@ public class RiftService {
 	}
 
 	/**
-	 * 获取服务单例（优先 Spring Provider）。
-	 * Returns the service singleton (prefers Spring provider).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static RiftService getInstance() {
-		ObjectProvider<RiftService> provider = instanceProvider;
-		if (provider == null) {
-			return RiftServiceHolder.INSTANCE;
+		RiftService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> RiftServiceHolder.INSTANCE);
+		ObjectProvider<RiftService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("RiftService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -258,27 +273,24 @@ public class RiftService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<RiftService> instanceProvider) {
 		RiftService.instanceProvider = instanceProvider;
-	}
-
-	private static class RiftServiceHolder {
-		private static final RiftService INSTANCE = new RiftService();
+		resolvedInstance = null;
 	}
 
     /**
      * 裂隙开启定时任务，按世界 ID 打开对应裂隙并向玩家广播状态。
      * Runnable that opens rifts for a world id and broadcasts rift state to players.
      */
-    private record RiftOpenRunnable(int worldId) implements Runnable {
+    private record RiftOpenRunnable(RiftService service, int worldId) implements Runnable {
         /**
          * 打开该世界全部裂隙位置并发送裂隙信息。
          * Opens all rift locations in the world and sends rift info.
          */
         @Override
         public void run() {
-            Map<Integer, RiftLocation> locations = GameLocationBootstrapServices.riftService().getRiftLocations();
+            Map<Integer, RiftLocation> locations = service.getRiftLocations();
             for (final RiftLocation loc : locations.values()) {
                 if (loc.getWorldId() == worldId) {
-                    GameLocationBootstrapServices.riftService().openRifts(loc);
+                    service.openRifts(loc);
                 }
             }
             RiftInformer.sendRiftsInfo(worldId);

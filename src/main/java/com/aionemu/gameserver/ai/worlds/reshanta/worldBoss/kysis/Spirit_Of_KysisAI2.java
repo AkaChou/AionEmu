@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.kysis;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -63,9 +63,9 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 15, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 15, 0);
 				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 3, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 3, 0);
 				}
 			}
 		});

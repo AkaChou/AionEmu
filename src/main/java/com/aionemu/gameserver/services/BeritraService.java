@@ -45,6 +45,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class BeritraService {
 	private static volatile ObjectProvider<BeritraService> instanceProvider;
+	private static volatile BeritraService resolvedInstance;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, BeritraLocation> beritra;
 	// 贝里特拉入侵 4.7 / Beritra Invasion 4.7
@@ -530,16 +531,30 @@ public class BeritraService {
 	}
 
 	/**
-	 * 获取 BeritraService 单例（Spring 提供者优先，否则 holder）。
-	 * Return the BeritraService singleton (Spring provider first, else holder).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static BeritraService getInstance() {
-		ObjectProvider<BeritraService> provider = instanceProvider;
-		if (provider == null) {
-			return BeritraServiceHolder.INSTANCE;
+		BeritraService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> BeritraServiceHolder.INSTANCE);
+		ObjectProvider<BeritraService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("BeritraService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -550,9 +565,6 @@ public class BeritraService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<BeritraService> instanceProvider) {
 		BeritraService.instanceProvider = instanceProvider;
-	}
-
-	private static class BeritraServiceHolder {
-		private static final BeritraService INSTANCE = new BeritraService();
+		resolvedInstance = null;
 	}
 }

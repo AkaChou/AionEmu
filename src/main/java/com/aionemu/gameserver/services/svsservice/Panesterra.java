@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.svsservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.SvsService;
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.model.svs.SvsStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(SvsStateType type) {
-		GameLocationBootstrapServices.svsService().spawn(getSvsLocation(), type);
+		SvsService.getInstance().spawn(getSvsLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.svsService().despawn(getSvsLocation());
+		SvsService.getInstance().despawn(getSvsLocation());
 	}
 
 	/**

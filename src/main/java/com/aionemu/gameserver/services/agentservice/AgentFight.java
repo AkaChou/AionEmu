@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.agentservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.agent.AgentStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(AgentStateType type) {
-		GameLocationBootstrapServices.agentService().spawn(getAgentLocation(), type);
+		AgentService.getInstance().spawn(getAgentLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.agentService().despawn(getAgentLocation());
+		AgentService.getInstance().despawn(getAgentLocation());
 	}
 
 	/**

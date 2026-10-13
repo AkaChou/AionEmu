@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.anohaservice;
 
 import java.util.Map;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -28,29 +28,29 @@ public class AnohaStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
-		GameLocationBootstrapServices.anohaService().clearAdventObjects(id);
+		AnohaService.getInstance().clearAdventObjects(id);
 		// 狂暴阿诺哈剑效果。 / Berserk Anoha Sword Effect.
-		GameLocationBootstrapServices.anohaService().adventSwordEffectSP(id);
+		AnohaService.getInstance().adventSwordEffectSP(id);
 		// 狂暴阿诺哈将在 30 分钟后返回卡尔多。 / Berserk Anoha will return to Kaldor in 30 minutes.
-		GameLocationBootstrapServices.anohaService().berserkAnohaMsg1(id);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> GameLocationBootstrapServices.anohaService().sendRequest(player));
+		AnohaService.getInstance().berserkAnohaMsg1(id);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> AnohaService.getInstance().sendRequest(player));
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 暴怒的韦尔休守护者将在 5 分钟后出现。 / Enraged Wealhtheow Guardian will appear in 5 minutes.
-			GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg1(id);
+			AnohaService.getInstance().wealhtheowGuardianMsg1(id);
 		}, 1500000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 暴怒的韦尔休守护者将在 3 分钟后出现。 / Enraged Wealhtheow Guardian will appear in 3 minutes.
-			GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg2(id);
+			AnohaService.getInstance().wealhtheowGuardianMsg2(id);
 		}, 1620000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 暴怒的韦尔休守护者将在 1 分钟后出现。 / Enraged Wealhtheow Guardian will appear in 1 minute.
-			GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg3(id);
+			AnohaService.getInstance().wealhtheowGuardianMsg3(id);
 		}, 1740000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			Map<Integer, AnohaLocation> locations = GameLocationBootstrapServices.anohaService().getAnohaLocations();
+			Map<Integer, AnohaLocation> locations = AnohaService.getInstance().getAnohaLocations();
 			for (final AnohaLocation loc : locations.values()) {
 				if (loc.getId() == id) {
-					GameLocationBootstrapServices.anohaService().startAnoha(loc.getId());
+					AnohaService.getInstance().startAnoha(loc.getId());
 				}
 			}
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {

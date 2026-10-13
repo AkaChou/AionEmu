@@ -42,6 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class ZorshivDredgionService {
 	private static volatile ObjectProvider<ZorshivDredgionService> instanceProvider;
+	private static volatile ZorshivDredgionService resolvedInstance;
 	private DredgionSchedule dredgionSchedule;
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
@@ -380,16 +381,30 @@ public class ZorshivDredgionService {
 	}
 
 	/**
-	 * 获取服务单例（优先 Spring Provider）。
-	 * Returns the service singleton (prefers Spring provider).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static ZorshivDredgionService getInstance() {
-		ObjectProvider<ZorshivDredgionService> provider = instanceProvider;
-		if (provider == null) {
-			return ZorshivDredgionServiceHolder.INSTANCE;
+		ZorshivDredgionService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> ZorshivDredgionServiceHolder.INSTANCE);
+		ObjectProvider<ZorshivDredgionService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("ZorshivDredgionService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -400,10 +415,7 @@ public class ZorshivDredgionService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ZorshivDredgionService> instanceProvider) {
 		ZorshivDredgionService.instanceProvider = instanceProvider;
-	}
-
-	private static class ZorshivDredgionServiceHolder {
-		private static final ZorshivDredgionService INSTANCE = new ZorshivDredgionService();
+		resolvedInstance = null;
 	}
 
 	/**

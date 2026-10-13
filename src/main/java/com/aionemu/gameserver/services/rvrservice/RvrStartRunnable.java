@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.rvrservice;
 
 import java.util.Map;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import lombok.AllArgsConstructor;
@@ -26,57 +26,57 @@ public class RvrStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// 清理上一轮遗留的临时对象。 / Despawn temporary objects left by the previous cycle.
-		GameLocationBootstrapServices.rvrService().clearAdventObjects(id);
+		RvrService.getInstance().clearAdventObjects(id);
 		// 入侵传送门。 / Invasion Portal.
-		GameLocationBootstrapServices.rvrService().adventPortalSP(id);
+		RvrService.getInstance().adventPortalSP(id);
 		// 天族战舰将在 10 分钟后入侵。 / An Elyos warship will invade in 10 minutes.
-		GameLocationBootstrapServices.rvrService().DF6G1Spawn01Msg(id);
+		RvrService.getInstance().DF6G1Spawn01Msg(id);
 		// 魔族战舰将在 10 分钟后入侵。 / An Asmodian warship will invade in 10 minutes.
-		GameLocationBootstrapServices.rvrService().LF6G1Spawn01Msg(id);
+		RvrService.getInstance().LF6G1Spawn01Msg(id);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 入侵激光。 / Invasion Lazer.
-			GameLocationBootstrapServices.rvrService().adventDirectingSP(id);
+			RvrService.getInstance().adventDirectingSP(id);
 		}, 180000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 入侵黑空。 / Invasion Black Sky.
-			GameLocationBootstrapServices.rvrService().adventControlSP(id);
+			RvrService.getInstance().adventControlSP(id);
 			// 天族战舰将在 5 分钟后入侵。 / An Elyos Warship will invade in 5 minutes.
-			GameLocationBootstrapServices.rvrService().DF6G1Spawn02Msg(id);
+			RvrService.getInstance().DF6G1Spawn02Msg(id);
 			// 魔族战舰将在 5 分钟后入侵。 / An Asmodian Warship will invade in 5 minutes.
-			GameLocationBootstrapServices.rvrService().LF6G1Spawn02Msg(id);
+			RvrService.getInstance().LF6G1Spawn02Msg(id);
 			// 检测到入侵。 / Intrusion was detected.
-			GameLocationBootstrapServices.rvrService().F6RaidStart5Minute(id);
+			RvrService.getInstance().F6RaidStart5Minute(id);
 		}, 300000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 天族战舰将在 3 分钟后入侵。 / An Elyos warship will invade in 3 minutes.
-			GameLocationBootstrapServices.rvrService().DF6G1Spawn03Msg(id);
+			RvrService.getInstance().DF6G1Spawn03Msg(id);
 			// 魔族战舰将在 3 分钟后入侵。 / An Asmodian warship will invade in 3 minutes.
-			GameLocationBootstrapServices.rvrService().LF6G1Spawn03Msg(id);
+			RvrService.getInstance().LF6G1Spawn03Msg(id);
 		}, 480000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			// 天族战舰将在 1 分钟后入侵。 / An Elyos warship will invade in 1 minute.
-			GameLocationBootstrapServices.rvrService().DF6G1Spawn04Msg(id);
+			RvrService.getInstance().DF6G1Spawn04Msg(id);
 			// 魔族战舰将在 1 分钟后入侵。 / An Asmodian warship will invade in 1 minute.
-			GameLocationBootstrapServices.rvrService().LF6G1Spawn04Msg(id);
+			RvrService.getInstance().LF6G1Spawn04Msg(id);
 		}, 540000);
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			Map<Integer, RvrLocation> locations = GameLocationBootstrapServices.rvrService().getRvrLocations();
+			Map<Integer, RvrLocation> locations = RvrService.getInstance().getRvrLocations();
 			for (final RvrLocation loc : locations.values()) {
 				if (loc.getId() == id) {
 					// 入侵浅蓝。 / Invasion Light Blue.
-					GameLocationBootstrapServices.rvrService().adventEffectSP(id);
+					RvrService.getInstance().adventEffectSP(id);
 					// 天族战舰入侵。 / Elyos Warship Invasion.
-					GameLocationBootstrapServices.rvrService().DF6G1Spawn05Msg(id);
+					RvrService.getInstance().DF6G1Spawn05Msg(id);
 					// 魔族战舰入侵。 / Asmodian Warship Invasion.
-					GameLocationBootstrapServices.rvrService().LF6G1Spawn05Msg(id);
+					RvrService.getInstance().LF6G1Spawn05Msg(id);
 					// 古代武器入侵。 / Ancient's Weapon Invasion.
-					GameLocationBootstrapServices.rvrService().F6RaidStart(id);
+					RvrService.getInstance().F6RaidStart(id);
 					// 旅团将军的紧急命令。 / Brigade General's Urgent Order.
-					GameLocationBootstrapServices.rvrService().startRvr(loc.getId());
+					RvrService.getInstance().startRvr(loc.getId());
 					// 军官落败后，魔族士兵正在撤退。 / The Asmodian Troopers are retreating after the defeat of their officers.
-					GameLocationBootstrapServices.rvrService().LF6EventG2Start02Msg(id);
+					RvrService.getInstance().LF6EventG2Start02Msg(id);
 					// 军官落败后，埃托斯正在撤退。 / The Aetos are retreating after the defeat of their officers.
-					GameLocationBootstrapServices.rvrService().DF6EventG2Start02Msg(id);
+					RvrService.getInstance().DF6EventG2Start02Msg(id);
 				}
 			}
 		}, 600000);

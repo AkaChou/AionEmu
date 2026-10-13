@@ -5,7 +5,9 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.OutpostService;
+import com.aionemu.gameserver.services.TowerOfEternityService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -118,11 +120,11 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// 术古皇陵 4.3 / Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
-		GameLocationBootstrapServices.abyssLandingService().onEnterWorld(activePlayer);
+		AbyssLandingService.getInstance().onEnterWorld(activePlayer);
 		// 永恒之塔 5.0 / Tower Of Eternity 5.0
-		GameLocationBootstrapServices.towerOfEternityService().onEnterTowerWorld(activePlayer);
+		TowerOfEternityService.getInstance().onEnterTowerWorld(activePlayer);
 		// 前哨 5.8 / Outpost 5.8
-		GameLocationBootstrapServices.outpostService().onEnterOutpostWorld(activePlayer);
+		OutpostService.getInstance().onEnterOutpostWorld(activePlayer);
 		activePlayer.getEffectController().updatePlayerEffectIcons();
 		sendPacket(SM_CUBE_UPDATE.cubeSize(StorageType.CUBE, activePlayer));
 		TeleportService2.archdaevaTransformation(activePlayer);

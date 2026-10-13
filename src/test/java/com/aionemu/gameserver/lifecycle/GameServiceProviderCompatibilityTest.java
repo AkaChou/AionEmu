@@ -538,7 +538,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(Power.class, power),
                 provider(Precision.class, precision),
                 provider(Will.class, will));
-            GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
+            LocationBootstrapServiceBindings locationServices = new LocationBootstrapServiceBindings(
                 provider(VortexService.class, instance(VortexService.class)),
                 provider(BeritraService.class, instance(BeritraService.class)),
                 provider(AgentService.class, instance(AgentService.class)),
@@ -736,7 +736,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(zoneService, ZoneService.getInstance());
             assertSame(hotspotTeleportService, HotspotTeleportService.getInstance());
             assertSame(roadService, RoadService.getInstance());
-            assertSame(towerOfEternityService, GameLocationBootstrapServices.towerOfEternityService());
+            assertSame(towerOfEternityService, TowerOfEternityService.getInstance());
             assertSame(aStationService, AStationService.getInstance());
             assertSame(f2pService, F2pService.getInstance());
             assertSame(f2pService, GameFeatureServices.f2pService());
@@ -1366,7 +1366,7 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
-    void gameLocationBootstrapServicesRegistersAndClearsAbyssLandingProvider() {
+    void locationBootstrapServiceBindingsRegistersAndClearsProviders() {
         VortexService vortexService = instance(VortexService.class);
         BeritraService beritraService = instance(BeritraService.class);
         AgentService agentService = instance(AgentService.class);
@@ -1385,7 +1385,7 @@ class GameServiceProviderCompatibilityTest {
         IdianDepthsService idianDepthsService = instance(IdianDepthsService.class);
         AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
         AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
-        GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
+        LocationBootstrapServiceBindings locationServices = new LocationBootstrapServiceBindings(
                 provider(VortexService.class, vortexService),
                 provider(BeritraService.class, beritraService),
                 provider(AgentService.class, agentService),
@@ -1410,46 +1410,46 @@ class GameServiceProviderCompatibilityTest {
                 provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
 
         try {
-            assertSame(vortexService, GameLocationBootstrapServices.vortexService());
-            assertSame(beritraService, GameLocationBootstrapServices.beritraService());
-            assertSame(agentService, GameLocationBootstrapServices.agentService());
-            assertSame(anohaService, GameLocationBootstrapServices.anohaService());
-            assertSame(svsService, GameLocationBootstrapServices.svsService());
-            assertSame(rvrService, GameLocationBootstrapServices.rvrService());
-            assertSame(iuService, GameLocationBootstrapServices.iuService());
-            assertSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
-            assertSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
-            assertSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
-            assertSame(outpostService, GameLocationBootstrapServices.outpostService());
-            assertSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
-            assertSame(moltenusService, GameLocationBootstrapServices.moltenusService());
-            assertSame(riftService, GameLocationBootstrapServices.riftService());
-            assertSame(conquestService, GameLocationBootstrapServices.conquestService());
-            assertSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
-            assertSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
-            assertSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
+            assertSame(vortexService, VortexService.getInstance());
+            assertSame(beritraService, BeritraService.getInstance());
+            assertSame(agentService, AgentService.getInstance());
+            assertSame(anohaService, AnohaService.getInstance());
+            assertSame(svsService, SvsService.getInstance());
+            assertSame(rvrService, RvrService.getInstance());
+            assertSame(iuService, IuService.getInstance());
+            assertSame(nightmareCircusService, NightmareCircusService.getInstance());
+            assertSame(dynamicRiftService, DynamicRiftService.getInstance());
+            assertSame(instanceRiftService, InstanceRiftService.getInstance());
+            assertSame(outpostService, OutpostService.getInstance());
+            assertSame(zorshivDredgionService, ZorshivDredgionService.getInstance());
+            assertSame(moltenusService, MoltenusService.getInstance());
+            assertSame(riftService, RiftService.getInstance());
+            assertSame(conquestService, ConquestService.getInstance());
+            assertSame(idianDepthsService, IdianDepthsService.getInstance());
+            assertSame(abyssLandingService, AbyssLandingService.getInstance());
+            assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());
         } finally {
             locationServices.destroy();
             // destroy 清空 provider 后，访问器一律 fail-fast（新契约，不再回退到另一套实例）。
             // After destroy clears the providers, every accessor fails fast (the new contract, no second instance).
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::vortexService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::beritraService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::agentService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::anohaService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::svsService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::rvrService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::iuService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::nightmareCircusService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::dynamicRiftService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::instanceRiftService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::zorshivDredgionService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::moltenusService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::riftService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::conquestService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::idianDepthsService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::outpostService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingService);
-            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingSpecialService);
+            assertThrows(IllegalStateException.class, VortexService::getInstance);
+            assertThrows(IllegalStateException.class, BeritraService::getInstance);
+            assertThrows(IllegalStateException.class, AgentService::getInstance);
+            assertThrows(IllegalStateException.class, AnohaService::getInstance);
+            assertThrows(IllegalStateException.class, SvsService::getInstance);
+            assertThrows(IllegalStateException.class, RvrService::getInstance);
+            assertThrows(IllegalStateException.class, IuService::getInstance);
+            assertThrows(IllegalStateException.class, NightmareCircusService::getInstance);
+            assertThrows(IllegalStateException.class, DynamicRiftService::getInstance);
+            assertThrows(IllegalStateException.class, InstanceRiftService::getInstance);
+            assertThrows(IllegalStateException.class, ZorshivDredgionService::getInstance);
+            assertThrows(IllegalStateException.class, MoltenusService::getInstance);
+            assertThrows(IllegalStateException.class, RiftService::getInstance);
+            assertThrows(IllegalStateException.class, ConquestService::getInstance);
+            assertThrows(IllegalStateException.class, IdianDepthsService::getInstance);
+            assertThrows(IllegalStateException.class, OutpostService::getInstance);
+            assertThrows(IllegalStateException.class, AbyssLandingService::getInstance);
+            assertThrows(IllegalStateException.class, AbyssLandingSpecialService::getInstance);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RvrService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -45,24 +45,24 @@ public class Rvr extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.rvrService().isRvrInProgress(rvrId)) {
+			if (RvrService.getInstance().isRvrInProgress(rvrId)) {
 				PacketSendUtility.sendMessage(player, "<R.v.r> " + rvrId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<R.v.r> " + rvrId + " started!");
-				GameLocationBootstrapServices.rvrService().startRvr(rvrId);
+				RvrService.getInstance().startRvr(rvrId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.rvrService().isRvrInProgress(rvrId)) {
+			if (!RvrService.getInstance().isRvrInProgress(rvrId)) {
 				PacketSendUtility.sendMessage(player, "<R.v.r> " + rvrId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<R.v.r> " + rvrId + " stopped!");
-				GameLocationBootstrapServices.rvrService().stopRvr(rvrId);
+				RvrService.getInstance().stopRvr(rvrId);
 			}
 		}
 	}
 
 	protected boolean isValidRvrLocationId(Player player, int rvrId) {
-		if (!GameLocationBootstrapServices.rvrService().getRvrLocations().containsKey(rvrId)) {
+		if (!RvrService.getInstance().getRvrLocations().containsKey(rvrId)) {
 			PacketSendUtility.sendMessage(player, "Id " + rvrId + " is invalid");
 			return false;
 		}

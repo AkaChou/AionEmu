@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.agentFight;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AgentService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -67,7 +67,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
         applyVeilleEnergy();
 		announceKilledMarchutan();
         announceEmpoweredMastariusDie();
-		GameLocationBootstrapServices.agentService().stopAgentFight(1);
+		AgentService.getInstance().stopAgentFight(1);
         GameFeatureServices.baseService().capture(90, Race.ELYOS);
 		super.handleDied();
 	}

@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.zorshivdredgionservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(ZorshivDredgionStateType type) {
-		GameLocationBootstrapServices.zorshivDredgionService().spawn(getZorshivDredgionLocation(), type);
+		ZorshivDredgionService.getInstance().spawn(getZorshivDredgionLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.zorshivDredgionService().despawn(getZorshivDredgionLocation());
+		ZorshivDredgionService.getInstance().despawn(getZorshivDredgionLocation());
 	}
 
 	/**

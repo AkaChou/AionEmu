@@ -260,7 +260,8 @@ class ServiceConstructorInjectionTest {
 			}
 		};
 
-		AbyssLandingService service = new AbyssLandingService(stubAbyssLandingDAO);
+		AbyssLandingService service = new AbyssLandingService(stubAbyssLandingDAO,
+			new AbyssLandingSpecialService(new SpecialLandingDaoImpl()));
 		assertNotNull(service);
 	}
 
@@ -937,7 +938,8 @@ class ServiceConstructorInjectionTest {
 	void servicesFailFastOnNullDaoInjection() {
 		assertThrows(NullPointerException.class, () -> new TownService(null));
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
-		assertThrows(NullPointerException.class, () -> new AbyssLandingService(null));
+		assertThrows(NullPointerException.class,
+			() -> new AbyssLandingService(null, new AbyssLandingSpecialService(new SpecialLandingDaoImpl())));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingSpecialService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssRankUpdateService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new AbyssRankCleaningService(null, null));

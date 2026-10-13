@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.instanceriftservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.InstanceRiftService;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
 import com.aionemu.gameserver.model.instancerift.InstanceRiftStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(InstanceRiftStateType type) {
-		GameLocationBootstrapServices.instanceRiftService().spawn(getInstanceRiftLocation(), type);
+		InstanceRiftService.getInstance().spawn(getInstanceRiftLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.instanceRiftService().despawn(getInstanceRiftLocation());
+		InstanceRiftService.getInstance().despawn(getInstanceRiftLocation());
 	}
 
 	/**

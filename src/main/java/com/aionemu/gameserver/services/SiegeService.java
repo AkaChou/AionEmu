@@ -63,7 +63,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 
 /**
  * 攻城战服务，管理要塞/神器攻城、刷怪、计划与状态广播。
@@ -76,8 +75,8 @@ public class SiegeService {
 	private final LegionService legionService;
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
-	@Setter
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
+	private static volatile SiegeService resolvedInstance;
 	private final SiegeLocationDao siegeDAO;
 	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<>();
 	private final List<Runnable> scheduledTasks = new ArrayList<>();
@@ -109,19 +108,41 @@ public class SiegeService {
 	}
 
 	/**
-	 * 获取服务单例（优先 Spring Provider）。
-	 * Returns the service singleton (prefers Spring provider).
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
 	 */
 	public static SiegeService getInstance() {
+		SiegeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<SiegeService> provider = instanceProvider;
-		SiegeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("SiegeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<SiegeService> instanceProvider) {
+		SiegeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

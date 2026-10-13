@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.ConquestService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,18 +53,18 @@ public class Conquest extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.conquestService().isConquestInProgress(conquestId)) {
+			if (ConquestService.getInstance().isConquestInProgress(conquestId)) {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " started!");
-				GameLocationBootstrapServices.conquestService().startConquest(conquestId);
+				ConquestService.getInstance().startConquest(conquestId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.conquestService().isConquestInProgress(conquestId)) {
+			if (!ConquestService.getInstance().isConquestInProgress(conquestId)) {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " stopped!");
-				GameLocationBootstrapServices.conquestService().stopConquest(conquestId);
+				ConquestService.getInstance().stopConquest(conquestId);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class Conquest extends AdminCommand
 	 * @return 若 valid 则为 true / true if valid
 	 */
 	protected boolean isValidConquestLocationId(Player player, int conquestId) {
-		if (!GameLocationBootstrapServices.conquestService().getConquestLocations().containsKey(conquestId)) {
+		if (!ConquestService.getInstance().getConquestLocations().containsKey(conquestId)) {
 			PacketSendUtility.sendMessage(player, "Id " + conquestId + " is invalid");
 			return false;
 		}

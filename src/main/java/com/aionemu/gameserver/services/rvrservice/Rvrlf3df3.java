@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.rvrservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.model.rvr.RvrStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(RvrStateType type) {
-		GameLocationBootstrapServices.rvrService().spawn(getRvrLocation(), type);
+		RvrService.getInstance().spawn(getRvrLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.rvrService().despawn(getRvrLocation());
+		RvrService.getInstance().despawn(getRvrLocation());
 	}
 
 	/**

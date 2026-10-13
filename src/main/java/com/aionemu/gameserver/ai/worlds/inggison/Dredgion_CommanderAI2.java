@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.inggison;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -27,7 +27,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 			sendDredgionGuide();
 		}
 		announceKilledBattleship();
-		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(3);
+		ZorshivDredgionService.getInstance().stopZorshivDredgion(3);
 	}
 
 	private void announceKilledBattleship() {

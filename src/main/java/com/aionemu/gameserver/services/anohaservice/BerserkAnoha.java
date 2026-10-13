@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.anohaservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
 import com.aionemu.gameserver.model.anoha.AnohaStateType;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(AnohaStateType type) {
-		GameLocationBootstrapServices.anohaService().spawn(getAnohaLocation(), type);
+		AnohaService.getInstance().spawn(getAnohaLocation(), type);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.anohaService().despawn(getAnohaLocation());
+		AnohaService.getInstance().despawn(getAnohaLocation());
 	}
 
 	/**

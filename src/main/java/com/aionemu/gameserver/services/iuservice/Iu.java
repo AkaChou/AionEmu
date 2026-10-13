@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.iuservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.IuService;
 import com.aionemu.gameserver.model.iu.IuLocation;
 import com.aionemu.gameserver.model.iu.IuStateType;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public abstract class Iu<IUL extends IuLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(IuStateType type) {
-		GameLocationBootstrapServices.iuService().spawn(getIuLocation(), type);
+		IuService.getInstance().spawn(getIuLocation(), type);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class Iu<IUL extends IuLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.iuService().despawn(getIuLocation());
+		IuService.getInstance().despawn(getIuLocation());
 	}
 
 	/**

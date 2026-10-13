@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -28,8 +27,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class BaseService {
-	@Setter
 	private static volatile ObjectProvider<BaseService> instanceProvider;
+	private static volatile BaseService resolvedInstance;
 	private final BaseLocationDao baseDAO;
 	/** 当前活跃据点实例。 / Currently active base instances. */
 	private final ConcurrentMap<Integer, Base<?>> active = new ConcurrentHashMap<>();
@@ -258,14 +257,30 @@ public class BaseService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static BaseService getInstance() {
+		BaseService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<BaseService> provider = instanceProvider;
-		BaseService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("BaseService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<BaseService> instanceProvider) {
+		BaseService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

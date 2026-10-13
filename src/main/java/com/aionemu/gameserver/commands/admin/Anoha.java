@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AnohaService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,18 +53,18 @@ public class Anoha extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.anohaService().isAnohaInProgress(anohaId)) {
+			if (AnohaService.getInstance().isAnohaInProgress(anohaId)) {
 				PacketSendUtility.sendMessage(player, "<Anoha> " + anohaId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Anoha> " + anohaId + " started!");
-				GameLocationBootstrapServices.anohaService().startAnoha(anohaId);
+				AnohaService.getInstance().startAnoha(anohaId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.anohaService().isAnohaInProgress(anohaId)) {
+			if (!AnohaService.getInstance().isAnohaInProgress(anohaId)) {
 				PacketSendUtility.sendMessage(player, "<Anoha> " + anohaId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Anoha> " + anohaId + " stopped!");
-				GameLocationBootstrapServices.anohaService().stopAnoha(anohaId);
+				AnohaService.getInstance().stopAnoha(anohaId);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class Anoha extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidAnohaLocationId(Player player, int anohaId) {
-		if (!GameLocationBootstrapServices.anohaService().getAnohaLocations().containsKey(anohaId)) {
+		if (!AnohaService.getInstance().getAnohaLocations().containsKey(anohaId)) {
 			PacketSendUtility.sendMessage(player, "Id " + anohaId + " is invalid");
 			return false;
 		}

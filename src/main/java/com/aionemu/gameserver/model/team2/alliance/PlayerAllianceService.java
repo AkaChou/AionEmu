@@ -4,7 +4,7 @@ package com.aionemu.gameserver.model.team2.alliance;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.VortexService;
 
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -163,13 +163,13 @@ public class PlayerAllianceService {
 						// 处于副本中。 / is in an Instanced Zone.
 						PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1400128));
 						return false;
-					} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(tm)) {
+					} else if (!VortexService.getInstance().isInsideVortexZone(tm)) {
 						PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE
 							.STR_PARTY_ALLIANCE_CANT_INVITE_WHEN_HE_IS_ASKED_QUESTION(tm.getName()));
 						return false;
 					}
 				}
-			} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(invited)) {
+			} else if (!VortexService.getInstance().isInsideVortexZone(invited)) {
 				// 无法邀请不同区域的人。 / You cannot invite someone in a different area.
 				PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1401527));
 				return false;
@@ -276,7 +276,7 @@ public class PlayerAllianceService {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
 			if (alliance.getTeamType().isDefence()) {
-				GameLocationBootstrapServices.vortexService().removeDefenderPlayer(player);
+				VortexService.getInstance().removeDefenderPlayer(player);
 			}
 			alliance.onEvent(new PlayerAllianceLeavedEvent(alliance, player));
 		}
@@ -291,7 +291,7 @@ public class PlayerAllianceService {
 		PlayerAlliance alliance = banGiver.getPlayerAlliance2();
 		if (alliance != null) {
 			if (alliance.getTeamType().isDefence()) {
-				GameLocationBootstrapServices.vortexService().removeDefenderPlayer(bannedPlayer);
+				VortexService.getInstance().removeDefenderPlayer(bannedPlayer);
 			}
 			PlayerAllianceMember bannedMember = alliance.getMember(bannedPlayer.getObjectId());
 			if (bannedMember != null) {
@@ -430,7 +430,7 @@ public class PlayerAllianceService {
 			int kickDelay = currentAlliance.getTeamType().isAutoTeam() ? 60 : GroupConfig.ALLIANCE_REMOVE_TIME;
 			if (!member.isOnline() && TimeUtil.isExpired(member.getLastOnlineTime() + kickDelay * 1000L)) {
 				if (currentAlliance.getTeamType().isOffence()) {
-					GameLocationBootstrapServices.vortexService().removeInvaderPlayer(member.getObject());
+					VortexService.getInstance().removeInvaderPlayer(member.getObject());
 				}
 				currentAlliance.onEvent(
 					new PlayerAllianceLeavedEvent(currentAlliance, member.getObject(), LeaveReson.LEAVE_TIMEOUT));

@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.services.abysslandingservice;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
 import com.aionemu.gameserver.model.landing.LandingLocation;
+import java.util.Objects;
 
 /**
  * 欧比斯着陆点积分定时重置服务（任务/纪念碑/设施/指挥官）。
@@ -18,9 +19,11 @@ import com.aionemu.gameserver.model.landing.LandingLocation;
 @Slf4j
 public class LandingUpdateService {
 	private static volatile ObjectProvider<LandingUpdateService> instanceProvider;
+	private static volatile LandingUpdateService resolvedInstance;
 
-	final LandingLocation redemptionLanding = GameLocationBootstrapServices.abyssLandingService().redemptionLanding();
-	final LandingLocation harbingerLanding = GameLocationBootstrapServices.abyssLandingService().harbingerLanding();
+	private final AbyssLandingService abyssLandingService;
+	final LandingLocation redemptionLanding;
+	final LandingLocation harbingerLanding;
 
 	// 任务点数。 / Quest Points.
 	final int redemptionPts = 0;
@@ -39,10 +42,16 @@ public class LandingUpdateService {
 	final int harbingerPts3 = 0;
 
 	/**
-	 * 默认构造。
-	 * Default constructor.
+	 * 使用注入的深渊登陆点服务构造，并缓存双方登陆点引用。
+	 * Constructs with the injected abyss landing service and caches both landing references.
+	 *
+	 * @param abyssLandingService 深渊登陆点服务 / Abyss landing service
 	 */
-	public LandingUpdateService() {
+	public LandingUpdateService(AbyssLandingService abyssLandingService) {
+		this.abyssLandingService = Objects.requireNonNull(abyssLandingService,
+			"abyssLandingService must not be null");
+		this.redemptionLanding = abyssLandingService.redemptionLanding();
+		this.harbingerLanding = abyssLandingService.harbingerLanding();
 	}
 
 	/**
@@ -79,13 +88,13 @@ public class LandingUpdateService {
 		// 救赎登陆点。 / Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts);
 		redemptionLanding.setQuestPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		abyssLandingService.checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// 先驱登陆点。 / Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts);
 		harbingerLanding.setQuestPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		abyssLandingService.checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// 更新全部登陆点。 / Update All Landing.
-		GameLocationBootstrapServices.abyssLandingService().onUpdate();
+		abyssLandingService.onUpdate();
 	}
 
 	/**
@@ -98,13 +107,13 @@ public class LandingUpdateService {
 		// 救赎登陆点。 / Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts1);
 		redemptionLanding.setMonumentsPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		abyssLandingService.checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// 先驱登陆点。 / Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts1);
 		harbingerLanding.setMonumentsPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		abyssLandingService.checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// 更新全部登陆点。 / Update All Landing.
-		GameLocationBootstrapServices.abyssLandingService().onUpdate();
+		abyssLandingService.onUpdate();
 	}
 
 	/**
@@ -117,13 +126,13 @@ public class LandingUpdateService {
 		// 救赎登陆点。 / Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts2);
 		redemptionLanding.setFacilityPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		abyssLandingService.checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// 先驱登陆点。 / Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts2);
 		harbingerLanding.setFacilityPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		abyssLandingService.checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// 更新全部登陆点。 / Update All Landing.
-		GameLocationBootstrapServices.abyssLandingService().onUpdate();
+		abyssLandingService.onUpdate();
 	}
 
 	/**
@@ -136,13 +145,13 @@ public class LandingUpdateService {
 		// 救赎登陆点。 / Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts3);
 		redemptionLanding.setCommanderPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		abyssLandingService.checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// 先驱登陆点。 / Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts3);
 		harbingerLanding.setCommanderPoints(0);
-		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		abyssLandingService.checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// 更新全部登陆点。 / Update All Landing.
-		GameLocationBootstrapServices.abyssLandingService().onUpdate();
+		abyssLandingService.onUpdate();
 	}
 
 	/**
@@ -155,14 +164,19 @@ public class LandingUpdateService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static LandingUpdateService getInstance() {
+		LandingUpdateService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LandingUpdateService> provider = instanceProvider;
-		LandingUpdateService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LandingUpdateService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -172,5 +186,6 @@ public class LandingUpdateService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<LandingUpdateService> instanceProvider) {
 		LandingUpdateService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

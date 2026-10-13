@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,18 +46,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
+	private static volatile AbyssLandingService resolvedInstance;
 	private final AbyssLandingDao abyssLandingDAO;
+	private final AbyssLandingSpecialService abyssLandingSpecialService;
 	private static Map<Integer, LandingLocation> abyssLanding;
 	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<>();
 
 	/**
-	 * 使用指定的 AbyssLandingDAO 构造深渊登陆点服务。
-	 * Constructs the abyss landing service with the given AbyssLandingDAO.
+	 * 使用指定的 AbyssLandingDAO 与特殊登陆点服务构造深渊登陆点服务。
+	 * Constructs the abyss landing service with the given AbyssLandingDAO and AbyssLandingSpecialService.
 	 *
 	 * @param abyssLandingDAO 深渊登陆点数据访问对象 / Abyss landing DAO
+	 * @param abyssLandingSpecialService 特殊登陆点服务 / Abyss landing special service
 	 */
-	public AbyssLandingService(AbyssLandingDao abyssLandingDAO) {
+	public AbyssLandingService(AbyssLandingDao abyssLandingDAO, AbyssLandingSpecialService abyssLandingSpecialService) {
 		this.abyssLandingDAO = Objects.requireNonNull(abyssLandingDAO, "abyssLandingDAO must not be null");
+		this.abyssLandingSpecialService = Objects.requireNonNull(abyssLandingSpecialService,
+			"abyssLandingSpecialService must not be null");
 	}
 
 	/**
@@ -499,19 +503,19 @@ public class AbyssLandingService {
 	 * points
 	 */
 	public void onRewardMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = abyssLandingSpecialService.getLandingSpecialLocation(id);
 		if (lsl == null) {
 			return;
 		}
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, true);
-			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
+			abyssLandingSpecialService.startLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
-			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
+			abyssLandingSpecialService.startLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.ACTIVE);
-		GameLocationBootstrapServices.abyssLandingSpecialService().onSave(lsl);
+		abyssLandingSpecialService.onSave(lsl);
 	}
 
 	/**
@@ -522,7 +526,7 @@ public class AbyssLandingService {
 	 * points
 	 */
 	public void onDieMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = abyssLandingSpecialService.getLandingSpecialLocation(id);
 		if (lsl == null) {
 			return;
 		}
@@ -536,7 +540,7 @@ public class AbyssLandingService {
 			stopLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.NO_ACTIVE);
-		GameLocationBootstrapServices.abyssLandingSpecialService().onSave(lsl);
+		abyssLandingSpecialService.onSave(lsl);
 	}
 
 		
@@ -551,11 +555,11 @@ public class AbyssLandingService {
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, false);
-			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
+			abyssLandingSpecialService.stopLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, false);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
+			abyssLandingSpecialService.stopLanding(id);
 		}
 	}
 
@@ -617,14 +621,19 @@ public class AbyssLandingService {
 	 *         when no provider or bean is available
 	 */
 	public static AbyssLandingService getInstance() {
+		AbyssLandingService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AbyssLandingService> provider = instanceProvider;
-		AbyssLandingService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AbyssLandingService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -634,6 +643,7 @@ public class AbyssLandingService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AbyssLandingService> instanceProvider) {
 		AbyssLandingService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

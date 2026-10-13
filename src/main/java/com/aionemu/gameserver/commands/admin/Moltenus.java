@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.MoltenusService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -54,19 +54,19 @@ public class Moltenus extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.moltenusService().isMoltenusInProgress(moltenusId)) {
+			if (MoltenusService.getInstance().isMoltenusInProgress(moltenusId)) {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " started!");
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!"));
-				GameLocationBootstrapServices.moltenusService().startMoltenus(moltenusId);
+				MoltenusService.getInstance().startMoltenus(moltenusId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.moltenusService().isMoltenusInProgress(moltenusId)) {
+			if (!MoltenusService.getInstance().isMoltenusInProgress(moltenusId)) {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " stopped!");
-				GameLocationBootstrapServices.moltenusService().stopMoltenus(moltenusId);
+				MoltenusService.getInstance().stopMoltenus(moltenusId);
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class Moltenus extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidMoltenusLocationId(Player player, int moltenusId) {
-		if (!GameLocationBootstrapServices.moltenusService().getMoltenusLocations().containsKey(moltenusId)) {
+		if (!MoltenusService.getInstance().getMoltenusLocations().containsKey(moltenusId)) {
 			PacketSendUtility.sendMessage(player, "Id " + moltenusId + " is invalid");
 			return false;
 		}

@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.moltenusservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.model.moltenus.MoltenusStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(MoltenusStateType type) {
-		GameLocationBootstrapServices.moltenusService().spawn(getMoltenusLocation(), type);
+		MoltenusService.getInstance().spawn(getMoltenusLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.moltenusService().despawn(getMoltenusLocation());
+		MoltenusService.getInstance().despawn(getMoltenusLocation());
 	}
 
 	/**

@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.beritraservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import com.aionemu.gameserver.model.beritra.BeritraStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(BeritraStateType type) {
-		GameLocationBootstrapServices.beritraService().spawn(getBeritraLocation(), type);
+		BeritraService.getInstance().spawn(getBeritraLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.beritraService().despawn(getBeritraLocation());
+		BeritraService.getInstance().despawn(getBeritraLocation());
 	}
 
 	/**

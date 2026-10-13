@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.VortexService;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -54,7 +54,7 @@ public class Invasion extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.vortexService().isInvasionInProgress(vortexId)) {
+			if (VortexService.getInstance().isInvasionInProgress(vortexId)) {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " started!");
@@ -70,14 +70,14 @@ public class Invasion extends AdminCommand
 						PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 					}
 				});
-				GameLocationBootstrapServices.vortexService().startInvasion(vortexId);
+				VortexService.getInstance().startInvasion(vortexId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.vortexService().isInvasionInProgress(vortexId)) {
+			if (!VortexService.getInstance().isInvasionInProgress(vortexId)) {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " stopped!");
-				GameLocationBootstrapServices.vortexService().stopInvasion(vortexId);
+				VortexService.getInstance().stopInvasion(vortexId);
 			}
 		}
 	}
@@ -89,7 +89,7 @@ public class Invasion extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidVortexLocationId(Player player, int vortexId) {
-		if (!GameLocationBootstrapServices.vortexService().getVortexLocations().containsKey(vortexId)) {
+		if (!VortexService.getInstance().getVortexLocations().containsKey(vortexId)) {
 			PacketSendUtility.sendMessage(player, "Id " + vortexId + " is invalid");
 			return false;
 		}

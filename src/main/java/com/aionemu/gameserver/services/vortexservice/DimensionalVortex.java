@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -162,7 +162,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(VortexStateType type) {
-		GameLocationBootstrapServices.vortexService().spawn(getVortexLocation(), type);
+		VortexService.getInstance().spawn(getVortexLocation(), type);
 	}
 
 	/**
@@ -170,7 +170,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.vortexService().despawn(getVortexLocation());
+		VortexService.getInstance().despawn(getVortexLocation());
 	}
 
 	/**
@@ -224,7 +224,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 		@Override
 		public void onAfterDie(AbstractAI obj) {
 			vortex.setGeneratorDestroyed(true);
-			GameLocationBootstrapServices.vortexService().stopInvasion(vortex.getVortexLocationId());
+			VortexService.getInstance().stopInvasion(vortex.getVortexLocationId());
 		}
 	}
 }

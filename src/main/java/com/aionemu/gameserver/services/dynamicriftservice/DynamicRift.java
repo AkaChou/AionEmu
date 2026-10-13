@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.dynamicriftservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.DynamicRiftService;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftStateType;
 import lombok.Getter;
@@ -76,7 +76,7 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(DynamicRiftStateType type) {
-		GameLocationBootstrapServices.dynamicRiftService().spawn(getDynamicRiftLocation(), type);
+		DynamicRiftService.getInstance().spawn(getDynamicRiftLocation(), type);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.dynamicRiftService().despawn(getDynamicRiftLocation());
+		DynamicRiftService.getInstance().despawn(getDynamicRiftLocation());
 	}
 
 	/**

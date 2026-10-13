@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.NightmareCircusService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -54,19 +54,19 @@ public class NightmareCircus extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.nightmareCircusService().isNightmareCircusInProgress(nightmareId)) {
+			if (NightmareCircusService.getInstance().isNightmareCircusInProgress(nightmareId)) {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " started!");
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE04C", "<Nightmare Circus 4.3> is now open !!!"));
-				GameLocationBootstrapServices.nightmareCircusService().startNightmareCircus(nightmareId);
+				NightmareCircusService.getInstance().startNightmareCircus(nightmareId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.nightmareCircusService().isNightmareCircusInProgress(nightmareId)) {
+			if (!NightmareCircusService.getInstance().isNightmareCircusInProgress(nightmareId)) {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " stopped!");
-				GameLocationBootstrapServices.nightmareCircusService().stopNightmareCircus(nightmareId);
+				NightmareCircusService.getInstance().stopNightmareCircus(nightmareId);
 			}
 		}
 	}
@@ -77,7 +77,7 @@ public class NightmareCircus extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidNightmareCircusLocationId(Player player, int nightmareId) {
-		if (!GameLocationBootstrapServices.nightmareCircusService().getNightmareCircusLocations().containsKey(nightmareId)) {
+		if (!NightmareCircusService.getInstance().getNightmareCircusLocations().containsKey(nightmareId)) {
 			PacketSendUtility.sendMessage(player, "Id " + nightmareId + " is invalid");
 			return false;
 		}

@@ -4,7 +4,9 @@ import com.aionemu.gameserver.services.LegionService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.AbyssLandingSpecialService;
+import com.aionemu.gameserver.services.MoltenusService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -193,26 +195,26 @@ public class FortressSiege extends Siege<FortressLocation> {
 			switch (getSiegeLocationId()) {
 			case 1131: // Siel's Western Fortress.
 				if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(5);
+					MoltenusService.getInstance().startMoltenus(5);
 				}
 				if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(8);
+					MoltenusService.getInstance().startMoltenus(8);
 				}
 				break;
 			case 1132: // Siel's Eastern Fortress.
 				if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(6);
+					MoltenusService.getInstance().startMoltenus(6);
 				}
 				if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(9);
+					MoltenusService.getInstance().startMoltenus(9);
 				}
 				break;
 			case 1141: // Sulfur Fortress.
 				if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(4);
+					MoltenusService.getInstance().startMoltenus(4);
 				}
 				if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-					GameLocationBootstrapServices.moltenusService().startMoltenus(7);
+					MoltenusService.getInstance().startMoltenus(7);
 				}
 				break;
 			}
@@ -326,38 +328,38 @@ public class FortressSiege extends Siege<FortressLocation> {
 				// 克罗坦避难所。 / Krotan Refuge.
 				case 1221:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(16);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(16);
+						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(4);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(4);
+						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// 基西斯要塞。 / Kysis Fortress.
 				case 1231:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(18);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(18);
+						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(6);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(6);
+						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// 米伦要塞。 / Miren Fortress.
 				case 1241:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(17);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(17);
+						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(5);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						AbyssLandingSpecialService.getInstance().startLanding(5);
+						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				}
-				GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player,
+				AbyssLandingService.getInstance().AnnounceToPoints(player,
 						getSiegeLocation().getRace().getDescriptionId(), getSiegeLocation().getNameAsDescriptionId(), 0,
 						LandingPointsEnum.SIEGE);
 			}
@@ -411,36 +413,36 @@ public class FortressSiege extends Siege<FortressLocation> {
 				// 克罗坦避难所。 / Krotan Refuge.
 				case 1221:
 					if (looser == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(16);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						AbyssLandingSpecialService.getInstance().stopLanding(16);
+						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(4);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						AbyssLandingSpecialService.getInstance().stopLanding(4);
+						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
 				// 基西斯要塞。 / Kysis Fortress.
 				case 1231:
 					if (looser == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(18);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
+						AbyssLandingSpecialService.getInstance().stopLanding(18);
+						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(6);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
+						AbyssLandingSpecialService.getInstance().stopLanding(6);
+						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
 				// 米伦要塞。 / Miren Fortress.
 				case 1241:
 					if (looser == SiegeRace.ASMODIANS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(17);
-						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						AbyssLandingSpecialService.getInstance().stopLanding(17);
+						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(5);
-						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						AbyssLandingSpecialService.getInstance().stopLanding(5);
+						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -48,9 +48,9 @@ public class Spirit_MonumentAI2 extends NpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ASMODIANS, id, 20000);
+AbyssLandingService.getInstance().onDieMonuments(Race.ASMODIANS, id, 20000);
 } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ELYOS, id, 20000);
+AbyssLandingService.getInstance().onDieMonuments(Race.ELYOS, id, 20000);
 }
 }
 		});

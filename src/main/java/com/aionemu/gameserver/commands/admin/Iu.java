@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.IuService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -52,18 +52,18 @@ public class Iu extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.iuService().isConcertInProgress(iuId)) {
+			if (IuService.getInstance().isConcertInProgress(iuId)) {
 				PacketSendUtility.sendMessage(player, "<Concert> " + iuId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Concert> " + iuId + " started!");
-				GameLocationBootstrapServices.iuService().startConcert(iuId);
+				IuService.getInstance().startConcert(iuId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.iuService().isConcertInProgress(iuId)) {
+			if (!IuService.getInstance().isConcertInProgress(iuId)) {
 				PacketSendUtility.sendMessage(player, "<Concert> " + iuId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Concert> " + iuId + " stopped!");
-				GameLocationBootstrapServices.iuService().stopConcert(iuId);
+				IuService.getInstance().stopConcert(iuId);
 			}
 		}
 	}
@@ -76,7 +76,7 @@ public class Iu extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidConcertLocationId(Player player, int iuId) {
-		if (!GameLocationBootstrapServices.iuService().getIuLocations().containsKey(iuId)) {
+		if (!IuService.getInstance().getIuLocations().containsKey(iuId)) {
 			PacketSendUtility.sendMessage(player, "Id " + iuId + " is invalid");
 			return false;
 		}

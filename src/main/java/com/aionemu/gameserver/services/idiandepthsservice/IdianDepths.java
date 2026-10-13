@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.idiandepthsservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.IdianDepthsService;
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsLocation;
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(IdianDepthsStateType type) {
-		GameLocationBootstrapServices.idianDepthsService().spawn(getIdianDepthsLocation(), type);
+		IdianDepthsService.getInstance().spawn(getIdianDepthsLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.idianDepthsService().despawn(getIdianDepthsLocation());
+		IdianDepthsService.getInstance().despawn(getIdianDepthsLocation());
 	}
 
 	/**

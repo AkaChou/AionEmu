@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.services.conquestservice;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -144,7 +144,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(ConquestStateType type) {
-		GameLocationBootstrapServices.conquestService().spawn(getConquestLocation(), type);
+		ConquestService.getInstance().spawn(getConquestLocation(), type);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.conquestService().despawn(getConquestLocation());
+		ConquestService.getInstance().despawn(getConquestLocation());
 	}
 
 	/**

@@ -3,7 +3,7 @@ package com.aionemu.gameserver.services;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -277,12 +277,12 @@ public final class QuestService {
 		// CP 奖励 5.3 待实现 / CP reward 5.3 is not implemented yet
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
-			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
+			AbyssLandingService.getInstance().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
-				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				AbyssLandingService.getInstance().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 			if (player.getRace() == Race.ELYOS) {
-				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				AbyssLandingService.getInstance().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 		}
 		// 玩家完成任务现可获得“DP”。 / Now player can win "Dp" if finish quest.

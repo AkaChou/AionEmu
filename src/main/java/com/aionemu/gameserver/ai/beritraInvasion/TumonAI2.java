@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.beritraInvasion;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -188,9 +188,9 @@ public class TumonAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 21, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 21, 0);
 				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 9, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 9, 0);
 				}
 			}
 		});
@@ -200,9 +200,9 @@ public class TumonAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 22, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 22, 0);
 				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 10, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 10, 0);
 				}
 			}
 		});

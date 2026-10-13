@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.nightmarecircusservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.NightmareCircusService;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(NightmareCircusStateType type) {
-		GameLocationBootstrapServices.nightmareCircusService().spawn(getNightmareCircusLocation(), type);
+		NightmareCircusService.getInstance().spawn(getNightmareCircusLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.nightmareCircusService().despawn(getNightmareCircusLocation());
+		NightmareCircusService.getInstance().despawn(getNightmareCircusLocation());
 	}
 
 	/**

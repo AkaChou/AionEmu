@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -52,19 +52,19 @@ public class ZorshivDredgion extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " started!");
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE050", "The <Zorshiv Dredgion> to lands at levinshor !!!"));
-				GameLocationBootstrapServices.zorshivDredgionService().startZorshivDredgion(zorshivDredgionId);
+				ZorshivDredgionService.getInstance().startZorshivDredgion(zorshivDredgionId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (!ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " stopped!");
-				GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(zorshivDredgionId);
+				ZorshivDredgionService.getInstance().stopZorshivDredgion(zorshivDredgionId);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class ZorshivDredgion extends AdminCommand
 	 * @return 若 valid 则为 true / True if valid
 	 */
 	protected boolean isValidZorshivDredgionLocationId(Player player, int zorshivDredgionId) {
-		if (!GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocations().containsKey(zorshivDredgionId)) {
+		if (!ZorshivDredgionService.getInstance().getZorshivDredgionLocations().containsKey(zorshivDredgionId)) {
 			PacketSendUtility.sendMessage(player, "Id " + zorshivDredgionId + " is invalid");
 			return false;
 		}

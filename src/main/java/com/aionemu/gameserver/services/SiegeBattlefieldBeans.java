@@ -272,14 +272,15 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public AbyssLandingService abyssLandingService(AbyssLandingDao dao) {
-        return new AbyssLandingService(dao);
+    public AbyssLandingService abyssLandingService(AbyssLandingDao dao,
+                                                   AbyssLandingSpecialService abyssLandingSpecialService) {
+        return new AbyssLandingService(dao, abyssLandingSpecialService);
     }
 
     @Bean
     @Lazy
-    public LandingUpdateService landingUpdateService() {
-        return new LandingUpdateService();
+    public LandingUpdateService landingUpdateService(AbyssLandingService abyssLandingService) {
+        return new LandingUpdateService(abyssLandingService);
     }
 
     @Bean

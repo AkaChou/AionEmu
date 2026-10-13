@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.beritraInvasion;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -45,9 +45,9 @@ public class Wurg_The_GlacierAI2 extends AggressiveNpcAI2
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 23, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 23, 0);
 				} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-					GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 11, 0);
+					AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 11, 0);
 				}
 			}
 		});

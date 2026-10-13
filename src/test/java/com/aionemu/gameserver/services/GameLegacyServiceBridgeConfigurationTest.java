@@ -865,28 +865,44 @@ class GameLegacyServiceBridgeConfigurationTest {
 	@Test
 	void createsSpringManagedLocationBootstrapServicesInsteadOfLegacySingletons() {
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
-			assertNotSame(VortexService.getInstance(), context.getBean(VortexService.class));
-			assertNotSame(BeritraService.getInstance(), context.getBean(BeritraService.class));
-			assertNotSame(AgentService.getInstance(), context.getBean(AgentService.class));
-			assertNotSame(AnohaService.getInstance(), context.getBean(AnohaService.class));
-			assertNotSame(SvsService.getInstance(), context.getBean(SvsService.class));
-			assertNotSame(RvrService.getInstance(), context.getBean(RvrService.class));
-			assertNotSame(IuService.getInstance(), context.getBean(IuService.class));
+			assertTrue(context.containsBeanDefinition("vortexService"));
+			assertTrue(context.containsBeanDefinition("beritraService"));
+			assertTrue(context.containsBeanDefinition("agentService"));
+			assertTrue(context.containsBeanDefinition("anohaService"));
+			assertTrue(context.containsBeanDefinition("svsService"));
+			assertTrue(context.containsBeanDefinition("rvrService"));
+			assertTrue(context.containsBeanDefinition("iuService"));
+			assertThrows(IllegalStateException.class, VortexService::getInstance);
+			assertThrows(IllegalStateException.class, BeritraService::getInstance);
+			assertThrows(IllegalStateException.class, AgentService::getInstance);
+			assertThrows(IllegalStateException.class, AnohaService::getInstance);
+			assertThrows(IllegalStateException.class, SvsService::getInstance);
+			assertThrows(IllegalStateException.class, RvrService::getInstance);
+			assertThrows(IllegalStateException.class, IuService::getInstance);
 		}
 	}
 
 	@Test
 	void createsSpringManagedRiftAndLandingServicesInsteadOfLegacySingletons() {
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
-			assertNotSame(NightmareCircusService.getInstance(), context.getBean(NightmareCircusService.class));
-			assertNotSame(DynamicRiftService.getInstance(), context.getBean(DynamicRiftService.class));
-			assertNotSame(InstanceRiftService.getInstance(), context.getBean(InstanceRiftService.class));
-			assertNotSame(ZorshivDredgionService.getInstance(), context.getBean(ZorshivDredgionService.class));
-			assertNotSame(MoltenusService.getInstance(), context.getBean(MoltenusService.class));
-			assertNotSame(RiftService.getInstance(), context.getBean(RiftService.class));
-			assertNotSame(ConquestService.getInstance(), context.getBean(ConquestService.class));
-			assertNotSame(IdianDepthsService.getInstance(), context.getBean(IdianDepthsService.class));
-			assertNotSame(TowerOfEternityService.getInstance(), context.getBean(TowerOfEternityService.class));
+			assertTrue(context.containsBeanDefinition("nightmareCircusService"));
+			assertTrue(context.containsBeanDefinition("dynamicRiftService"));
+			assertTrue(context.containsBeanDefinition("instanceRiftService"));
+			assertTrue(context.containsBeanDefinition("zorshivDredgionService"));
+			assertTrue(context.containsBeanDefinition("moltenusService"));
+			assertTrue(context.containsBeanDefinition("riftService"));
+			assertTrue(context.containsBeanDefinition("conquestService"));
+			assertTrue(context.containsBeanDefinition("idianDepthsService"));
+			assertTrue(context.containsBeanDefinition("towerOfEternityService"));
+			assertThrows(IllegalStateException.class, NightmareCircusService::getInstance);
+			assertThrows(IllegalStateException.class, DynamicRiftService::getInstance);
+			assertThrows(IllegalStateException.class, InstanceRiftService::getInstance);
+			assertThrows(IllegalStateException.class, ZorshivDredgionService::getInstance);
+			assertThrows(IllegalStateException.class, MoltenusService::getInstance);
+			assertThrows(IllegalStateException.class, RiftService::getInstance);
+			assertThrows(IllegalStateException.class, ConquestService::getInstance);
+			assertThrows(IllegalStateException.class, IdianDepthsService::getInstance);
+			assertThrows(IllegalStateException.class, TowerOfEternityService::getInstance);
 			assertThrows(IllegalStateException.class, AbyssLandingService::getInstance);
 		}
 	}

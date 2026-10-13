@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.towerofeternityservice;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 import lombok.Getter;
@@ -75,7 +75,7 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * @param type 状态类型 / state type
 	 */
 	protected void spawn(TowerOfEternityStateType type) {
-		GameLocationBootstrapServices.towerOfEternityService().spawn(getTowerOfEternityLocation(), type);
+		TowerOfEternityService.getInstance().spawn(getTowerOfEternityLocation(), type);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	 * Despawns entities for this location.
 	 */
 	protected void despawn() {
-		GameLocationBootstrapServices.towerOfEternityService().despawn(getTowerOfEternityLocation());
+		TowerOfEternityService.getInstance().despawn(getTowerOfEternityLocation());
 	}
 
 	/**
