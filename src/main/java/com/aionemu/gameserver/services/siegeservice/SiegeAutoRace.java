@@ -3,7 +3,7 @@ package com.aionemu.gameserver.services.siegeservice;
 import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -32,7 +32,7 @@ public class SiegeAutoRace {
 	 * @param locid 据点 ID / location id
 	 */
 	public static void AutoSiegeRace(final int locid) {
-		final SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(locid);
+		final SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(locid);
 		if (!loc.getRace().equals(SiegeRace.ASMODIANS) || !loc.getRace().equals(SiegeRace.ELYOS)) {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				/**
@@ -40,10 +40,10 @@ public class SiegeAutoRace {
 				 * Runs the task.
 				 */
 				public void run() {
-					GameFeatureServices.siegeService().startSiege(locid);
+					SiegeService.getInstance().startSiege(locid);
 				}
 			}, 300000);
-			GameFeatureServices.siegeService().deSpawnNpcs(locid);
+			SiegeService.getInstance().deSpawnNpcs(locid);
 			final int oldOwnerRaceId = loc.getRace().getRaceId();
 			final int legionId = loc.getLegionId();
 			final String legionName = legionId != 0 ? LegionService.getInstance().getLegion(legionId).getLegionName()
@@ -74,13 +74,13 @@ public class SiegeAutoRace {
                 }
             });
 			if (ElyosAutoSiege(locid)) {
-				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ELYOS, SiegeModType.PEACE);
+				SiegeService.getInstance().spawnNpcs(locid, SiegeRace.ELYOS, SiegeModType.PEACE);
 			} else if (AsmoAutoSiege(locid)) {
-				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ASMODIANS, SiegeModType.PEACE);
+				SiegeService.getInstance().spawnNpcs(locid, SiegeRace.ASMODIANS, SiegeModType.PEACE);
 			}
-			GameFeatureServices.siegeService().getSiegeDAO().updateSiegeLocation(loc);
+			SiegeService.getInstance().getSiegeDAO().updateSiegeLocation(loc);
 		}
-		GameFeatureServices.siegeService().broadcastUpdate(loc);
+		SiegeService.getInstance().broadcastUpdate(loc);
 	}
 
 	/**

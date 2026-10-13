@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -20,14 +19,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Kisk (resurrection stone) service managing binds, offline retention, and member cleanup on removal.
  */
 public class KiskService {
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  Spring provider
-     */
-    @Setter
     private static volatile ObjectProvider<KiskService> instanceProvider;
+    private static volatile KiskService resolvedInstance;
 	/** 已绑定但离线的玩家 → 基斯克。 / Bound-but-offline players to their kisk. */
 	private final ConcurrentMap<Integer, Kisk> boundButOfflinePlayer = new ConcurrentHashMap<>();
 	/** 基斯克拥有者 → 基斯克。 / Kisk owners to their kisk. */
@@ -130,14 +123,30 @@ public class KiskService {
 	 *         when no provider or bean is available
 	 */
 	public static KiskService getInstance() {
+		KiskService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<KiskService> provider = instanceProvider;
-		KiskService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("KiskService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<KiskService> instanceProvider) {
+		KiskService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

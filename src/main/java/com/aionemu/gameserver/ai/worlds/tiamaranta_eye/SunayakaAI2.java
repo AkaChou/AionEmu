@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -47,7 +47,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
                 case 249144: // 总督苏纳亚卡 / Governor Sunayaka.
 				case 249145: // 狂战士苏纳亚卡 / Berserker Sunayaka.
 					// 狂战士苏纳亚卡在开战 15 分钟后狂暴。 / Berserker Sunayaka goes berserk 15 minutes after the battle starts.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401459, 0);
 					getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
 						if (player.isOnline()) {
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); // 15 分钟 / 15 Minutes.
@@ -55,7 +55,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 					});
 					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 						// 狂战士苏纳亚卡已狂暴。 / Berserker Sunayaka has gone berserk.
-						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
+						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401460, 0);
 						getPosition().getWorldMapInstance().doOnAllPlayers(player -> {
 							simmeringRage();
 							if (player.isOnline()) {

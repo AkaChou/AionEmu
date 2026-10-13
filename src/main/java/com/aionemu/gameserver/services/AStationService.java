@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -21,14 +20,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class AStationService {
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  Spring provider
-     */
-    @Setter
     private static volatile ObjectProvider<AStationService> instanceProvider;
+    private static volatile AStationService resolvedInstance;
 	/** Accountscurrently 在 Stationmappedplayers / Accounts currently on A-Station mapped to players */
 	private final ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<>(1);
 
@@ -43,14 +36,30 @@ public class AStationService {
 	 *         when no provider or bean is available
 	 */
 	public static AStationService getInstance() {
+		AStationService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AStationService> provider = instanceProvider;
-		AStationService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AStationService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AStationService> instanceProvider) {
+		AStationService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

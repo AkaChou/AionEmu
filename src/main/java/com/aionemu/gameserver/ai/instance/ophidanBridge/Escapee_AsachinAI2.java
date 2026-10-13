@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.ophidanBridge;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -44,11 +44,11 @@ public class Escapee_AsachinAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 				case 235767: //Escapee Asachin Leader.
 					// 逃犯将在 8 分钟后逃脱！ / The fugitive will get away in 8 minutes!
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402860, 0);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402860, 0);
 					// 逃犯将在 4 分钟后逃脱！ / The fugitive will get away in 4 minutes!
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402861, 240000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402861, 240000);
 					// 逃犯将在 1 分钟后逃脱！ / The fugitive will get away in 1 minute!
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402862, 420000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402862, 420000);
 					asachinTask = GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Escapee_AsachinAI2.this), 480000);
 				break;
 			}

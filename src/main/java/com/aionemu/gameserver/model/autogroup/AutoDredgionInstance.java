@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.instance.DredgionService2;
 
 import java.util.List;
 
@@ -73,7 +73,7 @@ public class AutoDredgionInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
-		GameFeatureServices.dredgionService().addCoolDown(player);
+		DredgionService2.getInstance().addCoolDown(player);
 		((DredgionReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
 	}
 

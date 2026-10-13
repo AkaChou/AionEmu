@@ -4,7 +4,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -28,14 +27,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class ArcadeUpgradeService {
-	/**
-	 * -- SETTER --
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 * provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<ArcadeUpgradeService> instanceProvider;
+	private static volatile ArcadeUpgradeService resolvedInstance;
 
 	public ArcadeUpgradeService() {
 	}
@@ -117,14 +110,30 @@ public class ArcadeUpgradeService {
 	 *                               when no provider or bean is available
 	 */
 	public static ArcadeUpgradeService getInstance() {
+		ArcadeUpgradeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ArcadeUpgradeService> provider = instanceProvider;
-		ArcadeUpgradeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ArcadeUpgradeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<ArcadeUpgradeService> instanceProvider) {
+		ArcadeUpgradeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

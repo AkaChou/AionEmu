@@ -37,7 +37,7 @@ import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.lifecycle.FeatureServiceBindings;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
@@ -191,7 +191,7 @@ class AionBootApplicationTest {
 			assertEquals(AdminService.class, context.getType("adminService"));
 			assertEquals(GameRuntimeServicesLifecycle.class, context.getType("gameRuntimeServicesLifecycle"));
 			assertEquals(CoreGameplayServiceBindings.class, context.getType("coreGameplayServiceBindings"));
-			assertEquals(GameFeatureServices.class, context.getType("gameFeatureServices"));
+			assertEquals(FeatureServiceBindings.class, context.getType("featureServiceBindings"));
 			assertEquals(GameWorldServices.class, context.getType("gameWorldServices"));
 			assertEquals(GameEngineServices.class, context.getType("gameEngineServices"));
 			assertEquals(GameBattlefieldLifecycle.class, context.getType("gameBattlefieldLifecycle"));

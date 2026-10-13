@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -361,7 +360,7 @@ public class TradeService {
 			repurchaseItem.setRepurchasePrice(realReward);
 			items.add(repurchaseItem);
 		}
-		GameFeatureServices.repurchaseService().addRepurchaseItems(player, items);
+		RepurchaseService.getInstance().addRepurchaseItems(player, items);
 		inventory.increaseKinah(kinahReward);
 		return true;
 	}

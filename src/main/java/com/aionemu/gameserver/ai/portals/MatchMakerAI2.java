@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.portals;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.instance.DredgionService2;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -41,7 +41,7 @@ public class MatchMakerAI2 extends GeneralNpcAI2
 		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == DialogAction.MATCH_MAKER.id()) { //Infiltrate the Dredgion.
-			if (GameFeatureServices.dredgionService().isDredgionAvailable()) {
+			if (DredgionService2.getInstance().isDredgionAvailable()) {
 				AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
 				if (agt != null && agt.isDredgion()) {
 					PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(agt.getInstanceMaskId()));

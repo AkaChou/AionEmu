@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -295,7 +295,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		cancelFlameBuffEvent();
 		cancelAirEvent();
 		super.handleSpawned();
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500405, getObjectId(), 0, 2000);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500405, getObjectId(), 0, 2000);
 		blueFlameSmashs.add(new Point3D(176.184f, 415.782f, 260.572f));
 		blueFlameSmashs.add(new Point3D(159.480f, 412.495f, 260.555f));
 		blueFlameSmashs.add(new Point3D(183.784f, 413.475f, 260.755f));
@@ -352,7 +352,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		cancelFlameBuffEvent();
 		cancelAirEvent();
 		cancelFlameSmashTask();
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500410, getObjectId(), 0, 0);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500410, getObjectId(), 0, 0);
 		super.handleDied();
 	}
 }

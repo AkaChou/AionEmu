@@ -3,7 +3,7 @@ package com.aionemu.gameserver.ai.worlds.norsvold;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -26,7 +26,7 @@ public class Ravenous_VinesAI2 extends NpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 10) {
 				if (startedEvent.compareAndSet(false, true)) {
 					// 谢谢你救了我！ / Thank you for saving me!
-					GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), 1501531, getObjectId(), false, 0, 0);
+					NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), 1501531, getObjectId(), false, 0, 0);
 				}
 			}
 		}

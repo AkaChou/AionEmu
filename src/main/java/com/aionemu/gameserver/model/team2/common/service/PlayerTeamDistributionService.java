@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.model.team2.common.service;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -68,13 +69,13 @@ public class PlayerTeamDistributionService {
 			// 成长光环。 / Aura Of Growth.
 			if (owner.getLevel() >= 66) {
 				if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-					GameFeatureServices.growthEnergy().addGrowthEnergy(member);
+					GrowthEnergy.getInstance().addGrowthEnergy(member);
 					PacketSendUtility.sendPacket(member, new SM_STATS_INFO(member));
 				}
 			}
 			// 阿特雷亚图鉴。 / Atreian Bestiary.
 			if (owner.getLevel() >= 66) {
-				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
+				AtreianBestiaryService.getInstance().onKill(member, owner.getNpcId());
 			}
 			long rewardXp = (expReward * bonus * member.getLevel()) / (filteredStats.partyLvlSum * 100L);
 			int rewardDp = StatFunctions.calculateGroupDPReward(member, owner);

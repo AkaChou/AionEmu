@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -364,9 +364,9 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401540, Race.ELYOS, 5000);
 									Npc godKaisinel1 = getNpc(219489);
 									// 我在变弱。守护者们必须接替。 / I am weakening. You Daevas must take your turn.
-									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
+									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
 									// 我们还不算太晚！ / We're not too late!
-									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
+									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 						break;
@@ -386,9 +386,9 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401541, Race.ASMODIANS, 5000);
 									Npc godMarchutan1 = getNpc(219492);
 									// 我须稍作休息。期间挡住那条龙！ / I must rest a moment. Hold off the Dragon while I do!
-									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
+									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
 									// 你，你一定是…… / You, you must be...
-									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
+									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 				        break;
@@ -404,50 +404,50 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				            spawn(833486, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Kaisinel.
 							Npc godKaisinel2 = getNpc(833486);
 							// 终于结束了。 / It is finally over.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
 							// 即便龙主也可能陷入疯狂。 / Even a Dragon Lord can be driven to madness.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
 							// 不必谢我。现在，把遗物给我，我就走。 / No need to thank me. Now, give me the relics, and I will be gone.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
 							// 是吗？你干得可真漂亮。 / Yes ? And such a fine job you've done.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
 							// 你竟敢在此高声喧哗？安静。 / How dare you raise your voice in this place ? Be silent.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
 							// 伊斯拉菲尔？在这里？ / Israphel? Here?
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
 							//No!
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
 							// 你打算拿那些做什么？ / What do you think you're going to do with those ?
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
 							// 叛徒有一点说对了。我们必须搁置争论去追他。 / The traitor was right about one thing. We must put our argument aside and go after him.
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
 							// 啊，卡伦。是不是有点野心太大了？ / Ah, Kahrun. Getting a little ambitious, don't you think ?
-							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
+							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
 				        break;
 			            case ASMODIANS:
 				            sendMovie(player, 885);
 				            spawn(833487, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Marchutan.
 							Npc godMarchutan2 = getNpc(833487);
 							// 终于，提亚马特死了。 / Finally, Tiamat is dead.
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
 							// 在终结前，我看到了它的绝望。 / I saw its despair, before the end.
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
 							// 若要谢我，就把那些遗物交给我保管。 / You can thank me by giving me those relics, for safekeeping.
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
 							// 那个时代结束了，卡伦。 / That time is over, Kahrun.
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
 							// 你连提亚马特都打不过，凭什么以为能阻止我？ / You didn't have the power to fight Tiamat, so what makes you think you can stop me ?
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
 							// 你？你想要什么？ / You ? What do you want ?
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
 							// 停下！ / Stop!
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
 							// 你以为靠那些能走多远？ / How far do you think you'll get with those ?
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
 							// 我们必须联合阻止他——但别以为争论结束了！ / We must unite to stop him--but don't think that this argument is over!
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
 							// 哦？这是什么？争吵？胜利才刚过去就…… / Well well. What's this ? Bickering ? And so soon after your glorious victory.
-							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
+							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
 				        break;
 					}
 			    }

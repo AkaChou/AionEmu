@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -48,7 +48,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 		if (isHome.compareAndSet(true, false)) {
 			getPosition().getWorldMapInstance().getDoors().get(467).setOpen(false);
 			// 无论你是谁，都无法逃脱此诅咒。 / Whoever ye may be, thou shalt not escape this curse.
-			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500063, getObjectId(), 0, 0);
+			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500063, getObjectId(), 0, 0);
 			startMacumbelloRightHandEvent();
 		}
 	}
@@ -71,9 +71,9 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 				phase = Phase.RIGHT_HAND;
 				cancelActiveEventTask();
 				// 出来吧，我忠诚的仆从们！ / Come forth, my faithful servants!
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
 				// 快去吞噬这些愚蠢的守护者！ / Hurry and devour these foolish Daevas!
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
 				canThink = false;
 				EmoteManager.emoteStopAttacking(getOwner());
 				setStateIfNot(AIState.WALKING);

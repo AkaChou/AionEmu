@@ -34,6 +34,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 public class NpcShoutsService {
 
 	private static volatile ObjectProvider<NpcShoutsService> instanceProvider;
+	private static volatile NpcShoutsService resolvedInstance;
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
@@ -266,14 +267,19 @@ public class NpcShoutsService {
 	 *         when no provider or bean is available
 	 */
 	public static NpcShoutsService getInstance() {
+		NpcShoutsService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<NpcShoutsService> provider = instanceProvider;
-		NpcShoutsService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("NpcShoutsService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -283,5 +289,6 @@ public class NpcShoutsService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<NpcShoutsService> instanceProvider) {
 		NpcShoutsService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

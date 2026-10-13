@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -36,7 +36,7 @@ public class AtreianBestiary extends AdminCommand {
 		int templateId = Integer.parseInt(params[0]);
 		AtreianBestiaryTemplate template = DataManager.ATREIAN_BESTIARY.getAtreianBestiaryTemplateByNpcId(templateId);
 		if (template != null) {
-			GameFeatureServices.atreianBestiaryService().onKill(admin, templateId);
+			AtreianBestiaryService.getInstance().onKill(admin, templateId);
 			PacketSendUtility.sendMessage(admin, "Added kill count to Atreian Bestiary for npc "+ templateId);
 		}
 		else {

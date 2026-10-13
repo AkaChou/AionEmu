@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -260,7 +259,7 @@ public class PvpService {
 				playerDamage += aggro.getDamage();
 			}
 		}
-		GameFeatureServices.protectorConquerorService().updateRanks(winner, victim);
+		ProtectorConquerorService.getInstance().updateRanks(winner, victim);
 
 		// 通知任务引擎胜者及其小队 / notify Quest engine for winner + his group
 		notifyKillQuests(winner, victim);

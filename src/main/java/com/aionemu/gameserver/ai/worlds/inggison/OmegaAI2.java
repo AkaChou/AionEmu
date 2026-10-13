@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.inggison;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -92,27 +92,27 @@ public class OmegaAI2 extends AggressiveNpcAI2
 					switch (Rnd.get(1, 5)) {
 						case 1:
 							// 欧米伽召唤生物。 / Omega summons a creature.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400606, 0);
 							spawn(281945, x, y, z, (byte) 0); // 力量分身 / Clone Of Power.
 						break;
 						case 2:
 							// 欧米伽召唤强大生物。 / Omega summons a powerful creature.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400607, 0);
 							spawn(281946, x, y, z, (byte) 0); // 爆炸分身 / Clone Of Explosion.
 						break;
 						case 3:
 							// 欧米伽召唤治疗生物。 / Omega summons a healing creature.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400608, 0);
 							spawn(281947, x, y, z, (byte) 0); // 治疗分身 / Clone Of Healing.
 						break;
 						case 4:
 							// 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400609, 0);
 							spawn(281948, x, y, z, (byte) 0); // 物理屏障分身 / Clone Of Physical Barrier.
 						break;
 						case 5:
 							// 欧米伽召唤制造屏障的生物。 / Omega summons a creature that creates barriers.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400609, 0);
 							spawn(281949, x, y, z, (byte) 0); // 魔法屏障分身 / Clone Of Magical Barrier.
 						break;
 					}

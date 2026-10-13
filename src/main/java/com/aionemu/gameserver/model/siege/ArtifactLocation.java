@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.siege;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -80,12 +80,12 @@ public class ArtifactLocation extends SiegeLocation {
 	 * @return 是否独立 / Whether stand alone
 	 */
 	public boolean isStandAlone() {
-		return !GameFeatureServices.siegeService().getFortresses().containsKey(getLocationId());
+		return !SiegeService.getInstance().getFortresses().containsKey(getLocationId());
 	}
 
 	/** 返回所属要塞 / Returns the owning fortress */
 	public FortressLocation getOwningFortress() {
-		return GameFeatureServices.siegeService().getFortress(getLocationId());
+		return SiegeService.getInstance().getFortress(getLocationId());
 	}
 
 	/**

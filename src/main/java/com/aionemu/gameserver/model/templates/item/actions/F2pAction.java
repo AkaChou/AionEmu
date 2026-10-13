@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.F2pService;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -60,7 +60,7 @@ public class F2pAction extends AbstractItemAction {
 				if (succ) {
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423,
 						new DescriptionId(parentItem.getItemTemplate().getNameId())));
-					GameFeatureServices.f2pService().onAddF2p(player, minutes);
+					F2pService.getInstance().onAddF2p(player, minutes);
 				}
 			}
 		}, 1000);

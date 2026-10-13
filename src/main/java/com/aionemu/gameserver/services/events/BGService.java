@@ -23,6 +23,7 @@ import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 @Slf4j(topic = "com.aionemu.gameserver.services.EventService")
 public class BGService {
 	private static volatile ObjectProvider<BGService> instanceProvider;
+	private static volatile BGService resolvedInstance;
 	private static final int DELAY = 60 * 100;
 	private final List<ScheduledFuture<?>> futures = new ArrayList<>();
 
@@ -56,14 +57,19 @@ public class BGService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static BGService getInstance() {
+		BGService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<BGService> provider = instanceProvider;
-		BGService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("BGService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -74,5 +80,6 @@ public class BGService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<BGService> instanceProvider) {
 		BGService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

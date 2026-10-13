@@ -4,7 +4,7 @@ package com.aionemu.gameserver.services.reward;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,6 +26,7 @@ import java.util.List;
 public class RewardService {
 	private final WebRewardDao dao;
 	private static volatile ObjectProvider<RewardService> instanceProvider;
+	private static volatile RewardService resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -38,14 +39,19 @@ public class RewardService {
 	 *         when no provider or bean is available
 	 */
 	public static RewardService getInstance() {
+		RewardService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<RewardService> provider = instanceProvider;
-		RewardService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("RewardService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -55,6 +61,7 @@ public class RewardService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<RewardService> instanceProvider) {
 		RewardService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -84,7 +91,7 @@ public class RewardService {
 				continue;
 			}
 			try {
-				if (!GameFeatureServices.systemMailService().sendMail("$$CASH_ITEM_MAIL", player.getName(),
+				if (!SystemMailService.getInstance().sendMail("$$CASH_ITEM_MAIL", player.getName(),
 						item.id + ", " + item.count, "0, " + (System.currentTimeMillis() / 1000) + ",", item.id,
 						(int) item.count, 0, 0, LetterType.BLACKCLOUD)) {
 					continue;

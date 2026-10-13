@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.KiskService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -46,11 +46,11 @@ public class SummonKiskEffect extends SummonEffect {
 		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> kisk.getController().onDelete(), time * 1000L);
 		kisk.getController().addTask(TaskId.DESPAWN, task);
 		player.getController().cancelTask(TaskId.ITEM_USE);
-		GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);
+		KiskService.getInstance().regKisk(kisk, objOwnerId);
 		if (kisk.getMaxMembers() > 1) {
 			kisk.getController().onDialogRequest(player);
 		} else {
-			GameFeatureServices.kiskService().onBind(kisk, player);
+			KiskService.getInstance().onBind(kisk, player);
 		}
 	}
 }

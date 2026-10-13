@@ -70,6 +70,8 @@ import java.util.concurrent.Future;
 
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.events.BanditService;
 
 /**
  * 玩家控制器，管理视野、区域、战斗、技能、死亡与姿态等玩家行为。
@@ -441,7 +443,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * Processing when the player leaves the world.
 	 */
 	public void onLeaveWorld() {
-		GameFeatureServices.protectorConquerorService().onLeaveMap(getOwner());
+		ProtectorConquerorService.getInstance().onLeaveMap(getOwner());
 		InstanceService.onLeaveInstance(getOwner());
 	}
 
@@ -531,14 +533,14 @@ public class PlayerController extends CreatureController<Player> {
 			GameGameplayServices.duelService().loseDuel(player);
 		}
 		player.getCommonData().setDp(0);
-		if (GameFeatureServices.ffaService().isInArena(player) && player.isFFA()) {
+		if (FFAService.getInstance().isInArena(player) && player.isFFA()) {
 			player.getAggroList().clear();
-			GameFeatureServices.ffaService().onDie(player, master);
+			FFAService.getInstance().onDie(player, master);
 			return;
 		}
 		if (player.isBandit()) {
 			player.getAggroList().clear();
-			GameFeatureServices.banditService().onDie(player, master);
+			BanditService.getInstance().onDie(player, master);
 			return;
 		}
 		if (player.getBattleground() instanceof DeathmatchBg || player.getBattleground() instanceof SoloSurvivorBg) {
@@ -576,7 +578,7 @@ public class PlayerController extends CreatureController<Player> {
 		player.unsetState(CreatureState.GLIDING);
 		player.setFlyState(0);
 
-		if (player.isInInstance() && !GameFeatureServices.ffaService().isInArena(player) || player.getBattleground() == null || !player.getBattleground().is1v1()) {
+		if (player.isInInstance() && !FFAService.getInstance().isInArena(player) || player.getBattleground() == null || !player.getBattleground().is1v1()) {
 			if (player.getPosition().getWorldMapInstance().getInstanceHandler().onDie(player, lastAttacker)) {
 				super.onDie(lastAttacker);
 				return;

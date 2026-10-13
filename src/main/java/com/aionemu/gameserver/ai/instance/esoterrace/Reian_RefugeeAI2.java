@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -46,7 +46,7 @@ public class Reian_RefugeeAI2 extends NpcAI2
         npc.setState(1);
         PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 		if (msg != 0) {
-            GameFeatureServices.npcShoutsService().sendMsg(npc, msg, npc.getObjectId(), 0, 10000);
+            NpcShoutsService.getInstance().sendMsg(npc, msg, npc.getObjectId(), 0, 10000);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -58,9 +58,9 @@ public class CM_GROUP_LOOT extends AionClientPacket {
 			return;
 		}
 		if (distributionId == 2) {
-			GameFeatureServices.dropDistributionService().handleRoll(player, roll, itemId, npcId, index);
+			DropDistributionService.getInstance().handleRoll(player, roll, itemId, npcId, index);
 		} else if (distributionId == 3) {
-			GameFeatureServices.dropDistributionService().handleBid(player, bid, itemId, npcId, index);
+			DropDistributionService.getInstance().handleBid(player, bid, itemId, npcId, index);
 		}
 	}
 }

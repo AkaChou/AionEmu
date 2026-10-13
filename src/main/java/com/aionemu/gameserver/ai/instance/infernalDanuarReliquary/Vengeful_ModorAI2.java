@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -254,7 +254,7 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Ven
 	}
 
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 
 	private void announceAnotherDimension() {

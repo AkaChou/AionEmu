@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -32,7 +32,7 @@ public class MuruganAI2 extends GeneralNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getOwner().getNpcId() == 800438) {
-			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390852, getOwner().getObjectId(), 0, 1000);
+			NpcShoutsService.getInstance().sendMsg(getOwner(), 390852, getOwner().getObjectId(), 0, 1000);
 		}
 	}
 
@@ -62,8 +62,8 @@ public class MuruganAI2 extends GeneralNpcAI2
 		    return;
 		} switch (owner) {
 		    case 800435:
-			    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390837, getOwner().getObjectId(), 0, 0);
-			    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390838, getOwner().getObjectId(), 0, 4000);
+			    NpcShoutsService.getInstance().sendMsg(getOwner(), 390837, getOwner().getObjectId(), 0, 0);
+			    NpcShoutsService.getInstance().sendMsg(getOwner(), 390838, getOwner().getObjectId(), 0, 4000);
 			break;
 		}
 		setStateIfNot(AIState.WALKING);
@@ -78,7 +78,7 @@ public class MuruganAI2 extends GeneralNpcAI2
 
     private void openSuramaDoor() {
 	    if (getOwner().getNpcId() == 800436) {
-		    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390835, getOwner().getObjectId(), 0, 0);
+		    NpcShoutsService.getInstance().sendMsg(getOwner(), 390835, getOwner().getObjectId(), 0, 0);
 			getPosition().getWorldMapInstance().getDoors().get(56).setOpen(true);
 			AI2Actions.deleteOwner(this);
 	    }

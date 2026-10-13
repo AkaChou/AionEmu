@@ -5,7 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	 */
 	public SM_SIEGE_LOCATION_INFO() {
 		this.infoType = 0;
-		locations = GameFeatureServices.siegeService().getSiegeLocations();
+		locations = SiegeService.getInstance().getSiegeLocations();
 	}
 
 	/**

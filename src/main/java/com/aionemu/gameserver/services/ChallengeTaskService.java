@@ -3,7 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -315,7 +315,7 @@ public class ChallengeTaskService {
 								itemCount = reward.getItemCount();
 								String recipientName = this.playerDAO.loadPlayerCommonData(objectId)
 										.getName();
-								GameFeatureServices.systemMailService().sendMail("Legion reward", recipientName, "", "", itemId,
+								SystemMailService.getInstance().sendMail("Legion reward", recipientName, "", "", itemId,
 										itemCount, 0, 0, LetterType.NORMAL);
 								break;
 							}

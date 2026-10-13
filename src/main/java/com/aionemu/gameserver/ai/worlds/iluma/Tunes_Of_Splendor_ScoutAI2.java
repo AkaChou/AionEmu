@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -67,6 +67,6 @@ public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2 {
 	}
 
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -29,6 +29,6 @@ public class CM_ATREIAN_BESTIARY_LVLUP extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		GameFeatureServices.atreianBestiaryService().onLvlUp(player, id);
+		AtreianBestiaryService.getInstance().onLvlUp(player, id);
 	}
 }

@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -200,13 +199,13 @@ public class OutpostService {
 		} else {
 			sr = SiegeRace.BALAUR;
 		}
-		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(getOutpostLocation(id).getArtifactId());
-		GameFeatureServices.siegeService().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
+		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(getOutpostLocation(id).getArtifactId());
+		SiegeService.getInstance().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
 		loc.setVulnerable(false);
 		loc.setUnderShield(false);
 		loc.setRace(sr);
 		loc.setLegionId(0);
-		GameFeatureServices.siegeService().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
+		SiegeService.getInstance().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
 		siegeDAO.updateSiegeLocation(loc);
 	}
 

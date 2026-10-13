@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.siege;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import java.util.Iterator;
 
@@ -85,7 +85,7 @@ public class Influence {
 		float a_kaldor = 0f;
 		float b_kaldor = 0f;
 		float t_kaldor = 0f;
-		for (SiegeLocation sLoc : GameFeatureServices.siegeService().getSiegeLocations().values()) {
+		for (SiegeLocation sLoc : SiegeService.getInstance().getSiegeLocations().values()) {
 			switch (sLoc.getWorldId()) {
 				// 欧比斯 / ABYSS
 				case 400010000:

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -51,6 +51,6 @@ public class CM_COALESCENCE extends AionClientPacket {
 		if (player.getController().isInShutdownProgress()) {
 			return;
 		}
-		GameFeatureServices.coalescenceService().letsCoalescence(player, mainItemObjId, materialItemObjId);
+		CoalescenceService.getInstance().letsCoalescence(player, mainItemObjId, materialItemObjId);
 	}
 }

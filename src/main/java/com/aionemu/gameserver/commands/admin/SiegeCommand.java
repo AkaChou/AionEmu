@@ -1,7 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.BaseService;
 
 
 import com.aionemu.gameserver.model.Race;
@@ -73,24 +74,24 @@ public class SiegeCommand extends AdminCommand {
 			return;
 		}
 		if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (GameFeatureServices.siegeService().isSiegeInProgress(siegeLocId)) {
+			if (SiegeService.getInstance().isSiegeInProgress(siegeLocId)) {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " is already under siege");
 			} else {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " - starting siege!");
-				GameFeatureServices.siegeService().startSiege(siegeLocId);
+				SiegeService.getInstance().startSiege(siegeLocId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!GameFeatureServices.siegeService().isSiegeInProgress(siegeLocId)) {
+			if (!SiegeService.getInstance().isSiegeInProgress(siegeLocId)) {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " is not under siege");
 			} else {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " - stopping siege!");
-				GameFeatureServices.siegeService().stopSiege(siegeLocId);
+				SiegeService.getInstance().stopSiege(siegeLocId);
 			}
 		}
 	}
 
 	protected boolean isValidSiegeLocationId(Player player, int fortressId) {
-		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(fortressId)) {
+		if (!SiegeService.getInstance().getSiegeLocations().containsKey(fortressId)) {
 			PacketSendUtility.sendMessage(player, "Id " + fortressId + " is invalid");
 			return false;
 		}
@@ -112,19 +113,19 @@ public class SiegeCommand extends AdminCommand {
 	}
 
 	protected void listLocations(Player player) {
-		for (FortressLocation f : GameFeatureServices.siegeService().getFortresses().values()) {
+		for (FortressLocation f : SiegeService.getInstance().getFortresses().values()) {
 			PacketSendUtility.sendMessage(player, "Fortress: " + f.getLocationId() + " belongs to " + f.getRace());
 		}
-		for (ArtifactLocation a : GameFeatureServices.siegeService().getStandaloneArtifacts().values()) {
+		for (ArtifactLocation a : SiegeService.getInstance().getStandaloneArtifacts().values()) {
 			PacketSendUtility.sendMessage(player, "Artifact: " + a.getLocationId() + " belongs to " + a.getRace());
 		}
 	}
 
 	protected void listSieges(Player player) {
-		for (Integer i : GameFeatureServices.siegeService().getSiegeLocations().keySet()) {
-			Siege s = GameFeatureServices.siegeService().getSiege(i);
+		for (Integer i : SiegeService.getInstance().getSiegeLocations().keySet()) {
+			Siege s = SiegeService.getInstance().getSiege(i);
 			if (s != null) {
-				int secondsLeft = GameFeatureServices.siegeService().getRemainingSiegeTimeInSeconds(i);
+				int secondsLeft = SiegeService.getInstance().getRemainingSiegeTimeInSeconds(i);
 				String minSec = secondsLeft / 60 + "m ";
 				minSec += secondsLeft % 60 + "s";
 				PacketSendUtility.sendMessage(player, "Location: " + i + ": " + minSec + " left.");
@@ -138,7 +139,7 @@ public class SiegeCommand extends AdminCommand {
 			return;
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
-		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(siegeLocationId)) {
+		if (!SiegeService.getInstance().getSiegeLocations().containsKey(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
@@ -170,82 +171,82 @@ public class SiegeCommand extends AdminCommand {
 			PacketSendUtility.sendMessage(player, params[2] + " is not valid siege race or legion name");
 			return;
 		}
-		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(siegeLocationId);
-		Siege s = GameFeatureServices.siegeService().getSiege(siegeLocationId);
+		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(siegeLocationId);
+		Siege s = SiegeService.getInstance().getSiege(siegeLocationId);
 		if (s != null) {
 			s.getSiegeCounter().addRaceDamage(sr, s.getBoss().getLifeStats().getMaxHp() + 1);
 			s.setBossKilled(true);
-			GameFeatureServices.siegeService().stopSiege(siegeLocationId);
+			SiegeService.getInstance().stopSiege(siegeLocationId);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
 		} else {
-			GameFeatureServices.siegeService().deSpawnNpcs(siegeLocationId);
+			SiegeService.getInstance().deSpawnNpcs(siegeLocationId);
 			loc.setVulnerable(false);
 			loc.setUnderShield(false);
 			loc.setRace(sr);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
-			GameFeatureServices.siegeService().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
-			GameFeatureServices.siegeService().getSiegeDAO().updateSiegeLocation(loc);
+			SiegeService.getInstance().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
+			SiegeService.getInstance().getSiegeDAO().updateSiegeLocation(loc);
 			switch (siegeLocationId) {
 				// 希尔西要塞。 / Siel's Western Fortress.
 				case 1131:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
+						BaseService.getInstance().capture(108, Race.ASMODIANS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
+						BaseService.getInstance().capture(109, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.ELYOS);
+						BaseService.getInstance().capture(108, Race.ELYOS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.ELYOS);
+						BaseService.getInstance().capture(109, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.NPC);
+						BaseService.getInstance().capture(108, Race.NPC);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.NPC);
+						BaseService.getInstance().capture(109, Race.NPC);
 					}
 					break;
 				// 希尔东要塞。 / Siel's Eastern Fortress.
 				case 1132:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
+						BaseService.getInstance().capture(110, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.ELYOS);
+						BaseService.getInstance().capture(110, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.NPC);
+						BaseService.getInstance().capture(110, Race.NPC);
 					}
 					break;
 				// 硫磺要塞。 / Sulfur Fortress.
 				case 1141:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
+						BaseService.getInstance().capture(105, Race.ASMODIANS);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
+						BaseService.getInstance().capture(106, Race.ASMODIANS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
+						BaseService.getInstance().capture(107, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.ELYOS);
+						BaseService.getInstance().capture(105, Race.ELYOS);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.ELYOS);
+						BaseService.getInstance().capture(106, Race.ELYOS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.ELYOS);
+						BaseService.getInstance().capture(107, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.NPC);
+						BaseService.getInstance().capture(105, Race.NPC);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.NPC);
+						BaseService.getInstance().capture(106, Race.NPC);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.NPC);
+						BaseService.getInstance().capture(107, Race.NPC);
 					}
 					break;
 			}
 		}
-		GameFeatureServices.siegeService().broadcastUpdate(loc);
+		SiegeService.getInstance().broadcastUpdate(loc);
 	}
 
 	protected void assault(Player player, String[] params) {
@@ -255,7 +256,7 @@ public class SiegeCommand extends AdminCommand {
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
 		int delay = NumberUtils.toInt(params[2]);
-		if (!GameFeatureServices.siegeService().getSiegeLocations().containsKey(siegeLocationId)) {
+		if (!SiegeService.getInstance().getSiegeLocations().containsKey(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
@@ -269,8 +270,8 @@ public class SiegeCommand extends AdminCommand {
 			//siegecommand list locations|sieges
 			//siegecommand capture <LocationId> <siegeRaceName|legionName|legionId>
 			//siegecommand assault <LocationId> <delaySec>""");
-		java.util.Set<Integer> fortressIds = GameFeatureServices.siegeService().getFortresses().keySet();
-		java.util.Set<Integer> artifactIds = GameFeatureServices.siegeService().getStandaloneArtifacts().keySet();
+		java.util.Set<Integer> fortressIds = SiegeService.getInstance().getFortresses().keySet();
+		java.util.Set<Integer> artifactIds = SiegeService.getInstance().getStandaloneArtifacts().keySet();
 		PacketSendUtility.sendMessage(player, "Fortress: " + StringUtils.join(fortressIds, ", "));
 		PacketSendUtility.sendMessage(player, "Artifacts: " + StringUtils.join(artifactIds, ", "));
 	}

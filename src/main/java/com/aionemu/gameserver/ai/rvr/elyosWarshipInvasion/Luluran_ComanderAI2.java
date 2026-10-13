@@ -2,7 +2,7 @@ package com.aionemu.gameserver.ai.rvr.elyosWarshipInvasion;
 
 import com.aionemu.gameserver.services.RvrService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -50,6 +50,6 @@ public class Luluran_ComanderAI2 extends AggressiveNpcAI2
 	}
 
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

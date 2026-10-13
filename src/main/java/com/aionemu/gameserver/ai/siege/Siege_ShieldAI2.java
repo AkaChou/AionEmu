@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.siege;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -30,7 +30,7 @@ public class Siege_ShieldAI2 extends NpcAI2
 
 	private void sendShieldPacket(boolean shieldStatus) {
 		int id = getSpawnTemplate().getSiegeId();
-		GameFeatureServices.siegeService().getFortress(id).setUnderShield(shieldStatus);
+		SiegeService.getInstance().getFortress(id).setUnderShield(shieldStatus);
 		final SM_SHIELD_EFFECT packet = new SM_SHIELD_EFFECT(id);
 		getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, packet));
 	}

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.player;
 
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -25,13 +24,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class AtreianBestiaryService {
-    /**
-     * -- SETTER --
-     *  设置实例提供者（Spring 注入）。
-     *  Sets the instance provider (Spring injection).
-     */
-    @Setter
     private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
+    private static volatile AtreianBestiaryService resolvedInstance;
 	private final PlayerAtreianBestiaryDao playerABDAO;
 
 	/**
@@ -123,14 +117,30 @@ public class AtreianBestiaryService {
 	 *         when no provider or bean is available
 	 */
 	public static AtreianBestiaryService getInstance() {
+		AtreianBestiaryService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AtreianBestiaryService> provider = instanceProvider;
-		AtreianBestiaryService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AtreianBestiaryService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AtreianBestiaryService> instanceProvider) {
+		AtreianBestiaryService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.gelkmaros;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -46,19 +46,19 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				// 毒素与麻痹攻击开始。 / Attack of poison and paralysis begins.
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400610, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400610, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 50) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				// 限制物理与魔法攻击的攻势开始。 / Attack that restricts physical and magical assaults begins.
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400611, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400611, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 10) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				// 强力持续攻击与反射开始。 / Powerful continuous attacks and reflections begin.
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400613, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400613, 0);
 				startPhaseTask();
 			}
 		}
@@ -104,7 +104,7 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 						break;
 						case 2:
 							// 诸神黄昏的酸液出现。 / Ragnarok's acidic fluid appears.
-							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400612, 2000);
+							NpcShoutsService.getInstance().sendMsg(getOwner(), 1400612, 2000);
 							spawn(281951, x, y, z, (byte) 0); //Ragnarok Slime.
 						break;
 					}

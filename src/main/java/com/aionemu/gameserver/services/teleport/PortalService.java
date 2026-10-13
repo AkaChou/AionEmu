@@ -3,7 +3,7 @@ package com.aionemu.gameserver.services.teleport;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import java.util.List;
 
@@ -445,7 +445,7 @@ public class PortalService {
 	}
 
 	private static boolean checkSiegeId(Player player, int siegeId) {
-		FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeId);
+		FortressLocation loc = SiegeService.getInstance().getFortress(siegeId);
 		return loc == null || loc.getRace().getRaceId() == player.getRace().getRaceId();
 	}
 

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -18,13 +17,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class StaticDoorService {
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
     private static volatile ObjectProvider<StaticDoorService> instanceProvider;
+    private static volatile StaticDoorService resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -37,14 +31,30 @@ public class StaticDoorService {
 	 *         when no provider or bean is available
 	 */
 	public static StaticDoorService getInstance() {
+		StaticDoorService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<StaticDoorService> provider = instanceProvider;
-		StaticDoorService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("StaticDoorService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<StaticDoorService> instanceProvider) {
+		StaticDoorService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

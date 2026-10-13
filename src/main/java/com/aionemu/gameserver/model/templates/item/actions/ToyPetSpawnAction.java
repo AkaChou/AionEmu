@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.KiskService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -59,7 +59,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_FAR_FROM_NPC);
 			return false;
 		}
-		if (GameFeatureServices.kiskService().haveKisk(player.getObjectId())) {
+		if (KiskService.getInstance().haveKisk(player.getObjectId())) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390160));
 			return false;
 		}
@@ -142,11 +142,11 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				}, 7200000);
 				kisk.getController().addTask(TaskId.DESPAWN, task);
 				player.getController().cancelTask(TaskId.ITEM_USE);
-				GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);
+				KiskService.getInstance().regKisk(kisk, objOwnerId);
 				if (kisk.getMaxMembers() > 1) {
 					kisk.getController().onDialogRequest(player);
 				} else {
-					GameFeatureServices.kiskService().onBind(kisk, player);
+					KiskService.getInstance().onBind(kisk, player);
 				}
 			}
 		}, 3000);

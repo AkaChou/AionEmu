@@ -5,7 +5,7 @@ import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.reward.BonusService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -223,7 +223,7 @@ public final class QuestService {
 			// 处理器可在重复时添加额外奖励（活动任务无数据）。 / Handler can add additional bonuses on repeat (for event quests no data)
 			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType());
 			if (result != HandlerResult.FAILED) {
-				QuestItems additional = GameFeatureServices.bonusService().getQuestBonus(player, template);
+				QuestItems additional = BonusService.getInstance().getQuestBonus(player, template);
 				if (additional != null) {
 					questItems.add(additional);
 				}

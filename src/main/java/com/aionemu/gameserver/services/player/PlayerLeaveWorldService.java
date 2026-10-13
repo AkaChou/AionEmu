@@ -6,7 +6,10 @@ import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.toypet.PetService;
+import com.aionemu.gameserver.services.KiskService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.RepurchaseService;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
@@ -74,17 +77,17 @@ public class PlayerLeaveWorldService {
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
-		GameFeatureServices.petService().onPlayerLogout(player);
+		PetService.getInstance().onPlayerLogout(player);
 		GameRuntimeServices.brokerService().removePlayerCache(player);
 		GameRuntimeServices.exchangeService().cancelExchange(player);
-		GameFeatureServices.repurchaseService().removeRepurchaseItems(player);
+		RepurchaseService.getInstance().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 			AutoGroupService.getInstance().onPlayerLogOut(player);
 		}
-		GameFeatureServices.protectorConquerorService().onLogout(player);
+		ProtectorConquerorService.getInstance().onLogout(player);
 		InstanceService.onLogOut(player);
 		GameRuntimeServices.gmService().onPlayerLogedOut(player);
-		GameFeatureServices.kiskService().onLogout(player);
+		KiskService.getInstance().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
 			DropService.getInstance().closeDropList(player, player.getLootingNpcOid());

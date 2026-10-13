@@ -6,7 +6,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -975,7 +975,7 @@ public class BrokerService {
 	private boolean expireItem(Race race, BrokerItem item) {
 		PersistentState originalState = item.getPersistentState();
 		item.setPersistentState(PersistentState.DELETED);
-		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
+		if (SystemMailService.getInstance().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
 			item.getItem(), 0, 0, LetterType.NORMAL, () -> brokerDAO.storeInTransaction(item))) {
 			item.setPersistentState(PersistentState.UPDATED);
 			return true;

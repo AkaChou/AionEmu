@@ -56,6 +56,7 @@ public class FFAService {
 	 * Spring 实例提供者 / Spring instance provider
 	 */
 	private static volatile ObjectProvider<FFAService> instanceProvider;
+	private static volatile FFAService resolvedInstance;
 	/**
 	 * Worldpositionscached 前 enteringFFA / World positions cached before entering FFA
 	 */
@@ -695,15 +696,20 @@ public class FFAService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
 	 *                               when no provider or bean is available
 	 */
-	public static final FFAService getInstance() {
+	public static FFAService getInstance() {
+		FFAService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<FFAService> provider = instanceProvider;
-		FFAService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("FFAService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -713,6 +719,7 @@ public class FFAService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<FFAService> instanceProvider) {
 		FFAService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

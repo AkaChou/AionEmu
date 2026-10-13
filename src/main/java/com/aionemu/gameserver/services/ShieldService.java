@@ -28,6 +28,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 @Slf4j
 public class ShieldService {
 	private static volatile ObjectProvider<ShieldService> instanceProvider;
+	private static volatile ShieldService resolvedInstance;
 
 	private final Map<Integer, Shield> sphereShields = new HashMap<>();
 	private final Map<Integer, List<SiegeShield>> registeredShields = new HashMap<>();
@@ -43,14 +44,19 @@ public class ShieldService {
 	 *         when no provider or bean is available
 	 */
 	public static ShieldService getInstance() {
+		ShieldService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ShieldService> provider = instanceProvider;
-		ShieldService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ShieldService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -60,6 +66,7 @@ public class ShieldService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ShieldService> instanceProvider) {
 		ShieldService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -25,7 +25,7 @@ public class WeaponHAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			// 检测到异常物体。开始清除。 / Abnormal object detected. Elimination beginning.
-			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402787, 0);
+			NpcShoutsService.getInstance().sendMsg(getOwner(), 1402787, 0);
 			getPosition().getWorldMapInstance().getDoors().get(85).setOpen(true);
 		}
 	}

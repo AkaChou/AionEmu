@@ -27,6 +27,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class DredgionService2 {
 	private final AutoGroupService autoGroupService;
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
+	private static volatile DredgionService2 resolvedInstance;
 
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
@@ -185,14 +186,19 @@ public class DredgionService2 {
 	 *         when no provider or bean is available
 	 */
 	public static DredgionService2 getInstance() {
+		DredgionService2 resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<DredgionService2> provider = instanceProvider;
-		DredgionService2 provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("DredgionService2 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -202,5 +208,6 @@ public class DredgionService2 {
 	 */
 	public static void setInstanceProvider(ObjectProvider<DredgionService2> instanceProvider) {
 		DredgionService2.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

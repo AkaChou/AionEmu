@@ -23,7 +23,16 @@ import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.toypet.PetService;
+import com.aionemu.gameserver.services.KiskService;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
+import com.aionemu.gameserver.services.AStationService;
+import com.aionemu.gameserver.services.DisputeLandService;
+import com.aionemu.gameserver.services.WindyGorgeService;
+import com.aionemu.gameserver.services.F2pService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -366,7 +375,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(SM_ITEM_COOLDOWN.load(player.getItemCoolDowns()));
 			// 升级街机 4.7 / Upgrade Arcade 4.7
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
-				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);
+				ArcadeUpgradeService.getInstance().onEnterWorld(player);
 			}
 			List<QuestState> questList = new ArrayList<>();
 			List<QuestState> completeQuestList = new ArrayList<>();
@@ -422,7 +431,7 @@ public final class PlayerEnterWorldService {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));
 			}
 			if (AStationConfig.A_STATION_ENABLE) {
-				GameFeatureServices.aStationService().checkAuthorizationRequest(player);
+				AStationService.getInstance().checkAuthorizationRequest(player);
 			}
 			playerLoggedIn(player);
 			client.sendPacket(new SM_INSTANCE_INFO(player, false, player.getCurrentTeam()));
@@ -430,7 +439,7 @@ public final class PlayerEnterWorldService {
 			// SM_CHANNEL_INFO
 			client.sendPacket(new SM_CHANNEL_INFO(player.getPosition()));
 
-			GameFeatureServices.kiskService().onLogin(player);
+			KiskService.getInstance().onLogin(player);
 
 			// SM_TERRITORY_LIST
 			GameRuntimeServices.territoryService().onEnterWorld(player);
@@ -447,7 +456,7 @@ public final class PlayerEnterWorldService {
 			VortexService.getInstance().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
-			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);
+			ProtectorConquerorService.getInstance().onProtectorConquerorLogin(player);
 			// 军团请求 4.9.1 / Legion Request 4.9.1
 			if (player.isLegionMember()) {
 				LegionService.getInstance().onLogin(player);
@@ -460,7 +469,7 @@ public final class PlayerEnterWorldService {
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
 			client.sendPacket(new SM_EMOTION_LIST((byte) 0, player.getEmotions().getEmotions()));
-			GameFeatureServices.siegeService().onPlayerLogin(player);
+			SiegeService.getInstance().onPlayerLogin(player);
 
 			// SM_ATREIAN_PASSPORT
 			GameEventBootstrapServices.atreianPassportService().onLogin(player);
@@ -469,7 +478,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_PRICES());
 
 			// 争议之地 / DisputeLand
-			GameFeatureServices.disputeLandService().onLogin(player);
+			DisputeLandService.getInstance().onLogin(player);
 
 			// 活动窗口 / Event Window
 			GameEventBootstrapServices.eventWindowService().onLogin(player);
@@ -609,7 +618,7 @@ public final class PlayerEnterWorldService {
 				LoginServerInfo(player); // Show LoginServerinfo + Chat
 			}
 			// GloryPointLoseMsg(player);
-			GameFeatureServices.f2pService().onEnterWorld(player);
+			F2pService.getInstance().onEnterWorld(player);
 			// 成长光环。 / Aura Of Growth.
 			// 获得成长光环后，狩猎、采集或制作可获得额外经验。 / Players can gain additional XP from hunting, gathering or crafting by obtaining Growth Aura.
 			// 成长光环可通过狩猎、获取精华、登录与任务奖励获得。 / Growth Aura can be obtained from hunting monsters, acquiring essence, and through login and quest rewards.
@@ -631,10 +640,10 @@ public final class PlayerEnterWorldService {
 			}
 			PlayerGroupService.onPlayerLogin(player);
 			// SM_PET
-			GameFeatureServices.petService().onPlayerLogin(player);
+			PetService.getInstance().onPlayerLogin(player);
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
-			GameFeatureServices.windyGorgeService().onLogin(player);
+			WindyGorgeService.getInstance().onLogin(player);
 			MailService.getInstance().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
 			GameRuntimeServices.brokerService().onPlayerLogin(player);
@@ -713,13 +722,13 @@ public final class PlayerEnterWorldService {
 			EnchantService.GloryShieldSkill(player);
 			GameEventBootstrapServices.shugoSweepService().onLogin(player);
 			GameEventBootstrapServices.lunaShopService().onLogin(player);
-			if (GameFeatureServices.ffaService().isInArena(player)) {
+			if (FFAService.getInstance().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
 			player.setBattleground(null);
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			GameFeatureServices.atreianBestiaryService().onLogin(player);
+			AtreianBestiaryService.getInstance().onLogin(player);
 		} else {
 			log.info(I18n.get("log.f477c5171a48", objectId, player));
 		}

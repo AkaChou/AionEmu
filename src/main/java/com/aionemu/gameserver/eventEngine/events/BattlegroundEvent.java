@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.eventEngine.events;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.events.LadderService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ public class BattlegroundEvent extends Event {
 	 */
 	@Override
 	public void execute() {
-		GameFeatureServices.ladderService().createNormalBgs(this);
+		LadderService.getInstance().createNormalBgs(this);
 	}
 
 	/**

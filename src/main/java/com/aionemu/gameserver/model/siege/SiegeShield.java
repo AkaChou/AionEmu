@@ -8,7 +8,7 @@ import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.scene.DespawnableNode;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -47,7 +47,7 @@ public class SiegeShield implements ZoneHandler {
 			return;
 		}
 		if (GeoDataConfig.GEO_SHIELDS_ENABLE && (isEnabled || siegeLocationId == 0)) {
-			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
+			FortressLocation loc = SiegeService.getInstance().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
 				CollisionDieActor actor = new CollisionDieActor(creature, geometry);
 				creature.getObserveController().addObserver(actor);

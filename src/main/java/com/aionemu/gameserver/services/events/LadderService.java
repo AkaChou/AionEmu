@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -48,6 +47,7 @@ public class LadderService {
 	 * Spring 实例提供者 / Spring instance provider
 	 */
 	private static volatile ObjectProvider<LadderService> instanceProvider;
+	private static volatile LadderService resolvedInstance;
 	/**
 	 * 活动战场排队列表。 / Event battleground queue list.
 	 */
@@ -419,7 +419,7 @@ public class LadderService {
 		announceAll(
 			"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
-			if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
+			if (pl.getBattleground() == null && !isInQueue(pl) && !FFAService.getInstance().isInArena(pl)) {
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
 			}
 		});
@@ -730,7 +730,7 @@ public class LadderService {
 	 */
 	private void announceAll(final String msg) {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
-			if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
+			if (player.getBattleground() == null && !FFAService.getInstance().isInArena(player)) {
 				PacketSendUtility.sendSys3Message(player, "\uE05C", msg);
 			}
 		});
@@ -1134,14 +1134,19 @@ public class LadderService {
 	 *                               when no provider or bean is available
 	 */
 	public static LadderService getInstance() {
+		LadderService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LadderService> provider = instanceProvider;
-		LadderService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LadderService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -1151,5 +1156,6 @@ public class LadderService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<LadderService> instanceProvider) {
 		LadderService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

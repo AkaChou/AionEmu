@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -236,7 +238,7 @@ public class NpcController extends CreatureController<Npc> {
 						owner.getSpawn().getStaticId());
 				}
 			}
-			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !GameFeatureServices.siegeService().isSiegeNpcInActiveSiege(owner)) {
+			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !SiegeService.getInstance().isSiegeNpcInActiveSiege(owner)) {
 				Future<?> respawnTask = scheduleRespawn();
 				if (respawnTask != null) {
 					addTask(TaskId.RESPAWN, respawnTask);
@@ -353,13 +355,13 @@ public class NpcController extends CreatureController<Npc> {
 					// 成长光环。 / Aura Of Growth.
 					if (getOwner().getLevel() >= 66) {
 						if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-							GameFeatureServices.growthEnergy().addGrowthEnergy(player);
+							GrowthEnergy.getInstance().addGrowthEnergy(player);
 							PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 						}
 					}
 					// 阿特雷亚图鉴。 / Atreian Bestiary.
 					if (getOwner().getLevel() >= 66) {
-						GameFeatureServices.atreianBestiaryService().onKill(player, getOwner().getNpcId());
+						AtreianBestiaryService.getInstance().onKill(player, getOwner().getNpcId());
 					}
 				}
 			}

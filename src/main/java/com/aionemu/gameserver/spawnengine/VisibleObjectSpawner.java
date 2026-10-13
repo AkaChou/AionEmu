@@ -25,7 +25,8 @@ import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.BaseService;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -319,8 +320,8 @@ public class VisibleObjectSpawner {
 			return null;
 		}
 		int spawnId = spawn.getId();
-		boolean isActive = GameFeatureServices.baseService().isActive(spawnId);
-		BaseLocation base = GameFeatureServices.baseService().getBaseLocation(spawnId);
+		boolean isActive = BaseService.getInstance().isActive(spawnId);
+		BaseLocation base = BaseService.getInstance().getBaseLocation(spawnId);
 		IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
 		Npc npc;
 		if (!isActive && spawn.getBaseRace() != base.getRace()) {
@@ -398,7 +399,7 @@ public class VisibleObjectSpawner {
 		IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
 		Npc npc;
 		int spawnSiegeId = spawn.getSiegeId();
-		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(spawnSiegeId);
+		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(spawnSiegeId);
 		if ((spawn.isPeace() || loc.isVulnerable()) && spawnSiegeId == loc.getLocationId() && spawn.getSiegeRace() == loc.getRace()) {
 			npc = new SiegeNpc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
 			npc.setKnownlist(new NpcKnownList(npc));

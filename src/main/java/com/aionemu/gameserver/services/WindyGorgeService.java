@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -13,13 +12,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Wnkrz
  */
 public class WindyGorgeService {
-	/**
-	 * -- SETTER --
-	 *  设置 Spring 实例提供者。
-	 *  Sets the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<WindyGorgeService> instanceProvider;
+	private static volatile WindyGorgeService resolvedInstance;
 
 	/**
 	 * 玩家登录时发送风谷相关数据包。
@@ -42,14 +36,30 @@ public class WindyGorgeService {
 	 *         when no provider or bean is available
 	 */
 	public static WindyGorgeService getInstance() {
+		WindyGorgeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<WindyGorgeService> provider = instanceProvider;
-		WindyGorgeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("WindyGorgeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<WindyGorgeService> instanceProvider) {
+		WindyGorgeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

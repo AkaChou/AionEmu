@@ -9,7 +9,10 @@ import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.TowerOfEternityService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.BaseService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.AStationService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -90,7 +93,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(activePlayer);
 		activePlayer.getController().refreshZoneImpl();
 		if (activePlayer.isInSiegeWorld()) {
-			GameFeatureServices.siegeService().onEnterSiegeWorld(activePlayer);
+			SiegeService.getInstance().onEnterSiegeWorld(activePlayer);
 		}
 		activePlayer.getController().updateZone();
 		activePlayer.getController().updateNearbyQuests();
@@ -99,7 +102,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 			if (activePlayer.A_STATION_TYPE == 1) {
 				activePlayer.A_STATION_TYPE = 2;
 			} else if (activePlayer.A_STATION_TYPE == 2) {
-				GameFeatureServices.aStationService().handleMoveBack(activePlayer);
+				AStationService.getInstance().handleMoveBack(activePlayer);
 			}
 		}
 		GameEngineServices.questEngine().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
@@ -114,9 +117,9 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// 城镇 3.9 / Town 3.9
 		GameHousingServices.townService().onEnterWorld(activePlayer);
 		// 守护者/征服者 / Protector Conqueror
-		GameFeatureServices.protectorConquerorService().onEnterMap(activePlayer);
+		ProtectorConquerorService.getInstance().onEnterMap(activePlayer);
 		// 基地 4.3 / Base 4.3
-		GameFeatureServices.baseService().onEnterBaseWorld(activePlayer);
+		BaseService.getInstance().onEnterBaseWorld(activePlayer);
 		// 术古皇陵 4.3 / Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
 		// 欧比斯登陆 4.9.1 / Abyss Landing 4.9.1

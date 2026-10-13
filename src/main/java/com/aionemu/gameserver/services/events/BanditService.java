@@ -42,6 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class BanditService {
 	private static volatile ObjectProvider<BanditService> instanceProvider;
+	private static volatile BanditService resolvedInstance;
 
 	/**
 	 * 初始化服务。
@@ -283,14 +284,19 @@ public class BanditService {
 	 *                               when no provider or bean is available
 	 */
 	public static BanditService getInstance() {
+		BanditService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<BanditService> provider = instanceProvider;
-		BanditService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("BanditService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -301,5 +307,6 @@ public class BanditService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<BanditService> instanceProvider) {
 		BanditService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

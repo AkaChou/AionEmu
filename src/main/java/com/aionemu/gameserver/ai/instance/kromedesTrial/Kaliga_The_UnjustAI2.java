@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.kromedesTrial;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -91,7 +91,7 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 				cancelPhaseTask();
 			} else {
 				// 嗯嗯……轰隆…… / Mmmmm.... Rumble....
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -175,6 +175,6 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 	}
 
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

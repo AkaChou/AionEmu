@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.base;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -79,7 +79,7 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 			}
 			landingWinBase(race);
 		}
-		GameFeatureServices.baseService().capture(base.getId(), base.getRace());
+		BaseService.getInstance().capture(base.getId(), base.getRace());
 	}
 
 	/**

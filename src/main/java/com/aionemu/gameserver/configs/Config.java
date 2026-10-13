@@ -65,7 +65,8 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.services.BeritraService;
@@ -330,7 +331,7 @@ public class Config {
 			GameRuntimeServices.playerTransferService().reload();
 			GameWorldServices.dropRegistrationService().reload();
 			DateTimeUtil.init();
-			GameFeatureServices.protectorConquerorService().initSystem();
+			ProtectorConquerorService.getInstance().initSystem();
 			GameEventServices.playerEventService().reload();
 			GameEventServices.abyssRankUpdateService().reload();
 			GameEventServices.crazyDaevaService().startTimer();
@@ -345,7 +346,7 @@ public class Config {
 			NightmareCircusService.getInstance().reloadSchedule();
 			RiftService.getInstance().reloadSchedule();
 			RvrService.getInstance().reloadSchedule();
-			GameFeatureServices.siegeService().reloadSchedule();
+			SiegeService.getInstance().reloadSchedule();
 			SvsService.getInstance().reloadSchedule();
 			VortexService.getInstance().reloadSchedule();
 			ZorshivDredgionService.getInstance().reloadSchedule();

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -27,6 +27,6 @@ public class CM_SHOW_MAP extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		GameFeatureServices.protectorConquerorService().updateIcons(player);
+		ProtectorConquerorService.getInstance().updateIcons(player);
 	}
 }

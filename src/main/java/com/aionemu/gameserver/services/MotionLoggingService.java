@@ -48,13 +48,8 @@ import java.util.Map;
 @Slf4j
 public class MotionLoggingService {
 
-	/**
-	 * -- SETTER --
-	 *  注入 Spring 的实例提供者。
-	 *  Injects the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
+	private static volatile MotionLoggingService resolvedInstance;
 
 	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<>();
 
@@ -88,14 +83,30 @@ public class MotionLoggingService {
 	 *         when no provider or bean is available
 	 */
 	public static MotionLoggingService getInstance() {
+		MotionLoggingService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MotionLoggingService> provider = instanceProvider;
-		MotionLoggingService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("MotionLoggingService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<MotionLoggingService> instanceProvider) {
+		MotionLoggingService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

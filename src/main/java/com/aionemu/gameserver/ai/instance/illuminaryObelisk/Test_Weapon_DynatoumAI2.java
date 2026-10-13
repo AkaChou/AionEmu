@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -44,13 +44,13 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 				case 233740: //Test Weapon Dynatoum.
 					// 约有 6 分钟击杀首领，启动封印前全队须就绪。 / You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					// 试验武器迪纳图姆的炸弹计时已开始倒计时。 / The Test Weapon Dynatoum's bomb timer has begun its countdown.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402143, 0);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402143, 0);
 					// 试验武器迪纳图姆将在 5 分钟后引爆。 / Test Weapon Dynatoum will go off in 5 minutes.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402144, 60000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402144, 60000);
 					// 试验武器迪纳图姆将在 1 分钟后引爆。 / Test Weapon Dynatoum will go off in 1 minute.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402145, 300000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402145, 300000);
 					// 试验武器迪纳图姆已引爆。 / Test Weapon Dynatoum has detonated.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402146, 360000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402146, 360000);
 					testDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Test_Weapon_DynatoumAI2.this), 360000);
 				break;
 			}

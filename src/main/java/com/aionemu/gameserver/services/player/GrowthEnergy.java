@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -24,13 +23,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class GrowthEnergy {
 	private boolean dailyGenerated = true;
-    /**
-     * -- SETTER --
-     *  设置实例提供者（Spring 注入）。
-     *  Sets the instance provider (Spring injection).
-     */
-    @Setter
     private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
+    private static volatile GrowthEnergy resolvedInstance;
 
 	/**
 	 * 初始化。
@@ -139,14 +133,30 @@ public class GrowthEnergy {
 	 *         when no provider or bean is available
 	 */
 	public static GrowthEnergy getInstance() {
+		GrowthEnergy resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<GrowthEnergy> provider = instanceProvider;
-		GrowthEnergy provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("GrowthEnergy 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<GrowthEnergy> instanceProvider) {
+		GrowthEnergy.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/** 玩家 DAO / Player DAO */

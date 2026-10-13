@@ -11,7 +11,7 @@ import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.geometry.*;
@@ -198,7 +198,7 @@ public final class ZoneService implements GameEngine {
 		if (areas == null) {
 			return zones;
 		}
-		GameFeatureServices.shieldService().load(mapId);
+		ShieldService.getInstance().load(mapId);
 
 		for (ZoneInfo area : areas) {
 			ZoneInstance instance;
@@ -213,7 +213,7 @@ public final class ZoneService implements GameEngine {
 				if (siege != null) {
 					siege.addZone((SiegeZoneInstance) instance);
 					if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
-						GameFeatureServices.shieldService().attachShield(siege);
+						ShieldService.getInstance().attachShield(siege);
 					}
 				}
 				break;
@@ -306,7 +306,7 @@ public final class ZoneService implements GameEngine {
 			if (materialId == 11) {
 				if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
 					handler = new SiegeShield(geometry);
-					GameFeatureServices.shieldService().registerShield(worldId, (SiegeShield) handler);
+					ShieldService.getInstance().registerShield(worldId, (SiegeShield) handler);
 				} else {
 					return;
 				}

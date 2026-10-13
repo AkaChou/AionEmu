@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +25,7 @@ public class SM_SHIELD_EFFECT extends AionServerPacket {
 	 */
 	public SM_SHIELD_EFFECT(int location) {
 		this.locations = new ArrayList<>();
-		this.locations.add(GameFeatureServices.siegeService().getSiegeLocation(location));
+		this.locations.add(SiegeService.getInstance().getSiegeLocation(location));
 	}
 
 	@Override

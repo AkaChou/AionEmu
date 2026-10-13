@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -163,6 +163,6 @@ public class FissurefangAI2 extends AggressiveNpcAI2
 	}
 
 	private void sendMsg(int msg) {
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
 }

@@ -31,6 +31,7 @@ public class PlayerLimitService {
 	 */
 	private static ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
+	private static volatile PlayerLimitService resolvedInstance;
 
 	/**
 	 * 更新出售限额，超出限额则拒绝并提示。
@@ -87,14 +88,19 @@ public class PlayerLimitService {
 	 *                               when no provider or bean is available
 	 */
 	public static PlayerLimitService getInstance() {
+		PlayerLimitService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PlayerLimitService> provider = instanceProvider;
-		PlayerLimitService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PlayerLimitService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -105,5 +111,6 @@ public class PlayerLimitService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerLimitService> instanceProvider) {
 		PlayerLimitService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

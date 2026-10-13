@@ -7,7 +7,7 @@ import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import lombok.Getter;
@@ -136,7 +136,7 @@ public class DespawnableNode extends Node {
 	/** 按 ID 查找攻城地点；失败返回 null / Looks up siege location by id; null on failure */
 	private SiegeLocation getSiegeLocation() {
 		try {
-			return GameFeatureServices.siegeService().getSiegeLocation(id);
+			return SiegeService.getInstance().getSiegeLocation(id);
 		} catch (NullPointerException e) {
 			return null;
 		}

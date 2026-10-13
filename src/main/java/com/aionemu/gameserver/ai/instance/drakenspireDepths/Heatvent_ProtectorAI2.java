@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -47,11 +47,11 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 236228: //Heatvent Protector.
 					// 若 5 分钟内未击败守护者，分遣队突击小队将牺牲自身摧毁泉源。 / If the Protectors are not defeated in 5 minutes, the Detachment's Rush Squad will sacrifice themselves to destroy the Fount.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402684, 0);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402684, 0);
 					// 1 分钟后，分遣队突击小队将决心牺牲并尝试摧毁泉源。 / In 1 minute, the Detachment's Rush Squad will resolve to sacrifice themselves and attempt to destroy the Fount.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402685, 240000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402685, 240000);
 					// 片刻后，分遣队突击小队将怀着牺牲决心攻击泉源。 / In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402686, 270000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402686, 270000);
 					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
 						AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
 						// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.siege;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -33,13 +33,13 @@ public class Siege_TeleporterAI2 extends GeneralNpcAI2
 
 	private void siegeTeleport(final boolean status) {
 		final int id = ((SiegeNpc) getOwner()).getSiegeId();
-		GameFeatureServices.siegeService().getFortress(id).setCanTeleport(status);
+		SiegeService.getInstance().getFortress(id).setCanTeleport(status);
 		getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_FORTRESS_INFO(id, status)));
 	}
 
 	private void artifactTeleport(final boolean status) {
         final int id = ((SiegeNpc) getOwner()).getSiegeId();
-        GameFeatureServices.siegeService().getArtifact(id).setCanTeleport(status);
+        SiegeService.getInstance().getArtifact(id).setCanTeleport(status);
         getPosition().getWorldMapInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_ABYSS_ARTIFACT_INFO3(id, status)));
     }
 }

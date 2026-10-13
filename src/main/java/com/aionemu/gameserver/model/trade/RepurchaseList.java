@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.trade;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.RepurchaseService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ public class RepurchaseList {
 	private final List<Item> repurchases = new ArrayList<>();
 
 	public void addRepurchaseItem(Player player, int itemObjectId, long count) {
-		Item item = GameFeatureServices.repurchaseService().getRepurchaseItem(player, itemObjectId);
+		Item item = RepurchaseService.getInstance().getRepurchaseItem(player, itemObjectId);
 		if (item != null) {
 			repurchases.add(item);
 		}

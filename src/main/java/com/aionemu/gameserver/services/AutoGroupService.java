@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -231,9 +230,9 @@ public class AutoGroupService {
 			return false;
 		}
 		if (agt.isDredgion()) {
-			return GameFeatureServices.dredgionService().isDredgionAvailable();
+			return DredgionService2.getInstance().isDredgionAvailable();
 		} else if (agt.isAsyunatar()) {
-			return GameFeatureServices.asyunatarService().isAsyunatarAvailable();
+			return AsyunatarService.getInstance().isAsyunatarAvailable();
 		} else if (agt.isKamar()) {
 			return GameBattlefieldServices.kamarBattlefieldService().isKamarAvailable();
 		} else if (agt.isOphidan()) {
@@ -262,9 +261,9 @@ public class AutoGroupService {
 
 	private static boolean hasBattlefieldCoolDown(Player player, AutoGroupType agt) {
 		if (agt.isDredgion()) {
-			return GameFeatureServices.dredgionService().hasCoolDown(player);
+			return DredgionService2.getInstance().hasCoolDown(player);
 		} else if (agt.isAsyunatar()) {
-			return GameFeatureServices.asyunatarService().hasCoolDown(player);
+			return AsyunatarService.getInstance().hasCoolDown(player);
 		} else if (agt.isKamar()) {
 			return GameBattlefieldServices.kamarBattlefieldService().hasCoolDown(player);
 		} else if (agt.isOphidan()) {
@@ -292,15 +291,15 @@ public class AutoGroupService {
 	 * @param player logging-in player
 	 */
 	public void onPlayerLogin(Player player) {
-		if (GameFeatureServices.dredgionService().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
+		if (DredgionService2.getInstance().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
 			&& player.getLevel() < DredgionService2.capLevel
-			&& !GameFeatureServices.dredgionService().hasCoolDown(player)) {
+			&& !DredgionService2.getInstance().hasCoolDown(player)) {
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(
-				GameFeatureServices.dredgionService().getInstanceMaskId(player), SM_AUTO_GROUP.wnd_EntryIcon));
+				DredgionService2.getInstance().getInstanceMaskId(player), SM_AUTO_GROUP.wnd_EntryIcon));
 		}
-		if (GameFeatureServices.asyunatarService().isAsyunatarAvailable() && player.getLevel() > AsyunatarService.minLevel
+		if (AsyunatarService.getInstance().isAsyunatarAvailable() && player.getLevel() > AsyunatarService.minLevel
 			&& player.getLevel() < AsyunatarService.capLevel
-			&& !GameFeatureServices.asyunatarService().hasCoolDown(player)) {
+			&& !AsyunatarService.getInstance().hasCoolDown(player)) {
 			PacketSendUtility.sendPacket(player,
 				new SM_AUTO_GROUP(AsyunatarService.maskId, SM_AUTO_GROUP.wnd_EntryIcon));
 		}

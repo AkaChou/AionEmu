@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services.mail;
 import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -15,7 +14,6 @@ import java.util.List;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -50,15 +48,8 @@ public class SystemMailService {
 		void execute();
 	}
 
-	/**
-	 * Spring provider used to override the default singleton / Spring provider used to override the default singleton
-	 * -- SETTER --
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider to override the default singleton.
-	 * provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<SystemMailService> instanceProvider;
+	private static volatile SystemMailService resolvedInstance;
 
 	private final PlayerDao playerDAO;
 	private final InventoryDao inventoryDAO;
@@ -76,14 +67,30 @@ public class SystemMailService {
 	 *                               when no provider or bean is available
 	 */
 	public static SystemMailService getInstance() {
+		SystemMailService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<SystemMailService> provider = instanceProvider;
-		SystemMailService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("SystemMailService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<SystemMailService> instanceProvider) {
+		SystemMailService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -384,7 +391,7 @@ public class SystemMailService {
 	 */
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {
 		final MailRewardTemplate reward = DataManager.MAIL_REWARD.getMailReward(templateId);
-		GameFeatureServices.systemMailService().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
+		SystemMailService.getInstance().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
 			reward.getBody() + "\\n\\n" + reward.getTail(), reward.getItemId(), reward.getItemCount(),
 			reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
 	}

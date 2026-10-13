@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.drop;
 import com.aionemu.gameserver.services.drop.DropService;
 import java.util.Objects;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
@@ -40,13 +39,8 @@ public class DropDistributionService {
 		this.dropService = Objects.requireNonNull(dropService, "dropService must not be null");
 	}
 
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
     private static volatile ObjectProvider<DropDistributionService> instanceProvider;
+    private static volatile DropDistributionService resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -59,14 +53,30 @@ public class DropDistributionService {
 	 *         when no provider or bean is available
 	 */
 	public static DropDistributionService getInstance() {
+		DropDistributionService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<DropDistributionService> provider = instanceProvider;
-		DropDistributionService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("DropDistributionService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<DropDistributionService> instanceProvider) {
+		DropDistributionService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

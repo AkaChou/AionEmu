@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -85,12 +85,12 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			if (!isAlreadyDead()) {
 				EmoteManager.emoteStopAttacking(getOwner());
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400259);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400259);
 				GameEngineServices.skillEngine().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
 				GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					if (!isAlreadyDead()) {
 						getOwner().getController().onDelete();
-						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400260);
+						NpcShoutsService.getInstance().sendMsg(getOwner(), 1400260);
 					}
 				}, 2000);
 			}

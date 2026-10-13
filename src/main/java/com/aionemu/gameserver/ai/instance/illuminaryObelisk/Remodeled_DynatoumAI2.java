@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -44,13 +44,13 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 				case 234686: //Remodeled Dynatoum.
 					// 约有 6 分钟击杀首领，启动封印前全队须就绪。 / You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					// 改造的迪纳图姆炸弹已开始倒计时。 / The Remodeled Dynatoum bomb has begun counting down.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402425, 0);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402425, 0);
 					// 改造的迪纳图姆将在 5 分钟后爆炸。 / The Remodeled Dynatoum will explode in 5 minutes.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402426, 60000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402426, 60000);
 					// 改造的迪纳图姆将在 1 分钟后爆炸。 / The Remodeled Dynatoum will explode in 1 minute.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402427, 300000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402427, 300000);
 					// 改造的迪纳图姆即将爆炸。 / The Remodeled Dynatoum is going to explode.
-					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402428, 360000);
+					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402428, 360000);
 					remodeledDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Remodeled_DynatoumAI2.this), 360000);
 				break;
 			}

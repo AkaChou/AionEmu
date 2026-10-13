@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.events.FFAService;
 
 
 import java.sql.Timestamp;
@@ -904,7 +904,7 @@ public class Player extends Creature {
 		if (enemy.getBattleground() != null && this.getBattleground() != null) {
 			return true;
 		}
-		if (GameFeatureServices.ffaService().isInArena(enemy) && enemy.isFFA()) {
+		if (FFAService.getInstance().isInArena(enemy) && enemy.isFFA()) {
 			return true;
 		}
 		if (!enemy.getRace().equals(getRace()) || getController().isDueling(enemy) || enemy.isBandit()) {
@@ -926,7 +926,7 @@ public class Player extends Creature {
 		if (player.isBandit() || this.isBandit()) {
 			return true;
 		}
-		return !player.getRace().equals(getRace()) || player.getBattleground() != null || GameFeatureServices.ffaService().isInArena(player) && player.isFFA() || player.isBandit();
+		return !player.getRace().equals(getRace()) || player.getBattleground() != null || FFAService.getInstance().isInArena(player) && player.isFFA() || player.isBandit();
 	}
 
 	public boolean isInSameTeam(Player player) {

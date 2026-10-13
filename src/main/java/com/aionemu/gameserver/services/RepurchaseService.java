@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -25,13 +24,8 @@ import com.google.common.collect.Multimap;
  */
 public class RepurchaseService {
 
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
     private static volatile ObjectProvider<RepurchaseService> instanceProvider;
+    private static volatile RepurchaseService resolvedInstance;
 	private final Multimap<Integer, Item> repurchaseItems;
 
 	/**
@@ -143,14 +137,30 @@ public class RepurchaseService {
 	 *         when no provider or bean is available
 	 */
 	public static RepurchaseService getInstance() {
+		RepurchaseService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<RepurchaseService> provider = instanceProvider;
-		RepurchaseService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("RepurchaseService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<RepurchaseService> instanceProvider) {
+		RepurchaseService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

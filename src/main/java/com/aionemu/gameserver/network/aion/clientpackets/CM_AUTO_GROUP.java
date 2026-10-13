@@ -4,7 +4,9 @@ import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.instance.AsyunatarService;
 
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
@@ -62,13 +64,13 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			AutoGroupService.getInstance().cancelEnter(player, instanceMaskId);
 			break;
 		case 104:
-			GameFeatureServices.dredgionService().showWindow(player, instanceMaskId);
+			DredgionService2.getInstance().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
 			// 版本 5.1 / Ver. 5.1
-			GameFeatureServices.asyunatarService().showWindow(player, instanceMaskId);
+			AsyunatarService.getInstance().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
 			// 版本 5.3 / Ver. 5.3
@@ -82,7 +84,7 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			break;
 		}
 		if (PvPModConfig.BG_ENABLED) {
-			GameFeatureServices.ladderService().handleWindow(player, windowId, entryRequestId);
+			LadderService.getInstance().handleWindow(player, windowId, entryRequestId);
 		}
 	}
 }

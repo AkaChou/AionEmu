@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.events.LadderService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -271,13 +271,13 @@ public abstract class TwoTeamRoundBg extends Battleground {
 					for (PlayerGroup group : super.getGroups()) {
 						for (Player pl : group.getMembers()) {
 							super.scheduleAnnouncement(pl,
-								GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
+								LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex())
 									+ " Win's the round!",
 								0);
 						}
 					}
 					super.specAnnounce(
-						GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
+						LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
 					startNewRound();
 					return;
 				}
@@ -320,7 +320,7 @@ public abstract class TwoTeamRoundBg extends Battleground {
 					}
 				}
 			}
-			super.specAnnounce(GameFeatureServices.ladderService().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
+			super.specAnnounce(LadderService.getInstance().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
 		}
 		super.onEndDefault();
 	}

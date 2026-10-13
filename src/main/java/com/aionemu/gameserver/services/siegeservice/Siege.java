@@ -4,7 +4,7 @@ package com.aionemu.gameserver.services.siegeservice;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import java.util.Collection;
 import java.util.Date;
@@ -112,7 +112,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @param locationId 据点 ID / location id
 	 */
 	public final void startSiege(int locationId) {
-		GameFeatureServices.siegeService().startSiege(locationId);
+		SiegeService.getInstance().startSiege(locationId);
 	}
 
 	/**
@@ -223,7 +223,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @param type 攻城模式 / siege mod type
 	 */
 	protected void spawnNpcs(int locationId, SiegeRace race, SiegeModType type) {
-		GameFeatureServices.siegeService().spawnNpcs(locationId, race, type);
+		SiegeService.getInstance().spawnNpcs(locationId, race, type);
 	}
 
 	/**
@@ -232,7 +232,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @param locationId 据点 ID / location id
 	 */
 	protected void deSpawnNpcs(int locationId) {
-		GameFeatureServices.siegeService().deSpawnNpcs(locationId);
+		SiegeService.getInstance().deSpawnNpcs(locationId);
 	}
 
 	/**
@@ -241,7 +241,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @param location 攻城据点 / siege location
 	 */
 	protected void broadcastState(SiegeLocation location) {
-		GameFeatureServices.siegeService().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
+		SiegeService.getInstance().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
 	}
 
 	/**
@@ -250,7 +250,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 * @param location 攻城据点 / siege location
 	 */
 	protected void broadcastUpdate(SiegeLocation location) {
-		GameFeatureServices.siegeService().broadcastUpdate(location);
+		SiegeService.getInstance().broadcastUpdate(location);
 	}
 
 	/**
@@ -281,7 +281,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 		@Override
 		public void onAfterDie(AbstractAI obj) {
 			siege.setBossKilled(true);
-			GameFeatureServices.siegeService().stopSiege(siege.getSiegeLocationId());
+			SiegeService.getInstance().stopSiege(siege.getSiegeLocationId());
 		}
 	}
 }

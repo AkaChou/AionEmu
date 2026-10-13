@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.drakenseerLair;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -65,11 +65,11 @@ public class IDF6_Dragon_Artifact_Boost_BAI2 extends NpcAI2
 		// 增援已抵达，保护护盾导管。 / Reinforcements have arrived to defend the Shielding Conduits.
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDF6_Dragon_Attack_Tower, 0);
 		//准备战斗！敌人接近！ / Prepare for combat! Enemies approaching!
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402785, 10000);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), 1402785, 10000);
 		//再坚持一下就能活下来。 / Hold a little longer and you will survive.
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402833, 20000);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), 1402833, 20000);
 		//只剩少数敌人！ / Only a few enemies left!
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402834, 30000);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), 1402834, 30000);
 		dragonRaid((Npc)spawn(220432, 274.73267f, 204.81718f, 318.10443f, (byte) 18), 292.63412f, 227.10744f, 318.7312f, false);
 		dragonRaid((Npc)spawn(220433, 274.73267f, 204.81718f, 318.10443f, (byte) 18), 292.63412f, 227.10744f, 318.7312f, false);
 		dragonRaid((Npc)spawn(220432, 274.73267f, 204.81718f, 318.10443f, (byte) 18), 292.63412f, 227.10744f, 318.7312f, false);

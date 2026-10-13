@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.toypet;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -119,13 +118,13 @@ public class PetSpawnService {
 			PetFeedProgress progress = toyPet.getCommonData().getFeedProgress();
 			if (progress != null) {
 				toyPet.getCommonData().setCancelFeed(true);
-				GameFeatureServices.petService().playerPetsDAO().saveFeedStatus(player, toyPet.getPetId(),
+				PetService.getInstance().playerPetsDAO().saveFeedStatus(player, toyPet.getPetId(),
 					progress.getHungryLevel().getValue(), progress.getDataForPacket(),
 					toyPet.getCommonData().getCurentTime());
 			}
 			PetDopingBag bag = toyPet.getCommonData().getDopingBag();
 			if (bag != null && bag.isDirty()) {
-				GameFeatureServices.petService().playerPetsDAO().saveDopingBag(player, toyPet.getPetId(), bag);
+				PetService.getInstance().playerPetsDAO().saveDopingBag(player, toyPet.getPetId(), bag);
 			}
 			player.getController().cancelTask(TaskId.PET_UPDATE);
 

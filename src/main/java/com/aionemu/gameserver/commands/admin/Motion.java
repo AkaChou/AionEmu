@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.MotionLoggingService;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
@@ -50,24 +50,24 @@ public class Motion extends AdminCommand implements StatOwner {
 			PacketSendUtility.sendMessage(player, "//motion createxml - create new_motion_times.xml in definitions/compact/skills");
 		}
 		else if (params[0].equalsIgnoreCase("start")) {
-			GameFeatureServices.motionLoggingService().start();
+			MotionLoggingService.getInstance().start();
 			PacketSendUtility.sendMessage(player, "MotionLogginService was started!\nData loaded from DB.");
 		}
 		else if (params[0].equalsIgnoreCase("analyze")) {
-			GameFeatureServices.motionLoggingService().createAnalyzeFiles();
+			MotionLoggingService.getInstance().createAnalyzeFiles();
 			PacketSendUtility.sendMessage(player, "Created testing files!");
 		}
 		else if (params[0].equalsIgnoreCase("createxml")) {
-			GameFeatureServices.motionLoggingService().createFinalFile();
+			MotionLoggingService.getInstance().createFinalFile();
 			PacketSendUtility.sendMessage(player, "Created new_motion_times.xml in definitions/compact/skills!");
 		}
 		else if (params[0].equalsIgnoreCase("savetosql")) {
-			GameFeatureServices.motionLoggingService().saveToSql();
+			MotionLoggingService.getInstance().saveToSql();
 			PacketSendUtility.sendMessage(player, "MotionLog data saved to sql!");
 		}
 		else if (params[0].equalsIgnoreCase("advanced")) {
-			GameFeatureServices.motionLoggingService().setAdvancedLog((!GameFeatureServices.motionLoggingService().getAdvancedLog()));
-			PacketSendUtility.sendMessage(player, "AdvancedLog set to: "+GameFeatureServices.motionLoggingService().getAdvancedLog());
+			MotionLoggingService.getInstance().setAdvancedLog((!MotionLoggingService.getInstance().getAdvancedLog()));
+			PacketSendUtility.sendMessage(player, "AdvancedLog set to: "+MotionLoggingService.getInstance().getAdvancedLog());
 		}
 		else if (params[0].equalsIgnoreCase("as")) {
 			int parameter = 10000;

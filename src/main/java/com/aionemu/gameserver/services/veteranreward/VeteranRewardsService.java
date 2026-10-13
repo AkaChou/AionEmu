@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services.veteranreward;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
@@ -34,6 +33,7 @@ import java.util.HashSet;
 @Slf4j(topic = "VETERANREWARD_LOG")
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
+	private static volatile VeteranRewardsService resolvedInstance;
 
 	private final VeteranRewardDao veteranRewardsDAO;
 	private final PlayerDao playerDAO;
@@ -280,7 +280,7 @@ public class VeteranRewardsService {
 
 		SystemMailService.TransactionAction transactionAction = rewardId > 1
 			? () -> veteranRewardsDAO.deleteInTransaction(rewardId) : null;
-		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
+		boolean delivered = SystemMailService.getInstance().sendMail(sender, recipientName, title, message,
 			attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 
 		return delivered;
@@ -296,15 +296,20 @@ public class VeteranRewardsService {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final VeteranRewardsService getInstance() {
+	public static VeteranRewardsService getInstance() {
+		VeteranRewardsService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<VeteranRewardsService> provider = instanceProvider;
-		VeteranRewardsService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("VeteranRewardsService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -315,5 +320,6 @@ public class VeteranRewardsService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<VeteranRewardsService> instanceProvider) {
 		VeteranRewardsService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

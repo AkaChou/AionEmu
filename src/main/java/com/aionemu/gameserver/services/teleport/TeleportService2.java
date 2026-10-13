@@ -7,7 +7,8 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.AStationService;
+import com.aionemu.gameserver.services.DisputeLandService;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
@@ -569,9 +570,9 @@ public class TeleportService2 {
 			player.getKnownList().clear();
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			GameFeatureServices.disputeLandService().onLogin(player);
+			DisputeLandService.getInstance().onLogin(player);
 			player.getEffectController().updatePlayerEffectIcons();
-			ProtectorConquerorService sgs = GameFeatureServices.protectorConquerorService();
+			ProtectorConquerorService sgs = ProtectorConquerorService.getInstance();
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
@@ -819,7 +820,7 @@ public class TeleportService2 {
 				player.getEffectController().updatePlayerEffectIcons();
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
-				GameFeatureServices.disputeLandService().onLogin(player);
+				DisputeLandService.getInstance().onLogin(player);
 
 				playerTransformation(player);
 				instanceTransformation(player);
@@ -1262,7 +1263,7 @@ public class TeleportService2 {
 			PacketSendUtility.sendPacket(player, new SM_A_STATION_MOVE(NetworkConfig.GAMESERVER_ID, serverId, player.getWorldId()));
 			PacketSendUtility.sendPacket(player, new SM_A_STATION(NetworkConfig.GAMESERVER_ID, serverId, false));
 			PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
-			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), true);
+			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), true);
 		} else {
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
 			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
@@ -1274,7 +1275,7 @@ public class TeleportService2 {
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
-			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), false);
+			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), false);
 		}
 	}
 

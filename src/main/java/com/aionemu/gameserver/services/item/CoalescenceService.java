@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.item;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,14 +35,8 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 @Slf4j
 public class CoalescenceService {
 
-	/** Spring ObjectProvider preferred over local singleton / Spring ObjectProvider preferred over local singleton
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  provider
-     */
-	@Setter
     private static volatile ObjectProvider<CoalescenceService> instanceProvider;
+    private static volatile CoalescenceService resolvedInstance;
 
 	/**
 	 * 执行融合：播放读条动画，消耗核心与材料，随机发放同槽位大天使装备，并按材料数判定奖励。
@@ -184,14 +177,30 @@ public class CoalescenceService {
 	 *         when no provider or bean is available
 	 */
 	public static CoalescenceService getInstance() {
+		CoalescenceService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<CoalescenceService> provider = instanceProvider;
-		CoalescenceService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("CoalescenceService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<CoalescenceService> instanceProvider) {
+		CoalescenceService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

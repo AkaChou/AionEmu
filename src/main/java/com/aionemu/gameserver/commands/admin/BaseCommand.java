@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -53,7 +53,7 @@ public class BaseCommand extends AdminCommand
 	 * @return {@code true} if valid。
 	 */
 	protected boolean isValidBaseLocationId(Player player, int baseId) {
-		if (!GameFeatureServices.baseService().getBaseLocations().containsKey(baseId)) {
+		if (!BaseService.getInstance().getBaseLocations().containsKey(baseId)) {
 			PacketSendUtility.sendMessage(player, "Id " + baseId + " is invalid");
 			return false;
 		}
@@ -69,7 +69,7 @@ public class BaseCommand extends AdminCommand
 			showHelp(player);
 			return;
 		}
-		for (BaseLocation base : GameFeatureServices.baseService().getBaseLocations().values()) {
+		for (BaseLocation base : BaseService.getInstance().getBaseLocations().values()) {
 			PacketSendUtility.sendMessage(player, "Base:" + base.getId() + " belongs to " + base.getRace());
 		}
 	}
@@ -97,9 +97,9 @@ public class BaseCommand extends AdminCommand
 			showHelp(player);
 			return;
 		}
-		Base base = GameFeatureServices.baseService().getActiveBase(baseId);
+		Base base = BaseService.getInstance().getActiveBase(baseId);
 		if (base != null) {
-			GameFeatureServices.baseService().capture(baseId, race);
+			BaseService.getInstance().capture(baseId, race);
 		}
 	}
 

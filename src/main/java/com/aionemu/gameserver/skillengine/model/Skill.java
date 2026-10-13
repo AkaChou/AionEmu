@@ -4,7 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.MotionLoggingService;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
@@ -340,7 +340,7 @@ public class Skill {
 
 		// 若施法者为玩家则记录技能时间 / log skill time if effector instance of player
 		if (effector instanceof Player) {
-			GameFeatureServices.motionLoggingService().logTime((Player) effector, this.getSkillTemplate(), this.getHitTime(), MathUtil.getDistance(effector, firstTarget));
+			MotionLoggingService.getInstance().logTime((Player) effector, this.getSkillTemplate(), this.getHitTime(), MathUtil.getDistance(effector, firstTarget));
 		}
 		boolean setCooldowns = true;
 		if (effector instanceof Player) {

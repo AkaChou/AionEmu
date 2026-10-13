@@ -6,7 +6,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -396,7 +395,7 @@ public class LegionService {
 		for (int memberObjId : legion.getLegionMembers()) {
 			this.allCachedLegionMembers.remove(legionMembers().getLegionMemberEx(memberObjId));
 		}
-		GameFeatureServices.siegeService().cleanLegionId(legion.getLegionId());
+		SiegeService.getInstance().cleanLegionId(legion.getLegionId());
 		updateAfterDisbandLegion(legion);
 		deleteLegionFromDB(legion);
 	}

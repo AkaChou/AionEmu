@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.walkers;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -48,7 +48,7 @@ public class NaiaAI2 extends GeneralNpcAI2
 		} else if (saidQydro && !isQydroNear) {
 			saidQydro = false;
 		} if (shouts != null) {
-			GameFeatureServices.npcShoutsService().shout(getOwner(), npc2, shouts, delay, false);
+			NpcShoutsService.getInstance().shout(getOwner(), npc2, shouts, delay, false);
 			shouts.clear();
 		}
 	}

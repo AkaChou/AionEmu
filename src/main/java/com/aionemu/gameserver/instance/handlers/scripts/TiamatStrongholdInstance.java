@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -207,13 +207,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(283177, 1178.7662f, 1068.971f, 500.6963f, (byte) 0); //Tiamat Eye.
 				Npc tiamatEye1 = getNpc(283177);
 				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500679, tiamatEye1.getObjectId(), 0, 3000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500679, tiamatEye1.getObjectId(), 0, 3000);
 				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500680, tiamatEye1.getObjectId(), 0, 9000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500680, tiamatEye1.getObjectId(), 0, 9000);
 				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500681, tiamatEye1.getObjectId(), 0, 15000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500681, tiamatEye1.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye1, 1500682, tiamatEye1.getObjectId(), 0, 21000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500682, tiamatEye1.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -238,13 +238,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			    spawn(283178, 628.3988f, 1319.0686f, 494.79846f, (byte) 119); //Tiamat Eye.
 				Npc tiamatEye2 = getNpc(283178);
 				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500679, tiamatEye2.getObjectId(), 0, 3000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500679, tiamatEye2.getObjectId(), 0, 3000);
 				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500680, tiamatEye2.getObjectId(), 0, 9000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500680, tiamatEye2.getObjectId(), 0, 9000);
 				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500681, tiamatEye2.getObjectId(), 0, 15000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500681, tiamatEye2.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye2, 1500682, tiamatEye2.getObjectId(), 0, 21000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500682, tiamatEye2.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -272,13 +272,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(283178, 644.7906f, 1068.6279f, 506.9512f, (byte) 119); //Tiamat Eye.
 				Npc tiamatEye3 = getNpc(283178);
 				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500679, tiamatEye3.getObjectId(), 0, 3000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500679, tiamatEye3.getObjectId(), 0, 3000);
 				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500680, tiamatEye3.getObjectId(), 0, 9000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500680, tiamatEye3.getObjectId(), 0, 9000);
 				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500681, tiamatEye3.getObjectId(), 0, 15000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500681, tiamatEye3.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye3, 1500682, tiamatEye3.getObjectId(), 0, 21000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500682, tiamatEye3.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -311,13 +311,13 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(730629, 1121.5267f, 1069.9308f, 500.24982f, (byte) 0, 555); //Central Transport Passage.
 				Npc tiamatEye4 = getNpc(283180);
 				// 无礼的守护者！竟敢摧毁我的副官！ / Insolent Daevas! Destroying my lieutenants!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500679, tiamatEye4.getObjectId(), 0, 3000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500679, tiamatEye4.getObjectId(), 0, 3000);
 				// 拉克夏卡对我很有用。你会看到夺走我工具者的下场。 / Laksyaka was useful to me. You'll see what happens to those who take away my tools.
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500680, tiamatEye4.getObjectId(), 0, 9000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500680, tiamatEye4.getObjectId(), 0, 9000);
 				// 我的副官临死所受痛苦，你将感受十倍！ / Whatever agony my lieutenants felt as they died, you will feel tenfold!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500681, tiamatEye4.getObjectId(), 0, 15000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500681, tiamatEye4.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
-				GameFeatureServices.npcShoutsService().sendMsg(tiamatEye4, 1500682, tiamatEye4.getObjectId(), 0, 21000);
+				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500682, tiamatEye4.getObjectId(), 0, 21000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					/**
 					 * 处理 run。
@@ -383,38 +383,38 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 			  		    Npc kahrun = getNpc(800338);
 						Npc garnon = getNpc(800347);
 						// 雷安士兵将守住此区域。你必须继续前进。快！ / The Reian Soldiers will secure this area. You must press on. Hurry!
-					    GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500597, kahrun.getObjectId(), 0, 5000);
+					    NpcShoutsService.getInstance().sendMsg(kahrun, 1500597, kahrun.getObjectId(), 0, 5000);
 					    // 令人印象深刻！我以为守门人会更难对付。 / I'm impressed! I thought the gatekeeper would be a greater challenge.
 						// 看来我们选对了冠军。 / I see we chose our champions well.
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500598, kahrun.getObjectId(), 0, 15000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500598, kahrun.getObjectId(), 0, 15000);
 						// 更深处有增援。我们必须对付他们。 / There are reinforcements further in. We must deal with them.
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500599, kahrun.getObjectId(), 0, 25000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500599, kahrun.getObjectId(), 0, 25000);
 					    // 你还在等什么？快去！ / What are you waiting for? Get going!
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500600, kahrun.getObjectId(), 0, 35000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500600, kahrun.getObjectId(), 0, 35000);
 						// 这说不通。一定有办法从这里到达提亚马特的王座！ / This makes no sense. There must be a way to get to Tiamat's throne from here!
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500601, kahrun.getObjectId(), 0, 45000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500601, kahrun.getObjectId(), 0, 45000);
 						// 加农？你怎么到这儿的？ / Garnon? How did you get here?
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500602, kahrun.getObjectId(), 0, 55000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500602, kahrun.getObjectId(), 0, 55000);
 						// 你找到了？它到底在哪？ / You've found it? Where in the world was it?
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500603, kahrun.getObjectId(), 0, 65000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500603, kahrun.getObjectId(), 0, 65000);
 						// 别浪费时间。最终之战即将到来。 / Let's not waste time. The final battle is upon us.
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500604, kahrun.getObjectId(), 0, 75000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500604, kahrun.getObjectId(), 0, 75000);
 						// 卡伦大人！ / Lord Kahrun!
-						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500605, garnon.getObjectId(), 0, 85000);
+						NpcShoutsService.getInstance().sendMsg(garnon, 1500605, garnon.getObjectId(), 0, 85000);
 						// 我们发现了龙主避难所的入口！ / We've found the entrance to the Dragon Lord's Refuge!
-						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500606, garnon.getObjectId(), 0, 95000);
+						NpcShoutsService.getInstance().sendMsg(garnon, 1500606, garnon.getObjectId(), 0, 95000);
 						// 我们派往提亚玛兰塔之眼的侦察兵才是你该问的人。 / The scouts we sent to Tiamaranta's Eye are the ones you should be asking.
-						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500607, garnon.getObjectId(), 0, 105000);
+						NpcShoutsService.getInstance().sendMsg(garnon, 1500607, garnon.getObjectId(), 0, 105000);
 						// 提亚马特。交出希尔遗物并离开提亚玛兰塔。 / Tiamat. Hand over Siel's Relics and leave Tiamaranta.
-						GameFeatureServices.npcShoutsService().sendMsg(garnon, 1500608, garnon.getObjectId(), 0, 115000);
+						NpcShoutsService.getInstance().sendMsg(garnon, 1500608, garnon.getObjectId(), 0, 115000);
 						// 我的部队正在赶来。 / My forces are on their way.
 						// 你真要与我们全面开战？这选择将给双方带来悲剧。 / Do you truly wish to face us in all-out battle? Such a choice will lead to tragedy for us all.
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500609, kahrun.getObjectId(), 0, 125000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500609, kahrun.getObjectId(), 0, 125000);
 						// 那么，你选择了毁灭之路。现在你将见识雷安部族的真正力量。 / Well then, you've chosen the path of destruction. Now you will see the true power of the Reian Tribe
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500610, kahrun.getObjectId(), 0, 135000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500610, kahrun.getObjectId(), 0, 135000);
 						// 啊啊啊！希……希尔的遗物…… / Aarrghh! Si...Siel's Relics...
 						// 他们比我们想象的更强！快跑！别独自面对！ / They are more powerful than we ever imagined! Run! You must not try to face this alone.
-						GameFeatureServices.npcShoutsService().sendMsg(kahrun, 1500611, kahrun.getObjectId(), 0, 145000);
+						NpcShoutsService.getInstance().sendMsg(kahrun, 1500611, kahrun.getObjectId(), 0, 145000);
 			  	    }
 				    npc.getController().onDelete();
 			    }

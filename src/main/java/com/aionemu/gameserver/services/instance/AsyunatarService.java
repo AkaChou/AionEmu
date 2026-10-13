@@ -43,6 +43,7 @@ public class AsyunatarService {
 		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
 	}
 	private static volatile ObjectProvider<AsyunatarService> instanceProvider;
+	private static volatile AsyunatarService resolvedInstance;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
@@ -169,14 +170,19 @@ public class AsyunatarService {
 	 *         when no provider or bean is available
 	 */
 	public static AsyunatarService getInstance() {
+		AsyunatarService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AsyunatarService> provider = instanceProvider;
-		AsyunatarService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AsyunatarService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -186,5 +192,6 @@ public class AsyunatarService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AsyunatarService> instanceProvider) {
 		AsyunatarService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

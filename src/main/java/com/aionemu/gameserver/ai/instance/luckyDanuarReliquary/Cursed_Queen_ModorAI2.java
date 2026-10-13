@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.luckyDanuarReliquary;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -222,7 +222,7 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇收割者 / 
 	}
 
 	private void sendMsg(int msg) {
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 
 	private void despawnNpcs(int npcId) {

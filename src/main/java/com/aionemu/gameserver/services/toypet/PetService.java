@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,14 +44,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class PetService {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 实例提供者。
-	 * Inject Spring instance provider.
-	 * Provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<PetService> instanceProvider;
+	private static volatile PetService resolvedInstance;
 
 	private PetBuff PetBuff;
 	private boolean autoBuff = false;
@@ -69,14 +62,30 @@ public class PetService {
 	 *                               when no provider or bean is available
 	 */
 	public static PetService getInstance() {
+		PetService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PetService> provider = instanceProvider;
-		PetService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PetService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PetService> instanceProvider) {
+		PetService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

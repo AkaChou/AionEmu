@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.NonNull;
@@ -73,7 +72,7 @@ public class WebshopService {
 			List<RewardEntryItem> liste = this.rewardServiceDAO.getAvailable(pl.getObjectId());
 			if (!liste.isEmpty()) {
 				for (RewardEntryItem item : liste) {
-					deliverRewardMail(pl.getName(), item, this.rewardServiceDAO, GameFeatureServices.systemMailService());
+					deliverRewardMail(pl.getName(), item, this.rewardServiceDAO, SystemMailService.getInstance());
 				}
 			}
 		}), 5 * 1000, 5 * 1000);

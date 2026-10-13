@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -310,10 +310,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								sendMsgByRace(1402994, Race.ELYOS, 0);
 								spawn(209695, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 								Npc PCGuard_Li_Talk_A = getNpc(209695);
-								GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402727, PCGuard_Li_Talk_A.getObjectId(), 0, 2000);
-								GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402728, PCGuard_Li_Talk_A.getObjectId(), 0, 6000);
-								GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402729, PCGuard_Li_Talk_A.getObjectId(), 0, 10000);
-								GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402730, PCGuard_Li_Talk_A.getObjectId(), 0, 14000);
+								NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402727, PCGuard_Li_Talk_A.getObjectId(), 0, 2000);
+								NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402728, PCGuard_Li_Talk_A.getObjectId(), 0, 6000);
+								NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402729, PCGuard_Li_Talk_A.getObjectId(), 0, 10000);
+								NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402730, PCGuard_Li_Talk_A.getObjectId(), 0, 14000);
 									deleteNpc(209695);
 									// 消灭恶臭幻焰大师并选择前进路径。 / Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
 									sendMsgByRace(1402995, Race.ELYOS, 0);
@@ -323,11 +323,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209863, 582.5062f, 180.2349f, 1683.7301f, (byte) 1); //Masionel.
 									Npc Masionel = getNpc(209863);
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									/**
 									 * 处理 run。
@@ -340,9 +340,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 分遣队爆破手已打开通往下一区域的道路。 / Detachment Demolisher has opened the path to the next area.
 									sendMsgByRace(1402689, Race.ELYOS, 0);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
 									}
 								}, 10000);
 							break;
@@ -357,10 +357,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402994, Race.ASMODIANS, 0);
 									spawn(209760, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 									Npc PCGuard_Da_Talk_A = getNpc(209760);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402727, PCGuard_Da_Talk_A.getObjectId(), 0, 2000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402728, PCGuard_Da_Talk_A.getObjectId(), 0, 6000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402729, PCGuard_Da_Talk_A.getObjectId(), 0, 10000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402730, PCGuard_Da_Talk_A.getObjectId(), 0, 14000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402727, PCGuard_Da_Talk_A.getObjectId(), 0, 2000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402728, PCGuard_Da_Talk_A.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402729, PCGuard_Da_Talk_A.getObjectId(), 0, 10000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402730, PCGuard_Da_Talk_A.getObjectId(), 0, 14000);
 									deleteNpc(209760);
 									// 消灭恶臭幻焰大师并选择前进路径。 / Eliminate the Fetid Phantomscorch Master and choose a path to proceed.
 									sendMsgByRace(1402995, Race.ASMODIANS, 0);
@@ -370,11 +370,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209883, 582.5062f, 180.2349f, 1683.7301f, (byte) 1); //Parsia.
 									Npc Parsia = getNpc(209883);
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									/**
 									 * 处理 run。
@@ -387,9 +387,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 分遣队爆破手已打开通往下一区域的道路。 / Detachment Demolisher has opened the path to the next area.
 									sendMsgByRace(1402689, Race.ASMODIANS, 0);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
 								    }
 								}, 10000);
 							break;
@@ -485,11 +485,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 爆破手喊话与生成同批执行，避免 0ms 并发任务取用时拿不到 NPC。 / Speak in the spawning task so the 0ms tasks cannot race.
 									Npc bomber = getNpc(209711); // 分遣队爆破手 / Detachment Demolisher.
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -502,10 +502,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    spawn(805363, 811.5f, 583.0642f, 1701.0447f, (byte) 32); // 基里奥斯 / Killios.
 									spawn(209713, 810.85767f, 588.2299f, 1701.0449f, (byte) 32);
 									Npc PCGuard_Li = getNpc(209713);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402727, PCGuard_Li.getObjectId(), 0, 2000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402728, PCGuard_Li.getObjectId(), 0, 6000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402729, PCGuard_Li.getObjectId(), 0, 10000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402727, PCGuard_Li.getObjectId(), 0, 2000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402728, PCGuard_Li.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402729, PCGuard_Li.getObjectId(), 0, 10000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -523,9 +523,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 10 秒后爆破手补完收尾喊话，节奏与双子场景一致。 / The demolisher closes 10s later, matching the twin scene.
 									Npc bomber = getNpc(209711);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
 								}
 							}, 10000);
 						break;
@@ -556,11 +556,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 爆破手喊话与生成同批执行，避免 0ms 并发任务取用时拿不到 NPC。 / Speak in the spawning task so the 0ms tasks cannot race.
 									Npc bomber = getNpc(209776); // 分遣队爆破手 / Detachment Demolisher.
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501314, bomber.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501312, bomber.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -573,10 +573,10 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    spawn(805366, 811.5f, 583.0642f, 1701.0447f, (byte) 32); // 阿伊玛 / Aimah.
 									spawn(209778, 810.85767f, 588.2299f, 1701.0449f, (byte) 32);
 									Npc PCGuard_Da = getNpc(209778);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402727, PCGuard_Da.getObjectId(), 0, 2000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402728, PCGuard_Da.getObjectId(), 0, 6000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402729, PCGuard_Da.getObjectId(), 0, 10000);
-									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402727, PCGuard_Da.getObjectId(), 0, 2000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402728, PCGuard_Da.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402729, PCGuard_Da.getObjectId(), 0, 10000);
+									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
 								}
 							}, 0);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -594,9 +594,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 10 秒后爆破手补完收尾喊话，节奏与双子场景一致。 / The demolisher closes 10s later, matching the twin scene.
 									Npc bomber = getNpc(209776);
 									// 现在可以通过了。 / We can get through now.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501311, bomber.getObjectId(), 0, 0);
 									// 请多保重。 / Please take care.
-									GameFeatureServices.npcShoutsService().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(bomber, 1501313, bomber.getObjectId(), 0, 6000);
 								}
 							}, 10000);
 						break;
@@ -978,11 +978,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Masionel = getNpc(209720);
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									// 黑暗阻挡了道路。是时候使用主神的攻城武器了。 / Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1004,9 +1004,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 爆破手已打开通往下一区域的道路。 / The Demolisher has opened the path to the next area.
 									sendMsgByRace(1403009, Race.PC_ALL, 15000);
 									// 充能完成！开火！！ / Charge complete! Fire!!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501320, Masionel.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501320, Masionel.getObjectId(), 0, 0);
 									// 谢谢。现在，让我们把战斗带给贝里特拉！ / Thank you. Now, let's bring the fight to Beritra!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501321, Masionel.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501321, Masionel.getObjectId(), 0, 6000);
 								}
 							}, 30000);
 						break;
@@ -1026,11 +1026,11 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Parsia = getNpc(209785);
 									// 多亏你，分遣队毫无损失通过。干得好！ / Thanks to you, the Detachment got through without any losses. Excellent work!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
 									// 此地受黑暗力量保护，无法摧毁。 / This place is protected by a dark power. It cannot be destroyed.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									// 黑暗阻挡了道路。是时候使用主神的攻城武器了。 / Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -1052,9 +1052,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									// 爆破手已打开通往下一区域的道路。 / The Demolisher has opened the path to the next area.
 									sendMsgByRace(1403009, Race.PC_ALL, 15000);
 									// 充能完成！开火！！ / Charge complete! Fire!!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501320, Parsia.getObjectId(), 0, 0);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501320, Parsia.getObjectId(), 0, 0);
 									// 谢谢。现在，让我们把战斗带给贝里特拉！ / Thank you. Now, let's bring the fight to Beritra!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501321, Parsia.getObjectId(), 0, 6000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501321, Parsia.getObjectId(), 0, 6000);
 								}
 							}, 30000);
 						break;
@@ -1112,9 +1112,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(731548, 147.01088f, 517.9374f, 1749.5007f, (byte) 2); //Drakenspire Depths Exit.
 									Npc Masionel = getNpc(209739);
 									// 贝里特拉或许逃脱了，但我们已拿下龙脊深渊。干得好。 / Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
 									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
-									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
+									NpcShoutsService.getInstance().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<>() {
 										/**
 										 * 处理 visit。
@@ -1150,9 +1150,9 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(731548, 147.01088f, 517.9374f, 1749.5007f, (byte) 2); //Drakenspire Depths Exit.
 									Npc Parsia = getNpc(209804);
 									// 贝里特拉或许逃脱了，但我们已拿下龙脊深渊。干得好。 / Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
 									// 贝里特拉逃走了！他或许逃脱，但我们给他留下了深刻印象！ / Beritra has fled! He may have escaped, but we gave him something to remember us by!
-									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
+									NpcShoutsService.getInstance().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<>() {
 										/**
 										 * 处理 visit。

@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -262,7 +262,7 @@ public class BalaurAssaultService {
 			PacketSendUtility.sendMessage(player, "Assault on " + location + " was already started");
 			return;
 		}
-		newAssault(GameFeatureServices.siegeService().getSiege(location), delay);
+		newAssault(SiegeService.getInstance().getSiege(location), delay);
 	}
 
 	private void newAssault(Siege<?> siege, int delay) {
@@ -298,7 +298,7 @@ public class BalaurAssaultService {
 		int ownedForts = 0;
 		float influence;
 		if (isBalaurea) {
-			for (FortressLocation fl : GameFeatureServices.siegeService().getFortresses().values()) {
+			for (FortressLocation fl : SiegeService.getInstance().getFortresses().values()) {
 				if (fl.getWorldId() != 400010000 && !fortressAssaults.containsKey(fl.getLocationId())
 						&& fl.getRace().equals(locationRace)) {
 					ownedForts++;

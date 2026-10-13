@@ -8,7 +8,8 @@ import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.MoltenusService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.BaseService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -79,8 +80,8 @@ public class FortressSiege extends Siege<FortressLocation> {
 		if (getSiegeLocation().getLocationId() == 1131) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1131: // Siel's Western Fortress.
-				GameFeatureServices.baseService().capture(108, Race.NPC);
-				GameFeatureServices.baseService().capture(109, Race.NPC);
+				BaseService.getInstance().capture(108, Race.NPC);
+				BaseService.getInstance().capture(109, Race.NPC);
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					// 金沙谈判队正遭受龙族攻击。 / The Gold Sand Negotiation Team is under attack by the Balaur.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_War_Soon, 0);
@@ -102,7 +103,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1132) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1132: // Siel's Eastern Fortress.
-				GameFeatureServices.baseService().capture(110, Race.NPC);
+				BaseService.getInstance().capture(110, Race.NPC);
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					// 龙族已控制希尔右翼的萨斯明。 / The Balaur have taken control of the Sasming at Siel's Right Wing.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuDr_06,
@@ -116,9 +117,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1141) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1141: // Sulfur Fortress.
-				GameFeatureServices.baseService().capture(105, Race.NPC);
-				GameFeatureServices.baseService().capture(106, Race.NPC);
-				GameFeatureServices.baseService().capture(107, Race.NPC);
+				BaseService.getInstance().capture(105, Race.NPC);
+				BaseService.getInstance().capture(106, Race.NPC);
+				BaseService.getInstance().capture(107, Race.NPC);
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
 					// 龙族已控制硫磺树群岛的奥哈隆。 / The Balaur have taken control of the Oharung at the Sulfur Tree Archipelago.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuDr_01,
@@ -166,7 +167,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	public void onSiegeFinish() {
 		AbyssPointsService.removeListener(addAPListener);
 		unregisterSiegeBossListeners();
-		GameFeatureServices.siegeService().deSpawnNpcs(getSiegeLocationId());
+		SiegeService.getInstance().deSpawnNpcs(getSiegeLocationId());
 		getSiegeLocation().setVulnerable(false);
 		getSiegeLocation().setUnderShield(false);
 		if (isBossKilled()) {
@@ -176,7 +177,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else {
 			broadcastState(getSiegeLocation());
 		}
-		GameFeatureServices.siegeService().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
+		SiegeService.getInstance().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
 		if (SiegeRace.BALAUR != getSiegeLocation().getRace()) {
 			if (getSiegeLocation().getLegionId() > 0) {
 				giveRewardsToLegion();
@@ -248,9 +249,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
+						BaseService.getInstance().capture(108, Race.ASMODIANS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
+						BaseService.getInstance().capture(109, Race.ASMODIANS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player6 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 							// 西部要塞。 / Western Fortress.
@@ -260,9 +261,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.ELYOS);
+						BaseService.getInstance().capture(108, Race.ELYOS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.ELYOS);
+						BaseService.getInstance().capture(109, Race.ELYOS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player5 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
 							// 西部要塞。 / Western Fortress.
@@ -275,7 +276,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1132:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
+						BaseService.getInstance().capture(110, Race.ASMODIANS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player4 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 							// 东部要塞。 / Eastern Fortress.
@@ -285,7 +286,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.ELYOS);
+						BaseService.getInstance().capture(110, Race.ELYOS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player3 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
 							// 东部要塞。 / Eastern Fortress.
@@ -298,11 +299,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1141:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
+						BaseService.getInstance().capture(105, Race.ASMODIANS);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
+						BaseService.getInstance().capture(106, Race.ASMODIANS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
+						BaseService.getInstance().capture(107, Race.ASMODIANS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player2 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
 							// 要塞。 / Fortress.
@@ -312,11 +313,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.ELYOS);
+						BaseService.getInstance().capture(105, Race.ELYOS);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.ELYOS);
+						BaseService.getInstance().capture(106, Race.ELYOS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.ELYOS);
+						BaseService.getInstance().capture(107, Race.ELYOS);
 						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
 							// 要塞。 / Fortress.
@@ -369,45 +370,45 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (looser == SiegeRace.ASMODIANS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.NPC);
+						BaseService.getInstance().capture(108, Race.NPC);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.NPC);
+						BaseService.getInstance().capture(109, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// 在卡普斯岛的谢林。 / Shairing At Carpus Isle.
-						GameFeatureServices.baseService().capture(108, Race.NPC);
+						BaseService.getInstance().capture(108, Race.NPC);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
-						GameFeatureServices.baseService().capture(109, Race.NPC);
+						BaseService.getInstance().capture(109, Race.NPC);
 					}
 					break;
 				// 希尔东要塞。 / Siel's Eastern Fortress.
 				case 1132:
 					if (looser == SiegeRace.ASMODIANS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.NPC);
+						BaseService.getInstance().capture(110, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
-						GameFeatureServices.baseService().capture(110, Race.NPC);
+						BaseService.getInstance().capture(110, Race.NPC);
 					}
 					break;
 				// 硫磺要塞。 / Sulfur Fortress.
 				case 1141:
 					if (looser == SiegeRace.ASMODIANS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.NPC);
+						BaseService.getInstance().capture(105, Race.NPC);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.NPC);
+						BaseService.getInstance().capture(106, Race.NPC);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.NPC);
+						BaseService.getInstance().capture(107, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// 在硫磺群岛的奥哈隆。 / Oharung At The Sulfur Archipelago.
-						GameFeatureServices.baseService().capture(105, Race.NPC);
+						BaseService.getInstance().capture(105, Race.NPC);
 						// 在西风岛的乔阿林。 / Joarin At Zephyr Island.
-						GameFeatureServices.baseService().capture(106, Race.NPC);
+						BaseService.getInstance().capture(106, Race.NPC);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
-						GameFeatureServices.baseService().capture(107, Race.NPC);
+						BaseService.getInstance().capture(107, Race.NPC);
 					}
 					break;
 				// 克罗坦避难所。 / Krotan Refuge.
@@ -643,7 +644,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	 * @return 关联神器据点 / related artifact location
 	 */
 	protected ArtifactLocation getArtifact() {
-		return GameFeatureServices.siegeService().getFortressArtifacts().get(getSiegeLocationId());
+		return SiegeService.getInstance().getFortressArtifacts().get(getSiegeLocationId());
 	}
 	/**
 	 * @return 是否存在关联神器 / whether a related artifact exists

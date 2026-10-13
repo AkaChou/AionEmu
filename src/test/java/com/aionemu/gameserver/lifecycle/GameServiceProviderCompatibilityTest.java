@@ -495,7 +495,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(AionPacketHandlerFactory.class, instance(AionPacketHandlerFactory.class)),
                 provider(PacketFloodFilter.class, instance(PacketFloodFilter.class)),
                 provider(LsPacketHandlerFactory.class, instance(LsPacketHandlerFactory.class)));
-            GameFeatureServices featureServices = new GameFeatureServices(
+            FeatureServiceBindings featureServices = new FeatureServiceBindings(
                 provider(DisputeLandService.class, disputeLandService),
                 provider(DredgionService2.class, dredgionService),
                 provider(AsyunatarService.class, asyunatarService),
@@ -739,9 +739,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(towerOfEternityService, TowerOfEternityService.getInstance());
             assertSame(aStationService, AStationService.getInstance());
             assertSame(f2pService, F2pService.getInstance());
-            assertSame(f2pService, GameFeatureServices.f2pService());
             assertSame(windyGorgeService, WindyGorgeService.getInstance());
-            assertSame(windyGorgeService, GameFeatureServices.windyGorgeService());
             assertSame(motionLoggingService, MotionLoggingService.getInstance());
             assertSame(staticDoorService, StaticDoorService.getInstance());
             assertSame(kiskService, KiskService.getInstance());
@@ -749,14 +747,11 @@ class GameServiceProviderCompatibilityTest {
             assertSame(dropDistributionService, DropDistributionService.getInstance());
             assertSame(systemMailService, SystemMailService.getInstance());
             assertSame(bonusService, BonusService.getInstance());
-            assertSame(bonusService, GameFeatureServices.bonusService());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
-            assertSame(coalescenceService, GameFeatureServices.coalescenceService());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
-            assertSame(growthEnergy, GameFeatureServices.growthEnergy());
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
@@ -931,7 +926,7 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
-    void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
+    void featureServiceBindingsRegistersAndClearsProviders() throws Exception {
         BonusService bonusService = instance(BonusService.class);
         NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
         DredgionService2 dredgionService = instance(DredgionService2.class);
@@ -957,7 +952,7 @@ class GameServiceProviderCompatibilityTest {
         DropDistributionService dropDistributionService = instance(DropDistributionService.class);
         SystemMailService systemMailService = instance(SystemMailService.class);
 
-        GameFeatureServices featureServices = new GameFeatureServices(
+        FeatureServiceBindings featureServices = new FeatureServiceBindings(
                 provider(DisputeLandService.class, disputeLandService),
                 provider(DredgionService2.class, dredgionService),
                 provider(AsyunatarService.class, asyunatarService),
@@ -990,38 +985,35 @@ class GameServiceProviderCompatibilityTest {
                 provider(GrowthEnergy.class, growthEnergy));
 
         try {
-            assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
-            assertSame(dredgionService, GameFeatureServices.dredgionService());
-            assertSame(asyunatarService, GameFeatureServices.asyunatarService());
-            assertSame(shieldService, GameFeatureServices.shieldService());
-            assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
-            assertSame(disputeLandService, GameFeatureServices.disputeLandService());
-            assertSame(banditService, GameFeatureServices.banditService());
-            assertSame(staticDoorService, GameFeatureServices.staticDoorService());
-            assertSame(GameFeatureServices.siegeService(), GameFeatureServices.siegeService());
-            assertSame(baseService, GameFeatureServices.baseService());
-            assertSame(ffaService, GameFeatureServices.ffaService());
-            assertSame(ladderService, GameFeatureServices.ladderService());
-            assertSame(aStationService, GameFeatureServices.aStationService());
-            assertSame(motionLoggingService, GameFeatureServices.motionLoggingService());
-            assertSame(kiskService, GameFeatureServices.kiskService());
-            assertSame(repurchaseService, GameFeatureServices.repurchaseService());
-            assertSame(dropDistributionService, GameFeatureServices.dropDistributionService());
-            assertSame(systemMailService, GameFeatureServices.systemMailService());
+            assertSame(npcShoutsService, NpcShoutsService.getInstance());
+            assertSame(dredgionService, DredgionService2.getInstance());
+            assertSame(asyunatarService, AsyunatarService.getInstance());
+            assertSame(shieldService, ShieldService.getInstance());
+            assertSame(protectorConquerorService, ProtectorConquerorService.getInstance());
+            assertSame(disputeLandService, DisputeLandService.getInstance());
+            assertSame(banditService, BanditService.getInstance());
+            assertSame(staticDoorService, StaticDoorService.getInstance());
+            assertSame(SiegeService.getInstance(), SiegeService.getInstance());
+            assertSame(baseService, BaseService.getInstance());
+            assertSame(ffaService, FFAService.getInstance());
+            assertSame(ladderService, LadderService.getInstance());
+            assertSame(aStationService, AStationService.getInstance());
+            assertSame(motionLoggingService, MotionLoggingService.getInstance());
+            assertSame(kiskService, KiskService.getInstance());
+            assertSame(repurchaseService, RepurchaseService.getInstance());
+            assertSame(dropDistributionService, DropDistributionService.getInstance());
+            assertSame(systemMailService, SystemMailService.getInstance());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
-            assertSame(petService, GameFeatureServices.petService());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
-            assertSame(arcadeUpgradeService, GameFeatureServices.arcadeUpgradeService());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
-            assertSame(atreianBestiaryService, GameFeatureServices.atreianBestiaryService());
             assertSame(coalescenceService, CoalescenceService.getInstance());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
 
             featureServices.destroy();
             featureServices = null;
 
-            assertNotSame(bonusService, BonusService.getInstance());
+            assertThrows(IllegalStateException.class, BonusService::getInstance);
             assertThrows(IllegalStateException.class, PetService::getInstance);
             assertThrows(IllegalStateException.class, ArcadeUpgradeService::getInstance);
             assertThrows(IllegalStateException.class, AtreianBestiaryService::getInstance);

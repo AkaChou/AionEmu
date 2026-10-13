@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.model.team2.common.legacy;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -144,13 +144,13 @@ public class LootGroupRules {
 						switch (inRoll.getRollType()) {
 						case 2:
 							if (inRoll.getIndex() == index && inRoll.getNpcId() == npcId) {
-								GameFeatureServices.dropDistributionService().handleRoll(player, 0, inRoll.getItemId(),
+								DropDistributionService.getInstance().handleRoll(player, 0, inRoll.getItemId(),
 										inRoll.getNpcId(), inRoll.getIndex());
 							}
 							break;
 						case 3:
 							if (inRoll.getIndex() == index && inRoll.getNpcId() == npcId) {
-								GameFeatureServices.dropDistributionService().handleBid(player, 0, inRoll.getItemId(),
+								DropDistributionService.getInstance().handleBid(player, 0, inRoll.getItemId(),
 										inRoll.getNpcId(), inRoll.getIndex());
 							}
 							break;

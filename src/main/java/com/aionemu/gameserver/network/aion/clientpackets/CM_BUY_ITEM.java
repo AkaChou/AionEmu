@@ -2,7 +2,7 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.RepurchaseService;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -155,7 +155,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				}
 				break;
 			case 2: // [回购] / [Repurchase]
-				GameFeatureServices.repurchaseService().repurchaseFromShop(player, repurchaseList);
+				RepurchaseService.getInstance().repurchaseFromShop(player, repurchaseList);
 				break;
 			case 13: // [从商店购买] / [Buy From Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.NORMAL) {

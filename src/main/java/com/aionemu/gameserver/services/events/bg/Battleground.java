@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.services.StaticDoorService;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -1002,7 +1003,7 @@ public abstract class Battleground {
 	 * Default end cleanup: disband, return, destroy instance.
 	 */
 	protected void onEndDefault() {
-		GameFeatureServices.ladderService().onBgEnd(this);
+		LadderService.getInstance().onBgEnd(this);
 		if (!getPlayers().isEmpty()) {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);
@@ -1121,7 +1122,7 @@ public abstract class Battleground {
 		}
 		for (Player pl : getPlayers()) {
 			for (Integer doorId : getMap().getStaticDoors()) {
-				GameFeatureServices.staticDoorService().openStaticDoor(pl, doorId);
+				StaticDoorService.getInstance().openStaticDoor(pl, doorId);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -54,7 +54,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 		if (isHome.compareAndSet(true, false)) {
 			getPosition().getWorldMapInstance().getDoors().get(43).setOpen(true);
 			getPosition().getWorldMapInstance().getDoors().get(150).setOpen(false);
-			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500393, getObjectId(), 0, 0);
+			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500393, getObjectId(), 0, 0);
 			startActivEvent();
 			startBarrelEvent();
 			announceOilBarrel();
@@ -135,7 +135,7 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 			if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 				phase = Phase.BOMBS;
 				cancelActiveEventTask();
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
 				canThink = false;
 				EmoteManager.emoteStopAttacking(getOwner());
 				setStateIfNot(AIState.WALKING);
@@ -205,7 +205,7 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 			if (isAlreadyDead()) {
 				cancelActiveEventTask();
 			} else {
-				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
+				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
 				GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 						GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();

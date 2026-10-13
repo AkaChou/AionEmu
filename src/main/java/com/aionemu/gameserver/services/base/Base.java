@@ -2,7 +2,7 @@ package com.aionemu.gameserver.services.base;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -595,7 +595,7 @@ public class Base<BL extends BaseLocation> {
 	public void spawnAttackers(Race race) {
 		if (getFlag() != null && !getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				GameFeatureServices.baseService().capture(getId(), race);
+				BaseService.getInstance().capture(getId(), race);
 			} else {
 				delayedAssault();
 			}

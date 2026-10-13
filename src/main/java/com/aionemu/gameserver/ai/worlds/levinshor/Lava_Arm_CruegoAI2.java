@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.services.NpcShoutsService;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -56,7 +56,7 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 
 	private void sendMsg(int msg) {
-		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
+		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
 	}
 
 	private synchronized void checkPercentage(int hpPercentage) {

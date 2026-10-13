@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProtectorConquerorService {
 	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
+	private static volatile ProtectorConquerorService resolvedInstance;
 
 	private final Map<Integer, Protector> protectors = new ConcurrentHashMap<>();
 	private final Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<>();
@@ -439,14 +440,19 @@ public class ProtectorConquerorService {
 	 *         when no provider or bean is available
 	 */
 	public static ProtectorConquerorService getInstance() {
+		ProtectorConquerorService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ProtectorConquerorService> provider = instanceProvider;
-		ProtectorConquerorService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ProtectorConquerorService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -456,5 +462,6 @@ public class ProtectorConquerorService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ProtectorConquerorService> instanceProvider) {
 		ProtectorConquerorService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }
