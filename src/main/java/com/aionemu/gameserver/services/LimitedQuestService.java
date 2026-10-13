@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * 全服共享限量任务名额服务。 / Shared limited quest-slot service across the server.
@@ -25,7 +26,8 @@ public final class LimitedQuestService {
 
 	private static final String DEFINITIONS_FILE = "./definitions/compact/quests/limited-quests.xml";
 
-	private static volatile LimitedQuestService instance;
+	private static volatile ObjectProvider<LimitedQuestService> instanceProvider;
+	private static volatile LimitedQuestService resolvedInstance;
 	private final LimitedQuestCounterDao dao;
 	private final Map<Integer, Limit> limits;
 
@@ -36,15 +38,44 @@ public final class LimitedQuestService {
 	LimitedQuestService(LimitedQuestCounterDao dao, Map<Integer, Limit> limits) {
 		this.dao = Objects.requireNonNull(dao, "dao must not be null");
 		this.limits = Map.copyOf(limits);
-		instance = this;
 	}
 
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
 	public static LimitedQuestService getInstance() {
-		LimitedQuestService current = instance;
-		if (current == null) {
-			throw new IllegalStateException("LimitedQuestService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		LimitedQuestService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return current;
+		ObjectProvider<LimitedQuestService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("LimitedQuestService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / Instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<LimitedQuestService> instanceProvider) {
+		LimitedQuestService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

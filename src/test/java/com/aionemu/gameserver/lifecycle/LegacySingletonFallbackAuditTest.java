@@ -2,12 +2,17 @@ package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -181,5 +186,36 @@ class LegacySingletonFallbackAuditTest {
 		}
 		assertEquals(RETIRED, seen, "RETIRED 清单中的每个文件都必须存在");
 		assertEquals(0, sites, "双源静态兜底必须保持为零；新增会重新引入容器之外的第二套实例");
+	}
+
+	/**
+	 * 全库审计：每一处 fail-fast 单例通道（{@code instanceProvider}）都必须有生产代码喂入，
+	 * 防止「通道引入但接线遗漏」的半成品服务静默上线
+	 * （CoreRuntimeServiceBeans 的 7 个服务曾如此，实机登录认证链路以「未由 Spring 提供」失败）。
+	 * Whole-tree audit: every fail-fast singleton channel ({@code instanceProvider}) must have a
+	 * production feeder, guarding against half-migrated services that introduce a channel but never
+	 * wire it (the seven CoreRuntimeServiceBeans services once shipped this way and broke the live
+	 * login-auth chain).
+	 */
+	@Test
+	void everyFailFastChannelHasAFeeder() throws IOException {
+		Pattern channelHolder = Pattern.compile("static volatile ObjectProvider<(\\w+)> instanceProvider");
+		Map<String, Path> holders = new HashMap<>();
+		StringBuilder wholeTree = new StringBuilder();
+		try (Stream<Path> files = Files.walk(Path.of("src/main/java"))) {
+			for (Path file : files.filter(path -> path.toString().endsWith(".java")).toList()) {
+				String source = Files.readString(file);
+				wholeTree.append(source);
+				Matcher matcher = channelHolder.matcher(source);
+				while (matcher.find()) {
+					holders.putIfAbsent(matcher.group(1), file);
+				}
+			}
+		}
+		assertFalse(holders.isEmpty(), "fail-fast 通道持有者清单不应为空");
+		for (Map.Entry<String, Path> holder : holders.entrySet()) {
+			assertTrue(wholeTree.indexOf(holder.getKey() + ".setInstanceProvider(") >= 0,
+				"持有 fail-fast 通道的服务必须由绑定组件喂入：" + holder.getKey() + "（" + holder.getValue() + "）");
+		}
 	}
 }

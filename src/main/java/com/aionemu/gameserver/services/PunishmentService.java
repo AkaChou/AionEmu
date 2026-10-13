@@ -18,6 +18,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 import lombok.NonNull;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * 惩罚服务，处理角色封禁、监狱与采集限制（验证码）相关逻辑。
@@ -26,7 +27,8 @@ import lombok.NonNull;
  */
 public class PunishmentService {
 
-	private static volatile PunishmentService instance;
+	private static volatile ObjectProvider<PunishmentService> instanceProvider;
+	private static volatile PunishmentService resolvedInstance;
 	@NonNull
 	private final PlayerPunishmentDao playerPunishmentsDAO;
 
@@ -38,15 +40,44 @@ public class PunishmentService {
 	 */
 	public PunishmentService(@NonNull PlayerPunishmentDao playerPunishmentsDAO) {
 		this.playerPunishmentsDAO = playerPunishmentsDAO;
-		instance = this;
 	}
 
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
 	public static PunishmentService getInstance() {
-		PunishmentService current = instance;
-		if (current == null) {
-			throw new IllegalStateException("PunishmentService 未由 Spring 提供（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		PunishmentService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return current;
+		ObjectProvider<PunishmentService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("PunishmentService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 实例提供者。
+	 * Inject the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / Instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PunishmentService> instanceProvider) {
+		PunishmentService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
