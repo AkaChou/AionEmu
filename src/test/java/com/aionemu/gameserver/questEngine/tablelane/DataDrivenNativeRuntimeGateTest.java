@@ -1411,9 +1411,12 @@ class DataDrivenNativeRuntimeGateTest {
 	 * 无选择确认 → 结算 + 领奖收尾回选择对话页 10（原版 npc-complete finish=SELECTION_DIALOG；9/28
 	 * 旧引擎基线「状态=5 → 页=10」）。2026-10-03 回归补面：P7 步 f 切换批（715a00136）删旧后
 	 * 已接玩家在交付 NPC 上 31 零响应（quests.log 9/28 80790 基线：31 → REWARD+页5 → 23 → COMPLETE）。
+	 * 报告推进包形状 = update + REWARD + 收口步（隐式末步 + 1）：2026-10-13 实机 80790 GM 走轴校准
+	 * start/0 → reward/1（参照包由 {@code //quest set} 经 addsQuestToClientList 规则发出）。
 	 * <p>
 	 * The delivery-report face for zero-step Talk rows: 31 reports to REWARD + page 5 and the
-	 * no-selection confirm settles through the claim flow.
+	 * no-selection confirm settles through the claim flow. The report packet is an update carrying
+	 * REWARD and the close-out step (implicit final step + 1; live 80790 GM axis walk, 2026-10-13).
 	 */
 	@Test
 	void zeroStepTalkRowsReportAndClaimOnTheRewardNpc() {
@@ -1440,8 +1443,13 @@ class DataDrivenNativeRuntimeGateTest {
 
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(runtime.onDialog(player, npcId, 1009, 1, 80787), "START 1009 必须报告推进 REWARD");
-		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(80787).getStatus(),
-			"1009 报告确认 = 原版交付对象推进");
+		QuestState reported = player.getQuestStateList().getQuestState(80787);
+		assertEquals(QuestStatus.REWARD, reported.getStatus(), "1009 报告确认 = 原版交付对象推进");
+		assertEquals(1, DataDrivenProgress.step(reported.getQuestVars().getQuestVars()),
+			"收口写步 = 隐式末步 + 1（Talk 步进算术；2026-10-13 实机 80790 走轴 start/0 → reward/1）");
+		assertEquals(List.of(new NativeTalkFixture.QuestActionView(80787, 2, QuestStatus.REWARD.value(), 1)),
+			NativeTalkFixture.questActionViews(player),
+			"报告推进包 = update + REWARD + 步 1（非 add；START→REWARD 不重入客户端列表）");
 		assertEquals(List.of(5), NativeTalkFixture.dialogPages(player), "推进后发奖励窗页 5");
 
 		NativeTalkFixture.clearPackets(player);

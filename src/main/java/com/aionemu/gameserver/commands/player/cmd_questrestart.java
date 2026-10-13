@@ -59,6 +59,9 @@ public class cmd_questrestart extends PlayerCommand {
 				qs.setQuestVar(0);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 				PacketSendUtility.sendMessage(player, "Quest [quest: " + id + "] restarted.");
+				// 状态翻转后补可见性刷新：客户端仅在区域任务清单 0x7f 刷新时重算头顶标记。
+				// Refresh visibility after the flip: the client recomputes overhead markers only on a 0x7f refresh.
+				player.getController().updateNearbyQuests();
 			}
 			else {
 				PacketSendUtility.sendMessage(player, "Quest [quest: " + id + "] can't be restarted.");

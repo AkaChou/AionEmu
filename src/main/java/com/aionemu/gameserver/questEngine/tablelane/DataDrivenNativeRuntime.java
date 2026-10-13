@@ -1869,9 +1869,23 @@ public final class DataDrivenNativeRuntime {
 				}
 			}
 			if (state.getStatus() == QuestStatus.START && (dialogId == 31 || dialogId == 1009)) {
+				// 零步 Talk 行的报告收口 = 该行隐式末步的 SetQuestSuccess，收口步走同一条 DD 步进算术
+				// `prog = (prog & 0x3F) + 1`（Talk 无组槽、直接步进；DataDrivenProgress#advance），即
+				// 与步表收口（⑤e「收口写步 = 步号 + 1」）同轴；START → REWARD 两者都在客户端列表，
+				// 按 addsQuestToClientList 规则必须走 update 动作（同 apply 的写回包形状）。此前
+				// add 动作 + 写死步 0 会让客户端任务书领奖态停在进行中的步上——2026-10-13 实机 80790
+				// GM 走轴校准（参照包 = update + REWARD + 步 1）：start/0 → reward/1。
+				// The zero-step Talk report close-out is the implicit final step's SetQuestSuccess: the
+				// step advances with the retail write (prog & 0x3F) + 1 (Talk has no group slots), the
+				// same axis as the step-table close-out, and START -> REWARD is not a client-list add,
+				// so the sync is an update (the shape every other write-back here sends). The previous
+				// add action + hardcoded step 0 left the client journal on the in-progress step
+				// (live 80790 GM axis walk, 2026-10-13: start/0 -> reward/1).
+				int newVars = DataDrivenProgress.advance(state.getQuestVars().getQuestVars());
+				state.getQuestVars().setVar(newVars);
 				state.setStatus(QuestStatus.REWARD);
 				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
-				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD.value(), 0));
+				PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.updateQuest(questId, QuestStatus.REWARD, newVars));
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
 				// 实机 1103 同形：报告确认翻 REWARD 后交付 NPC 头顶无领奖标记 ⇒ 状态包之后补刷新。
 				// Same shape as live 1103: refresh the hand-in marker after the REWARD state packet.

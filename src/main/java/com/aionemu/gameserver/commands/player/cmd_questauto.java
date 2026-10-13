@@ -64,6 +64,9 @@ public class cmd_questauto extends PlayerCommand {
 
 		qs.setStatus(QuestStatus.REWARD);
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+		// 状态翻转后补可见性刷新：客户端仅在区域任务清单 0x7f 刷新时重算头顶标记。
+		// Refresh visibility after the flip: the client recomputes overhead markers only on a 0x7f refresh.
+		player.getController().updateNearbyQuests();
 	}
 
 }

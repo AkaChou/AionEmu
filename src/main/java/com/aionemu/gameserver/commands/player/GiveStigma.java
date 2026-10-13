@@ -164,6 +164,9 @@ public class GiveStigma extends PlayerCommand {
         // completed list, otherwise the row lingers in the active list until the next login.
         PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(questId));
         PacketSendUtility.sendPacket(player, new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
+        // 状态翻转后补可见性刷新：客户端仅在区域任务清单 0x7f 刷新时重算头顶标记。
+        // Refresh visibility after the flip: the client recomputes overhead markers only on a 0x7f refresh.
+        player.getController().updateNearbyQuests();
     }
 
     private void getStigmaStones(Player player, List<Integer> stoneList){
