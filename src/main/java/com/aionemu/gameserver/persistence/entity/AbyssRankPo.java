@@ -61,10 +61,25 @@ public class AbyssRankPo implements Serializable {
 	 */
 	private Long lastUpdate;
 
+	/**
+	 * 排行位置列。遗留 INSERT/UPDATE 均不含该列，其取值完全来自 DDL 默认值
+	 * （{@code NOT NULL DEFAULT '0'}），后续由 {@code UPDATE_PLAYER_RANK_LIST_JDBC}
+	 * （{@code SET old_rank_pos = rank_pos, rank_pos = @a:=@a+1}）重算。
+	 * 故退出 Flex 的 INSERT：纳入会显式写入 {@code null} 而违反 NOT NULL 约束。
+	 * Rank position column. Neither the legacy INSERT nor UPDATE listed it, so its value came
+	 * solely from the DDL default ({@code NOT NULL DEFAULT '0'}) and is recalculated later by
+	 * {@code UPDATE_PLAYER_RANK_LIST_JDBC}. Excluded from Flex INSERT: including it would write
+	 * an explicit {@code null} and violate the NOT NULL constraint.
+	 */
+	@Column(insertable = false)
 	private Integer rankPos;
 
+	/** 旧排行位置，同上依赖 DDL 默认值并由排行榜重算 SQL 维护。 / Previous rank position; same DDL-default and recalc-SQL handling as {@link #rankPos}. */
+	@Column(insertable = false)
 	private Integer oldRankPos;
 
+	/** 排行 AP。遗留实现从未读写该列，取值完全来自 DDL 默认值。 / Rank AP; the legacy implementation never read or wrote it, so its value came solely from the DDL default. */
+	@Column(insertable = false)
 	private Integer rankAp;
 
 }

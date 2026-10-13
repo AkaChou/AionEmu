@@ -45,10 +45,15 @@ public class InventoryPo implements Serializable {
 	private String itemCreator;
 
 	/**
-	 * DDL 类型 timestamp；遗留实现未读取该列。
-	 * DDL type timestamp; not read by the legacy implementation.
+	 * DDL 类型 timestamp；遗留实现的 SELECT/INSERT/UPDATE 三条 SQL 均不含该列，其取值完全来自 DDL 默认值
+	 * （{@code NOT NULL DEFAULT '2012-12-31 20:00:01'}），域模型也从不读写。故整列退出 Flex 的 CRUD：
+	 * 若纳入 INSERT 会显式写入 {@code null} 而违反 NOT NULL 约束。
+	 * DDL type timestamp; the legacy SELECT/INSERT/UPDATE never included this column, so its value came solely
+	 * from the DDL default ({@code NOT NULL DEFAULT '2012-12-31 20:00:01'}) and the domain model never read or
+	 * wrote it. Excluded from Flex CRUD entirely: including it in an INSERT would write an explicit {@code null}
+	 * and violate the NOT NULL constraint.
 	 */
-	@Column("itemCreationTime")
+	@Column(value = "itemCreationTime", ignore = true)
 	private Timestamp itemCreationTime;
 
 	private Integer expireTime;
