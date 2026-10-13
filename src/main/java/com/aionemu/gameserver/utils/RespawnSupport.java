@@ -2,6 +2,7 @@ package com.aionemu.gameserver.utils;
 
 import java.io.IOException;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -45,7 +46,7 @@ public final class RespawnSupport {
 		try {
 			DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
 		} catch (IOException e) {
-			log.warn("Could not save spawn", e);
+			log.warn(I18n.get("log.d1cfb63e6f6b"), e);
 			PacketSendUtility.sendMessage(admin, "Could not save spawn");
 			return;
 		}
