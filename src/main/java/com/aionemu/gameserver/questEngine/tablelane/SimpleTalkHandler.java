@@ -1048,6 +1048,8 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD, vars));
 					PacketSendUtility.sendPacket(player,
 							new SM_DIALOG_WINDOW(targetObjectId, PAGE_REWARD_WINDOW, questId));
+					// 状态包之后刷新领奖标记，顺序合同见 refreshVisibility。 / Refresh markers after the state packet.
+					NativeQuestStartPort.refreshVisibility(player);
 					return true;
 				}
 				if (dialogId == 1009 || dialogId == 31 || dialogId == 26 || dialogId == -1) {

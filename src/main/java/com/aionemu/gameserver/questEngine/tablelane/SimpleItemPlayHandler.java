@@ -626,6 +626,8 @@ public final class SimpleItemPlayHandler {
 			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player,
 				new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
+			// 状态包之后刷新领奖标记，顺序合同见 refreshVisibility。 / Refresh markers after the state packet.
+			NativeQuestStartPort.refreshVisibility(player);
 			handled = true;
 		}
 		return handled;

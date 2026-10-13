@@ -513,6 +513,17 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			PacketSendUtility.sendPacket(player,
 				new SM_QUEST_ACTION(ref.questId(), qs.getStatus(), qs.getQuestVars().getQuestVars()));
+			if (result.outcome() == ProgressCamera.Outcome.ADVANCE_WRITE) {
+				// 终击补原版可见性刷新，交付 NPC 头顶标记才会重算（实机 1102：杀满后 REWARD/3 无标记、
+				// 重登即现）。位置在状态包之后，对齐 GM 路径（Quest.java：状态包 → updateZone +
+				// updateNearbyQuests）；客户端按已收到的状态重算标记，顺序颠倒会拿旧状态重算
+				//（顺序合同实机 2026-10-13 确认：1102 击杀后不重登即出标记）。
+				// The terminal advance refreshes visibility so the hand-in marker is recomputed (live 1102:
+				// missing after the terminal kill, present after relog). It sits after the state packet,
+				// mirroring the GM path; refreshing first would re-evaluate against the stale state
+				// (the order was confirmed live on 2026-10-13).
+				NativeQuestStartPort.refreshVisibility(player);
+			}
 			handled = true;
 		}
 

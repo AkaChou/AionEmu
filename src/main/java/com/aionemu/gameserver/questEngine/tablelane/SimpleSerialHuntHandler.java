@@ -319,6 +319,10 @@ public final class SimpleSerialHuntHandler {
 				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 				PacketSendUtility.sendPacket(player,
 						new SM_QUEST_ACTION(questId, QuestStatus.REWARD, result.newVars()));
+				// 同 SimpleHuntHandler：杀满进 REWARD 时补可见性刷新，否则交付 NPC 头顶标记不更新。
+				// Same as SimpleHuntHandler: the terminal advance refreshes visibility so the
+				// hand-in NPC's overhead marker follows the new state.
+				NativeQuestStartPort.refreshVisibility(player);
 				handled = true;
 			}
 		}

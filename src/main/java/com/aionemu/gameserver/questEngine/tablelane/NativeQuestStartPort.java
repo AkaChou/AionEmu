@@ -207,6 +207,40 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
+	 * 状态提交后的可见性刷新（原版 {@code sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH} 的
+	 * {@code updateZone + updateNearbyQuests} 轴）：NPC 头顶任务标记随状态/步数变化重算。接取建档、
+	 * 网格族击杀推进、tablelane 各交付面翻 REWARD 与 DataDriven 收口/终步共用
+	 * （{@code DataDrivenNativeRuntime.refreshLevelAndVisibility} 先前是它的私有同名副本）。
+	 * The visibility refresh after a committed state change (the retail LEVEL_AND_VISIBILITY_REFRESH
+	 * axis) so NPC overhead quest markers follow status/step changes. Shared by the accept path, the
+	 * kill-advance lanes, every tablelane hand-in that flips REWARD and the DataDriven closure and
+	 * terminal step. Best effort in headless environments.
+	 * <p>调用合同：**在状态包下发之后调用**（对齐 GM 路径 Quest.java：状态包 → updateZone +
+	 * updateNearbyQuests）——客户端按已收到的任务状态重算头顶标记，先刷新后发包会拿旧状态重算；
+	 * 顺序合同实机 2026-10-13 确认（1102 击杀 / 1103 报告确认：均不重登即出标记；0x7f 清单本身不含
+	 * 进行中/REWARD 行，只作重算触发器）。 / Call contract: invoke it AFTER the state packet,
+	 * mirroring the GM path; the order was confirmed live on 2026-10-13 (the 0x7f list itself never
+	 * carries in-progress/REWARD rows — it only triggers the recompute).
+	 * <p>等级任务重评估轴（{@code onQuestStateChanged}）在 tablelane 无先例，未镜像（沿用
+	 * DataDriven 私有副本的登记口径）。 / The level-quest reevaluation axis is not mirrored here
+	 * (the registered scope of the former DataDriven private copy).
+	 */
+	public static void refreshVisibility(Player player) {
+		if (player == null) {
+			return;
+		}
+		try {
+			if (player.getController() != null) {
+				player.getController().updateZone();
+				player.getController().updateNearbyQuests();
+			}
+		} catch (RuntimeException ignored) {
+			// 单测/无控制器环境：状态已提交，刷新为尽力而为。
+			// Headless environments: the state is committed; the refresh is best effort.
+		}
+	}
+
+	/**
 	 * 区域任务清单（原版 opcode 127 / {@code SM_NEARBY_QUESTS}）单行结论。
 	 * <p>
 	 * 轴与 {@link #evaluateNpcAcquire(Player, int)} 同源，差别只有原版在清单形态下**不短路**：等级轴
@@ -431,20 +465,8 @@ public final class NativeQuestStartPort {
 			state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.START.value(), 0));
-		refreshController(player);
+		refreshVisibility(player);
 		return new StartResult(Outcome.STARTED, "START");
-	}
-
-	private static void refreshController(Player player) {
-		try {
-			if (player.getController() != null) {
-				player.getController().updateZone();
-				player.getController().updateNearbyQuests();
-			}
-		} catch (RuntimeException ignored) {
-			// 单测/无控制器环境：状态已落库，刷新为尽力而为。
-			// Headless environments: the state is committed; the refresh is best effort.
-		}
 	}
 
 	private static int intOr(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {

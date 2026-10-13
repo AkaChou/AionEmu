@@ -954,6 +954,10 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 					PacketSendUtility.sendPacket(player,
 						new SM_QUEST_ACTION(questId, state.getStatus(), state.getQuestVars().getQuestVars()));
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+					// 实机 1103：报告页确认进入 REWARD 后交付 NPC 头顶无领奖标记。
+					// Live 1103: the hand-in marker was missing once the report confirm reached REWARD.
+					// 状态包之后刷新领奖标记，顺序合同见 refreshVisibility。 / Refresh markers after the state packet.
+					NativeQuestStartPort.refreshVisibility(player);
 					return true;
 				}
 				if (dialogId == 31 || dialogId == 26 || dialogId == 1009 || dialogId == -1) {

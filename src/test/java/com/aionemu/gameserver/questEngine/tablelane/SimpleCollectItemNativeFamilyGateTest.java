@@ -13,6 +13,8 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.controllers.PlayerController;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -21,6 +23,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestTableLoader.SimpleCollectItemRow;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
 /**
  * SimpleCollectItem 原生表驱动家族门禁（计划 §6.6 / §7 P4 切换批）。
@@ -489,6 +492,97 @@ class SimpleCollectItemNativeFamilyGateTest {
 		assertEquals(List.of("remove:" + handIns.get(0) + ":" + MULTI_COLUMN_COUNT,
 				"remove:" + handIns.get(1) + ":" + MULTI_COLUMN_COUNT), inventory.calls(),
 			"两列交付物必须各按原版计数扣一份");
+	}
+
+	/**
+	 * 实机 1103：报告确认（1009）翻 REWARD 后交付 NPC 头顶无领奖标记，重登即现 ⇒ 交付门必须同帧补
+	 * 可见性刷新，且刷新发生在状态包之后（顺序合同实机 2026-10-13 确认）。报告页（31）不推进也不刷新。
+	 * Live 1103: the hand-in marker was missing once the report confirm (1009) reached REWARD, so the
+	 * confirm must refresh visibility after the state packet; the report page (31) never refreshes.
+	 */
+	@Test
+	void reportConfirmRefreshesTheHandInMarkerAfterTheStatePacket() {
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.RecordingInventory inventory = new NativeTalkFixture.RecordingInventory();
+		SimpleCollectItemHandler local = handlerWith(inventory, NativeReportRewardFlow.instance());
+		NativeTalkFixture.completePrerequisites(player, 1102);
+		NativeTalkFixture.start(player, MULTI_COUNT_QUEST);
+		int rewardNpc = local.rewardNpc(MULTI_COUNT_QUEST);
+		for (int handInItem : local.handInItems(MULTI_COUNT_QUEST)) {
+			inventory.hold(handInItem, 99);
+		}
+		CountingController controller = new CountingController();
+		installController(player, controller);
+		ZoneUpdateService previous = installZoneUpdateService();
+		try {
+			// 报告页（31）只发确认页：零推进、零刷新。
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COUNT_QUEST, 31)));
+			assertEquals(0, controller.visibilityRefreshes, "报告页不得刷新可见性");
+
+			NativeTalkFixture.clearPackets(player);
+			assertTrue(local.onDialog(NativeTalkFixture.dialog(player, rewardNpc, MULTI_COUNT_QUEST, 1009)));
+			assertEquals(QuestStatus.REWARD,
+				player.getQuestStateList().getQuestState(MULTI_COUNT_QUEST).getStatus(), "确认后翻 REWARD");
+			assertEquals(1, controller.visibilityRefreshes, "报告确认必须刷新一次可见性（REWARD 交付标记）");
+			// 顺序合同：刷新时 REWARD 状态包必须已在队列（先发包后刷新，对齐 GM 路径）。
+			// Order contract: the REWARD state packet must already be queued when the refresh runs.
+			assertEquals(1, controller.questActionsAtRefresh.size(), "刷新时状态包已在队列");
+			assertEquals(MULTI_COUNT_QUEST, controller.questActionsAtRefresh.getFirst().questId());
+			assertEquals(QuestStatus.REWARD.value(), controller.questActionsAtRefresh.getFirst().status());
+		} finally {
+			restoreZoneUpdateService(previous);
+		}
+	}
+
+	/** 记录型控制器：{@code updateZone} 为 final，刷新探针挂在 {@code updateNearbyQuests}。 /
+	 * A recording controller: the refresh probe rides the nearby tail (updateZone itself is final). */
+	private static final class CountingController extends PlayerController {
+		private int visibilityRefreshes;
+		private List<NativeTalkFixture.QuestActionView> questActionsAtRefresh = List.of();
+
+		@Override
+		public void updateNearbyQuests() {
+			visibilityRefreshes++;
+			// 刷新时快照已入队的任务动作包，锁「先状态包后刷新」的顺序合同。
+			// Snapshot the queued quest actions so the packet-then-refresh order is locked.
+			questActionsAtRefresh = NativeTalkFixture.questActionViews(getOwner());
+		}
+	}
+
+	/** 装入控制器（夹具玩家默认无控制器，刷新是 no-op）。 / Attaches the probe controller to the fixture player. */
+	private static void installController(Player player, PlayerController controller) {
+		try {
+			java.lang.reflect.Field field = VisibleObject.class.getDeclaredField("controller");
+			field.setAccessible(true);
+			field.set(player, controller);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+		controller.setOwner(player);
+	}
+
+	/** 装入刷新轴依赖的 ZoneUpdateService 解析缓存。 / Fills the zone-update resolve cache. */
+	private static ZoneUpdateService installZoneUpdateService() {
+		try {
+			java.lang.reflect.Field field = ZoneUpdateService.class.getDeclaredField("resolvedInstance");
+			field.setAccessible(true);
+			ZoneUpdateService previous = (ZoneUpdateService) field.get(null);
+			field.set(null, new ZoneUpdateService());
+			return previous;
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	private static void restoreZoneUpdateService(ZoneUpdateService previous) {
+		try {
+			java.lang.reflect.Field field = ZoneUpdateService.class.getDeclaredField("resolvedInstance");
+			field.setAccessible(true);
+			field.set(null, previous);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	/**

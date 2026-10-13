@@ -1873,6 +1873,9 @@ public final class DataDrivenNativeRuntime {
 				state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 				PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.REWARD.value(), 0));
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(objectId, PAGE_REWARD_WINDOW, questId));
+				// 实机 1103 同形：报告确认翻 REWARD 后交付 NPC 头顶无领奖标记 ⇒ 状态包之后补刷新。
+				// Same shape as live 1103: refresh the hand-in marker after the REWARD state packet.
+				refreshLevelAndVisibility(player);
 				return true;
 			}
 			if (state.getStatus() == QuestStatus.REWARD) {
@@ -2719,24 +2722,15 @@ public final class DataDrivenNativeRuntime {
 	}
 
 	/**
-	 * 收口后的等级与可见性刷新（原版 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH` 的
-	 * {@code updateZone + updateNearbyQuests} 轴；与 {@link NativeQuestStartPort} 建档刷新同形）。
-	 * 单测/无控制器环境 best-effort（状态已提交）。等级任务重评估轴（`onQuestStateChanged`）在
-	 * tablelane 无先例，未镜像（登记于本主题 summary）。
-	 * The level-and-visibility refresh after an advance (the visibility axis of the retail
-	 * LEVEL_AND_VISIBILITY_REFRESH sync, mirroring the NativeQuestStartPort refresh). Best effort in
-	 * headless environments; the level-quest reevaluation axis is not mirrored (registered).
+	 * 收口后的可见性刷新（原版 `sync-quest-state mode=LEVEL_AND_VISIBILITY_REFRESH` 的
+	 * {@code updateZone + updateNearbyQuests} 轴）。同一刷新已上提为
+	 * {@link NativeQuestStartPort#refreshVisibility(Player)}，供接取面、网格族推进、REWARD 翻转与收口共用。
+	 * The visibility refresh after an advance; the same refresh now lives in
+	 * {@link NativeQuestStartPort#refreshVisibility(Player)} and is shared by the accept, kill-advance,
+	 * REWARD-flip and closure faces.
 	 */
 	private static void refreshLevelAndVisibility(Player player) {
-		try {
-			if (player.getController() != null) {
-				player.getController().updateZone();
-				player.getController().updateNearbyQuests();
-			}
-		} catch (RuntimeException ignored) {
-			// 单测/无控制器环境：状态已提交，刷新为尽力而为。
-			// Headless environments: the state is committed; the refresh is best effort.
-		}
+		NativeQuestStartPort.refreshVisibility(player);
 	}
 
 	// ------------------------------------------------------------------ 交付门（39 检查按钮）
@@ -2867,6 +2861,11 @@ public final class DataDrivenNativeRuntime {
 		state.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		PacketSendUtility.sendPacket(player,
 			new SM_QUEST_ACTION(state.getQuestId(), state.getStatus(), state.getQuestVars().getQuestVars()));
+		if (result.outcome() == DataDrivenProgress.Outcome.STEP_COMPLETE) {
+			// 终步翻 REWARD：同帧补可见性刷新（实机 1102/1103 同形——交付 NPC 头顶标记随状态重算）。
+			// The terminal step flips to REWARD: refresh visibility in the same frame (live 1102/1103).
+			refreshLevelAndVisibility(player);
+		}
 		// 原版动作执行矩阵（步 f 逐 handler 修正）：推进/收口分支对 Hunt/EnterArea/TalkFOBJ **和 Talk**
 		// 调执行器——对话平面推进/完成统一汇入 `FUN_180c4d5b0(…,-1)`，其 -1 路径在 C:2075066 直调
 		// `FUN_180c4c8d0(完成步动作)`，门 = 完成步 kind==4（Talk）；CollectItem 拾取分支无执行器、
