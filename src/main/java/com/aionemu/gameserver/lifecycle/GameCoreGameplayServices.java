@@ -126,8 +126,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<DropService> provider = dropServiceProvider;
-        resolved = provider == null ? DropService.getInstance()
-                : provider.getIfAvailable(DropService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "DropService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedDropService = resolved;
         return resolved;
     }
@@ -143,8 +147,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<MailService> provider = mailServiceProvider;
-        resolved = provider == null ? MailService.getInstance()
-                : provider.getIfAvailable(MailService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "MailService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedMailService = resolved;
         return resolved;
     }
@@ -160,8 +168,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<PvpService> provider = pvpServiceProvider;
-        resolved = provider == null ? PvpService.getInstance()
-                : provider.getIfAvailable(PvpService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "PvpService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedPvpService = resolved;
         return resolved;
     }
@@ -177,8 +189,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<AbyssRankingCache> provider = abyssRankingCacheProvider;
-        resolved = provider == null ? AbyssRankingCache.getInstance()
-                : provider.getIfAvailable(AbyssRankingCache::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "AbyssRankingCache is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedAbyssRankingCache = resolved;
         return resolved;
     }
@@ -194,8 +210,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<LegionService> provider = legionServiceProvider;
-        resolved = provider == null ? LegionService.getInstance()
-                : provider.getIfAvailable(LegionService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "LegionService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedLegionService = resolved;
         return resolved;
     }
@@ -211,8 +231,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<AutoGroupService> provider = autoGroupServiceProvider;
-        resolved = provider == null ? AutoGroupService.getInstance()
-                : provider.getIfAvailable(AutoGroupService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "AutoGroupService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedAutoGroupService = resolved;
         return resolved;
     }
@@ -228,8 +252,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<BalaurAssaultService> provider = balaurAssaultServiceProvider;
-        resolved = provider == null ? BalaurAssaultService.getInstance()
-                : provider.getIfAvailable(BalaurAssaultService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "BalaurAssaultService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedBalaurAssaultService = resolved;
         return resolved;
     }
@@ -245,8 +273,12 @@ public final class GameCoreGameplayServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<BattlefieldUnionService> provider = battlefieldUnionServiceProvider;
-        resolved = provider == null ? BattlefieldUnionService.getInstance()
-                : provider.getIfAvailable(BattlefieldUnionService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "BattlefieldUnionService is only available inside the Spring container; "
+                    + "offline construction must not touch core gameplay services");
+        }
+        resolved = provider.getObject();
         resolvedBattlefieldUnionService = resolved;
         return resolved;
     }

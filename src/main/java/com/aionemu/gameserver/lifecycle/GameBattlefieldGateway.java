@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
@@ -9,6 +11,7 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,11 +77,6 @@ public class GameBattlefieldGateway {
      */
     private ObjectProvider<IDRunService> idRunServiceProvider;
 
-    /**
-     * 战场运行时桥提供者。
-     * Battlefield runtime-bridge provider.
-     */
-    private ObjectProvider<GameBattlefieldRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入卡玛战场服务 {@link ObjectProvider}。
@@ -170,22 +168,13 @@ public class GameBattlefieldGateway {
         this.idRunServiceProvider = idRunServiceProvider;
     }
 
-    /**
-     * 可选注入战场运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of battlefield runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameBattlefieldRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动战场阶段：打印分区并在自动组队开启时初始化各战场服务。
      * Start the battlefield stage: print section and init each battlefield service when auto-group is on.
      */
     public void start() {
-        runtimeBridge().printBattlefieldSection();
+        printBattlefieldSection();
         runIfAutoGroupEnabled(() -> kamarBattlefieldService().initKamarBattlefield());
         runIfAutoGroupEnabled(() -> engulfedOphidanBridgeService().initEngulfedOphidan());
         runIfAutoGroupEnabled(() -> suspiciousOphidanBridgeService().initSuspiciousOphidan());
@@ -203,10 +192,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private KamarBattlefieldService kamarBattlefieldService() {
-        if (kamarBattlefieldServiceProvider == null) {
-            return runtimeBridge().kamarBattlefieldService();
-        }
-        return kamarBattlefieldServiceProvider.getIfAvailable(() -> runtimeBridge().kamarBattlefieldService());
+        return kamarBattlefieldServiceProvider.getObject();
     }
 
     /**
@@ -215,10 +201,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
-        if (engulfedOphidanBridgeServiceProvider == null) {
-            return runtimeBridge().engulfedOphidanBridgeService();
-        }
-        return engulfedOphidanBridgeServiceProvider.getIfAvailable(() -> runtimeBridge().engulfedOphidanBridgeService());
+        return engulfedOphidanBridgeServiceProvider.getObject();
     }
 
     /**
@@ -227,10 +210,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
-        if (suspiciousOphidanBridgeServiceProvider == null) {
-            return runtimeBridge().suspiciousOphidanBridgeService();
-        }
-        return suspiciousOphidanBridgeServiceProvider.getIfAvailable(() -> runtimeBridge().suspiciousOphidanBridgeService());
+        return suspiciousOphidanBridgeServiceProvider.getObject();
     }
 
     /**
@@ -239,10 +219,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private IronWallWarfrontService ironWallWarfrontService() {
-        if (ironWallWarfrontServiceProvider == null) {
-            return runtimeBridge().ironWallWarfrontService();
-        }
-        return ironWallWarfrontServiceProvider.getIfAvailable(() -> runtimeBridge().ironWallWarfrontService());
+        return ironWallWarfrontServiceProvider.getObject();
     }
 
     /**
@@ -251,10 +228,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private IdgelDomeService idgelDomeService() {
-        if (idgelDomeServiceProvider == null) {
-            return runtimeBridge().idgelDomeService();
-        }
-        return idgelDomeServiceProvider.getIfAvailable(() -> runtimeBridge().idgelDomeService());
+        return idgelDomeServiceProvider.getObject();
     }
 
     /**
@@ -263,10 +237,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private IdgelDomeLandmarkService idgelDomeLandmarkService() {
-        if (idgelDomeLandmarkServiceProvider == null) {
-            return runtimeBridge().idgelDomeLandmarkService();
-        }
-        return idgelDomeLandmarkServiceProvider.getIfAvailable(() -> runtimeBridge().idgelDomeLandmarkService());
+        return idgelDomeLandmarkServiceProvider.getObject();
     }
 
     /**
@@ -275,10 +246,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private HallOfTenacityService hallOfTenacityService() {
-        if (hallOfTenacityServiceProvider == null) {
-            return runtimeBridge().hallOfTenacityService();
-        }
-        return hallOfTenacityServiceProvider.getIfAvailable(() -> runtimeBridge().hallOfTenacityService());
+        return hallOfTenacityServiceProvider.getObject();
     }
 
     /**
@@ -287,10 +255,7 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private GrandArenaTrainingCampService grandArenaTrainingCampService() {
-        if (grandArenaTrainingCampServiceProvider == null) {
-            return runtimeBridge().grandArenaTrainingCampService();
-        }
-        return grandArenaTrainingCampServiceProvider.getIfAvailable(() -> runtimeBridge().grandArenaTrainingCampService());
+        return grandArenaTrainingCampServiceProvider.getObject();
     }
 
     /**
@@ -299,10 +264,15 @@ public class GameBattlefieldGateway {
      * @return 服务实例 / Service instance
      */
     private IDRunService idRunService() {
-        if (idRunServiceProvider == null) {
-            return runtimeBridge().idRunService();
-        }
-        return idRunServiceProvider.getIfAvailable(() -> runtimeBridge().idRunService());
+        return idRunServiceProvider.getObject();
+    }
+
+    /**
+     * 打印战场分区标题。
+     * Print the battlefield section header.
+     */
+    private void printBattlefieldSection() {
+        Util.printSection(I18n.get("console.section.battlefield"));
     }
 
     /**
@@ -311,20 +281,8 @@ public class GameBattlefieldGateway {
      * @param initializer 初始化逻辑 / Initializer
      */
     private void runIfAutoGroupEnabled(Runnable initializer) {
-        if (runtimeBridge().isAutoGroupEnabled()) {
+        if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
             initializer.run();
         }
-    }
-
-    /**
-     * 解析战场运行时桥：优先 Spring，否则新建。
-     * Resolve battlefield runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameBattlefieldRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameBattlefieldRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameBattlefieldRuntimeBridge::new);
     }
 }

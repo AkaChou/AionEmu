@@ -21,10 +21,6 @@ class GameDisputeLandLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "outpostServiceProvider"));
     }
 
-    @Test
-    void disputeLandGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {

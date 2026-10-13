@@ -17,7 +17,6 @@ class GameHousingServicesTest {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("services/HousingService.java")))
-                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingFallbacks.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingServices.java")))
                 .toList();
         }
@@ -36,7 +35,6 @@ class GameHousingServicesTest {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("services/ChallengeTaskService.java")))
-                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingFallbacks.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingServices.java")))
                 .toList();
         }

@@ -419,7 +419,7 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
-	void brokerServiceConstructsWithInjectedDaos() {
+	void brokerServiceRequiresRunningContainer() {
 		BrokerDao stubBrokerDAO = new BrokerDaoImpl(new ItemStoneDaoImpl()) {
 			@Override
 			public List<BrokerItem> loadBroker() {
@@ -444,8 +444,9 @@ class ServiceConstructorInjectionTest {
 
 		InventoryDao stubInventoryDAO = new InventoryDaoImpl();
 
-		BrokerService brokerService = new BrokerService(stubBrokerDAO, stubInventoryDAO);
-		assertNotNull(brokerService);
+		// BrokerService 在构造期登记过期物品任务，容器未启动即应快速失败。
+		// BrokerService schedules the expired-items task during construction, so it must fail fast outside the container.
+		assertThrows(IllegalStateException.class, () -> new BrokerService(stubBrokerDAO, stubInventoryDAO));
 	}
 
 	@Test
@@ -552,11 +553,11 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
-	void webshopServiceConstructsWithInjectedDao() {
-		JdbcClient client = createNoAccessJdbcClient();
+	void webshopServiceRequiresRunningContainer() {
+		// WebshopService 构造期 load() 需要静态数据服务，容器未启动即应快速失败。
+		// WebshopService.load() needs static-data services during construction, so it must fail fast outside the container.
 		WebRewardDao dao = new WebRewardDaoImpl();
-		WebshopService service = new WebshopService(dao);
-		assertNotNull(service);
+		assertThrows(IllegalStateException.class, () -> new WebshopService(dao));
 	}
 
 	@Test
@@ -863,11 +864,11 @@ class ServiceConstructorInjectionTest {
 	}
 
 	@Test
-	void ladderServiceConstructsWithInjectedDao() {
-		JdbcClient client = createNoAccessJdbcClient();
+	void ladderServiceRequiresRunningContainer() {
+		// LadderService 在构造期就要向线程池登记周期任务，容器未启动即应快速失败。
+		// LadderService schedules a periodic task during construction, so it must fail fast outside the container.
 		LadderPlayerDao ladderDAO = new LadderPlayerDaoImpl();
-		LadderService service = new LadderService(ladderDAO);
-		assertNotNull(service);
+		assertThrows(IllegalStateException.class, () -> new LadderService(ladderDAO));
 	}
 
 	@Test

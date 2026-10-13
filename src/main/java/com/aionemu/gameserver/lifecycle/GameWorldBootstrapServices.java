@@ -84,8 +84,12 @@ public final class GameWorldBootstrapServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<IDFactory> provider = idFactoryProvider;
-        resolved = provider == null ? GameWorldBootstrapFallbacks.idFactory()
-                : provider.getIfAvailable(GameWorldBootstrapFallbacks::idFactory);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "IDFactory is only available inside the Spring container; "
+                    + "offline construction must not touch world bootstrap services");
+        }
+        resolved = provider.getObject();
         resolvedIdFactory = resolved;
         return resolved;
     }
@@ -101,8 +105,12 @@ public final class GameWorldBootstrapServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<ZoneService> provider = zoneServiceProvider;
-        resolved = provider == null ? GameWorldBootstrapFallbacks.zoneService()
-                : provider.getIfAvailable(GameWorldBootstrapFallbacks::zoneService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "ZoneService is only available inside the Spring container; "
+                    + "offline construction must not touch world bootstrap services");
+        }
+        resolved = provider.getObject();
         resolvedZoneService = resolved;
         return resolved;
     }
@@ -118,8 +126,12 @@ public final class GameWorldBootstrapServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<HotspotTeleportService> provider = hotspotTeleportServiceProvider;
-        resolved = provider == null ? GameWorldBootstrapFallbacks.hotspotTeleportService()
-                : provider.getIfAvailable(GameWorldBootstrapFallbacks::hotspotTeleportService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "HotspotTeleportService is only available inside the Spring container; "
+                    + "offline construction must not touch world bootstrap services");
+        }
+        resolved = provider.getObject();
         resolvedHotspotTeleportService = resolved;
         return resolved;
     }
@@ -135,8 +147,12 @@ public final class GameWorldBootstrapServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<World> provider = worldProvider;
-        resolved = provider == null ? GameWorldBootstrapFallbacks.world()
-                : provider.getIfAvailable(GameWorldBootstrapFallbacks::world);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "World is only available inside the Spring container; "
+                    + "offline construction must not touch world bootstrap services");
+        }
+        resolved = provider.getObject();
         resolvedWorld = resolved;
         return resolved;
     }

@@ -118,6 +118,12 @@ import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.PacketFloodFilter;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
+import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
@@ -448,6 +454,113 @@ class GameServiceProviderCompatibilityTest {
         PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
         GMService gmService = instance(GMService.class);
 
+            GameWorldServices worldServices = new GameWorldServices(
+                provider(GeoService.class, geoService), provider(PathService.class, pathService),
+                provider(DropRegistrationService.class, dropRegistrationService));
+            GameMaintenanceServices maintenanceServices = new GameMaintenanceServices(
+                provider(DatabaseCleaningService.class, databaseCleaningService),
+                provider(AbyssRankCleaningService.class, abyssRankCleaningService),
+                provider(ShugoImperialTombSpawnManager.class, shugoImperialTombSpawnManager),
+                provider(SeasonRankingUpdateService.class, seasonRankingUpdateService));
+            GameRuntimeServices runtimeServices = new GameRuntimeServices(
+                provider(PeriodicSaveService.class, periodicSaveService),
+                provider(AdminService.class, adminService),
+                provider(PlayerTransferService.class, playerTransferService),
+                provider(TerritoryService.class, territoryService),
+                provider(GameTimeService.class, gameTimeService),
+                provider(AnnouncementService.class, announcementService),
+                provider(DebugService.class, debugService),
+                provider(WeatherService.class, weatherService),
+                provider(BrokerService.class, brokerService),
+                provider(Influence.class, influence),
+                provider(ExchangeService.class, exchangeService),
+                provider(PetitionService.class, petitionService),
+                provider(FlyRingService.class, flyRingService),
+                provider(CuringZoneService.class, curingZoneService),
+                provider(SpringZoneService.class, springZoneService),
+                provider(BoostEventService.class, boostEventService),
+                provider(TaskManagerFromDB.class, taskManagerFromDB),
+                provider(LimitedItemTradeService.class, limitedItemTradeService),
+                provider(WebshopService.class, instance(WebshopService.class)),
+                provider(SurveyService.class, instance(SurveyService.class)),
+                provider(FindGroupService.class, instance(FindGroupService.class)),
+                provider(InGameShopEn.class, instance(InGameShopEn.class)),
+                provider(GMService.class, gmService));
+            GameServerNetworkServices networkServices = new GameServerNetworkServices(
+                provider(LoginServer.class, instance(LoginServer.class)),
+                provider(ChatServer.class, instance(ChatServer.class)),
+                provider(BannedMacManager.class, instance(BannedMacManager.class)),
+                provider(NetworkController.class, networkController),
+                provider(PacketLoggerService.class, packetLoggerService),
+                provider(AionPacketHandlerFactory.class, instance(AionPacketHandlerFactory.class)),
+                provider(PacketFloodFilter.class, instance(PacketFloodFilter.class)),
+                provider(LsPacketHandlerFactory.class, instance(LsPacketHandlerFactory.class)));
+            GameFeatureServices featureServices = new GameFeatureServices(
+                provider(DisputeLandService.class, disputeLandService),
+                provider(DredgionService2.class, dredgionService),
+                provider(AsyunatarService.class, asyunatarService),
+                provider(PlayerLimitService.class, playerLimitService),
+                provider(NpcShoutsService.class, npcShoutsService),
+                provider(ShieldService.class, shieldService),
+                provider(RewardService.class, rewardService),
+                provider(VeteranRewardsService.class, veteranRewardsService),
+                provider(ProtectorConquerorService.class, protectorConquerorService),
+                provider(FFAService.class, ffaService),
+                provider(LadderService.class, ladderService),
+                provider(BGService.class, bgService),
+                provider(BanditService.class, banditService),
+                provider(SiegeService.class, instance(SiegeService.class)),
+                provider(BaseService.class, instance(BaseService.class)),
+                provider(AStationService.class, aStationService),
+                provider(F2pService.class, f2pService),
+                provider(WindyGorgeService.class, windyGorgeService),
+                provider(MotionLoggingService.class, motionLoggingService),
+                provider(StaticDoorService.class, staticDoorService),
+                provider(KiskService.class, kiskService),
+                provider(RepurchaseService.class, repurchaseService),
+                provider(DropDistributionService.class, dropDistributionService),
+                provider(SystemMailService.class, systemMailService),
+                provider(BonusService.class, bonusService),
+                provider(PetService.class, petService),
+                provider(ArcadeUpgradeService.class, arcadeUpgradeService),
+                provider(AtreianBestiaryService.class, atreianBestiaryService),
+                provider(CoalescenceService.class, coalescenceService),
+                provider(GrowthEnergy.class, growthEnergy));
+            GameCreativityServices creativityServices = new GameCreativityServices(
+                provider(CreativityEssenceService.class, creativityEssenceService),
+                provider(CreativitySkillService.class, creativitySkillService),
+                provider(CreativityStatsService.class, creativityStatsService),
+                provider(CreativityTransfoService.class, creativityTransfoService),
+                provider(Accuracy.class, accuracy),
+                provider(Agility.class, agility),
+                provider(Health.class, health),
+                provider(Knowledge.class, knowledge),
+                provider(Power.class, power),
+                provider(Precision.class, precision),
+                provider(Will.class, will));
+            GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
+                provider(VortexService.class, instance(VortexService.class)),
+                provider(BeritraService.class, instance(BeritraService.class)),
+                provider(AgentService.class, instance(AgentService.class)),
+                provider(AnohaService.class, instance(AnohaService.class)),
+                provider(SvsService.class, instance(SvsService.class)),
+                provider(RvrService.class, instance(RvrService.class)),
+                provider(IuService.class, instance(IuService.class)),
+                provider(NightmareCircusService.class, instance(NightmareCircusService.class)),
+                provider(DynamicRiftService.class, instance(DynamicRiftService.class)),
+                provider(InstanceRiftService.class, instance(InstanceRiftService.class)),
+                provider(SiegeService.class, instance(SiegeService.class)),
+                provider(BaseService.class, instance(BaseService.class)),
+                provider(OutpostService.class, instance(OutpostService.class)),
+                provider(ZorshivDredgionService.class, instance(ZorshivDredgionService.class)),
+                provider(MoltenusService.class, instance(MoltenusService.class)),
+                provider(RiftService.class, instance(RiftService.class)),
+                provider(ConquestService.class, instance(ConquestService.class)),
+                provider(IdianDepthsService.class, instance(IdianDepthsService.class)),
+                provider(TowerOfEternityService.class, towerOfEternityService),
+                provider(AbyssLandingService.class, instance(AbyssLandingService.class)),
+                provider(LandingUpdateService.class, landingUpdateService),
+                provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
             PathService.setInstanceProvider(provider(PathService.class, pathService));
@@ -696,6 +809,13 @@ class GameServiceProviderCompatibilityTest {
             assertSame(gmService, GMService.getInstance());
             assertSame(gmService, GameRuntimeServices.gmService());
         } finally {
+            worldServices.destroy();
+            maintenanceServices.destroy();
+            runtimeServices.destroy();
+            networkServices.destroy();
+            featureServices.destroy();
+            creativityServices.destroy();
+            locationServices.destroy();
             GeoService.setInstanceProvider(null);
             PathService.setInstanceProvider(null);
             DropRegistrationService.setInstanceProvider(null);
@@ -1318,21 +1438,23 @@ class GameServiceProviderCompatibilityTest {
             assertSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
         } finally {
             locationServices.destroy();
-            assertNotSame(vortexService, GameLocationBootstrapServices.vortexService());
-            assertNotSame(beritraService, GameLocationBootstrapServices.beritraService());
-            assertNotSame(agentService, GameLocationBootstrapServices.agentService());
-            assertNotSame(anohaService, GameLocationBootstrapServices.anohaService());
-            assertNotSame(svsService, GameLocationBootstrapServices.svsService());
-            assertNotSame(rvrService, GameLocationBootstrapServices.rvrService());
-            assertNotSame(iuService, GameLocationBootstrapServices.iuService());
-            assertNotSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
-            assertNotSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
-            assertNotSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
-            assertNotSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
-            assertNotSame(moltenusService, GameLocationBootstrapServices.moltenusService());
-            assertNotSame(riftService, GameLocationBootstrapServices.riftService());
-            assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
-            assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
+            // destroy 清空 provider 后，访问器一律 fail-fast（新契约，不再回退到另一套实例）。
+            // After destroy clears the providers, every accessor fails fast (the new contract, no second instance).
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::vortexService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::beritraService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::agentService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::anohaService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::svsService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::rvrService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::iuService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::nightmareCircusService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::dynamicRiftService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::instanceRiftService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::zorshivDredgionService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::moltenusService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::riftService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::conquestService);
+            assertThrows(IllegalStateException.class, GameLocationBootstrapServices::idianDepthsService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::outpostService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingService);
             assertThrows(IllegalStateException.class, GameLocationBootstrapServices::abyssLandingSpecialService);
@@ -1536,6 +1658,10 @@ class GameServiceProviderCompatibilityTest {
         FindGroupService findGroupService = instance(FindGroupService.class);
         SurveyService surveyService = instance(SurveyService.class);
 
+            GameRuntimeServices runtimeServices = new GameRuntimeServices(
+                null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                null, provider(WebshopService.class, webshopService), provider(SurveyService.class, surveyService),
+                provider(FindGroupService.class, findGroupService), provider(InGameShopEn.class, inGameShopEn), null);
         try {
             LegionService.setInstanceProvider(provider(LegionService.class, legionService));
             WebshopService.setInstanceProvider(provider(WebshopService.class, webshopService));
@@ -1557,6 +1683,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(findGroupService, GameRuntimeServices.findGroupService());
             assertSame(surveyService, SurveyService.getInstance());
         } finally {
+            runtimeServices.destroy();
             LegionService.setInstanceProvider(null);
             WebshopService.setInstanceProvider(null);
             InGameShopEn.setInstanceProvider(null);

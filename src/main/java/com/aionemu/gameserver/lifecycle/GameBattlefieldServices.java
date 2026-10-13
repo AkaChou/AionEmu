@@ -124,9 +124,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static KamarBattlefieldService kamarBattlefieldService() {
         ObjectProvider<KamarBattlefieldService> provider = kamarBattlefieldServiceProvider;
         if (provider == null) {
-            return KamarBattlefieldService.getInstance();
+            throw new IllegalStateException(
+                "KamarBattlefieldService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(KamarBattlefieldService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -137,9 +139,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         ObjectProvider<EngulfedOphidanBridgeService> provider = engulfedOphidanBridgeServiceProvider;
         if (provider == null) {
-            return EngulfedOphidanBridgeService.getInstance();
+            throw new IllegalStateException(
+                "EngulfedOphidanBridgeService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(EngulfedOphidanBridgeService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -150,9 +154,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         ObjectProvider<SuspiciousOphidanBridgeService> provider = suspiciousOphidanBridgeServiceProvider;
         if (provider == null) {
-            return SuspiciousOphidanBridgeService.getInstance();
+            throw new IllegalStateException(
+                "SuspiciousOphidanBridgeService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(SuspiciousOphidanBridgeService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -163,9 +169,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static IronWallWarfrontService ironWallWarfrontService() {
         ObjectProvider<IronWallWarfrontService> provider = ironWallWarfrontServiceProvider;
         if (provider == null) {
-            return IronWallWarfrontService.getInstance();
+            throw new IllegalStateException(
+                "IronWallWarfrontService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(IronWallWarfrontService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -176,9 +184,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static IdgelDomeService idgelDomeService() {
         ObjectProvider<IdgelDomeService> provider = idgelDomeServiceProvider;
         if (provider == null) {
-            return IdgelDomeService.getInstance();
+            throw new IllegalStateException(
+                "IdgelDomeService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(IdgelDomeService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -189,9 +199,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static IdgelDomeLandmarkService idgelDomeLandmarkService() {
         ObjectProvider<IdgelDomeLandmarkService> provider = idgelDomeLandmarkServiceProvider;
         if (provider == null) {
-            return IdgelDomeLandmarkService.getInstance();
+            throw new IllegalStateException(
+                "IdgelDomeLandmarkService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(IdgelDomeLandmarkService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -202,9 +214,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static HallOfTenacityService hallOfTenacityService() {
         ObjectProvider<HallOfTenacityService> provider = hallOfTenacityServiceProvider;
         if (provider == null) {
-            return HallOfTenacityService.getInstance();
+            throw new IllegalStateException(
+                "HallOfTenacityService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(HallOfTenacityService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -215,9 +229,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static GrandArenaTrainingCampService grandArenaTrainingCampService() {
         ObjectProvider<GrandArenaTrainingCampService> provider = grandArenaTrainingCampServiceProvider;
         if (provider == null) {
-            return GrandArenaTrainingCampService.getInstance();
+            throw new IllegalStateException(
+                "GrandArenaTrainingCampService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(GrandArenaTrainingCampService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -228,9 +244,11 @@ public final class GameBattlefieldServices implements DisposableBean {
     public static IDRunService idRunService() {
         ObjectProvider<IDRunService> provider = idRunServiceProvider;
         if (provider == null) {
-            return IDRunService.getInstance();
+            throw new IllegalStateException(
+                "IDRunService is only available inside the Spring container; "
+                    + "offline construction must not touch battlefield services");
         }
-        return provider.getIfAvailable(IDRunService::getInstance);
+        return provider.getObject();
     }
 
     /**

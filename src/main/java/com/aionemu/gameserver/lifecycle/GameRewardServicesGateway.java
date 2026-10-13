@@ -27,11 +27,6 @@ public class GameRewardServicesGateway {
      */
     private ObjectProvider<VeteranRewardsService> veteranRewardsServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入奖励服务 {@link ObjectProvider}。
@@ -53,15 +48,6 @@ public class GameRewardServicesGateway {
         this.veteranRewardsServiceProvider = veteranRewardsServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动奖励服务：按配置解析常规奖励与老兵奖励。
@@ -81,11 +67,7 @@ public class GameRewardServicesGateway {
      * Resolve reward service: prefer Spring, otherwise fall back via runtime bridge.
      */
     private void rewardService() {
-        if (rewardServiceProvider == null) {
-            runtimeBridge().rewardService();
-    	return;
-        }
-        rewardServiceProvider.getIfAvailable(() -> runtimeBridge().rewardService());
+        rewardServiceProvider.getObject();
     }
 
     /**
@@ -93,22 +75,7 @@ public class GameRewardServicesGateway {
      * Resolve veteran-rewards service: prefer Spring, otherwise fall back via runtime bridge.
      */
     private void veteranRewardsService() {
-        if (veteranRewardsServiceProvider == null) {
-            runtimeBridge().veteranRewardsService();
-    	return;
-        }
-        veteranRewardsServiceProvider.getIfAvailable(() -> runtimeBridge().veteranRewardsService());
+        veteranRewardsServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥实例 / Runtime-bridge instance
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

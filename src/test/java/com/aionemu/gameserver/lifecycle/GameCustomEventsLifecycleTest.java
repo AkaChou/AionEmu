@@ -23,10 +23,6 @@ class GameCustomEventsLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "banditServiceProvider"));
     }
 
-    @Test
-    void customEventsGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsEnabledCustomEventsOnceAndRecordsLoadTime() {

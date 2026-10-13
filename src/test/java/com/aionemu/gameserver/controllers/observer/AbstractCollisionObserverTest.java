@@ -18,8 +18,10 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Node;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
@@ -45,8 +47,15 @@ class AbstractCollisionObserverTest {
 		});
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		beanFactory.registerSingleton(GeoService.class.getName(), geoService);
+		ThreadPoolManager threadPoolManager = new ThreadPoolManager();
+		beanFactory.registerSingleton(ThreadPoolManager.class.getName(), threadPoolManager);
 		GameWorldServices worldServices = new GameWorldServices(beanFactory.getBeanProvider(GeoService.class),
 				beanFactory.getBeanProvider(PathService.class), beanFactory.getBeanProvider(DropRegistrationService.class));
+		// D1a 后 holder 定位器不再回退到单例：显式构造线程池门面，碰撞回调才能被异步执行。
+		// After D1a the holder locator no longer falls back to the singleton: construct the
+		// thread-pool facade explicitly so the collision callback can run asynchronously.
+		GameThreadPoolServices threadPoolServices = new GameThreadPoolServices(
+				beanFactory.getBeanProvider(ThreadPoolManager.class));
 
 		AtomicReference<Ray> capturedRay = new AtomicReference<>();
 		CountDownLatch collisionChecked = new CountDownLatch(1);
@@ -74,6 +83,8 @@ class AbstractCollisionObserverTest {
 			float endZ = ray.origin.z + ray.direction.z * ray.limit;
 			assertTrue(endZ < creature.getZ(), () -> "射线终点应低于角色脚面，实际为 " + endZ);
 		} finally {
+			threadPoolServices.destroy();
+			threadPoolManager.shutdown();
 			worldServices.destroy();
 		}
 	}

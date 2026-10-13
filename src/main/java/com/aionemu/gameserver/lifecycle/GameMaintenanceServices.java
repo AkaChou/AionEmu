@@ -55,9 +55,11 @@ public final class GameMaintenanceServices implements DisposableBean {
     public static SeasonRankingUpdateService seasonRankingUpdateService() {
         ObjectProvider<SeasonRankingUpdateService> provider = seasonRankingUpdateServiceProvider;
         if (provider == null) {
-            return GameMaintenanceServiceFallbacks.seasonRankingUpdateService();
+            throw new IllegalStateException(
+                "SeasonRankingUpdateService is only available inside the Spring container; "
+                    + "offline construction must not touch maintenance services");
         }
-        return provider.getIfAvailable(GameMaintenanceServiceFallbacks::seasonRankingUpdateService);
+        return provider.getObject();
     }
 
     /**
@@ -68,9 +70,11 @@ public final class GameMaintenanceServices implements DisposableBean {
     public static ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
         ObjectProvider<ShugoImperialTombSpawnManager> provider = shugoImperialTombSpawnManagerProvider;
         if (provider == null) {
-            return GameMaintenanceServiceFallbacks.shugoImperialTombSpawnManager();
+            throw new IllegalStateException(
+                "ShugoImperialTombSpawnManager is only available inside the Spring container; "
+                    + "offline construction must not touch maintenance services");
         }
-        return provider.getIfAvailable(GameMaintenanceServiceFallbacks::shugoImperialTombSpawnManager);
+        return provider.getObject();
     }
 
     /**

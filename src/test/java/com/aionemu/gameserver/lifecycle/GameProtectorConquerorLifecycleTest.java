@@ -20,10 +20,6 @@ class GameProtectorConquerorLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorGateway.class, "protectorConquerorServiceProvider"));
     }
 
-    @Test
-    void protectorConquerorGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {

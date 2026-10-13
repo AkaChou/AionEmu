@@ -69,9 +69,11 @@ public final class GameTaskManagerServices implements DisposableBean {
     public static ExpireTimerTask expireTimerTask() {
         ObjectProvider<ExpireTimerTask> provider = expireTimerTaskProvider;
         if (provider == null) {
-            return ExpireTimerTask.getInstance();
+            throw new IllegalStateException(
+                "ExpireTimerTask is only available inside the Spring container; "
+                    + "offline construction must not touch task-manager services");
         }
-        return provider.getIfAvailable(ExpireTimerTask::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -82,9 +84,11 @@ public final class GameTaskManagerServices implements DisposableBean {
     public static TeamEffectUpdater teamEffectUpdater() {
         ObjectProvider<TeamEffectUpdater> provider = teamEffectUpdaterProvider;
         if (provider == null) {
-            return TeamEffectUpdater.getInstance();
+            throw new IllegalStateException(
+                "TeamEffectUpdater is only available inside the Spring container; "
+                    + "offline construction must not touch task-manager services");
         }
-        return provider.getIfAvailable(TeamEffectUpdater::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -95,9 +99,11 @@ public final class GameTaskManagerServices implements DisposableBean {
     public static TeamMoveUpdater teamMoveUpdater() {
         ObjectProvider<TeamMoveUpdater> provider = teamMoveUpdaterProvider;
         if (provider == null) {
-            return TeamMoveUpdater.getInstance();
+            throw new IllegalStateException(
+                "TeamMoveUpdater is only available inside the Spring container; "
+                    + "offline construction must not touch task-manager services");
         }
-        return provider.getIfAvailable(TeamMoveUpdater::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -108,9 +114,11 @@ public final class GameTaskManagerServices implements DisposableBean {
     public static TemporaryTradeTimeTask temporaryTradeTimeTask() {
         ObjectProvider<TemporaryTradeTimeTask> provider = temporaryTradeTimeTaskProvider;
         if (provider == null) {
-            return TemporaryTradeTimeTask.getInstance();
+            throw new IllegalStateException(
+                "TemporaryTradeTimeTask is only available inside the Spring container; "
+                    + "offline construction must not touch task-manager services");
         }
-        return provider.getIfAvailable(TemporaryTradeTimeTask::getInstance);
+        return provider.getObject();
     }
 
     /**

@@ -21,10 +21,6 @@ class GameSiegeScheduleLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "baseServiceProvider"));
     }
 
-    @Test
-    void siegeScheduleGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsInitializersOnceAndRecordsLoadTime() {

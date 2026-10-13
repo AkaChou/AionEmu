@@ -146,9 +146,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static CreativityEssenceService creativityEssenceService() {
         ObjectProvider<CreativityEssenceService> provider = creativityEssenceServiceProvider;
         if (provider == null) {
-            return CreativityEssenceService.getInstance();
+            throw new IllegalStateException(
+                "CreativityEssenceService is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(CreativityEssenceService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -159,9 +161,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static CreativitySkillService creativitySkillService() {
         ObjectProvider<CreativitySkillService> provider = creativitySkillServiceProvider;
         if (provider == null) {
-            return CreativitySkillService.getInstance();
+            throw new IllegalStateException(
+                "CreativitySkillService is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(CreativitySkillService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -172,9 +176,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static CreativityStatsService creativityStatsService() {
         ObjectProvider<CreativityStatsService> provider = creativityStatsServiceProvider;
         if (provider == null) {
-            return CreativityStatsService.getInstance();
+            throw new IllegalStateException(
+                "CreativityStatsService is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(CreativityStatsService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -185,9 +191,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static CreativityTransfoService creativityTransfoService() {
         ObjectProvider<CreativityTransfoService> provider = creativityTransfoServiceProvider;
         if (provider == null) {
-            return CreativityTransfoService.getInstance();
+            throw new IllegalStateException(
+                "CreativityTransfoService is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(CreativityTransfoService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -198,9 +206,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Accuracy accuracy() {
         ObjectProvider<Accuracy> provider = accuracyProvider;
         if (provider == null) {
-            return Accuracy.getInstance();
+            throw new IllegalStateException(
+                "Accuracy is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Accuracy::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -211,9 +221,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Agility agility() {
         ObjectProvider<Agility> provider = agilityProvider;
         if (provider == null) {
-            return Agility.getInstance();
+            throw new IllegalStateException(
+                "Agility is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Agility::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -224,9 +236,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Health health() {
         ObjectProvider<Health> provider = healthProvider;
         if (provider == null) {
-            return Health.getInstance();
+            throw new IllegalStateException(
+                "Health is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Health::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -237,9 +251,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Knowledge knowledge() {
         ObjectProvider<Knowledge> provider = knowledgeProvider;
         if (provider == null) {
-            return Knowledge.getInstance();
+            throw new IllegalStateException(
+                "Knowledge is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Knowledge::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -250,9 +266,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Power power() {
         ObjectProvider<Power> provider = powerProvider;
         if (provider == null) {
-            return Power.getInstance();
+            throw new IllegalStateException(
+                "Power is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Power::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -263,9 +281,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Precision precision() {
         ObjectProvider<Precision> provider = precisionProvider;
         if (provider == null) {
-            return Precision.getInstance();
+            throw new IllegalStateException(
+                "Precision is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Precision::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -276,9 +296,11 @@ public final class GameCreativityServices implements DisposableBean {
     public static Will will() {
         ObjectProvider<Will> provider = willProvider;
         if (provider == null) {
-            return Will.getInstance();
+            throw new IllegalStateException(
+                "Will is only available inside the Spring container; "
+                    + "offline construction must not touch creativity services");
         }
-        return provider.getIfAvailable(Will::getInstance);
+        return provider.getObject();
     }
 
     /**

@@ -91,7 +91,6 @@ class GameServerNetworkLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "bannedMacManagerProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "loginServerProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "chatServerProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "runtimeBridgeProvider"));
     }
 
     private static Class<?> fieldType(String name) {

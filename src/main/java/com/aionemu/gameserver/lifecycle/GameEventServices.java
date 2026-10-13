@@ -24,7 +24,7 @@ public final class GameEventServices implements DisposableBean {
     private static volatile ObjectProvider<EventService> eventServiceProvider;
     /**
      * 已解析的事件服务单例；仅在真正解析到 Spring bean 后缓存，避免把回退实例钉住。
-     * Resolved event-service singleton; cached only after a real Spring bean is resolved, so a fallback
+     * Resolved event-service singleton; cached only after a real Spring bean is resolved
      * instance is never pinned.
      */
     private static volatile EventService resolvedEventService;
@@ -121,12 +121,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<EventService> provider = eventServiceProvider;
         if (provider == null) {
-            return EventService.getInstance();
+            throw new IllegalStateException(
+                "EventService is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return EventService.getInstance();
-        }
+        resolved = provider.getObject();
         resolvedEventService = resolved;
         return resolved;
     }
@@ -143,12 +142,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<PlayerEventService> provider = playerEventServiceProvider;
         if (provider == null) {
-            return GameEventRuntimeFallbacks.playerEventService();
+            throw new IllegalStateException(
+                "PlayerEventService is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEventRuntimeFallbacks.playerEventService();
-        }
+                resolved = provider.getObject();
         resolvedPlayerEventService = resolved;
         return resolved;
     }
@@ -165,12 +163,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<CrazyDaevaService> provider = crazyDaevaServiceProvider;
         if (provider == null) {
-            return GameEventRuntimeFallbacks.crazyDaevaService();
+            throw new IllegalStateException(
+                "CrazyDaevaService is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEventRuntimeFallbacks.crazyDaevaService();
-        }
+                resolved = provider.getObject();
         resolvedCrazyDaevaService = resolved;
         return resolved;
     }
@@ -187,12 +184,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<AbyssRankUpdateService> provider = abyssRankUpdateServiceProvider;
         if (provider == null) {
-            return GameEventRuntimeFallbacks.abyssRankUpdateService();
+            throw new IllegalStateException(
+                "AbyssRankUpdateService is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEventRuntimeFallbacks.abyssRankUpdateService();
-        }
+                resolved = provider.getObject();
         resolvedAbyssRankUpdateService = resolved;
         return resolved;
     }
@@ -209,12 +205,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<PacketBroadcaster> provider = packetBroadcasterProvider;
         if (provider == null) {
-            return GameEventRuntimeFallbacks.packetBroadcaster();
+            throw new IllegalStateException(
+                "PacketBroadcaster is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEventRuntimeFallbacks.packetBroadcaster();
-        }
+                resolved = provider.getObject();
         resolvedPacketBroadcaster = resolved;
         return resolved;
     }
@@ -231,12 +226,11 @@ public final class GameEventServices implements DisposableBean {
         }
         ObjectProvider<EventScheduler> provider = eventSchedulerProvider;
         if (provider == null) {
-            return GameEventRuntimeFallbacks.eventScheduler();
+            throw new IllegalStateException(
+                "EventScheduler is only available inside the Spring container; "
+                    + "offline construction must not touch event services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEventRuntimeFallbacks.eventScheduler();
-        }
+                resolved = provider.getObject();
         resolvedEventScheduler = resolved;
         return resolved;
     }

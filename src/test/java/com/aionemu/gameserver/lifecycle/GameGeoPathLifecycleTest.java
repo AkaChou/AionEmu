@@ -21,10 +21,6 @@ class GameGeoPathLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameGeoPathGateway.class, "pathServiceProvider"));
     }
 
-    @Test
-    void geoPathGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameGeoPathGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startInitializesGeoThenPathOnceAndRecordsLoadTime() {

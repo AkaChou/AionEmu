@@ -45,11 +45,6 @@ public class GameEnginesGateway {
      * Thread-pool-manager provider.
      */
     private ObjectProvider<ThreadPoolManager> threadPoolManagerProvider;
-    /**
-     * 运行时桥接提供者。
-     * Runtime-bridge provider.
-     */
-    private ObjectProvider<GameEnginesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入任务引擎提供者。
@@ -101,15 +96,6 @@ public class GameEnginesGateway {
         this.threadPoolManagerProvider = threadPoolManagerProvider;
     }
 
-    /**
-     * 可选注入运行时桥接提供者。
-     * Optionally inject the runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameEnginesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 打印引擎启动分区标题。
@@ -156,10 +142,7 @@ public class GameEnginesGateway {
      * @return 任务引擎 / Quest engine
      */
     private QuestEngine questEngine() {
-        if (questEngineProvider == null) {
-            return runtimeBridge().questEngine();
-        }
-        return questEngineProvider.getIfAvailable(() -> runtimeBridge().questEngine());
+        return questEngineProvider.getObject();
     }
 
     /**
@@ -168,10 +151,7 @@ public class GameEnginesGateway {
      * @return 副本引擎 / Instance engine
      */
     private InstanceEngine instanceEngine() {
-        if (instanceEngineProvider == null) {
-            return runtimeBridge().instanceEngine();
-        }
-        return instanceEngineProvider.getIfAvailable(() -> runtimeBridge().instanceEngine());
+        return instanceEngineProvider.getObject();
     }
 
     /**
@@ -180,10 +160,7 @@ public class GameEnginesGateway {
      * @return AI2 引擎 / AI2 engine
      */
     private AI2Engine ai2Engine() {
-        if (ai2EngineProvider == null) {
-            return runtimeBridge().ai2Engine();
-        }
-        return ai2EngineProvider.getIfAvailable(() -> runtimeBridge().ai2Engine());
+        return ai2EngineProvider.getObject();
     }
 
     /**
@@ -192,10 +169,7 @@ public class GameEnginesGateway {
      * @return 聊天处理器 / Chat processor
      */
     private ChatProcessor chatProcessor() {
-        if (chatProcessorProvider == null) {
-            return runtimeBridge().chatProcessor();
-        }
-        return chatProcessorProvider.getIfAvailable(() -> runtimeBridge().chatProcessor());
+        return chatProcessorProvider.getObject();
     }
 
     /**
@@ -204,21 +178,7 @@ public class GameEnginesGateway {
      * @return 线程池管理器 / Thread-pool manager
      */
     private ThreadPoolManager threadPoolManager() {
-        if (threadPoolManagerProvider == null) {
-            return runtimeBridge().threadPoolManager();
-        }
-        return threadPoolManagerProvider.getIfAvailable(() -> runtimeBridge().threadPoolManager());
+        return threadPoolManagerProvider.getObject();
     }
 
-    /**
-     * 解析运行时桥接。
-     * Resolve the runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameEnginesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameEnginesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameEnginesRuntimeBridge::new);
-    }
 }

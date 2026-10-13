@@ -20,10 +20,6 @@ class GameScheduledServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "shugoImperialTombSpawnManagerProvider"));
     }
 
-    @Test
-    void scheduledServicesGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsEnabledSchedulersOnceAndRecordsLoadTime() {

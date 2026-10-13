@@ -35,11 +35,6 @@ public class GameOptionalServicesGateway {
      */
     private ObjectProvider<ShieldService> shieldServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入玩家限制服务 {@link ObjectProvider}。
@@ -71,15 +66,6 @@ public class GameOptionalServicesGateway {
         this.shieldServiceProvider = shieldServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动可选服务：按配置调度玩家限制、解析 NPC 喊话并生成护盾。
@@ -103,10 +89,7 @@ public class GameOptionalServicesGateway {
      * @return 服务实例 / Service instance
      */
     private PlayerLimitService playerLimitService() {
-        if (playerLimitServiceProvider == null) {
-            return runtimeBridge().playerLimitService();
-        }
-        return playerLimitServiceProvider.getIfAvailable(() -> runtimeBridge().playerLimitService());
+        return playerLimitServiceProvider.getObject();
     }
 
     /**
@@ -114,11 +97,7 @@ public class GameOptionalServicesGateway {
      * Resolve NPC-shouts service: prefer Spring, otherwise fall back via runtime bridge.
      */
     private void npcShoutsService() {
-        if (npcShoutsServiceProvider == null) {
-            runtimeBridge().npcShoutsService();
-    	return;
-        }
-        npcShoutsServiceProvider.getIfAvailable(() -> runtimeBridge().npcShoutsService());
+        npcShoutsServiceProvider.getObject();
     }
 
     /**
@@ -127,21 +106,7 @@ public class GameOptionalServicesGateway {
      * @return 服务实例 / Service instance
      */
     private ShieldService shieldService() {
-        if (shieldServiceProvider == null) {
-            return runtimeBridge().shieldService();
-        }
-        return shieldServiceProvider.getIfAvailable(() -> runtimeBridge().shieldService());
+        return shieldServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥实例 / Runtime-bridge instance
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

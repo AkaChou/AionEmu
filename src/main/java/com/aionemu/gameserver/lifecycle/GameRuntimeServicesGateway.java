@@ -18,20 +18,24 @@ import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.WeatherService;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * 运行时服务集合启动网关：按固定顺序解析并初始化各运行时服务，
- * 优先使用 Spring 注入的 {@link ObjectProvider}，否则回退 {@link GameRuntimeServiceBridge}。
+ * 由 Spring 注入的 {@link ObjectProvider} 解析各运行时服务。
  * Gateway that starts the runtime services set in a fixed order, preferring Spring
- * {@link ObjectProvider}s and falling back to {@link GameRuntimeServiceBridge}.
+ * via Spring-injected {@link ObjectProvider}s.
  */
 @Component
 public class GameRuntimeServicesGateway {
@@ -65,6 +69,12 @@ public class GameRuntimeServicesGateway {
      * Optional game-time service provider.
      */
     private ObjectProvider<GameTimeService> gameTimeServiceProvider;
+
+    /**
+     * 服务器变量 DAO 提供者（可选）。
+     * Optional server-variable DAO provider.
+     */
+    private ObjectProvider<ServerVariableDao> serverVariableDaoProvider;
 
     /**
      * 公告服务提供者（可选）。
@@ -174,11 +184,6 @@ public class GameRuntimeServicesGateway {
      */
     private ObjectProvider<InGameShopEn> inGameShopEnProvider;
 
-    /**
-     * 运行时服务桥接提供者（可选）。
-     * Optional runtime service bridge provider.
-     */
-    private ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider;
 
     /**
      * 注入管理服务提供者。
@@ -228,6 +233,16 @@ public class GameRuntimeServicesGateway {
     @Autowired(required = false)
     void setGameTimeServiceProvider(ObjectProvider<GameTimeService> gameTimeServiceProvider) {
         this.gameTimeServiceProvider = gameTimeServiceProvider;
+    }
+
+    /**
+     * 可选注入服务器变量 DAO 提供者。
+     * Optionally inject the server-variable DAO provider.
+     * @param serverVariableDaoProvider 服务器变量 DAO 提供者 / Server-variable DAO provider
+     */
+    @Autowired(required = false)
+    void setServerVariableDaoProvider(ObjectProvider<ServerVariableDao> serverVariableDaoProvider) {
+        this.serverVariableDaoProvider = serverVariableDaoProvider;
     }
 
     /**
@@ -410,15 +425,6 @@ public class GameRuntimeServicesGateway {
         this.inGameShopEnProvider = inGameShopEnProvider;
     }
 
-    /**
-     * 注入运行时服务桥接提供者。
-     * Inject the runtime service bridge provider.
-     * @param runtimeServiceBridgeProvider 运行时服务桥接提供者 / Runtime service bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeServiceBridgeProvider(ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider) {
-        this.runtimeServiceBridgeProvider = runtimeServiceBridgeProvider;
-    }
 
     /**
      * 启动运行时服务集合：打印分区、解析并初始化各服务、加载副本并启动游戏时钟。
@@ -426,7 +432,7 @@ public class GameRuntimeServicesGateway {
      * load instances, and start the game-time clock.
      */
     public void start() {
-        runtimeServiceBridge().printServicesSection();
+        printServicesSection();
         periodicSaveService();
         adminService();
         playerTransferService();
@@ -450,7 +456,42 @@ public class GameRuntimeServicesGateway {
         surveyService();
         findGroupService();
         inGameShopEn();
-        runtimeServiceBridge().startGameTimeClock();
+        startGameTimeClock();
+    }
+
+    /**
+     * 打印运行时服务分区标题。
+     * Print the runtime-services section header.
+     */
+    private void printServicesSection() {
+        Util.printSection(I18n.get("console.section.services"));
+    }
+
+    /**
+     * 初始化游戏时间：绑定服务器变量 DAO 并读取游戏时间。
+     * Initialize game time: bind the server-variable DAO and read the game time.
+     * <p>幂等：游戏时间已绑定时直接返回。</p>
+     * <p>Idempotent: returns immediately once the game time is bound.</p>
+     */
+    private void bindGameTime() {
+        if (GameTimeManager.getGameTime() != null) {
+            return;
+        }
+        if (serverVariableDaoProvider != null) {
+            ServerVariableDao dao = serverVariableDaoProvider.getIfAvailable();
+            if (dao != null) {
+                GameTimeManager.init(dao);
+            }
+        }
+    }
+
+    /**
+     * 启动游戏时间时钟。
+     * Start the game-time clock.
+     */
+    private void startGameTimeClock() {
+        bindGameTime();
+        GameTimeManager.startClock();
     }
 
     /**
@@ -459,7 +500,7 @@ public class GameRuntimeServicesGateway {
      * game time).
      */
     public void initializeGameTime() {
-        runtimeServiceBridge().initializeGameTime();
+        bindGameTime();
     }
 
     /**
@@ -467,11 +508,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the periodic-save service.
      */
     private void periodicSaveService() {
-        if (periodicSaveServiceProvider == null) {
-            runtimeServiceBridge().periodicSaveService();
-            return;
-        }
-        periodicSaveServiceProvider.getIfAvailable(() -> runtimeServiceBridge().periodicSaveService());
+        periodicSaveServiceProvider.getObject();
     }
 
     /**
@@ -479,11 +516,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the admin service.
      */
     private void adminService() {
-        if (adminServiceProvider == null) {
-            runtimeServiceBridge().adminService();
-            return;
-        }
-        adminServiceProvider.getIfAvailable(() -> runtimeServiceBridge().adminService());
+        adminServiceProvider.getObject();
     }
 
     /**
@@ -491,11 +524,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the player-transfer service.
      */
     private void playerTransferService() {
-        if (playerTransferServiceProvider == null) {
-            runtimeServiceBridge().playerTransferService();
-            return;
-        }
-        playerTransferServiceProvider.getIfAvailable(() -> runtimeServiceBridge().playerTransferService());
+        playerTransferServiceProvider.getObject();
     }
 
     /**
@@ -504,10 +533,7 @@ public class GameRuntimeServicesGateway {
      * @return 领地服务 / Territory service
      */
     private TerritoryService territoryService() {
-        if (territoryServiceProvider == null) {
-            return runtimeServiceBridge().territoryService();
-        }
-        return territoryServiceProvider.getIfAvailable(() -> runtimeServiceBridge().territoryService());
+        return territoryServiceProvider.getObject();
     }
 
     /**
@@ -515,11 +541,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the game-time service.
      */
     private void gameTimeService() {
-        if (gameTimeServiceProvider == null) {
-            runtimeServiceBridge().gameTimeService();
-            return;
-        }
-        gameTimeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().gameTimeService());
+        gameTimeServiceProvider.getObject();
     }
 
     /**
@@ -527,11 +549,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the announcement service.
      */
     private void announcementService() {
-        if (announcementServiceProvider == null) {
-            runtimeServiceBridge().announcementService();
-            return;
-        }
-        announcementServiceProvider.getIfAvailable(() -> runtimeServiceBridge().announcementService());
+        announcementServiceProvider.getObject();
     }
 
     /**
@@ -539,11 +557,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the debug service.
      */
     private void debugService() {
-        if (debugServiceProvider == null) {
-            runtimeServiceBridge().debugService();
-            return;
-        }
-        debugServiceProvider.getIfAvailable(() -> runtimeServiceBridge().debugService());
+        debugServiceProvider.getObject();
     }
 
     /**
@@ -551,11 +565,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the weather service.
      */
     private void weatherService() {
-        if (weatherServiceProvider == null) {
-            runtimeServiceBridge().weatherService();
-            return;
-        }
-        weatherServiceProvider.getIfAvailable(() -> runtimeServiceBridge().weatherService());
+        weatherServiceProvider.getObject();
     }
 
     /**
@@ -563,11 +573,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the broker service.
      */
     private void brokerService() {
-        if (brokerServiceProvider == null) {
-            runtimeServiceBridge().brokerService();
-            return;
-        }
-        brokerServiceProvider.getIfAvailable(() -> runtimeServiceBridge().brokerService());
+        brokerServiceProvider.getObject();
     }
 
     /**
@@ -575,11 +581,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the legion service.
      */
     private void legionService() {
-        if (legionServiceProvider == null) {
-            runtimeServiceBridge().legionService();
-            return;
-        }
-        legionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().legionService());
+        legionServiceProvider.getObject();
     }
 
     /**
@@ -587,11 +589,7 @@ public class GameRuntimeServicesGateway {
      * Resolve influence.
      */
     private void influence() {
-        if (influenceProvider == null) {
-            runtimeServiceBridge().influence();
-            return;
-        }
-        influenceProvider.getIfAvailable(() -> runtimeServiceBridge().influence());
+        influenceProvider.getObject();
     }
 
     /**
@@ -599,11 +597,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the exchange service.
      */
     private void exchangeService() {
-        if (exchangeServiceProvider == null) {
-            runtimeServiceBridge().exchangeService();
-            return;
-        }
-        exchangeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().exchangeService());
+        exchangeServiceProvider.getObject();
     }
 
     /**
@@ -611,11 +605,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the petition service.
      */
     private void petitionService() {
-        if (petitionServiceProvider == null) {
-            runtimeServiceBridge().petitionService();
-            return;
-        }
-        petitionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().petitionService());
+        petitionServiceProvider.getObject();
     }
 
     /**
@@ -623,11 +613,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the fly-ring service.
      */
     private void flyRingService() {
-        if (flyRingServiceProvider == null) {
-            runtimeServiceBridge().flyRingService();
-            return;
-        }
-        flyRingServiceProvider.getIfAvailable(() -> runtimeServiceBridge().flyRingService());
+        flyRingServiceProvider.getObject();
     }
 
     /**
@@ -635,11 +621,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the curing-zone service.
      */
     private void curingZoneService() {
-        if (curingZoneServiceProvider == null) {
-            runtimeServiceBridge().curingZoneService();
-            return;
-        }
-        curingZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().curingZoneService());
+        curingZoneServiceProvider.getObject();
     }
 
     /**
@@ -647,11 +629,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the spring-zone service.
      */
     private void springZoneService() {
-        if (springZoneServiceProvider == null) {
-            runtimeServiceBridge().springZoneService();
-            return;
-        }
-        springZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().springZoneService());
+        springZoneServiceProvider.getObject();
     }
 
     /**
@@ -660,10 +638,7 @@ public class GameRuntimeServicesGateway {
      * @return 增益活动服务 / Boost-event service
      */
     private BoostEventService boostEventService() {
-        if (boostEventServiceProvider == null) {
-            return runtimeServiceBridge().boostEventService();
-        }
-        return boostEventServiceProvider.getIfAvailable(() -> runtimeServiceBridge().boostEventService());
+        return boostEventServiceProvider.getObject();
     }
 
     /**
@@ -671,11 +646,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the DB task manager.
      */
     private void taskManagerFromDB() {
-        if (taskManagerFromDBProvider == null) {
-            runtimeServiceBridge().taskManagerFromDB();
-            return;
-        }
-        taskManagerFromDBProvider.getIfAvailable(() -> runtimeServiceBridge().taskManagerFromDB());
+        taskManagerFromDBProvider.getObject();
     }
 
     /**
@@ -684,10 +655,7 @@ public class GameRuntimeServicesGateway {
      * @return 限购交易服务 / Limited-item trade service
      */
     private LimitedItemTradeService limitedItemTradeService() {
-        if (limitedItemTradeServiceProvider == null) {
-            return runtimeServiceBridge().limitedItemTradeService();
-        }
-        return limitedItemTradeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().limitedItemTradeService());
+        return limitedItemTradeServiceProvider.getObject();
     }
 
     /**
@@ -695,11 +663,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the webshop service.
      */
     private void webshopService() {
-        if (webshopServiceProvider == null) {
-            runtimeServiceBridge().webshopService();
-            return;
-        }
-        webshopServiceProvider.getIfAvailable(() -> runtimeServiceBridge().webshopService());
+        webshopServiceProvider.getObject();
     }
 
     /**
@@ -707,11 +671,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the survey service.
      */
     private void surveyService() {
-        if (surveyServiceProvider == null) {
-            runtimeServiceBridge().surveyService();
-            return;
-        }
-        surveyServiceProvider.getIfAvailable(() -> runtimeServiceBridge().surveyService());
+        surveyServiceProvider.getObject();
     }
 
     /**
@@ -719,11 +679,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the find-group service.
      */
     private void findGroupService() {
-        if (findGroupServiceProvider == null) {
-            runtimeServiceBridge().findGroupService();
-            return;
-        }
-        findGroupServiceProvider.getIfAvailable(() -> runtimeServiceBridge().findGroupService());
+        findGroupServiceProvider.getObject();
     }
 
     /**
@@ -731,22 +687,7 @@ public class GameRuntimeServicesGateway {
      * Resolve the in-game shop.
      */
     private void inGameShopEn() {
-        if (inGameShopEnProvider == null) {
-            runtimeServiceBridge().inGameShopEn();
-            return;
-        }
-        inGameShopEnProvider.getIfAvailable(() -> runtimeServiceBridge().inGameShopEn());
+        inGameShopEnProvider.getObject();
     }
 
-    /**
-     * 解析运行时服务桥接。
-     * Resolve the runtime service bridge.
-     * @return 运行时服务桥接 / Runtime service bridge
-     */
-    private GameRuntimeServiceBridge runtimeServiceBridge() {
-        if (runtimeServiceBridgeProvider == null) {
-            return new GameRuntimeServiceBridge();
-        }
-        return runtimeServiceBridgeProvider.getIfAvailable(GameRuntimeServiceBridge::new);
-    }
 }

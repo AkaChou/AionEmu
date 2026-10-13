@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.AgentService;
@@ -30,10 +32,8 @@ import org.springframework.stereotype.Component;
  * 地点/副本引导启动网关：按固定顺序引导世界地点系统（攻城/战场、漩涡/世界 Boss、PvP/RvR、副本/地牢、欧比斯/登陆）。
  * LocationBootstrap gateway that bootstraps world location systems in a fixed order:
  * siege/battlefield, vortex/world bosses, PvP/RvR, instance/dungeon, and abyss/landing.
- * <p>各服务优先通过注入的 {@link ObjectProvider} 解析；不可用时回退到
- * {@link GameLocationBootstrapRuntimeBridge}。
- * Services are resolved via injected {@link ObjectProvider}s first, falling back to
- * {@link GameLocationBootstrapRuntimeBridge} when unavailable.</p>
+ * <p>各服务通过注入的 {@link ObjectProvider} 解析。
+ * Services are resolved via injected {@link ObjectProvider}s.</p>
  */
 @Component
 public class GameLocationBootstrapGateway {
@@ -170,11 +170,6 @@ public class GameLocationBootstrapGateway {
      */
     private ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider;
 
-    /**
-     * 地点引导运行时桥接提供者。
-     * LocationBootstrap runtime bridge provider.
-     */
-    private ObjectProvider<GameLocationBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 注入攻城服务提供者。
@@ -396,15 +391,6 @@ public class GameLocationBootstrapGateway {
         this.abyssLandingSpecialServiceProvider = abyssLandingSpecialServiceProvider;
     }
 
-    /**
-     * 注入地点引导运行时桥接提供者。
-     * Inject the LocationBootstrap runtime bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameLocationBootstrapRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 按固定顺序引导全部世界地点系统。
@@ -428,7 +414,7 @@ public class GameLocationBootstrapGateway {
      * </p>
      */
     public void bootstrap() {
-        runtimeBridge().printSiegeAndBattlefieldLocationsSection();
+        Util.printSection(I18n.get("console.section.locations.siege_battlefield"));
         siegeService().initSiegeLocations();
         BaseService baseService = baseService();
         baseService.initBaseLocations();
@@ -436,7 +422,7 @@ public class GameLocationBootstrapGateway {
         OutpostService outpostService = outpostService();
         outpostService.initOutpostLocations();
         outpostService.initOupostReset();
-        runtimeBridge().printVortexAndWorldBossLocationsSection();
+        Util.printSection(I18n.get("console.section.locations.vortex_world_boss"));
         VortexService vortexService = vortexService();
         vortexService.initVortex();
         vortexService.initVortexLocations();
@@ -452,7 +438,7 @@ public class GameLocationBootstrapGateway {
         SvsService svsService = svsService();
         svsService.initSvs();
         svsService.initSvsLocations();
-        runtimeBridge().printPvpAndRvrLocationsSection();
+        Util.printSection(I18n.get("console.section.locations.pvp_rvr"));
         RvrService rvrService = rvrService();
         rvrService.initRvr();
         rvrService.initRvrLocations();
@@ -465,7 +451,7 @@ public class GameLocationBootstrapGateway {
         DynamicRiftService dynamicRiftService = dynamicRiftService();
         dynamicRiftService.initDynamicRift();
         dynamicRiftService.initDynamicRiftLocations();
-        runtimeBridge().printInstanceAndDungeonLocationsSection();
+        Util.printSection(I18n.get("console.section.locations.instance_dungeon"));
         InstanceRiftService instanceRiftService = instanceRiftService();
         instanceRiftService.initInstance();
         instanceRiftService.initInstanceLocations();
@@ -487,7 +473,7 @@ public class GameLocationBootstrapGateway {
         TowerOfEternityService towerOfEternityService = towerOfEternityService();
         towerOfEternityService.initTowerOfEternity();
         towerOfEternityService.initTowerOfEternityLocation();
-        runtimeBridge().printAbyssAndLandingLocationsSection();
+        Util.printSection(I18n.get("console.section.locations.abyss_landing"));
         abyssLandingService().initLandingLocations();
         LandingUpdateService landingUpdateService = landingUpdateService();
         landingUpdateService.initResetQuestPoints();
@@ -501,10 +487,7 @@ public class GameLocationBootstrapGateway {
      * @return 攻城服务 / Siege service
      */
     private SiegeService siegeService() {
-        if (siegeServiceProvider == null) {
-            return runtimeBridge().siegeService();
-        }
-        return siegeServiceProvider.getIfAvailable(() -> runtimeBridge().siegeService());
+        return siegeServiceProvider.getObject();
     }
 
     /**
@@ -513,10 +496,7 @@ public class GameLocationBootstrapGateway {
      * @return 基地服务 / Base service
      */
     private BaseService baseService() {
-        if (baseServiceProvider == null) {
-            return runtimeBridge().baseService();
-        }
-        return baseServiceProvider.getIfAvailable(() -> runtimeBridge().baseService());
+        return baseServiceProvider.getObject();
     }
 
     /**
@@ -525,10 +505,7 @@ public class GameLocationBootstrapGateway {
      * @return 前哨服务 / Outpost service
      */
     private OutpostService outpostService() {
-        if (outpostServiceProvider == null) {
-            return runtimeBridge().outpostService();
-        }
-        return outpostServiceProvider.getIfAvailable(() -> runtimeBridge().outpostService());
+        return outpostServiceProvider.getObject();
     }
 
     /**
@@ -537,10 +514,7 @@ public class GameLocationBootstrapGateway {
      * @return 漩涡服务 / Vortex service
      */
     private VortexService vortexService() {
-        if (vortexServiceProvider == null) {
-            return runtimeBridge().vortexService();
-        }
-        return vortexServiceProvider.getIfAvailable(() -> runtimeBridge().vortexService());
+        return vortexServiceProvider.getObject();
     }
 
     /**
@@ -549,10 +523,7 @@ public class GameLocationBootstrapGateway {
      * @return 贝里特拉服务 / Beritra service
      */
     private BeritraService beritraService() {
-        if (beritraServiceProvider == null) {
-            return runtimeBridge().beritraService();
-        }
-        return beritraServiceProvider.getIfAvailable(() -> runtimeBridge().beritraService());
+        return beritraServiceProvider.getObject();
     }
 
     /**
@@ -561,10 +532,7 @@ public class GameLocationBootstrapGateway {
      * @return 代理人服务 / Agent service
      */
     private AgentService agentService() {
-        if (agentServiceProvider == null) {
-            return runtimeBridge().agentService();
-        }
-        return agentServiceProvider.getIfAvailable(() -> runtimeBridge().agentService());
+        return agentServiceProvider.getObject();
     }
 
     /**
@@ -573,10 +541,7 @@ public class GameLocationBootstrapGateway {
      * @return 阿诺哈服务 / Anoha service
      */
     private AnohaService anohaService() {
-        if (anohaServiceProvider == null) {
-            return runtimeBridge().anohaService();
-        }
-        return anohaServiceProvider.getIfAvailable(() -> runtimeBridge().anohaService());
+        return anohaServiceProvider.getObject();
     }
 
     /**
@@ -585,10 +550,7 @@ public class GameLocationBootstrapGateway {
      * @return SvS 服务 / SvS service
      */
     private SvsService svsService() {
-        if (svsServiceProvider == null) {
-            return runtimeBridge().svsService();
-        }
-        return svsServiceProvider.getIfAvailable(() -> runtimeBridge().svsService());
+        return svsServiceProvider.getObject();
     }
 
     /**
@@ -597,10 +559,7 @@ public class GameLocationBootstrapGateway {
      * @return RvR 服务 / RvR service
      */
     private RvrService rvrService() {
-        if (rvrServiceProvider == null) {
-            return runtimeBridge().rvrService();
-        }
-        return rvrServiceProvider.getIfAvailable(() -> runtimeBridge().rvrService());
+        return rvrServiceProvider.getObject();
     }
 
     /**
@@ -609,10 +568,7 @@ public class GameLocationBootstrapGateway {
      * @return IU 服务 / IU service
      */
     private IuService iuService() {
-        if (iuServiceProvider == null) {
-            return runtimeBridge().iuService();
-        }
-        return iuServiceProvider.getIfAvailable(() -> runtimeBridge().iuService());
+        return iuServiceProvider.getObject();
     }
 
     /**
@@ -621,10 +577,7 @@ public class GameLocationBootstrapGateway {
      * @return 噩梦马戏团服务 / Nightmare Circus service
      */
     private NightmareCircusService nightmareCircusService() {
-        if (nightmareCircusServiceProvider == null) {
-            return runtimeBridge().nightmareCircusService();
-        }
-        return nightmareCircusServiceProvider.getIfAvailable(() -> runtimeBridge().nightmareCircusService());
+        return nightmareCircusServiceProvider.getObject();
     }
 
     /**
@@ -633,10 +586,7 @@ public class GameLocationBootstrapGateway {
      * @return 动态裂隙服务 / Dynamic Rift service
      */
     private DynamicRiftService dynamicRiftService() {
-        if (dynamicRiftServiceProvider == null) {
-            return runtimeBridge().dynamicRiftService();
-        }
-        return dynamicRiftServiceProvider.getIfAvailable(() -> runtimeBridge().dynamicRiftService());
+        return dynamicRiftServiceProvider.getObject();
     }
 
     /**
@@ -645,10 +595,7 @@ public class GameLocationBootstrapGateway {
      * @return 副本裂隙服务 / Instance Rift service
      */
     private InstanceRiftService instanceRiftService() {
-        if (instanceRiftServiceProvider == null) {
-            return runtimeBridge().instanceRiftService();
-        }
-        return instanceRiftServiceProvider.getIfAvailable(() -> runtimeBridge().instanceRiftService());
+        return instanceRiftServiceProvider.getObject();
     }
 
     /**
@@ -657,10 +604,7 @@ public class GameLocationBootstrapGateway {
      * @return 佐西夫战舰服务 / Zorshiv Dredgion service
      */
     private ZorshivDredgionService zorshivDredgionService() {
-        if (zorshivDredgionServiceProvider == null) {
-            return runtimeBridge().zorshivDredgionService();
-        }
-        return zorshivDredgionServiceProvider.getIfAvailable(() -> runtimeBridge().zorshivDredgionService());
+        return zorshivDredgionServiceProvider.getObject();
     }
 
     /**
@@ -669,10 +613,7 @@ public class GameLocationBootstrapGateway {
      * @return 熔岩巨兽服务 / Moltenus service
      */
     private MoltenusService moltenusService() {
-        if (moltenusServiceProvider == null) {
-            return runtimeBridge().moltenusService();
-        }
-        return moltenusServiceProvider.getIfAvailable(() -> runtimeBridge().moltenusService());
+        return moltenusServiceProvider.getObject();
     }
 
     /**
@@ -681,10 +622,7 @@ public class GameLocationBootstrapGateway {
      * @return 裂隙服务 / Rift service
      */
     private RiftService riftService() {
-        if (riftServiceProvider == null) {
-            return runtimeBridge().riftService();
-        }
-        return riftServiceProvider.getIfAvailable(() -> runtimeBridge().riftService());
+        return riftServiceProvider.getObject();
     }
 
     /**
@@ -693,10 +631,7 @@ public class GameLocationBootstrapGateway {
      * @return 征服服务 / Conquest service
      */
     private ConquestService conquestService() {
-        if (conquestServiceProvider == null) {
-            return runtimeBridge().conquestService();
-        }
-        return conquestServiceProvider.getIfAvailable(() -> runtimeBridge().conquestService());
+        return conquestServiceProvider.getObject();
     }
 
     /**
@@ -705,10 +640,7 @@ public class GameLocationBootstrapGateway {
      * @return 伊迪安深渊服务 / Idian Depths service
      */
     private IdianDepthsService idianDepthsService() {
-        if (idianDepthsServiceProvider == null) {
-            return runtimeBridge().idianDepthsService();
-        }
-        return idianDepthsServiceProvider.getIfAvailable(() -> runtimeBridge().idianDepthsService());
+        return idianDepthsServiceProvider.getObject();
     }
 
     /**
@@ -717,10 +649,7 @@ public class GameLocationBootstrapGateway {
      * @return 永恒之塔服务 / Tower of Eternity service
      */
     private TowerOfEternityService towerOfEternityService() {
-        if (towerOfEternityServiceProvider == null) {
-            return runtimeBridge().towerOfEternityService();
-        }
-        return towerOfEternityServiceProvider.getIfAvailable(() -> runtimeBridge().towerOfEternityService());
+        return towerOfEternityServiceProvider.getObject();
     }
 
     /**
@@ -729,10 +658,7 @@ public class GameLocationBootstrapGateway {
      * @return 欧比斯登陆服务 / Abyss Landing service
      */
     private AbyssLandingService abyssLandingService() {
-        if (abyssLandingServiceProvider == null) {
-            return runtimeBridge().abyssLandingService();
-        }
-        return abyssLandingServiceProvider.getIfAvailable(() -> runtimeBridge().abyssLandingService());
+        return abyssLandingServiceProvider.getObject();
     }
 
     /**
@@ -741,10 +667,7 @@ public class GameLocationBootstrapGateway {
      * @return 登陆更新服务 / Landing update service
      */
     private LandingUpdateService landingUpdateService() {
-        if (landingUpdateServiceProvider == null) {
-            return runtimeBridge().landingUpdateService();
-        }
-        return landingUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().landingUpdateService());
+        return landingUpdateServiceProvider.getObject();
     }
 
     /**
@@ -753,21 +676,7 @@ public class GameLocationBootstrapGateway {
      * @return 欧比斯特殊登陆服务 / Abyss Landing special service
      */
     private AbyssLandingSpecialService abyssLandingSpecialService() {
-        if (abyssLandingSpecialServiceProvider == null) {
-            return runtimeBridge().abyssLandingSpecialService();
-        }
-        return abyssLandingSpecialServiceProvider.getIfAvailable(() -> runtimeBridge().abyssLandingSpecialService());
+        return abyssLandingSpecialServiceProvider.getObject();
     }
 
-    /**
-     * 解析地点引导运行时桥接。
-     * Resolve the LocationBootstrap runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameLocationBootstrapRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameLocationBootstrapRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameLocationBootstrapRuntimeBridge::new);
-    }
 }

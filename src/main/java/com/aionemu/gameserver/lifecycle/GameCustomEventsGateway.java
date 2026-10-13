@@ -43,11 +43,6 @@ public class GameCustomEventsGateway {
      */
     private ObjectProvider<BanditService> banditServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入 FFA 服务 {@link ObjectProvider}。
@@ -89,15 +84,6 @@ public class GameCustomEventsGateway {
         this.banditServiceProvider = banditServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动自定义活动：打印分区并按开关初始化 FFA、天梯/BG 与强盗服务。
@@ -120,11 +106,7 @@ public class GameCustomEventsGateway {
      * Resolve FFA service: prefer Spring, otherwise fall back via runtime bridge.
      */
     private void ffaService() {
-        if (ffaServiceProvider == null) {
-            runtimeBridge().ffaService();
-    	return;
-        }
-        ffaServiceProvider.getIfAvailable(() -> runtimeBridge().ffaService());
+        ffaServiceProvider.getObject();
     }
 
     /**
@@ -132,11 +114,7 @@ public class GameCustomEventsGateway {
      * Resolve ladder service.
      */
     private void ladderService() {
-        if (ladderServiceProvider == null) {
-            runtimeBridge().ladderService();
-    	return;
-        }
-        ladderServiceProvider.getIfAvailable(() -> runtimeBridge().ladderService());
+        ladderServiceProvider.getObject();
     }
 
     /**
@@ -144,11 +122,7 @@ public class GameCustomEventsGateway {
      * Resolve BG service.
      */
     private void bgService() {
-        if (bgServiceProvider == null) {
-            runtimeBridge().bgService();
-    	return;
-        }
-        bgServiceProvider.getIfAvailable(() -> runtimeBridge().bgService());
+        bgServiceProvider.getObject();
     }
 
     /**
@@ -157,21 +131,7 @@ public class GameCustomEventsGateway {
      * @return 服务实例 / Service instance
      */
     private BanditService banditService() {
-        if (banditServiceProvider == null) {
-            return runtimeBridge().banditService();
-        }
-        return banditServiceProvider.getIfAvailable(() -> runtimeBridge().banditService());
+        return banditServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

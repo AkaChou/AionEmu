@@ -14,7 +14,6 @@ import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
@@ -365,63 +364,6 @@ class GameLegacyServiceBridgeConfigurationTest {
 			assertThrows(IllegalStateException.class, MinionService::getInstance);
 			assertThrows(IllegalStateException.class, ShugoSweepService::getInstance);
 			assertThrows(IllegalStateException.class, AtreianPassportService::getInstance);
-		}
-	}
-
-	@Test
-	void exposesRuntimeServicesAsSpringBeansWithEagerBridgeOnly() {
-		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
-			assertTrue(context.containsBeanDefinition("periodicSaveService"));
-			assertTrue(context.containsBeanDefinition("territoryService"));
-			assertTrue(context.containsBeanDefinition("gameTimeService"));
-			assertTrue(context.containsBeanDefinition("announcementService"));
-			assertTrue(context.containsBeanDefinition("debugService"));
-			assertTrue(context.containsBeanDefinition("weatherService"));
-			assertTrue(context.containsBeanDefinition("brokerService"));
-			assertTrue(context.containsBeanDefinition("influence"));
-			assertTrue(context.containsBeanDefinition("exchangeService"));
-			assertTrue(context.containsBeanDefinition("petitionService"));
-			assertTrue(context.containsBeanDefinition("flyRingService"));
-			assertTrue(context.containsBeanDefinition("curingZoneService"));
-			assertTrue(context.containsBeanDefinition("springZoneService"));
-			assertTrue(context.containsBeanDefinition("boostEventService"));
-			assertTrue(context.containsBeanDefinition("taskManagerFromDB"));
-			assertTrue(context.containsBeanDefinition("limitedItemTradeService"));
-			assertTrue(context.containsBeanDefinition("gameRuntimeServiceBridge"));
-			assertEquals(PeriodicSaveService.class, context.getType("periodicSaveService"));
-			assertEquals(TerritoryService.class, context.getType("territoryService"));
-			assertEquals(GameTimeService.class, context.getType("gameTimeService"));
-			assertEquals(AnnouncementService.class, context.getType("announcementService"));
-			assertEquals(DebugService.class, context.getType("debugService"));
-			assertEquals(WeatherService.class, context.getType("weatherService"));
-			assertEquals(BrokerService.class, context.getType("brokerService"));
-			assertEquals(Influence.class, context.getType("influence"));
-			assertEquals(ExchangeService.class, context.getType("exchangeService"));
-			assertEquals(PetitionService.class, context.getType("petitionService"));
-			assertEquals(FlyRingService.class, context.getType("flyRingService"));
-			assertEquals(CuringZoneService.class, context.getType("curingZoneService"));
-			assertEquals(SpringZoneService.class, context.getType("springZoneService"));
-			assertEquals(BoostEventService.class, context.getType("boostEventService"));
-			assertEquals(TaskManagerFromDB.class, context.getType("taskManagerFromDB"));
-			assertEquals(LimitedItemTradeService.class, context.getType("limitedItemTradeService"));
-			assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
-			assertLazy(context.getBeanFactory(), "periodicSaveService");
-			assertLazy(context.getBeanFactory(), "territoryService");
-			assertLazy(context.getBeanFactory(), "gameTimeService");
-			assertLazy(context.getBeanFactory(), "announcementService");
-			assertLazy(context.getBeanFactory(), "debugService");
-			assertLazy(context.getBeanFactory(), "weatherService");
-			assertLazy(context.getBeanFactory(), "brokerService");
-			assertLazy(context.getBeanFactory(), "influence");
-			assertLazy(context.getBeanFactory(), "exchangeService");
-			assertLazy(context.getBeanFactory(), "petitionService");
-			assertLazy(context.getBeanFactory(), "flyRingService");
-			assertLazy(context.getBeanFactory(), "curingZoneService");
-			assertLazy(context.getBeanFactory(), "springZoneService");
-			assertLazy(context.getBeanFactory(), "boostEventService");
-			assertLazy(context.getBeanFactory(), "taskManagerFromDB");
-			assertLazy(context.getBeanFactory(), "limitedItemTradeService");
-			assertEager(context.getBeanFactory(), "gameRuntimeServiceBridge");
 		}
 	}
 

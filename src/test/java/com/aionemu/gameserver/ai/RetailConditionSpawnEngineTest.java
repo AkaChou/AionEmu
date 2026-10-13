@@ -15,8 +15,10 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawn;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
@@ -46,14 +48,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RetailConditionSpawnEngineTest {
 
+	/**
+	 * 测试内构造的核心玩法服务门面。
+	 * Core-gameplay service facade constructed by the test.
+	 */
+	private GameCoreGameplayServices coreGameplayServices;
+
+	/**
+	 * 测试内构造的世界服务门面。
+	 * World-service facade constructed by the test.
+	 */
+	private GameWorldServices gameWorldServices;
+
 	@BeforeEach
 	void installRetiredServiceProvider() {
-		TestServiceProviders.install(DropService.class, new DropService());
-		TestServiceProviders.install(DropRegistrationService.class, new DropRegistrationService());
+		DropService dropService = new DropService();
+		DropRegistrationService dropRegistrationService = new DropRegistrationService();
+		TestServiceProviders.install(DropService.class, dropService);
+		TestServiceProviders.install(DropRegistrationService.class, dropRegistrationService);
+		// D1a 后 holder 定位器不再回退到单例：显式构造核心玩法/世界服务门面，消亡路径才能解析掉落服务。
+		// After D1a the holder locator no longer falls back to the singleton: construct the core
+		// gameplay and world facades explicitly so despawn paths can resolve the drop service.
+		coreGameplayServices = new GameCoreGameplayServices(
+			provider(DropService.class, dropService), null, null, null, null, null, null, null);
+		gameWorldServices = new GameWorldServices(null, null,
+			provider(DropRegistrationService.class, dropRegistrationService));
 	}
 
 	@AfterEach
 	void clearRetiredServiceProvider() {
+		coreGameplayServices.destroy();
+		gameWorldServices.destroy();
 		TestServiceProviders.clear(DropService.class);
 		TestServiceProviders.clear(DropRegistrationService.class);
 	}

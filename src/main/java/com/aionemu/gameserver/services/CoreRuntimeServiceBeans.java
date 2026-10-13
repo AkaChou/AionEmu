@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
@@ -214,11 +213,6 @@ public class CoreRuntimeServiceBeans {
     @Lazy
     public GMService gmService() {
         return new GMService();
-    }
-
-    @Bean
-    public GameRuntimeServiceBridge gameRuntimeServiceBridge() {
-        return new GameRuntimeServiceBridge();
     }
 
     @Bean

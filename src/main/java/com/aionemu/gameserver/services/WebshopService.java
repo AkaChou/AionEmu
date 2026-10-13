@@ -5,7 +5,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.NonNull;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -15,13 +14,11 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.List;
 
-import com.aionemu.boot.i18n.I18n;
 
 /**
  * 网页商城服务，定时扫描并发放待领取的商城奖励邮件。
  * Web shop service that periodically scans and delivers pending shop reward mails.
  */
-@Slf4j
 public class WebshopService {
 	private static final String SHOP_MAIL_SENDER = "Aion Shop";
 	private static final String SHOP_MAIL_TITLE = "Shop Purchase";
@@ -72,18 +69,14 @@ public class WebshopService {
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
 	private void load() {
-		try {
-			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
-				List<RewardEntryItem> liste = this.rewardServiceDAO.getAvailable(pl.getObjectId());
-				if (!liste.isEmpty()) {
-					for (RewardEntryItem item : liste) {
-						deliverRewardMail(pl.getName(), item, this.rewardServiceDAO, GameFeatureServices.systemMailService());
-					}
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			List<RewardEntryItem> liste = this.rewardServiceDAO.getAvailable(pl.getObjectId());
+			if (!liste.isEmpty()) {
+				for (RewardEntryItem item : liste) {
+					deliverRewardMail(pl.getName(), item, this.rewardServiceDAO, GameFeatureServices.systemMailService());
 				}
-			}), 5 * 1000, 5 * 1000);
-		} catch (Exception e) {
-			log.warn(I18n.get("log.035caceb1de8", e.getMessage()), e);
-		}
+			}
+		}), 5 * 1000, 5 * 1000);
 	}
 
 	/**

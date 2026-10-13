@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.player.PlayerService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,12 +21,6 @@ public class GameWorldActivationGateway {
     private ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider;
 
     /**
-     * 世界服务运行时桥的可选提供者。
-     * Optional provider for the world-services runtime bridge.
-     */
-    private ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider;
-
-    /**
      * 注入掉落注册服务提供者。
      * Inject the drop-registration-service provider.
      * @param dropRegistrationServiceProvider 掉落注册服务提供者 / Drop-registration-service provider
@@ -36,50 +31,49 @@ public class GameWorldActivationGateway {
     }
 
     /**
-     * 注入世界服务运行时桥提供者。
-     * Inject the world-services runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
-
-    /**
      * 激活世界：解析掉落服务、创建并激活 GameServer、标记玩家离线。
      * Activate the world: resolve drop service, create/activate GameServer, mark players offline.
      * @return 激活后的 GameServer 实例 / Activated GameServer instance
      */
     public GameServer activate() {
         dropRegistrationService();
-        GameWorldServicesRuntimeBridge runtimeBridge = runtimeBridge();
-        GameServer server = runtimeBridge.createGameServer();
-        runtimeBridge.activateGameServer(server);
-        runtimeBridge.markPlayersOffline();
+        GameServer server = createGameServer();
+        activateGameServer(server);
+        markPlayersOffline();
         return server;
     }
 
     /**
-     * 解析掉落注册服务：优先 Spring，否则运行时桥。
-     * Resolve drop-registration service: prefer Spring, otherwise runtime bridge.
+     * 解析掉落注册服务。
+     * Resolve the drop-registration service.
      */
     private void dropRegistrationService() {
-        if (dropRegistrationServiceProvider == null) {
-            runtimeBridge().dropRegistrationService();
-    	return;
-        }
-        dropRegistrationServiceProvider.getIfAvailable(() -> runtimeBridge().dropRegistrationService());
+        dropRegistrationServiceProvider.getObject();
     }
 
     /**
-     * 解析世界服务运行时桥：优先 Spring，否则新建。
-     * Resolve the world-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
+     * 创建 GameServer 实例。
+     * Create the GameServer instance.
+     * @return 新的 GameServer / New GameServer
      */
-    private GameWorldServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameWorldServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameWorldServicesRuntimeBridge::new);
+    private GameServer createGameServer() {
+        return new GameServer();
+    }
+
+    /**
+     * 激活 GameServer。
+     * Activate the GameServer.
+     * @param server 待激活实例 / Instance to activate
+     */
+    private void activateGameServer(GameServer server) {
+        GameServer.activateServer(server);
+    }
+
+    /**
+     * 将全部玩家标记为离线。
+     * Mark every player offline.
+     */
+    private void markPlayersOffline() {
+        PlayerService.daos().playerDAO().setPlayersOffline(false);
     }
 }

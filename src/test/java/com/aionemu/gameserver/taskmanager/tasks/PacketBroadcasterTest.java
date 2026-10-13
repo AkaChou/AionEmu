@@ -7,6 +7,7 @@ import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.controllers.CreatureController;
@@ -20,13 +21,27 @@ import org.junit.jupiter.api.Test;
 
 class PacketBroadcasterTest {
 
+	/**
+	 * GameEventServices 已解析数据包广播器缓存字段。
+	 * Resolved packet-broadcaster cache field of GameEventServices.
+	 */
+	private Field resolvedPacketBroadcasterField;
+
 	@BeforeEach
-	void installRetiredServiceProvider() {
-		TestServiceProviders.install(PacketBroadcaster.class, new PacketBroadcaster());
+	void installRetiredServiceProvider() throws ReflectiveOperationException {
+		PacketBroadcaster packetBroadcaster = new PacketBroadcaster();
+		TestServiceProviders.install(PacketBroadcaster.class, packetBroadcaster);
+		// D1a 后 holder 定位器不再回退到单例：预置已解析缓存，离线路径不再 fail-fast。
+		// After D1a the holder locator no longer falls back to the singleton: preset the
+		// resolved cache so offline paths do not fail fast.
+		resolvedPacketBroadcasterField = GameEventServices.class.getDeclaredField("resolvedPacketBroadcaster");
+		resolvedPacketBroadcasterField.setAccessible(true);
+		resolvedPacketBroadcasterField.set(null, packetBroadcaster);
 	}
 
 	@AfterEach
-	void clearRetiredServiceProvider() {
+	void clearRetiredServiceProvider() throws ReflectiveOperationException {
+		resolvedPacketBroadcasterField.set(null, null);
 		TestServiceProviders.clear(PacketBroadcaster.class);
 	}
 

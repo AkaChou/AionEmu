@@ -66,9 +66,11 @@ public final class GameGameplayServices implements DisposableBean {
     public static DuelService duelService() {
         ObjectProvider<DuelService> provider = duelServiceProvider;
         if (provider == null) {
-            return DuelService.getInstance();
+            throw new IllegalStateException(
+                "DuelService is only available inside the Spring container; "
+                    + "offline construction must not touch gameplay services");
         }
-        return provider.getIfAvailable(DuelService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -79,9 +81,11 @@ public final class GameGameplayServices implements DisposableBean {
     public static LifeStatsRestoreService lifeStatsRestoreService() {
         ObjectProvider<LifeStatsRestoreService> provider = lifeStatsRestoreServiceProvider;
         if (provider == null) {
-            return LifeStatsRestoreService.getInstance();
+            throw new IllegalStateException(
+                "LifeStatsRestoreService is only available inside the Spring container; "
+                    + "offline construction must not touch gameplay services");
         }
-        return provider.getIfAvailable(LifeStatsRestoreService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -92,9 +96,11 @@ public final class GameGameplayServices implements DisposableBean {
     public static SeasonRankingService seasonRankingService() {
         ObjectProvider<SeasonRankingService> provider = seasonRankingServiceProvider;
         if (provider == null) {
-            return SeasonRankingService.getInstance();
+            throw new IllegalStateException(
+                "SeasonRankingService is only available inside the Spring container; "
+                    + "offline construction must not touch gameplay services");
         }
-        return provider.getIfAvailable(SeasonRankingService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -105,9 +111,11 @@ public final class GameGameplayServices implements DisposableBean {
     public static RiftManager riftManager() {
         ObjectProvider<RiftManager> provider = riftManagerProvider;
         if (provider == null) {
-            return RiftManager.getInstance();
+            throw new IllegalStateException(
+                "RiftManager is only available inside the Spring container; "
+                    + "offline construction must not touch gameplay services");
         }
-        return provider.getIfAvailable(RiftManager::getInstance);
+        return provider.getObject();
     }
 
     /**

@@ -18,11 +18,6 @@ public class GameStaticDataGateway {
      */
     private ObjectProvider<DataManager> dataManagerProvider;
 
-    /**
-     * 核心服务运行时桥的可选提供者。
-     * Optional provider for the core-services runtime bridge.
-     */
-    private ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 注入 DataManager 提供者。
@@ -34,15 +29,6 @@ public class GameStaticDataGateway {
         this.dataManagerProvider = dataManagerProvider;
     }
 
-    /**
-     * 注入核心服务运行时桥提供者。
-     * Inject the core-services runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 加载静态数据：解析 DataManager Bean（轻量构造）后显式触发加载。
@@ -63,21 +49,7 @@ public class GameStaticDataGateway {
      * @return DataManager 实例 / DataManager instance
      */
     private DataManager dataManager() {
-        if (dataManagerProvider == null) {
-            return runtimeBridge().dataManager();
-        }
-        return dataManagerProvider.getIfAvailable(() -> runtimeBridge().dataManager());
+        return dataManagerProvider.getObject();
     }
 
-    /**
-     * 解析核心服务运行时桥：优先 Spring，否则新建。
-     * Resolve the core-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameCoreServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameCoreServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameCoreServicesRuntimeBridge::new);
-    }
 }

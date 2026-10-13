@@ -20,10 +20,6 @@ class GameSeasonRankingLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "seasonRankingUpdateServiceProvider"));
     }
 
-    @Test
-    void seasonRankingGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {

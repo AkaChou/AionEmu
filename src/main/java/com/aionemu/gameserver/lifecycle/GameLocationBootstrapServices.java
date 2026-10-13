@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.util.function.Supplier;
 
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
@@ -41,10 +40,10 @@ import org.springframework.stereotype.Component;
 public final class GameLocationBootstrapServices implements DisposableBean {
 
     /**
-     * 按服务解析供应器缓存的已解析实例；见 {@link #getIfAvailable}。
-     * Resolved instances cached by their resolution suppliers; see {@link #getIfAvailable}.
+     * 按服务提供者缓存的已解析实例；见 {@link #resolveCached}。
+     * Resolved instances cached by their providers; see {@link #resolveCached}.
      */
-    private static final java.util.concurrent.ConcurrentHashMap<Supplier<?>, Object> RESOLVED_SERVICES =
+    private static final java.util.concurrent.ConcurrentHashMap<ObjectProvider<?>, Object> RESOLVED_SERVICES =
         new java.util.concurrent.ConcurrentHashMap<>();
 
     /**
@@ -261,7 +260,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 漩涡服务 / Vortex service
      */
     public static VortexService vortexService() {
-        return getIfAvailable(vortexServiceProvider, VortexService::getInstance);
+        return resolveCached(vortexServiceProvider);
     }
 
     /**
@@ -270,7 +269,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 贝里特拉服务 / Beritra service
      */
     public static BeritraService beritraService() {
-        return getIfAvailable(beritraServiceProvider, BeritraService::getInstance);
+        return resolveCached(beritraServiceProvider);
     }
 
     /**
@@ -279,7 +278,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 代理人服务 / Agent service
      */
     public static AgentService agentService() {
-        return getIfAvailable(agentServiceProvider, AgentService::getInstance);
+        return resolveCached(agentServiceProvider);
     }
 
     /**
@@ -288,7 +287,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 阿诺哈服务 / Anoha service
      */
     public static AnohaService anohaService() {
-        return getIfAvailable(anohaServiceProvider, AnohaService::getInstance);
+        return resolveCached(anohaServiceProvider);
     }
 
     /**
@@ -297,7 +296,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return SvS 服务 / SvS service
      */
     public static SvsService svsService() {
-        return getIfAvailable(svsServiceProvider, SvsService::getInstance);
+        return resolveCached(svsServiceProvider);
     }
 
     /**
@@ -306,7 +305,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return RvR 服务 / RvR service
      */
     public static RvrService rvrService() {
-        return getIfAvailable(rvrServiceProvider, RvrService::getInstance);
+        return resolveCached(rvrServiceProvider);
     }
 
     /**
@@ -315,7 +314,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return IU 服务 / IU service
      */
     public static IuService iuService() {
-        return getIfAvailable(iuServiceProvider, IuService::getInstance);
+        return resolveCached(iuServiceProvider);
     }
 
     /**
@@ -324,7 +323,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 噩梦马戏团服务 / Nightmare Circus service
      */
     public static NightmareCircusService nightmareCircusService() {
-        return getIfAvailable(nightmareCircusServiceProvider, NightmareCircusService::getInstance);
+        return resolveCached(nightmareCircusServiceProvider);
     }
 
     /**
@@ -333,7 +332,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 动态裂隙服务 / Dynamic Rift service
      */
     public static DynamicRiftService dynamicRiftService() {
-        return getIfAvailable(dynamicRiftServiceProvider, DynamicRiftService::getInstance);
+        return resolveCached(dynamicRiftServiceProvider);
     }
 
     /**
@@ -342,7 +341,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 副本裂隙服务 / Instance Rift service
      */
     public static InstanceRiftService instanceRiftService() {
-        return getIfAvailable(instanceRiftServiceProvider, InstanceRiftService::getInstance);
+        return resolveCached(instanceRiftServiceProvider);
     }
 
     /**
@@ -351,7 +350,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 前哨服务 / Outpost service
      */
     public static OutpostService outpostService() {
-        return getIfAvailable(outpostServiceProvider, OutpostService::getInstance);
+        return resolveCached(outpostServiceProvider);
     }
 
     /**
@@ -360,7 +359,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 佐西夫战舰服务 / Zorshiv Dredgion service
      */
     public static ZorshivDredgionService zorshivDredgionService() {
-        return getIfAvailable(zorshivDredgionServiceProvider, ZorshivDredgionService::getInstance);
+        return resolveCached(zorshivDredgionServiceProvider);
     }
 
     /**
@@ -369,7 +368,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 熔岩巨兽服务 / Moltenus service
      */
     public static MoltenusService moltenusService() {
-        return getIfAvailable(moltenusServiceProvider, MoltenusService::getInstance);
+        return resolveCached(moltenusServiceProvider);
     }
 
     /**
@@ -378,7 +377,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 裂隙服务 / Rift service
      */
     public static RiftService riftService() {
-        return getIfAvailable(riftServiceProvider, RiftService::getInstance);
+        return resolveCached(riftServiceProvider);
     }
 
     /**
@@ -387,7 +386,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 征服服务 / Conquest service
      */
     public static ConquestService conquestService() {
-        return getIfAvailable(conquestServiceProvider, ConquestService::getInstance);
+        return resolveCached(conquestServiceProvider);
     }
 
     /**
@@ -396,7 +395,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 伊迪安深渊服务 / Idian Depths service
      */
     public static IdianDepthsService idianDepthsService() {
-        return getIfAvailable(idianDepthsServiceProvider, IdianDepthsService::getInstance);
+        return resolveCached(idianDepthsServiceProvider);
     }
 
     /**
@@ -405,7 +404,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 永恒之塔服务 / Tower of Eternity service
      */
     public static TowerOfEternityService towerOfEternityService() {
-        return getIfAvailable(towerOfEternityServiceProvider, TowerOfEternityService::getInstance);
+        return resolveCached(towerOfEternityServiceProvider);
     }
 
     /**
@@ -414,7 +413,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 欧比斯登陆服务 / Abyss Landing service
      */
     public static AbyssLandingService abyssLandingService() {
-        return getIfAvailable(abyssLandingServiceProvider, AbyssLandingService::getInstance);
+        return resolveCached(abyssLandingServiceProvider);
     }
 
     /**
@@ -423,30 +422,38 @@ public final class GameLocationBootstrapServices implements DisposableBean {
      * @return 欧比斯特殊登陆服务 / Abyss Landing special service
      */
     public static AbyssLandingSpecialService abyssLandingSpecialService() {
-        return getIfAvailable(abyssLandingSpecialServiceProvider, AbyssLandingSpecialService::getInstance);
+        return resolveCached(abyssLandingSpecialServiceProvider);
     }
 
     /**
      * 在 {@link ObjectProvider} 可用时取 Bean，否则走单例回退。
-     * Return the bean from {@link ObjectProvider} when available, otherwise use the singleton fallback.
+     * Return the bean from {@link ObjectProvider}, failing fast when it is absent.
      * @param provider 可选提供者 / Optional provider
-     * @param fallback 单例回退供应器 / Singleton fallback supplier
      * @param <T> 服务类型 / Service type
      * @return 服务实例 / Service instance
      */
-    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
-        // 解析结果按 fallback 供应器缓存：并行刷怪期间每个 spawn 都会经此处穿过
-        // Spring 单例注册表全局锁（JFR 抓到的成片停车点），缓存后仅首次解析。
-        // Results are cached per fallback supplier: every spawn passes through here and the Spring
-        // singleton-registry global lock during parallel spawning (the JFR hotspot), so resolve once.
-        Object cached = RESOLVED_SERVICES.get(fallback);
+    private static <T> T resolveCached(ObjectProvider<T> provider) {
+        // 容器未启动即抛异常（fail-fast）；Bean 缺席由 getObject() 抛出。
+        // Fail fast when the container is not up; a missing bean is thrown by getObject().
+        if (provider == null) {
+            throw new IllegalStateException(
+                "Location service is only available inside the Spring container; "
+                    + "offline construction must not touch location services");
+        }
+        // 解析结果按提供者缓存：并行刷怪期间每个 spawn 都会经此处穿过 Spring 单例注册表
+        // 全局锁（JFR 抓到的成片停车点），缓存后仅首次解析。
+        // Results are cached per provider: every spawn passes through here and the Spring singleton-registry
+        // global lock during parallel spawning (the JFR hotspot), so resolve once.
+        Object cached = RESOLVED_SERVICES.get(provider);
         if (cached != null) {
             @SuppressWarnings("unchecked")
             T hit = (T) cached;
             return hit;
         }
-        T resolved = provider == null ? fallback.get() : provider.getIfAvailable(fallback);
-        RESOLVED_SERVICES.putIfAbsent(fallback, resolved);
+        // Bean 缺席即抛异常（fail-fast）。
+        // Fail fast when the bean is absent.
+        T resolved = provider.getObject();
+        RESOLVED_SERVICES.putIfAbsent(provider, resolved);
         return resolved;
     }
 

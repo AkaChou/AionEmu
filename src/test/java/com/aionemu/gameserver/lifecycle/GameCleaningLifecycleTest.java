@@ -21,10 +21,6 @@ class GameCleaningLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameCleaningGateway.class, "abyssRankCleaningServiceProvider"));
     }
 
-    @Test
-    void cleaningGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameCleaningGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsCleanersOnceAndRecordsLoadTime() {

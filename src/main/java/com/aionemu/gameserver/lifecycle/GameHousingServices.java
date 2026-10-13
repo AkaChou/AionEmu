@@ -89,8 +89,12 @@ public final class GameHousingServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<HousingBidService> provider = housingBidServiceProvider;
-        resolved = provider == null ? GameHousingFallbacks.housingBidService()
-                : provider.getIfAvailable(GameHousingFallbacks::housingBidService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "HousingBidService is only available inside the Spring container; "
+                    + "offline construction must not touch housing services");
+        }
+        resolved = provider.getObject();
         resolvedHousingBidService = resolved;
         return resolved;
     }
@@ -106,8 +110,12 @@ public final class GameHousingServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<MaintenanceTask> provider = maintenanceTaskProvider;
-        resolved = provider == null ? GameHousingFallbacks.maintenanceTask()
-                : provider.getIfAvailable(GameHousingFallbacks::maintenanceTask);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "MaintenanceTask is only available inside the Spring container; "
+                    + "offline construction must not touch housing services");
+        }
+        resolved = provider.getObject();
         resolvedMaintenanceTask = resolved;
         return resolved;
     }
@@ -123,8 +131,12 @@ public final class GameHousingServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<TownService> provider = townServiceProvider;
-        resolved = provider == null ? GameHousingFallbacks.townService()
-                : provider.getIfAvailable(GameHousingFallbacks::townService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "TownService is only available inside the Spring container; "
+                    + "offline construction must not touch housing services");
+        }
+        resolved = provider.getObject();
         resolvedTownService = resolved;
         return resolved;
     }
@@ -140,8 +152,12 @@ public final class GameHousingServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<HousingService> provider = housingServiceProvider;
-        resolved = provider == null ? GameHousingFallbacks.housingService()
-                : provider.getIfAvailable(GameHousingFallbacks::housingService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "HousingService is only available inside the Spring container; "
+                    + "offline construction must not touch housing services");
+        }
+        resolved = provider.getObject();
         resolvedHousingService = resolved;
         return resolved;
     }
@@ -157,8 +173,12 @@ public final class GameHousingServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<ChallengeTaskService> provider = challengeTaskServiceProvider;
-        resolved = provider == null ? GameHousingFallbacks.challengeTaskService()
-                : provider.getIfAvailable(GameHousingFallbacks::challengeTaskService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "ChallengeTaskService is only available inside the Spring container; "
+                    + "offline construction must not touch housing services");
+        }
+        resolved = provider.getObject();
         resolvedChallengeTaskService = resolved;
         return resolved;
     }

@@ -24,10 +24,6 @@ class GameOptionalServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "shieldServiceProvider"));
     }
 
-    @Test
-    void optionalServicesGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {

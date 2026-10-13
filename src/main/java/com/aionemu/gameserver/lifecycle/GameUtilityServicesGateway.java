@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,30 +15,15 @@ import org.springframework.stereotype.Component;
  * Utility-services gateway: orchestrates exception handler, config and thread-config init.
  */
 @Component
+@Slf4j
 public class GameUtilityServicesGateway {
-
-    /**
-     * 工具服务运行时桥的可选提供者。
-     * Optional provider for the utility-services runtime bridge.
-     */
-    private ObjectProvider<GameUtilityServicesRuntimeBridge> runtimeBridgeProvider;
-
-    /**
-     * 注入工具服务运行时桥提供者。
-     * Inject the utility-services runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameUtilityServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 初始化默认未捕获异常处理器。
      * Initialize the default uncaught-exception handler.
      */
     public void initializeExceptionHandler() {
-        runtimeBridge().initializeExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
     }
 
     /**
@@ -42,7 +31,9 @@ public class GameUtilityServicesGateway {
      * Report Java-agent callback support status.
      */
     public void reportCallbackSupport() {
-        runtimeBridge().reportCallbackSupport();
+        // 构建期织入后回调系统恒就绪：仅保留启动提示，不再保留 javaagent 探测外壳。
+        // The callback system is always ready after build-time weaving: keep the startup hint only.
+        log.info(I18n.get("console.startup.callback_ok"));
     }
 
     /**
@@ -50,7 +41,7 @@ public class GameUtilityServicesGateway {
      * Initialize the cron service.
      */
     public void initializeCronService() {
-        runtimeBridge().initializeCronService();
+        GameCronServices.initialize();
     }
 
     /**
@@ -62,11 +53,13 @@ public class GameUtilityServicesGateway {
     }
 
     /**
-     * 加载配置。
-     * Load configuration.
+     * 加载配置并应用国家码到 I18n。
+     * Load configuration and apply the country code to I18n.
      */
     public void loadConfig() {
-        runtimeBridge().loadConfig();
+        Config.load();
+        GSConfig.resolveServerCountryCode();
+        I18n.applyCountryCode(GSConfig.SERVER_COUNTRY_CODE);
     }
 
     /**
@@ -74,7 +67,7 @@ public class GameUtilityServicesGateway {
      * Initialize date-time utilities.
      */
     public void initializeDateTime() {
-        runtimeBridge().initializeDateTime();
+        DateTimeUtil.init();
     }
 
     /**
@@ -90,7 +83,7 @@ public class GameUtilityServicesGateway {
      * Load thread configuration.
      */
     public void loadThreadConfig() {
-        runtimeBridge().loadThreadConfig();
+        ThreadConfig.load();
     }
 
     /**
@@ -100,17 +93,5 @@ public class GameUtilityServicesGateway {
      */
     public long currentTimeMillis() {
         return System.currentTimeMillis();
-    }
-
-    /**
-     * 解析工具服务运行时桥：优先 Spring，否则新建。
-     * Resolve the utility-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameUtilityServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameUtilityServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameUtilityServicesRuntimeBridge::new);
     }
 }

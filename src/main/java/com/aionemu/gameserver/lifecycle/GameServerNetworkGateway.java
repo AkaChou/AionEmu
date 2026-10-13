@@ -7,6 +7,7 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.aion.GameClientConnectionFactory;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import org.springframework.beans.factory.ObjectProvider;
@@ -38,11 +39,6 @@ public class GameServerNetworkGateway {
      */
     private ObjectProvider<ChatServer> chatServerProvider;
 
-    /**
-     * 网络运行时桥接提供者（可选）。
-     * Optional network runtime-bridge provider.
-     */
-    private ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 注入 MAC 封禁管理器提供者。
@@ -74,15 +70,6 @@ public class GameServerNetworkGateway {
         this.chatServerProvider = chatServerProvider;
     }
 
-    /**
-     * 注入网络运行时桥接提供者。
-     * Inject the network runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 当前是否为 boot 嵌入式运行模式。
@@ -108,7 +95,7 @@ public class GameServerNetworkGateway {
      * @return 服务器传输 / Server transport
      */
     public ServerTransport createNettyTransport() {
-        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
+        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameClientConnectionFactory()));
     }
 
     /**
@@ -151,11 +138,7 @@ public class GameServerNetworkGateway {
      * Resolve the banned-MAC manager.
      */
     private void bannedMacManager() {
-        if (bannedMacManagerProvider == null) {
-            runtimeBridge().bannedMacManager();
-    	return;
-        }
-        bannedMacManagerProvider.getIfAvailable(() -> runtimeBridge().bannedMacManager());
+        bannedMacManagerProvider.getObject();
     }
 
     /**
@@ -164,10 +147,7 @@ public class GameServerNetworkGateway {
      * @return 登录服连接 / Login server
      */
     private LoginServer loginServerInstance() {
-        if (loginServerProvider == null) {
-            return runtimeBridge().loginServer();
-        }
-        return loginServerProvider.getIfAvailable(() -> runtimeBridge().loginServer());
+        return loginServerProvider.getObject();
     }
 
     /**
@@ -176,23 +156,9 @@ public class GameServerNetworkGateway {
      * @return 聊天服连接 / Chat server
      */
     private ChatServer chatServerInstance() {
-        if (chatServerProvider == null) {
-            return runtimeBridge().chatServer();
-        }
-        return chatServerProvider.getIfAvailable(() -> runtimeBridge().chatServer());
+        return chatServerProvider.getObject();
     }
 
-    /**
-     * 解析网络运行时桥接。
-     * Resolve the network runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameServerNetworkRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameServerNetworkRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameServerNetworkRuntimeBridge::new);
-    }
 
 	/**
 	 * 登录服网络对等端适配器。

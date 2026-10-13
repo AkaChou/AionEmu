@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
@@ -19,11 +20,6 @@ public class GameNetworkStartupGateway {
      * Shutdown-hook provider.
      */
     private ObjectProvider<ShutdownHook> shutdownHookProvider;
-    /**
-     * 网络启动运行时桥提供者。
-     * Network-startup runtime-bridge provider.
-     */
-    private ObjectProvider<GameNetworkStartupRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入关闭钩子提供者。
@@ -33,16 +29,6 @@ public class GameNetworkStartupGateway {
     @Autowired(required = false)
     void setShutdownHookProvider(ObjectProvider<ShutdownHook> shutdownHookProvider) {
         this.shutdownHookProvider = shutdownHookProvider;
-    }
-
-    /**
-     * 可选注入运行时桥提供者。
-     * Optionally inject the runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameNetworkStartupRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     /**
@@ -67,23 +53,16 @@ public class GameNetworkStartupGateway {
      * @return 处于 boot-embedded 模式为 {@code true} / {@code true} if boot-embedded
      */
     public boolean isBootEmbedded() {
-        return runtimeBridge().isBootEmbedded();
+        return AionRuntimeMode.isBootEmbedded();
     }
 
     /**
-     * 解析关闭钩子线程：优先 Spring 提供者，否则运行时桥回退。
-     * Resolve the shutdown-hook thread: prefer Spring provider, otherwise runtime-bridge fallback.
+     * 解析关闭钩子线程。
+     * Resolve the shutdown-hook thread.
      * @return 关闭钩子线程 / Shutdown-hook thread
      */
     public Thread shutdownHook() {
-        if (shutdownHookProvider == null) {
-            return runtimeBridge().shutdownHook();
-        }
-        ShutdownHook springShutdownHook = shutdownHookProvider.getIfAvailable();
-        if (springShutdownHook != null) {
-            return springShutdownHook;
-        }
-        return runtimeBridge().shutdownHook();
+        return shutdownHookProvider.getObject();
     }
 
     /**
@@ -92,7 +71,7 @@ public class GameNetworkStartupGateway {
      * @param shutdownHook 关闭钩子线程 / Shutdown-hook thread
      */
     public void registerShutdownHook(Thread shutdownHook) {
-        runtimeBridge().registerShutdownHook(shutdownHook);
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
     /**
@@ -101,18 +80,6 @@ public class GameNetworkStartupGateway {
      * @return 当前时间毫秒 / Current time millis
      */
     public long currentTimeMillis() {
-        return runtimeBridge().currentTimeMillis();
-    }
-
-    /**
-     * 解析网络启动运行时桥：优先 Spring 提供者，否则新建。
-     * Resolve the network-startup runtime bridge: prefer Spring provider, otherwise a new instance.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameNetworkStartupRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameNetworkStartupRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameNetworkStartupRuntimeBridge::new);
+        return System.currentTimeMillis();
     }
 }

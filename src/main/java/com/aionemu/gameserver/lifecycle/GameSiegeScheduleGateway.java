@@ -27,11 +27,6 @@ public class GameSiegeScheduleGateway {
      */
     private ObjectProvider<BaseService> baseServiceProvider;
 
-    /**
-     * 功能服务运行时桥接提供者（可选）。
-     * Optional provider for the feature-services runtime bridge.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 注入攻城服务提供者。
@@ -53,15 +48,6 @@ public class GameSiegeScheduleGateway {
         this.baseServiceProvider = baseServiceProvider;
     }
 
-    /**
-     * 注入功能服务运行时桥接提供者。
-     * Inject the feature-services runtime bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 打印攻城分区并初始化攻城与基地。
@@ -79,10 +65,7 @@ public class GameSiegeScheduleGateway {
      * @return 攻城服务 / Siege service
      */
     private SiegeService siegeService() {
-        if (siegeServiceProvider == null) {
-            return runtimeBridge().siegeService();
-        }
-        return siegeServiceProvider.getIfAvailable(() -> runtimeBridge().siegeService());
+        return siegeServiceProvider.getObject();
     }
 
     /**
@@ -91,21 +74,7 @@ public class GameSiegeScheduleGateway {
      * @return 基地服务 / Base service
      */
     private BaseService baseService() {
-        if (baseServiceProvider == null) {
-            return runtimeBridge().baseService();
-        }
-        return baseServiceProvider.getIfAvailable(() -> runtimeBridge().baseService());
+        return baseServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥接。
-     * Resolve the feature-services runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

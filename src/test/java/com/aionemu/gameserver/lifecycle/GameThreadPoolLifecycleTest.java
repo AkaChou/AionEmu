@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -34,10 +35,6 @@ class GameThreadPoolLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "threadPoolManagerProvider"));
     }
 
-    @Test
-    void threadPoolGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void threadPoolSingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
@@ -62,12 +59,14 @@ class GameThreadPoolLifecycleTest {
     }
 
     @Test
-    void gameThreadPoolBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+    void threadPoolServicesFailFastOutsideSpringContainerInsteadOfLocalFallback() throws IOException {
         String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameThreadPoolServices.java"));
 
         assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
-        assertTrue(servicesSource.contains("fallbackThreadPoolManager()"));
-        assertTrue(servicesSource.contains("new ThreadPoolManager()"));
+        assertFalse(servicesSource.contains("new ThreadPoolManager()"));
+
+        new GameThreadPoolServices(null).destroy();
+        assertThrows(IllegalStateException.class, GameThreadPoolServices::threadPoolManager);
     }
 
     @Test

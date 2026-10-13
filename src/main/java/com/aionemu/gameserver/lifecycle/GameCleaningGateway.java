@@ -25,11 +25,6 @@ public class GameCleaningGateway {
      */
     private ObjectProvider<AbyssRankCleaningService> abyssRankCleaningServiceProvider;
 
-    /**
-     * 运维服务运行时桥提供者。
-     * Maintenance-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入数据库清理服务 {@link ObjectProvider}。
@@ -51,15 +46,6 @@ public class GameCleaningGateway {
         this.abyssRankCleaningServiceProvider = abyssRankCleaningServiceProvider;
     }
 
-    /**
-     * 可选注入运维服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of maintenance-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 执行清理：解析并触发数据库与欧比斯排名清理服务。
@@ -75,11 +61,7 @@ public class GameCleaningGateway {
      * Trigger database cleaning service resolution: prefer Spring, otherwise fall back via runtime bridge.
      */
     private void databaseCleaningService() {
-        if (databaseCleaningServiceProvider == null) {
-            runtimeBridge().databaseCleaningService();
-            return;
-        }
-        databaseCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().databaseCleaningService());
+        databaseCleaningServiceProvider.getObject();
     }
 
     /**
@@ -87,22 +69,7 @@ public class GameCleaningGateway {
      * Trigger abyss-rank cleaning service resolution.
      */
     private void abyssRankCleaningService() {
-        if (abyssRankCleaningServiceProvider == null) {
-            runtimeBridge().abyssRankCleaningService();
-            return;
-        }
-        abyssRankCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankCleaningService());
+        abyssRankCleaningServiceProvider.getObject();
     }
 
-    /**
-     * 解析运维服务运行时桥：优先 Spring，否则新建。
-     * Resolve maintenance-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameMaintenanceServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameMaintenanceServicesRuntimeBridge::new);
-    }
 }

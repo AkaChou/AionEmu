@@ -47,9 +47,11 @@ public final class GameCraftServices implements DisposableBean {
     public static CraftSkillUpdateService craftSkillUpdateService() {
         ObjectProvider<CraftSkillUpdateService> provider = craftSkillUpdateServiceProvider;
         if (provider == null) {
-            return CraftSkillUpdateService.getInstance();
+            throw new IllegalStateException(
+                "CraftSkillUpdateService is only available inside the Spring container; "
+                    + "offline construction must not touch craft services");
         }
-        return provider.getIfAvailable(CraftSkillUpdateService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -60,9 +62,11 @@ public final class GameCraftServices implements DisposableBean {
     public static RelinquishCraftStatus relinquishCraftStatus() {
         ObjectProvider<RelinquishCraftStatus> provider = relinquishCraftStatusProvider;
         if (provider == null) {
-            return RelinquishCraftStatus.getInstance();
+            throw new IllegalStateException(
+                "RelinquishCraftStatus is only available inside the Spring container; "
+                    + "offline construction must not touch craft services");
         }
-        return provider.getIfAvailable(RelinquishCraftStatus::getInstance);
+        return provider.getObject();
     }
 
     /**

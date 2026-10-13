@@ -49,11 +49,6 @@ public class GameEventBootstrapGateway {
      * Event-window service provider.
      */
     private ObjectProvider<EventWindowService> eventWindowServiceProvider;
-    /**
-     * 运行时桥接提供者。
-     * Runtime-bridge provider.
-     */
-    private ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 使用当前控制台进度报告器构造。
@@ -113,15 +108,6 @@ public class GameEventBootstrapGateway {
         this.eventWindowServiceProvider = eventWindowServiceProvider;
     }
 
-    /**
-     * 可选注入运行时桥接提供者。
-     * Optionally inject the runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 引导全部游戏事件子系统并报告进度。
@@ -189,10 +175,7 @@ public class GameEventBootstrapGateway {
      * @return 露娜商店服务 / Luna-shop service
      */
     private LunaShopService lunaShopService() {
-        if (lunaShopServiceProvider == null) {
-            return runtimeBridge().lunaShopService();
-        }
-        return lunaShopServiceProvider.getIfAvailable(() -> runtimeBridge().lunaShopService());
+        return lunaShopServiceProvider.getObject();
     }
 
     /**
@@ -201,10 +184,7 @@ public class GameEventBootstrapGateway {
      * @return 宠物役从服务 / Minion service
      */
     private MinionService minionService() {
-        if (minionServiceProvider == null) {
-            return runtimeBridge().minionService();
-        }
-        return minionServiceProvider.getIfAvailable(() -> runtimeBridge().minionService());
+        return minionServiceProvider.getObject();
     }
 
     /**
@@ -213,10 +193,7 @@ public class GameEventBootstrapGateway {
      * @return 修勾扫荡服务 / Shugo-sweep service
      */
     private ShugoSweepService shugoSweepService() {
-        if (shugoSweepServiceProvider == null) {
-            return runtimeBridge().shugoSweepService();
-        }
-        return shugoSweepServiceProvider.getIfAvailable(() -> runtimeBridge().shugoSweepService());
+        return shugoSweepServiceProvider.getObject();
     }
 
     /**
@@ -225,10 +202,7 @@ public class GameEventBootstrapGateway {
      * @return 阿特里亚护照服务 / Atreian-passport service
      */
     private AtreianPassportService atreianPassportService() {
-        if (atreianPassportServiceProvider == null) {
-            return runtimeBridge().atreianPassportService();
-        }
-        return atreianPassportServiceProvider.getIfAvailable(() -> runtimeBridge().atreianPassportService());
+        return atreianPassportServiceProvider.getObject();
     }
 
     /**
@@ -237,23 +211,9 @@ public class GameEventBootstrapGateway {
      * @return 事件窗口服务 / Event-window service
      */
     private EventWindowService eventWindowService() {
-        if (eventWindowServiceProvider == null) {
-            return runtimeBridge().eventWindowService();
-        }
-        return eventWindowServiceProvider.getIfAvailable(() -> runtimeBridge().eventWindowService());
+        return eventWindowServiceProvider.getObject();
     }
 
-    /**
-     * 解析运行时桥接。
-     * Resolve the runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameEventBootstrapRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameEventBootstrapRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameEventBootstrapRuntimeBridge::new);
-    }
 
     /**
      * 执行并报告单个加载步骤。

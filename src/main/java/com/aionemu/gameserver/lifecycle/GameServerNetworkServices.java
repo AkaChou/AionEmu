@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * 服务器网络服务静态门面：绑定登录/聊天/封禁/控制器与包处理相关 instance provider，
- * 并在销毁时清空；解析时优先 Spring，否则回退 {@link GameServerNetworkFallbacks}。
+ * 并在销毁时清空；解析时要求 Spring Bean 必须存在。
  * Static facade for server-network services: binds login/chat/ban/controller and packet-handler
- * instance providers, clears them on destroy; resolves via Spring then {@link GameServerNetworkFallbacks}.
+ * instance providers, clears them on destroy; resolves via Spring, requiring the bean to exist.
  */
 @Component
 public final class GameServerNetworkServices implements DisposableBean {
@@ -118,9 +118,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static BannedMacManager bannedMacManager() {
         ObjectProvider<BannedMacManager> provider = bannedMacManagerProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.bannedMacManager();
+            throw new IllegalStateException(
+                "BannedMacManager is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::bannedMacManager);
+        return provider.getObject();
     }
 
     /**
@@ -131,9 +133,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static NetworkController networkController() {
         ObjectProvider<NetworkController> provider = networkControllerProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.networkController();
+            throw new IllegalStateException(
+                "NetworkController is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::networkController);
+        return provider.getObject();
     }
 
     /**
@@ -148,12 +152,11 @@ public final class GameServerNetworkServices implements DisposableBean {
         }
         ObjectProvider<PacketLoggerService> provider = packetLoggerServiceProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.packetLoggerService();
+            throw new IllegalStateException(
+                "PacketLoggerService is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameServerNetworkFallbacks.packetLoggerService();
-        }
+                resolved = provider.getObject();
         resolvedPacketLoggerService = resolved;
         return resolved;
     }
@@ -166,9 +169,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static LoginServer loginServer() {
         ObjectProvider<LoginServer> provider = loginServerProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.loginServer();
+            throw new IllegalStateException(
+                "LoginServer is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::loginServer);
+        return provider.getObject();
     }
 
     /**
@@ -179,9 +184,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static ChatServer chatServer() {
         ObjectProvider<ChatServer> provider = chatServerProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.chatServer();
+            throw new IllegalStateException(
+                "ChatServer is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::chatServer);
+        return provider.getObject();
     }
 
     /**
@@ -192,9 +199,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static AionPacketHandlerFactory aionPacketHandlerFactory() {
         ObjectProvider<AionPacketHandlerFactory> provider = aionPacketHandlerFactoryProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.aionPacketHandlerFactory();
+            throw new IllegalStateException(
+                "AionPacketHandlerFactory is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::aionPacketHandlerFactory);
+        return provider.getObject();
     }
 
     /**
@@ -205,9 +214,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static PacketFloodFilter packetFloodFilter() {
         ObjectProvider<PacketFloodFilter> provider = packetFloodFilterProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.packetFloodFilter();
+            throw new IllegalStateException(
+                "PacketFloodFilter is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::packetFloodFilter);
+        return provider.getObject();
     }
 
     /**
@@ -218,9 +229,11 @@ public final class GameServerNetworkServices implements DisposableBean {
     public static LsPacketHandlerFactory lsPacketHandlerFactory() {
         ObjectProvider<LsPacketHandlerFactory> provider = lsPacketHandlerFactoryProvider;
         if (provider == null) {
-            return GameServerNetworkFallbacks.lsPacketHandlerFactory();
+            throw new IllegalStateException(
+                "LsPacketHandlerFactory is only available inside the Spring container; "
+                    + "offline construction must not touch server network services");
         }
-        return provider.getIfAvailable(GameServerNetworkFallbacks::lsPacketHandlerFactory);
+        return provider.getObject();
     }
 
     /**

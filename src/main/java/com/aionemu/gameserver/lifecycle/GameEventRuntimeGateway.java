@@ -1,10 +1,15 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.EventsConfig;
+import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,11 +46,6 @@ public class GameEventRuntimeGateway {
      * Packet-broadcaster provider.
      */
     private ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
-    /**
-     * 运行时桥接提供者。
-     * Runtime-bridge provider.
-     */
-    private ObjectProvider<GameEventRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入事件服务提供者。
@@ -98,40 +98,81 @@ public class GameEventRuntimeGateway {
     }
 
     /**
-     * 可选注入运行时桥接提供者。
-     * Optionally inject the runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameEventRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
-
-    /**
      * 启动事件运行时：按开关启停各子系统并调度排名更新。
      * Start the event runtime: enable subsystems per flags and schedule ranking updates.
      */
     public void start() {
-        GameEventRuntimeBridge runtimeBridge = runtimeBridge();
-        runtimeBridge.printEventsSection();
-        if (runtimeBridge.isEventServiceEnabled()) {
+        printEventsSection();
+        if (isEventServiceEnabled()) {
             eventService().start();
         }
-        if (runtimeBridge.isPlayerEventEnabled()) {
+        if (isPlayerEventEnabled()) {
             playerEventService();
         }
-        if (runtimeBridge.isCrazyDaevaEnabled()) {
+        if (isCrazyDaevaEnabled()) {
             crazyDaevaService().startTimer();
         }
         AbyssRankUpdateService abyssRankUpdateService = abyssRankUpdateService();
-        if (runtimeBridge.isTopRankingUpdateEnabled()) {
+        if (isTopRankingUpdateEnabled()) {
             abyssRankUpdateService.scheduleUpdateHour();
         } else {
             abyssRankUpdateService.scheduleUpdateMinute();
         }
         abyssRankUpdateService.initRewardWeeklyManager();
         packetBroadcaster();
-        runtimeBridge.spawnTemporarySpawns();
+        spawnTemporarySpawns();
+    }
+
+    /**
+     * 打印事件分区标题。
+     * Print the events section header.
+     */
+    private void printEventsSection() {
+        Util.printSection(I18n.get("console.section.events"));
+    }
+
+    /**
+     * 事件服务是否启用。
+     * Whether the event service is enabled.
+     * @return 启用则 true / true when enabled
+     */
+    private boolean isEventServiceEnabled() {
+        return EventsConfig.ENABLE_EVENT_SERVICE;
+    }
+
+    /**
+     * 玩家事件是否启用。
+     * Whether player events are enabled.
+     * @return 启用则 true / true when enabled
+     */
+    private boolean isPlayerEventEnabled() {
+        return EventsConfig.EVENT_ENABLED;
+    }
+
+    /**
+     * 疯狂守护者是否启用。
+     * Whether Crazy Daeva is enabled.
+     * @return 启用则 true / true when enabled
+     */
+    private boolean isCrazyDaevaEnabled() {
+        return EventsConfig.ENABLE_CRAZY;
+    }
+
+    /**
+     * 排名更新开关是否为小时级。
+     * Whether the ranking update switch is hourly.
+     * @return 小时级则 true / true for hourly
+     */
+    private boolean isTopRankingUpdateEnabled() {
+        return RankingConfig.TOP_RANKING_UPDATE_SETTING;
+    }
+
+    /**
+     * 生成临时刷怪。
+     * Spawn the temporary spawns.
+     */
+    private void spawnTemporarySpawns() {
+        TemporarySpawnEngine.spawnAll();
     }
 
     /**
@@ -140,10 +181,7 @@ public class GameEventRuntimeGateway {
      * @return 事件服务 / Event service
      */
     private EventService eventService() {
-        if (eventServiceProvider == null) {
-            return runtimeBridge().eventService();
-        }
-        return eventServiceProvider.getIfAvailable(() -> runtimeBridge().eventService());
+        return eventServiceProvider.getObject();
     }
 
     /**
@@ -152,10 +190,7 @@ public class GameEventRuntimeGateway {
      * @return 玩家事件服务 / Player-event service
      */
     private PlayerEventService playerEventService() {
-        if (playerEventServiceProvider == null) {
-            return runtimeBridge().playerEventService();
-        }
-        return playerEventServiceProvider.getIfAvailable(() -> runtimeBridge().playerEventService());
+        return playerEventServiceProvider.getObject();
     }
 
     /**
@@ -164,10 +199,7 @@ public class GameEventRuntimeGateway {
      * @return 疯狂守护者服务 / Crazy-Daeva service
      */
     private CrazyDaevaService crazyDaevaService() {
-        if (crazyDaevaServiceProvider == null) {
-            return runtimeBridge().crazyDaevaService();
-        }
-        return crazyDaevaServiceProvider.getIfAvailable(() -> runtimeBridge().crazyDaevaService());
+        return crazyDaevaServiceProvider.getObject();
     }
 
     /**
@@ -176,10 +208,7 @@ public class GameEventRuntimeGateway {
      * @return 欧比斯排名更新服务 / Abyss-rank update service
      */
     private AbyssRankUpdateService abyssRankUpdateService() {
-        if (abyssRankUpdateServiceProvider == null) {
-            return runtimeBridge().abyssRankUpdateService();
-        }
-        return abyssRankUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankUpdateService());
+        return abyssRankUpdateServiceProvider.getObject();
     }
 
     /**
@@ -188,21 +217,7 @@ public class GameEventRuntimeGateway {
      * @return 数据包广播器 / Packet broadcaster
      */
     private PacketBroadcaster packetBroadcaster() {
-        if (packetBroadcasterProvider == null) {
-            return runtimeBridge().packetBroadcaster();
-        }
-        return packetBroadcasterProvider.getIfAvailable(() -> runtimeBridge().packetBroadcaster());
+        return packetBroadcasterProvider.getObject();
     }
 
-    /**
-     * 解析运行时桥接。
-     * Resolve the runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameEventRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameEventRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameEventRuntimeBridge::new);
-    }
 }

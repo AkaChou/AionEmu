@@ -108,17 +108,16 @@ public final class GameEngineServices implements DisposableBean {
      */
     public static QuestEngine questEngine() {
         ObjectProvider<QuestEngine> provider = questEngineProvider;
+        if (provider == null) {
+            throw new IllegalStateException(
+                "QuestEngine is only available inside the Spring container; "
+                    + "offline construction must not touch game engines");
+        }
         ResolvedEngine<QuestEngine> cached = resolvedQuestEngine;
         if (cached != null && cached.provider() == provider) {
             return cached.engine();
         }
-        if (provider == null) {
-            return GameEngineServiceFallbacks.questEngine();
-        }
-        QuestEngine resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return GameEngineServiceFallbacks.questEngine();
-        }
+                QuestEngine resolved = provider.getObject();
         resolvedQuestEngine = new ResolvedEngine<>(provider, resolved);
         return resolved;
     }
@@ -130,12 +129,16 @@ public final class GameEngineServices implements DisposableBean {
      */
     public static SkillEngine skillEngine() {
         ObjectProvider<SkillEngine> provider = skillEngineProvider;
+        if (provider == null) {
+            throw new IllegalStateException(
+                "SkillEngine is only available inside the Spring container; "
+                    + "offline construction must not touch game engines");
+        }
         ResolvedEngine<SkillEngine> cached = resolvedSkillEngine;
         if (cached != null && cached.provider() == provider) {
             return cached.engine();
         }
-        SkillEngine resolved = provider == null ? GameEngineServiceFallbacks.skillEngine()
-                : provider.getIfAvailable(GameEngineServiceFallbacks::skillEngine);
+        SkillEngine resolved = provider.getObject();
         resolvedSkillEngine = new ResolvedEngine<>(provider, resolved);
         return resolved;
     }
@@ -147,17 +150,16 @@ public final class GameEngineServices implements DisposableBean {
      */
     public static InstanceEngine instanceEngine() {
         ObjectProvider<InstanceEngine> provider = instanceEngineProvider;
+        if (provider == null) {
+            throw new IllegalStateException(
+                "InstanceEngine is only available inside the Spring container; "
+                    + "offline construction must not touch game engines");
+        }
         ResolvedEngine<InstanceEngine> cached = resolvedInstanceEngine;
         if (cached != null && cached.provider() == provider) {
             return cached.engine();
         }
-        if (provider == null) {
-            return InstanceEngine.getInstance();
-        }
-        InstanceEngine resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return InstanceEngine.getInstance();
-        }
+                InstanceEngine resolved = provider.getObject();
         resolvedInstanceEngine = new ResolvedEngine<>(provider, resolved);
         return resolved;
     }
@@ -169,17 +171,16 @@ public final class GameEngineServices implements DisposableBean {
      */
     public static AI2Engine ai2Engine() {
         ObjectProvider<AI2Engine> provider = ai2EngineProvider;
+        if (provider == null) {
+            throw new IllegalStateException(
+                "AI2Engine is only available inside the Spring container; "
+                    + "offline construction must not touch game engines");
+        }
         ResolvedEngine<AI2Engine> cached = resolvedAi2Engine;
         if (cached != null && cached.provider() == provider) {
             return cached.engine();
         }
-        if (provider == null) {
-            return AI2Engine.getInstance();
-        }
-        AI2Engine resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return AI2Engine.getInstance();
-        }
+                AI2Engine resolved = provider.getObject();
         resolvedAi2Engine = new ResolvedEngine<>(provider, resolved);
         return resolved;
     }
@@ -191,17 +192,16 @@ public final class GameEngineServices implements DisposableBean {
      */
     public static ChatProcessor chatProcessor() {
         ObjectProvider<ChatProcessor> provider = chatProcessorProvider;
+        if (provider == null) {
+            throw new IllegalStateException(
+                "ChatProcessor is only available inside the Spring container; "
+                    + "offline construction must not touch game engines");
+        }
         ResolvedEngine<ChatProcessor> cached = resolvedChatProcessor;
         if (cached != null && cached.provider() == provider) {
             return cached.engine();
         }
-        if (provider == null) {
-            return ChatProcessor.getInstance();
-        }
-        ChatProcessor resolved = provider.getIfAvailable();
-        if (resolved == null) {
-            return ChatProcessor.getInstance();
-        }
+                ChatProcessor resolved = provider.getObject();
         resolvedChatProcessor = new ResolvedEngine<>(provider, resolved);
         return resolved;
     }

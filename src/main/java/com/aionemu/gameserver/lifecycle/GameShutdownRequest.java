@@ -80,15 +80,11 @@ public final class GameShutdownRequest implements DisposableBean {
     }
 
     /**
-     * 解析 {@link ShutdownHook}：优先 Spring 提供，否则回退。
-     * Resolve {@link ShutdownHook}: prefer Spring, otherwise fallback.
+     * 解析 {@link ShutdownHook}：由 Spring 提供，缺席即抛异常。
+     * Resolve {@link ShutdownHook} from Spring, failing fast when it is absent.
      * @return 关停钩子 / Shutdown hook
      */
     private static ShutdownHook shutdownHook() {
-        ObjectProvider<ShutdownHook> provider = shutdownHookProvider;
-        if (provider == null) {
-            return GameShutdownHookFallbacks.shutdownHook();
-        }
-        return provider.getIfAvailable(GameShutdownHookFallbacks::shutdownHook);
+        return shutdownHookProvider.getObject();
     }
 }

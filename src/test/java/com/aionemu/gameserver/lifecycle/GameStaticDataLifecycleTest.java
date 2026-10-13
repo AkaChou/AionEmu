@@ -34,10 +34,6 @@ class GameStaticDataLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "dataManagerProvider"));
     }
 
-    @Test
-    void staticDataGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void staticDataServicesXmlDataLoaderAccessorUsesSpringProviderBeforeLegacyFallback() {

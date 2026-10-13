@@ -9,6 +9,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
@@ -67,6 +68,21 @@ public class EngineBeans {
     @Lazy
     public AI2Engine ai2Engine() {
         return new AI2Engine();
+    }
+
+    /**
+     * 技能引擎 Bean：直接暴露静态单例，使其成为容器可解析的 Bean。
+     * Skill-engine bean: exposes the static singleton so the container can resolve it.
+     * <p>不得改写成 {@code SkillEngine.getInstance()}：该方法会回头向本容器索取
+     * {@code SkillEngine}，构成 Bean 创建期循环引用。返回静态字段是行为等价的。</p>
+     * <p>Must not call {@code SkillEngine.getInstance()}: it would ask this very container for
+     * {@code SkillEngine} and create a creation-time cycle. Returning the static field is equivalent.</p>
+     * @return 技能引擎 / skill engine
+     */
+    @Bean
+    @Lazy
+    public SkillEngine skillEngine() {
+        return SkillEngine.skillEngine;
     }
 
     @Bean

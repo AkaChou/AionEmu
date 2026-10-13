@@ -76,9 +76,11 @@ public final class GameEventBootstrapServices implements DisposableBean {
     public static LunaShopService lunaShopService() {
         ObjectProvider<LunaShopService> provider = lunaShopServiceProvider;
         if (provider == null) {
-            return GameEventBootstrapFallbacks.lunaShopService();
+            throw new IllegalStateException(
+                "LunaShopService is only available inside the Spring container; "
+                    + "offline construction must not touch event bootstrap services");
         }
-        return provider.getIfAvailable(GameEventBootstrapFallbacks::lunaShopService);
+        return provider.getObject();
     }
 
     /**
@@ -89,9 +91,11 @@ public final class GameEventBootstrapServices implements DisposableBean {
     public static MinionService minionService() {
         ObjectProvider<MinionService> provider = minionServiceProvider;
         if (provider == null) {
-            return GameEventBootstrapFallbacks.minionService();
+            throw new IllegalStateException(
+                "MinionService is only available inside the Spring container; "
+                    + "offline construction must not touch event bootstrap services");
         }
-        return provider.getIfAvailable(GameEventBootstrapFallbacks::minionService);
+        return provider.getObject();
     }
 
     /**
@@ -102,9 +106,11 @@ public final class GameEventBootstrapServices implements DisposableBean {
     public static ShugoSweepService shugoSweepService() {
         ObjectProvider<ShugoSweepService> provider = shugoSweepServiceProvider;
         if (provider == null) {
-            return GameEventBootstrapFallbacks.shugoSweepService();
+            throw new IllegalStateException(
+                "ShugoSweepService is only available inside the Spring container; "
+                    + "offline construction must not touch event bootstrap services");
         }
-        return provider.getIfAvailable(GameEventBootstrapFallbacks::shugoSweepService);
+        return provider.getObject();
     }
 
     /**
@@ -115,9 +121,11 @@ public final class GameEventBootstrapServices implements DisposableBean {
     public static AtreianPassportService atreianPassportService() {
         ObjectProvider<AtreianPassportService> provider = atreianPassportServiceProvider;
         if (provider == null) {
-            return GameEventBootstrapFallbacks.atreianPassportService();
+            throw new IllegalStateException(
+                "AtreianPassportService is only available inside the Spring container; "
+                    + "offline construction must not touch event bootstrap services");
         }
-        return provider.getIfAvailable(GameEventBootstrapFallbacks::atreianPassportService);
+        return provider.getObject();
     }
 
     /**
@@ -128,9 +136,11 @@ public final class GameEventBootstrapServices implements DisposableBean {
     public static EventWindowService eventWindowService() {
         ObjectProvider<EventWindowService> provider = eventWindowServiceProvider;
         if (provider == null) {
-            return GameEventBootstrapFallbacks.eventWindowService();
+            throw new IllegalStateException(
+                "EventWindowService is only available inside the Spring container; "
+                    + "offline construction must not touch event bootstrap services");
         }
-        return provider.getIfAvailable(GameEventBootstrapFallbacks::eventWindowService);
+        return provider.getObject();
     }
 
     /**

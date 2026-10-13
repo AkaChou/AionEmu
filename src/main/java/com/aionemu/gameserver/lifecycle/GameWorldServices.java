@@ -67,8 +67,12 @@ public final class GameWorldServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<GeoService> provider = geoServiceProvider;
-        resolved = provider == null ? GameWorldServiceFallbacks.geoService()
-                : provider.getIfAvailable(GameWorldServiceFallbacks::geoService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "GeoService is only available inside the Spring container; "
+                    + "offline construction must not touch world services");
+        }
+        resolved = provider.getObject();
         resolvedGeoService = resolved;
         return resolved;
     }
@@ -84,8 +88,12 @@ public final class GameWorldServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<DropRegistrationService> provider = dropRegistrationServiceProvider;
-        resolved = provider == null ? GameWorldServiceFallbacks.dropRegistrationService()
-                : provider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "DropRegistrationService is only available inside the Spring container; "
+                    + "offline construction must not touch world services");
+        }
+        resolved = provider.getObject();
         resolvedDropRegistrationService = resolved;
         return resolved;
     }
@@ -101,8 +109,12 @@ public final class GameWorldServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<PathService> provider = pathServiceProvider;
-        resolved = provider == null ? GameWorldServiceFallbacks.pathService()
-                : provider.getIfAvailable(GameWorldServiceFallbacks::pathService);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "PathService is only available inside the Spring container; "
+                    + "offline construction must not touch world services");
+        }
+        resolved = provider.getObject();
         resolvedPathService = resolved;
         return resolved;
     }

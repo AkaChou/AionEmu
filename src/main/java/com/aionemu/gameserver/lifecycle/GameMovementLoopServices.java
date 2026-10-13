@@ -78,8 +78,12 @@ public final class GameMovementLoopServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<MovementNotifyTask> provider = movementNotifyTaskProvider;
-        resolved = provider == null ? MovementNotifyTask.getInstance()
-                : provider.getIfAvailable(MovementNotifyTask::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "MovementNotifyTask is only available inside the Spring container; "
+                    + "offline construction must not touch movement-loop services");
+        }
+        resolved = provider.getObject();
         resolvedMovementNotifyTask = resolved;
         return resolved;
     }
@@ -95,8 +99,12 @@ public final class GameMovementLoopServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<MoveTaskManager> provider = moveTaskManagerProvider;
-        resolved = provider == null ? MoveTaskManager.getInstance()
-                : provider.getIfAvailable(MoveTaskManager::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "MoveTaskManager is only available inside the Spring container; "
+                    + "offline construction must not touch movement-loop services");
+        }
+        resolved = provider.getObject();
         resolvedMoveTaskManager = resolved;
         return resolved;
     }
@@ -112,8 +120,12 @@ public final class GameMovementLoopServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<PlayerMoveTaskManager> provider = playerMoveTaskManagerProvider;
-        resolved = provider == null ? PlayerMoveTaskManager.getInstance()
-                : provider.getIfAvailable(PlayerMoveTaskManager::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "PlayerMoveTaskManager is only available inside the Spring container; "
+                    + "offline construction must not touch movement-loop services");
+        }
+        resolved = provider.getObject();
         resolvedPlayerMoveTaskManager = resolved;
         return resolved;
     }
@@ -129,8 +141,12 @@ public final class GameMovementLoopServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<ZoneUpdateService> provider = zoneUpdateServiceProvider;
-        resolved = provider == null ? ZoneUpdateService.getInstance()
-                : provider.getIfAvailable(ZoneUpdateService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "ZoneUpdateService is only available inside the Spring container; "
+                    + "offline construction must not touch movement-loop services");
+        }
+        resolved = provider.getObject();
         resolvedZoneUpdateService = resolved;
         return resolved;
     }

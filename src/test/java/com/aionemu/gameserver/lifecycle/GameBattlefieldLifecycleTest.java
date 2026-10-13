@@ -40,7 +40,6 @@ class GameBattlefieldLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "hallOfTenacityServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "grandArenaTrainingCampServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idRunServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.util.function.Supplier;
 
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.BaseService;
@@ -237,8 +236,12 @@ public final class GameFeatureServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<NpcShoutsService> provider = npcShoutsServiceProvider;
-        resolved = provider == null ? NpcShoutsService.getInstance()
-                : provider.getIfAvailable(NpcShoutsService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "NpcShoutsService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
+        }
+        resolved = provider.getObject();
         resolvedNpcShoutsService = resolved;
         return resolved;
     }
@@ -249,7 +252,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 钢铁之战服务 / Dredgion service
      */
     public static DredgionService2 dredgionService() {
-        return getIfAvailable(dredgionServiceProvider, DredgionService2::getInstance);
+        return requireService(dredgionServiceProvider);
     }
 
     /**
@@ -258,7 +261,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 争议之地服务 / Dispute-land service
      */
     public static DisputeLandService disputeLandService() {
-        return getIfAvailable(disputeLandServiceProvider, DisputeLandService::getInstance);
+        return requireService(disputeLandServiceProvider);
     }
 
     /**
@@ -267,7 +270,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 阿修那塔服务 / Asyunatar service
      */
     public static AsyunatarService asyunatarService() {
-        return getIfAvailable(asyunatarServiceProvider, AsyunatarService::getInstance);
+        return requireService(asyunatarServiceProvider);
     }
 
     /**
@@ -276,7 +279,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 护盾服务 / Shield service
      */
     public static ShieldService shieldService() {
-        return getIfAvailable(shieldServiceProvider, ShieldService::getInstance);
+        return requireService(shieldServiceProvider);
     }
 
     /**
@@ -285,7 +288,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 奖励服务 / Reward service
      */
     public static RewardService rewardService() {
-        return getIfAvailable(rewardServiceProvider, RewardService::getInstance);
+        return requireService(rewardServiceProvider);
     }
 
     /**
@@ -294,7 +297,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 保护者征服者服务 / Protector-conqueror service
      */
     public static ProtectorConquerorService protectorConquerorService() {
-        return getIfAvailable(protectorConquerorServiceProvider, ProtectorConquerorService::getInstance);
+        return requireService(protectorConquerorServiceProvider);
     }
 
     /**
@@ -305,9 +308,11 @@ public final class GameFeatureServices implements DisposableBean {
     public static FFAService ffaService() {
         ObjectProvider<FFAService> provider = ffaServiceProvider;
         if (provider == null) {
-            return FFAService.getInstance();
+            throw new IllegalStateException(
+                "FFAService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(FFAService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -318,9 +323,11 @@ public final class GameFeatureServices implements DisposableBean {
     public static LadderService ladderService() {
         ObjectProvider<LadderService> provider = ladderServiceProvider;
         if (provider == null) {
-            return LadderService.getInstance();
+            throw new IllegalStateException(
+                "LadderService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(LadderService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -334,7 +341,12 @@ public final class GameFeatureServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<SiegeService> provider = siegeServiceProvider;
-        resolved = provider == null ? SiegeService.getInstance() : provider.getIfAvailable(SiegeService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "SiegeService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
+        }
+        resolved = provider.getObject();
         resolvedSiegeService = resolved;
         return resolved;
     }
@@ -350,8 +362,12 @@ public final class GameFeatureServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<BaseService> provider = baseServiceProvider;
-        resolved = provider == null ? BaseService.getInstance()
-                : provider.getIfAvailable(BaseService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "BaseService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
+        }
+        resolved = provider.getObject();
         resolvedBaseService = resolved;
         return resolved;
     }
@@ -362,7 +378,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return A 站服务 / A-Station service
      */
     public static AStationService aStationService() {
-        return getIfAvailable(aStationServiceProvider, AStationService::getInstance);
+        return requireService(aStationServiceProvider);
     }
 
     /**
@@ -371,7 +387,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return F2P 服务 / F2P service
      */
     public static F2pService f2pService() {
-        return getIfAvailable(f2pServiceProvider, F2pService::getInstance);
+        return requireService(f2pServiceProvider);
     }
 
     /**
@@ -380,7 +396,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 风之峡谷服务 / Windy-gorge service
      */
     public static WindyGorgeService windyGorgeService() {
-        return getIfAvailable(windyGorgeServiceProvider, WindyGorgeService::getInstance);
+        return requireService(windyGorgeServiceProvider);
     }
 
     /**
@@ -389,7 +405,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 动作日志服务 / Motion-logging service
      */
     public static MotionLoggingService motionLoggingService() {
-        return getIfAvailable(motionLoggingServiceProvider, MotionLoggingService::getInstance);
+        return requireService(motionLoggingServiceProvider);
     }
 
     /**
@@ -400,9 +416,11 @@ public final class GameFeatureServices implements DisposableBean {
     public static KiskService kiskService() {
         ObjectProvider<KiskService> provider = kiskServiceProvider;
         if (provider == null) {
-            return KiskService.getInstance();
+            throw new IllegalStateException(
+                "KiskService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(KiskService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -411,7 +429,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 回购服务 / Repurchase service
      */
     public static RepurchaseService repurchaseService() {
-        return getIfAvailable(repurchaseServiceProvider, RepurchaseService::getInstance);
+        return requireService(repurchaseServiceProvider);
     }
 
     /**
@@ -420,7 +438,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 掉落分配服务 / Drop-distribution service
      */
     public static DropDistributionService dropDistributionService() {
-        return getIfAvailable(dropDistributionServiceProvider, DropDistributionService::getInstance);
+        return requireService(dropDistributionServiceProvider);
     }
 
     /**
@@ -429,7 +447,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 土匪服务 / Bandit service
      */
     public static BanditService banditService() {
-        return getIfAvailable(banditServiceProvider, BanditService::getInstance);
+        return requireService(banditServiceProvider);
     }
 
     /**
@@ -443,8 +461,12 @@ public final class GameFeatureServices implements DisposableBean {
             return resolved;
         }
         ObjectProvider<StaticDoorService> provider = staticDoorServiceProvider;
-        resolved = provider == null ? StaticDoorService.getInstance()
-                : provider.getIfAvailable(StaticDoorService::getInstance);
+        if (provider == null) {
+            throw new IllegalStateException(
+                "StaticDoorService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
+        }
+        resolved = provider.getObject();
         resolvedStaticDoorService = resolved;
         return resolved;
     }
@@ -457,9 +479,11 @@ public final class GameFeatureServices implements DisposableBean {
     public static SystemMailService systemMailService() {
         ObjectProvider<SystemMailService> provider = systemMailServiceProvider;
         if (provider == null) {
-            return SystemMailService.getInstance();
+            throw new IllegalStateException(
+                "SystemMailService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(SystemMailService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -468,7 +492,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 加成服务 / Bonus service
      */
     public static BonusService bonusService() {
-        return getIfAvailable(bonusServiceProvider, BonusService::getInstance);
+        return requireService(bonusServiceProvider);
     }
 
     /**
@@ -479,9 +503,11 @@ public final class GameFeatureServices implements DisposableBean {
     public static PetService petService() {
         ObjectProvider<PetService> provider = petServiceProvider;
         if (provider == null) {
-            return PetService.getInstance();
+            throw new IllegalStateException(
+                "PetService is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(PetService::getInstance);
+        return provider.getObject();
     }
 
     /**
@@ -490,7 +516,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 街机升级服务 / Arcade-upgrade service
      */
     public static ArcadeUpgradeService arcadeUpgradeService() {
-        return getIfAvailable(arcadeUpgradeServiceProvider, ArcadeUpgradeService::getInstance);
+        return requireService(arcadeUpgradeServiceProvider);
     }
 
     /**
@@ -499,7 +525,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 阿特里亚图鉴服务 / Atreian-bestiary service
      */
     public static AtreianBestiaryService atreianBestiaryService() {
-        return getIfAvailable(atreianBestiaryServiceProvider, AtreianBestiaryService::getInstance);
+        return requireService(atreianBestiaryServiceProvider);
     }
 
     /**
@@ -508,7 +534,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 融合服务 / Coalescence service
      */
     public static CoalescenceService coalescenceService() {
-        return getIfAvailable(coalescenceServiceProvider, CoalescenceService::getInstance);
+        return requireService(coalescenceServiceProvider);
     }
 
     /**
@@ -517,7 +543,7 @@ public final class GameFeatureServices implements DisposableBean {
      * @return 成长能量 / Growth energy
      */
     public static GrowthEnergy growthEnergy() {
-        return getIfAvailable(growthEnergyProvider, GrowthEnergy::getInstance);
+        return requireService(growthEnergyProvider);
     }
 
     /**
@@ -528,11 +554,15 @@ public final class GameFeatureServices implements DisposableBean {
      * @param <T> 服务类型 / Service type
      * @return 服务实例 / Service instance
      */
-    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
+    private static <T> T requireService(ObjectProvider<T> provider) {
+        // 容器未启动即抛异常（fail-fast）；Bean 缺席由 getObject() 抛出。
+        // Fail fast when the container is not up; a missing bean is thrown by getObject().
         if (provider == null) {
-            return fallback.get();
+            throw new IllegalStateException(
+                "Feature service is only available inside the Spring container; "
+                    + "offline construction must not touch feature services");
         }
-        return provider.getIfAvailable(fallback);
+        return provider.getObject();
     }
 
     /**

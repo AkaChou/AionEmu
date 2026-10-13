@@ -21,6 +21,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.geo.GeoService;
@@ -49,14 +51,46 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NpcMoveControllerPathTest {
 
+	/**
+	 * GameMovementLoopServices 已解析移动任务管理器缓存字段。
+	 * Resolved move-task-manager cache field of GameMovementLoopServices.
+	 */
+	private Field resolvedMoveTaskManagerField;
+
+	/**
+	 * GameThreadPoolServices 已解析线程池缓存字段。
+	 * Resolved thread-pool cache field of GameThreadPoolServices.
+	 */
+	private Field resolvedThreadPoolManagerField;
+
+	/**
+	 * 测试专用线程池管理器（构造即起池，清理时关闭）。
+	 * Test-scoped thread-pool manager (pools start on construction, shut down on cleanup).
+	 */
+	private ThreadPoolManager threadPoolManager;
+
 	@BeforeEach
-	void installRetiredServiceProvider() {
-		TestServiceProviders.install(MoveTaskManager.class, new MoveTaskManager());
+	void installRetiredServiceProvider() throws ReflectiveOperationException {
+		MoveTaskManager moveTaskManager = new MoveTaskManager();
+		TestServiceProviders.install(MoveTaskManager.class, moveTaskManager);
+		// D1a 后 holder 定位器不再回退到单例：预置已解析缓存，离线路径不再 fail-fast。
+		// After D1a the holder locator no longer falls back to the singleton: preset the
+		// resolved cache so offline paths do not fail fast.
+		resolvedMoveTaskManagerField = GameMovementLoopServices.class.getDeclaredField("resolvedMoveTaskManager");
+		resolvedMoveTaskManagerField.setAccessible(true);
+		resolvedMoveTaskManagerField.set(null, moveTaskManager);
+		threadPoolManager = new ThreadPoolManager();
+		resolvedThreadPoolManagerField = GameThreadPoolServices.class.getDeclaredField("resolvedThreadPoolManager");
+		resolvedThreadPoolManagerField.setAccessible(true);
+		resolvedThreadPoolManagerField.set(null, threadPoolManager);
 	}
 
 	@AfterEach
-	void clearRetiredServiceProvider() {
+	void clearRetiredServiceProvider() throws ReflectiveOperationException {
+		resolvedMoveTaskManagerField.set(null, null);
 		TestServiceProviders.clear(MoveTaskManager.class);
+		resolvedThreadPoolManagerField.set(null, null);
+		threadPoolManager.shutdown();
 	}
 
 	@BeforeAll

@@ -25,11 +25,6 @@ public class GameGeoPathGateway {
      * Path-service provider.
      */
     private ObjectProvider<PathService> pathServiceProvider;
-    /**
-     * 世界服务运行时桥接提供者。
-     * World-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入地理服务提供者。
@@ -51,15 +46,6 @@ public class GameGeoPathGateway {
         this.pathServiceProvider = pathServiceProvider;
     }
 
-    /**
-     * 可选注入世界服务运行时桥接提供者。
-     * Optionally inject the world-services runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 初始化地理数据与 PATH。
@@ -77,10 +63,7 @@ public class GameGeoPathGateway {
      * @return 地理服务 / Geo service
      */
     private GeoService geoService() {
-        if (geoServiceProvider == null) {
-            return runtimeBridge().geoService();
-        }
-        return geoServiceProvider.getIfAvailable(() -> runtimeBridge().geoService());
+        return geoServiceProvider.getObject();
     }
 
     /**
@@ -89,21 +72,7 @@ public class GameGeoPathGateway {
      * @return PATH 服务 / Path service
      */
     private PathService pathService() {
-        if (pathServiceProvider == null) {
-            return runtimeBridge().pathService();
-        }
-        return pathServiceProvider.getIfAvailable(() -> runtimeBridge().pathService());
+        return pathServiceProvider.getObject();
     }
 
-    /**
-     * 解析世界服务运行时桥接。
-     * Resolve the world-services runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameWorldServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameWorldServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameWorldServicesRuntimeBridge::new);
-    }
 }

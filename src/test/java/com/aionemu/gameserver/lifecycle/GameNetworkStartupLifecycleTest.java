@@ -80,44 +80,6 @@ class GameNetworkStartupLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "shutdownHookProvider"));
     }
 
-    @Test
-    void networkStartupGatewayBridgesRuntimeCallsThroughSpringProviders() {
-        List<String> events = new ArrayList<>();
-        Thread hook = new Thread();
-        RecordingGameNetworkStartupRuntimeBridge bridge = new RecordingGameNetworkStartupRuntimeBridge(events, hook);
-        GameNetworkStartupGateway gateway = new GameNetworkStartupGateway();
-        gateway.setRuntimeBridgeProvider(provider(GameNetworkStartupRuntimeBridge.class, bridge));
-
-        assertSame(hook, gateway.shutdownHook());
-        assertFalse(gateway.isBootEmbedded());
-        gateway.registerShutdownHook(hook);
-        assertEquals(42L, gateway.currentTimeMillis());
-
-        assertEquals(List.of("shutdownHook", "isBootEmbedded", "registerShutdownHook", "currentTimeMillis"), events);
-        assertSame(hook, bridge.registeredHook);
-    }
-
-    @Test
-    void networkStartupGatewayBridgesRuntimeBoundaryThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "runtimeBridgeProvider"));
-    }
-
-    @Test
-    void networkStartupRuntimeBridgeUsesShutdownHookProviderBeforeLegacySingletonFallback() {
-        ProviderUsedException providerUsed = new ProviderUsedException();
-        GameNetworkStartupRuntimeBridge runtimeBridge = new GameNetworkStartupRuntimeBridge();
-        runtimeBridge.setShutdownHookProvider(throwingProvider(providerUsed));
-
-        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shutdownHook));
-    }
-
-    @Test
-    void networkStartupRuntimeBridgeDoesNotCallLegacyShutdownHookDirectly() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameNetworkStartupRuntimeBridge.java"));
-
-        assertFalse(source.contains("ShutdownHook.getInstance()"));
-    }
-
     private static Class<?> fieldType(String name) {
         try {
             return GameNetworkStartupLifecycle.class.getDeclaredField(name).getType();
@@ -175,42 +137,6 @@ class GameNetworkStartupLifecycleTest {
         @Override
         public long currentTimeMillis() {
             return currentTimeMillis++;
-        }
-    }
-
-    private static final class RecordingGameNetworkStartupRuntimeBridge extends GameNetworkStartupRuntimeBridge {
-
-        private final List<String> events;
-        private final Thread shutdownHook;
-        private Thread registeredHook;
-
-        private RecordingGameNetworkStartupRuntimeBridge(List<String> events, Thread shutdownHook) {
-            this.events = events;
-            this.shutdownHook = shutdownHook;
-        }
-
-        @Override
-        public boolean isBootEmbedded() {
-            events.add("isBootEmbedded");
-            return false;
-        }
-
-        @Override
-        public Thread shutdownHook() {
-            events.add("shutdownHook");
-            return shutdownHook;
-        }
-
-        @Override
-        public void registerShutdownHook(Thread shutdownHook) {
-            events.add("registerShutdownHook");
-            registeredHook = shutdownHook;
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            events.add("currentTimeMillis");
-            return 42L;
         }
     }
 

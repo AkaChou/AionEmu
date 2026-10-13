@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.services.HousingService;
@@ -41,11 +43,6 @@ public class GameHousingGateway {
      * Challenge-task service provider.
      */
     private ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
-    /**
-     * 运行时桥接提供者。
-     * Runtime-bridge provider.
-     */
-    private ObjectProvider<GameHousingRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入房屋竞拍服务提供者。
@@ -97,22 +94,13 @@ public class GameHousingGateway {
         this.challengeTaskServiceProvider = challengeTaskServiceProvider;
     }
 
-    /**
-     * 可选注入运行时桥接提供者。
-     * Optionally inject the runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameHousingRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动房屋相关服务。
      * Start housing-related services.
      */
     public void start() {
-        runtimeBridge().printHousingSection();
+        printHousingSection();
         housingBidService().start();
         maintenanceTask();
         townService();
@@ -121,15 +109,20 @@ public class GameHousingGateway {
     }
 
     /**
+     * 打印房屋分区标题。
+     * Print the housing section header.
+     */
+    private void printHousingSection() {
+        Util.printSection(I18n.get("console.section.housing"));
+    }
+
+    /**
      * 解析房屋竞拍服务。
      * Resolve the housing-bid service.
      * @return 房屋竞拍服务 / Housing-bid service
      */
     private HousingBidService housingBidService() {
-        if (housingBidServiceProvider == null) {
-            return runtimeBridge().housingBidService();
-        }
-        return housingBidServiceProvider.getIfAvailable(() -> runtimeBridge().housingBidService());
+        return housingBidServiceProvider.getObject();
     }
 
     /**
@@ -138,10 +131,7 @@ public class GameHousingGateway {
      * @return 房屋维护任务 / Maintenance task
      */
     private MaintenanceTask maintenanceTask() {
-        if (maintenanceTaskProvider == null) {
-            return runtimeBridge().maintenanceTask();
-        }
-        return maintenanceTaskProvider.getIfAvailable(() -> runtimeBridge().maintenanceTask());
+        return maintenanceTaskProvider.getObject();
     }
 
     /**
@@ -150,10 +140,7 @@ public class GameHousingGateway {
      * @return 城镇服务 / Town service
      */
     private TownService townService() {
-        if (townServiceProvider == null) {
-            return runtimeBridge().townService();
-        }
-        return townServiceProvider.getIfAvailable(() -> runtimeBridge().townService());
+        return townServiceProvider.getObject();
     }
 
     /**
@@ -162,10 +149,7 @@ public class GameHousingGateway {
      * @return 房屋服务 / Housing service
      */
     private HousingService housingService() {
-        if (housingServiceProvider == null) {
-            return runtimeBridge().housingService();
-        }
-        return housingServiceProvider.getIfAvailable(() -> runtimeBridge().housingService());
+        return housingServiceProvider.getObject();
     }
 
     /**
@@ -174,21 +158,7 @@ public class GameHousingGateway {
      * @return 挑战任务服务 / Challenge-task service
      */
     private ChallengeTaskService challengeTaskService() {
-        if (challengeTaskServiceProvider == null) {
-            return runtimeBridge().challengeTaskService();
-        }
-        return challengeTaskServiceProvider.getIfAvailable(() -> runtimeBridge().challengeTaskService());
+        return challengeTaskServiceProvider.getObject();
     }
 
-    /**
-     * 解析运行时桥接。
-     * Resolve the runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameHousingRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameHousingRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameHousingRuntimeBridge::new);
-    }
 }

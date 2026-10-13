@@ -18,6 +18,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.dataholders.QuestsData;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -52,20 +53,25 @@ class EventQuestNativeMaintenanceTest {
 
 	private QuestsData previousQuestsData;
 	private ObjectProvider<QuestEngine> previousEngine;
+	private ObjectProvider<QuestEngine> previousHolderEngineProvider;
 	private ZoneUpdateService previousZoneUpdateService;
 
 	@BeforeEach
 	void installBareProductionSurfaces() {
 		// 目录面：空 QuestsData（与「目录行 = 733 行、native 行取不到模板」的生产形状等价，
-		// 且无需装载 733 行静态数据）；引擎面：裸引擎（native 侧不依赖 typed 目录）；
+		// 且无需装载 733 行静态数据）；引擎面：裸引擎（native 侧不依赖 typed 目录）同时装入
+		// QuestEngine 单例与 holder provider（D1a 后 QuestService 走 GameEngineServices）；
 		// 收尾面：真实构造的 ZoneUpdateService 装入移动循环解析缓存（startEventQuest 的
 		// updateZone 收尾走它；构造器仅注册启动钩子，无线程启动）。
 		// Empty QuestsData mirrors the production shape for native rows (no template reachable);
-		// a bare engine serves the native metadata surface; a real ZoneUpdateService fills the
-		// movement-loop resolve cache for the updateZone tail.
+		// a bare engine serves the native metadata surface for both the QuestEngine singleton and
+		// the holder provider (post-D1a QuestService goes through GameEngineServices); a real
+		// ZoneUpdateService fills the movement-loop resolve cache for the updateZone tail.
 		previousQuestsData = QuestService.questsData;
 		QuestService.questsData = new QuestsData();
-		previousEngine = installBareEngine();
+		QuestEngine bareEngine = new QuestEngine();
+		previousEngine = installBareEngine(bareEngine);
+		previousHolderEngineProvider = installHolderEngineProvider(bareEngine);
 		previousZoneUpdateService = installZoneUpdateService();
 	}
 
@@ -73,6 +79,7 @@ class EventQuestNativeMaintenanceTest {
 	void restoreProductionSurfaces() {
 		QuestService.questsData = previousQuestsData;
 		QuestEngine.setInstanceProvider(previousEngine);
+		restoreHolderEngineProvider(previousHolderEngineProvider);
 		restoreZoneUpdateService(previousZoneUpdateService);
 	}
 
@@ -197,16 +204,41 @@ class EventQuestNativeMaintenanceTest {
 
 	/** 装一个裸引擎（空 typed 目录）：native 元数据面不依赖生产目录。 / A bare engine for the native surface. */
 	@SuppressWarnings("unchecked")
-	private static ObjectProvider<QuestEngine> installBareEngine() {
+	private static ObjectProvider<QuestEngine> installBareEngine(QuestEngine engine) {
 		try {
 			Field providerField = QuestEngine.class.getDeclaredField("instanceProvider");
 			providerField.setAccessible(true);
 			ObjectProvider<QuestEngine> previous = (ObjectProvider<QuestEngine>) providerField.get(null);
 			DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-			beanFactory.registerSingleton(EventQuestNativeMaintenanceTest.class.getName() + ".engine",
-				new QuestEngine());
+			beanFactory.registerSingleton(EventQuestNativeMaintenanceTest.class.getName() + ".engine", engine);
 			QuestEngine.setInstanceProvider(beanFactory.getBeanProvider(QuestEngine.class));
 			return previous;
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	/** 预置 holder 的任务引擎 provider（D1a 后访问器不再回退单例）。 / Presets the holder quest-engine provider (no singleton fallback after D1a). */
+	@SuppressWarnings("unchecked")
+	private static ObjectProvider<QuestEngine> installHolderEngineProvider(QuestEngine engine) {
+		try {
+			Field field = GameEngineServices.class.getDeclaredField("questEngineProvider");
+			field.setAccessible(true);
+			ObjectProvider<QuestEngine> previous = (ObjectProvider<QuestEngine>) field.get(null);
+			DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+			beanFactory.registerSingleton(EventQuestNativeMaintenanceTest.class.getName() + ".holderEngine", engine);
+			field.set(null, beanFactory.getBeanProvider(QuestEngine.class));
+			return previous;
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	private static void restoreHolderEngineProvider(ObjectProvider<QuestEngine> previous) {
+		try {
+			Field field = GameEngineServices.class.getDeclaredField("questEngineProvider");
+			field.setAccessible(true);
+			field.set(null, previous);
 		} catch (ReflectiveOperationException e) {
 			throw new AssertionError(e);
 		}

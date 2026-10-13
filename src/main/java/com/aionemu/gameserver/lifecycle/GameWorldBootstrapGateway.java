@@ -58,11 +58,6 @@ public class GameWorldBootstrapGateway {
      */
     private ObjectProvider<World> worldProvider;
 
-    /**
-     * 世界引导运行时桥的可选提供者。
-     * Optional provider for the world-bootstrap runtime bridge.
-     */
-    private ObjectProvider<GameWorldBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 默认构造：使用当前控制台进度报告器。
@@ -131,15 +126,6 @@ public class GameWorldBootstrapGateway {
         this.worldProvider = worldProvider;
     }
 
-    /**
-     * 注入世界引导运行时桥提供者。
-     * Inject the world-bootstrap runtime-bridge provider.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameWorldBootstrapRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 引导世界：并行执行各引导步骤并报告进度。
@@ -208,11 +194,7 @@ public class GameWorldBootstrapGateway {
      * Resolve IDFactory: prefer Spring, otherwise runtime bridge.
      */
     private void idFactory() {
-        if (idFactoryProvider == null) {
-            runtimeBridge().idFactory();
-    	return;
-        }
-        idFactoryProvider.getIfAvailable(() -> runtimeBridge().idFactory());
+        idFactoryProvider.getObject();
     }
 
     /**
@@ -221,10 +203,7 @@ public class GameWorldBootstrapGateway {
      * @return ZoneService 实例 / ZoneService instance
      */
     private ZoneService zoneService() {
-        if (zoneServiceProvider == null) {
-            return runtimeBridge().zoneService();
-        }
-        return zoneServiceProvider.getIfAvailable(() -> runtimeBridge().zoneService());
+        return zoneServiceProvider.getObject();
     }
 
     /**
@@ -232,11 +211,7 @@ public class GameWorldBootstrapGateway {
      * Resolve HotspotTeleportService: prefer Spring, otherwise runtime bridge.
      */
     private void hotspotTeleportService() {
-        if (hotspotTeleportServiceProvider == null) {
-            runtimeBridge().hotspotTeleportService();
-    	return;
-        }
-        hotspotTeleportServiceProvider.getIfAvailable(() -> runtimeBridge().hotspotTeleportService());
+        hotspotTeleportServiceProvider.getObject();
     }
 
     /**
@@ -244,11 +219,7 @@ public class GameWorldBootstrapGateway {
      * Resolve RoadService: prefer Spring, otherwise runtime bridge.
      */
     private void roadService() {
-        if (roadServiceProvider == null) {
-            runtimeBridge().roadService();
-    	return;
-        }
-        roadServiceProvider.getIfAvailable(() -> runtimeBridge().roadService());
+        roadServiceProvider.getObject();
     }
 
     /**
@@ -256,24 +227,9 @@ public class GameWorldBootstrapGateway {
      * Resolve World: prefer Spring, otherwise runtime bridge.
      */
     private void world() {
-        if (worldProvider == null) {
-            runtimeBridge().world();
-    	return;
-        }
-        worldProvider.getIfAvailable(() -> runtimeBridge().world());
+        worldProvider.getObject();
     }
 
-    /**
-     * 解析世界引导运行时桥：优先 Spring，否则新建。
-     * Resolve the world-bootstrap runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameWorldBootstrapRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameWorldBootstrapRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameWorldBootstrapRuntimeBridge::new);
-    }
 
     /**
      * 执行单步加载并报告开始/结束。

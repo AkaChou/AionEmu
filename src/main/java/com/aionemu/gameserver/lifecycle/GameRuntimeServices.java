@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.util.function.Supplier;
 
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
@@ -231,7 +230,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 管理服务 / Admin service
      */
     public static AdminService adminService() {
-        return getIfAvailable(adminServiceProvider, AdminService::getInstance);
+        return requireService(adminServiceProvider);
     }
 
     /**
@@ -240,7 +239,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 周期存档服务 / Periodic-save service
      */
     public static PeriodicSaveService periodicSaveService() {
-        return getIfAvailable(periodicSaveServiceProvider, PeriodicSaveService::getInstance);
+        return requireService(periodicSaveServiceProvider);
     }
 
     /**
@@ -249,7 +248,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 公告服务 / Announcement service
      */
     public static AnnouncementService announcementService() {
-        return getIfAvailable(announcementServiceProvider, AnnouncementService::getInstance);
+        return requireService(announcementServiceProvider);
     }
 
     /**
@@ -258,7 +257,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 角色转移服务 / Player-transfer service
      */
     public static PlayerTransferService playerTransferService() {
-        return getIfAvailable(playerTransferServiceProvider, PlayerTransferService::getInstance);
+        return requireService(playerTransferServiceProvider);
     }
 
     /**
@@ -267,7 +266,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 领地服务 / Territory service
      */
     public static TerritoryService territoryService() {
-        return getIfAvailable(territoryServiceProvider, TerritoryService::getInstance);
+        return requireService(territoryServiceProvider);
     }
 
     /**
@@ -276,7 +275,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 天气服务 / Weather service
      */
     public static WeatherService weatherService() {
-        return getIfAvailable(weatherServiceProvider, WeatherService::getInstance);
+        return requireService(weatherServiceProvider);
     }
 
     /**
@@ -285,7 +284,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 寄售服务 / Broker service
      */
     public static BrokerService brokerService() {
-        return getIfAvailable(brokerServiceProvider, BrokerService::getInstance);
+        return requireService(brokerServiceProvider);
     }
 
     /**
@@ -294,7 +293,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 影响力 / Influence
      */
     public static Influence influence() {
-        return getIfAvailable(influenceProvider, Influence::getInstance);
+        return requireService(influenceProvider);
     }
 
     /**
@@ -303,7 +302,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 交易服务 / Exchange service
      */
     public static ExchangeService exchangeService() {
-        return getIfAvailable(exchangeServiceProvider, ExchangeService::getInstance);
+        return requireService(exchangeServiceProvider);
     }
 
     /**
@@ -312,7 +311,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 请愿服务 / Petition service
      */
     public static PetitionService petitionService() {
-        return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
+        return requireService(petitionServiceProvider);
     }
 
     /**
@@ -321,7 +320,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 增益活动服务 / Boost-event service
      */
     public static BoostEventService boostEventService() {
-        return getIfAvailable(boostEventServiceProvider, BoostEventService::getInstance);
+        return requireService(boostEventServiceProvider);
     }
 
     /**
@@ -330,7 +329,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 限购交易服务 / Limited-item trade service
      */
     public static LimitedItemTradeService limitedItemTradeService() {
-        return getIfAvailable(limitedItemTradeServiceProvider, LimitedItemTradeService::getInstance);
+        return requireService(limitedItemTradeServiceProvider);
     }
 
     /**
@@ -339,7 +338,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 问卷服务 / Survey service
      */
     public static SurveyService surveyService() {
-        return getIfAvailable(surveyServiceProvider, SurveyService::getInstance);
+        return requireService(surveyServiceProvider);
     }
 
     /**
@@ -348,7 +347,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 寻找队伍服务 / Find-group service
      */
     public static FindGroupService findGroupService() {
-        return getIfAvailable(findGroupServiceProvider, FindGroupService::getInstance);
+        return requireService(findGroupServiceProvider);
     }
 
     /**
@@ -357,7 +356,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return 商城服务 / In-game shop
      */
     public static InGameShopEn inGameShopEn() {
-        return getIfAvailable(inGameShopEnProvider, InGameShopEn::getInstance);
+        return requireService(inGameShopEnProvider);
     }
 
     /**
@@ -366,7 +365,7 @@ public final class GameRuntimeServices implements DisposableBean {
      * @return GM 服务 / GM service
      */
     public static GMService gmService() {
-        return getIfAvailable(gmServiceProvider, GMService::getInstance);
+        return requireService(gmServiceProvider);
     }
 
     /**
@@ -377,11 +376,15 @@ public final class GameRuntimeServices implements DisposableBean {
      * @param <T> 服务类型 / Service type
      * @return 服务实例 / Service instance
      */
-    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
+    private static <T> T requireService(ObjectProvider<T> provider) {
+        // 容器未启动即抛异常（fail-fast）；Bean 缺席由 getObject() 抛出。
+        // Fail fast when the container is not up; a missing bean is thrown by getObject().
         if (provider == null) {
-            return fallback.get();
+            throw new IllegalStateException(
+                "Runtime service is only available inside the Spring container; "
+                    + "offline construction must not touch runtime services");
         }
-        return provider.getIfAvailable(fallback);
+        return provider.getObject();
     }
 
     /**

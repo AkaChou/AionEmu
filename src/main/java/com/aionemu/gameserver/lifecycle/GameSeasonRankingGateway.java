@@ -20,11 +20,6 @@ public class GameSeasonRankingGateway {
      */
     private ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider;
 
-    /**
-     * 维护类运行时桥接提供者（可选）。
-     * Optional provider for the maintenance runtime bridge.
-     */
-    private ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 注入赛季排名更新服务提供者。
@@ -36,15 +31,6 @@ public class GameSeasonRankingGateway {
         this.seasonRankingUpdateServiceProvider = seasonRankingUpdateServiceProvider;
     }
 
-    /**
-     * 注入维护类运行时桥接提供者。
-     * Inject the maintenance runtime bridge provider.
-     * @param runtimeBridgeProvider 运行时桥接提供者 / Runtime bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 打印赛季排名分区并启动更新服务。
@@ -61,21 +47,7 @@ public class GameSeasonRankingGateway {
      * @return 更新服务 / Update service
      */
     private SeasonRankingUpdateService seasonRankingUpdateService() {
-        if (seasonRankingUpdateServiceProvider == null) {
-            return runtimeBridge().seasonRankingUpdateService();
-        }
-        return seasonRankingUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().seasonRankingUpdateService());
+        return seasonRankingUpdateServiceProvider.getObject();
     }
 
-    /**
-     * 解析维护类运行时桥接。
-     * Resolve the maintenance runtime bridge.
-     * @return 运行时桥接 / Runtime bridge
-     */
-    private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameMaintenanceServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameMaintenanceServicesRuntimeBridge::new);
-    }
 }

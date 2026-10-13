@@ -21,10 +21,6 @@ class GameWorldActivationLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "dropRegistrationServiceProvider"));
     }
 
-    @Test
-    void worldActivationGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsDropRegistrationServerActivationAndOfflineMarkerOnce() {

@@ -28,11 +28,6 @@ public class GameDredgionGateway {
      */
     private ObjectProvider<AsyunatarService> asyunatarServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入挖掘场服务 {@link ObjectProvider}。
@@ -54,15 +49,6 @@ public class GameDredgionGateway {
         this.asyunatarServiceProvider = asyunatarServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动挖掘场阶段：打印分区并在自动组队开启时初始化相关服务。
@@ -84,10 +70,7 @@ public class GameDredgionGateway {
      * @return 服务实例 / Service instance
      */
     private DredgionService2 dredgionService() {
-        if (dredgionServiceProvider == null) {
-            return runtimeBridge().dredgionService();
-        }
-        return dredgionServiceProvider.getIfAvailable(() -> runtimeBridge().dredgionService());
+        return dredgionServiceProvider.getObject();
     }
 
     /**
@@ -96,21 +79,7 @@ public class GameDredgionGateway {
      * @return 服务实例 / Service instance
      */
     private AsyunatarService asyunatarService() {
-        if (asyunatarServiceProvider == null) {
-            return runtimeBridge().asyunatarService();
-        }
-        return asyunatarServiceProvider.getIfAvailable(() -> runtimeBridge().asyunatarService());
+        return asyunatarServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

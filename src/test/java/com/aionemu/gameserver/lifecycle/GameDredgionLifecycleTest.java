@@ -23,10 +23,6 @@ class GameDredgionLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "asyunatarServiceProvider"));
     }
 
-    @Test
-    void dredgionGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsEnabledInitializersOnceAndRecordsLoadTime() {

@@ -18,7 +18,6 @@ class GameWorldServicesTest {
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("world/geo/GeoService.java")))
                 .filter(path -> !path.endsWith(Path.of("world/geo/path/PathService.java")))
-                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldServiceFallbacks.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldServices.java")))
                 .toList();
         }

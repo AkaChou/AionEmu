@@ -36,20 +36,22 @@ public final class GameThreadPoolServices implements DisposableBean {
     }
 
     /**
-     * 解析 ThreadPoolManager：优先 Spring，否则回退并缓存。
-     * Resolve ThreadPoolManager: prefer Spring, otherwise fallback, and remember the result.
+     * 解析 ThreadPoolManager 并缓存。
+     * Resolve ThreadPoolManager and remember the result.
      * @return ThreadPoolManager 实例 / ThreadPoolManager instance
+     * @throws IllegalStateException 容器未启动即请求线程池（如离线构造服务）/ when the container is not up yet
      */
     public static ThreadPoolManager threadPoolManager() {
         ThreadPoolManager resolved = resolvedThreadPoolManager;
         if (resolved != null) {
             return resolved;
         }
-        ObjectProvider<ThreadPoolManager> provider = threadPoolManagerProvider;
-        if (provider == null) {
-            return rememberThreadPoolManager(fallbackThreadPoolManager());
+        if (threadPoolManagerProvider == null) {
+            throw new IllegalStateException(
+                "ThreadPoolManager is only available inside the Spring container; "
+                    + "offline construction must not touch the thread pool");
         }
-        return rememberThreadPoolManager(provider.getIfAvailable(GameThreadPoolServices::fallbackThreadPoolManager));
+        return rememberThreadPoolManager(threadPoolManagerProvider.getObject());
     }
 
     /**
@@ -74,25 +76,4 @@ public final class GameThreadPoolServices implements DisposableBean {
         ThreadPoolManager.setInstanceProvider(null);
     }
 
-    /**
-     * 回退 ThreadPoolManager（懒加载单例）。
-     * Fallback ThreadPoolManager (lazy singleton).
-     * @return 回退实例 / Fallback instance
-     */
-    private static ThreadPoolManager fallbackThreadPoolManager() {
-        return Fallbacks.THREAD_POOL_MANAGER;
-    }
-
-    /**
-     * 回退持有者：延迟创建默认 ThreadPoolManager。
-     * Fallback holder: lazily creates the default ThreadPoolManager.
-     */
-    private static final class Fallbacks {
-
-        /**
-         * 默认 ThreadPoolManager 单例。
-         * Default ThreadPoolManager singleton.
-         */
-        private static final ThreadPoolManager THREAD_POOL_MANAGER = new ThreadPoolManager();
-    }
 }

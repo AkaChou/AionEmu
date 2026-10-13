@@ -23,10 +23,6 @@ class GameRewardServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "veteranRewardsServiceProvider"));
     }
 
-    @Test
-    void rewardGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {

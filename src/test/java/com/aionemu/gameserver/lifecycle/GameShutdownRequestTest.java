@@ -60,14 +60,6 @@ class GameShutdownRequestTest {
         assertFalse(source.contains("ShutdownHook.getInstance()"));
     }
 
-    @Test
-    void fallbackCreatesLocalShutdownHookInsteadOfLegacySingleton() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameShutdownHookFallbacks.java"));
-
-        assertFalse(source.contains("ShutdownHook.getInstance()"));
-        assertTrue(source.contains("new ShutdownHook()"));
-    }
-
     private static ObjectProvider<ShutdownHook> provider(ShutdownHook shutdownHook) {
         return (ObjectProvider) Proxy.newProxyInstance(
 			ObjectProvider.class.getClassLoader(),

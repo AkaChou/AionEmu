@@ -20,10 +20,6 @@ class GameHtmlLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameHtmlGateway.class, "htmlCacheProvider"));
     }
 
-    @Test
-    void htmlGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameHtmlGateway.class, "runtimeBridgeProvider"));
-    }
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {

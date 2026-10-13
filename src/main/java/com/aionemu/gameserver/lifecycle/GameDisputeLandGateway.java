@@ -27,11 +27,6 @@ public class GameDisputeLandGateway {
      */
     private ObjectProvider<OutpostService> outpostServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入争议之地服务 {@link ObjectProvider}。
@@ -53,15 +48,6 @@ public class GameDisputeLandGateway {
         this.outpostServiceProvider = outpostServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动争议之地阶段：打印分区并初始化争议之地与前哨。
@@ -79,10 +65,7 @@ public class GameDisputeLandGateway {
      * @return 服务实例 / Service instance
      */
     private DisputeLandService disputeLandService() {
-        if (disputeLandServiceProvider == null) {
-            return runtimeBridge().disputeLandService();
-        }
-        return disputeLandServiceProvider.getIfAvailable(() -> runtimeBridge().disputeLandService());
+        return disputeLandServiceProvider.getObject();
     }
 
     /**
@@ -91,21 +74,7 @@ public class GameDisputeLandGateway {
      * @return 服务实例 / Service instance
      */
     private OutpostService outpostService() {
-        if (outpostServiceProvider == null) {
-            return runtimeBridge().outpostService();
-        }
-        return outpostServiceProvider.getIfAvailable(() -> runtimeBridge().outpostService());
+        return outpostServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥 / Runtime bridge
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }

@@ -51,42 +51,48 @@ public final class GameStaticDataServices implements DisposableBean {
     }
 
     /**
-     * 解析 DataManager：优先 Spring，否则回退。
-     * Resolve DataManager: prefer Spring, otherwise fallback.
+     * 解析 DataManager：由 Spring 提供，容器未启动即抛异常。
+     * Resolve DataManager from Spring, failing fast when the container is not up.
      * @return DataManager 实例 / DataManager instance
      */
     public static DataManager dataManager() {
         ObjectProvider<DataManager> provider = dataManagerProvider;
         if (provider == null) {
-            return GameCoreServiceFallbacks.dataManager();
+            throw new IllegalStateException(
+                "DataManager is only available inside the Spring container; "
+                    + "offline construction must not touch static data services");
         }
-        return provider.getIfAvailable(GameCoreServiceFallbacks::dataManager);
+        return provider.getObject();
     }
 
     /**
-     * 解析 HTMLCache：优先 Spring，否则回退。
-     * Resolve HTMLCache: prefer Spring, otherwise fallback.
+     * 解析 HTMLCache：由 Spring 提供，容器未启动即抛异常。
+     * Resolve HTMLCache from Spring, failing fast when the container is not up.
      * @return HTMLCache 实例 / HTMLCache instance
      */
     public static HTMLCache htmlCache() {
         ObjectProvider<HTMLCache> provider = htmlCacheProvider;
         if (provider == null) {
-            return GameCoreServiceFallbacks.htmlCache();
+            throw new IllegalStateException(
+                "HTMLCache is only available inside the Spring container; "
+                    + "offline construction must not touch static data services");
         }
-        return provider.getIfAvailable(GameCoreServiceFallbacks::htmlCache);
+        return provider.getObject();
     }
 
     /**
-     * 解析 XmlDataLoader：优先 Spring，否则回退。
-     * Resolve XmlDataLoader: prefer Spring, otherwise fallback.
+     * 解析 XmlDataLoader：由 Spring 提供，容器未启动即抛异常。
+     * Resolve XmlDataLoader from Spring, failing fast when the container is not up.
      * @return XmlDataLoader 实例 / XmlDataLoader instance
      */
     public static XmlDataLoader xmlDataLoader() {
         ObjectProvider<XmlDataLoader> provider = xmlDataLoaderProvider;
         if (provider == null) {
-            return GameCoreServiceFallbacks.xmlDataLoader();
+            throw new IllegalStateException(
+                "XmlDataLoader is only available inside the Spring container; "
+                    + "offline construction must not touch static data services");
         }
-        return provider.getIfAvailable(GameCoreServiceFallbacks::xmlDataLoader);
+        return provider.getObject();
     }
 
     /**

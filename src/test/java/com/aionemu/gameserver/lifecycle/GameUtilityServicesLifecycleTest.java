@@ -83,37 +83,6 @@ class GameUtilityServicesLifecycleTest {
         assertEquals(GameUtilityServicesGateway.class, fieldType("utilityServicesGateway"));
     }
 
-    @Test
-    void utilityGatewayBridgesRuntimeStaticsThroughSpringProvider() {
-        List<String> events = new ArrayList<>();
-        GameUtilityServicesGateway gateway = new GameUtilityServicesGateway();
-        gateway.setRuntimeBridgeProvider(provider(
-            GameUtilityServicesRuntimeBridge.class,
-            new RecordingGameUtilityServicesRuntimeBridge(events)
-        ));
-
-        gateway.initializeExceptionHandler();
-        gateway.reportCallbackSupport();
-        gateway.initializeCronService();
-        gateway.loadConfig();
-        gateway.initializeDateTime();
-        gateway.loadThreadConfig();
-
-        assertEquals(List.of(
-            "exceptionHandler",
-            "callbackSupport",
-            "cron",
-            "config:load",
-            "dateTime",
-            "threadConfig"
-        ), events);
-    }
-
-    @Test
-    void utilityGatewayUsesOptionalRuntimeBridgeProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameUtilityServicesGateway.class, "runtimeBridgeProvider"));
-    }
-
     private static Class<?> fieldType(String name) {
         return fieldType(GameUtilityServicesLifecycle.class, name);
     }
@@ -188,46 +157,6 @@ class GameUtilityServicesLifecycleTest {
         @Override
         public long currentTimeMillis() {
             return currentTimeMillis++;
-        }
-    }
-
-    private static final class RecordingGameUtilityServicesRuntimeBridge extends GameUtilityServicesRuntimeBridge {
-
-        private final List<String> events;
-
-        private RecordingGameUtilityServicesRuntimeBridge(List<String> events) {
-            super();
-            this.events = events;
-        }
-
-        @Override
-        public void initializeExceptionHandler() {
-            events.add("exceptionHandler");
-        }
-
-        @Override
-        public void reportCallbackSupport() {
-            events.add("callbackSupport");
-        }
-
-        @Override
-        public void initializeCronService() {
-            events.add("cron");
-        }
-
-        @Override
-        public void loadConfig() {
-            events.add("config:load");
-        }
-
-        @Override
-        public void initializeDateTime() {
-            events.add("dateTime");
-        }
-
-        @Override
-        public void loadThreadConfig() {
-            events.add("threadConfig");
         }
     }
 

@@ -26,6 +26,7 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "periodicSaveServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "territoryServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "gameTimeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "serverVariableDaoProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "announcementServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "debugServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "weatherServiceProvider"));
@@ -44,7 +45,6 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "surveyServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "findGroupServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "inGameShopEnProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "runtimeServiceBridgeProvider"));
     }
 
     @Test

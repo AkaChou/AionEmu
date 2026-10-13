@@ -20,11 +20,6 @@ public class GameProtectorConquerorGateway {
      */
     private ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
 
-    /**
-     * 功能服务运行时桥提供者。
-     * Feature-services runtime-bridge provider.
-     */
-    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     /**
      * 可选注入守护者/征服者服务 {@link ObjectProvider}。
@@ -36,15 +31,6 @@ public class GameProtectorConquerorGateway {
         this.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
     }
 
-    /**
-     * 可选注入功能服务运行时桥 {@link ObjectProvider}。
-     * Optionally inject the {@link ObjectProvider} of feature-services runtime bridge.
-     * @param runtimeBridgeProvider 运行时桥提供者 / Runtime-bridge provider
-     */
-    @Autowired(required = false)
-    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
-        this.runtimeBridgeProvider = runtimeBridgeProvider;
-    }
 
     /**
      * 启动守护者/征服者系统：打印分区并初始化服务。
@@ -61,21 +47,7 @@ public class GameProtectorConquerorGateway {
      * @return 服务实例 / Service instance
      */
     private ProtectorConquerorService protectorConquerorService() {
-        if (protectorConquerorServiceProvider == null) {
-            return runtimeBridge().protectorConquerorService();
-        }
-        return protectorConquerorServiceProvider.getIfAvailable(() -> runtimeBridge().protectorConquerorService());
+        return protectorConquerorServiceProvider.getObject();
     }
 
-    /**
-     * 解析功能服务运行时桥：优先 Spring，否则新建。
-     * Resolve feature-services runtime bridge: prefer Spring, otherwise create new.
-     * @return 运行时桥实例 / Runtime-bridge instance
-     */
-    private GameFeatureServicesRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new GameFeatureServicesRuntimeBridge();
-        }
-        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
-    }
 }
