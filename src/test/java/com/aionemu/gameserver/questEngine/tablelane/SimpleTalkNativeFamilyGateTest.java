@@ -379,11 +379,14 @@ class SimpleTalkNativeFamilyGateTest {
 		NativeTalkFixture.assertCloseDialog(player);
 		assertEquals(1, state.getQuestVars().getQuestVars(), "重复推进不得再改步号");
 
-		// 已推进的步可重看（幂等，零状态写）。
+		// 已完成的步不再回放（de3208ff9「13700/13800 死循环」修复：中继分支越过该步）：中继专属
+		// 节点落穿默认处理 = 零响应、零下发、零状态写（回放步页会把报告分支永久遮蔽）。
+		// A finished step is never replayed: a relay-only npc falls through to default handling.
 		state.getQuestVars().setVar(1);
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(itemHandler.onDialog(new QuestEnv(first, player, questId, 31)));
-		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.pageForStep(1));
+		assertFalse(itemHandler.onDialog(new QuestEnv(first, player, questId, 31)),
+			"已完成的步不回放 / a finished step is never replayed");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "零下发");
 		assertEquals(1, state.getQuestVars().getQuestVars());
 	}
 
