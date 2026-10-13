@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,7 +42,7 @@ class PlayerQuestCraftPortTest {
 		RecordingRecipesDao recipesDao = new RecordingRecipesDao();
 		PlayerQuestCraftPort port = port(player, recipesDao, new RecordingSkillsDao(), new RecordingPublisher(), true);
 
-		port.preflight(connection(), snapshot(1, Set.of()),
+		port.preflight(snapshot(1, Set.of()),
 			List.of(new QuestAction.LearnRecipe(RECIPE, QuestRecipeOwnership.QUEST_OWNED)));
 	}
 
@@ -54,15 +51,16 @@ class PlayerQuestCraftPortTest {
 		Player player = player(0, Set.of());
 		PlayerQuestCraftPort missingSkill = port(player, new RecordingRecipesDao(),
 			new RecordingSkillsDao(), new RecordingPublisher(), true);
-		assertThrows(SQLException.class, () -> missingSkill.preflight(connection(), snapshot(0, Set.of()),
+		assertThrows(SQLException.class, () -> missingSkill.preflight(snapshot(0, Set.of()),
 			List.of(new QuestAction.LearnRecipe(RECIPE, QuestRecipeOwnership.QUEST_OWNED))));
 
 		PlayerQuestCraftPort noSlot = port(player, new RecordingRecipesDao(),
 			new RecordingSkillsDao(), new RecordingPublisher(), false);
-		assertThrows(SQLException.class, () -> noSlot.preflight(connection(), snapshot(399, Set.of()),
+		assertThrows(SQLException.class, () -> noSlot.preflight(snapshot(399, Set.of()),
 			List.of(new QuestAction.GrantCraftSkill(SKILL, 400, true))));
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
 	void applyUsesCallerTransactionAndPublishesOnlyAfterCommit() throws Exception {
 		Player player = player(399, Set.of());
@@ -70,19 +68,17 @@ class PlayerQuestCraftPortTest {
 		RecordingSkillsDao skillsDao = new RecordingSkillsDao();
 		RecordingPublisher publisher = new RecordingPublisher();
 		PlayerQuestCraftPort port = port(player, recipesDao, skillsDao, publisher, true);
-		Connection connection = connection();
 		List<QuestAction> actions = List.of(
 			new QuestAction.LearnRecipe(RECIPE, QuestRecipeOwnership.QUEST_OWNED),
 			new QuestAction.GrantCraftSkill(SKILL, 400, true));
 
-		port.preflight(connection, snapshot(399, Set.of()), actions);
-		QuestTransactionParticipant participant = port.apply(connection, snapshot(399, Set.of()), actions);
+		port.preflight(snapshot(399, Set.of()), actions);
+		QuestTransactionParticipant participant = port.apply(snapshot(399, Set.of()), actions);
 
 		assertTrue(publisher.calls.isEmpty());
-		assertEquals(Set.of(RECIPE, AUTO_RECIPE), recipesDao.added.stream().map(Call::id).collect(java.util.stream.Collectors.toSet()));
-		assertTrue(recipesDao.added.stream().allMatch(call -> call.connection() == connection));
+		assertEquals(Set.of(RECIPE, AUTO_RECIPE),
+			recipesDao.added.stream().map(Call::id).collect(java.util.stream.Collectors.toSet()));
 		assertEquals(1, skillsDao.stored.size());
-		assertSame(connection, skillsDao.stored.getFirst().connection());
 		assertEquals(SKILL, skillsDao.stored.getFirst().id());
 		assertEquals(400, skillsDao.stored.getFirst().value());
 		participant.afterCommit();
@@ -98,18 +94,19 @@ class PlayerQuestCraftPortTest {
 		RecordingPublisher publisher = new RecordingPublisher();
 		Player player = player(1, Set.of());
 		PlayerQuestCraftPort port = port(player, recipesDao, skillsDao, publisher, true);
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(1, Set.of()),
+		QuestTransactionParticipant participant = port.apply(snapshot(1, Set.of()),
 			List.of(new QuestAction.LearnRecipe(RECIPE, QuestRecipeOwnership.QUEST_OWNED)));
 		participant.afterRollback();
 		assertTrue(publisher.calls.isEmpty());
 
 		PlayerQuestCraftPort offline = port(null, recipesDao, skillsDao, publisher, true);
-		assertThrows(SQLException.class, () -> offline.apply(connection(), snapshot(1, Set.of()),
+		assertThrows(SQLException.class, () -> offline.apply(snapshot(1, Set.of()),
 			List.of(new QuestAction.ForgetRecipe(RECIPE))));
 		assertEquals(1, recipesDao.added.size());
 		assertTrue(recipesDao.deleted.isEmpty());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
 	void learnForgetAndSkillGrantAreIdempotentConvergenceOperations() throws Exception {
 		Player player = player(450, Set.of(RECIPE));
@@ -117,19 +114,16 @@ class PlayerQuestCraftPortTest {
 		RecordingSkillsDao skillsDao = new RecordingSkillsDao();
 		RecordingPublisher publisher = new RecordingPublisher();
 		PlayerQuestCraftPort port = port(player, recipesDao, skillsDao, publisher, true);
-		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.apply(connection, snapshot(450, Set.of(RECIPE)), List.of(
+		QuestTransactionParticipant participant = port.apply(snapshot(450, Set.of(RECIPE)), List.of(
 			new QuestAction.LearnRecipe(RECIPE, QuestRecipeOwnership.QUEST_OWNED),
 			new QuestAction.GrantCraftSkill(SKILL, 400, false),
 			new QuestAction.ForgetRecipe(RECIPE)));
 		participant.afterCommit();
 
 		assertEquals(1, recipesDao.deleted.size());
-		assertSame(connection, recipesDao.deleted.getFirst().connection());
 		assertEquals(RECIPE, recipesDao.deleted.getFirst().id());
 		assertEquals(1, skillsDao.stored.size());
-		assertSame(connection, skillsDao.stored.getFirst().connection());
 		assertEquals(SKILL, skillsDao.stored.getFirst().id());
 		assertEquals(450, skillsDao.stored.getFirst().value());
 		assertEquals(Set.of(RECIPE), publisher.calls.getFirst().forgotten());
@@ -163,26 +157,13 @@ class PlayerQuestCraftPortTest {
 		return player;
 	}
 
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(PlayerQuestCraftPortTest.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> {
-				if (method.getName().equals("isWrapperFor")) return false;
-				if (method.getName().equals("unwrap")) return null;
-				Class<?> type = method.getReturnType();
-				if (type == boolean.class) return false;
-				if (type == int.class) return 0;
-				if (type == long.class) return 0L;
-				return null;
-			});
-	}
-
 	private static void setField(Class<?> owner, Object target, String name, Object value) throws Exception {
 		Field field = owner.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);
 	}
 
-	private record Call(Connection connection, int id, int value) {
+	private record Call(int id, int value) {
 	}
 
 	private record PublishCall(Set<Integer> learned, Set<Integer> forgotten, Map<Integer, Integer> skills) {
@@ -219,13 +200,13 @@ class PlayerQuestCraftPortTest {
 		}
 
 		@Override
-		public void addRecipeInTransaction(Connection connection, int playerId, int recipeId) {
-			added.add(new Call(connection, recipeId, 0));
+		public void addRecipeInTransaction(int playerId, int recipeId) {
+			added.add(new Call(recipeId, 0));
 		}
 
 		@Override
-		public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) {
-			deleted.add(new Call(connection, recipeId, 0));
+		public void delRecipeInTransaction(int playerId, int recipeId) {
+			deleted.add(new Call(recipeId, 0));
 		}
 	}
 
@@ -243,8 +224,8 @@ class PlayerQuestCraftPortTest {
 		}
 
 		@Override
-		public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) {
-			stored.add(new Call(connection, skillId, targetLevel));
+		public void storeSkillInTransaction(int playerId, int skillId, int targetLevel) {
+			stored.add(new Call(skillId, targetLevel));
 		}
 	}
 }

@@ -20,8 +20,6 @@ import org.junit.jupiter.api.Test;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import java.io.InputStream;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -214,35 +212,27 @@ class QuestInteractionObjectCatalogTest {
 			(connection, playerId, questId, event) -> new QuestSnapshot(playerId, questId,
 				QuestStatus.START, 0, Map.of()), new QuestActionPort() {
 			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot,
+			public void preflight(QuestSnapshot snapshot,
 								  List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 													 List<com.aionemu.gameserver.questEngine.definition.QuestAction> required) {
 				return QuestTransactionParticipant.none();
 			}
 		}, new QuestStatePort() {
 			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			public void apply(int playerId, QuestMutationPlan plan) {
 			}
 
 			@Override
 			public void publish(int playerId, QuestMutationPlan plan) {
 			}
 		}, (action, snapshot, plan) -> {
-		}, () -> connection(), ignored -> {
+		}, ignored -> {
 		},
 			new QuestRuntimeMetricsCollector());
-	}
-
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				default -> method.getReturnType() == boolean.class ? false : null;
-			});
 	}
 
 	private static String npcAi(int npcId) throws Exception {

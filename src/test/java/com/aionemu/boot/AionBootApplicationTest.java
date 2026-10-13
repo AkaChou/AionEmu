@@ -159,17 +159,23 @@ class AionBootApplicationTest {
 
 	/**
 	 * 装配审计上下文的 JDBC 自动配置排除清单；{@code JdbcClientAutoConfiguration} 也必须排除，
-	 * 否则它会经由 {@code dataSourceScriptDatabaseInitializer} 拉起数据源解析。
+	 * 否则它会经由 {@code dataSourceScriptDatabaseInitializer} 拉起数据源解析。{@code FlywayAutoConfiguration}
+	 * 同理：夹具声明的 {@code JdbcClient} 被 Boot 视为依赖库初始化，会拉起 {@code flywayInitializer} 真连库，
+	 * 使这些用例依赖本机 MySQL 是否放行无凭据连接。
 	 * JDBC auto-configurations excluded from assembly-audit contexts; {@code JdbcClientAutoConfiguration}
 	 * must be listed too, or it drags in DataSource resolution through
-	 * {@code dataSourceScriptDatabaseInitializer}.
+	 * {@code dataSourceScriptDatabaseInitializer}. {@code FlywayAutoConfiguration} likewise: the fixture's
+	 * {@code JdbcClient} counts as depending on database initialization, which starts {@code flywayInitializer}
+	 * against the real database and makes these cases depend on whether the local MySQL accepts a
+	 * credential-less connection.
 	 */
 	private static final String JDBC_AUTO_CONFIGURATION_EXCLUSIONS = String.join(",",
 		"org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration",
 		"org.springframework.boot.jdbc.autoconfigure.DataSourceInitializationAutoConfiguration",
 		"org.springframework.boot.jdbc.autoconfigure.DataSourceTransactionManagerAutoConfiguration",
 		"org.springframework.boot.jdbc.autoconfigure.JdbcTemplateAutoConfiguration",
-		"org.springframework.boot.jdbc.autoconfigure.JdbcClientAutoConfiguration");
+		"org.springframework.boot.jdbc.autoconfigure.JdbcClientAutoConfiguration",
+		"org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration");
 
 	@AfterEach
 	void clearBootRuntimeFlags() {

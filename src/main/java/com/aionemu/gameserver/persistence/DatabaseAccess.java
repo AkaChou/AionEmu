@@ -16,11 +16,14 @@ import org.springframework.transaction.support.TransactionTemplate;
  * 静态持久化资源定位器：把 Spring 容器管理的连接池与事务资源暴露给无法依赖注入的静态调用点。
  * Static persistence-resource locator exposing the Spring-managed DataSource and transaction resources
  * to static call sites that cannot use dependency injection.
- * <p>所有资源均来自 Boot 单一数据源（application.yml 的 spring.datasource）；事务内取连接会复用当前
- * Spring 事务的连接，从而让原生 JDBC 与 MyBatis-Flex 共享同一事务。</p>
- * <p>Every resource is the Boot single DataSource (spring.datasource in application.yml); a connection
- * obtained inside an active Spring transaction reuses that transaction's connection, so raw JDBC and
- * MyBatis-Flex share one transaction.</p>
+ * <p>所有资源均来自 Boot 单一数据源：库参数只在
+ * {@code aion/config/network/database.properties} 维护，由遗留属性后处理器在启动期翻译成
+ * {@code spring.datasource.*}；事务内取连接会复用当前 Spring 事务的连接，从而让原生 JDBC 与 MyBatis-Flex
+ * 共享同一事务。</p>
+ * <p>Every resource is the Boot single DataSource: the DB settings live only in
+ * {@code aion/config/network/database.properties} and are translated into {@code spring.datasource.*} at
+ * startup by the legacy property environment post-processor; a connection obtained inside an active Spring
+ * transaction reuses that transaction's connection, so raw JDBC and MyBatis-Flex share one transaction.</p>
  */
 @Component
 public final class DatabaseAccess {
@@ -86,6 +89,15 @@ public final class DatabaseAccess {
 	 */
 	public static TransactionTemplate transactionTemplate() {
 		return new TransactionTemplate(require(transactionManager, "PlatformTransactionManager"));
+	}
+
+	/**
+	 * 返回容器的事务管理器，供需要显式 begin/commit 边界的调用点使用。
+	 * Returns the container's transaction manager for call sites that need an explicit begin/commit boundary.
+	 * @return 事务管理器 / transaction manager
+	 */
+	public static PlatformTransactionManager transactionManager() {
+		return require(transactionManager, "PlatformTransactionManager");
 	}
 
 	private static <T> T require(T value, String name) {

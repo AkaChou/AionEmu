@@ -1,9 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +26,7 @@ import com.aionemu.gameserver.persistence.entity.InventoryPo;
 import com.aionemu.gameserver.persistence.entity.MailPo;
 import com.aionemu.gameserver.persistence.mapper.MailMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -190,110 +188,98 @@ public class MailDaoImpl extends ServiceImpl<MailMapper, MailPo> implements Mail
 	 */
 	@Override
 	public boolean storeLetter(Timestamp time, Letter letter) {
-		try (Connection con = DatabaseAccess.getConnection()) {
-			storeLetterInTransaction(con, time, letter);
+		try {
+			storeLetterInTransaction(time, letter);
 			letter.setPersistState(PersistentState.UPDATED);
 			return true;
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.2d8239fcf778", letter.getRecipientId()), e);
 			return false;
 		}
 	}
 
 	/**
-	 * 在调用方事务连接上按持久化状态插入或更新信件。
-	 * Inserts or updates a letter on the caller's transactional connection.
-	 * @param con 调用方事务连接 / caller's transactional connection
+	 * 在调用方事务内按持久化状态插入或更新信件。
+	 * Inserts or updates a letter inside the caller's transaction.
 	 * @param time 时间戳 / timestamp
 	 * @param letter 邮件 / letter
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
 	@Override
-	public void storeLetterInTransaction(Connection con, Timestamp time, Letter letter) throws SQLException {
+	public void storeLetterInTransaction(Timestamp time, Letter letter) {
 		boolean result = switch (letter.getLetterPersistentState()) {
-			case NEW -> saveLetter(con, time, letter);
-			case UPDATE_REQUIRED -> updateLetter(con, time, letter);
+			case NEW -> saveLetter(time, letter);
+			case UPDATE_REQUIRED -> updateLetter(time, letter);
 			default -> true;
 		};
 		if (!result) {
-			throw new SQLException("No mail row changed for letter " + letter.getObjectId());
+			throw new DataAccessException("No mail row changed for letter " + letter.getObjectId()) {
+			};
 		}
 	}
 
 	/**
 	 * 插入新信件。
 	 * Inserts a new letter.
-	 * @param con 数据库连接 / database connection
 	 * @param time 时间戳 / timestamp
 	 * @param letter 邮件 / letter
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean saveLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
-		int attachedItemId = 0;
-		if (letter.getAttachedItem() != null) {
-			attachedItemId = letter.getAttachedItem().getObjectId();
-		}
-
-		try (PreparedStatement stmt = con.prepareStatement(MailMapper.INSERT_MAIL_QUERY_JDBC)) {
-			stmt.setInt(1, letter.getObjectId());
-			stmt.setInt(2, letter.getRecipientId());
-			stmt.setString(3, letter.getSenderName());
-			stmt.setString(4, letter.getTitle());
-			stmt.setString(5, letter.getMessage());
-			stmt.setBoolean(6, letter.isUnread());
-			stmt.setInt(7, attachedItemId);
-			stmt.setLong(8, letter.getAttachedKinah());
-			stmt.setInt(9, letter.getLetterType().getId());
-			stmt.setTimestamp(10, time);
-			stmt.setLong(11, letter.getAttachedAp());
-
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean saveLetter(final Timestamp time, final Letter letter) {
+		return mapper.insert(toPo(time, letter)) > 0;
 	}
 
 	/**
 	 * 更新已有信件。
 	 * Updates an existing letter.
-	 * @param con 数据库连接 / database connection
 	 * @param time 时间戳 / timestamp
 	 * @param letter 邮件 / letter
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean updateLetter(Connection con, final Timestamp time, final Letter letter) throws SQLException {
-		int attachedItemId = 0;
-		if (letter.getAttachedItem() != null) {
-			attachedItemId = letter.getAttachedItem().getObjectId();
-		}
-
-		try (PreparedStatement stmt = con.prepareStatement(MailMapper.UPDATE_MAIL_QUERY_JDBC)) {
-			stmt.setBoolean(1, letter.isUnread());
-			stmt.setInt(2, attachedItemId);
-			stmt.setLong(3, letter.getAttachedKinah());
-			stmt.setInt(4, letter.getLetterType().getId());
-			stmt.setTimestamp(5, time);
-			stmt.setLong(6, letter.getAttachedAp());
-			stmt.setInt(7, letter.getObjectId());
-
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean updateLetter(final Timestamp time, final Letter letter) {
+		MailPo po = toPo(time, letter);
+		po.setMailUniqueId(null);
+		return UpdateChain.of(MailPo.class)
+			.set(MailPo::getUnread, po.getUnread())
+			.set(MailPo::getAttachedItemId, po.getAttachedItemId())
+			.set(MailPo::getAttachedKinahCount, po.getAttachedKinahCount())
+			.set(MailPo::getExpress, po.getExpress())
+			.set(MailPo::getRecievedTime, po.getRecievedTime())
+			.set(MailPo::getAttachedApCount, po.getAttachedApCount())
+			.where(MailPo::getMailUniqueId).eq(letter.getObjectId())
+			.update();
 	}
 
 	/**
-	 * 在调用方事务连接上更新离线收件人的邮箱信件计数。
-	 * Updates the offline recipient's mailbox counter on the caller's transactional connection.
-	 * @param con 调用方事务连接 / caller's transactional connection
+	 * 由领域信件构造持久化实体。
+	 * Builds the persistence entity from a domain letter.
+	 */
+	private static MailPo toPo(final Timestamp time, final Letter letter) {
+		MailPo po = new MailPo();
+		po.setMailUniqueId(letter.getObjectId());
+		po.setMailRecipientId(letter.getRecipientId());
+		po.setSenderName(letter.getSenderName());
+		po.setMailTitle(letter.getTitle());
+		po.setMailMessage(letter.getMessage());
+		po.setUnread(letter.isUnread() ? 1 : 0);
+		po.setAttachedItemId(letter.getAttachedItem() == null ? 0 : letter.getAttachedItem().getObjectId());
+		po.setAttachedKinahCount(letter.getAttachedKinah());
+		po.setAttachedApCount(letter.getAttachedAp());
+		po.setExpress(letter.getLetterType().getId());
+		po.setRecievedTime(time);
+		return po;
+	}
+
+	/**
+	 * 在调用方事务内更新离线收件人的邮箱信件计数（写 players，跨表）。
+	 * Updates the offline recipient's mailbox counter inside the caller's transaction (writes players, cross-table).
 	 * @param playerName 玩家名 / player name
 	 * @param count 信件计数 / letter count
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
 	@Override
-	public void updateMailCounterInTransaction(Connection con, String playerName, int count) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(MailMapper.UPDATE_MAIL_COUNTER_QUERY_JDBC)) {
-			stmt.setInt(1, count);
-			stmt.setString(2, playerName);
-			if (stmt.executeUpdate() == 0) {
-				throw new SQLException("No player row changed for mail counter: " + playerName);
-			}
+	public void updateMailCounterInTransaction(String playerName, int count) {
+		if (mapper.updateMailboxLetters(playerName, count) == 0) {
+			throw new DataAccessException("No player row changed for mail counter: " + playerName) {
+			};
 		}
 	}
 

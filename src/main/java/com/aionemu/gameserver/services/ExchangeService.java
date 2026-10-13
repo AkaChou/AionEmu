@@ -6,8 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -572,17 +570,12 @@ public class ExchangeService {
 		}
 
 		public boolean save() {
-			try (Connection con = DatabaseAccess.getConnection()) {
-				con.setAutoCommit(false);
-				try {
-					inventoryDAO.storeInTransaction(con, player1Items, player1Id, null, null);
-					inventoryDAO.storeInTransaction(con, player2Items, player2Id, null, null);
-					con.commit();
-				} catch (SQLException e) {
-					con.rollback();
-					throw e;
-				}
-			} catch (SQLException e) {
+			try {
+				DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
+					inventoryDAO.storeInTransaction(player1Items, player1Id, null, null);
+					inventoryDAO.storeInTransaction(player2Items, player2Id, null, null);
+				});
+			} catch (RuntimeException e) {
 				log.error(I18n.get("log.39a7be863899", player1Id, player2Id), e);
 				return false;
 			}

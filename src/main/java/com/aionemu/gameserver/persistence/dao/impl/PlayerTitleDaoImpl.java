@@ -1,9 +1,5 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -60,13 +56,8 @@ public class PlayerTitleDaoImpl extends ServiceImpl<PlayerTitleMapper, PlayerTit
 	}
 
 	@Override
-	public void storeInTransaction(Connection connection, int playerId, int titleId, int remaining) throws SQLException {
-		try (PreparedStatement stmt = connection.prepareStatement(PlayerTitleMapper.INSERT_QUERY_JDBC)) {
-			stmt.setInt(1, playerId);
-			stmt.setInt(2, titleId);
-			stmt.setInt(3, remaining);
-			stmt.executeUpdate();
-		}
+	public void storeInTransaction(int playerId, int titleId, int remaining) {
+		mapper.upsert(playerId, titleId, remaining);
 	}
 
 	@Override

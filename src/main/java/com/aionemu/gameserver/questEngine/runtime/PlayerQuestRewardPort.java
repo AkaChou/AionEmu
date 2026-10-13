@@ -14,7 +14,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestRewardAmountMode;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 import com.aionemu.gameserver.services.item.ItemService;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +25,17 @@ import java.util.function.IntPredicate;
 
 /**
  * 真实 {@link QuestRewardPort}：将耐久（非货币）任务奖励应用到在线玩家，
- * 并通过调用方连接上的事务 DAO 持久化。
+ * 并通过调用方事务内的事务 DAO 持久化。
  * Real {@link QuestRewardPort}: applies durable (non-currency) quest rewards to
- * the live player and persists them through the transactional DAO on the
- * caller-owned connection. The item grant path is injected as a function so the
+ * the live player and persists them through the transactional DAO inside the
+ * caller-owned transaction. The item grant path is injected as a function so the
  * production wiring uses {@code ItemService::addQuestItems} while tests stay
  * free of the static {@code DataManager}.
  * <p>Preflight fails closed on unsupported kinds. Kinds with no transactional
  * store today ({@code EXTEND_INVENTORY}, {@code SELECTABLE_ITEM},
  * {@code EXTEND_STIGMA}) are rejected rather than guessed; their transactional
  * wiring is deferred to the retail-calibration batch.</p>
- * <p>TITLE 奖励在调用方连接上经 {@link PlayerTitleDao#storeInTransaction} 持久化，
+ * <p>TITLE 奖励在调用方事务内经 {@link PlayerTitleDao#storeInTransaction} 持久化，
  * 与任务状态同事务；重复领取幂等（已拥有则不重复发放）。
  * 获得称号消息和 TitleList 刷新仅在事务提交后发送。</p>
  */
@@ -72,9 +71,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
-			List<QuestAction.GrantReward> rewards) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflight(QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards) throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		for (QuestAction.GrantReward reward : rewards) {
 			QuestRewardKind kind = reward.rewardKind();
@@ -109,9 +106,8 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
@@ -145,7 +141,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 					case AURA_OF_GROWTH:
 						break;
 					case TITLE:
-						grantTitle(connection, snapshot, player, reward, grantedTitles);
+						grantTitle(snapshot, player, reward, grantedTitles);
 						break;
 					default:
 						throw new SQLException("unsupported durable reward " + kind);
@@ -180,9 +176,9 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
                 }
 			}
 			List<Item> dirty = itemRewards ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, player, dirty);
 			if (commonDataChanged) {
-				playerDao.storeInTransaction(connection, snapshot.playerId(), player.getCommonData());
+				playerDao.storeInTransaction(snapshot.playerId(), player.getCommonData());
 			}
 			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			List<Integer> committedTitles = List.copyOf(grantedTitles);
@@ -229,10 +225,10 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 	}
 
 	/**
-	 * 发放称号奖励：内存加入 TitleList 并在调用方连接上持久化，已拥有则幂等跳过。
-	 * Grants a title reward: adds to the in-memory TitleList and persists on the caller connection; idempotent.
+	 * 发放称号奖励：内存加入 TitleList 并在调用方事务内持久化，已拥有则幂等跳过。
+	 * Grants a title reward: adds to the in-memory TitleList and persists inside the caller transaction; idempotent.
 	 */
-	private void grantTitle(Connection connection, QuestSnapshot snapshot, Player player,
+	private void grantTitle(QuestSnapshot snapshot, Player player,
 			QuestAction.GrantReward reward, List<Integer> grantedTitles) throws SQLException {
 		TitleList titleList = player.getTitleList();
 		if (titleList == null) {
@@ -248,7 +244,7 @@ public final class PlayerQuestRewardPort implements QuestRewardPort {
 			throw new SQLException("invalid title id " + titleId + " for player " + snapshot.playerId(), e);
 		}
 		grantedTitles.add(titleId);
-		titleListDao.storeInTransaction(connection, snapshot.playerId(), titleId, 0);
+		titleListDao.storeInTransaction(snapshot.playerId(), titleId, 0);
 	}
 
 	private static void rollbackTitles(Player player, List<Integer> grantedTitles) {

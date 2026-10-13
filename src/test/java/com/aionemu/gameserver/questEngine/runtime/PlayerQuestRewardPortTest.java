@@ -45,8 +45,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -64,8 +62,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Real {@link QuestRewardPort}: durable (non-currency) rewards are applied to the
- * live player and persisted through the transactional DAO on the caller-owned
- * connection, so rewards commit atomically with the quest state.
+ * live player and persisted through the transactional DAO inside the caller-owned
+ * transaction, so rewards commit atomically with the quest state.
  * <p>EXP 数值发放依赖 {@code DataManager.PLAYER_EXPERIENCE_TABLE}（单测不可用），
  * 因此 EXP apply 用例用 {@code noExp} 短路验证端口路径（调用 addExp + 持久化）；
  * 实际数值由 PlayerCommonData 承担。AURA_OF_GROWTH/EXP_BOOST 依赖 level>=66 且
@@ -104,7 +102,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("EXTEND_INVENTORY", 0, 1))));
+			() -> port.preflight(snapshot(), List.of(reward("EXTEND_INVENTORY", 0, 1))));
 		assertTrue(thrown.getMessage().contains("no transactional durable reward store"));
 	}
 
@@ -114,7 +112,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("ITEM", 0, 1))));
+			() -> port.preflight(snapshot(), List.of(reward("ITEM", 0, 1))));
 		assertTrue(thrown.getMessage().contains("without a positive item id"));
 	}
 
@@ -122,7 +120,7 @@ class PlayerQuestRewardPortTest {
 	void preflightPassesForSupportedDurableKinds() throws Exception {
 		PlayerQuestRewardPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
-		port.preflight(connection(), snapshot(),
+		port.preflight(snapshot(),
 			List.of(reward("ITEM", ITEM_A, 2), reward("EXP", 0, 1000),
 				reward("EXP_BOOST", 0, 3), reward("AURA_OF_GROWTH", 0, 5000),
 				reward("TITLE", TITLE_ID, 1), reward("RANDOM", 18505, 1)));
@@ -136,7 +134,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingTitleListDao(), poolId -> false, poolId -> new QuestItems(ITEM_A, 1));
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 18505, 1))));
+			() -> port.preflight(snapshot(), List.of(reward("RANDOM", 18505, 1))));
 
 		assertTrue(thrown.getMessage().contains("unknown quest random reward pool 18505"));
 	}
@@ -147,7 +145,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 18505, 2))));
+			() -> port.preflight(snapshot(), List.of(reward("RANDOM", 18505, 2))));
 
 		assertTrue(thrown.getMessage().contains("must draw exactly one pool entry"));
 	}
@@ -158,24 +156,23 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("TITLE", 0, 1))));
+			() -> port.preflight(snapshot(), List.of(reward("TITLE", 0, 1))));
 		assertTrue(thrown.getMessage().contains("without a positive title id"));
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsTitleAndPersistsOnCallerConnection() throws Exception {
+	void applyGrantsTitleAndPersistsInCallerTransaction() throws Exception {
 		com.aionemu.gameserver.dataholders.DataManager.TITLE_DATA = titleDataWith(TITLE_ID);
 		Player player = emptyPlayer();
 		RecordingTitleListDao titleListDao = new RecordingTitleListDao();
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
-		Connection connection = connection();
 
-		port.apply(connection, snapshot(), List.of(reward("TITLE", TITLE_ID, 1)));
+		port.apply(snapshot(), List.of(reward("TITLE", TITLE_ID, 1)));
 
 		assertTrue(player.getTitleList().contains(TITLE_ID));
 		assertEquals(1, titleListDao.calls.size());
-		assertSame(connection, titleListDao.calls.getFirst());
 		assertEquals(TITLE_ID, titleListDao.lastTitleId);
 	}
 
@@ -188,7 +185,7 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+		QuestTransactionParticipant participant = port.apply(snapshot(),
 			List.of(reward("TITLE", TITLE_ID, 1)));
 
 		assertTrue(packetQueue(player.getClientConnection()).isEmpty());
@@ -206,7 +203,7 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+		QuestTransactionParticipant participant = port.apply(snapshot(),
 			List.of(reward("TITLE", TITLE_ID, 1)));
 
 		assertEquals(0, titleListDao.calls.size());
@@ -222,7 +219,7 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+		QuestTransactionParticipant participant = port.apply(snapshot(),
 			List.of(reward("TITLE", TITLE_ID, 1)));
 
 		assertTrue(player.getTitleList().contains(TITLE_ID));
@@ -240,7 +237,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), (p, items) -> true, titleListDao);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshot(), List.of(reward("TITLE", TITLE_ID, 1))));
+			() -> port.apply(snapshot(), List.of(reward("TITLE", TITLE_ID, 1))));
 		assertTrue(thrown.getMessage().contains("invalid title id"));
 		assertEquals(0, titleListDao.calls.size());
 		assertFalse(player.getTitleList().contains(TITLE_ID));
@@ -254,31 +251,30 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> null, inventoryDao, playerDao, adder);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshot(), List.of(reward("ITEM", ITEM_A, 1))));
+			() -> port.apply(snapshot(), List.of(reward("ITEM", ITEM_A, 1))));
 		assertEquals(0, adder.calls.size());
 		assertEquals(0, inventoryDao.transactions.size());
 		assertEquals(0, playerDao.calls.size());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyInvokesItemAdderAndPersistsDirtyOnCallerConnection() throws Exception {
+	void applyInvokesItemAdderAndPersistsDirtyInCallerTransaction() throws Exception {
 		Player player = emptyPlayer();
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 		AddingItemAdder adder = new AddingItemAdder();
 		PlayerQuestRewardPort port = port(playerId -> player, inventoryDao,
 			new RecordingPlayerDao(), adder);
-		Connection connection = connection();
 
 		QuestTransactionParticipant participant = port.apply(
-			connection, snapshot(), List.of(reward("ITEM", ITEM_A, 2)));
+			snapshot(), List.of(reward("ITEM", ITEM_A, 2)));
 
 		// itemAdder 收到正确奖励清单
 		assertEquals(1, adder.calls.size());
 		assertEquals(ITEM_A, adder.calls.getFirst().getFirst().getItemId());
 		assertEquals(2, adder.calls.getFirst().getFirst().getCount());
-		// 通过调用方 Connection 持久化 dirty items,与任务状态同事务
+		// 通过调用方事务持久化 dirty items,与任务状态同事务
 		assertEquals(1, inventoryDao.transactions.size());
-		assertSame(connection, inventoryDao.transactions.getFirst().connection);
 		assertTrue(inventoryDao.transactions.getFirst().items.stream()
 			.anyMatch(item -> item.getItemTemplate().getTemplateId() == ITEM_A));
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
@@ -301,8 +297,8 @@ class PlayerQuestRewardPortTest {
 		});
 
 		List<QuestAction.GrantReward> rewards = List.of(reward("RANDOM", 18505, 1));
-		port.preflight(connection(), snapshot(), rewards);
-		port.apply(connection(), snapshot(), rewards);
+		port.preflight(snapshot(), rewards);
+		port.apply(snapshot(), rewards);
 
 		assertEquals(1, draws.get());
 		assertEquals(1, adder.calls.size());
@@ -322,7 +318,7 @@ class PlayerQuestRewardPortTest {
 			throw new IllegalStateException("invalid random pool result");
 		});
 
-		SQLException thrown = assertThrows(SQLException.class, () -> port.apply(connection(), snapshot(),
+		SQLException thrown = assertThrows(SQLException.class, () -> port.apply(snapshot(),
 			List.of(reward("TITLE", TITLE_ID, 1), reward("RANDOM", 18505, 1))));
 
 		assertTrue(thrown.getMessage().contains("failed to draw quest random reward pool 18505"));
@@ -336,7 +332,7 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingPlayerDao(), new AddingItemAdder());
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+		QuestTransactionParticipant participant = port.apply(snapshot(),
 			List.of(reward("ITEM", ITEM_A, 2), reward("AURA_OF_GROWTH", 0, 5000)));
 		assertEquals(2, player.getInventory().getItemCountByItemId(ITEM_A));
 		assertEquals(5000, player.getCommonData().getAuraOfGrowth());
@@ -357,7 +353,7 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), adder);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshot(), List.of(reward("ITEM", ITEM_A, 1))));
+			() -> port.apply(snapshot(), List.of(reward("ITEM", ITEM_A, 1))));
 		assertTrue(thrown.getMessage().contains("failed to add quest items"));
 		assertEquals(0, inventoryDao.transactions.size());
 	}
@@ -373,7 +369,7 @@ class PlayerQuestRewardPortTest {
 			poolId -> true, poolId -> new QuestItems(182005205, 1));
 
 		QuestTransactionParticipant participant = port.apply(
-			connection(), snapshot(), List.of(reward("RANDOM", 18505, 1)));
+			snapshot(), List.of(reward("RANDOM", 18505, 1)));
 
 		assertEquals(1, adder.calls.size());
 		assertEquals(182005205, adder.calls.getFirst().getFirst().getItemId());
@@ -388,24 +384,23 @@ class PlayerQuestRewardPortTest {
 			new RecordingPlayerDao(), new AddingItemAdder());
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot(), List.of(reward("RANDOM", 0, 1))));
+			() -> port.preflight(snapshot(), List.of(reward("RANDOM", 0, 1))));
 		assertTrue(thrown.getMessage().contains("positive pool id"));
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsExpAndPersistsCommonDataOnCallerConnection() throws Exception {
+	void applyGrantsExpAndPersistsCommonDataInCallerTransaction() throws Exception {
 		// noExp 短路:addExp 直接返回,不触碰 DataManager 经验表;验证端口调用 addExp 并持久化
 		Player player = playerWithCommonData(true, 66, 0);
 		RecordingPlayerDao playerDao = new RecordingPlayerDao();
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			playerDao, (p, items) -> true);
-		Connection connection = connection();
 
-		port.apply(connection, snapshot(), List.of(reward("EXP", 0, 1000)));
+		port.apply(snapshot(), List.of(reward("EXP", 0, 1000)));
 
 		assertEquals(0, player.getCommonData().getExp());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.getFirst());
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 		assertSame(player.getCommonData(), playerDao.lastPcd);
 	}
@@ -418,19 +413,18 @@ class PlayerQuestRewardPortTest {
 			new QuestAction.GrantReward("EXP", 0, 1000, QuestRewardAmountMode.QUEST_BASE)));
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsAuraOfGrowthAndPersistsCommonDataOnCallerConnection() throws Exception {
+	void applyGrantsAuraOfGrowthAndPersistsCommonDataInCallerTransaction() throws Exception {
 		Player player = playerWithCommonData(false, 66, 1_000_000_000L);
 		RecordingPlayerDao playerDao = new RecordingPlayerDao();
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			playerDao, (p, items) -> true);
-		Connection connection = connection();
 
-		port.apply(connection, snapshot(), List.of(reward("AURA_OF_GROWTH", 0, 5000)));
+		port.apply(snapshot(), List.of(reward("AURA_OF_GROWTH", 0, 5000)));
 
 		assertEquals(5000, player.getCommonData().getAuraOfGrowth());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.getFirst());
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 	}
 
@@ -441,7 +435,7 @@ class PlayerQuestRewardPortTest {
 		PlayerQuestRewardPort port = port(playerId -> player, new RecordingInventoryDao(),
 			playerDao, (p, items) -> true);
 
-		port.apply(connection(), snapshot(), List.of(reward("EXP_BOOST", 0, 3)));
+		port.apply(snapshot(), List.of(reward("EXP_BOOST", 0, 3)));
 
 		// 镜像旧 QuestService.giveReward 语义:boast 值 × 1060000 折算为 aura of growth
 		assertEquals(1060000L * 3, player.getCommonData().getAuraOfGrowth());
@@ -602,40 +596,6 @@ class PlayerQuestRewardPortTest {
 		}
 	}
 
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> false;
-				case "toString" -> "test-connection";
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) {
-			return null;
-		}
-		if (type == boolean.class) {
-			return false;
-		}
-		if (type == int.class || type == short.class || type == byte.class) {
-			return 0;
-		}
-		if (type == long.class) {
-			return 0L;
-		}
-		if (type == float.class) {
-			return 0F;
-		}
-		if (type == double.class) {
-			return 0D;
-		}
-		if (type == char.class) {
-			return '\0';
-		}
-		return null;
-	}
-
 	private static AionConnection packetConnection() throws Exception {
 		AionConnection connection = new ObjenesisStd().newInstance(AionConnection.class);
 		RecordingTransport transport = new RecordingTransport();
@@ -679,15 +639,15 @@ class PlayerQuestRewardPortTest {
 	}
 
 	private static final class RecordingInventoryDao extends InventoryDaoImpl {
-		private record Transaction(Connection connection, List<Item> items) {
+		private record Transaction(List<Item> items) {
 		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
 
 		@Override
-		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
+		public void storeInTransaction(List<Item> items, Integer playerId, Integer accountId,
 									   Integer legionId) {
-			transactions.add(new Transaction(connection, items));
+			transactions.add(new Transaction(items));
 		}
 
 		@Override
@@ -747,13 +707,13 @@ class PlayerQuestRewardPortTest {
 	}
 
 	private static final class RecordingPlayerDao extends PlayerDaoImpl {
-		private final List<Connection> calls = new ArrayList<>();
+		private final List<Integer> calls = new ArrayList<>();
 		private int lastPlayerId;
 		private PlayerCommonData lastPcd;
 
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) {
-			calls.add(connection);
+		public void storeInTransaction(int playerId, PlayerCommonData pcd) {
+			calls.add(playerId);
 			lastPlayerId = playerId;
 			lastPcd = pcd;
 		}
@@ -893,12 +853,12 @@ class PlayerQuestRewardPortTest {
 	}
 
 	private static final class RecordingTitleListDao extends PlayerTitleDaoImpl {
-		private final List<Connection> calls = new ArrayList<>();
+		private final List<Integer> calls = new ArrayList<>();
 		private int lastTitleId;
 
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, int titleId, int remaining) {
-			calls.add(connection);
+		public void storeInTransaction(int playerId, int titleId, int remaining) {
+			calls.add(playerId);
 			lastTitleId = titleId;
 		}
 

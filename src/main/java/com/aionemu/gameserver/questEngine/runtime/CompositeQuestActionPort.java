@@ -3,7 +3,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestRewardKind;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -53,38 +52,36 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
-			throws SQLException {
+	public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
 		Buckets buckets = Buckets.from(actions);
 		validateCurrencyComposition(buckets);
 		if (!buckets.unequips().isEmpty()) {
 			if (equipment == null) {
 				throw new SQLException("equipment actions require an equipment port");
 			}
-			equipment.preflight(connection, snapshot, buckets.unequips());
+			equipment.preflight(snapshot, buckets.unequips());
 		}
-		inventory.preflight(connection, snapshot, buckets.removals(), buckets.gives(), buckets.unequips());
-		currency.preflight(connection, snapshot, buckets.currencyRewards());
-		currency.preflightDebits(connection, snapshot, buckets.currencyDebits());
-		currency.preflightSets(connection, snapshot, buckets.currencySets());
-		rewards.preflight(connection, snapshot, buckets.durableRewards());
+		inventory.preflight(snapshot, buckets.removals(), buckets.gives(), buckets.unequips());
+		currency.preflight(snapshot, buckets.currencyRewards());
+		currency.preflightDebits(snapshot, buckets.currencyDebits());
+		currency.preflightSets(snapshot, buckets.currencySets());
+		rewards.preflight(snapshot, buckets.durableRewards());
 		if (!buckets.archDaevaPromotions().isEmpty()) {
 			if (progression == null) {
 				throw new SQLException("player progression actions require a progression port");
 			}
-			progression.preflight(connection, snapshot, buckets.archDaevaPromotions());
+			progression.preflight(snapshot, buckets.archDaevaPromotions());
 		}
 		if (!buckets.craftActions().isEmpty()) {
 			if (craft == null) {
 				throw new SQLException("craft actions require a craft port");
 			}
-			craft.preflight(connection, snapshot, buckets.craftActions());
+			craft.preflight(snapshot, buckets.craftActions());
 		}
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
-			throws SQLException {
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
 		Buckets buckets = Buckets.from(actions);
 		validateCurrencyComposition(buckets);
 		List<QuestTransactionParticipant> participants = new ArrayList<>();
@@ -95,24 +92,24 @@ public final class CompositeQuestActionPort implements QuestActionPort {
 				}
 				// 先卸下装备：任务可能立即消耗归还的物品。
 				// Unequip first: a quest may immediately consume the returned item.
-				participants.add(equipment.apply(connection, snapshot, buckets.unequips()));
+				participants.add(equipment.apply(snapshot, buckets.unequips()));
 			}
-			participants.add(inventory.apply(connection, snapshot, buckets.removals(), buckets.gives(), buckets.unequips()));
-			participants.add(currency.apply(connection, snapshot, buckets.currencyRewards()));
-			participants.add(currency.applyDebits(connection, snapshot, buckets.currencyDebits()));
-			participants.add(currency.applySets(connection, snapshot, buckets.currencySets()));
-			participants.add(rewards.apply(connection, snapshot, buckets.durableRewards()));
+			participants.add(inventory.apply(snapshot, buckets.removals(), buckets.gives(), buckets.unequips()));
+			participants.add(currency.apply(snapshot, buckets.currencyRewards()));
+			participants.add(currency.applyDebits(snapshot, buckets.currencyDebits()));
+			participants.add(currency.applySets(snapshot, buckets.currencySets()));
+			participants.add(rewards.apply(snapshot, buckets.durableRewards()));
 			if (!buckets.archDaevaPromotions().isEmpty()) {
 				if (progression == null) {
 					throw new SQLException("player progression actions require a progression port");
 				}
-				participants.add(progression.apply(connection, snapshot, buckets.archDaevaPromotions()));
+				participants.add(progression.apply(snapshot, buckets.archDaevaPromotions()));
 			}
 			if (!buckets.craftActions().isEmpty()) {
 				if (craft == null) {
 					throw new SQLException("craft actions require a craft port");
 				}
-				participants.add(craft.apply(connection, snapshot, buckets.craftActions()));
+				participants.add(craft.apply(snapshot, buckets.craftActions()));
 			}
 			return QuestTransactionParticipant.compose(participants);
 		} catch (SQLException | RuntimeException failure) {

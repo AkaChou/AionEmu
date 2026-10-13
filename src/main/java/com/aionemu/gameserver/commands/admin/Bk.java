@@ -12,10 +12,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapType;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 书签管理命令（{@code //bk}）：添加、删除、传送与列表。
@@ -76,19 +74,15 @@ public class Bk extends AdminCommand {
 				}
 				break;
 			case "del":
-				Connection con = null;
 				try {
 					bookmark_name = params[1].toLowerCase();
-					con = DatabaseAccess.getConnection();
-
-					PreparedStatement statement = con.prepareStatement("DELETE FROM bookmark WHERE name = ?");
-					statement.setString(1, bookmark_name);
-					statement.executeUpdate();
-					statement.close();
+					DatabaseAccess.jdbcClient()
+						.sql("DELETE FROM bookmark WHERE name = ?")
+						.param(bookmark_name)
+						.update();
 				} catch (Exception e) {
 					PacketSendUtility.sendMessage(player, "syntax //bk <add|del|tele> <bookmark name>");
 				} finally {
-					DatabaseAccess.release(con);
 					PacketSendUtility.sendMessage(player, "Bookmark " + bookmark_name
 						+ " sucessfully removed from your bookmark list!");
 					updateInfo(player.getObjectId());
@@ -169,27 +163,17 @@ public class Bk extends AdminCommand {
 	 * @return 已存在则为 true / true if exists
 	 */
 	public boolean isBookmarkExists(final String bk_name, final int objId) {
-		Connection con = null;
-		int bkcount = 0;
 		try {
-			con = DatabaseAccess.getConnection();
-			PreparedStatement statement = con
-				.prepareStatement("SELECT count(id) as bkcount FROM bookmark WHERE ? = name AND char_id = ?");
-			statement.setString(1, bk_name);
-			statement.setInt(2, objId);
-			ResultSet rset = statement.executeQuery();
-			while (rset.next())
-				bkcount = rset.getInt("bkcount");
-			rset.close();
-			statement.close();
-		}
-		catch (Exception e) {
+			List<Integer> counts = DatabaseAccess.jdbcClient()
+				.sql("SELECT count(id) as bkcount FROM bookmark WHERE ? = name AND char_id = ?")
+				.param(bk_name).param(objId)
+				.query((rset, rowNum) -> rset.getInt("bkcount"))
+				.list();
+			return !counts.isEmpty() && counts.get(0) > 0;
+		} catch (Exception e) {
 			log.error(I18n.get("log.0de52ee75b14"), e);
+			return false;
 		}
-		finally {
-			DatabaseAccess.release(con);
-		}
-		return bkcount > 0;
 	}
 
 	/**

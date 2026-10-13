@@ -17,7 +17,6 @@ import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,9 +61,7 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
-			throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(actions, "actions");
 		if (actions.isEmpty()) {
@@ -122,9 +119,8 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions)
 			throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		Objects.requireNonNull(actions, "actions");
 		if (actions.isEmpty()) {
@@ -157,13 +153,13 @@ public final class PlayerQuestCraftPort implements QuestCraftPort {
 		}
 		for (int recipeId : touchedRecipes) {
 			if (targetRecipes.contains(recipeId)) {
-				recipesDao.addRecipeInTransaction(connection, snapshot.playerId(), recipeId);
+				recipesDao.addRecipeInTransaction(snapshot.playerId(), recipeId);
 			} else {
-				recipesDao.delRecipeInTransaction(connection, snapshot.playerId(), recipeId);
+				recipesDao.delRecipeInTransaction(snapshot.playerId(), recipeId);
 			}
 		}
 		for (Map.Entry<Integer, Integer> skill : targetSkills.entrySet()) {
-			skillsDao.storeSkillInTransaction(connection, snapshot.playerId(), skill.getKey(), skill.getValue());
+			skillsDao.storeSkillInTransaction(snapshot.playerId(), skill.getKey(), skill.getValue());
 		}
 		Set<Integer> learned = new HashSet<>(targetRecipes);
 		learned.removeAll(originalRecipes);

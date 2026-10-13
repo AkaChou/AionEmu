@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import com.aionemu.gameserver.persistence.dao.WebRewardDao;
 import com.aionemu.gameserver.persistence.entity.WebRewardPo;
 import com.aionemu.gameserver.persistence.mapper.WebRewardMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -54,7 +55,11 @@ public class WebRewardDaoImpl extends ServiceImpl<WebRewardMapper, WebRewardPo> 
 	@Override
 	public boolean setUpdate(int unique) {
 		try {
-			return mapper.updateReceived(1, unique) > 0;
+			return UpdateChain.of(WebRewardPo.class)
+				.set(WebRewardPo::getRewarded, 1)
+				.set(WebRewardPo::getReceived, QueryMethods.now())
+				.where(WebRewardPo::getUnique).eq(unique)
+				.update();
 		} catch (Exception e) {
 			log.error(I18n.get("log.248cee6e9874", unique), e);
 			return false;
@@ -95,9 +100,11 @@ public class WebRewardDaoImpl extends ServiceImpl<WebRewardMapper, WebRewardPo> 
 		}
 
 		try {
-			for (int uniqid : ids) {
-				mapper.updateReceived(1, uniqid);
-			}
+			UpdateChain.of(WebRewardPo.class)
+				.set(WebRewardPo::getRewarded, 1)
+				.set(WebRewardPo::getReceived, QueryMethods.now())
+				.in(WebRewardPo::getUnique, ids)
+				.update();
 		} catch (Exception e) {
 			log.error(I18n.get("log.563cfc162266"), e);
 		}

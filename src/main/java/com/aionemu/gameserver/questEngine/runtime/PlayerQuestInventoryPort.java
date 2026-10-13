@@ -7,7 +7,6 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.services.item.ItemService;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +17,11 @@ import java.util.function.BiFunction;
 
 /**
  * 真实 {@link QuestInventoryPort}：从在线玩家背包移除所需物品并发放任务工作物品，
- * 通过 {@link InventoryDao} 的调用方连接事务内钩子持久化脏物品，使变更与任务状态原子提交。
+ * 通过 {@link InventoryDao} 的调用方事务内钩子持久化脏物品，使变更与任务状态原子提交。
  * Real {@link QuestInventoryPort}: removes required items from and grants quest
  * work items to the live player inventory, persisting dirty items through
- * {@link InventoryDao}'s transaction-in-progress hook on the caller-owned
- * connection so the mutations commit atomically with the quest state.
+ * {@link InventoryDao}'s transaction-in-progress hook inside the caller-owned
+ * transaction so the mutations commit atomically with the quest state.
  * <p>Preflight fails closed when the snapshot did not capture inventory facts:
  * unknown counts are never guessed as zero.</p>
  */
@@ -43,16 +42,15 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
+	public void preflight(QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) throws SQLException {
-		preflight(connection, snapshot, removals, gives, List.of());
+		preflight(snapshot, removals, gives, List.of());
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
+	public void preflight(QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives,
 			List<QuestAction.UnequipItem> unequips) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		Map<Integer, Integer> unequipped = new HashMap<>();
 		Map<Integer, Integer> returnedRemovals = new HashMap<>();
@@ -102,16 +100,15 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives) throws SQLException {
-		return apply(connection, snapshot, removals, gives, List.of());
+		return apply(snapshot, removals, gives, List.of());
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 			List<QuestAction.RemoveItem> removals, List<QuestAction.GiveItem> gives,
 			List<QuestAction.UnequipItem> unequips) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
@@ -139,7 +136,7 @@ public final class PlayerQuestInventoryPort implements QuestInventoryPort {
 				throw new SQLException("failed to give quest work items for player " + snapshot.playerId());
 			}
 			List<Item> dirty = List.copyOf(player.getDirtyItemsToUpdate());
-			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, player, dirty);
 			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(committedInventoryStage::afterCommit, () -> {
 				committedInventoryStage.afterRollback();

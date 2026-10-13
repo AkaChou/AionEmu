@@ -11,14 +11,11 @@ import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
@@ -56,8 +53,7 @@ class QuestProductionDispatcherTest {
 		assertTrue(result.consumed());
 		assertTrue(result.claimed());
 		assertEquals(List.of(1101), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
-		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"),
-			calls);
+		assertEquals(List.of("begin", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -144,7 +140,7 @@ class QuestProductionDispatcherTest {
 		assertTrue(result.consumed());
 		assertTrue(result.claimed());
 		assertEquals(List.of(1100), result.owners().stream().map(QuestEventRouter.OwnerResult::questId).toList());
-		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
+		assertEquals(List.of("begin", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -197,18 +193,15 @@ class QuestProductionDispatcherTest {
 
 	@Test
 	void unrelatedEventDoesNotAcquireDatabaseConnection() {
-		AtomicInteger connections = new AtomicInteger();
+		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition(1101);
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
-			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new ImmutableQuestCatalog(List.of(definition)),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(), new RecordingTransactionManager(calls)),
 			(connection, playerId, questId, event) -> {
 				throw new AssertionError("snapshot must not run");
 			}, noOpActions(), noOpState(), (action, snapshot, plan) -> {
-		},
-			() -> {
-				connections.incrementAndGet();
-				return connection(new ArrayList<>());
-			}, ignored -> {
+		}, ignored -> {
 		}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
@@ -216,23 +209,20 @@ class QuestProductionDispatcherTest {
 
 		assertFalse(result.claimed());
 		assertTrue(result.owners().isEmpty());
-		assertEquals(0, connections.get());
+		assertFalse(calls.contains("begin"));
 	}
 
 	@Test
 	void routedConditionMismatchDoesNotAcquireDatabaseConnection() {
-		AtomicInteger connections = new AtomicInteger();
+		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition(1101);
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
-			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new ImmutableQuestCatalog(List.of(definition)),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(), new RecordingTransactionManager(calls)),
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.NONE, 0, Map.of()),
 			noOpActions(), noOpState(), (action, snapshot, plan) -> {
-		},
-			() -> {
-				connections.incrementAndGet();
-				return connection(new ArrayList<>());
-			}, ignored -> {
+		}, ignored -> {
 		}, new QuestRuntimeMetricsCollector());
 
 		QuestEventRouter.DispatchResult result = dispatcher.dispatch(
@@ -240,12 +230,12 @@ class QuestProductionDispatcherTest {
 
 		assertFalse(result.claimed());
 		assertEquals(QuestRouteResult.UNKNOWN, result.owners().getFirst().result());
-		assertEquals(0, connections.get());
+		assertFalse(calls.contains("begin"));
 	}
 
 	@Test
 	void protocolOnlyRouteDoesNotAcquireDatabaseConnection() {
-		AtomicInteger connections = new AtomicInteger();
+		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = QuestDsl.quest(1103)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
@@ -254,7 +244,8 @@ class QuestProductionDispatcherTest {
 			.compile();
 		List<Integer> pages = new ArrayList<>();
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
-			new ImmutableQuestCatalog(List.of(definition)), new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new ImmutableQuestCatalog(List.of(definition)),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(), new RecordingTransactionManager(calls)),
 			(connection, playerId, questId, event) ->
 				new QuestSnapshot(playerId, questId, QuestStatus.START, 0, Map.of()),
 			noOpActions(), noOpState(), (action, snapshot, plan) -> {
@@ -263,9 +254,6 @@ class QuestProductionDispatcherTest {
 			)) {
 				pages.add(dialogId);
 			}
-		}, () -> {
-			connections.incrementAndGet();
-			return connection(new ArrayList<>());
 		}, ignored -> {
 		}, new QuestRuntimeMetricsCollector());
 
@@ -274,7 +262,7 @@ class QuestProductionDispatcherTest {
 
 		assertTrue(result.consumed());
 		assertEquals(List.of(1011), pages);
-		assertEquals(0, connections.get());
+		assertFalse(calls.contains("begin"));
 	}
 
 	@Test
@@ -343,8 +331,7 @@ class QuestProductionDispatcherTest {
 		assertTrue(dispatcher.dispatchSharedQuestAccept(7, 28738, 1002));
 
 		assertEquals(List.of(new QuestEvent.QuestDialog(1002)), events);
-		assertEquals(List.of("setAutoCommit:false", "preflight", "apply", "state", "commit", "publish", "close"),
-			calls);
+		assertEquals(List.of("begin", "preflight", "apply", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -380,7 +367,7 @@ class QuestProductionDispatcherTest {
 		assertTrue(calls.isEmpty());
 
 		assertTrue(dispatcher.dispatchRewardWindowAction(event, 7, 11323));
-		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
+		assertEquals(List.of("begin", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -444,8 +431,7 @@ class QuestProductionDispatcherTest {
 
 		assertTrue(result.consumed());
 		assertTrue(result.claimed());
-		assertEquals(List.of("setAutoCommit:false", "preflight", "apply", "state", "commit", "publish", "close"),
-			calls);
+		assertEquals(List.of("begin", "preflight", "apply", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -467,7 +453,7 @@ class QuestProductionDispatcherTest {
 
 		assertTrue(result.consumed());
 		assertTrue(result.claimed());
-		assertEquals(List.of("setAutoCommit:false", "state", "commit", "publish", "close"), calls);
+		assertEquals(List.of("begin", "state", "commit", "publish"), calls);
 	}
 
 	@Test
@@ -503,9 +489,10 @@ class QuestProductionDispatcherTest {
 	private static QuestProductionDispatcher dispatcher(List<CompiledQuestDefinition> definitions,
 														List<String> calls, QuestEventPort eventPort, List<QuestAuditEvent> audits) {
 		return new QuestProductionDispatcher(new ImmutableQuestCatalog(definitions),
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()), eventPort, recordingActions(calls),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(), new RecordingTransactionManager(calls)),
+			eventPort, recordingActions(calls),
 			recordingState(calls), (action, snapshot, plan) -> {
-		}, () -> connection(calls),
+		},
 			audits::add, new QuestRuntimeMetricsCollector());
 	}
 
@@ -539,13 +526,12 @@ class QuestProductionDispatcherTest {
 	private static QuestActionPort recordingActions(List<String> calls) {
 		return new QuestActionPort() {
 			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) {
 				calls.add("preflight");
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-													 List<QuestAction> actions) {
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 				calls.add("apply");
 				return QuestTransactionParticipant.none();
 			}
@@ -555,12 +541,11 @@ class QuestProductionDispatcherTest {
 	private static QuestActionPort noOpActions() {
 		return new QuestActionPort() {
 			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) {
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-													 List<QuestAction> actions) {
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 				return QuestTransactionParticipant.none();
 			}
 		};
@@ -569,7 +554,7 @@ class QuestProductionDispatcherTest {
 	private static QuestStatePort recordingState(List<String> calls) {
 		return new QuestStatePort() {
 			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			public void apply(int playerId, QuestMutationPlan plan) {
 				calls.add("state");
 			}
 
@@ -583,36 +568,12 @@ class QuestProductionDispatcherTest {
 	private static QuestStatePort noOpState() {
 		return new QuestStatePort() {
 			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			public void apply(int playerId, QuestMutationPlan plan) {
 			}
 
 			@Override
 			public void publish(int playerId, QuestMutationPlan plan) {
 			}
 		};
-	}
-
-	private static Connection connection(List<String> calls) {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-			(proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				case "setAutoCommit" -> {
-					calls.add("setAutoCommit:" + args[0]);
-					yield null;
-				}
-				case "commit" -> {
-					calls.add("commit");
-					yield null;
-				}
-				case "rollback" -> {
-					calls.add("rollback");
-					yield null;
-				}
-				case "close" -> {
-					calls.add("close");
-					yield null;
-				}
-				default -> method.getReturnType() == boolean.class ? false : null;
-			});
 	}
 }

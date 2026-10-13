@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.model.templates.tasks;
 
-import java.util.Objects;
-
-import com.aionemu.gameserver.persistence.dao.TaskDao;
 import lombok.Setter;
 
 /**
@@ -13,10 +10,9 @@ import lombok.Setter;
 public abstract class TaskFromDBHandler implements Runnable {
 
 	/**
-	 * Spring 绑定的数据库任务 DAO / Spring-bound task-from-DB DAO.
+	 * 库中的任务 ID，仅用于日志。
+	 * Task id in the database, used for logging only.
 	 */
-	private static volatile TaskDao boundTaskFromDBDAO;
-
 	@Setter
 	protected int id;
 	protected String[] params;
@@ -29,29 +25,8 @@ public abstract class TaskFromDBHandler implements Runnable {
 	}
 
 	/**
-	 * 由 Spring 配置类在启动期绑定数据库任务 DAO。
-	 * Binds the task-from-DB DAO from the Spring configuration at startup.
-	 * @param dao 数据库任务 DAO / task-from-DB DAO
-	 */
-	public static void bindTaskFromDBDAO(TaskDao dao) {
-		boundTaskFromDBDAO = Objects.requireNonNull(dao, "taskFromDBDAO must not be null");
-	}
-
-	/**
-	 * 返回数据库任务 DAO；必须由 Spring 在启动期绑定，未绑定即失败。
-	 * Returns the task-from-DB DAO; Spring must bind it at startup, otherwise it fails fast.
-	 * @return 数据库任务 DAO / task-from-DB DAO
-	 */
-	private static TaskDao taskFromDBDAO() {
-		TaskDao current = boundTaskFromDBDAO;
-		if (current == null) {
-			throw new IllegalStateException("TaskDao is not bound; Spring must bind it at startup");
-		}
-		return current;
-	}
-
-	/**
-	 * 任务名称，用于与表字段 task 对照。 / The task's name This allow to check with the table column "task"
+	 * 任务名称，与库中 task_type 列对照（DAO 读取时已归一为小写）。
+	 * The task's name, matched against the task_type column (normalised to lower case when read).
 	 */
 	public abstract String getTaskName();
 
@@ -60,11 +35,4 @@ public abstract class TaskFromDBHandler implements Runnable {
 	 * @return 有效返回 true，否则 false / true if valid, false otherwise
 	 */
 	public abstract boolean isValid();
-
-	/**
-	 * 经绑定的数据库任务 DAO 记录本次激活时间。 / Records the last activation via the bound task-from-DB DAO.
-	 */
-	protected void setLastActivation() {
-		taskFromDBDAO().setLastActivation(id);
-	}
 }

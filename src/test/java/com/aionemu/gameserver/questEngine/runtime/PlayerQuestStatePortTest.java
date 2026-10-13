@@ -20,8 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -53,7 +51,7 @@ class PlayerQuestStatePortTest {
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> null, dao);
 		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
 
-		assertThrows(IllegalStateException.class, () -> port.apply(connection(), PLAYER_ID, plan));
+		assertThrows(IllegalStateException.class, () -> port.apply(PLAYER_ID, plan));
 		assertEquals(0, dao.stores.size());
 	}
 
@@ -65,7 +63,7 @@ class PlayerQuestStatePortTest {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, dao);
 
-		port.apply(connection(), PLAYER_ID, plan(QuestStatus.REWARD, 1));
+		port.apply(PLAYER_ID, plan(QuestStatus.REWARD, 1));
 
 		// 暂存投影写入 DB，但不推进 live 状态。 The staged projection is persisted without advancing live state.
 		assertEquals(1, dao.stores.size());
@@ -85,7 +83,7 @@ class PlayerQuestStatePortTest {
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, new RecordingDao());
 		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
 
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 		port.publish(PLAYER_ID, plan);
 
 		QuestState live = player.getQuestStateList().getQuestState(QUEST_ID);
@@ -100,7 +98,7 @@ class PlayerQuestStatePortTest {
 		AtomicReference<Player> live = new AtomicReference<>(playerWithState(QuestStatus.START, 0));
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> live.get(), new RecordingDao());
 		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 		live.set(null);
 		// 不抛:提交已成功,玩家登出则内存无可发布对象,重登从 DB 恢复。
 		port.publish(PLAYER_ID, plan);
@@ -113,7 +111,7 @@ class PlayerQuestStatePortTest {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, dao);
 
-		port.apply(connection(), PLAYER_ID, plan(QuestStatus.START, 0));
+		port.apply(PLAYER_ID, plan(QuestStatus.START, 0));
 
 		QuestState stagedProjection = dao.stores.getFirst().getFirst();
 		// NEW 保持 NEW,由 DAO 走 INSERT(而非 UPDATE),不产生重复/丢失。
@@ -127,7 +125,7 @@ class PlayerQuestStatePortTest {
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, dao);
 		QuestMutationPlan plan = plan(QuestStatus.START, 0);
 
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 
 		assertNull(player.getQuestStateList().getQuestState(QUEST_ID));
 		assertEquals(PersistentState.NEW, dao.stores.getFirst().getFirst().getPersistentState());
@@ -149,7 +147,7 @@ class PlayerQuestStatePortTest {
 		QuestMutationPlan plan = new QuestMutationPlan(QUEST_ID, QuestStatus.COMPLETE, 0,
 			List.of(new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(3)), List.of());
 
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 
 		QuestState stagedProjection = dao.stores.getFirst().getFirst();
 		assertEquals(QuestStatus.COMPLETE, stagedProjection.getStatus());
@@ -180,7 +178,7 @@ class PlayerQuestStatePortTest {
 		QuestMutationPlan plan = new QuestMutationPlan(QUEST_ID, QuestStatus.COMPLETE, 0,
 			List.of(new com.aionemu.gameserver.questEngine.definition.QuestAction.CompleteQuest(0)), List.of());
 
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 
 		Timestamp nextRepeat = dao.stores.getFirst().getFirst().getNextRepeatTime();
 		ZonedDateTime scheduled = nextRepeat.toInstant().atZone(ZoneId.systemDefault());
@@ -193,7 +191,7 @@ class PlayerQuestStatePortTest {
 		Player player = playerWithState(QuestStatus.START, 0);
 		PlayerQuestStatePort port = new PlayerQuestStatePort(playerId -> player, new RecordingDao());
 		QuestMutationPlan plan = plan(QuestStatus.REWARD, 1);
-		port.apply(connection(), PLAYER_ID, plan);
+		port.apply(PLAYER_ID, plan);
 
 		port.rollback(PLAYER_ID, plan);
 
@@ -226,40 +224,6 @@ class PlayerQuestStatePortTest {
 		field.set(target, value);
 	}
 
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> false;
-				case "toString" -> "test-connection";
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) {
-			return null;
-		}
-		if (type == boolean.class) {
-			return false;
-		}
-		if (type == int.class || type == short.class || type == byte.class) {
-			return 0;
-		}
-		if (type == long.class) {
-			return 0L;
-		}
-		if (type == float.class) {
-			return 0F;
-		}
-		if (type == double.class) {
-			return 0D;
-		}
-		if (type == char.class) {
-			return '\0';
-		}
-		return null;
-	}
-
 	private static final class RecordingDao extends PlayerQuestDaoImpl {
 		private RecordingDao() {
 			super(new org.springframework.transaction.support.TransactionTemplate());
@@ -278,12 +242,7 @@ class PlayerQuestStatePortTest {
 		}
 
 		@Override
-		public void store(Connection connection, Player player) {
-			throw new AssertionError("unexpected player-based store");
-		}
-
-		@Override
-		public void store(Connection connection, int playerId, java.util.Collection<QuestState> states) {
+		public void store(int playerId, java.util.Collection<QuestState> states) {
 			stores.add(List.copyOf(states));
 		}
 	}

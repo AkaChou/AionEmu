@@ -1,32 +1,45 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** 必需任务变更与耐久奖励的共享事务边界。 / Shared transaction boundary for required quest mutations and durable rewards. */
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+import com.aionemu.gameserver.persistence.DatabaseAccess;
+
+/**
+ * 必需任务变更与耐久奖励的共享事务边界。
+ * Shared transaction boundary for required quest mutations and durable rewards.
+ * <p>边界由 Spring 事务管理器持有，因此边界内的领域端口通过 MyBatis-Flex 访问数据库时
+ * 自动加入同一事务，无需再把连接逐级传参。
+ * The boundary is owned by a Spring transaction manager, so the domain ports inside it reach the
+ * database through MyBatis-Flex and join the same transaction without threading a connection
+ * through every call.</p>
+ */
 public final class QuestUnitOfWork implements AutoCloseable {
-	private final Connection connection;
+	private final PlatformTransactionManager transactionManager;
+	private final TransactionStatus status;
 	private final List<Runnable> afterCommit = new ArrayList<>();
 	private final List<RuntimeException> afterCommitFailures = new ArrayList<>();
 	private boolean completed;
 	private boolean committed;
 
-	private QuestUnitOfWork(Connection connection) throws SQLException {
-		this.connection = Objects.requireNonNull(connection, "connection");
-		if (connection.getAutoCommit()) {
-			connection.setAutoCommit(false);
-		}
+	private QuestUnitOfWork(PlatformTransactionManager transactionManager) {
+		this.transactionManager = Objects.requireNonNull(transactionManager, "transactionManager");
+		this.status = transactionManager.getTransaction(new DefaultTransactionDefinition());
 	}
 
-	public static QuestUnitOfWork open(Connection connection) throws SQLException {
-		return new QuestUnitOfWork(connection);
+	/** 以 {@link DatabaseAccess} 绑定的生产事务管理器开启工作单元。/ Opens a unit of work on the production transaction manager bound by {@link DatabaseAccess}. */
+	public static QuestUnitOfWork open() {
+		return new QuestUnitOfWork(DatabaseAccess.transactionManager());
 	}
 
-	public Connection connection() {
-		return connection;
+	/** 以调用方给出的事务管理器开启工作单元（供测试注入）。/ Opens a unit of work on a caller-supplied transaction manager (for tests). */
+	public static QuestUnitOfWork open(PlatformTransactionManager transactionManager) {
+		return new QuestUnitOfWork(transactionManager);
 	}
 
 	public void afterCommit(Runnable action) {
@@ -36,9 +49,9 @@ public final class QuestUnitOfWork implements AutoCloseable {
 		afterCommit.add(Objects.requireNonNull(action, "action"));
 	}
 
-	public void commit() throws SQLException {
+	public void commit() {
 		ensureOpen();
-		connection.commit();
+		transactionManager.commit(status);
 		committed = true;
 		completed = true;
 		// afterCommit 由 runAfterCommit() 显式执行，使调用方能在提交成功后、
@@ -67,11 +80,11 @@ public final class QuestUnitOfWork implements AutoCloseable {
 		}
 	}
 
-	public void rollback() throws SQLException {
+	public void rollback() {
 		if (completed) {
 			return;
 		}
-		connection.rollback();
+		transactionManager.rollback(status);
 		completed = true;
 	}
 
@@ -90,7 +103,7 @@ public final class QuestUnitOfWork implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws SQLException {
+	public void close() {
 		if (!completed) {
 			rollback();
 		}

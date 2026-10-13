@@ -11,6 +11,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
 import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
 import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
+import com.aionemu.gameserver.persistence.dao.SkillMotionDao;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -165,7 +166,9 @@ public class EventBeans {
 
     @Bean
     @Lazy
-    public MotionLoggingService motionLoggingService() {
-        return new MotionLoggingService();
+    public MotionLoggingService motionLoggingService(SkillMotionDao skillMotionDao) {
+        MotionLoggingService service = new MotionLoggingService();
+        service.setSkillMotionDao(skillMotionDao);
+        return service;
     }
 }

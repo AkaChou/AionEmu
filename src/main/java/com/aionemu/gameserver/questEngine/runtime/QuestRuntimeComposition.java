@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.player.PlayerServiceDaos;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -150,15 +149,14 @@ public final class QuestRuntimeComposition {
 		}
 
 		@Override
-		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions)
-				throws SQLException {
-			delegate().preflight(connection, snapshot, actions);
+		public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
+			delegate().preflight(snapshot, actions);
 		}
 
 		@Override
-		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction> actions) throws SQLException {
-			return delegate().apply(connection, snapshot, actions);
+		public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions)
+				throws SQLException {
+			return delegate().apply(snapshot, actions);
 		}
 
 		private QuestActionPort delegate() {
@@ -197,8 +195,8 @@ public final class QuestRuntimeComposition {
 		}
 
 		@Override
-		public void apply(Connection connection, int playerId, QuestMutationPlan plan) throws SQLException {
-			delegate().apply(connection, playerId, plan);
+		public void apply(int playerId, QuestMutationPlan plan) throws SQLException {
+			delegate().apply(playerId, plan);
 		}
 
 		@Override

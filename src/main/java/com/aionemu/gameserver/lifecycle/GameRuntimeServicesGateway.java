@@ -454,6 +454,15 @@ public class GameRuntimeServicesGateway {
     }
 
     /**
+     * 提前绑定游戏时间的持久化来源（幂等，须在任何读取游戏时间的阶段之前调用）。
+     * Bind the game-time persistence source ahead of time (idempotent; must run before any phase that reads
+     * game time).
+     */
+    public void initializeGameTime() {
+        runtimeServiceBridge().initializeGameTime();
+    }
+
+    /**
      * 解析周期存档服务。
      * Resolve the periodic-save service.
      */

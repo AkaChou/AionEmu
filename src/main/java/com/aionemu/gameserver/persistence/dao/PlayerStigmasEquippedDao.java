@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.linked_skill.PlayerEquippedStigmaList;
 import com.aionemu.gameserver.persistence.entity.PlayerStigmasEquippedPo;
@@ -30,13 +27,11 @@ public interface PlayerStigmasEquippedDao extends IService<PlayerStigmasEquipped
 	void storeItems(Player player);
 
 	/**
-	 * 在调用方事务连接上持久化待处理的刺针列表变更。
-	 * Persists pending stigma-list changes on a caller-owned transaction.
-	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * 在调用方事务内持久化待处理的刺针列表变更。
+	 * Persists pending stigma-list changes inside the caller-owned transaction.
 	 * @param player 玩家 / player
-	 * @throws SQLException 写入失败时 / on write failure
 	 */
-	void storeItemsInTransaction(Connection connection, Player player) throws SQLException;
+	void storeItemsInTransaction(Player player);
 
 	/**
 	 * 在调用方事务提交后发布已持久化的条目状态。

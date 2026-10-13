@@ -16,11 +16,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  * Aion 统一 Boot 启动入口，以非 Web 模式拉起内嵌游戏/登录/聊天服务。
  * Unified Boot entry that starts the embedded game/login/chat services without a web container.
  * <p>
- * 持久层走 Spring Boot 标准数据源（application.yml 的 spring.datasource 指向统一库 aion_emu），
- * MyBatis-Flex Mapper 以懒加载方式扫描注册，避免非 Boot 注解上下文在缺少 Flex 基建时提前实例化。
- * Persistence uses the standard Boot DataSource (spring.datasource in application.yml, unified
- * aion_emu database); MyBatis-Flex mappers are scanned lazily so non-Boot annotation contexts do
- * not instantiate them before the Flex infrastructure exists.
+ * 持久层走 Spring Boot 标准数据源（库参数唯一来源是 aion/config/network/database.properties，由遗留属性
+ * 后处理器在启动期翻译成 spring.datasource 并指向统一库 aion_emu），MyBatis-Flex Mapper 以懒加载方式扫描
+ * 注册，避免非 Boot 注解上下文在缺少 Flex 基建时提前实例化。
+ * Persistence uses the standard Boot DataSource (the database settings have a single source,
+ * aion/config/network/database.properties, translated into spring.datasource at startup by the legacy
+ * property environment post-processor and pointing at the unified aion_emu database); MyBatis-Flex mappers
+ * are scanned lazily so non-Boot annotation contexts do not instantiate them before the Flex infrastructure
+ * exists.
  * </p>
  */
 @SpringBootApplication

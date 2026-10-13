@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import com.aionemu.gameserver.model.gameobjects.Letter;
@@ -28,24 +26,20 @@ public interface MailDao extends IService<MailPo> {
 	boolean storeLetter(Timestamp time, Letter letter);
 
 	/**
-	 * 在调用方事务连接上持久化信件（原生 PreparedStatement，同事务）。
-	 * Stores a letter on the caller's transactional connection (raw PreparedStatement, same transaction).
-	 * @param connection 调用方事务连接 / caller's transactional connection
+	 * 在调用方事务内持久化信件。
+	 * Stores a letter inside the caller's transaction.
 	 * @param time 发信时间 / letter time
 	 * @param letter 信件对象 / letter object
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
-	void storeLetterInTransaction(Connection connection, Timestamp time, Letter letter) throws SQLException;
+	void storeLetterInTransaction(Timestamp time, Letter letter);
 
 	/**
-	 * 在调用方事务连接上更新离线收件人未读邮件计数（原生 PreparedStatement，同事务）。
-	 * Updates the offline recipient's unread counter on the caller's transactional connection.
-	 * @param connection 调用方事务连接 / caller's transactional connection
+	 * 在调用方事务内更新离线收件人未读邮件计数。
+	 * Updates the offline recipient's unread counter inside the caller's transaction.
 	 * @param playerName 玩家名 / player name
 	 * @param count 未读邮件计数 / unread mail count
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
-	void updateMailCounterInTransaction(Connection connection, String playerName, int count) throws SQLException;
+	void updateMailCounterInTransaction(String playerName, int count);
 
 	/**
 	 * 加载玩家邮箱内容。

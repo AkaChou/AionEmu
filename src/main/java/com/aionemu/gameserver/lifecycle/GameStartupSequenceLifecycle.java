@@ -252,6 +252,13 @@ public class GameStartupSequenceLifecycle {
         long start = startupLogLifecycle.start();
 
         loggingLifecycle.start();
+
+        // 游戏时间实例必须早于任何读取它的阶段就绪（临时刷怪在 eventRuntimeLifecycle 就会读它），
+        // 而时钟的启动仍留在 runtimeServicesLifecycle；此处只做绑定。
+        // The game-time instance must exist before any phase reads it (temp spawns read it during
+        // eventRuntimeLifecycle); only the binding happens here — starting the clock stays in runtimeServicesLifecycle.
+        runtimeServicesLifecycle.initializeGameTime();
+
         utilityServicesLifecycle.start(threadPoolLifecycle);
         chatServerOverrideLifecycle.start(chatServerEnabledOverride);
         adminPanelLifecycle.start();

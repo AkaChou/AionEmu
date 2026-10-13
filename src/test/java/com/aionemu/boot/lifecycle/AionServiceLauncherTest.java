@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class AionServiceLauncherTest {
 
@@ -193,6 +195,33 @@ class AionServiceLauncherTest {
         assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
     }
 
+    /**
+     * 停服要写库，必须早于容器销毁 Bean（数据源在销毁阶段已经关闭）。
+     * Service shutdown writes to the database and must happen before the container destroys its beans (the
+     * DataSource is already closed during destruction).
+     */
+    @Test
+    void servicesStopBeforeTheContainerDestroysItsBeans() throws Exception {
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new RecordingTransportBoundary(events),
+            List.of(new RecordingLifecycle("login", 100, true, events))
+        );
+
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        // 连接池后注册：destroyBeans 逆序销毁时会先关掉它，这正是停服写库失败的原因。
+        // The pool is registered second, so destroyBeans closes it first — the reason the shutdown writes failed.
+        context.registerBean("serviceLauncher", AionServiceLauncher.class, () -> launcher);
+        context.registerBean("pool", RecordingPool.class, () -> new RecordingPool(events));
+        context.refresh();
+
+        launcher.run(new DefaultApplicationArguments());
+        context.close();
+
+        assertEquals(List.of("prepare", "start:login", "stop:login", "stop:transport", "close:pool"), events);
+    }
+
     @Test
     void gracefulShutdownRequestRunsOnlyOnce() {
         AtomicInteger requests = new AtomicInteger();
@@ -220,6 +249,20 @@ class AionServiceLauncherTest {
         int completeShutdown = source.indexOf("GameShutdownRequest.completeShutdown", contextClose);
 
         assertTrue(gameContext > contextClose && waitForPlayers > gameContext && completeShutdown > waitForPlayers);
+    }
+
+    /** 模拟容器托管的连接池：容器销毁时关闭。 / Stands in for the container-managed pool, closed at destruction. */
+    private static final class RecordingPool implements DisposableBean {
+        private final List<String> events;
+
+        private RecordingPool(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void destroy() {
+            events.add("close:pool");
+        }
     }
 
     private static final class RecordingTransportBoundary extends AionTransportBoundary {

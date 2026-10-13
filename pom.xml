@@ -175,6 +175,14 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
         </dependency>
+        <!-- Boot 4 把各项技术的自动配置从 spring-boot-autoconfigure 拆成独立模块；
+             缺失该模块时 spring.flyway.* 是死配置，迁移不会在启动时执行。 -->
+        <!-- Boot 4 split per-technology auto-configuration out of spring-boot-autoconfigure;
+             without this module spring.flyway.* is dead config and migrations never run at startup. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-flyway</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.mybatis-flex</groupId>
             <artifactId>mybatis-flex-spring-boot4-starter</artifactId>

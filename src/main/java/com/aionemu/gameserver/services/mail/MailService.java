@@ -12,8 +12,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -306,23 +304,18 @@ public class MailService {
 		Integer legionId = sender.getLegion() == null ? null : sender.getLegion().getLegionId();
 		int mailboxLetters = recipientCommonData.getMailboxLetters() + 1;
 
-		try (Connection con = DatabaseAccess.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				inventoryDAO.storeInTransaction(con, senderItems, sender.getObjectId(), accountId, legionId);
+		try {
+			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
+				inventoryDAO.storeInTransaction(senderItems, sender.getObjectId(), accountId, legionId);
 				if (attachedItem != null) {
-					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+					inventoryDAO.storeInTransaction(List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
 				}
-				mailDAO.storeLetterInTransaction(con, time, letter);
+				mailDAO.storeLetterInTransaction(time, letter);
 				if (recipientMailbox == null) {
-					mailDAO.updateMailCounterInTransaction(con, recipientCommonData.getName(), mailboxLetters);
+					mailDAO.updateMailCounterInTransaction(recipientCommonData.getName(), mailboxLetters);
 				}
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.d40fe011fd92", sender.getObjectId(), recipientCommonData.getPlayerObjId()), e);
 			return false;
 		}
@@ -447,20 +440,15 @@ public class MailService {
 	}
 
 	private boolean storeClaimedAttachment(Player player, Letter letter, List<Item> items, AbyssRank abyssRank) {
-		try (Connection con = DatabaseAccess.getConnection()) {
-			con.setAutoCommit(false);
-			try {
-				inventoryDAO.storeInTransaction(con, items, player.getObjectId(), null, null);
+		try {
+			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
+				inventoryDAO.storeInTransaction(items, player.getObjectId(), null, null);
 				if (abyssRank != null) {
-					abyssRankDAO.storeInTransaction(con, player.getObjectId(), abyssRank);
+					abyssRankDAO.storeInTransaction(player.getObjectId(), abyssRank);
 				}
-				mailDAO.storeLetterInTransaction(con, letter.getTimeStamp(), letter);
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+				mailDAO.storeLetterInTransaction(letter.getTimeStamp(), letter);
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.9b61ee4df55e", player.getObjectId(), letter.getObjectId()), e);
 			return false;
 		}

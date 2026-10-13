@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -51,24 +49,21 @@ public interface PlayerDao extends IService<PlayerPo> {
 	 * 在调用方事务内持久化玩家公共数据的任务货币列（dp/creativity_point/abyss_favor）。
 	 * Persists the quest-currency columns of a player's common data inside the
 	 * caller-owned transaction, so currency rewards commit atomically with the
-	 * quest state. The caller must own and commit/rollback the connection.
+	 * quest state. The caller owns the transaction boundary.
 	 *
-	 * @param connection 调用方事务连接 / caller-owned transaction connection
 	 * @param playerId   玩家 object id / player object id
 	 * @param pcd        玩家公共数据 / player common data
 	 */
-	void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException;
+	void storeInTransaction(int playerId, PlayerCommonData pcd);
 
 	/**
 	 * 在调用方任务事务中保证角色至少拥有 66 级起始经验，并持久化高阶守护者标记。
 	 * Ensures at least level-66 start EXP and persists the ArchDaeva flag in the caller-owned quest transaction.
 	 *
-	 * @param connection 调用方事务连接 / caller-owned transaction connection
 	 * @param playerId   玩家对象 ID / player object ID
 	 * @param minimumExp 66 级起始经验 / level-66 start EXP
-	 * @throws SQLException 晋升结果无法持久化 / if the promotion result cannot be persisted
 	 */
-	void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException;
+	void promoteArchDaevaInTransaction(int playerId, long minimumExp);
 
 	/**
 	 * 保存新创建的角色。

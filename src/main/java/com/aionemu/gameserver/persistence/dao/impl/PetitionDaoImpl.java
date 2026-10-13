@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.PetitionStatus;
 import com.aionemu.gameserver.persistence.dao.PetitionDao;
 import com.aionemu.gameserver.persistence.entity.PetitionPo;
 import com.aionemu.gameserver.persistence.mapper.PetitionMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -36,7 +37,9 @@ public class PetitionDaoImpl extends ServiceImpl<PetitionMapper, PetitionPo> imp
 	@Override
 	public synchronized int getNextAvailableId() {
 		try {
-			return mapper.nextId();
+			Object maxId = mapper.selectObjectByQuery(
+				QueryWrapper.create().select(QueryMethods.max(PetitionPo::getId)));
+			return maxId == null ? 1 : ((Number) maxId).intValue() + 1;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.fb167a91b87e"), e);
 			return 0;

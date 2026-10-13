@@ -99,7 +99,7 @@ AionEmu 是一个 Aion 5.8 社区服务端项目。采用单体 Spring Boot 应�
 ### 核心配置文件
 - **Spring Boot 引导入口**：`src/main/resources/application.yml`（非 Web 模式运行，默认启用 login、game、chat 服务，基于 Netty 传输）。
 - **运行时配置目录**：`src/main/resources/aion/config/`，划分为登录（login）、网络（network）、主服（main）、聊天（chat）、管理（administration）、调度（schedule）等领域。
-- **数据库配置**：统一单库 `aion_emu`，由 `src/main/resources/application.yml` 的 `spring.datasource` 提供，schema 由 Flyway 管理（`src/main/resources/db/migration/`）。`src/main/resources/aion/config/network/database.properties` 为历史遗留键值，仅供既有属性解析器向后兼容，不再是数据源来源。
+- **数据库配置**：统一单库 `aion_emu`，连接参数（url/用户/密码/连接池）**唯一维护在** `src/main/resources/aion/config/network/database.properties`；`application.yml` **不写任何库键**，由 `AionLegacyPropertySourceEnvironmentPostProcessor` 在启动期把遗留键 `database.*` 翻译成 Boot 数据源键 `spring.datasource.*`（以最低优先级注册，命令行/系统属性/环境变量仍可覆盖）。schema 由 Flyway 管理（`src/main/resources/db/migration/`）。
 
 ### 默认网络端口速查
 定义于 `src/main/resources/aion/config/network/network.properties`：

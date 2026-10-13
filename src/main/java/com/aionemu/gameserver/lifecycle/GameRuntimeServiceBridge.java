@@ -645,16 +645,35 @@ public class GameRuntimeServiceBridge {
     }
 
     /**
-     * 启动游戏时间时钟。
-     * Start the game-time clock.
+     * 绑定游戏时间的持久化来源（幂等，已绑定则直接返回）。
+     * Bind the game-time persistence source (idempotent; a no-op once already bound).
+     *
+     * <p>游戏时间实例必须早于任何读取它的启动阶段就绪：临时刷怪在 {@code eventRuntimeLifecycle} 就会读
+     * {@link GameTimeManager#getGameTime()}，而本阶段 {@code runtimeServicesLifecycle} 在其之后，故把绑定从
+     * 时钟启动中拆出，交由启动序列提前调用。
+     * The game-time instance must be ready before any startup phase reads it: temporary spawns read
+     * {@link GameTimeManager#getGameTime()} during {@code eventRuntimeLifecycle}, which runs before this phase
+     * ({@code runtimeServicesLifecycle}); the binding is therefore split out of the clock start and invoked
+     * earlier by the startup sequence.</p>
      */
-    public void startGameTimeClock() {
+    public void initializeGameTime() {
+        if (GameTimeManager.getGameTime() != null) {
+            return;
+        }
         if (serverVariableDaoProvider != null) {
             com.aionemu.gameserver.persistence.dao.ServerVariableDao dao = serverVariableDaoProvider.getIfAvailable();
             if (dao != null) {
                 GameTimeManager.init(dao);
             }
         }
+    }
+
+    /**
+     * 启动游戏时间时钟；尚未绑定来源时先完成绑定。
+     * Start the game-time clock, binding its persistence source first when that has not happened yet.
+     */
+    public void startGameTimeClock() {
+        initializeGameTime();
         GameTimeManager.startClock();
     }
 

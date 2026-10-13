@@ -9,9 +9,12 @@ import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.persistence.dao.AccountDataDao;
 import com.aionemu.loginserver.persistence.entity.AccountDataPo;
 import com.aionemu.loginserver.persistence.mapper.AccountDataMapper;
+import com.mybatisflex.core.query.QueryColumn;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.service.IService;
 import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.util.LambdaUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -124,7 +127,13 @@ public class AccountDataDaoImpl extends ServiceImpl<AccountDataMapper, AccountDa
 	@Override
 	public boolean updateMembership(int accountId) {
 		try {
-			return mapper.restoreExpiredMembership(accountId) > 0;
+			QueryColumn oldMembership = LambdaUtil.getQueryColumn(AccountDataPo::getOldMembership);
+			return UpdateChain.of(AccountDataPo.class)
+				.set(AccountDataPo::getMembership, oldMembership)
+				.set(AccountDataPo::getExpire, null)
+				.where(AccountDataPo::getId).eq(accountId)
+				.and(AccountDataPo::getExpire).lt(QueryMethods.currentTimestamp())
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.971689f314b7", accountId), e);
 			return false;

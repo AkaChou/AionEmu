@@ -1,10 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -311,13 +307,8 @@ public class InventoryDaoImpl extends ServiceImpl<InventoryMapper, InventoryPo> 
 			return true;
 		}
 		try {
-			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					storeInTransaction(con, items, playerId, accountId, legionId);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store inventory items", e) {};
-				}
-			});
+			DatabaseAccess.transactionTemplate()
+				.executeWithoutResult(_ -> storeInTransaction(items, playerId, accountId, legionId));
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.c240e77dc213", playerId), e);
 			return false;
@@ -328,8 +319,7 @@ public class InventoryDaoImpl extends ServiceImpl<InventoryMapper, InventoryPo> 
 	}
 
 	@Override
-	public void storeInTransaction(Connection con, List<Item> items, Integer playerId, Integer accountId,
-			Integer legionId) throws SQLException {
+	public void storeInTransaction(List<Item> items, Integer playerId, Integer accountId, Integer legionId) {
 		Collection<Item> itemsToUpdate = new ArrayList<>();
 		Collection<Item> itemsToInsert = new ArrayList<>();
 		Collection<Item> itemsToDelete = new ArrayList<>();
@@ -347,9 +337,9 @@ public class InventoryDaoImpl extends ServiceImpl<InventoryMapper, InventoryPo> 
 			}
 		}
 
-		deleteItems(con, itemsToDelete);
-		insertItems(con, itemsToInsert, playerId, accountId, legionId);
-		updateItems(con, itemsToUpdate, playerId, accountId, legionId);
+		deleteItems(itemsToDelete);
+		insertItems(itemsToInsert, playerId, accountId, legionId);
+		updateItems(itemsToUpdate, playerId, accountId, legionId);
 	}
 
 	@Override
@@ -391,174 +381,149 @@ public class InventoryDaoImpl extends ServiceImpl<InventoryMapper, InventoryPo> 
 	 * 在调用方连接上批量插入物品。
 	 * Batch-inserts items on the caller's connection.
 	 *
-	 * @param con       调用方连接 / caller connection
 	 * @param items     物品集合 / item collection
 	 * @param playerId  玩家 ID / player id
 	 * @param accountId 账号 ID / account id
 	 * @param legionId  军团 ID / legion id
-	 * @throws SQLException 写入失败时 / when the write fails
 	 */
-	private void insertItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId,
-			Integer legionId) throws SQLException {
+	private void insertItems(Collection<Item> items, Integer playerId, Integer accountId,
+			Integer legionId) {
 
 		if (GenericValidator.isBlankOrNull(items)) {
 			return;
 		}
 
-		try (PreparedStatement stmt = con.prepareStatement(InventoryMapper.INSERT_QUERY_JDBC)) {
-			for (Item item : items) {
-				stmt.setInt(1, item.getObjectId());
-				stmt.setInt(2, item.getItemTemplate().getTemplateId());
-				stmt.setLong(3, item.getItemCount());
-				stmt.setInt(4, item.getItemColor());
-				stmt.setInt(5, item.getColorExpireTime());
-				stmt.setString(6, item.getItemCreator());
-				stmt.setInt(7, item.getExpireTime());
-				stmt.setInt(8, item.getActivationCount());
-				stmt.setInt(9, getItemOwnerId(item, playerId, accountId, legionId));
-				stmt.setBoolean(10, item.isEquipped());
-				stmt.setInt(11, item.isSoulBound() ? 1 : 0);
-				stmt.setLong(12, item.getEquipmentSlot());
-				stmt.setInt(13, item.getItemLocation());
-				stmt.setInt(14, item.getEnchantLevel());
-				stmt.setInt(15, item.getEnchantBonus());
-				stmt.setInt(16, item.getItemSkinTemplate().getTemplateId());
-				stmt.setInt(17, item.getFusionedItemId());
-				stmt.setInt(18, item.getOptionalSocket());
-				stmt.setInt(19, item.getOptionalFusionSocket());
-				stmt.setInt(20, item.getChargePoints());
-				stmt.setInt(21, item.getBonusNumber());
-				stmt.setInt(22, item.getRandomCount());
-				stmt.setInt(23, item.getWrappableCount());
-				stmt.setBoolean(24, item.isPacked());
-				stmt.setInt(25, item.getAuthorize());
-				stmt.setBoolean(26, item.isAmplified());
-				stmt.setInt(27, item.getAmplificationSkill());
-				stmt.setInt(28, item.getItemSkinSkill());
-				stmt.setBoolean(29, item.isLunaReskin());
-				stmt.setInt(30, item.getReductionLevel());
-				stmt.setInt(31, item.getUnSeal());
-				stmt.setBoolean(32, item.isEnhance());
-				stmt.setInt(33, item.getEnhanceSkillId());
-				stmt.setInt(34, item.getEnhanceEnchantLevel());
-				stmt.addBatch();
-			}
+		List<InventoryPo> rows = new ArrayList<>(items.size());
+		for (Item item : items) {
+			rows.add(toPo(item, playerId, accountId, legionId));
+		}
 
-			ensureBatchChanged(stmt.executeBatch(), items.size(), "insert");
-		} catch (SQLException e) {
+		try {
+			ensureBatchChanged(mapper.insertBatch(rows), rows.size(), "insert");
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.f078e8399e22"), e);
 			throw e;
 		}
 	}
 
+
 	/**
 	 * 在调用方连接上批量更新物品。
 	 * Batch-updates items on the caller's connection.
 	 *
-	 * @param con       调用方连接 / caller connection
 	 * @param items     物品集合 / item collection
 	 * @param playerId  玩家 ID / player id
 	 * @param accountId 账号 ID / account id
 	 * @param legionId  军团 ID / legion id
-	 * @throws SQLException 写入失败时 / when the write fails
 	 */
-	private void updateItems(Connection con, Collection<Item> items, Integer playerId, Integer accountId,
-			Integer legionId) throws SQLException {
+	private void updateItems(Collection<Item> items, Integer playerId, Integer accountId,
+			Integer legionId) {
 
 		if (GenericValidator.isBlankOrNull(items)) {
 			return;
 		}
 
-		try (PreparedStatement stmt = con.prepareStatement(InventoryMapper.UPDATE_QUERY_JDBC)) {
+		try {
 			for (Item item : items) {
-				stmt.setLong(1, item.getItemCount());
-				stmt.setInt(2, item.getItemColor());
-				stmt.setInt(3, item.getColorExpireTime());
-				stmt.setString(4, item.getItemCreator());
-				stmt.setInt(5, item.getExpireTime());
-				stmt.setInt(6, item.getActivationCount());
-				stmt.setInt(7, getItemOwnerId(item, playerId, accountId, legionId));
-				stmt.setBoolean(8, item.isEquipped());
-				stmt.setInt(9, item.isSoulBound() ? 1 : 0);
-				stmt.setLong(10, item.getEquipmentSlot());
-				stmt.setInt(11, item.getItemLocation());
-				stmt.setInt(12, item.getEnchantLevel());
-				stmt.setInt(13, item.getEnchantBonus());
-				stmt.setInt(14, item.getItemSkinTemplate().getTemplateId());
-				stmt.setInt(15, item.getFusionedItemId());
-				stmt.setInt(16, item.getOptionalSocket());
-				stmt.setInt(17, item.getOptionalFusionSocket());
-				stmt.setInt(18, item.getChargePoints());
-				stmt.setInt(19, item.getBonusNumber());
-				stmt.setInt(20, item.getRandomCount());
-				stmt.setInt(21, item.getWrappableCount());
-				stmt.setBoolean(22, item.isPacked());
-				stmt.setInt(23, item.getAuthorize());
-				stmt.setBoolean(24, item.isAmplified());
-				stmt.setInt(25, item.getAmplificationSkill());
-				stmt.setInt(26, item.getItemSkinSkill());
-				stmt.setBoolean(27, item.isLunaReskin());
-				stmt.setInt(28, item.getReductionLevel());
-				stmt.setInt(29, item.getUnSeal());
-				stmt.setBoolean(30, item.isEnhance());
-				stmt.setInt(31, item.getEnhanceSkillId());
-				stmt.setInt(32, item.getEnhanceEnchantLevel());
-				stmt.setInt(33, item.getObjectId());
-				stmt.addBatch();
+				InventoryPo po = toPo(item, playerId, accountId, legionId);
+				// 原 UPDATE 语句刻意不含 item_id；置空后由 ignoreNulls 排除该列。
+				// The legacy UPDATE deliberately omitted item_id; nulling it lets ignoreNulls drop the column.
+				po.setItemId(null);
+				// 逐行断言「这一行确实被改动」，保留原 JDBC batch 的逐行校验语义。
+				// Asserts each row actually changed, preserving the legacy JDBC batch's per-row check.
+				int changed = mapper.updateByQuery(po,
+					QueryWrapper.create().where(InventoryPo::getItemUniqueId).eq(item.getObjectId()));
+				ensureBatchChanged(changed, 1, "update");
 			}
-
-			ensureBatchChanged(stmt.executeBatch(), items.size(), "update");
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.ac4bea7b080f"), e);
 			throw e;
 		}
 	}
 
+
 	/**
 	 * 在调用方连接上批量删除物品。
 	 * Batch-deletes items on the caller's connection.
 	 *
-	 * @param con   调用方连接 / caller connection
 	 * @param items 物品集合 / item collection
-	 * @throws SQLException 删除失败时 / when the delete fails
 	 */
-	private void deleteItems(Connection con, Collection<Item> items) throws SQLException {
+	private void deleteItems(Collection<Item> items) {
 		if (GenericValidator.isBlankOrNull(items)) {
 			return;
 		}
 
-		try (PreparedStatement stmt = con.prepareStatement(InventoryMapper.DELETE_QUERY_JDBC)) {
-			for (Item item : items) {
-				stmt.setInt(1, item.getObjectId());
-				stmt.addBatch();
-			}
+		List<Integer> ids = new ArrayList<>(items.size());
+		for (Item item : items) {
+			ids.add(item.getObjectId());
+		}
 
-			stmt.executeBatch();
-		} catch (SQLException e) {
+		try {
+			mapper.deleteBatchByIds(ids);
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.8c6bf238353d"), e);
 			throw e;
 		}
 	}
 
+
 	/**
-	 * 校验批次结果行数与影响行数，任何一行未变更即视为失败。
-	 * Validates the batch result size and that every row was changed, failing otherwise.
+	 * 校验受影响行数等于期望值，任何一行未变更即视为失败。
+	 * Validates that the affected row count equals the expectation, failing when a row was not changed.
 	 *
-	 * @param results   批次结果 / batch results
+	 * @param changed   实际受影响行数 / actually affected rows
 	 * @param expected  期望条目数 / expected entry count
 	 * @param operation 操作名 / operation name
-	 * @throws SQLException 行数不符或存在未变更行时 / when counts mismatch or a row was not changed
 	 */
-	private void ensureBatchChanged(int[] results, int expected, String operation) throws SQLException {
-		if (results.length != expected) {
-			throw new SQLException("Inventory " + operation + " batch returned " + results.length
-				+ " results for " + expected + " items");
+	private static void ensureBatchChanged(int changed, int expected, String operation) {
+		if (changed != expected) {
+			throw new DataAccessException("Inventory " + operation + " batch changed " + changed
+				+ " of " + expected + " rows") {
+			};
 		}
-		for (int result : results) {
-			if (result == 0 || result == Statement.EXECUTE_FAILED) {
-				throw new SQLException("Inventory " + operation + " batch did not change every row");
-			}
-		}
+	}
+
+	/**
+	 * 由领域物品构造库存持久化实体。
+	 * Builds the inventory persistence entity from a domain item.
+	 */
+	private InventoryPo toPo(Item item, Integer playerId, Integer accountId, Integer legionId) {
+		InventoryPo po = new InventoryPo();
+		po.setItemUniqueId(item.getObjectId());
+		po.setItemId(item.getItemTemplate().getTemplateId());
+		po.setItemCount(item.getItemCount());
+		po.setItemColor(item.getItemColor());
+		po.setColorExpires(item.getColorExpireTime());
+		po.setItemCreator(item.getItemCreator());
+		po.setExpireTime(item.getExpireTime());
+		po.setActivationCount(item.getActivationCount());
+		po.setItemOwner(getItemOwnerId(item, playerId, accountId, legionId));
+		po.setEquiped(item.isEquipped());
+		po.setSoulBound(item.isSoulBound());
+		po.setSlot(item.getEquipmentSlot());
+		po.setItemLocation(item.getItemLocation());
+		po.setEnchant(item.getEnchantLevel());
+		po.setEnchantBonus(item.getEnchantBonus());
+		po.setItemSkin(item.getItemSkinTemplate().getTemplateId());
+		po.setFusionedItem(item.getFusionedItemId());
+		po.setOptionalSocket(item.getOptionalSocket());
+		po.setOptionalFusionSocket(item.getOptionalFusionSocket());
+		po.setCharge(item.getChargePoints());
+		po.setRndBonus(item.getBonusNumber());
+		po.setRndCount(item.getRandomCount());
+		po.setWrappableCount(item.getWrappableCount());
+		po.setPacked(item.isPacked());
+		po.setTemperingLevel(item.getAuthorize());
+		po.setTopped(item.isAmplified());
+		po.setStrengthenSkill(item.getAmplificationSkill());
+		po.setSkinSkill(item.getItemSkinSkill());
+		po.setLunaReskin(item.isLunaReskin());
+		po.setReductionLevel(item.getReductionLevel());
+		po.setSeal(item.getUnSeal());
+		po.setIsEnhance(item.isEnhance());
+		po.setEnhanceSkillId(item.getEnhanceSkillId());
+		po.setEnhanceSkillEnchant(item.getEnhanceEnchantLevel());
+		return po;
 	}
 
 	/**

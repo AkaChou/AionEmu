@@ -34,8 +34,6 @@ import org.objenesis.ObjenesisStd;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,8 +76,8 @@ class QuestMinionTutorialProductionFlowTest {
 			assertEquals(1, fixture.state().getQuestVars().getQuestVars(), tutorial.toString());
 			assertEquals(1, fixture.persistedState().getQuestVars().getQuestVars(), tutorial.toString());
 			assertQuestAction(fixture.packets().getLast(), 2, tutorial.questId, QuestStatus.REWARD, 1);
-			assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("jdbc.commit"));
-			assertTrue(fixture.calls().indexOf("jdbc.commit") < fixture.calls().indexOf("state.publish"));
+			assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("commit"));
+			assertTrue(fixture.calls().indexOf("commit") < fixture.calls().indexOf("state.publish"));
 		}
 	}
 
@@ -102,8 +100,8 @@ class QuestMinionTutorialProductionFlowTest {
 				assertEquals(List.of(new QuestAction.GiveItem(tutorial.itemId, 1)),
 					fixture.appliedActions().getLast(), tutorial.toString());
 				assertQuestAction(fixture.packets().getLast(), 1, tutorial.questId, QuestStatus.START, 0);
-				assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("jdbc.commit"));
-				assertTrue(fixture.calls().indexOf("jdbc.commit") < fixture.calls().indexOf("state.publish"));
+				assertTrue(fixture.calls().indexOf("state.persist") < fixture.calls().indexOf("commit"));
+				assertTrue(fixture.calls().indexOf("commit") < fixture.calls().indexOf("state.publish"));
 			}
 		}
 	}
@@ -145,8 +143,8 @@ class QuestMinionTutorialProductionFlowTest {
 			questId -> questId == tutorial.questId ? metadata : null);
 		QuestStatePort statePort = new QuestStatePort() {
 			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) throws java.sql.SQLException {
-				stateDelegate.apply(connection, playerId, plan);
+			public void apply(int playerId, QuestMutationPlan plan) throws java.sql.SQLException {
+				stateDelegate.apply(playerId, plan);
 				calls.add("state.persist");
 			}
 
@@ -172,10 +170,11 @@ class QuestMinionTutorialProductionFlowTest {
 			playerId -> player, id -> id == tutorial.questId ? metadata : null, (id, value) -> false);
 		QuestProductionDispatcher dispatcher = new QuestProductionDispatcher(
 			new ImmutableQuestCatalog(List.of(definition)),
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(),
+				new RecordingTransactionManager(calls)),
 			new PlayerQuestEventPort(playerId -> player, startEligibility, ignored -> false),
 			actionPort, statePort,
-			afterCommit, () -> transaction(calls), ignored -> { }, new QuestRuntimeMetricsCollector());
+			afterCommit, ignored -> { }, new QuestRuntimeMetricsCollector());
 		return new Fixture(player, dispatcher, startEligibility, dao, actionPort.appliedActions, calls);
 	}
 
@@ -216,28 +215,6 @@ class QuestMinionTutorialProductionFlowTest {
 		return connection;
 	}
 
-	private static Connection transaction(List<String> calls) {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				case "setAutoCommit" -> {
-					calls.add("jdbc.autoCommit:" + args[0]);
-					yield null;
-				}
-				case "commit" -> {
-					calls.add("jdbc.commit");
-					yield null;
-				}
-				case "rollback" -> {
-					calls.add("jdbc.rollback");
-					yield null;
-				}
-				case "close" -> null;
-				case "toString" -> "minion-tutorial-transaction";
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
 	private static void assertQuestAction(AionServerPacket packet, int expectedAction, int questId,
 			QuestStatus status, int packed) throws Exception {
 		SM_QUEST_ACTION action = assertInstanceOf(SM_QUEST_ACTION.class, packet);
@@ -276,19 +253,6 @@ class QuestMinionTutorialProductionFlowTest {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
 		return field.getInt(target);
-	}
-
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) return null;
-		if (type == boolean.class) return false;
-		if (type == byte.class) return (byte) 0;
-		if (type == short.class) return (short) 0;
-		if (type == int.class) return 0;
-		if (type == long.class) return 0L;
-		if (type == float.class) return 0F;
-		if (type == double.class) return 0D;
-		if (type == char.class) return '\0';
-		return null;
 	}
 
 	private enum Tutorial {
@@ -337,12 +301,11 @@ class QuestMinionTutorialProductionFlowTest {
 		private final List<List<QuestAction>> appliedActions = new ArrayList<>();
 
 		@Override
-		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+		public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) {
 		}
 
 		@Override
-		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-				List<QuestAction> actions) {
+		public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 			appliedActions.add(List.copyOf(actions));
 			return QuestTransactionParticipant.none();
 		}
@@ -367,12 +330,7 @@ class QuestMinionTutorialProductionFlowTest {
 		}
 
 		@Override
-		public void store(Connection connection, Player player) {
-			throw new AssertionError("unexpected player-based store");
-		}
-
-		@Override
-		public void store(Connection connection, int playerId, Collection<QuestState> states) {
+		public void store(int playerId, Collection<QuestState> states) {
 			stored.addAll(states);
 			if (!stored.isEmpty()) {
 				questId = stored.getLast().getQuestId();

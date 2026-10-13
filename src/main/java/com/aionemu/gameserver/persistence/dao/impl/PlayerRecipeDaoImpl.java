@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashSet;
 
 import org.springframework.context.annotation.Lazy;
@@ -87,20 +84,14 @@ public class PlayerRecipeDaoImpl extends ServiceImpl<PlayerRecipeMapper, PlayerR
 	}
 
 	@Override
-	public void addRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException {
-		try (PreparedStatement ps = connection.prepareStatement(PlayerRecipeMapper.ADD_RECIPE_JDBC)) {
-			ps.setInt(1, playerId);
-			ps.setInt(2, recipeId);
-			ps.executeUpdate();
-		}
+	public void addRecipeInTransaction(int playerId, int recipeId) {
+		mapper.addRecipe(playerId, recipeId);
 	}
 
 	@Override
-	public void delRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException {
-		try (PreparedStatement ps = connection.prepareStatement(PlayerRecipeMapper.DELETE_RECIPE_JDBC)) {
-			ps.setInt(1, playerId);
-			ps.setInt(2, recipeId);
-			ps.executeUpdate();
-		}
+	public void delRecipeInTransaction(int playerId, int recipeId) {
+		mapper.deleteByQuery(QueryWrapper.create()
+			.where(PlayerRecipePo::getPlayerId).eq(playerId)
+			.and(PlayerRecipePo::getRecipeId).eq(recipeId));
 	}
 }

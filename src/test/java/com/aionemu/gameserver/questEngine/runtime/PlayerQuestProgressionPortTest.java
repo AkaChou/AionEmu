@@ -8,19 +8,15 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,26 +29,23 @@ class PlayerQuestProgressionPortTest {
 	private static final int PLAYER_ID = 7;
 	private static final long LEVEL_66_EXP = 2066885620L;
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void persistsPromotionOnTheCallerConnectionAndPublishesOnlyAfterCommit() throws Exception {
+	void persistsPromotionAndPublishesOnlyAfterCommit() throws Exception {
 		Player player = playerAtLevel(65);
-		Connection connection = connection();
-		AtomicReference<Connection> storedConnection = new AtomicReference<>();
 		AtomicInteger storedPlayerId = new AtomicInteger();
 		AtomicLong storedMinimumExp = new AtomicLong();
 		AtomicBoolean promoted = new AtomicBoolean();
 		PlayerQuestProgressionPort port = new PlayerQuestProgressionPort(playerId -> player,
-			(storedOn, playerId, minimumExp) -> {
-				storedConnection.set(storedOn);
+			(playerId, minimumExp) -> {
 				storedPlayerId.set(playerId);
 				storedMinimumExp.set(minimumExp);
 			}, () -> LEVEL_66_EXP, ignored -> promoted.set(true));
 		List<QuestAction.PromoteArchDaeva> actions = List.of(new QuestAction.PromoteArchDaeva());
 
-		port.preflight(connection, snapshot(), actions);
-		QuestTransactionParticipant participant = port.apply(connection, snapshot(), actions);
+		port.preflight(snapshot(), actions);
+		QuestTransactionParticipant participant = port.apply(snapshot(), actions);
 
-		assertSame(connection, storedConnection.get());
 		assertEquals(PLAYER_ID, storedPlayerId.get());
 		assertEquals(LEVEL_66_EXP, storedMinimumExp.get());
 		assertFalse(promoted.get());
@@ -65,9 +58,9 @@ class PlayerQuestProgressionPortTest {
 		Player player = playerAtLevel(65);
 		AtomicBoolean promoted = new AtomicBoolean();
 		PlayerQuestProgressionPort port = new PlayerQuestProgressionPort(playerId -> player,
-			(connection, playerId, minimumExp) -> { }, () -> LEVEL_66_EXP, ignored -> promoted.set(true));
+			(playerId, minimumExp) -> { }, () -> LEVEL_66_EXP, ignored -> promoted.set(true));
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshot(),
+		QuestTransactionParticipant participant = port.apply(snapshot(),
 			List.of(new QuestAction.PromoteArchDaeva()));
 		participant.afterRollback();
 
@@ -78,9 +71,9 @@ class PlayerQuestProgressionPortTest {
 	void rejectsPromotionBelowLevel65() throws Exception {
 		Player player = playerAtLevel(64);
 		PlayerQuestProgressionPort port = new PlayerQuestProgressionPort(playerId -> player,
-			(connection, playerId, minimumExp) -> { }, () -> LEVEL_66_EXP, ignored -> { });
+			(playerId, minimumExp) -> { }, () -> LEVEL_66_EXP, ignored -> { });
 
-		assertThrows(SQLException.class, () -> port.preflight(connection(), snapshot(),
+		assertThrows(SQLException.class, () -> port.preflight(snapshot(),
 			List.of(new QuestAction.PromoteArchDaeva())));
 	}
 
@@ -100,10 +93,5 @@ class PlayerQuestProgressionPortTest {
 		Field field = declaringClass.getDeclaredField(name);
 		field.setAccessible(true);
 		field.set(target, value);
-	}
-
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-			(proxy, method, args) -> method.getReturnType() == boolean.class ? false : null);
 	}
 }

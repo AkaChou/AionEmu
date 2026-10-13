@@ -1,9 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +22,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -93,14 +91,8 @@ public class PlayerSkillDaoImpl extends ServiceImpl<PlayerSkillMapper, PlayerSki
 	}
 
 	@Override
-	public void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel)
-		throws SQLException {
-		try (PreparedStatement ps = connection.prepareStatement(PlayerSkillMapper.GRANT_QUERY_JDBC)) {
-			ps.setInt(1, playerId);
-			ps.setInt(2, skillId);
-			ps.setInt(3, targetLevel);
-			ps.executeUpdate();
-		}
+	public void storeSkillInTransaction(int playerId, int skillId, int targetLevel) {
+		mapper.grantSkill(playerId, skillId, targetLevel);
 	}
 
 	/**
@@ -114,15 +106,10 @@ public class PlayerSkillDaoImpl extends ServiceImpl<PlayerSkillMapper, PlayerSki
 	private boolean store(Player player, List<PlayerSkillEntry> skills) {
 		try {
 			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					deleteSkills(con, player, skills);
-					addSkills(con, player, skills);
-					updateSkills(con, player, skills);
-					updateSkinSkills(con, player, skills);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store skill list", e) {
-					};
-				}
+				deleteSkills(player, skills);
+				addSkills(player, skills);
+				updateSkills(player, skills);
+				updateSkinSkills(player, skills);
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.6790b402b724", player.getObjectId()), e);
@@ -136,112 +123,91 @@ public class PlayerSkillDaoImpl extends ServiceImpl<PlayerSkillMapper, PlayerSki
 	}
 
 	/**
-	 * 批量插入 NEW 状态技能。
-	 * Batch-inserts skills in NEW state.
+	 * 插入 NEW 状态技能（逐行 upsert）。
+	 * Inserts skills in NEW state (one upsert per row).
 	 *
-	 * @param con    连接 / connection
 	 * @param player 玩家 / player
 	 * @param skills 技能条目列表 / list of skill entries
 	 */
-	private void addSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
+	private void addSkills(Player player, List<PlayerSkillEntry> skills) {
 		Collection<PlayerSkillEntry> skillsToInsert = Collections2.filter(skills, skillsToInsertPredicate);
 
 		if (GenericValidator.isBlankOrNull(skillsToInsert)) {
 			return;
 		}
 
-		try (PreparedStatement ps = con.prepareStatement(PlayerSkillMapper.INSERT_QUERY_JDBC)) {
-			for (PlayerSkillEntry skill : skillsToInsert) {
-				ps.setInt(1, player.getObjectId());
-				ps.setInt(2, skill.getSkillId());
-				ps.setInt(3, skill.getSkillLevel());
-				ps.addBatch();
-			}
-
-			ps.executeBatch();
+		for (PlayerSkillEntry skill : skillsToInsert) {
+			mapper.insertSkill(player.getObjectId(), skill.getSkillId(), skill.getSkillLevel());
 		}
 	}
 
 	/**
-	 * 批量更新 UPDATE_REQUIRED 状态技能等级。
-	 * Batch-updates skill levels in UPDATE_REQUIRED state.
+	 * 更新 UPDATE_REQUIRED 状态技能等级。
+	 * Updates skill levels in UPDATE_REQUIRED state.
 	 *
-	 * @param con    连接 / connection
 	 * @param player 玩家 / player
 	 * @param skills 技能条目列表 / list of skill entries
 	 */
-	private void updateSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
+	private void updateSkills(Player player, List<PlayerSkillEntry> skills) {
 		Collection<PlayerSkillEntry> skillsToUpdate = Collections2.filter(skills, skillsToUpdatePredicate);
 
 		if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
 			return;
 		}
 
-		try (PreparedStatement ps = con.prepareStatement(PlayerSkillMapper.UPDATE_QUERY_JDBC)) {
-			for (PlayerSkillEntry skill : skillsToUpdate) {
-				ps.setInt(1, skill.getSkillLevel());
-				ps.setInt(2, player.getObjectId());
-				ps.setInt(3, skill.getSkillId());
-				ps.addBatch();
-			}
-
-			ps.executeBatch();
+		for (PlayerSkillEntry skill : skillsToUpdate) {
+			UpdateChain.of(PlayerSkillPo.class)
+				.set(PlayerSkillPo::getSkillLevel, skill.getSkillLevel())
+				.where(PlayerSkillPo::getPlayerId).eq(player.getObjectId())
+				.and(PlayerSkillPo::getSkillId).eq(skill.getSkillId())
+				.update();
 		}
 	}
 
 	/**
-	 * 批量更新 UPDATE_REQUIRED 状态技能皮肤信息。
-	 * Batch-updates skill skin info in UPDATE_REQUIRED state.
+	 * 更新 UPDATE_REQUIRED 状态技能皮肤信息。
+	 * Updates skill skin info in UPDATE_REQUIRED state.
 	 *
-	 * @param con    连接 / connection
 	 * @param player 玩家 / player
 	 * @param skills 技能条目列表 / list of skill entries
 	 */
-	private void updateSkinSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
+	private void updateSkinSkills(Player player, List<PlayerSkillEntry> skills) {
 		Collection<PlayerSkillEntry> skillsToUpdate = Collections2.filter(skills, skillsToUpdatePredicate);
 
 		if (GenericValidator.isBlankOrNull(skillsToUpdate)) {
 			return;
 		}
 
-		try (PreparedStatement ps = con.prepareStatement(PlayerSkillMapper.UPDATE_SKIN_QUERY_JDBC)) {
-			for (PlayerSkillEntry skill : skillsToUpdate) {
-				ps.setInt(1, skill.getSkinId());
-				ps.setTimestamp(2, skill.getSkinActiveTime());
-				ps.setInt(3, skill.getSkinExpireTime());
-				ps.setBoolean(4, skill.isActivated());
-				ps.setInt(5, player.getObjectId());
-				ps.setInt(6, skill.getSkillId());
-				ps.addBatch();
-			}
-
-			ps.executeBatch();
+		for (PlayerSkillEntry skill : skillsToUpdate) {
+			UpdateChain.of(PlayerSkillPo.class)
+				.set(PlayerSkillPo::getSkinId, skill.getSkinId())
+				.set(PlayerSkillPo::getSkinActiveDate, skill.getSkinActiveTime())
+				.set(PlayerSkillPo::getSkinExpireTime, skill.getSkinExpireTime())
+				.set(PlayerSkillPo::getSkinActivated, skill.isActivated())
+				.where(PlayerSkillPo::getPlayerId).eq(player.getObjectId())
+				.and(PlayerSkillPo::getSkillId).eq(skill.getSkillId())
+				.update();
 		}
 	}
 
 	/**
-	 * 批量删除 DELETED 状态技能。
-	 * Batch-deletes skills in DELETED state.
+	 * 删除 DELETED 状态技能。
+	 * Deletes skills in DELETED state.
 	 *
-	 * @param con    连接 / connection
 	 * @param player 玩家 / player
 	 * @param skills 技能条目列表 / list of skill entries
 	 */
-	private void deleteSkills(Connection con, Player player, List<PlayerSkillEntry> skills) throws SQLException {
+	private void deleteSkills(Player player, List<PlayerSkillEntry> skills) {
 		Collection<PlayerSkillEntry> skillsToDelete = Collections2.filter(skills, skillsToDeletePredicate);
 
 		if (GenericValidator.isBlankOrNull(skillsToDelete)) {
 			return;
 		}
 
-		try (PreparedStatement ps = con.prepareStatement(PlayerSkillMapper.DELETE_QUERY_JDBC)) {
-			for (PlayerSkillEntry skill : skillsToDelete) {
-				ps.setInt(1, player.getObjectId());
-				ps.setInt(2, skill.getSkillId());
-				ps.addBatch();
-			}
-
-			ps.executeBatch();
+		for (PlayerSkillEntry skill : skillsToDelete) {
+			mapper.deleteByQuery(QueryWrapper.create()
+				.where(PlayerSkillPo::getPlayerId).eq(player.getObjectId())
+				.and(PlayerSkillPo::getSkillId).eq(skill.getSkillId()));
 		}
 	}
 

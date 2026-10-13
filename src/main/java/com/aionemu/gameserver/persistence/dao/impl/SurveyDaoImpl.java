@@ -11,7 +11,9 @@ import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import com.aionemu.gameserver.persistence.dao.SurveyDao;
 import com.aionemu.gameserver.persistence.entity.SurveyPo;
 import com.aionemu.gameserver.persistence.mapper.SurveyMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +53,11 @@ public class SurveyDaoImpl extends ServiceImpl<SurveyMapper, SurveyPo> implement
 	@Override
 	public boolean useItem(int id) {
 		try {
-			return mapper.markUsed(1, id) > 0;
+			return UpdateChain.of(SurveyPo.class)
+				.set(SurveyPo::getUsed, 1)
+				.set(SurveyPo::getUsedTime, QueryMethods.now())
+				.where(SurveyPo::getUniqueId).eq(id)
+				.update();
 		} catch (Exception e) {
 			log.error(I18n.get("log.4f720321ff23"), e);
 			return false;

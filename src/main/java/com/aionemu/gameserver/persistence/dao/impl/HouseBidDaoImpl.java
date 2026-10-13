@@ -60,7 +60,12 @@ public class HouseBidDaoImpl extends ServiceImpl<HouseBidMapper, HouseBidPo> imp
 	@Override
 	public void changeBid(int playerId, int houseId, long newBidOffer, Timestamp time) {
 		try {
-			if (mapper.changeBid(playerId, houseId, newBidOffer, time) == 0) {
+			HouseBidPo update = new HouseBidPo();
+			update.setBid(newBidOffer);
+			update.setBidTime(time);
+			if (mapper.updateByQuery(update, QueryWrapper.create()
+				.where(HouseBidPo::getPlayerId).eq(playerId)
+				.and(HouseBidPo::getHouseId).eq(houseId)) == 0) {
 				addBid(playerId, houseId, newBidOffer, time);
 			}
 		} catch (DataAccessException e) {

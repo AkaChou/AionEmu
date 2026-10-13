@@ -8,13 +8,13 @@ import com.aionemu.gameserver.questEngine.definition.QuestCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
+
+import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * 按快照、计划、事务和提交后动作的固定顺序执行一个 owner。
@@ -23,30 +23,37 @@ import java.util.function.Supplier;
 public final class QuestExecutionCoordinator {
 	private final PlayerSerialExecutor serialExecutor;
 	private final BiConsumer<Integer, Integer> terminalCleanup;
+	private final PlatformTransactionManager transactionManager;
 
 	public QuestExecutionCoordinator(PlayerSerialExecutor serialExecutor) {
-		this(serialExecutor, QuestRuntimeResources::cleanupQuest);
+		this(serialExecutor, QuestRuntimeResources::cleanupQuest, null);
 	}
 
 	QuestExecutionCoordinator(PlayerSerialExecutor serialExecutor, BiConsumer<Integer, Integer> terminalCleanup) {
+		this(serialExecutor, terminalCleanup, null);
+	}
+
+	/** 注入事务管理器的工作单元边界；null 表示使用容器默认（测试专用）。 */
+	QuestExecutionCoordinator(PlayerSerialExecutor serialExecutor, PlatformTransactionManager transactionManager) {
+		this(serialExecutor, QuestRuntimeResources::cleanupQuest, transactionManager);
+	}
+
+	QuestExecutionCoordinator(PlayerSerialExecutor serialExecutor,
+			BiConsumer<Integer, Integer> terminalCleanup, PlatformTransactionManager transactionManager) {
 		this.serialExecutor = serialExecutor;
 		this.terminalCleanup = Objects.requireNonNull(terminalCleanup, "terminalCleanup");
+		this.transactionManager = transactionManager;
 	}
 
-	public QuestExecutionResult execute(Connection connection, int playerId,
+	private QuestUnitOfWork openUnitOfWork() {
+		return transactionManager == null ? QuestUnitOfWork.open() : QuestUnitOfWork.open(transactionManager);
+	}
+
+	QuestExecutionResult execute(int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
-		Objects.requireNonNull(connection, "connection");
-		return execute(() -> connection, playerId, definition, event, transition, eventPort, actionPort,
-			statePort, afterCommitPort);
-	}
-
-	QuestExecutionResult execute(Supplier<Connection> connections, int playerId,
-			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
-			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort) throws Exception {
-		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
+		return executeValidated(playerId, definition, event, transition, eventPort, actionPort,
 			statePort, afterCommitPort, QuestEvent.matches(transition.event(), event), false, false);
 	}
 
@@ -62,41 +69,31 @@ public final class QuestExecutionCoordinator {
 	 * snapshot by {@link QuestMutationPlanner}; nothing commits when the source state or conditions do
 	 * not hold.</p>
 	 */
-	QuestExecutionResult executeRewardWindowAction(Supplier<Connection> connections, int playerId,
+	QuestExecutionResult executeRewardWindowAction(int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
-		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
+		return executeValidated(playerId, definition, event, transition, eventPort, actionPort,
 			statePort, afterCommitPort, false, false, true);
 	}
 
-	QuestExecutionResult executeSharedQuestAccept(Connection connection, int playerId,
-			CompiledQuestDefinition definition, QuestEvent.QuestDialog event, QuestTransition transition,
-			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort) throws Exception {
-		Objects.requireNonNull(connection, "connection");
-		return executeSharedQuestAccept(() -> connection, playerId, definition, event, transition, eventPort,
-			actionPort, statePort, afterCommitPort);
-	}
-
-	QuestExecutionResult executeSharedQuestAccept(Supplier<Connection> connections, int playerId,
+	QuestExecutionResult executeSharedQuestAccept(int playerId,
 			CompiledQuestDefinition definition, QuestEvent.QuestDialog event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort) throws Exception {
 		boolean matchesSharedAccept = transition.event() instanceof QuestEvent.TalkToNpc talk
 			&& talk.dialogId() != null && talk.dialogId() == event.dialogId();
-		return executeValidated(connections, playerId, definition, event, transition, eventPort, actionPort,
+		return executeValidated(playerId, definition, event, transition, eventPort, actionPort,
 			statePort, afterCommitPort, matchesSharedAccept, true, false);
 	}
 
-	private QuestExecutionResult executeValidated(Supplier<Connection> connections, int playerId,
+	private QuestExecutionResult executeValidated(int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort, boolean eventMatches, boolean sharedQuestAccept,
 			boolean unpinnedRewardWindow) throws Exception {
 		// 统一入口保证所有正式 owner 使用同一执行顺序。
 		// The single entry point guarantees one execution order for every production owner.
-		Objects.requireNonNull(connections, "connections");
 		if (playerId <= 0) {
 			throw new IllegalArgumentException("playerId must be positive");
 		}
@@ -113,12 +110,12 @@ public final class QuestExecutionCoordinator {
 		Objects.requireNonNull(actionPort, "actionPort");
 		Objects.requireNonNull(statePort, "statePort");
 		Objects.requireNonNull(afterCommitPort, "afterCommitPort");
-		return serialExecutor.execute(playerId, () -> executeSerialized(connections, playerId, definition, event,
+		return serialExecutor.execute(playerId, () -> executeSerialized(playerId, definition, event,
 				transition, eventPort, actionPort, statePort, afterCommitPort, sharedQuestAccept,
 				unpinnedRewardWindow));
 	}
 
-	private QuestExecutionResult executeSerialized(Supplier<Connection> connections, int playerId,
+	private QuestExecutionResult executeSerialized(int playerId,
 			CompiledQuestDefinition definition, QuestEvent event, QuestTransition transition,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
 			QuestAfterCommitPort afterCommitPort, boolean sharedQuestAccept,
@@ -164,16 +161,15 @@ public final class QuestExecutionCoordinator {
 				return executeProtocolOnly(snapshot, resolved, afterCommitPort);
 			}
 			stage = QuestFailureStage.PREFLIGHT;
-			Connection connection = Objects.requireNonNull(connections.get(), "connection provider returned null");
-			try (QuestUnitOfWork unit = QuestUnitOfWork.open(connection)) {
+			try (QuestUnitOfWork unit = openUnitOfWork()) {
 				if (!durableActions.isEmpty()) {
-					actionPort.preflight(unit.connection(), snapshot, durableActions);
+					actionPort.preflight(snapshot, durableActions);
 					stage = QuestFailureStage.APPLY_ACTIONS;
-					participant = actionPort.apply(unit.connection(), snapshot, durableActions);
+					participant = actionPort.apply(snapshot, durableActions);
 				}
 				if (persistState) {
 					stage = QuestFailureStage.APPLY_STATE;
-					statePort.apply(unit.connection(), playerId, resolved);
+					statePort.apply(playerId, resolved);
 					appliedPlan = resolved;
 				}
 				for (AfterCommitAction action : withoutRedundantStateSync(resolved.afterCommit(), persistState,

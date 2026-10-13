@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import com.aionemu.gameserver.persistence.entity.AbyssRankPo;
 import com.mybatisflex.core.BaseMapper;
@@ -34,14 +33,6 @@ public interface AbyssRankMapper extends BaseMapper<AbyssRankPo> {
 		+ "top_ranking, daily_kill, weekly_kill, all_kill, max_rank, last_kill, "
 		+ "last_ap, last_gp, last_update FROM abyss_rank WHERE player_id = #{playerId}")
 	Map<String, Object> selectRankByPlayerId(@Param("playerId") int playerId);
-
-	/**
-	 * 更新玩家军阶与名额（原 UPDATE_RANK，无 WHERE 之外的复杂语义，逐字保留）。
-	 * Updates the player's rank and top-ranking quota (formerly UPDATE_RANK, kept verbatim).
-	 */
-	@Update("UPDATE abyss_rank SET `rank` = #{rank}, top_ranking = #{topRanking} WHERE player_id = #{playerId}")
-	int updateRankAndQuota(@Param("rank") int rank, @Param("topRanking") int topRanking,
-		@Param("playerId") int playerId);
 
 	/**
 	 * 阵营玩家欧比斯排行（原 SELECT_PLAYERS_RANKING）。
@@ -96,24 +87,6 @@ public interface AbyssRankMapper extends BaseMapper<AbyssRankPo> {
 		+ "ORDER BY gp DESC")
 	List<Map<String, Object>> selectActivePlayerGp(@Param("race") String race, @Param("lowerGpLimit") int lowerGpLimit,
 		@Param("maxOfflineDays") int maxOfflineDays);
-
-	/**
-	 * 插入军阶记录；经 storeInTransaction 的原生 PreparedStatement 执行，故保留 ? 原文。
-	 * Insert statement; executed by raw PreparedStatement inside storeInTransaction, so `?` is kept.
-	 */
-	String INSERT_QUERY_JDBC = "INSERT INTO abyss_rank (player_id, daily_ap, daily_gp, weekly_ap, "
-		+ "weekly_gp, ap, gp, `rank`, top_ranking, daily_kill, weekly_kill, "
-		+ "all_kill, max_rank, last_kill, last_ap, last_gp, last_update) "
-		+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-	/**
-	 * 更新军阶记录；经 storeInTransaction 的原生 PreparedStatement 执行，故保留 ? 原文。
-	 * Update statement; executed by raw PreparedStatement inside storeInTransaction, so `?` is kept.
-	 */
-	String UPDATE_QUERY_JDBC = "UPDATE abyss_rank SET daily_ap = ?, daily_gp = ?, weekly_ap = ?, "
-		+ "weekly_gp = ?, ap = ?, gp = ?, `rank` = ?, top_ranking = ?, daily_kill = ?, "
-		+ "weekly_kill = ?, all_kill = ?, max_rank = ?, last_kill = ?, last_ap = ?, "
-		+ "last_gp = ?, last_update = ? WHERE player_id = ?";
 
 	/**
 	 * 按 GP 重算玩家排行位置；依赖会话变量与无 WHERE 的 UPDATE，经原生语句执行，保留 ? 原文。

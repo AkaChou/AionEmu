@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.aionemu.gameserver.model.gameobjects.player.RecipeList;
 import com.aionemu.gameserver.persistence.entity.PlayerRecipePo;
 import com.mybatisflex.core.service.IService;
@@ -40,9 +37,9 @@ public interface PlayerRecipeDao extends IService<PlayerRecipePo> {
 	 */
 	boolean delRecipe(int playerId, int recipeId);
 
-	/** Adds or converges a recipe on the caller-owned transaction. */
-	void addRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException;
+	/** Adds or converges a recipe inside the caller-owned transaction. */
+	void addRecipeInTransaction(int playerId, int recipeId);
 
-	/** Deletes a recipe on the caller-owned transaction; deleting an absent row is successful convergence. */
-	void delRecipeInTransaction(Connection connection, int playerId, int recipeId) throws SQLException;
+	/** Deletes a recipe inside the caller-owned transaction; deleting an absent row is successful convergence. */
+	void delRecipeInTransaction(int playerId, int recipeId);
 }

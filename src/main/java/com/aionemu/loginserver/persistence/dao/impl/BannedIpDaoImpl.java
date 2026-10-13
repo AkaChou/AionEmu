@@ -13,6 +13,7 @@ import com.aionemu.loginserver.model.BannedIP;
 import com.aionemu.loginserver.persistence.dao.BannedIpDao;
 import com.aionemu.loginserver.persistence.entity.BannedIpPo;
 import com.aionemu.loginserver.persistence.mapper.BannedIpMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
@@ -104,7 +105,9 @@ public class BannedIpDaoImpl extends ServiceImpl<BannedIpMapper, BannedIpPo> imp
 	@Override
 	public void cleanExpiredBans() {
 		try {
-			int deleted = mapper.cleanExpiredBans();
+			int deleted = mapper.deleteByQuery(QueryWrapper.create()
+				.where(BannedIpPo::getTimeEnd).lt(QueryMethods.currentTimestamp())
+				.and(BannedIpPo::getTimeEnd).isNotNull());
 			if (deleted > 0) {
 				log.info(I18n.get("log.351f92913e18", deleted));
 			}

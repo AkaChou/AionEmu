@@ -1,9 +1,5 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +16,10 @@ import com.aionemu.gameserver.persistence.dao.BrokerDao;
 import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
 import com.aionemu.gameserver.persistence.entity.BrokerPo;
 import com.aionemu.gameserver.persistence.entity.InventoryPo;
+import com.aionemu.gameserver.persistence.entity.PlayerPo;
 import com.aionemu.gameserver.persistence.mapper.BrokerMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -140,77 +138,71 @@ public class BrokerDaoImpl extends ServiceImpl<BrokerMapper, BrokerPo> implement
 			return false;
 		}
 
-		try (Connection con = DatabaseAccess.getConnection()) {
-			storeInTransaction(con, item);
+		try {
+			storeInTransaction(item);
 			item.setPersistentState(PersistentState.UPDATED);
 			return true;
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.96bb344ecaba", item.getItemUniqueId()), e);
 			return false;
 		}
 	}
 
 	/**
-	 * 在调用方事务连接上按持久化状态存储交易所物品。
-	 * Stores a broker item on the caller's transactional connection by persistent state.
-	 * @param con 调用方事务连接 / caller's transactional connection
+	 * 在调用方事务内按持久化状态存储交易所物品。
+	 * Stores a broker item inside the caller's transaction, by persistent state.
 	 * @param item 交易所物品 / broker item
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
 	@Override
-	public void storeInTransaction(Connection con, BrokerItem item) throws SQLException {
+	public void storeInTransaction(BrokerItem item) {
 		boolean result = switch (item.getPersistentState()) {
-			case NEW -> insertBrokerItem(con, item);
-			case DELETED -> deleteBrokerItem(con, item);
-			case UPDATE_ITEM_BROKER -> updateItem(con, item);
-			case UPDATE_REQUIRED -> updateBrokerItem(con, item);
+			case NEW -> insertBrokerItem(item);
+			case DELETED -> deleteBrokerItem(item);
+			case UPDATE_ITEM_BROKER -> updateItem(item);
+			case UPDATE_REQUIRED -> updateBrokerItem(item);
 			default -> true;
 		};
 		if (!result) {
-			throw new SQLException("No broker row changed for item " + item.getItemUniqueId());
+			throw new DataAccessException("No broker row changed for item " + item.getItemUniqueId()) {
+			};
 		}
 	}
 
 	/**
 	 * 插入交易所条目。
 	 * Inserts a broker entry.
-	 * @param con 数据库连接 / database connection
 	 * @param item 交易所物品 / broker item
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean insertBrokerItem(Connection con, final BrokerItem item) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(BrokerMapper.INSERT_BROKER_QUERY_JDBC)) {
-			stmt.setInt(1, item.getItemUniqueId());
-			stmt.setInt(2, item.getItemId());
-			stmt.setLong(3, item.getItemCount());
-			stmt.setString(4, item.getItemCreator());
-			stmt.setString(5, item.getSeller());
-			stmt.setLong(6, item.getPrice());
-			stmt.setString(7, String.valueOf(item.getItemBrokerRace()));
-			stmt.setTimestamp(8, item.getExpireTime());
-			stmt.setTimestamp(9, item.getSettleTime());
-			stmt.setInt(10, item.getSellerId());
-			stmt.setBoolean(11, item.isSold());
-			stmt.setBoolean(12, item.isSettled());
-			stmt.setBoolean(13, item.isSplitSell());
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean insertBrokerItem(final BrokerItem item) {
+		BrokerPo po = new BrokerPo();
+		po.setItemPointer(item.getItemUniqueId());
+		po.setItemId(item.getItemId());
+		po.setItemCount(item.getItemCount());
+		po.setItemCreator(item.getItemCreator());
+		po.setSeller(item.getSeller());
+		po.setPrice(item.getPrice());
+		po.setBrokerRace(String.valueOf(item.getItemBrokerRace()));
+		po.setExpireTime(item.getExpireTime());
+		po.setSettleTime(item.getSettleTime());
+		po.setSellerId(item.getSellerId());
+		po.setSold(item.isSold());
+		po.setSettled(item.isSettled());
+		po.setSplitsell(item.isSplitSell());
+		return mapper.insert(po) > 0;
 	}
 
 	/**
 	 * 删除交易所条目。
 	 * Deletes a broker entry.
-	 * @param con 数据库连接 / database connection
 	 * @param item 交易所物品 / broker item
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean deleteBrokerItem(Connection con, final BrokerItem item) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(BrokerMapper.DELETE_BROKER_QUERY_JDBC)) {
-			stmt.setInt(1, item.getItemUniqueId());
-			stmt.setInt(2, item.getSellerId());
-			stmt.setTimestamp(3, item.getExpireTime());
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean deleteBrokerItem(final BrokerItem item) {
+		return mapper.deleteByQuery(QueryWrapper.create()
+			.where(BrokerPo::getItemPointer).eq(item.getItemUniqueId())
+			.and(BrokerPo::getSellerId).eq(item.getSellerId())
+			.and(BrokerPo::getExpireTime).eq(item.getExpireTime())) > 0;
 	}
 
 	/**
@@ -232,43 +224,42 @@ public class BrokerDaoImpl extends ServiceImpl<BrokerMapper, BrokerPo> implement
 	}
 
 	/**
-	 * 更新交易所条目的出售/结算状态。
-	 * Updates the sold/settled state of a broker entry.
-	 * @param con 数据库连接 / database connection
+	 * 更新交易所条目的出售/结算状态（仅未结算行）。
+	 * Updates the sold/settled state of a broker entry (unsettled rows only).
 	 * @param item 交易所物品 / broker item
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean updateBrokerItem(Connection con, final BrokerItem item) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(BrokerMapper.UPDATE_BROKER_QUERY_JDBC)) {
-			stmt.setBoolean(1, item.isSold());
-			stmt.setTimestamp(2, item.getSettleTime());
-			stmt.setInt(3, item.getItemUniqueId());
-			stmt.setTimestamp(4, item.getExpireTime());
-			stmt.setInt(5, item.getSellerId());
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean updateBrokerItem(final BrokerItem item) {
+		return UpdateChain.of(BrokerPo.class)
+			.set(BrokerPo::getSold, item.isSold())
+			.set(BrokerPo::getSettled, true)
+			.set(BrokerPo::getSettleTime, item.getSettleTime())
+			.where(BrokerPo::getItemPointer).eq(item.getItemUniqueId())
+			.and(BrokerPo::getExpireTime).eq(item.getExpireTime())
+			.and(BrokerPo::getSellerId).eq(item.getSellerId())
+			.and(BrokerPo::getSettled).eq(false)
+			.update();
 	}
 
 	/**
-	 * 更新交易所物品数量、价格与拆分出售等字段。
-	 * Updates broker item count, price, split-sell and related fields.
-	 * @param con 数据库连接 / database connection
+	 * 更新交易所物品数量、价格与拆分出售等字段（仅未结算行）。
+	 * Updates broker item count, price, split-sell and related fields (unsettled rows only).
 	 * @param item 交易所物品 / broker item
 	 * @return 是否成功 / whether successful
 	 */
-	private boolean updateItem(Connection con, final BrokerItem item) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(BrokerMapper.UPDATE_ITEM_QUERY_JDBC)) {
-			stmt.setLong(1, item.getItemCount());
-			stmt.setLong(2, item.getPrice());
-			stmt.setBoolean(3, item.isSold());
-			stmt.setBoolean(4, item.isSettled());
-			stmt.setTimestamp(5, item.getSettleTime());
-			stmt.setBoolean(6, item.isSplitSell());
-			stmt.setInt(7, item.getItemUniqueId());
-			stmt.setTimestamp(8, item.getExpireTime());
-			stmt.setInt(9, item.getSellerId());
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean updateItem(final BrokerItem item) {
+		return UpdateChain.of(BrokerPo.class)
+			.set(BrokerPo::getItemCount, item.getItemCount())
+			.set(BrokerPo::getPrice, item.getPrice())
+			.set(BrokerPo::getSold, item.isSold())
+			.set(BrokerPo::getSettled, item.isSettled())
+			.set(BrokerPo::getSettleTime, item.getSettleTime())
+			.set(BrokerPo::getSplitsell, item.isSplitSell())
+			.where(BrokerPo::getItemPointer).eq(item.getItemUniqueId())
+			.and(BrokerPo::getExpireTime).eq(item.getExpireTime())
+			.and(BrokerPo::getSellerId).eq(item.getSellerId())
+			.and(BrokerPo::getSettled).eq(false)
+			.update();
 	}
 
 	/**
@@ -279,10 +270,11 @@ public class BrokerDaoImpl extends ServiceImpl<BrokerMapper, BrokerPo> implement
 	@Override
 	public int[] getUsedIDs() {
 		try {
-			List<Integer> ids = mapper.selectPlayerIds();
+			List<Object> ids = mapper.selectObjectListByQuery(
+				QueryWrapper.create().select(PlayerPo::getId).from(PlayerPo.class));
 			int[] result = new int[ids.size()];
 			for (int i = 0; i < ids.size(); i++) {
-				result[i] = ids.get(i);
+				result[i] = ((Number) ids.get(i)).intValue();
 			}
 			return result;
 		} catch (DataAccessException e) {

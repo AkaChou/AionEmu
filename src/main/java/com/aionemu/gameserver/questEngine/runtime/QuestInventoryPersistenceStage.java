@@ -5,8 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +33,8 @@ final class QuestInventoryPersistenceStage {
 		return NONE;
 	}
 
-	static QuestInventoryPersistenceStage persist(InventoryDao inventoryDao, Connection connection,
-			Player player, List<Item> dirty) throws SQLException {
+	static QuestInventoryPersistenceStage persist(InventoryDao inventoryDao, Player player, List<Item> dirty) {
 		Objects.requireNonNull(inventoryDao, "inventoryDao");
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(player, "player");
 		List<Item> items = List.copyOf(Objects.requireNonNull(dirty, "dirty"));
 		if (items.isEmpty()) {
@@ -50,13 +46,13 @@ final class QuestInventoryPersistenceStage {
 				originalStates.put(item, item.getPersistentState());
 			}
 		}
-		inventoryDao.storeInTransaction(connection, items, player.getObjectId(), null, null);
+		inventoryDao.storeInTransaction(items, player.getObjectId(), null, null);
 		for (Map.Entry<Item, PersistentState> entry : originalStates.entrySet()) {
 			if (entry.getValue() == PersistentState.NEW
 					&& entry.getKey().getPersistentState() == PersistentState.NEW) {
-				// 该行现在存在于打开的 JDBC 事务中。后续变更会把 UPDATED 移到 UPDATE_REQUIRED，
+				// 该行现在存在于打开的事务中。后续变更会把 UPDATED 移到 UPDATE_REQUIRED，
 				// 而未变更的后续端口会跳过它。
-				// The row now exists in the open JDBC transaction. A later mutation will
+				// The row now exists in the open transaction. A later mutation will
 				// move UPDATED to UPDATE_REQUIRED, while an unchanged later port skips it.
 				entry.getKey().setPersistentState(PersistentState.UPDATED);
 			}

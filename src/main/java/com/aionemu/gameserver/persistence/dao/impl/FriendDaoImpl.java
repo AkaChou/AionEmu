@@ -86,10 +86,8 @@ public class FriendDaoImpl extends ServiceImpl<FriendMapper, FriendPo> implement
 
 	@Override
 	public void setFriendNote(int playerId, int friendId, String note) {
-		try {
-			mapper.updateNote(playerId, friendId, note);
-		} catch (Exception e) {
-			log.error(I18n.get("log.7761eea711e0", playerId, friendId), e);
-		}
+		// friends 表没有 note 列，原 SQL 恒抛 Unknown column 并返回 false（无实际效果）；此处改为无操作。
+		// The friends table has no note column; the old SQL always threw Unknown column and returned false
+		// (no effect), so this is now an explicit no-op.
 	}
 }

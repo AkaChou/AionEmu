@@ -26,6 +26,8 @@ import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 import com.aionemu.gameserver.persistence.entity.AbyssRankPo;
 import com.aionemu.gameserver.persistence.mapper.AbyssRankMapper;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -94,23 +96,24 @@ public class AbyssRankDaoImpl extends ServiceImpl<AbyssRankMapper, AbyssRankPo> 
 		if (state != PersistentState.NEW && state != PersistentState.UPDATE_REQUIRED) {
 			return;
 		}
-		try (Connection con = DatabaseAccess.getConnection()) {
-			storeInTransaction(con, player.getObjectId(), rank);
+		try {
+			storeInTransaction(player.getObjectId(), rank);
 			rank.setPersistentState(PersistentState.UPDATED);
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.418d26f689fd", player.getObjectId()), e);
 		}
 	}
 
 	@Override
-	public void storeInTransaction(Connection con, int playerId, AbyssRank rank) throws SQLException {
+	public void storeInTransaction(int playerId, AbyssRank rank) {
 		boolean result = switch (rank.getPersistentState()) {
-			case NEW -> addRank(con, playerId, rank);
-			case UPDATE_REQUIRED -> updateRank(con, playerId, rank);
+			case NEW -> addRank(playerId, rank);
+			case UPDATE_REQUIRED -> updateRank(playerId, rank);
 			default -> true;
 		};
 		if (!result) {
-			throw new SQLException("No abyss rank row changed for player " + playerId);
+			throw new DataAccessException("No abyss rank row changed for player " + playerId) {
+			};
 		}
 	}
 
@@ -230,7 +233,11 @@ public class AbyssRankDaoImpl extends ServiceImpl<AbyssRankMapper, AbyssRankPo> 
 	@Override
 	public void updateAbyssRank(int playerId, AbyssRankEnum rankEnum) {
 		try {
-			mapper.updateRankAndQuota(rankEnum.getId(), rankEnum.getQuota(), playerId);
+			UpdateChain.of(AbyssRankPo.class)
+				.set(AbyssRankPo::getRank, rankEnum.getId())
+				.set(AbyssRankPo::getTopRanking, rankEnum.getQuota())
+				.where(AbyssRankPo::getPlayerId).eq(playerId)
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.77672b720fdd", playerId), e);
 		}
@@ -307,57 +314,46 @@ public class AbyssRankDaoImpl extends ServiceImpl<AbyssRankMapper, AbyssRankPo> 
 	}
 
 	/**
-	 * 依持久化状态插入军阶行（原生 PreparedStatement，随调用方事务）。
-	 * Inserts the rank row by persistent state (raw PreparedStatement, caller's transaction).
+	 * 插入军阶行，随调用方事务。
+	 * Inserts the rank row inside the caller's transaction.
 	 */
-	private boolean addRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(AbyssRankMapper.INSERT_QUERY_JDBC)) {
-			stmt.setInt(1, objectId);
-			stmt.setInt(2, rank.getDailyAP());
-			stmt.setInt(3, rank.getDailyGP());
-			stmt.setInt(4, rank.getWeeklyAP());
-			stmt.setInt(5, rank.getWeeklyGP());
-			stmt.setInt(6, rank.getAp());
-			stmt.setInt(7, rank.getGp());
-			stmt.setInt(8, rank.getRank().getId());
-			stmt.setInt(9, rank.getTopRanking());
-			stmt.setInt(10, rank.getDailyKill());
-			stmt.setInt(11, rank.getWeeklyKill());
-			stmt.setInt(12, rank.getAllKill());
-			stmt.setInt(13, rank.getMaxRank());
-			stmt.setInt(14, rank.getLastKill());
-			stmt.setInt(15, rank.getLastAP());
-			stmt.setInt(16, rank.getLastGP());
-			stmt.setLong(17, rank.getLastUpdate());
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean addRank(final int objectId, final AbyssRank rank) {
+		return mapper.insert(toPo(objectId, rank)) > 0;
 	}
 
 	/**
-	 * 依持久化状态更新军阶行（原生 PreparedStatement，随调用方事务）。
-	 * Updates the rank row by persistent state (raw PreparedStatement, caller's transaction).
+	 * 更新军阶行，随调用方事务。
+	 * Updates the rank row inside the caller's transaction.
 	 */
-	private boolean updateRank(Connection con, final int objectId, final AbyssRank rank) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(AbyssRankMapper.UPDATE_QUERY_JDBC)) {
-			stmt.setInt(1, rank.getDailyAP());
-			stmt.setInt(2, rank.getDailyGP());
-			stmt.setInt(3, rank.getWeeklyAP());
-			stmt.setInt(4, rank.getWeeklyGP());
-			stmt.setInt(5, rank.getAp());
-			stmt.setInt(6, rank.getGp());
-			stmt.setInt(7, rank.getRank().getId());
-			stmt.setInt(8, rank.getTopRanking());
-			stmt.setInt(9, rank.getDailyKill());
-			stmt.setInt(10, rank.getWeeklyKill());
-			stmt.setInt(11, rank.getAllKill());
-			stmt.setInt(12, rank.getMaxRank());
-			stmt.setInt(13, rank.getLastKill());
-			stmt.setInt(14, rank.getLastAP());
-			stmt.setInt(15, rank.getLastGP());
-			stmt.setLong(16, rank.getLastUpdate());
-			stmt.setInt(17, objectId);
-			return stmt.executeUpdate() > 0;
-		}
+	private boolean updateRank(final int objectId, final AbyssRank rank) {
+		return mapper.updateByQuery(toPo(objectId, rank),
+			QueryWrapper.create().where(AbyssRankPo::getPlayerId).eq(objectId)) > 0;
+	}
+
+	/**
+	 * 由领域军阶构造持久化实体。
+	 * Builds the persistence entity from the domain abyss rank.
+	 */
+	private static AbyssRankPo toPo(final int playerId, final AbyssRank rank) {
+		AbyssRankPo po = new AbyssRankPo();
+		po.setPlayerId(playerId);
+		po.setDailyAp(rank.getDailyAP());
+		po.setDailyGp(rank.getDailyGP());
+		po.setWeeklyAp(rank.getWeeklyAP());
+		po.setWeeklyGp(rank.getWeeklyGP());
+		po.setAp(rank.getAp());
+		po.setGp(rank.getGp());
+		po.setRank(rank.getRank().getId());
+		po.setTopRanking(rank.getTopRanking());
+		po.setDailyKill(rank.getDailyKill());
+		po.setWeeklyKill(rank.getWeeklyKill());
+		po.setAllKill(rank.getAllKill());
+		po.setMaxRank(rank.getMaxRank());
+		po.setLastKill(rank.getLastKill());
+		po.setLastAp(rank.getLastAP());
+		po.setLastGp(rank.getLastGP());
+		po.setLastUpdate(rank.getLastUpdate());
+		return po;
 	}
 
 	/**

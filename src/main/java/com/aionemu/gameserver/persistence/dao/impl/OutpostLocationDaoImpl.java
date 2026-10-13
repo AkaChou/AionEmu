@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.outpost.OutpostLocation;
 import com.aionemu.gameserver.persistence.dao.OutpostLocationDao;
 import com.aionemu.gameserver.persistence.entity.OutpostLocationPo;
 import com.aionemu.gameserver.persistence.mapper.OutpostLocationMapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,10 @@ public class OutpostLocationDaoImpl extends ServiceImpl<OutpostLocationMapper, O
 	@Override
 	public boolean updateOutpostLocation(OutpostLocation location) {
 		try {
-			return mapper.updateOutpostRace(location.getRace().toString(), location.getId()) > 0;
+			return UpdateChain.of(OutpostLocationPo.class)
+				.set(OutpostLocationPo::getRace, location.getRace().toString())
+				.where(OutpostLocationPo::getId).eq(location.getId())
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.3e416c0dd49f", location.getId()), e);
 			return false;

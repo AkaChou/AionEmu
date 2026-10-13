@@ -1,61 +1,52 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import com.aionemu.gameserver.questEngine.model.QuestState;
-import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Proxy;
-import java.sql.PreparedStatement;
-import java.sql.Types;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.questEngine.model.QuestStatus;
+
 /**
  * 任务奖励参数绑定契约测试。
- * Contract tests for quest-reward parameter binding.
+ * 旧实现以 {@code PreparedStatement} 代理断言 {@code setNull(Types.INTEGER)}；映射层改为 Flex 更新链后，
+ * 「未选奖励写 NULL」由 nullable 的 {@code getRewardOrNull()} 直接交给更新链表达——若误用带 0 兜底的
+ * {@code getReward()}，未选奖励会被持久化成 0。
+ * Contract tests for quest-reward parameter binding. The legacy test asserted
+ * {@code setNull(Types.INTEGER)} through a {@code PreparedStatement} proxy; with the Flex update chain the
+ * "unselected reward writes NULL" behaviour is expressed by handing the nullable
+ * {@code getRewardOrNull()} straight to the chain — using the 0-fallback {@code getReward()} instead would
+ * persist an unselected reward as 0.
  */
 class PlayerQuestListDAOTest {
 
 	@Test
-	void persistsAnUnselectedRewardAsSqlNull() throws Exception {
-		Map<Integer, Object> parameters = new HashMap<>();
-		Map<Integer, Integer> nullTypes = new HashMap<>();
-		PreparedStatement statement = recordingStatement(parameters, nullTypes);
+	void unselectedRewardStaysNullForPersistence() {
 		QuestState state = new QuestState(1101, QuestStatus.START, 0, 0, null, null, null);
 
-		PlayerQuestDaoImpl.setRewardParameter(statement, 7, state);
-
-		assertTrue(parameters.containsKey(7));
-		assertNull(parameters.get(7));
-		assertEquals(Types.INTEGER, nullTypes.get(7));
+		assertNull(state.getRewardOrNull());
 	}
 
 	@Test
-	void persistsASelectedRewardAsItsIndex() throws Exception {
-		Map<Integer, Object> parameters = new HashMap<>();
-		PreparedStatement statement = recordingStatement(parameters, new HashMap<>());
+	void selectedRewardKeepsItsIndexForPersistence() {
 		QuestState state = new QuestState(1101, QuestStatus.COMPLETE, 0, 1, null, 3, null);
 
-		PlayerQuestDaoImpl.setRewardParameter(statement, 5, state);
-
-		assertEquals(3, parameters.get(5));
+		assertEquals(3, state.getRewardOrNull());
 	}
 
-	private static PreparedStatement recordingStatement(Map<Integer, Object> parameters,
-			Map<Integer, Integer> nullTypes) {
-		return (PreparedStatement) Proxy.newProxyInstance(PlayerQuestListDAOTest.class.getClassLoader(),
-			new Class<?>[] { PreparedStatement.class }, (proxy, method, args) -> {
-				if (method.getName().equals("setNull")) {
-					parameters.put((Integer) args[0], null);
-					nullTypes.put((Integer) args[0], (Integer) args[1]);
-				} else if (method.getName().equals("setInt")) {
-					parameters.put((Integer) args[0], args[1]);
-				}
-				return null;
-			});
+	@Test
+	void rewardColumnIsBoundFromTheNullableAccessor() throws IOException {
+		String dao = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/persistence/dao/impl/PlayerQuestDaoImpl.java"));
+
+		assertTrue(dao.contains(".set(PlayerQuestPo::getReward, qs.getRewardOrNull())"));
+		assertFalse(dao.contains("qs.getReward()"));
 	}
 }

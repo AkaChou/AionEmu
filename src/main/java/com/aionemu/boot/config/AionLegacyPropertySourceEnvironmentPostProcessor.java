@@ -30,10 +30,24 @@ import org.springframework.core.env.MapPropertySource;
  * feed the login-server {@code database.url} back into the game server. Such keys are left to each
  * service's own legacy loader reading its own file, while keys every service agrees on (for example
  * {@code gameserver.thread.*} and {@code svstats.*}) keep being mirrored.
+ * <p>同时把游戏服的 {@code network/database.properties} 翻译成 Boot 数据源键 {@code spring.datasource.*}。
+ * <p>It also translates the game server's {@code network/database.properties} into Boot DataSource keys
+ * ({@code spring.datasource.*}).
  */
 public class AionLegacyPropertySourceEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
     static final String PROPERTY_SOURCE_NAME = "aionLegacyProperties";
+
+    static final String DATA_SOURCE_PROPERTY_SOURCE_NAME = "aionGameDatabaseProperties";
+
+    /** Boot 数据源键 ↔ 游戏服 {@code database.properties} 遗留键 / Boot DataSource keys ↔ legacy keys. */
+    private static final Map<String, String> DATA_SOURCE_KEYS = Map.of(
+        "url", "database.url",
+        "username", "database.user",
+        "password", "database.password",
+        "hikari.maximum-pool-size", "database.maxconnections",
+        "hikari.max-lifetime", "database.hikari.maxLifetime",
+        "hikari.connection-test-query", "database.hikari.connectionTestQuery");
 
     /**
      * 加载游戏/登录/聊天遗留配置并注册为低优先级 PropertySource。
@@ -55,6 +69,11 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
             // variables and application.yml still override; file values apply only when nothing
             // with a higher precedence defines the key.
             environment.getPropertySources().addLast(new MapPropertySource(PROPERTY_SOURCE_NAME, properties));
+        }
+        Map<String, Object> dataSourceProperties = dataSourceProperties(environment);
+        if (!dataSourceProperties.isEmpty()) {
+            environment.getPropertySources().addLast(
+                new MapPropertySource(DATA_SOURCE_PROPERTY_SOURCE_NAME, dataSourceProperties));
         }
         // 这里刻意**不**发布 ConfigSourceResolverHolder：本处理器在任何 SpringApplication 实例化时
         // 都会执行，一旦在此写入全局持有者，测试与并行上下文就会互相污染。解析器只由启动层单例
@@ -185,17 +204,46 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      */
     private void loadFile(LegacyPropertyCollector collector, Path file, String legacyPrefix,
         boolean includeRawProperty) {
-        if (!Files.isRegularFile(file)) {
-            return;
-        }
+        readProperties(file).forEach((key, value) ->
+            collector.put(legacyPrefix, String.valueOf(key), value, includeRawProperty));
+    }
+
+    /**
+     * 读取单个 properties 文件；文件不存在时返回空集。
+     * Reads one properties file; a missing file yields an empty set.
+     * @param file 文件路径 / file path
+     * @return 属性集 / properties
+     */
+    private static Properties readProperties(Path file) {
         Properties properties = new Properties();
+        if (!Files.isRegularFile(file)) {
+            return properties;
+        }
         try (InputStream inputStream = Files.newInputStream(file)) {
             properties.load(inputStream);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load legacy properties from " + file, e);
         }
-        properties.forEach((key, value) ->
-            collector.put(legacyPrefix, String.valueOf(key), value, includeRawProperty));
+        return properties;
+    }
+
+    /**
+     * 把游戏服的库配置翻译成 Boot 数据源键（{@code spring.datasource.*}），以最低优先级注册。
+     * Translates the game server's database settings into Boot DataSource keys ({@code spring.datasource.*}),
+     * registered at the lowest precedence.
+     * @param environment 环境 / environment
+     * @return 数据源键值 / DataSource key-value pairs
+     */
+    private Map<String, Object> dataSourceProperties(ConfigurableEnvironment environment) {
+        Properties properties = readProperties(configDir(environment).resolve("network/database.properties"));
+        Map<String, Object> translated = new LinkedHashMap<>();
+        DATA_SOURCE_KEYS.forEach((bootKey, legacyKey) -> {
+            String value = properties.getProperty(legacyKey);
+            if (value != null) {
+                translated.put("spring.datasource." + bootKey, value);
+            }
+        });
+        return translated;
     }
 
     /**

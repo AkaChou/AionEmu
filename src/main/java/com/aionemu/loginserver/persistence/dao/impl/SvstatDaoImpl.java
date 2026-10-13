@@ -8,6 +8,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.persistence.entity.SvstatPo;
 import com.aionemu.loginserver.persistence.mapper.SvstatMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
@@ -28,7 +29,7 @@ public class SvstatDaoImpl extends ServiceImpl<SvstatMapper, SvstatPo> implement
 				.set(SvstatPo::getStatus, status)
 				.set(SvstatPo::getCurrent, current)
 				.set(SvstatPo::getMax, max)
-				.setRaw("last_update", "NOW()")
+				.set(SvstatPo::getLastUpdate, QueryMethods.now())
 				.where(SvstatPo::getServer).eq(server)
 				.update();
 			if (!updated) {
@@ -45,7 +46,7 @@ public class SvstatDaoImpl extends ServiceImpl<SvstatMapper, SvstatPo> implement
 			boolean updated = UpdateChain.of(SvstatPo.class)
 				.set(SvstatPo::getStatus, status)
 				.set(SvstatPo::getCurrent, current)
-				.setRaw("last_update", "NOW()")
+				.set(SvstatPo::getLastUpdate, QueryMethods.now())
 				.where(SvstatPo::getServer).eq(server)
 				.update();
 			if (!updated) {

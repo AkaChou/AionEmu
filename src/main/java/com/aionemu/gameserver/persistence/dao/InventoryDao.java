@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -120,18 +118,14 @@ public interface InventoryDao extends IService<InventoryPo> {
 	boolean store(List<Item> items, Integer playerId, Integer accountId, Integer legionId);
 
 	/**
-	 * 在调用方连接上按持久化状态写入物品（<b>不经 Mapper</b>：Mapper 使用独立 SqlSession，无法与调用方同事务）。
-	 * Persists items by persistent state on the caller's connection (<b>bypassing the Mapper</b>: the Mapper
-	 * runs on its own SqlSession and cannot share the caller's transaction).
-	 * @param connection 调用方连接 / caller connection
+	 * 在调用方事务内按持久化状态写入物品。
+	 * Persists items by persistent state inside the caller-owned transaction.
 	 * @param items 物品列表 / item list
 	 * @param playerId 玩家 ID / player ID
 	 * @param accountId 账号 ID / account ID
 	 * @param legionId 军团 ID / legion ID
-	 * @throws SQLException 写入失败时 / when the write fails
 	 */
-	void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-			Integer legionId) throws SQLException;
+	void storeInTransaction(List<Item> items, Integer playerId, Integer accountId, Integer legionId);
 
 	/**
 	 * 将物品标记为已持久化（删除态物品同时释放其唯一 ID）。

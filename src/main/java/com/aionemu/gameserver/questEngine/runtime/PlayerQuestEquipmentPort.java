@@ -10,7 +10,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -37,9 +36,7 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
-		List<QuestAction.UnequipItem> unequips) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflight(QuestSnapshot snapshot, List<QuestAction.UnequipItem> unequips) throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (snapshot.equipmentFacts() == null) {
 			throw new SQLException("equipment facts are not captured for player " + snapshot.playerId());
@@ -52,9 +49,8 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-		List<QuestAction.UnequipItem> unequips) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction.UnequipItem> unequips)
+			throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		Player player = players.find(snapshot.playerId());
 		if (player == null || player.getEquipment() == null || player.getInventory() == null
@@ -96,8 +92,8 @@ public final class PlayerQuestEquipmentPort implements QuestEquipmentPort {
 				.filter(item -> !item.isEquipped())
 				.toList();
 			List<Item> dirty = List.copyOf(player.getDirtyItemsToUpdate());
-			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
-			stigmaDao.storeItemsInTransaction(connection, player);
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, player, dirty);
+			stigmaDao.storeItemsInTransaction(player);
 			final QuestInventoryPersistenceStage committedInventoryStage = inventoryStage;
 			return QuestTransactionParticipant.of(() -> {
 				committedInventoryStage.afterCommit();

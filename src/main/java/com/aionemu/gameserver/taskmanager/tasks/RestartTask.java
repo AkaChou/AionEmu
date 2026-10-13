@@ -63,7 +63,6 @@ public class RestartTask extends TaskFromDBHandler {
 	@Override
 	public void run() {
 		log.info(I18n.get("log.92ee53efe389", id));
-		setLastActivation();
 
 		countDown = Integer.parseInt(params[0]);
 		announceInterval = Integer.parseInt(params[1]);

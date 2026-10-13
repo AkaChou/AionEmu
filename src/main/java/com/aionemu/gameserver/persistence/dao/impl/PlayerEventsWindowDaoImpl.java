@@ -16,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.entity.PlayerEventsWindowPo;
 import com.aionemu.gameserver.persistence.mapper.PlayerEventsWindowMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -138,7 +139,13 @@ public class PlayerEventsWindowDaoImpl extends ServiceImpl<PlayerEventsWindowMap
 	@Override
 	public void setRewardRecivedCount(int accountId, int eventId, int rewardRecivedCount) {
 		try {
-			mapper.updateReward(accountId, eventId, rewardRecivedCount);
+			UpdateChain.of(PlayerEventsWindowPo.class)
+				.set(PlayerEventsWindowPo::getRewardRecivedCount, rewardRecivedCount)
+				.set(PlayerEventsWindowPo::getElapsed, 0)
+				.set(PlayerEventsWindowPo::getLastStamp, QueryMethods.now())
+				.where(PlayerEventsWindowPo::getAccountId).eq(accountId)
+				.and(PlayerEventsWindowPo::getEventId).eq(eventId)
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.90532cef7c99", accountId, eventId), e);
 		}

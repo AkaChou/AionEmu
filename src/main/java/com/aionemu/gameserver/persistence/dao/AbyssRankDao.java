@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,15 +46,13 @@ public interface AbyssRankDao extends IService<AbyssRankPo> {
 	void storeAbyssRank(Player player);
 
 	/**
-	 * 在调用方事务连接上存储欧比斯排名（原生 PreparedStatement，同事务）。
-	 * Stores the abyss rank on the caller's transactional connection (raw PreparedStatement, same transaction).
+	 * 在调用方事务内存储欧比斯排名。
+	 * Stores the abyss rank inside the caller's transaction.
 	 *
-	 * @param connection 调用方事务连接 / caller's transactional connection
-	 * @param playerId   玩家 ID / player ID
-	 * @param rank       欧比斯排名 / abyss rank
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
+	 * @param playerId 玩家 ID / player ID
+	 * @param rank     欧比斯排名 / abyss rank
 	 */
-	void storeInTransaction(Connection connection, int playerId, AbyssRank rank) throws SQLException;
+	void storeInTransaction(int playerId, AbyssRank rank);
 
 	/**
 	 * 获取指定种族的玩家欧比斯排行榜。

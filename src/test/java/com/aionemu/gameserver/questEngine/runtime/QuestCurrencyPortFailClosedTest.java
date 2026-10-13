@@ -16,12 +16,11 @@ class QuestCurrencyPortFailClosedTest {
 	void anUncomposedCurrencyPortCannotSilentlySkipDebits() {
 		QuestCurrencyPort port = new QuestCurrencyPort() {
 			@Override
-			public void preflight(java.sql.Connection connection, QuestSnapshot snapshot,
-					List<QuestAction.GrantReward> rewards) {
+			public void preflight(QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards) {
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(java.sql.Connection connection, QuestSnapshot snapshot,
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 					List<QuestAction.GrantReward> rewards) {
 				return QuestTransactionParticipant.none();
 			}
@@ -30,7 +29,7 @@ class QuestCurrencyPortFailClosedTest {
 			new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 1));
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1001, QuestStatus.START, 0, Map.of(), Map.of());
 
-		assertThrows(SQLException.class, () -> port.preflightDebits(null, snapshot, debits));
-		assertThrows(SQLException.class, () -> port.applyDebits(null, snapshot, debits));
+		assertThrows(SQLException.class, () -> port.preflightDebits(snapshot, debits));
+		assertThrows(SQLException.class, () -> port.applyDebits(snapshot, debits));
 	}
 }

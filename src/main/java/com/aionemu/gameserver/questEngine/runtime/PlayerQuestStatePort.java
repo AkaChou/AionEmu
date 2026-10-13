@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -47,8 +46,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 	}
 
 	@Override
-	public void apply(Connection connection, int playerId, QuestMutationPlan plan) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void apply(int playerId, QuestMutationPlan plan) throws SQLException {
 		Objects.requireNonNull(plan, "plan");
 		Player player = players.find(playerId);
 		if (player == null) {
@@ -67,7 +65,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 			stagedProjection.setPersistentState(PersistentState.UPDATED);
 			stagedProjection.setPersistentState(PersistentState.UPDATE_REQUIRED);
 		}
-		questDao.store(connection, playerId, List.of(stagedProjection));
+		questDao.store(playerId, List.of(stagedProjection));
 		PendingKey key = new PendingKey(playerId, plan);
 		if (pending.putIfAbsent(key, stagedProjection) != null) {
 			throw new IllegalStateException("quest projection is already pending: " + plan.questId());
@@ -103,7 +101,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 			state.setCompleteTime(committed.getCompleteTime());
 			state.setNextRepeatTime(committed.getNextRepeatTime());
 		}
-		// 已持久化:避免下一次 store(Connection, Player) 重复写。
+		// 已持久化:避免下一次 store(Player) 重复写。
 		state.setPersistentState(PersistentState.UPDATED);
 		pending.remove(key, committed);
 	}

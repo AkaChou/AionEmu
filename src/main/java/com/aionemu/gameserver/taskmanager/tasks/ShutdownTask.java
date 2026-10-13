@@ -62,7 +62,6 @@ public class ShutdownTask extends TaskFromDBHandler {
 	@Override
 	public void run() {
 		log.info(I18n.get("log.8f7fa68333a8", id));
-		setLastActivation();
 
 		countDown = Integer.parseInt(params[0]);
 		announceInterval = Integer.parseInt(params[1]);

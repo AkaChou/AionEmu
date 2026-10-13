@@ -59,6 +59,20 @@ public class GameRuntimeServicesLifecycle {
     }
 
     /**
+     * 提前绑定游戏时间的持久化来源（幂等）。
+     * Bind the game-time persistence source ahead of time (idempotent).
+     *
+     * <p>与 {@link #start()} 分离：时钟启动仍留在完整阶段里，这里只保证游戏时间实例在任何读取它的阶段之前
+     * 就绪（临时刷怪所在的 {@code eventRuntimeLifecycle} 早于本阶段）。
+     * Separate from {@link #start()}: starting the clock stays in the full phase; this only guarantees the
+     * game-time instance exists before any phase reads it (the temp-spawn {@code eventRuntimeLifecycle} runs
+     * before this one).</p>
+     */
+    public synchronized void initializeGameTime() {
+        runtimeServicesGateway.initializeGameTime();
+    }
+
+    /**
      * 是否已成功加载。
      * Whether loading completed successfully.
      * @return 已加载为 {@code true} / {@code true} when loaded

@@ -61,6 +61,12 @@ public class LoginStartupSequence {
      * Shutdown provider: keeps Shutdown lazy while avoiding a CGLIB proxy (it must register as a real Thread).
      */
     private final ObjectProvider<Shutdown> shutdownProvider;
+    /**
+     * 启动期解析出的关机句柄；销毁阶段容器已禁止创建单例，届时不能再向 provider 索取。
+     * Shutdown handle resolved at startup: the container forbids singleton creation during destruction,
+     * so the provider must not be asked again at that point.
+     */
+    private Shutdown shutdown;
 
     private boolean loaded;
     private long loadTimeMillis = -1;
@@ -88,8 +94,9 @@ public class LoginStartupSequence {
             bannedIpController.start();
             bannedMacDao.cleanExpiredBans();
             netConnector.currentTransport().connect();
+            shutdown = shutdownProvider.getObject();
             if (!AionRuntimeMode.isBootEmbedded()) {
-                Runtime.getRuntime().addShutdownHook(shutdownProvider.getObject());
+                Runtime.getRuntime().addShutdownHook(shutdown);
             }
             AEInfos.printAllInfos();
             loaded = true;
@@ -106,9 +113,10 @@ public class LoginStartupSequence {
      * Shuts down login runtime without halting the process and resets the loaded flag.
      */
     public synchronized void stop() {
-        Shutdown shutdown = shutdownProvider.getIfAvailable();
-        if (shutdown != null) {
-            shutdown.shutdown(false);
+        Shutdown current = shutdown;
+        shutdown = null;
+        if (current != null) {
+            current.shutdown(false);
         }
         loaded = false;
     }

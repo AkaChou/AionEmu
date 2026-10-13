@@ -1,15 +1,13 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import com.aionemu.boot.i18n.I18n;
@@ -25,6 +23,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Lazy
 public class PlayerQuestDaoImpl extends ServiceImpl<PlayerQuestMapper, PlayerQuestPo> implements PlayerQuestDao {
-
-	/** 批处理大小 / Batch size */
-	private static final int BATCH_SIZE = 100;
 
 	/** 筛选需新增的任务状态 / Filter quests to insert */
 	private static final Predicate<QuestState> questsToAddPredicate =
@@ -95,13 +91,7 @@ public class PlayerQuestDaoImpl extends ServiceImpl<PlayerQuestMapper, PlayerQue
 			return;
 		}
 		try {
-			transactionTemplate.executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					store(con, player);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store quest states", e) {};
-				}
-			});
+			transactionTemplate.executeWithoutResult(_ -> store(player.getObjectId(), qsList));
 			for (QuestState qs : qsList) {
 				qs.setPersistentState(PersistentState.UPDATED);
 			}
@@ -111,152 +101,100 @@ public class PlayerQuestDaoImpl extends ServiceImpl<PlayerQuestMapper, PlayerQue
 	}
 
 	@Override
-	public void store(Connection con, Player player) throws SQLException {
-		if (con == null || player == null) {
-			throw new IllegalArgumentException("connection and player are required");
-		}
-		if (con.getAutoCommit()) {
-			throw new IllegalStateException("caller-owned quest transaction must disable auto-commit");
-		}
-		Collection<QuestState> qsList = player.getQuestStateList().getAllQuestState();
-		if (GenericValidator.isBlankOrNull(qsList)) {
-			return;
-		}
-		deleteQuest(con, player.getObjectId(), qsList);
-		addQuests(con, player.getObjectId(), qsList);
-		updateQuests(con, player.getObjectId(), qsList);
-	}
-
-	@Override
-	public void store(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
-		if (con == null) {
-			throw new IllegalArgumentException("connection is required");
-		}
-		if (con.getAutoCommit()) {
-			throw new IllegalStateException("caller-owned quest transaction must disable auto-commit");
-		}
+	public void store(int playerId, Collection<QuestState> states) {
+		requireTransaction();
 		if (GenericValidator.isBlankOrNull(states)) {
 			return;
 		}
-		deleteQuest(con, playerId, states);
-		addQuests(con, playerId, states);
-		updateQuests(con, playerId, states);
+		deleteQuest(playerId, states);
+		addQuests(playerId, states);
+		updateQuests(playerId, states);
+	}
+
+	/**
+	 * 要求存在活动事务：Spring 事务连接默认关闭自动提交。
+	 * 旧实现直接断言 {@code !connection.getAutoCommit()}，此处保留等价断言。
+	 * Requires an active transaction: Spring transactional connections default to auto-commit disabled.
+	 * The legacy implementation asserted {@code !connection.getAutoCommit()}; this keeps the equivalent guard.
+	 */
+	private static void requireTransaction() {
+		if (!TransactionSynchronizationManager.isActualTransactionActive()) {
+			throw new IllegalStateException("caller-owned quest transaction must disable auto-commit");
+		}
 	}
 
 	/**
 	 * 批量插入新增任务状态。
 	 * Batch-inserts newly created quest states.
 	 */
-	private void addQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
+	private void addQuests(int playerId, Collection<QuestState> states) {
 		Collection<QuestState> statesToAdd = Collections2.filter(states, questsToAddPredicate);
 		if (GenericValidator.isBlankOrNull(statesToAdd)) {
 			return;
 		}
-		try (PreparedStatement ps = con.prepareStatement(PlayerQuestMapper.INSERT_JDBC)) {
-			int count = 0;
-			for (QuestState qs : statesToAdd) {
-				setInsertParameters(ps, playerId, qs);
-				ps.addBatch();
-				if (++count % BATCH_SIZE == 0) {
-					ps.executeBatch();
-				}
-			}
-			ps.executeBatch();
-			log.debug("Inserted {} quests for player {}", statesToAdd.size(), playerId);
+		List<PlayerQuestPo> rows = new ArrayList<>(statesToAdd.size());
+		for (QuestState qs : statesToAdd) {
+			rows.add(toPo(playerId, qs));
 		}
-	}
-
-	private void setInsertParameters(PreparedStatement ps, int playerId, QuestState qs) throws SQLException {
-		ps.setInt(1, playerId);
-		ps.setInt(2, qs.getQuestId());
-		ps.setString(3, qs.getStatus().toString());
-		ps.setInt(4, qs.getQuestVars().getQuestVars());
-		ps.setInt(5, qs.getCompleteCount());
-		if (qs.getNextRepeatTime() != null) {
-			ps.setTimestamp(6, qs.getNextRepeatTime());
-		} else {
-			ps.setNull(6, Types.TIMESTAMP);
-		}
-		setRewardParameter(ps, 7, qs);
-		if (qs.getCompleteTime() == null) {
-			ps.setNull(8, Types.TIMESTAMP);
-		} else {
-			ps.setTimestamp(8, qs.getCompleteTime());
-		}
+		mapper.insertBatch(rows);
+		log.debug("Inserted {} quests for player {}", rows.size(), playerId);
 	}
 
 	/**
-	 * 批量更新已修改的任务状态。
-	 * Batch-updates quest states that require update.
+	 * 更新已修改的任务状态。
+	 * Updates quest states that require update.
 	 */
-	private void updateQuests(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
+	private void updateQuests(int playerId, Collection<QuestState> states) {
 		Collection<QuestState> statesToUpdate = Collections2.filter(states, questsToUpdatePredicate);
 		if (GenericValidator.isBlankOrNull(statesToUpdate)) {
 			return;
 		}
-		try (PreparedStatement ps = con.prepareStatement(PlayerQuestMapper.UPDATE_JDBC)) {
-			int count = 0;
-			for (QuestState qs : statesToUpdate) {
-				setUpdateParameters(ps, playerId, qs);
-				ps.addBatch();
-				if (++count % BATCH_SIZE == 0) {
-					ps.executeBatch();
-				}
-			}
-			ps.executeBatch();
-			log.debug("Updated {} quests for player {}", statesToUpdate.size(), playerId);
+		for (QuestState qs : statesToUpdate) {
+			UpdateChain.of(PlayerQuestPo.class)
+				.set(PlayerQuestPo::getStatus, qs.getStatus().toString())
+				.set(PlayerQuestPo::getQuestVars, qs.getQuestVars().getQuestVars())
+				.set(PlayerQuestPo::getCompleteCount, qs.getCompleteCount())
+				.set(PlayerQuestPo::getNextRepeatTime, qs.getNextRepeatTime())
+				.set(PlayerQuestPo::getReward, qs.getRewardOrNull())
+				.set(PlayerQuestPo::getCompleteTime, qs.getCompleteTime())
+				.where(PlayerQuestPo::getPlayerId).eq(playerId)
+				.and(PlayerQuestPo::getQuestId).eq(qs.getQuestId())
+				.update();
 		}
-	}
-
-	private void setUpdateParameters(PreparedStatement ps, int playerId, QuestState qs) throws SQLException {
-		ps.setString(1, qs.getStatus().toString());
-		ps.setInt(2, qs.getQuestVars().getQuestVars());
-		ps.setInt(3, qs.getCompleteCount());
-		if (qs.getNextRepeatTime() != null) {
-			ps.setTimestamp(4, qs.getNextRepeatTime());
-		} else {
-			ps.setNull(4, Types.TIMESTAMP);
-		}
-		setRewardParameter(ps, 5, qs);
-		if (qs.getCompleteTime() == null) {
-			ps.setNull(6, Types.TIMESTAMP);
-		} else {
-			ps.setTimestamp(6, qs.getCompleteTime());
-		}
-		ps.setInt(7, playerId);
-		ps.setInt(8, qs.getQuestId());
-	}
-
-	static void setRewardParameter(PreparedStatement ps, int parameterIndex, QuestState qs) throws SQLException {
-		Integer reward = qs.getRewardOrNull();
-		if (reward == null) {
-			ps.setNull(parameterIndex, Types.INTEGER);
-		} else {
-			ps.setInt(parameterIndex, reward);
-		}
+		log.debug("Updated {} quests for player {}", statesToUpdate.size(), playerId);
 	}
 
 	/**
-	 * 批量删除标记为 DELETED 的任务状态。
-	 * Batch-deletes quest states marked as DELETED.
+	 * 删除标记为 DELETED 的任务状态。
+	 * Deletes quest states marked as DELETED.
 	 */
-	private void deleteQuest(Connection con, int playerId, Collection<QuestState> states) throws SQLException {
+	private void deleteQuest(int playerId, Collection<QuestState> states) {
 		Collection<QuestState> statesToDelete = Collections2.filter(states, questsToDeletePredicate);
 		if (GenericValidator.isBlankOrNull(statesToDelete)) {
 			return;
 		}
-		try (PreparedStatement ps = con.prepareStatement(PlayerQuestMapper.DELETE_JDBC)) {
-			int count = 0;
-			for (QuestState qs : statesToDelete) {
-				ps.setInt(1, playerId);
-				ps.setInt(2, qs.getQuestId());
-				ps.addBatch();
-				if (++count % BATCH_SIZE == 0) {
-					ps.executeBatch();
-				}
-			}
-			ps.executeBatch();
-			log.debug("Deleted {} quests for player {}", statesToDelete.size(), playerId);
+		for (QuestState qs : statesToDelete) {
+			mapper.deleteByQuery(QueryWrapper.create()
+				.where(PlayerQuestPo::getPlayerId).eq(playerId)
+				.and(PlayerQuestPo::getQuestId).eq(qs.getQuestId()));
 		}
+		log.debug("Deleted {} quests for player {}", statesToDelete.size(), playerId);
+	}
+
+	/**
+	 * 由领域任务状态构造持久化实体。
+	 * Builds the persistence entity from a domain quest state.
+	 */
+	private static PlayerQuestPo toPo(int playerId, QuestState qs) {
+		PlayerQuestPo po = new PlayerQuestPo();
+		po.setPlayerId(playerId);
+		po.setQuestId(qs.getQuestId());
+		po.setStatus(qs.getStatus().toString());
+		po.setQuestVars(qs.getQuestVars().getQuestVars());
+		po.setCompleteCount(qs.getCompleteCount());
+		po.setNextRepeatTime(qs.getNextRepeatTime());
+		po.setReward(qs.getRewardOrNull());
+		po.setCompleteTime(qs.getCompleteTime());
+		return po;
 	}
 }

@@ -17,6 +17,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.entity.BlockPo;
 import com.aionemu.gameserver.persistence.mapper.BlockMapper;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +82,11 @@ public class BlockDaoImpl extends ServiceImpl<BlockMapper, BlockPo> implements B
 	@Override
 	public boolean setReason(int playerObjId, int blockedPlayerObjId, String reason) {
 		try {
-			return mapper.updateReason(playerObjId, blockedPlayerObjId, reason) > 0;
+			return UpdateChain.of(BlockPo.class)
+				.set(BlockPo::getReason, reason)
+				.where(BlockPo::getPlayer).eq(playerObjId)
+				.and(BlockPo::getBlockedPlayer).eq(blockedPlayerObjId)
+				.update();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.efb77a6431a9", playerObjId, blockedPlayerObjId), e);
 			return false;

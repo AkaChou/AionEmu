@@ -5,7 +5,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -48,9 +47,8 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
-			List<QuestAction.PromoteArchDaeva> promotions) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflight(QuestSnapshot snapshot, List<QuestAction.PromoteArchDaeva> promotions)
+			throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		validatePromotions(promotions);
 		if (promotions.isEmpty()) {
@@ -61,9 +59,8 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 			List<QuestAction.PromoteArchDaeva> promotions) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		validatePromotions(promotions);
 		if (promotions.isEmpty()) {
@@ -75,7 +72,7 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 		if (minimumExp <= 0) {
 			throw new SQLException("invalid level 66 start EXP: " + minimumExp);
 		}
-		promotionStore.promote(connection, snapshot.playerId(), minimumExp);
+		promotionStore.promote(snapshot.playerId(), minimumExp);
 		return QuestTransactionParticipant.of(() -> livePromoter.accept(player), () -> { });
 	}
 
@@ -107,13 +104,12 @@ public final class PlayerQuestProgressionPort implements QuestProgressionPort {
 	@FunctionalInterface
 	interface ArchDaevaPromotionStore {
 		/**
-		 * 在事务中写入晋升最低经验和高阶守护者标记。
-		 * Writes minimum promotion EXP and the ArchDaeva flag in the transaction.
-		 * @param connection 调用方拥有的 JDBC 连接 / JDBC connection owned by the caller
+		 * 在调用方事务中写入晋升最低经验和高阶守护者标记。
+		 * Writes minimum promotion EXP and the ArchDaeva flag inside the caller-owned transaction.
 		 * @param playerId 玩家对象 ID / player object ID
 		 * @param minimumExp 晋升所需的最低经验 / minimum EXP required for promotion
 		 * @throws SQLException 持久化失败 / if persistence fails
 		 */
-		void promote(Connection connection, int playerId, long minimumExp) throws SQLException;
+		void promote(int playerId, long minimumExp) throws SQLException;
 	}
 }

@@ -8,8 +8,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
@@ -43,9 +41,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j(topic = "SYSMAIL_LOG")
 public class SystemMailService {
+	/**
+	 * 在同一 Spring 事务内追加的持久化动作（如扣减老兵奖励、写交易所条目）。
+	 * Extra persistence executed inside the same Spring transaction (e.g. consume a veteran reward, write a broker entry).
+	 */
 	@FunctionalInterface
 	public interface TransactionAction {
-		void execute(Connection connection) throws SQLException;
+		void execute();
 	}
 
 	/**
@@ -343,25 +345,20 @@ public class SystemMailService {
 		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
 			? recipient.getCommonData() : recipientCommonData;
 		int mailboxLetters = counterData.getMailboxLetters() + 1;
-		try (Connection con = DatabaseAccess.getConnection()) {
-			con.setAutoCommit(false);
-			try {
+		try {
+			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
 				if (attachedItem != null) {
-					inventoryDAO.storeInTransaction(con, List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
+					inventoryDAO.storeInTransaction(List.of(attachedItem), recipientCommonData.getPlayerObjId(), null, null);
 				}
-				mailDAO.storeLetterInTransaction(con, time, letter);
+				mailDAO.storeLetterInTransaction(time, letter);
 				if (recipientMailbox == null) {
-					mailDAO.updateMailCounterInTransaction(con, counterData.getName(), mailboxLetters);
+					mailDAO.updateMailCounterInTransaction(counterData.getName(), mailboxLetters);
 				}
 				if (transactionAction != null) {
-					transactionAction.execute(con);
+					transactionAction.execute();
 				}
-				con.commit();
-			} catch (SQLException e) {
-				con.rollback();
-				throw e;
-			}
-		} catch (SQLException e) {
+			});
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.bf6c47a4810b", recipientCommonData.getPlayerObjId()), e);
 			return false;
 		}

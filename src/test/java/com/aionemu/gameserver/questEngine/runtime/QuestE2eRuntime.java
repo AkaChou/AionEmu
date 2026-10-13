@@ -31,7 +31,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,11 +57,11 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 	private final ScenarioFacts facts = new ScenarioFacts();
 	private final InMemoryActionPort actionPort = new InMemoryActionPort();
 	private final InMemoryStatePort statePort = new InMemoryStatePort();
-	private final QuestProductionDispatcher.ConnectionProvider connections = this::connection;
+	private final RecordingTransactionManager transactionManager =
+		new RecordingTransactionManager(label -> trace.add("TRANSACTION", label));
 	private final QuestEventIndex eventIndex;
 	private final QuestRuntimeMetricsCollector metrics = new QuestRuntimeMetricsCollector();
 	private final QuestProductionDispatcher dispatcher;
-	private boolean failCommit;
 	private boolean unsupportedFacts;
 	private QuestTransition preparedTransition;
 	private QuestTransition matchedTransition;
@@ -105,9 +104,9 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 		ImmutableQuestCatalog catalog = new ImmutableQuestCatalog(List.of(definition));
 		eventIndex = new QuestEventIndex(catalog);
 		dispatcher = new QuestProductionDispatcher(catalog,
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()), this::snapshot,
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(), transactionManager), this::snapshot,
 			actionPort, statePort, (action, snapshot, plan) -> executeAfterCommit(afterCommit, action, snapshot, plan),
-			connections, auditEvents::add, metrics);
+			auditEvents::add, metrics);
 	}
 
 	/** 返回正式 dispatcher，供协议回环安装到 QuestEngine。 / Returns the formal dispatcher for protocol-loop installation into QuestEngine. */
@@ -166,7 +165,7 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 			: QuestE2eTransitionMatch.ALTERNATE_TRANSITION_MATCHED;
 	}
 	/** 让下一次事务 commit 失败，用于验证原子回滚。 / Makes the next transaction commit fail to verify atomic rollback. */
-	public void failNextCommit() { failCommit = true; }
+	public void failNextCommit() { transactionManager.failNextCommit(); }
 	/**
 	 * 用指定计数替换场景中已捕获的装备物品事实。
 	 * Replaces the scenario's captured equipped-item facts with the supplied counts.
@@ -1065,32 +1064,6 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 		};
 	}
 
-	private Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(), new Class<?>[]{Connection.class},
-			(proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				case "setAutoCommit" -> { trace.add("TRANSACTION", "setAutoCommit:" + args[0]); yield null; }
-				case "commit" -> { trace.add("TRANSACTION", "commit"); if (failCommit) { failCommit = false; throw new SQLException("deterministic commit failure"); } yield null; }
-				case "rollback" -> { trace.add("TRANSACTION", "rollback"); yield null; }
-				case "close" -> { trace.add("TRANSACTION", "close"); yield null; }
-				case "toString" -> "quest-e2e-transaction";
-				default -> primitiveDefault(method.getReturnType());
-			});
-	}
-
-	private static Object primitiveDefault(Class<?> type) {
-		if (!type.isPrimitive()) return null;
-		if (type == boolean.class) return false;
-		if (type == byte.class) return (byte) 0;
-		if (type == short.class) return (short) 0;
-		if (type == int.class) return 0;
-		if (type == long.class) return 0L;
-		if (type == float.class) return 0F;
-		if (type == double.class) return 0D;
-		if (type == char.class) return '\0';
-		return null;
-	}
-
 	@Override
 	public void close() {
 		world.close();
@@ -1098,7 +1071,7 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 
 	private final class InMemoryActionPort implements QuestActionPort {
 		private Map<Integer, Integer> before;
-		@Override public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
+		@Override public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) throws SQLException {
 			trace.add("TRANSACTION", "preflight");
 			before = new LinkedHashMap<>(facts.inventory);
 			for (QuestAction action : actions) {
@@ -1108,7 +1081,7 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 				}
 			}
 		}
-		@Override public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+		@Override public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 			trace.add("TRANSACTION", "actions");
 			List<QuestAction> appliedActions = List.copyOf(actions);
 			for (QuestAction action : actions) {
@@ -1135,7 +1108,7 @@ public final class QuestE2eRuntime implements ClientActionBridge, AutoCloseable 
 
 	private final class InMemoryStatePort implements QuestStatePort {
 		private QuestMutationPlan pending;
-		@Override public void apply(Connection connection, int playerId, QuestMutationPlan plan) { pending = plan; trace.add("STATE", "apply:" + plan.nextStatus()); }
+		@Override public void apply(int playerId, QuestMutationPlan plan) { pending = plan; trace.add("STATE", "apply:" + plan.nextStatus()); }
 		@Override public void publish(int playerId, QuestMutationPlan plan) {
 			committedTransactionActions = plan.requiredActions();
 			state.project(plan.nextStatus(), plan.nextPackedVariables());

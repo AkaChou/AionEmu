@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -15,7 +14,7 @@ public interface QuestStatePort {
 	 * deferred to {@link #publish} so a failed commit never leaves memory
 	 * ahead of the database.
 	 */
-	void apply(Connection connection, int playerId, QuestMutationPlan plan) throws SQLException;
+	void apply(int playerId, QuestMutationPlan plan) throws SQLException;
 
 	/**
 	 * 将已提交投影发布到实时内存任务状态。仅在所属事务成功提交后调用。

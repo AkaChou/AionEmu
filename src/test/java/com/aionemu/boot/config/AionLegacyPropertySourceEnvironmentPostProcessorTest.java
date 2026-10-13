@@ -15,8 +15,10 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.core.io.ClassPathResource;
 
 import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.configuration.ConfigSourceResolverHolder;
@@ -164,6 +166,62 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         } finally {
             snapshot.restore();
         }
+    }
+
+    /**
+     * 库参数只在 {@code network/database.properties}，翻译成 Boot 数据源键后仍可被更高优先级来源覆盖。
+     * Database settings live only in {@code network/database.properties}; the translated Boot DataSource keys
+     * stay overridable by higher-precedence sources.
+     * @throws Exception 临时配置写入失败 / when writing the temporary configuration fails
+     */
+    @Test
+    void translatesTheGameDatabasePropertiesIntoBootDataSourceKeys() throws Exception {
+        Path configDir = tempDir.resolve("config");
+        Files.createDirectories(configDir.resolve("network"));
+        Files.writeString(configDir.resolve("network/database.properties"), """
+            database.url = jdbc:mysql://127.0.0.1:3306/aion_emu
+            database.user = aion
+            database.password = secret
+            database.maxconnections = 12
+            database.hikari.maxLifetime = 600000
+            database.hikari.connectionTestQuery = SELECT 2
+            """);
+
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "commandLine",
+            Map.of(
+                "aion.config.dir", configDir.toString(),
+                "spring.datasource.url", "jdbc:mysql://127.0.0.1:3306/from-command-line"
+            )
+        ));
+        new AionLegacyPropertySourceEnvironmentPostProcessor()
+            .postProcessEnvironment(environment, new SpringApplication());
+
+        assertEquals("aion", environment.getProperty("spring.datasource.username"));
+        assertEquals("secret", environment.getProperty("spring.datasource.password"));
+        assertEquals("12", environment.getProperty("spring.datasource.hikari.maximum-pool-size"));
+        assertEquals("600000", environment.getProperty("spring.datasource.hikari.max-lifetime"));
+        assertEquals("SELECT 2", environment.getProperty("spring.datasource.hikari.connection-test-query"));
+        assertEquals("jdbc:mysql://127.0.0.1:3306/from-command-line",
+            environment.getProperty("spring.datasource.url"),
+            "the translated source is registered last, so a higher-precedence source still overrides it");
+    }
+
+    /**
+     * application.yml 不写库键（{@code network/database.properties} 是唯一来源）。
+     * application.yml declares no database key ({@code network/database.properties} is the only source).
+     * @throws Exception 读取失败 / when reading fails
+     */
+    @Test
+    void applicationYmlDeclaresNoDataSourceKey() throws Exception {
+        StandardEnvironment environment = new StandardEnvironment();
+        new YamlPropertySourceLoader()
+            .load("application.yml", new ClassPathResource("application.yml"))
+            .forEach(source -> environment.getPropertySources().addLast(source));
+
+        assertNull(environment.getProperty("spring.datasource.url"));
+        assertNull(environment.getProperty("spring.datasource.hikari.maximum-pool-size"));
     }
 
     @Test

@@ -279,7 +279,7 @@ public class VeteranRewardsService {
 		}
 
 		SystemMailService.TransactionAction transactionAction = rewardId > 1
-			? con -> veteranRewardsDAO.deleteInTransaction(con, rewardId) : null;
+			? () -> veteranRewardsDAO.deleteInTransaction(rewardId) : null;
 		boolean delivered = GameFeatureServices.systemMailService().sendMail(sender, recipientName, title, message,
 			attachedItemObjId, attachedItemCount, attachedKinahCount, 0, type, transactionAction);
 

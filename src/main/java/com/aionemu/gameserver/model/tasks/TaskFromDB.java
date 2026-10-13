@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.tasks;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,16 +9,14 @@ import java.util.Objects;
  *
  * @author Divinity
  */
-public record TaskFromDB(int id, String name, String type, Timestamp lastActivation, String startTime, int delay,
-                         String[] params) {
+public record TaskFromDB(int id, String name, String type, String startTime, String[] params) {
 
 	/**
 	 * 以空格分隔的单字符串参数构造，param 为 null 时参数表为空。
 	 * Constructs from a single space-separated parameter string; null yields an empty parameter array.
 	 */
-	public TaskFromDB(int id, String name, String type, Timestamp lastActivation, String startTime, int delay,
-			String param) {
-		this(id, name, type, lastActivation, startTime, delay, param != null ? param.split(" ") : new String[0]);
+	public TaskFromDB(int id, String name, String type, String startTime, String param) {
+		this(id, name, type, startTime, param != null ? param.split(" ") : new String[0]);
 	}
 
 	@Override
@@ -31,23 +28,21 @@ public record TaskFromDB(int id, String name, String type, Timestamp lastActivat
 			return false;
 		}
 		return id == that.id
-			&& delay == that.delay
 			&& Objects.equals(name, that.name)
 			&& Objects.equals(type, that.type)
-			&& Objects.equals(lastActivation, that.lastActivation)
 			&& Objects.equals(startTime, that.startTime)
 			&& Arrays.equals(params, that.params);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(id, name, type, lastActivation, startTime, delay);
+		int result = Objects.hash(id, name, type, startTime);
 		return 31 * result + Arrays.hashCode(params);
 	}
 
 	@Override
 	public String toString() {
-		return "TaskFromDB[id=" + id + ", name=" + name + ", type=" + type + ", lastActivation=" + lastActivation
-			+ ", startTime=" + startTime + ", delay=" + delay + ", params=" + Arrays.toString(params) + "]";
+		return "TaskFromDB[id=" + id + ", name=" + name + ", type=" + type + ", startTime=" + startTime
+			+ ", params=" + Arrays.toString(params) + "]";
 	}
 }

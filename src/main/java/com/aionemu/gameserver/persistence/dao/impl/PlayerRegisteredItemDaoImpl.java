@@ -1,10 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -250,16 +246,12 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 
 		try {
 			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					deleteObjects(con, objectsToDelete);
-					deleteParts(con, partsToDelete);
-					storeObjects(con, objectsToUpdate, playerId, false);
-					storeParts(con, partsToUpdate, playerId, false);
-					storeObjects(con, objectsToAdd, playerId, true);
-					storeParts(con, partsToAdd, playerId, true);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store registered items", e) {};
-				}
+				deleteObjects(objectsToDelete);
+				deleteParts(partsToDelete);
+				storeObjects(objectsToUpdate, playerId, false);
+				storeParts(partsToUpdate, playerId, false);
+				storeObjects(objectsToAdd, playerId, true);
+				storeParts(partsToAdd, playerId, true);
 			});
 			registry.setPersistentState(PersistentState.UPDATED);
 		} catch (RuntimeException e) {
@@ -311,158 +303,175 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 	/**
 	 * 批量写入房屋对象的摆放与归属数据（调用方连接执行）。
 	 * Batch-writes house object placement and ownership data on the caller's connection.
-	 * @param con 调用方连接 / caller connection
 	 * @param objects 房屋对象集合 / house object collection
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param isNew 是否新增（否则为更新） / true to insert, false to update
-	 * @throws SQLException 写入失败时 / when the write fails
 	 */
-	private void storeObjects(Connection con, Collection<HouseObject<?>> objects, int playerId, boolean isNew)
-			throws SQLException {
+	private void storeObjects(Collection<HouseObject<?>> objects, int playerId, boolean isNew) {
 		if (GenericValidator.isBlankOrNull(objects)) {
 			return;
 		}
 
-		String query = isNew
-			? PlayerRegisteredItemMapper.INSERT_QUERY_JDBC
-			: PlayerRegisteredItemMapper.UPDATE_QUERY_JDBC;
-
-		try (PreparedStatement stmt = con.prepareStatement(query)) {
-			for (HouseObject<?> obj : objects) {
-				if (obj == null) {
-					continue;
-				}
-
-				if (obj.getExpireTime() > 0) {
-					stmt.setInt(1, obj.getExpireTime());
-				} else {
-					stmt.setNull(1, Types.INTEGER);
-				}
-
-				if (obj.getColor() == null) {
-					stmt.setNull(2, Types.INTEGER);
-				} else {
-					stmt.setInt(2, obj.getColor());
-				}
-
-				stmt.setInt(3, obj.getColorExpireEnd());
-				stmt.setInt(4, obj.getOwnerUsedCount());
-				stmt.setInt(5, obj.getVisitorUsedCount());
-				stmt.setFloat(6, obj.getX());
-				stmt.setFloat(7, obj.getY());
-				stmt.setFloat(8, obj.getZ());
-				stmt.setInt(9, obj.getHeading());
-
-				if (obj.getX() > 0 || obj.getY() > 0 || obj.getZ() > 0) {
-					stmt.setString(10, obj.getPlaceArea().toString());
-				} else {
-					stmt.setString(10, "NONE");
-				}
-
-				stmt.setByte(11, (byte) 0);
-				stmt.setInt(12, playerId);
-				stmt.setInt(13, obj.getObjectId());
-				stmt.setInt(14, obj.getObjectTemplate().getTemplateId());
-				stmt.addBatch();
+		List<PlayerRegisteredItemPo> rows = new ArrayList<>(objects.size());
+		for (HouseObject<?> obj : objects) {
+			if (obj == null) {
+				continue;
 			}
-
-			stmt.executeBatch();
+			rows.add(toPo(obj, playerId));
 		}
+		if (isNew) {
+			if (!rows.isEmpty()) {
+				mapper.insertBatch(rows);
+			}
+			return;
+		}
+		for (PlayerRegisteredItemPo row : rows) {
+			// 原 UPDATE 只写 11 个非主键列，且显式写入 NULL；UpdateChain 逐列还原该 SET 列表。
+			// The legacy UPDATE wrote only the 11 non-key columns and wrote NULLs explicitly;
+			// UpdateChain reproduces that SET list column by column.
+			UpdateChain.of(PlayerRegisteredItemPo.class)
+				.set(PlayerRegisteredItemPo::getExpireTime, row.getExpireTime())
+				.set(PlayerRegisteredItemPo::getColor, row.getColor())
+				.set(PlayerRegisteredItemPo::getColorExpires, row.getColorExpires())
+				.set(PlayerRegisteredItemPo::getOwnerUseCount, row.getOwnerUseCount())
+				.set(PlayerRegisteredItemPo::getVisitorUseCount, row.getVisitorUseCount())
+				.set(PlayerRegisteredItemPo::getX, row.getX())
+				.set(PlayerRegisteredItemPo::getY, row.getY())
+				.set(PlayerRegisteredItemPo::getZ, row.getZ())
+				.set(PlayerRegisteredItemPo::getH, row.getH())
+				.set(PlayerRegisteredItemPo::getArea, row.getArea())
+				.set(PlayerRegisteredItemPo::getFloor, row.getFloor())
+				.where(PlayerRegisteredItemPo::getPlayerId).eq(row.getPlayerId())
+				.and(PlayerRegisteredItemPo::getItemUniqueId).eq(row.getItemUniqueId())
+				.and(PlayerRegisteredItemPo::getItemId).eq(row.getItemId())
+				.update();
+		}
+	}
+
+	/**
+	 * 由房屋对象构造注册物品实体。
+	 * Builds the registered-item entity from a house object.
+	 */
+	private static PlayerRegisteredItemPo toPo(HouseObject<?> obj, int playerId) {
+		PlayerRegisteredItemPo po = new PlayerRegisteredItemPo();
+		po.setExpireTime(obj.getExpireTime() > 0 ? obj.getExpireTime() : null);
+		po.setColor(obj.getColor() == null ? null : obj.getColor());
+		po.setColorExpires(obj.getColorExpireEnd());
+		po.setOwnerUseCount(obj.getOwnerUsedCount());
+		po.setVisitorUseCount(obj.getVisitorUsedCount());
+		po.setX(obj.getX());
+		po.setY(obj.getY());
+		po.setZ(obj.getZ());
+		po.setH((int) obj.getHeading());
+		po.setArea(obj.getX() > 0 || obj.getY() > 0 || obj.getZ() > 0 ? obj.getPlaceArea().toString() : "NONE");
+		po.setFloor((byte) 0);
+		po.setPlayerId(playerId);
+		po.setItemUniqueId(obj.getObjectId());
+		po.setItemId(obj.getObjectTemplate().getTemplateId());
+		return po;
 	}
 
 	/**
 	 * 批量写入房屋装饰部件数据（调用方连接执行）。
 	 * Batch-writes house decoration part data on the caller's connection.
-	 * @param con 调用方连接 / caller connection
 	 * @param parts 装饰部件集合 / decoration part collection
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param isNew 是否新增（否则为更新） / true to insert, false to update
-	 * @throws SQLException 写入失败时 / when the write fails
 	 */
-	private void storeParts(Connection con, Collection<HouseDecoration> parts, int playerId, boolean isNew)
-			throws SQLException {
+	private void storeParts(Collection<HouseDecoration> parts, int playerId, boolean isNew) {
 		if (GenericValidator.isBlankOrNull(parts)) {
 			return;
 		}
 
-		String query = isNew
-			? PlayerRegisteredItemMapper.INSERT_QUERY_JDBC
-			: PlayerRegisteredItemMapper.UPDATE_QUERY_JDBC;
-
-		try (PreparedStatement stmt = con.prepareStatement(query)) {
-			for (HouseDecoration part : parts) {
-				if (part == null) {
-					continue;
-				}
-
-				stmt.setNull(1, Types.INTEGER);
-				stmt.setNull(2, Types.INTEGER);
-				stmt.setInt(3, 0);
-				stmt.setInt(4, part.isUsed() ? 1 : 0);
-				stmt.setInt(5, 0);
-				stmt.setFloat(6, 0);
-				stmt.setFloat(7, 0);
-				stmt.setFloat(8, 0);
-				stmt.setInt(9, 0);
-				stmt.setString(10, "DECOR");
-				stmt.setByte(11, part.getFloor());
-				stmt.setInt(12, playerId);
-				stmt.setInt(13, part.getObjectId());
-				stmt.setInt(14, part.getTemplate().getId());
-				stmt.addBatch();
+		List<PlayerRegisteredItemPo> rows = new ArrayList<>(parts.size());
+		for (HouseDecoration part : parts) {
+			if (part == null) {
+				continue;
 			}
-
-			stmt.executeBatch();
+			rows.add(toPo(part, playerId));
 		}
+		if (isNew) {
+			if (!rows.isEmpty()) {
+				mapper.insertBatch(rows);
+			}
+			return;
+		}
+		for (PlayerRegisteredItemPo row : rows) {
+			UpdateChain.of(PlayerRegisteredItemPo.class)
+				.set(PlayerRegisteredItemPo::getExpireTime, row.getExpireTime())
+				.set(PlayerRegisteredItemPo::getColor, row.getColor())
+				.set(PlayerRegisteredItemPo::getColorExpires, row.getColorExpires())
+				.set(PlayerRegisteredItemPo::getOwnerUseCount, row.getOwnerUseCount())
+				.set(PlayerRegisteredItemPo::getVisitorUseCount, row.getVisitorUseCount())
+				.set(PlayerRegisteredItemPo::getX, row.getX())
+				.set(PlayerRegisteredItemPo::getY, row.getY())
+				.set(PlayerRegisteredItemPo::getZ, row.getZ())
+				.set(PlayerRegisteredItemPo::getH, row.getH())
+				.set(PlayerRegisteredItemPo::getArea, row.getArea())
+				.set(PlayerRegisteredItemPo::getFloor, row.getFloor())
+				.where(PlayerRegisteredItemPo::getPlayerId).eq(row.getPlayerId())
+				.and(PlayerRegisteredItemPo::getItemUniqueId).eq(row.getItemUniqueId())
+				.and(PlayerRegisteredItemPo::getItemId).eq(row.getItemId())
+				.update();
+		}
+	}
+
+	/**
+	 * 由装饰部件构造注册物品实体。
+	 * Builds the registered-item entity from a decoration part.
+	 */
+	private static PlayerRegisteredItemPo toPo(HouseDecoration part, int playerId) {
+		PlayerRegisteredItemPo po = new PlayerRegisteredItemPo();
+		po.setExpireTime(null);
+		po.setColor(null);
+		po.setColorExpires(0);
+		po.setOwnerUseCount(part.isUsed() ? 1 : 0);
+		po.setVisitorUseCount(0);
+		po.setX(0f);
+		po.setY(0f);
+		po.setZ(0f);
+		po.setH(0);
+		po.setArea("DECOR");
+		po.setFloor(part.getFloor());
+		po.setPlayerId(playerId);
+		po.setItemUniqueId(part.getObjectId());
+		po.setItemId(part.getTemplate().getId());
+		return po;
 	}
 
 	/**
 	 * 批量删除房屋对象（调用方连接执行）。
 	 * Batch-deletes house objects on the caller's connection.
-	 * @param con 调用方连接 / caller connection
 	 * @param objects 房屋对象集合 / house object collection
-	 * @throws SQLException 删除失败时 / when the delete fails
 	 */
-	private void deleteObjects(Connection con, Collection<HouseObject<?>> objects) throws SQLException {
+	private void deleteObjects(Collection<HouseObject<?>> objects) {
 		if (GenericValidator.isBlankOrNull(objects)) {
 			return;
 		}
-
-		try (PreparedStatement stmt = con.prepareStatement(PlayerRegisteredItemMapper.DELETE_QUERY_JDBC)) {
-			for (HouseObject<?> obj : objects) {
-				if (obj == null) {
-					continue;
-				}
-				stmt.setInt(1, obj.getObjectId());
-				stmt.addBatch();
+		for (HouseObject<?> obj : objects) {
+			if (obj == null) {
+				continue;
 			}
-
-			stmt.executeBatch();
+			mapper.deleteByQuery(QueryWrapper.create()
+				.where(PlayerRegisteredItemPo::getItemUniqueId).eq(obj.getObjectId()));
 		}
 	}
 
 	/**
 	 * 批量删除房屋装饰部件（调用方连接执行）。
 	 * Batch-deletes house decoration parts on the caller's connection.
-	 * @param con 调用方连接 / caller connection
 	 * @param parts 装饰部件集合 / decoration part collection
-	 * @throws SQLException 删除失败时 / when the delete fails
 	 */
-	private void deleteParts(Connection con, Collection<HouseDecoration> parts) throws SQLException {
+	private void deleteParts(Collection<HouseDecoration> parts) {
 		if (GenericValidator.isBlankOrNull(parts)) {
 			return;
 		}
-
-		try (PreparedStatement stmt = con.prepareStatement(PlayerRegisteredItemMapper.DELETE_QUERY_JDBC)) {
-			for (HouseDecoration part : parts) {
-				if (part == null) {
-					continue;
-				}
-				stmt.setInt(1, part.getObjectId());
-				stmt.addBatch();
+		for (HouseDecoration part : parts) {
+			if (part == null) {
+				continue;
 			}
-
-			stmt.executeBatch();
+			mapper.deleteByQuery(QueryWrapper.create()
+				.where(PlayerRegisteredItemPo::getItemUniqueId).eq(part.getObjectId()));
 		}
 	}
 

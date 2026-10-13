@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +27,7 @@ import com.aionemu.gameserver.persistence.mapper.ItemStoneMapper;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -238,13 +237,9 @@ public class ItemStoneDaoImpl extends ServiceImpl<ItemStoneMapper, ItemStonePo> 
 
 		try {
 			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					deleteItemStones(con, stonesToDelete, ist);
-					addItemStones(con, stonesToAdd, ist);
-					updateItemStones(con, stonesToUpdate, ist);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store item stones", e) {};
-				}
+				deleteItemStones(stonesToDelete, ist);
+				addItemStones(stonesToAdd, ist);
+				updateItemStones(stonesToUpdate, ist);
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.441d0f828363"), e);
@@ -260,37 +255,29 @@ public class ItemStoneDaoImpl extends ServiceImpl<ItemStoneMapper, ItemStonePo> 
 	 * 批量插入镶嵌石。
 	 * Batch-inserts item stones.
 	 *
-	 * @param con        数据库连接 / database connection
 	 * @param itemStones 镶嵌石集合 / stone collection
 	 * @param ist        镶嵌石类型 / item stone type
 	 */
-	private void addItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist)
-			throws SQLException {
+	private void addItemStones(Collection<? extends ItemStone> itemStones, ItemStoneType ist) {
 		if (GenericValidator.isBlankOrNull(itemStones)) {
 			return;
 		}
 
-		try (PreparedStatement st = con.prepareStatement(ItemStoneMapper.INSERT_QUERY_JDBC)) {
+		try {
+			List<ItemStonePo> rows = new ArrayList<>(itemStones.size());
 			for (ItemStone is : itemStones) {
-				st.setInt(1, is.getItemObjId());
-				st.setInt(2, is.getItemId());
-				st.setInt(3, is.getSlot());
-				st.setInt(4, ist.ordinal());
-
-				if (is instanceof IdianStone stone) {
-					st.setInt(5, stone.getPolishNumber());
-					st.setInt(6, stone.getPolishCharge());
-				} else {
-					st.setInt(5, 0);
-					st.setInt(6, 0);
-				}
-				st.setInt(7, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
-
-				st.addBatch();
+				ItemStonePo po = new ItemStonePo();
+				po.setItemUniqueId(is.getItemObjId());
+				po.setItemId(is.getItemId());
+				po.setSlot(is.getSlot());
+				po.setCategory(ist.ordinal());
+				po.setPolishNumber(is instanceof IdianStone stone ? stone.getPolishNumber() : 0);
+				po.setPolishCharge(is instanceof IdianStone stone ? stone.getPolishCharge() : 0);
+				po.setProcCount(is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
+				rows.add(po);
 			}
-
-			st.executeBatch();
-		} catch (SQLException e) {
+			mapper.insertBatch(rows);
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.ff24b8461da0"), e);
 			throw e;
 		}
@@ -300,37 +287,33 @@ public class ItemStoneDaoImpl extends ServiceImpl<ItemStoneMapper, ItemStonePo> 
 	 * 批量更新镶嵌石。
 	 * Batch-updates item stones.
 	 *
-	 * @param con        数据库连接 / database connection
 	 * @param itemStones 镶嵌石集合 / stone collection
 	 * @param ist        镶嵌石类型 / item stone type
 	 */
-	private void updateItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist)
-			throws SQLException {
+	private void updateItemStones(Collection<? extends ItemStone> itemStones, ItemStoneType ist) {
 		if (GenericValidator.isBlankOrNull(itemStones)) {
 			return;
 		}
 
-		try (PreparedStatement st = con.prepareStatement(ItemStoneMapper.UPDATE_QUERY_JDBC)) {
+		try {
 			for (ItemStone is : itemStones) {
-				st.setInt(1, is.getItemId());
-				st.setInt(2, is.getSlot());
-
-				if (is instanceof IdianStone stone) {
-					st.setInt(3, stone.getPolishNumber());
-					st.setInt(4, stone.getPolishCharge());
-				} else {
-					st.setInt(3, 0);
-					st.setInt(4, 0);
-				}
-
-				st.setInt(5, is instanceof GodStone godStone ? godStone.getActivatedCount() : 0);
-				st.setInt(6, is.getItemObjId());
-				st.setInt(7, ist.ordinal());
-				st.addBatch();
+				// 原 UPDATE 的 WHERE 仅含 item_unique_id + category，且显式写 slot；故 slot 必须留在 SET 中。
+				// The legacy UPDATE keyed only on item_unique_id + category and wrote slot explicitly,
+				// so slot must stay in the SET list.
+				UpdateChain.of(ItemStonePo.class)
+					.set(ItemStonePo::getItemId, is.getItemId())
+					.set(ItemStonePo::getSlot, is.getSlot())
+					.set(ItemStonePo::getPolishNumber,
+						is instanceof IdianStone stone ? stone.getPolishNumber() : 0)
+					.set(ItemStonePo::getPolishCharge,
+						is instanceof IdianStone stone ? stone.getPolishCharge() : 0)
+					.set(ItemStonePo::getProcCount,
+						is instanceof GodStone godStone ? godStone.getActivatedCount() : 0)
+					.where(ItemStonePo::getItemUniqueId).eq(is.getItemObjId())
+					.and(ItemStonePo::getCategory).eq(ist.ordinal())
+					.update();
 			}
-
-			st.executeBatch();
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.9292d96bede8"), e);
 			throw e;
 		}
@@ -340,26 +323,22 @@ public class ItemStoneDaoImpl extends ServiceImpl<ItemStoneMapper, ItemStonePo> 
 	 * 批量删除镶嵌石。
 	 * Batch-deletes item stones.
 	 *
-	 * @param con        数据库连接 / database connection
 	 * @param itemStones 镶嵌石集合 / stone collection
 	 * @param ist        镶嵌石类型 / item stone type
 	 */
-	private void deleteItemStones(Connection con, Collection<? extends ItemStone> itemStones, ItemStoneType ist)
-			throws SQLException {
+	private void deleteItemStones(Collection<? extends ItemStone> itemStones, ItemStoneType ist) {
 		if (GenericValidator.isBlankOrNull(itemStones)) {
 			return;
 		}
 
-		try (PreparedStatement st = con.prepareStatement(ItemStoneMapper.DELETE_QUERY_JDBC)) {
+		try {
 			for (ItemStone is : itemStones) {
-				st.setInt(1, is.getItemObjId());
-				st.setInt(2, is.getSlot());
-				st.setInt(3, ist.ordinal());
-				st.addBatch();
+				mapper.deleteByQuery(QueryWrapper.create()
+					.where(ItemStonePo::getItemUniqueId).eq(is.getItemObjId())
+					.and(ItemStonePo::getSlot).eq(is.getSlot())
+					.and(ItemStonePo::getCategory).eq(ist.ordinal()));
 			}
-
-			st.executeBatch();
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.e2ee88575c70"), e);
 			throw e;
 		}

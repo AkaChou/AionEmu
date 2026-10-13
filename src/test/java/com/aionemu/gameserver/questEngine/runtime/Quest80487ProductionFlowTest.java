@@ -29,8 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -131,11 +129,12 @@ class Quest80487ProductionFlowTest {
 			new PlayerQuestDialogPort(playerId -> player), null, null, null, null, null,
 			stateSync, null, null, null);
 		return new QuestProductionDispatcher(new ImmutableQuestCatalog(List.of(definition)),
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(),
+				new RecordingTransactionManager(ignored -> { })),
 			new PlayerQuestEventPort(playerId -> player,
 				(playerId, id, event) -> QuestStartEligibility.allowed()),
-			new NoOpActionPort(), statePort, afterCommit, Quest80487ProductionFlowTest::transaction,
-			auditEvents::add, new QuestRuntimeMetricsCollector());
+			new NoOpActionPort(), statePort, afterCommit, auditEvents::add,
+			new QuestRuntimeMetricsCollector());
 	}
 
 	private static Player player() throws Exception {
@@ -157,16 +156,6 @@ class Quest80487ProductionFlowTest {
 		setField(AConnection.class, connection, "guard", new Object());
 		setField(AionConnection.class, connection, "sendMsgQueue", new ArrayList<AionServerPacket>());
 		return connection;
-	}
-
-	private static Connection transaction() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> true;
-				case "setAutoCommit", "commit", "rollback", "close" -> null;
-				case "toString" -> "quest-80487-transaction";
-				default -> defaultValue(method.getReturnType());
-			});
 	}
 
 	private static void assertNoFailure(QuestEventRouter.DispatchResult result) {
@@ -200,27 +189,13 @@ class Quest80487ProductionFlowTest {
 		return field.getInt(target);
 	}
 
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) return null;
-		if (type == boolean.class) return false;
-		if (type == byte.class) return (byte) 0;
-		if (type == short.class) return (short) 0;
-		if (type == int.class) return 0;
-		if (type == long.class) return 0L;
-		if (type == float.class) return 0F;
-		if (type == double.class) return 0D;
-		if (type == char.class) return '\0';
-		return null;
-	}
-
 	private static final class NoOpActionPort implements QuestActionPort {
 		@Override
-		public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+		public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) {
 		}
 
 		@Override
-		public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-												 List<QuestAction> actions) {
+		public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 			return QuestTransactionParticipant.none();
 		}
 	}
@@ -241,12 +216,7 @@ class Quest80487ProductionFlowTest {
 		}
 
 		@Override
-		public void store(Connection connection, Player player) {
-			throw new AssertionError("unexpected player-based store");
-		}
-
-		@Override
-		public void store(Connection connection, int playerId, Collection<QuestState> states) {
+		public void store(int playerId, Collection<QuestState> states) {
 		}
 	}
 

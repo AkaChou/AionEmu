@@ -18,11 +18,4 @@ public interface TaskDao extends IService<TaskPo> {
 	 * @return 任务列表 / task list
 	 */
 	ArrayList<TaskFromDB> getAllTasks();
-
-	/**
-	 * 将指定任务的最后激活时间设为 NOW()。
-	 * Sets the last activation time of the task to NOW().
-	 * @param id 任务 ID / task id
-	 */
-	void setLastActivation(int id);
 }

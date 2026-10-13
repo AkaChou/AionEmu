@@ -8,6 +8,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import com.aionemu.gameserver.persistence.entity.ServerVariablePo;
 import com.aionemu.gameserver.persistence.mapper.ServerVariableMapper;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,9 @@ public class ServerVariableDaoImpl extends ServiceImpl<ServerVariableMapper, Ser
 	@Override
 	public int load(String var) {
 		try {
-			String value = mapper.selectValue(var);
+			ServerVariablePo po = mapper.selectOneByQuery(
+				QueryWrapper.create().where(ServerVariablePo::getKey).eq(var));
+			String value = po == null ? null : po.getValue();
 			if (value != null) {
 				return Integer.parseInt(value);
 			}

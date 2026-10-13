@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
@@ -30,13 +28,11 @@ public interface BrokerDao extends IService<BrokerPo> {
 	boolean store(BrokerItem brokerItem);
 
 	/**
-	 * 在调用方事务连接上存储交易行物品（原生 PreparedStatement，同事务）。
-	 * Stores a broker item on the caller's transactional connection (raw PreparedStatement, same transaction).
-	 * @param connection 调用方事务连接 / caller's transactional connection
+	 * 在调用方事务内存储交易行物品。
+	 * Stores a broker item inside the caller's transaction.
 	 * @param brokerItem 交易行物品 / broker item
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
-	void storeInTransaction(Connection connection, BrokerItem brokerItem) throws SQLException;
+	void storeInTransaction(BrokerItem brokerItem);
 
 	/**
 	 * 购买前校验物品是否仍可购买。

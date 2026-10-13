@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
@@ -16,8 +15,6 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import lombok.extern.slf4j.Slf4j;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,11 +30,6 @@ import java.util.Set;
  */
 @Slf4j(topic = "QUEST_RUNTIME")
 public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
-	@FunctionalInterface
-	interface ConnectionProvider {
-		Connection open() throws SQLException;
-	}
-
 	private final QuestCatalogRegistry catalog;
 	private final QuestEventIndex index;
 	private final QuestDependencyIndex dependencyIndex;
@@ -48,7 +40,6 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 	private final QuestActionPort actionPort;
 	private final QuestStatePort statePort;
 	private final QuestAfterCommitPort afterCommitPort;
-	private final ConnectionProvider connections;
 	private final QuestAuditSink auditSink;
 	private final QuestRuntimeMetrics metrics;
 	private final ThreadLocal<StateChangeContext> stateChanges = new ThreadLocal<>();
@@ -66,12 +57,11 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		this.actionPort = null;
 		this.statePort = null;
 		this.afterCommitPort = null;
-		this.connections = null;
 	}
 
 	QuestProductionDispatcher(QuestCatalog catalog, QuestExecutionCoordinator coordinator,
 			QuestEventPort eventPort, QuestActionPort actionPort, QuestStatePort statePort,
-			QuestAfterCommitPort afterCommitPort, ConnectionProvider connections,
+			QuestAfterCommitPort afterCommitPort,
 			QuestAuditSink auditSink, QuestRuntimeMetrics metrics) {
 		this.catalog = registry(catalog);
 		this.index = new QuestEventIndex(this.catalog);
@@ -85,7 +75,6 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		this.actionPort = Objects.requireNonNull(actionPort, "actionPort");
 		this.statePort = Objects.requireNonNull(statePort, "statePort");
 		this.afterCommitPort = Objects.requireNonNull(afterCommitPort, "afterCommitPort");
-		this.connections = Objects.requireNonNull(connections, "connections");
 	}
 
 	/** 返回无 owner 的禁用 dispatcher，供引擎初始化使用。 Return an owner-free dispatcher for initialization. */
@@ -98,7 +87,7 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		Objects.requireNonNull(composition, "composition");
 		return new QuestProductionDispatcher(catalog, new QuestExecutionCoordinator(new PlayerSerialExecutor()),
 			composition.eventPort(), composition.actionPort(), composition.statePort(),
-			composition.afterCommitPort(), DatabaseAccess::getConnection,
+			composition.afterCommitPort(),
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 
@@ -116,7 +105,7 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		Objects.requireNonNull(composition, "composition");
 		Objects.requireNonNull(coordinator, "coordinator");
 		return new QuestProductionDispatcher(catalog, coordinator, composition.eventPort(), composition.actionPort(),
-			composition.statePort(), composition.afterCommitPort(), DatabaseAccess::getConnection,
+			composition.statePort(), composition.afterCommitPort(),
 			new LocalizedQuestAuditSink(), new QuestRuntimeMetricsCollector());
 	}
 
@@ -212,8 +201,8 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		if (transition == null) {
 			return false;
 		}
-		try (LazyConnection connection = new LazyConnection(connections)) {
-			QuestExecutionResult result = coordinator.executeRewardWindowAction(connection::get, playerId,
+		try {
+			QuestExecutionResult result = coordinator.executeRewardWindowAction(playerId,
 				definition, event, transition, eventPort, actionPort, statePort, afterCommitPort);
 			if (result.status() == QuestExecutionStatus.COMMITTED) {
 				if (!result.afterCommitFailures().isEmpty()) {
@@ -283,9 +272,10 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 
 	/**
 	 * {@code questId == 0} 时分发全部匹配 owner，否则只分发指定 owner。
-	 * 数据库连接按需获取，无关事件不会访问连接池。
+	 * 事务边界只在真正需要提交变更时开启，无关事件不会访问连接池。
 	 * Dispatches all matching owners when {@code questId == 0}, otherwise only the named owner.
-	 * A connection is acquired lazily, so unrelated live events do not touch the database pool.
+	 * The transaction boundary opens only when a mutation actually commits, so unrelated live
+	 * events do not touch the database pool.
 	 */
 	public QuestEventRouter.DispatchResult dispatch(QuestEvent event, int playerId, int questId,
 			QuestDispatchContract contract) {
@@ -297,12 +287,10 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		if (questId < 0) {
 			throw new IllegalArgumentException("questId must not be negative");
 		}
-		try (LazyConnection connection = new LazyConnection(connections)) {
-			QuestRouteHandler handler = route -> execute(connection, playerId, event, route, contract);
-			return questId == 0
-				? router.dispatch(event, contract, handler)
-				: router.dispatchOwner(event, questId, contract, handler);
-		}
+		QuestRouteHandler handler = route -> execute(playerId, event, route, contract);
+		return questId == 0
+			? router.dispatch(event, contract, handler)
+			: router.dispatchOwner(event, questId, contract, handler);
 	}
 
 	/**
@@ -383,16 +371,14 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 			return false;
 		}
 		QuestEvent.QuestDialog event = new QuestEvent.QuestDialog(dialogId);
-		try (LazyConnection connection = new LazyConnection(connections)) {
-			for (QuestTransition transition : candidates) {
-				QuestRouteResult result = execute(connection, playerId, event,
-					new QuestEventIndex.Route(questId, transition), QuestDispatchContract.EXCLUSIVE, true);
-				if (result == QuestRouteResult.HANDLED || result == QuestRouteResult.BLOCKED) {
-					return true;
-				}
-				if (result == QuestRouteResult.FAILED) {
-					return false;
-				}
+		for (QuestTransition transition : candidates) {
+			QuestRouteResult result = execute(playerId, event,
+				new QuestEventIndex.Route(questId, transition), QuestDispatchContract.EXCLUSIVE, true);
+			if (result == QuestRouteResult.HANDLED || result == QuestRouteResult.BLOCKED) {
+				return true;
+			}
+			if (result == QuestRouteResult.FAILED) {
+				return false;
 			}
 		}
 		return false;
@@ -408,12 +394,12 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 				&& (status1 == QuestStatus.NONE || status1 == QuestStatus.COMPLETE));
 	}
 
-	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
+	private QuestRouteResult execute(int playerId, QuestEvent event,
 		QuestEventIndex.Route route, QuestDispatchContract contract) {
-		return execute(connection, playerId, event, route, contract, false);
+		return execute(playerId, event, route, contract, false);
 	}
 
-	private QuestRouteResult execute(LazyConnection connection, int playerId, QuestEvent event,
+	private QuestRouteResult execute(int playerId, QuestEvent event,
 		QuestEventIndex.Route route, QuestDispatchContract contract, boolean sharedQuestAccept) {
 		// 索引刻意用一个宽键路由一个 NPC 的所有对话。
 		// 其他对话的候选是普通不匹配而非执行失败；保持非结论性，让路由器尝试下一个转换。
@@ -426,9 +412,9 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 		CompiledQuestDefinition definition = catalog.findExecutable(route.questId()).orElseThrow();
 		try {
 			QuestExecutionResult result = sharedQuestAccept
-				? coordinator.executeSharedQuestAccept(connection::get, playerId, definition,
+				? coordinator.executeSharedQuestAccept(playerId, definition,
 					(QuestEvent.QuestDialog) event, route.transition(), eventPort, actionPort, statePort, afterCommitPort)
-				: coordinator.execute(connection::get, playerId, definition, event,
+				: coordinator.execute(playerId, definition, event,
 					route.transition(), eventPort, actionPort, statePort, afterCommitPort);
 			if (!result.afterCommitFailures().isEmpty()) {
 				log.warn(I18n.get("log.quest_engine.typed_after_commit_failures",
@@ -458,41 +444,6 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 			throw failure;
 		} catch (Exception failure) {
 			throw new QuestProductionExecutionException(definition.id(), failure);
-		}
-	}
-
-	private static final class LazyConnection implements AutoCloseable {
-		private final ConnectionProvider provider;
-		private Connection connection;
-
-		private LazyConnection(ConnectionProvider provider) {
-			this.provider = provider;
-		}
-
-		private Connection get() {
-			if (connection == null) {
-				if (provider == null) {
-					throw new IllegalStateException("typed production dispatcher is disabled");
-				}
-				try {
-					connection = provider.open();
-				} catch (SQLException failure) {
-					throw new QuestProductionExecutionException(0, failure);
-				}
-			}
-			return connection;
-		}
-
-		@Override
-		public void close() {
-			if (connection == null) {
-				return;
-			}
-			try {
-				connection.close();
-			} catch (SQLException failure) {
-				log.warn(I18n.get("log.quest_engine.typed_connection_close_failed"), failure);
-			}
 		}
 	}
 

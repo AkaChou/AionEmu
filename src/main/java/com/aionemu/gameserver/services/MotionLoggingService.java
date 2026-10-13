@@ -1,17 +1,15 @@
 package com.aionemu.gameserver.services;
 
 
-import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.persistence.dao.SkillMotionDao;
+import com.aionemu.gameserver.persistence.entity.SkillMotionPo;
+import com.aionemu.gameserver.persistence.mapper.SkillMotionMapper;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,6 +57,14 @@ public class MotionLoggingService {
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 
 	private final Map<String, MotionLog> motionsMap = new LinkedHashMap<>();
+
+	/**
+	 * -- SETTER --
+	 *  注入动作耗时持久层：{@link #saveToSql()} 与 {@link #loadFromSql()} 的写入/读取入口。
+	 *  Injects the motion-timing persistence layer used by {@link #saveToSql()} and {@link #loadFromSql()}.
+	 */
+	@Setter
+	private SkillMotionDao skillMotionDao;
 
 	/**
 	 * -- SETTER --
@@ -393,18 +399,10 @@ public class MotionLoggingService {
 	 * Persists collected motion times to the database.
 	 */
 	public void saveToSql() {
-		Connection con = null;
-
-		final String INSERT_QUERY = "INSERT INTO skill_motions (motion_name, weapon_type, off_weapon_type, skill_id, attack_speed, race, gender, time) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE motion_name = ?";
-
+		SkillMotionMapper mapper = requireDao().getMapper();
 		try {
-			con = DatabaseAccess.getConnection();
-			PreparedStatement stmt = con.prepareStatement(INSERT_QUERY);
 			for (Entry<String, MotionLog> entry : motionsMap.entrySet()) {
 				String motionName = entry.getKey();
-				// 设置动作名称 / set motion_name
-				stmt.setString(1, motionName);
-				stmt.setString(9, motionName);
 				if (entry.getValue() == null) {
 					continue;
 				}
@@ -416,9 +414,6 @@ public class MotionLoggingService {
 					String offWeaponType = (entry2.getKey().offHand() != null
 							? entry2.getKey().offHand().toString()
 							: "null");
-					// 设置武器类型 / set weapon_type
-					stmt.setString(2, weaponType);
-					stmt.setString(3, offWeaponType);
 
 					if (entry2.getValue() == null) {
 						continue;
@@ -426,20 +421,12 @@ public class MotionLoggingService {
 					// 按技能 ID 排序 / sort by skillId
 					Collections.sort(entry2.getValue());
 					for (SkillTime st : entry2.getValue()) {
-						stmt.setInt(4, st.getSkillId());
-						stmt.setInt(5, st.getAttackSpeed());
-						stmt.setString(6, st.getRace().toString());
-						stmt.setString(7, st.getGender().toString());
-						stmt.setInt(8, st.getClientTime());
-						stmt.execute();
+						mapper.upsert(toPo(motionName, weaponType, offWeaponType, st));
 					}
 				}
 			}
-			stmt.close();
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.59fa1e0145de"), e);
-		} finally {
-			DatabaseAccess.release(con);
 		}
 	}
 
@@ -449,45 +436,59 @@ public class MotionLoggingService {
 	 * Loads motion times from the database.
 	 */
 	public void loadFromSql() {
-		Connection con = null;
-
-		final String SELECT_QUERY = "SELECT * FROM skill_motions";
+		SkillMotionDao dao = requireDao();
 		try {
-			con = DatabaseAccess.getConnection();
-			PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);
-
-			ResultSet resultSet = stmt.executeQuery();
-
-			while (resultSet.next()) {
-				String motionName = resultSet.getString("motion_name");
-				WeaponType mainHandWeapon = WeaponType.valueOf(resultSet.getString("weapon_type"));
-				WeaponType offHandWeapon = (resultSet.getString("off_weapon_type").contains("null") ? null
-						: WeaponType.valueOf(resultSet.getString("off_weapon_type")));
-				int skillId = resultSet.getInt("skill_id");
-				int attackSpeed = resultSet.getInt("attack_speed");
-				int time = resultSet.getInt("time");
-				String sRace = resultSet.getString("race");
-				String sGender = resultSet.getString("gender");
+			for (SkillMotionPo row : dao.list()) {
+				String motionName = row.getMotionName();
+				WeaponType mainHandWeapon = WeaponType.valueOf(row.getWeaponType());
+				WeaponType offHandWeapon = (row.getOffWeaponType().contains("null") ? null
+						: WeaponType.valueOf(row.getOffWeaponType()));
 				WeaponTypeWrapper weapon = new WeaponTypeWrapper(mainHandWeapon, offHandWeapon);
 
 				Race race = null;
 				Gender gender = null;
 				try {
-					race = Race.valueOf(sRace);
-					gender = Gender.valueOf(sGender);
+					race = Race.valueOf(row.getRace());
+					gender = Gender.valueOf(row.getGender());
 				} catch (Exception e) {
 					log.info(I18n.get("log.bd04b9af9457", motionName));
 				} finally {
-					this.addTime(motionName, weapon, skillId, attackSpeed, race, gender, time);
+					this.addTime(motionName, weapon, row.getSkillId(), row.getAttackSpeed(), race, gender,
+						row.getTime());
 				}
 			}
-			resultSet.close();
-			stmt.close();
-		} catch (SQLException e) {
+		} catch (RuntimeException e) {
 			log.error(I18n.get("log.59fa1e0145de"), e);
-		} finally {
-			DatabaseAccess.release(con);
 		}
+	}
+
+	/**
+	 * 由采集记录构造持久化实体。
+	 * Builds the persistence entity from one collected motion sample.
+	 */
+	private static SkillMotionPo toPo(String motionName, String weaponType, String offWeaponType, SkillTime st) {
+		SkillMotionPo po = new SkillMotionPo();
+		po.setMotionName(motionName);
+		po.setWeaponType(weaponType);
+		po.setOffWeaponType(offWeaponType);
+		po.setSkillId(st.getSkillId());
+		po.setAttackSpeed(st.getAttackSpeed());
+		po.setRace(st.getRace().toString());
+		po.setGender(st.getGender().toString());
+		po.setTime(st.getClientTime());
+		return po;
+	}
+
+	/**
+	 * 返回映射层所在的 DAO；未由 Spring 注入即失败。
+	 * Returns the DAO backing the mapper; fails fast when Spring did not inject it.
+	 */
+	private SkillMotionDao requireDao() {
+		SkillMotionDao dao = skillMotionDao;
+		if (dao == null) {
+			throw new IllegalStateException("SkillMotionDao 未注入 / SkillMotionDao is not injected");
+		}
+		return dao;
 	}
 
 	private boolean isPresent(String motionName, WeaponTypeWrapper weapon, int skillId, int currentAttackSpeed,

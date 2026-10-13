@@ -12,6 +12,7 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
 import com.aionemu.loginserver.persistence.dao.BannedMacDao;
 import com.aionemu.loginserver.persistence.entity.BannedMacPo;
 import com.aionemu.loginserver.persistence.mapper.BannedMacMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
@@ -60,7 +61,8 @@ public class BannedMacDaoImpl extends ServiceImpl<BannedMacMapper, BannedMacPo> 
 	@Override
 	public void cleanExpiredBans() {
 		try {
-			int deleted = mapper.cleanExpiredBans();
+			int deleted = mapper.deleteByQuery(QueryWrapper.create()
+				.where(BannedMacPo::getTime).lt(QueryMethods.curDate()));
 			if (deleted > 0) {
 				log.info(I18n.get("log.bfee9964538a", deleted));
 			}

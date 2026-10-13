@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.siege.Influence;
-import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.events.BoostEventService;
@@ -195,16 +194,13 @@ public class CoreRuntimeServiceBeans {
     }
 
     /**
-     * 装配数据库任务管理器：注入任务 DAO 并顺带绑定至 {@link TaskFromDBHandler} 静态门面
-     * （反射创建的处理器无法构造注入，缺失时门面保持未绑定，不触发整体降级）。
-     * Wires the DB task manager: injects the task DAO and also binds it to the {@link TaskFromDBHandler}
-     * static facade (reflectively created handlers cannot take constructor injection; when the DAO is
-     * absent the facade stays unbound without triggering a full offline fallback).
+     * 装配数据库任务管理器：注入任务 DAO，由管理器加载并调度库中的关机/重启任务。
+     * Wires the DB task manager: injects the task DAO, which the manager uses to load and schedule the
+     * shutdown/restart tasks stored in the database.
      */
     @Bean
     @Lazy
     public TaskManagerFromDB taskManagerFromDB(TaskDao taskDao) {
-        TaskFromDBHandler.bindTaskFromDBDAO(taskDao);
         return new TaskManagerFromDB(taskDao);
     }
 

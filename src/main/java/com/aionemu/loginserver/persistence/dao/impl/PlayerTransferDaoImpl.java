@@ -10,6 +10,7 @@ import com.aionemu.loginserver.persistence.dao.PlayerTransferDao;
 import com.aionemu.loginserver.persistence.entity.PlayerTransferPo;
 import com.aionemu.loginserver.persistence.mapper.PlayerTransferMapper;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -42,8 +43,9 @@ public class PlayerTransferDaoImpl extends ServiceImpl<PlayerTransferMapper, Pla
 				.set(PlayerTransferPo::getStatus, (int) task.status)
 				.set(PlayerTransferPo::getComment, task.comment);
 			switch (task.status) {
-				case PlayerTransferTask.STATUS_ACTIVE -> chain.setRaw("time_performed", "NOW()");
-				case PlayerTransferTask.STATUS_DONE, PlayerTransferTask.STATUS_ERROR -> chain.setRaw("time_done", "NOW()");
+				case PlayerTransferTask.STATUS_ACTIVE -> chain.set(PlayerTransferPo::getTimePerformed, QueryMethods.now());
+				case PlayerTransferTask.STATUS_DONE, PlayerTransferTask.STATUS_ERROR ->
+					chain.set(PlayerTransferPo::getTimeDone, QueryMethods.now());
 			}
 			return chain.where(PlayerTransferPo::getId).eq(task.id).update();
 		} catch (DataAccessException e) {

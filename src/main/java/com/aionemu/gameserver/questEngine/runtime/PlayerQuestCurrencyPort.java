@@ -17,7 +17,6 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.EnumMap;
 import java.util.List;
@@ -27,11 +26,11 @@ import java.util.function.Consumer;
 
 /**
  * 真实 {@link QuestCurrencyPort}：将货币奖励（基纳、AP、GP、DP）应用到在线玩家，
- * 并通过各货币的事务 DAO 在调用方持有的连接上持久化，与任务状态原子提交。
+ * 并通过各货币的事务 DAO 在调用方事务内持久化，与任务状态原子提交。
  * Real {@link QuestCurrencyPort}: applies currency rewards (kinah, AP, GP, DP)
  * to the live player and persists them through each currency's transactional
- * DAO on the caller-owned connection, so they commit atomically with the quest
- * state. Preflight fails closed on uncaptured facts or unsupported kinds.
+ * DAO inside the caller-owned transaction, so they commit atomically with the
+ * quest state. Preflight fails closed on uncaptured facts or unsupported kinds.
  */
 public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	private final QuestPlayerPort players;
@@ -55,9 +54,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public void preflight(Connection connection, QuestSnapshot snapshot,
-			List<QuestAction.GrantReward> rewards) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflight(QuestSnapshot snapshot, List<QuestAction.GrantReward> rewards) throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (rewards.isEmpty()) {
 			return;
@@ -82,9 +79,8 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant apply(QuestSnapshot snapshot,
 			List<QuestAction.GrantReward> rewards) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (rewards.isEmpty()) {
 			return QuestTransactionParticipant.none();
@@ -159,7 +155,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				rewardKinahItem = player.getInventory().getKinahItem();
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, player, dirty);
 			if (ap > 0) {
 				player.getAbyssRank().addAp(ap, player);
 			}
@@ -167,11 +163,11 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				player.getAbyssRank().addGp(gp);
 			}
 			if (rankChanged) {
-				abyssRankDao.storeInTransaction(connection, player.getObjectId(), player.getAbyssRank());
+				abyssRankDao.storeInTransaction(player.getObjectId(), player.getAbyssRank());
 			}
 			if (dp > 0) {
 				player.getCommonData().setDpSilently(player.getCommonData().getDp() + dp);
-				playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
+				playerDao.storeInTransaction(player.getObjectId(), player.getCommonData());
 			}
 			final Item committedKinahItem = rewardKinahItem;
 			final boolean committedKinahItemCreated = rewardKinahItemCreated;
@@ -239,9 +235,8 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public void preflightDebits(Connection connection, QuestSnapshot snapshot,
+	public void preflightDebits(QuestSnapshot snapshot,
 			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (debits.isEmpty()) {
 			return;
@@ -268,14 +263,13 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant applyDebits(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant applyDebits(QuestSnapshot snapshot,
 			List<QuestAction.DecreaseCurrency> debits) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (debits.isEmpty()) {
 			return QuestTransactionParticipant.none();
 		}
-		preflightDebits(connection, snapshot, debits);
+		preflightDebits(snapshot, debits);
 		long kinah;
 		int ap;
 		int gp;
@@ -337,9 +331,9 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			}
 			if (ap > 0) {
-				// 直接变更军阶投影；服务包装器会在调用方持有的 JDBC 事务提交前发送数据包。
+				// 直接变更军阶投影；服务包装器会在调用方事务提交前发送数据包。
 				// Mutate the rank projection directly; the service wrapper sends packets before
-				// the caller-owned JDBC transaction commits.
+				// the caller-owned transaction commits.
 				int expectedAp = player.getAbyssRank().getAp() - ap;
 				player.getAbyssRank().addAp(-ap, player);
 				if (player.getAbyssRank().getAp() != expectedAp) {
@@ -361,12 +355,12 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 				}
 			}
 			List<Item> dirty = kinah > 0 ? List.copyOf(player.getDirtyItemsToUpdate()) : List.of();
-			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, connection, player, dirty);
+			inventoryStage = QuestInventoryPersistenceStage.persist(inventoryDao, player, dirty);
 			if (ap > 0 || gp > 0) {
-				abyssRankDao.storeInTransaction(connection, player.getObjectId(), player.getAbyssRank());
+				abyssRankDao.storeInTransaction(player.getObjectId(), player.getAbyssRank());
 			}
 			if (dp > 0) {
-				playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
+				playerDao.storeInTransaction(player.getObjectId(), player.getCommonData());
 			}
 			final AbyssRankEnum newRank = rankDebitChanged ? player.getAbyssRank().getRank() : null;
 			final int debitedAp = ap;
@@ -417,9 +411,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public void preflightSets(Connection connection, QuestSnapshot snapshot,
-			List<QuestAction.SetCurrency> sets) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
+	public void preflightSets(QuestSnapshot snapshot, List<QuestAction.SetCurrency> sets) throws SQLException {
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (sets.isEmpty()) {
 			return;
@@ -439,14 +431,13 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 	}
 
 	@Override
-	public QuestTransactionParticipant applySets(Connection connection, QuestSnapshot snapshot,
+	public QuestTransactionParticipant applySets(QuestSnapshot snapshot,
 			List<QuestAction.SetCurrency> sets) throws SQLException {
-		Objects.requireNonNull(connection, "connection");
 		Objects.requireNonNull(snapshot, "snapshot");
 		if (sets.isEmpty()) {
 			return QuestTransactionParticipant.none();
 		}
-		preflightSets(connection, snapshot, sets);
+		preflightSets(snapshot, sets);
 		Player player = players.find(snapshot.playerId());
 		if (player == null) {
 			throw new SQLException("player is unavailable: " + snapshot.playerId());
@@ -470,7 +461,7 @@ public final class PlayerQuestCurrencyPort implements QuestCurrencyPort {
 			if (player.getCommonData().getDp() != target) {
 				throw new SQLException("live DP exact set was clamped or ignored for player " + snapshot.playerId());
 			}
-			playerDao.storeInTransaction(connection, player.getObjectId(), player.getCommonData());
+			playerDao.storeInTransaction(player.getObjectId(), player.getCommonData());
 			return QuestTransactionParticipant.of(
 				player.getCommonData()::publishDp,
 				commonSnapshot::restore);

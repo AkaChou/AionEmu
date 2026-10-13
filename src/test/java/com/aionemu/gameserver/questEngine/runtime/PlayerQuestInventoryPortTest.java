@@ -29,8 +29,6 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -52,8 +50,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Real {@link QuestInventoryPort}: removals run against the live inventory and
  * the dirty items are persisted through {@link InventoryDao#storeInTransaction}
- * on the caller-owned connection, so the removal commits atomically with the
- * quest state. Preflight fails closed on uncaptured or insufficient facts.
+ * inside the caller-owned transaction, so the removal commits atomically with
+ * the quest state. Preflight fails closed on uncaptured or insufficient facts.
  */
 class PlayerQuestInventoryPortTest {
 	private GameWorldBootstrapServices worldBootstrapServices;
@@ -94,7 +92,7 @@ class PlayerQuestInventoryPortTest {
 			null, Map.of(), false, true, 0);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 1), List.of()));
+			() -> port.preflight(snapshot, removals(ITEM_A, 1), List.of()));
 		assertTrue(thrown.getMessage().contains("not captured"));
 	}
 
@@ -104,38 +102,37 @@ class PlayerQuestInventoryPortTest {
 		QuestSnapshot snapshot = snapshotWith(ITEM_A, 1);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, removals(ITEM_A, 2), List.of()));
+			() -> port.preflight(snapshot, removals(ITEM_A, 2), List.of()));
 		assertTrue(thrown.getMessage().contains("insufficient"));
 	}
 
 	@Test
 	void preflightPassesWhenKnownCountIsSufficient() throws Exception {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
-		port.preflight(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
+		port.preflight(snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 	}
 
 	@Test
 	void preflightAllowsRemoveAllWithoutRequiringAPositiveRequestedCount() throws Exception {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, new RecordingDao());
 
-		port.preflight(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
-		port.preflight(connection(), snapshotWith(ITEM_A, 0), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+		port.preflight(snapshotWith(ITEM_A, 5), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
+		port.preflight(snapshotWith(ITEM_A, 0), removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyRemovesItemsAndPersistsDirtyOnCallerConnection() throws Exception {
+	void applyRemovesItemsAndPersistsDirtyInCallerTransaction() throws Exception {
 		Player player = playerWithInventory(ITEM_A, 5);
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
-		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.apply(connection, snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
+		QuestTransactionParticipant participant = port.apply(snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 
 		// 真实从 live 背包移除
 		assertEquals(3, player.getInventory().getItemCountByItemId(ITEM_A));
-		// 通过调用方 Connection 持久化 dirty items,与任务状态同事务
+		// 在调用方事务内持久化 dirty items,与任务状态同事务
 		assertEquals(1, dao.transactions.size());
-		assertSame(connection, dao.transactions.getFirst().connection);
 		assertTrue(dao.transactions.getFirst().items.stream()
 			.anyMatch(item -> item.getItemTemplate().getTemplateId() == ITEM_A));
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
@@ -150,7 +147,7 @@ class PlayerQuestInventoryPortTest {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 5),
+		QuestTransactionParticipant participant = port.apply(snapshotWith(ITEM_A, 5),
 			removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
 
 		assertEquals(0, player.getInventory().getItemCountByItemId(ITEM_A));
@@ -165,7 +162,7 @@ class PlayerQuestInventoryPortTest {
 		RecordingDao dao = new RecordingDao();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 0),
+		QuestTransactionParticipant participant = port.apply(snapshotWith(ITEM_A, 0),
 			removals(ITEM_A, QuestAction.RemoveItem.ALL), List.of());
 
 		assertEquals(0, player.getInventory().getItemCountByItemId(ITEM_A));
@@ -179,7 +176,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, new RecordingDao());
 
 		QuestTransactionParticipant participant = port.apply(
-			connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
+			snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of());
 		assertEquals(3, player.getInventory().getItemCountByItemId(ITEM_A));
 
 		participant.afterRollback();
@@ -196,17 +193,16 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort inventory = new PlayerQuestInventoryPort(playerId -> player, dao);
 		QuestActionPort actions = new QuestActionPort() {
 			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> required)
-				throws SQLException {
-				inventory.preflight(connection, snapshot,
+			public void preflight(QuestSnapshot snapshot, List<QuestAction> required) throws SQLException {
+				inventory.preflight(snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
 						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-													 List<QuestAction> required) throws SQLException {
-				return inventory.apply(connection, snapshot,
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> required)
+				throws SQLException {
+				return inventory.apply(snapshot,
 					required.stream().filter(QuestAction.RemoveItem.class::isInstance)
 						.map(QuestAction.RemoveItem.class::cast).toList(), List.of());
 			}
@@ -217,16 +213,18 @@ class PlayerQuestInventoryPortTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(ITEM_A, 5))
 			.then(removeItem(ITEM_A, 2)).then(setVariable("step", 1)).goTo("reward").compile();
-		List<String> jdbc = new ArrayList<>();
+		List<String> calls = new ArrayList<>();
+		RecordingTransactionManager transactionManager = new RecordingTransactionManager(calls);
+		transactionManager.failNextCommit();
 
 		QuestExecutionFailureException failure = assertThrows(QuestExecutionFailureException.class,
-			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor()).execute(
-				commitFailingConnection(jdbc), PLAYER_ID, definition, talkToNpc(700001),
+			() -> new QuestExecutionCoordinator(new PlayerSerialExecutor(), transactionManager).execute(
+				PLAYER_ID, definition, talkToNpc(700001),
 				definition.definition().transitions().getFirst(),
 				(connection, playerId, questId, event) -> snapshotWith(ITEM_A, 5), actions,
 				new QuestStatePort() {
 					@Override
-					public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+					public void apply(int playerId, QuestMutationPlan plan) {
 					}
 
 					@Override
@@ -239,30 +237,29 @@ class PlayerQuestInventoryPortTest {
 
 		assertEquals(QuestFailureStage.COMMIT, failure.stage());
 		assertFalse(failure.committed());
-		assertInstanceOf(SQLException.class, failure.getCause());
-		assertEquals(List.of("commit", "rollback"), jdbc);
+		assertInstanceOf(IllegalStateException.class, failure.getCause());
+		assertEquals(List.of("begin", "commit", "rollback"), calls);
 		assertEquals(5, player.getInventory().getItemCountByItemId(ITEM_A));
 		assertTrue(player.getInventory().getDeletedItems().isEmpty());
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
 		assertEquals(1, dao.transactions.size());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGivesQuestWorkItemsAndPersistsDirtyOnCallerConnection() throws Exception {
+	void applyGivesQuestWorkItemsAndPersistsDirtyInCallerTransaction() throws Exception {
 		Player player = playerWithInventory();
 		RecordingDao dao = new RecordingDao();
 		AddingItemAdder adder = new AddingItemAdder();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao, adder);
-		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.apply(connection, snapshotWith(ITEM_A, 0),
+		QuestTransactionParticipant participant = port.apply(snapshotWith(ITEM_A, 0),
 			List.of(), gives(169001002, 2));
 
 		assertEquals(1, adder.calls.size());
 		assertEquals(169001002, adder.calls.getFirst().getFirst().getItemId());
 		assertEquals(2, adder.calls.getFirst().getFirst().getCount());
 		assertEquals(1, dao.transactions.size());
-		assertSame(connection, dao.transactions.getFirst().connection);
 		assertEquals(2, player.getInventory().getItemCountByItemId(169001002));
 		participant.afterCommit();
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
@@ -275,7 +272,7 @@ class PlayerQuestInventoryPortTest {
 		AddingItemAdder adder = new AddingItemAdder();
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao, adder);
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshotWith(ITEM_A, 0),
+		QuestTransactionParticipant participant = port.apply(snapshotWith(ITEM_A, 0),
 			List.of(), gives(169001002, 2));
 		assertEquals(2, player.getInventory().getItemCountByItemId(169001002));
 
@@ -290,7 +287,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> null, dao);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
+			() -> port.apply(snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
 		assertEquals(0, dao.transactions.size());
 	}
 
@@ -302,7 +299,7 @@ class PlayerQuestInventoryPortTest {
 		PlayerQuestInventoryPort port = new PlayerQuestInventoryPort(playerId -> player, dao);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
+			() -> port.apply(snapshotWith(ITEM_A, 5), removals(ITEM_A, 2), List.of()));
 		assertEquals(0, dao.transactions.size());
 		// 失败不能留下部分脏标记
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
@@ -413,66 +410,15 @@ class PlayerQuestInventoryPortTest {
 		return field.get(target);
 	}
 
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> false;
-				case "toString" -> "test-connection";
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
-	private static Connection commitFailingConnection(List<String> calls) {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> false;
-				case "commit" -> {
-					calls.add("commit");
-					throw new SQLException("injected commit failure");
-				}
-				case "rollback" -> {
-					calls.add("rollback");
-					yield null;
-				}
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) {
-			return null;
-		}
-		if (type == boolean.class) {
-			return false;
-		}
-		if (type == int.class || type == short.class || type == byte.class) {
-			return 0;
-		}
-		if (type == long.class) {
-			return 0L;
-		}
-		if (type == float.class) {
-			return 0F;
-		}
-		if (type == double.class) {
-			return 0D;
-		}
-		if (type == char.class) {
-			return '\0';
-		}
-		return null;
-	}
-
 	private static final class RecordingDao extends InventoryDaoImpl {
-		private record Transaction(Connection connection, List<Item> items) {
+		private record Transaction(List<Item> items) {
 		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
 
 		@Override
-		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-									   Integer legionId) {
-			transactions.add(new Transaction(connection, items));
+		public void storeInTransaction(List<Item> items, Integer playerId, Integer accountId, Integer legionId) {
+			transactions.add(new Transaction(items));
 		}
 
 		@Override

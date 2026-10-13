@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.aionemu.boot.i18n.I18n;
@@ -50,20 +48,16 @@ public class VeteranRewardDaoImpl extends ServiceImpl<VeteranRewardMapper, Veter
 	}
 
 	/**
-	 * 在调用方事务连接上按 ID 删除老兵奖励。
-	 * Deletes a veteran reward by id on the caller's transactional connection.
+	 * 在调用方事务内按 ID 删除老兵奖励。
+	 * Deletes a veteran reward by id inside the caller's transaction.
 	 *
-	 * @param con 调用方事务连接 / caller's transactional connection
 	 * @param rewardId 奖励 ID / reward id
-	 * @throws SQLException 底层 JDBC 异常 / underlying JDBC failure
 	 */
 	@Override
-	public void deleteInTransaction(Connection con, int rewardId) throws SQLException {
-		try (PreparedStatement stmt = con.prepareStatement(VeteranRewardMapper.DELETE_QUERY_JDBC)) {
-			stmt.setInt(1, rewardId);
-			if (stmt.executeUpdate() == 0) {
-				throw new SQLException("No veteran reward row deleted for id " + rewardId);
-			}
+	public void deleteInTransaction(int rewardId) {
+		if (mapper.deleteByQuery(QueryWrapper.create().where(VeteranRewardPo::getId).eq(rewardId)) == 0) {
+			throw new DataAccessException("No veteran reward row deleted for id " + rewardId) {
+			};
 		}
 	}
 }

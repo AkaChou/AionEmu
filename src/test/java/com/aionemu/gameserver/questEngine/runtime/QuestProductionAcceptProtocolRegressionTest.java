@@ -23,8 +23,6 @@ import com.aionemu.gameserver.questEngine.tablelane.SimpleTalkHandler;
 import org.junit.jupiter.api.Test;
 
 
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -263,7 +261,7 @@ class QuestProductionAcceptProtocolRegressionTest {
 				.withCompletedQuestIds(completedPrerequisites(definition));
 		QuestStatePort statePort = new QuestStatePort() {
 			@Override
-			public void apply(Connection connection, int playerId, QuestMutationPlan plan) {
+			public void apply(int playerId, QuestMutationPlan plan) {
 				plans.add(plan);
 				status.set(plan.nextStatus());
 			}
@@ -274,22 +272,21 @@ class QuestProductionAcceptProtocolRegressionTest {
 		};
 		return new QuestProductionDispatcher(
 			new ImmutableQuestCatalog(List.of(definition)),
-			new QuestExecutionCoordinator(new PlayerSerialExecutor()),
+			new QuestExecutionCoordinator(new PlayerSerialExecutor(),
+				new RecordingTransactionManager(ignored -> { })),
 			eventPort, noOpActions(), statePort,
 			(action, snapshot, plan) -> afterCommit.add(action),
-			QuestProductionAcceptProtocolRegressionTest::connection, ignored -> { },
-			new QuestRuntimeMetricsCollector());
+			ignored -> { }, new QuestRuntimeMetricsCollector());
 	}
 
 	private static QuestActionPort noOpActions() {
 		return new QuestActionPort() {
 			@Override
-			public void preflight(Connection connection, QuestSnapshot snapshot, List<QuestAction> actions) {
+			public void preflight(QuestSnapshot snapshot, List<QuestAction> actions) {
 			}
 
 			@Override
-			public QuestTransactionParticipant apply(Connection connection, QuestSnapshot snapshot,
-					List<QuestAction> actions) {
+			public QuestTransactionParticipant apply(QuestSnapshot snapshot, List<QuestAction> actions) {
 				return QuestTransactionParticipant.none();
 			}
 		};
@@ -307,16 +304,4 @@ class QuestProductionAcceptProtocolRegressionTest {
 
 	// TEMP-VERIFY(view): 并行批次落定前的宽松生产视图（XML 目录 + 原版驱动，跳过覆盖门）。
 	private static final AtomicReference<QuestCatalog> VIEW = new AtomicReference<>();
-
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "hashCode" -> System.identityHashCode(proxy);
-				case "equals" -> proxy == args[0];
-				case "toString" -> "MockConnection@" + Integer.toHexString(System.identityHashCode(proxy));
-				case "getAutoCommit" -> true;
-				case "setAutoCommit", "commit", "rollback", "close" -> null;
-				default -> method.getReturnType() == boolean.class ? false : null;
-			});
-	}
 }

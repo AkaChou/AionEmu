@@ -27,6 +27,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +37,8 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware,
-    ApplicationListener<ContextClosedEvent> {
+public class AionServiceLauncher implements ApplicationRunner, DisposableBean, SmartLifecycle,
+    ApplicationContextAware, ApplicationListener<ContextClosedEvent> {
 
     private final AionServicesProperties services;
     private final AionTransportBoundary transportBoundary;
@@ -201,6 +202,31 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
                 }
             });
         }
+    }
+
+    /**
+     * 在容器销毁 Bean 之前停服：停服路径要写库（svstats 置离线、玩家状态落盘），而数据源在销毁阶段已经关闭。
+     * Stops before the container destroys its beans: the shutdown path writes to the database (svstats offline,
+     * player state), while the DataSource is already closed during that phase.
+     */
+    @Override
+    public void stop() {
+        destroy();
+    }
+
+    /** 启动由 {@link ApplicationRunner} 驱动。 / Startup is driven by {@link ApplicationRunner}. */
+    @Override
+    public void start() {
+    }
+
+    @Override
+    public boolean isRunning() {
+        return !destroyed.get();
+    }
+
+    @Override
+    public boolean isAutoStartup() {
+        return false;
     }
 
     /**

@@ -1,9 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import com.aionemu.gameserver.persistence.DatabaseAccess;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -75,13 +72,8 @@ public class PlayerEffectDaoImpl extends ServiceImpl<PlayerEffectMapper, PlayerE
 
 		try {
 			DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
-				try (Connection con = DatabaseAccess.getConnection()) {
-					deleteAll(con, player);
-					insertAll(con, player, validEffects);
-				} catch (SQLException e) {
-					throw new DataAccessException("Failed to store player effects", e) {
-					};
-				}
+				deleteAll(player);
+				insertAll(player, validEffects);
 			});
 		} catch (RuntimeException e) {
 			log.error(I18n.get("log.db9bf45e33ff", player.getObjectId()), e);
@@ -103,40 +95,26 @@ public class PlayerEffectDaoImpl extends ServiceImpl<PlayerEffectMapper, PlayerE
 	}
 
 	/**
-	 * 在事务连接上删除玩家全部效果。
-	 * Deletes all of the player's effects on the transaction connection.
+	 * 在事务内删除玩家全部效果。
+	 * Deletes all of the player's effects inside the transaction.
 	 *
-	 * @param con 事务连接 / transaction connection
 	 * @param player 玩家 / player
-	 * @throws SQLException 删除失败时 / on delete failure
 	 */
-	private void deleteAll(Connection con, Player player) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(PlayerEffectMapper.DELETE_QUERY_JDBC)) {
-			ps.setInt(1, player.getObjectId());
-			ps.executeUpdate();
-		}
+	private void deleteAll(Player player) {
+		mapper.deleteByQuery(QueryWrapper.create().where(PlayerEffectPo::getPlayerId).eq(player.getObjectId()));
 	}
 
 	/**
-	 * 在事务连接上批量插入玩家效果。
-	 * Batch-inserts the player's effects on the transaction connection.
+	 * 在事务内逐行 upsert 玩家效果。
+	 * Upserts the player's effects one row at a time inside the transaction.
 	 *
-	 * @param con 事务连接 / transaction connection
 	 * @param player 玩家 / player
 	 * @param validEffects 待插入效果 / insertable effects
-	 * @throws SQLException 写入失败时 / on write failure
 	 */
-	private void insertAll(Connection con, Player player, List<Effect> validEffects) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(PlayerEffectMapper.INSERT_QUERY_JDBC)) {
-			for (Effect effect : validEffects) {
-				ps.setInt(1, player.getObjectId());
-				ps.setInt(2, effect.getSkillId());
-				ps.setInt(3, effect.getSkillLevel());
-				ps.setInt(4, effect.getRemainingTime());
-				ps.setLong(5, persistedEndTime(effect));
-				ps.addBatch();
-			}
-			ps.executeBatch();
+	private void insertAll(Player player, List<Effect> validEffects) {
+		for (Effect effect : validEffects) {
+			mapper.upsertEffect(player.getObjectId(), effect.getSkillId(), effect.getSkillLevel(),
+				effect.getRemainingTime(), persistedEndTime(effect));
 		}
 	}
 

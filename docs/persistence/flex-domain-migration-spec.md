@@ -20,7 +20,7 @@
 | 产物 | 路径 | 要求 |
 |---|---|---|
 | 实体 Po | `persistence/entity/XxxPo` | `@Data @Table("表名")`；`@Id` 单主键 / `KeyType.Auto` 自增；`is_` 前缀布尔列改字段名去 `is` 前缀 + `@Column("is_xxx")` |
-| Mapper | `persistence/mapper/XxxMapper` | `extends BaseMapper<XxxPo>`；**仅**复杂/方言 SQL 用注解（`@Select/@Insert/@Update/@Delete`），其余走 Flex CRUD |
+| Mapper | `persistence/mapper/XxxMapper` | `extends BaseMapper<XxxPo>`；**默认空接口**，一律走 Flex CRUD；仅 §4.2 例外清单内的语句才用注解（`@Select/@Insert/@Update/@Delete`），且注解 Javadoc 必须写明保留理由 |
 | Dao 接口 | `persistence/dao/XxxDao` | `extends IService<XxxPo>`；**方法签名 = 遗留 DAO 公开方法签名**（去掉 `getClassName`/`supports`），使调用点零改动 |
 | DaoImpl | `persistence/dao/impl/XxxDaoImpl` | `@Service @Lazy extends ServiceImpl<Mapper,Po> implements Dao`；**保留原降级语义**（catch `DataAccessException` → 原 I18n 键 → 原降级返回值） |
 
@@ -41,12 +41,58 @@
 - `timestamp/datetime`：原 `rs.getTimestamp` → `Timestamp`；原 `rs.getString` 读时间列的保持 `String`。
 - 类型修正须在实体 Javadoc 注明 DDL 原类型。
 
-## 4. SQL 转换规则
+## 4. SQL 转换规则（本版口径：最小化手写 SQL）
 
-- 常规单表 CRUD → Flex（`selectListByQuery` / `insert` / `UpdateChain`）。
-- 方言 SQL 逐字节保留，仅 `?` → `#{name}`：`REPLACE INTO`、`INSERT ... ON DUPLICATE KEY UPDATE`、`UPDATE t SET c=?`（无 WHERE，Flex 硬拒）、`COUNT(DISTINCT col)` 以外的复杂聚合、JOIN/子查询。
-- `storeInTransaction(Connection, ...)` 类方法：**不经 Mapper**，用原生 `PreparedStatement` 并向上抛 `SQLException`（Mapper 走独立 SqlSession，无法与调用方事务同事务）；Mapper 中保留 `?` 原文常量命名 `<原名>_JDBC`。
-- 无 WHERE 的 UPDATE/DELETE：Flex 运行期抛 `UPDATE_OR_DELETE_NOT_ALLOW`，必须保留注解 SQL。
+> **本节于 2026-10-13 改写。** 旧口径是「方言 SQL 逐字节保留，仅 `?` → `#{name}`」，把可转语句
+> 大量留在注解里；新口径是「**能由 Flex 表达的，一律不手写 SQL**；只有确实无法表达时才保留注解，
+> **且必须在 Javadoc 注明为何 Flex 表达不了**」。策略逆转的动因与备选方案见
+> [`adr/0001-minimize-handwritten-sql-over-verbatim-dialect.md`](adr/0001-minimize-handwritten-sql-over-verbatim-dialect.md)。
+
+### 4.1 默认：走 Flex
+
+- 单表查询 → `selectListByQuery` / `selectOneByQuery` / `selectCountByQuery` + `QueryWrapper` 谓词（**用 `Po::getX` 方法引用，不写字符串列名**）。
+- 单表更新 → `UpdateChain.of(Po).set(...).where(...).update()`；需要影响行数用 `mapper.updateByQuery(po, wrapper)`（返回 `int`，`ignoreNulls=true`，SET 自动排除主键列）。
+- 单表删除 → `mapper.deleteByQuery(wrapper)`。
+- 批量写入 → `mapper.insertBatch(rows)`。
+- 列自运算 → `QueryColumn.add/subtract/multiply/divide`；方言函数 → `new FunctionQueryColumn("LEAST", col.add(n), new RawQueryColumn(...))`。
+- 时间函数 → `QueryMethods.now()/currentTimestamp()`（**禁止 `setRaw(col, "NOW()")` 之类的裸片段**）。
+- 无 `@Id` 表（`outpost_location`/`competition_ranking`/`item_drop`/`legion_announcement_list`/`player_skill_skins`/`player_transform`）：**不改 DDL**，一律查询式 CRUD，不用 byId。
+
+### 4.2 例外清单（保留注解 SQL，共 62 条，按理由归类）
+
+| 理由 | 条数 | 代表 | 为何 Flex 表达不了 |
+|---|---|---|---|
+| 原子 upsert (`INSERT ... ON DUPLICATE KEY UPDATE`) | 32 | `PlayerVar.upsert`、`PlayerRecipe.addRecipe`、`LadderPlayer.addWins`、`AccountPlaytime.accumulateOnlineTime` | **Flex 1.11.8 无 SQL 级 upsert**：`insertOrUpdate(entity, ignoreNulls)` 是 Java 分支（主键有值 → `update`，否则 → `insert`）。这些表主键全为业务值，故它**只发 UPDATE**，行不存在时 0 行、从不插入 = 静默丢数据；`IService.saveOrUpdate` 只是它的包装 |
+| `REPLACE INTO` | 7 | `PlayerSetting.replaceSetting`、`ServerVariable.replace`、`BannedMac.replaceBan`、`AccountTime.replaceAccountTime` | 同上（无 SQL 级 upsert）。改成「`deleteByQuery` + `insert`」会把单语句原子操作拆成两条，重新引入竞态 |
+| `INSERT IGNORE` | 3 | `LimitedQuestCounter.initialize`、`AccountVip.insertIfAbsent`、`AccountVip.syncMissingAccounts`（后者是 `INSERT IGNORE ... SELECT`） | Flex 无 `insertIgnore`；同样不能退化成「存在性检查 + 插入」 |
+| 无 `WHERE` 全表 `UPDATE`/`DELETE` | 4 | `Player.setAllOnline`、`Svstat.updateAllOffline`、`PlayerLunaShop.deleteAll`、`PlayerShugoSweep.deleteAll` | Flex 运行期硬拒无 `WHERE` 的更新/删除（`UPDATE_OR_DELETE_NOT_ALLOW`） |
+| JOIN / 逗号连表 / 子查询 | 8 | `AbyssRank.selectPlayerRanking`、`CompetitionRanking.selectCompetitionRankingPlayers`、`LegionMember.selectLegionMemberExById`、`AccountData.deleteInactiveAccounts` | 跨表结果集（多表列混合 + 别名），Flex 的 `QueryWrapper` 无法表达这些列的投影与连接语义 |
+| 跨闭包单表语句（**mapper 归属表 ≠ 语句目标表**） | 7 | `Broker.selectBrokerItems` / `Mail.selectMailboxItems`（读 `inventory`）、`Inventory.selectAccountId`（读 `players`）、`Inventory.selectLegionId`（读 `legion_members`）、`Mail.updateMailboxLetters`（更新 `players`）、`AbyssRank.selectRankByPlayerId` / `countLegionMembers` | 归属表与目标表分属不同闭包；用 Flex 表达需在 AbyssRank 闭包里注入 Legion/Player/Inventory 的 Mapper/Dao，把跨闭包依赖固化进 DAO。**这些是「归属越界」而非「表达力不足」**，换闭包时优先重新评估 |
+| `INSERT` 值列表内嵌库端函数 `NOW()` | 1 | `PlayerMinion.insertMinion`（`birthday = NOW()`） | `QueryMethods.now()` 只能出现在 `QueryWrapper`/`UpdateChain` 中；`insert(entity)` 的值来自实体字段，无法注入库端求值 |
+
+> **`*_JDBC` 常量已清零**（唯二保留：`AbyssRankMapper.UPDATE_PLAYER_RANK_LIST_JDBC` /
+> `UPDATE_LEGION_RANK_LIST_JDBC`——会话变量排名 + 动态 `LIMIT`，由 `AbyssRankDaoImpl` 用
+> `PreparedStatement` 执行，仍复用调用方事务连接）。
+
+### 4.3 事务归 Spring（不再由调用方持有 `Connection`）
+
+- DAO 方法**不再接收 `Connection`**：`storeInTransaction(Xxx)` / `deleteInTransaction(...)` 等一律去掉连接形参，
+  内部走 Flex（`@Transactional` 或复用调用方已开启的 Spring 事务）。
+- 调用方手工事务（`setAutoCommit(false)` / `commit()` / `rollback()`）→ `DatabaseAccess.transactionTemplate()`
+  或 `QuestUnitOfWork`（内部包 `PlatformTransactionManager`）。生产源码中 `setAutoCommit` **已清零**
+  （仅 `TransactionSafetyTest` 保留两条「不得再出现」的否定断言）。
+- **「Flex 与裸 JDBC 同事务」的接缝已存在**：`DatabaseAccess.getConnection()` 是 `DataSourceUtils.getConnection`，
+  事务内自动复用 Spring 的事务连接，无需新增基础设施。
+- `PlayerQuestDaoImpl.store` 的原「`con.getAutoCommit()==true` → `IllegalStateException`」守卫，等价替换为
+  `TransactionSynchronizationManager.isActualTransactionActive()`。
+- 非事务的单语句 DML（`Repairkit` / `Bk` / `MotionLoggingService`）：**不套事务**，改走 `DatabaseAccess.jdbcClient()`
+  或对应的 Flex DAO/Mapper（`MotionLoggingService` 已改走 `SkillMotionDao`）。
+
+> **已知残留接缝（非本批范围）**：`QuestEventPort` / `PlayerQuestEventPort` 仍保留
+> `snapshot(Connection, ...)` 重载，但**形参已被忽略**（直接委托给无连接的 `snapshot(...)`），
+> 属兼容入口而非真实连接传递。删除它要牵动 questEngine tablelane 原生夹具，故不在本批处置，
+> 后续如需彻底去 `java.sql.Connection` 从这里下手。
+
 
 ## 5. 离线兜底删除（本批确立）
 
@@ -66,7 +112,22 @@
 | gs（合计） | gameserver/dao/**（69 接口 + 70 实现，已删） | persistence/dao/ 78 个 | 与遗留等签名 | ✅ | ✅ | 无 | ✅ |
 | ls（合计） | loginserver/dao/**（已删） | loginserver/persistence/dao/ 11 个 | 与遗留等签名 | ✅ | ✅ | 无 | ✅ |
 
+## 6b. 台账（本批：最小化手写 SQL + 事务归 Spring，2026-10-13）
+
+| 项 | 结果 |
+|---|---|
+| 事务重构 | 15 个 DAO 去 `Connection` 形参；`QuestUnitOfWork` 改包 `PlatformTransactionManager`；`BrokerService` / `ExchangeService` / `MailService` / `SystemMailService` 改 `DatabaseAccess.transactionTemplate()`；全库 `setAutoCommit` 与 `*InTransaction(Connection` **归零** |
+| `QueryWrapper` 裸片段 | `.setRaw(col,"NOW()")` 6 处 → `QueryMethods.now()`；`.select("列名")` 11 处 → `Po::getX`（两项均**归零**） |
+| 前缀为 `_JDBC` 的常量 | 除会话变量排名 2 处例外外**归零**；`PreparedStatement` 仅剩 `AbyssRankDaoImpl`（排名）与 `commands/admin/{Bk,Repairkit}`（已改 `JdbcClient`，无 `Connection` 管理） |
+| 保留注解 | 62 条，全部落入 §4.2 例外清单（原子 upsert 32 / `REPLACE INTO` 7 / `INSERT IGNORE` 3 / 无 WHERE 全表 4 / JOIN 与子查询 8 / 跨闭包单表 7 / 内嵌 `NOW()` 1） |
+| 测试改造 | `TransactionSafetyTest` / `LimitedQuestDAOSqlTest` / `PlayerQuestListDAOTest` 改写为新契约；`RecordingTransactionManager` 事务替身替代连接代理；`QuestExecutionCoordinatorTest` / `QuestE2eRuntime` / `QuestCurrencyPortFailClosedTest` 随签名同步；连接断言删除后，先编码了「调用方 Connection」旧契约的 5 个测试方法已改名（`…OnCallerConnection` → `…InCallerTransaction`、`…SharesTheExactConnection` → `…SharesOneTransaction`） |
+| 已知既有失败（**与本次无关**） | `QuestInteractionObjectCatalogTest.productionQuestUseItemTalkRoutesDeclareActionEligibility` 断言 13 条 `questId:node:npcId` 缺少 `CanAct(… ACTION_ITEM_USE)` 资格路由。该用例只读 `quest_definition_catalog.xml`（本工作树未改动）且断言体未被本次触碰，属 `quest` 分支既有的任务定义数据缺口，需走 quest-repair 流程另行处理，**不要**在持久层批次里顺手改 |
+| 验证 | `build_project` 全绿；已跑 `TransactionSafetyTest`、`LimitedQuestDAOSqlTest`、`PlayerQuestListDAOTest`、`PlayerEquipmentSettingDAOTest`、`VipDaoSqlTest`、`BannedMacManagerTest`、`ServiceConstructorInjectionTest`、`GameLegacyServiceBridgeConfigurationTest`、`AionBootApplicationTest`，以及 questEngine runtime 的 `QuestExecutionCoordinatorTest` / `QuestUnitOfWorkTest` / `QuestProductionDispatcherTest` / `QuestCurrencyPortFailClosedTest` / 各 `PlayerQuest*PortTest` / 三个 production-flow 回归 —— 全部通过 |
+
 ## 7. 终态判据（终批审计）
 
 grep 归零：`gameserver.dao.` / `loginserver.dao.`、`DAOManager.getDAO`、`buildOfflineDaos`、`safeDao`、`GameDAOClassProvider`、`DAOUtils`；删除 `DatabaseFactory`、`commons/database/**`、`gameserver/dao/**`、`loginserver/dao/**`。
 **核对结果（2026-10-12）：全部归零，目录已不存在；`LocalizedLogArgumentsTest` 全库 0 缺失键；`GameServiceProviderCompatibilityTest` / `MinionServiceTest` / `ModelCollectionImplementationTest` / `TransactionSafetyTest` 等回归绿。**
+
+补充归零项（2026-10-13，配合 §4 新口径）：`setAutoCommit`、`QueryWrapper.setRaw(`、`.select("字符串列名")`、带 `Connection` 形参的 `*InTransaction(...)`、除 2 处例外外的 `*_JDBC` 常量。
+**核对结果：上述五项全部归零；保留注解 62 条已逐条落入 §4.2 并注明理由。**

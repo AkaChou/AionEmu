@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.persistence.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.PlayerSkillList;
 import com.aionemu.gameserver.persistence.entity.PlayerSkillPo;
@@ -33,13 +30,11 @@ public interface PlayerSkillDao extends IService<PlayerSkillPo> {
 	boolean storeSkills(Player player);
 
 	/**
-	 * 在调用方事务上将单个技能收敛到至少目标等级。
-	 * Converges one skill to at least the target level on the caller-owned transaction.
-	 * @param connection 调用方事务连接 / caller-owned transaction connection
+	 * 在调用方事务内将单个技能收敛到至少目标等级。
+	 * Converges one skill to at least the target level inside the caller-owned transaction.
 	 * @param playerId 玩家对象 ID / player object id
 	 * @param skillId 技能 ID / skill id
 	 * @param targetLevel 目标等级 / target level
-	 * @throws SQLException 写入失败时 / on write failure
 	 */
-	void storeSkillInTransaction(Connection connection, int playerId, int skillId, int targetLevel) throws SQLException;
+	void storeSkillInTransaction(int playerId, int skillId, int targetLevel);
 }

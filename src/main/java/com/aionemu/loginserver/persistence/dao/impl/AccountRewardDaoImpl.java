@@ -10,6 +10,7 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.loginserver.persistence.dao.AccountRewardDao;
 import com.aionemu.loginserver.persistence.entity.AccountRewardPo;
 import com.aionemu.loginserver.persistence.mapper.AccountRewardMapper;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
@@ -43,7 +44,7 @@ public class AccountRewardDaoImpl extends ServiceImpl<AccountRewardMapper, Accou
 			try {
 				UpdateChain.of(AccountRewardPo.class)
 					.set(AccountRewardPo::getRewarded, 1)
-					.setRaw("received", "NOW()")
+					.set(AccountRewardPo::getReceived, QueryMethods.now())
 					.in(AccountRewardPo::getUniqId, pending.stream().map(AccountRewardPo::getUniqId).toList())
 					.update();
 			} catch (DataAccessException e) {

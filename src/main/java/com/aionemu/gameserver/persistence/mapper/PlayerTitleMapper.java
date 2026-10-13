@@ -23,11 +23,4 @@ public interface PlayerTitleMapper extends BaseMapper<PlayerTitlePo> {
 	@Insert("INSERT INTO `player_titles` (`player_id`, `title_id`, `remaining`) VALUES (#{playerId}, #{titleId}, #{remaining}) "
 		+ "ON DUPLICATE KEY UPDATE `remaining` = VALUES(`remaining`)")
 	int upsert(@Param("playerId") int playerId, @Param("titleId") int titleId, @Param("remaining") int remaining);
-
-	/**
-	 * 插入或更新玩家称号（原生 JDBC 常量，供调用方事务复用）。
-	 * Insert or update a player title (raw JDBC constant for caller-owned transactions).
-	 */
-	String INSERT_QUERY_JDBC = "INSERT INTO `player_titles` (`player_id`, `title_id`, `remaining`) VALUES (?, ?, ?) "
-		+ "ON DUPLICATE KEY UPDATE `remaining` = VALUES(`remaining`)";
 }

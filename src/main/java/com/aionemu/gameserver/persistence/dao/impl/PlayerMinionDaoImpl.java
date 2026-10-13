@@ -256,7 +256,7 @@ public class PlayerMinionDaoImpl extends ServiceImpl<PlayerMinionMapper, PlayerM
 	@Override
 	public int[] getUsedIDs() {
 		try {
-			List<PlayerMinionPo> rows = mapper.selectListByQuery(QueryWrapper.create().select("object_id"));
+			List<PlayerMinionPo> rows = mapper.selectListByQuery(QueryWrapper.create().select(PlayerMinionPo::getObjectId));
 			return rows.stream().mapToInt(PlayerMinionPo::getObjectId).toArray();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.6b0198f98c6b", 0), e);
@@ -274,7 +274,7 @@ public class PlayerMinionDaoImpl extends ServiceImpl<PlayerMinionMapper, PlayerM
 	public void saveBirthday(MinionCommonData minionCommonData) {
 		try {
 			PlayerMinionPo po = mapper.selectOneByQuery(QueryWrapper.create()
-				.select("birthday")
+				.select(PlayerMinionPo::getBirthday)
 				.where(PlayerMinionPo::getPlayerId).eq(minionCommonData.getMasterObjectId())
 				.and(PlayerMinionPo::getObjectId).eq(minionCommonData.getObjectId()));
 

@@ -33,8 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -51,8 +49,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Real {@link QuestCurrencyPort}: kinah/AP/GP/DP rewards are applied to the live
- * player and each currency is persisted through its transactional DAO on the
- * caller-owned connection, so the rewards commit atomically with the quest state.
+ * player and each currency is persisted through its transactional DAO inside the
+ * caller-owned transaction, so the rewards commit atomically with the quest state.
  */
 class PlayerQuestCurrencyPortTest {
 	private static final int PLAYER_ID = 7;
@@ -65,10 +63,10 @@ class PlayerQuestCurrencyPortTest {
 		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
 			Map.of(), null, true, false, 0);
 
-		port.preflight(connection(), snapshot, List.of());
-		port.apply(connection(), snapshot, List.of());
-		port.preflightDebits(connection(), snapshot, List.of());
-		port.preflightSets(connection(), snapshot, List.of());
+		port.preflight(snapshot, List.of());
+		port.apply(snapshot, List.of());
+		port.preflightDebits(snapshot, List.of());
+		port.preflightSets(snapshot, List.of());
 	}
 
 	@Test
@@ -79,7 +77,7 @@ class PlayerQuestCurrencyPortTest {
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotCaptured(), List.of(reward("AP", 1))));
+			() -> port.apply(snapshotCaptured(), List.of(reward("AP", 1))));
 		assertEquals(Integer.MAX_VALUE, player.getAbyssRank().getAp());
 	}
 
@@ -91,7 +89,7 @@ class PlayerQuestCurrencyPortTest {
 			Map.of(), null, true, false, 0);
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, List.of(reward("GOLD", 500))));
+			() -> port.preflight(snapshot, List.of(reward("GOLD", 500))));
 		assertTrue(thrown.getMessage().contains("not captured"));
 	}
 
@@ -102,7 +100,7 @@ class PlayerQuestCurrencyPortTest {
 		QuestSnapshot snapshot = snapshotCaptured();
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflight(connection(), snapshot, List.of(reward("CP", 1))));
+			() -> port.preflight(snapshot, List.of(reward("CP", 1))));
 		assertTrue(thrown.getMessage().contains("no transactional currency store"));
 	}
 
@@ -110,7 +108,7 @@ class PlayerQuestCurrencyPortTest {
 	void preflightPassesForSupportedCurrencyKinds() throws Exception {
 		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
-		port.preflight(connection(), snapshotCaptured(),
+		port.preflight(snapshotCaptured(),
 			List.of(reward("GOLD", 500), reward("AP", 100), reward("GP", 50), reward("DP", 20)));
 	}
 
@@ -122,7 +120,7 @@ class PlayerQuestCurrencyPortTest {
 			Map.of(), Map.of(QuestRewardKind.GOLD, 100L));
 
 		SQLException thrown = assertThrows(SQLException.class,
-			() -> port.preflightDebits(connection(), snapshot,
+			() -> port.preflightDebits(snapshot,
 				List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 60),
 					new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 60))));
 		assertTrue(thrown.getMessage().contains("insufficient"));
@@ -133,24 +131,23 @@ class PlayerQuestCurrencyPortTest {
 		PlayerQuestCurrencyPort port = port(playerId -> null, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
 
-		assertThrows(SQLException.class, () -> port.preflightSets(connection(), snapshotCaptured().withMaxDp(100),
+		assertThrows(SQLException.class, () -> port.preflightSets(snapshotCaptured().withMaxDp(100),
 			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 101))));
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsKinahAndPersistsOnCallerConnection() throws Exception {
+	void applyGrantsKinahAndPersistsInCallerTransaction() throws Exception {
 		Player player = playerWithCurrency(0, 0, 0, 0);
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 		PlayerQuestCurrencyPort port = port(playerId -> player, inventoryDao,
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
-		Connection connection = connection();
 
 		QuestTransactionParticipant participant = port.apply(
-			connection, snapshotCaptured(), List.of(reward("GOLD", 500)));
+			snapshotCaptured(), List.of(reward("GOLD", 500)));
 
 		assertEquals(500, player.getInventory().getKinah());
 		assertEquals(1, inventoryDao.transactions.size());
-		assertSame(connection, inventoryDao.transactions.getFirst().connection);
 		assertTrue(inventoryDao.transactions.getFirst().items.stream()
 			.anyMatch(item -> item.getItemTemplate().isKinah()));
 		assertEquals(PersistentState.UPDATE_REQUIRED,
@@ -169,7 +166,7 @@ class PlayerQuestCurrencyPortTest {
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
 
 		QuestTransactionParticipant participant = port.apply(
-			connection(), snapshotCaptured(), List.of(reward("GOLD", 500)));
+			snapshotCaptured(), List.of(reward("GOLD", 500)));
 
 		assertEquals(1, inventoryDao.insertCount);
 		assertEquals(PersistentState.UPDATED, player.getInventory().getKinahItem().getPersistentState());
@@ -202,7 +199,7 @@ class PlayerQuestCurrencyPortTest {
 		CompositeQuestActionPort composite = new CompositeQuestActionPort(
 			new PlayerQuestInventoryPort(players, inventoryDao, (target, items) -> true), currency, rewards);
 
-		QuestTransactionParticipant participant = composite.apply(connection(), snapshotCaptured(), List.of(
+		QuestTransactionParticipant participant = composite.apply(snapshotCaptured(), List.of(
 			reward("GOLD", 500), new QuestAction.GrantReward("ITEM", 169001001, 1)));
 
 		assertEquals(2, inventoryDao.insertCount);
@@ -223,13 +220,13 @@ class PlayerQuestCurrencyPortTest {
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 
 		QuestInventoryPersistenceStage first = QuestInventoryPersistenceStage.persist(
-			inventoryDao, connection(), player, player.getDirtyItemsToUpdate());
+			inventoryDao, player, player.getDirtyItemsToUpdate());
 		assertEquals(PersistentState.UPDATED, item.getPersistentState());
 		item.increaseItemCount(1);
 		assertEquals(PersistentState.UPDATE_REQUIRED, item.getPersistentState());
 
 		QuestInventoryPersistenceStage second = QuestInventoryPersistenceStage.persist(
-			inventoryDao, connection(), player, player.getDirtyItemsToUpdate());
+			inventoryDao, player, player.getDirtyItemsToUpdate());
 		assertEquals(1, inventoryDao.insertCount);
 		assertEquals(1, inventoryDao.updateCount);
 
@@ -238,22 +235,21 @@ class PlayerQuestCurrencyPortTest {
 		assertEquals(PersistentState.NEW, item.getPersistentState());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsApAndGpAndPersistsAbyssRankOnCallerConnection() throws Exception {
+	void applyGrantsApAndGpAndPersistsAbyssRankInCallerTransaction() throws Exception {
 		Player player = playerWithCurrency(0, 0, 0, 0);
 		RecordingAbyssRankDao abyssRankDao = new RecordingAbyssRankDao();
 		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
 			abyssRankDao, new RecordingPlayerDao());
-		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.apply(connection, snapshotCaptured(),
+		QuestTransactionParticipant participant = port.apply(snapshotCaptured(),
 			List.of(reward("AP", 100), reward("GP", 50)));
 
 		AbyssRank rank = player.getAbyssRank();
 		assertEquals(100, rank.getAp());
 		assertEquals(50, rank.getGp());
 		assertEquals(1, abyssRankDao.calls.size());
-		assertSame(connection, abyssRankDao.calls.getFirst());
 		assertEquals(PLAYER_ID, abyssRankDao.lastPlayerId);
 		assertEquals(PersistentState.UPDATE_REQUIRED, rank.getPersistentState());
 		participant.afterCommit();
@@ -267,7 +263,7 @@ class PlayerQuestCurrencyPortTest {
 		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
 
-		QuestTransactionParticipant participant = port.apply(connection(), snapshotCaptured(),
+		QuestTransactionParticipant participant = port.apply(snapshotCaptured(),
 			List.of(reward("GOLD", 500), reward("AP", 100), reward("GP", 50), reward("DP", 20)));
 		assertEquals(540, player.getInventory().getKinah());
 		assertEquals(110, player.getAbyssRank().getAp());
@@ -283,19 +279,18 @@ class PlayerQuestCurrencyPortTest {
 		assertEquals(PersistentState.UPDATED, player.getInventory().getPersistentState());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applyGrantsDpAndPersistsCommonDataOnCallerConnection() throws Exception {
+	void applyGrantsDpAndPersistsCommonDataInCallerTransaction() throws Exception {
 		Player player = playerWithCurrency(0, 0, 0, 0);
 		RecordingPlayerDao playerDao = new RecordingPlayerDao();
 		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), playerDao);
-		Connection connection = connection();
 
-		port.apply(connection, snapshotCaptured(), List.of(reward("DP", 20)));
+		port.apply(snapshotCaptured(), List.of(reward("DP", 20)));
 
 		assertEquals(20, player.getCommonData().getDp());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.getFirst());
 		assertEquals(PLAYER_ID, playerDao.lastPlayerId);
 		assertSame(player.getCommonData(), playerDao.lastPcd);
 	}
@@ -308,29 +303,28 @@ class PlayerQuestCurrencyPortTest {
 		PlayerQuestCurrencyPort port = port(playerId -> null, inventoryDao, abyssRankDao, playerDao);
 
 		assertThrows(SQLException.class,
-			() -> port.apply(connection(), snapshotCaptured(), List.of(reward("AP", 100))));
+			() -> port.apply(snapshotCaptured(), List.of(reward("AP", 100))));
 		assertEquals(0, inventoryDao.transactions.size());
 		assertEquals(0, abyssRankDao.calls.size());
 		assertEquals(0, playerDao.calls.size());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
 	void applyDebitsKinahPersistsAndRollbackRestoresTheLiveBalance() throws Exception {
 		Player player = playerWithCurrency(0, 0, 0, 100);
 		RecordingInventoryDao inventoryDao = new RecordingInventoryDao();
 		PlayerQuestCurrencyPort port = port(playerId -> player, inventoryDao,
 			new RecordingAbyssRankDao(), new RecordingPlayerDao());
-		Connection connection = connection();
 		QuestSnapshot snapshot = new QuestSnapshot(PLAYER_ID, QUEST_ID, QuestStatus.START, 0,
 			Map.of(), Map.of(QuestRewardKind.GOLD, 100L));
 
-		QuestTransactionParticipant participant = port.applyDebits(connection, snapshot,
+		QuestTransactionParticipant participant = port.applyDebits(snapshot,
 			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 10),
 				new QuestAction.DecreaseCurrency(QuestRewardKind.KINAH, 30)));
 
 		assertEquals(60, player.getInventory().getKinah());
 		assertEquals(1, inventoryDao.transactions.size());
-		assertSame(connection, inventoryDao.transactions.getFirst().connection);
 		assertEquals(PersistentState.UPDATE_REQUIRED, player.getInventory().getPersistentState());
 
 		participant.afterCommit();
@@ -352,7 +346,7 @@ class PlayerQuestCurrencyPortTest {
 			Map.of(QuestRewardKind.GOLD, 100L, QuestRewardKind.AP, 10L,
 				QuestRewardKind.GP, 20L, QuestRewardKind.DP, 30L));
 
-		assertThrows(SQLException.class, () -> port.applyDebits(connection(), snapshot,
+		assertThrows(RuntimeException.class, () -> port.applyDebits(snapshot,
 			List.of(new QuestAction.DecreaseCurrency(QuestRewardKind.GOLD, 10),
 				new QuestAction.DecreaseCurrency(QuestRewardKind.AP, 2),
 				new QuestAction.DecreaseCurrency(QuestRewardKind.GP, 3),
@@ -366,20 +360,19 @@ class PlayerQuestCurrencyPortTest {
 		assertEquals(initialRankState, player.getAbyssRank().getPersistentState());
 	}
 
+	// 事务连接不再是端口契约，改为断言调用发生。
 	@Test
-	void applySetsPersistsOnCallerConnectionAndParticipantRollbackRestoresDp() throws Exception {
+	void applySetsPersistsInCallerTransactionAndParticipantRollbackRestoresDp() throws Exception {
 		Player player = playerWithCurrency(0, 0, 40, 100);
 		RecordingPlayerDao playerDao = new RecordingPlayerDao();
 		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), playerDao);
-		Connection connection = connection();
 
-		QuestTransactionParticipant participant = port.applySets(connection, snapshotCaptured().withMaxDp(4000),
+		QuestTransactionParticipant participant = port.applySets(snapshotCaptured().withMaxDp(4000),
 			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0)));
 
 		assertEquals(0, player.getCommonData().getDp());
 		assertEquals(1, playerDao.calls.size());
-		assertSame(connection, playerDao.calls.getFirst());
 		participant.afterRollback();
 		assertEquals(40, player.getCommonData().getDp());
 	}
@@ -392,7 +385,7 @@ class PlayerQuestCurrencyPortTest {
 		PlayerQuestCurrencyPort port = port(playerId -> player, new RecordingInventoryDao(),
 			new RecordingAbyssRankDao(), playerDao);
 
-		assertThrows(SQLException.class, () -> port.applySets(connection(), snapshotCaptured().withMaxDp(4000),
+		assertThrows(SQLException.class, () -> port.applySets(snapshotCaptured().withMaxDp(4000),
 			List.of(new QuestAction.SetCurrency(QuestRewardKind.DP, 0))));
 		assertEquals(40, player.getCommonData().getDp());
 		assertTrue(playerDao.calls.isEmpty());
@@ -474,42 +467,8 @@ class PlayerQuestCurrencyPortTest {
 		field.set(target, value);
 	}
 
-	private static Connection connection() {
-		return (Connection) Proxy.newProxyInstance(Connection.class.getClassLoader(),
-			new Class<?>[]{Connection.class}, (proxy, method, args) -> switch (method.getName()) {
-				case "getAutoCommit" -> false;
-				case "toString" -> "test-connection";
-				default -> defaultValue(method.getReturnType());
-			});
-	}
-
-	private static Object defaultValue(Class<?> type) {
-		if (!type.isPrimitive()) {
-			return null;
-		}
-		if (type == boolean.class) {
-			return false;
-		}
-		if (type == int.class || type == short.class || type == byte.class) {
-			return 0;
-		}
-		if (type == long.class) {
-			return 0L;
-		}
-		if (type == float.class) {
-			return 0F;
-		}
-		if (type == double.class) {
-			return 0D;
-		}
-		if (type == char.class) {
-			return '\0';
-		}
-		return null;
-	}
-
 	private static final class RecordingInventoryDao extends InventoryDaoImpl {
-		private record Transaction(Connection connection, List<Item> items) {
+		private record Transaction(List<Item> items) {
 		}
 
 		private final List<Transaction> transactions = new ArrayList<>();
@@ -518,13 +477,13 @@ class PlayerQuestCurrencyPortTest {
 		private int updateCount;
 
 		@Override
-		public void storeInTransaction(Connection connection, List<Item> items, Integer playerId, Integer accountId,
-									   Integer legionId) throws SQLException {
-			transactions.add(new Transaction(connection, List.copyOf(items)));
+		public void storeInTransaction(List<Item> items, Integer playerId, Integer accountId,
+									   Integer legionId) {
+			transactions.add(new Transaction(List.copyOf(items)));
 			for (Item item : items) {
 				if (item.getPersistentState() == PersistentState.NEW) {
 					if (!insertedIds.add(item.getObjectId())) {
-						throw new SQLException("duplicate insert " + item.getObjectId());
+						throw new IllegalStateException("duplicate insert " + item.getObjectId());
 					}
 					insertCount++;
 				} else if (item.getPersistentState() == PersistentState.UPDATE_REQUIRED) {
@@ -596,7 +555,7 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, int titleId, int remaining) {
+		public void storeInTransaction(int playerId, int titleId, int remaining) {
 			throw new AssertionError("unexpected storeInTransaction");
 		}
 
@@ -612,13 +571,13 @@ class PlayerQuestCurrencyPortTest {
 	}
 
 	private static final class RecordingAbyssRankDao extends AbyssRankDaoImpl {
-		private final List<Connection> calls = new ArrayList<>();
+		private final List<Integer> calls = new ArrayList<>();
 		private int lastPlayerId;
 		private AbyssRank lastRank;
 
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, AbyssRank rank) {
-			calls.add(connection);
+		public void storeInTransaction(int playerId, AbyssRank rank) {
+			calls.add(playerId);
 			lastPlayerId = playerId;
 			lastRank = rank;
 		}
@@ -671,7 +630,7 @@ class PlayerQuestCurrencyPortTest {
 	}
 
 	private static final class RecordingPlayerDao extends PlayerDaoImpl {
-		private final List<Connection> calls = new ArrayList<>();
+		private final List<Integer> calls = new ArrayList<>();
 		private final boolean failOnStore;
 		private int lastPlayerId;
 		private PlayerCommonData lastPcd;
@@ -685,11 +644,11 @@ class PlayerQuestCurrencyPortTest {
 		}
 
 		@Override
-		public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException {
+		public void storeInTransaction(int playerId, PlayerCommonData pcd) {
 			if (failOnStore) {
-				throw new SQLException("recording player DAO failure");
+				throw new IllegalStateException("recording player DAO failure");
 			}
-			calls.add(connection);
+			calls.add(playerId);
 			lastPlayerId = playerId;
 			lastPcd = pcd;
 		}

@@ -10,8 +10,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -978,7 +976,7 @@ public class BrokerService {
 		PersistentState originalState = item.getPersistentState();
 		item.setPersistentState(PersistentState.DELETED);
 		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
-			item.getItem(), 0, 0, LetterType.NORMAL, con -> brokerDAO.storeInTransaction(con, item))) {
+			item.getItem(), 0, 0, LetterType.NORMAL, () -> brokerDAO.storeInTransaction(item))) {
 			item.setPersistentState(PersistentState.UPDATED);
 			return true;
 		}
@@ -1072,21 +1070,16 @@ public class BrokerService {
 		}
 
 		private boolean save() {
-			try (Connection con = DatabaseAccess.getConnection()) {
-				con.setAutoCommit(false);
-				try {
+			try {
+				DatabaseAccess.transactionTemplate().executeWithoutResult(_ -> {
 					for (InventorySave inventorySave : inventorySaves) {
-						inventoryDAO.storeInTransaction(con, inventorySave.items(), inventorySave.playerId(), null, null);
+						inventoryDAO.storeInTransaction(inventorySave.items(), inventorySave.playerId(), null, null);
 					}
 					for (BrokerItem brokerItem : brokerItems) {
-						brokerDAO.storeInTransaction(con, brokerItem);
+						brokerDAO.storeInTransaction(brokerItem);
 					}
-					con.commit();
-				} catch (SQLException e) {
-					con.rollback();
-					throw e;
-				}
-			} catch (SQLException e) {
+				});
+			} catch (RuntimeException e) {
 				log.error(I18n.get("log.30a6c4139e12",
 					inventorySaves.stream().map(InventorySave::playerId).distinct().toList()), e);
 				return false;

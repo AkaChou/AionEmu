@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,8 +37,13 @@ import com.aionemu.gameserver.persistence.mapper.PlayerMapper;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
+import com.mybatisflex.core.query.FunctionQueryColumn;
+import com.mybatisflex.core.query.QueryColumn;
+import com.mybatisflex.core.query.QueryMethods;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.query.RawQueryColumn;
 import com.mybatisflex.core.update.UpdateChain;
+import com.mybatisflex.core.util.LambdaUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -92,7 +94,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 
 		Map<Integer, String> result = new HashMap<>();
 		try {
-			mapper.selectListByQuery(QueryWrapper.create().select("id", "name").where(PlayerPo::getId).in(playerObjectIds))
+			mapper.selectListByQuery(QueryWrapper.create().select(PlayerPo::getId, PlayerPo::getName).where(PlayerPo::getId).in(playerObjectIds))
 				.forEach(po -> result.put(po.getId(), po.getName()));
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.25f109fb2408"), e);
@@ -182,28 +184,34 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	}
 
 	@Override
-	public void storeInTransaction(Connection connection, int playerId, PlayerCommonData pcd) throws SQLException {
-		try (PreparedStatement stmt = connection.prepareStatement(PlayerMapper.UPDATE_QUEST_CURRENCIES_QUERY_JDBC)) {
-			stmt.setLong(1, pcd.getExp());
-			stmt.setInt(2, pcd.getDp());
-			stmt.setInt(3, pcd.getCreativityPoint());
-			stmt.setLong(4, pcd.getAbyssFavor());
-			stmt.setLong(5, pcd.getAuraOfGrowth());
-			stmt.setInt(6, playerId);
-			if (stmt.executeUpdate() != 1) {
-				throw new SQLException("No player row changed for player " + playerId);
-			}
+	public void storeInTransaction(int playerId, PlayerCommonData pcd) {
+		boolean updated = UpdateChain.of(PlayerPo.class)
+			.set(PlayerPo::getExp, pcd.getExp())
+			.set(PlayerPo::getDp, pcd.getDp())
+			.set(PlayerPo::getCreativityPoint, pcd.getCreativityPoint())
+			.set(PlayerPo::getAbyssFavor, pcd.getAbyssFavor())
+			.set(PlayerPo::getAuraOfGrowth, pcd.getAuraOfGrowth())
+			.where(PlayerPo::getId).eq(playerId)
+			.update();
+		if (!updated) {
+			throw new DataAccessException("No player row changed for player " + playerId) {
+			};
 		}
 	}
 
 	@Override
-	public void promoteArchDaevaInTransaction(Connection connection, int playerId, long minimumExp) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(PlayerMapper.PROMOTE_ARCHDAEVA_QUERY_JDBC)) {
-			statement.setLong(1, minimumExp);
-			statement.setInt(2, playerId);
-			if (statement.executeUpdate() != 1) {
-				throw new SQLException("No player row changed for player " + playerId);
-			}
+	public void promoteArchDaevaInTransaction(int playerId, long minimumExp) {
+		// exp = GREATEST(exp, ?) 依赖 GREATEST 方言函数（Flex 无专用 helper）。
+		// exp = GREATEST(exp, ?) relies on the GREATEST dialect function (Flex has no dedicated helper).
+		boolean updated = UpdateChain.of(PlayerPo.class)
+			.set(PlayerPo::getExp, new FunctionQueryColumn("GREATEST",
+				LambdaUtil.getQueryColumn(PlayerPo::getExp), new RawQueryColumn(String.valueOf(minimumExp))))
+			.set(PlayerPo::getArchdaeva, true)
+			.where(PlayerPo::getId).eq(playerId)
+			.update();
+		if (!updated) {
+			throw new DataAccessException("No player row changed for player " + playerId) {
+			};
 		}
 	}
 
@@ -277,7 +285,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 
 		int playerObjId = 0;
 		try {
-			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select("id").eq(PlayerPo::getName, name));
+			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select(PlayerPo::getId).eq(PlayerPo::getName, name));
 			playerObjId = po == null ? 0 : intValue(po.getId());
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.cbf76d90931d", name), e);
@@ -477,7 +485,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public List<Integer> getPlayerOidsOnAccount(final int accountId) {
 		try {
-			return mapper.selectListByQuery(QueryWrapper.create().select("id").eq(PlayerPo::getAccountId, accountId))
+			return mapper.selectListByQuery(QueryWrapper.create().select(PlayerPo::getId).eq(PlayerPo::getAccountId, accountId))
 				.stream()
 				.map(po -> intValue(po.getId()))
 				.toList();
@@ -496,7 +504,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	public void setCreationDeletionTime(final PlayerAccountData acData) {
 		final int playerObjId = acData.getPlayerCommonData().getPlayerObjId();
 		try {
-			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select("creation_date", "deletion_date")
+			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select(PlayerPo::getCreationDate, PlayerPo::getDeletionDate)
 				.eq(PlayerPo::getId, playerObjId));
 			if (po != null) {
 				acData.setDeletionDate(po.getDeletionDate());
@@ -551,7 +559,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public int[] getUsedIDs() {
 		try {
-			List<PlayerPo> players = mapper.selectListByQuery(QueryWrapper.create().select("id"));
+			List<PlayerPo> players = mapper.selectListByQuery(QueryWrapper.create().select(PlayerPo::getId));
 
 			int[] result = new int[players.size()];
 			for (int i = 0; i < players.size(); i++) {
@@ -606,7 +614,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public String getPlayerNameByObjId(final int playerObjId) {
 		try {
-			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select("name").eq(PlayerPo::getId, playerObjId));
+			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select(PlayerPo::getName).eq(PlayerPo::getId, playerObjId));
 			return po == null ? null : po.getName();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.0b502d634f86", playerObjId), e);
@@ -623,7 +631,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public int getPlayerIdByName(final String playerName) {
 		try {
-			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select("id").eq(PlayerPo::getName, playerName));
+			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select(PlayerPo::getId).eq(PlayerPo::getName, playerName));
 			return po == null ? 0 : intValue(po.getId());
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.f273cc47e33d", playerName), e);
@@ -640,7 +648,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public int getAccountIdByName(final String name) {
 		try {
-			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select("account_id").eq(PlayerPo::getName, name));
+			PlayerPo po = mapper.selectOneByQuery(QueryWrapper.create().select(PlayerPo::getAccountId).eq(PlayerPo::getName, name));
 			return po == null ? 0 : intValue(po.getAccountId());
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b4979008052c", name), e);
@@ -677,7 +685,10 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public int getCharacterCountOnAccount(final int accountId) {
 		try {
-			return mapper.countCharactersOnAccount(accountId);
+			return (int) mapper.selectCountByQuery(QueryWrapper.create()
+				.where(PlayerPo::getAccountId).eq(accountId)
+				.and(PlayerPo::getDeletionDate).isNull()
+				.or(PlayerPo::getDeletionDate).gt(QueryMethods.currentTimestamp()));
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.fe988f5216b0", accountId), e);
 			return 0;
@@ -693,8 +704,11 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public int getCharacterCountForRace(Race race) {
 		try {
-			return mapper.countAccountsForRace(race.name(),
-				DataManager.PLAYER_EXPERIENCE_TABLE.getStartExpForLevel(GSConfig.RATIO_MIN_REQUIRED_LEVEL));
+			return (int) mapper.selectCountByQuery(QueryWrapper.create()
+				.select(QueryMethods.distinct(PlayerPo::getAccountName))
+				.where(PlayerPo::getRace).eq(race.name())
+				.and(PlayerPo::getExp).ge(DataManager.PLAYER_EXPERIENCE_TABLE
+					.getStartExpForLevel(GSConfig.RATIO_MIN_REQUIRED_LEVEL)));
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.6a4af16dff6d", race), e);
 			return 0;
@@ -726,8 +740,15 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	@Override
 	public List<Integer> getPlayersToDelete(final int daysOfInactivity, int limitation) {
 		try {
-			return limitation > 0 ? mapper.selectPlayersToDeleteLimited(daysOfInactivity, limitation)
-				: mapper.selectPlayersToDelete(daysOfInactivity);
+			QueryColumn inactivity = QueryMethods.unixTimestamp(QueryMethods.curDate())
+				.subtract(QueryMethods.unixTimestamp(PlayerPo::getLastOnline));
+			QueryWrapper query = QueryWrapper.create()
+				.select(PlayerPo::getId)
+				.where(inactivity.gt(daysOfInactivity * 24 * 60 * 60L));
+			if (limitation > 0) {
+				query.limit(limitation);
+			}
+			return mapper.selectListByQuery(query).stream().map(PlayerPo::getId).toList();
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.e40ff813df6d"), e);
 			return new ArrayList<>();
@@ -797,7 +818,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	public void getJoinRequestState(final Player player) {
 		try {
 			PlayerPo po = mapper.selectOneByQuery(
-				QueryWrapper.create().select("join_state").eq(PlayerPo::getId, player.getObjectId()));
+				QueryWrapper.create().select(PlayerPo::getJoinState).eq(PlayerPo::getId, player.getObjectId()));
 			if (po == null) {
 				return;
 			}

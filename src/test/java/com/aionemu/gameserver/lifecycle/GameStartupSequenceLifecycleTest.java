@@ -57,6 +57,7 @@ class GameStartupSequenceLifecycleTest {
             "systemProperties:start",
             "startupLog:start",
             "logging:start",
+            "runtimeServices:initializeGameTime",
             "utilityServices:start",
             "chatOverride:start:true",
             "adminPanel:start",
@@ -398,6 +399,11 @@ class GameStartupSequenceLifecycleTest {
         private RecordingGameRuntimeServicesLifecycle(List<String> events) {
             super(new GameRuntimeServicesGateway());
             this.events = events;
+        }
+
+        @Override
+        public synchronized void initializeGameTime() {
+            events.add("runtimeServices:initializeGameTime");
         }
 
         @Override
