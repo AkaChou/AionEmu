@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.model.templates.CraftLearnTemplate;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -234,6 +235,10 @@ public class RelinquishCraftStatus {
 				qs.setCompleteCount(0);
 				qs.setStatus(null);
 				qs.setPersistentState(PersistentState.DELETED);
+				// 删除会把该行移出客户端活动列表，action3 必须与已完成列表成对，否则该行滞留活动列表直到重登。
+				// Deletion moves the row out of the active list; action3 must be paired with the completed
+				// list, otherwise the row lingers in the active list until the next login.
+				PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(questId));
 			}
 		}
 		if (isExpert) {
@@ -244,6 +249,7 @@ public class RelinquishCraftStatus {
 					qs.setCompleteCount(0);
 					qs.setStatus(null);
 					qs.setPersistentState(PersistentState.DELETED);
+					PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(questId));
 				}
 			}
 		}

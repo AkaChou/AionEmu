@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestCategory;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -72,6 +73,10 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 			qs.setStatus(QuestStatus.START);
 		} else {
 			qs.setStatus(null);
+			// 置 null 会把该行移出客户端活动列表，action3 必须与已完成列表成对，否则该行滞留活动列表直到重登。
+			// Nulling the status moves the row out of the active list; action3 must be paired with the
+			// completed list, otherwise the row lingers in the active list until the next login.
+			PacketSendUtility.sendPacket(t, SM_QUEST_ACTION.removeQuestFromClientList(questID));
 		}
 		if (qs.getPersistentState() != PersistentState.NEW) {
 			qs.setPersistentState(PersistentState.DELETED);

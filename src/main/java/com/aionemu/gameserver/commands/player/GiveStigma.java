@@ -159,6 +159,10 @@ public class GiveStigma extends PlayerCommand {
             player.getController().updateNearbyQuests();
             completeQuest(player, questId);
         }
+        // 完成会把该行移出客户端活动列表，action3 必须与已完成列表成对，否则该行滞留活动列表直到重登。
+        // Completion moves the row out of the client's active list; action3 must be paired with the
+        // completed list, otherwise the row lingers in the active list until the next login.
+        PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(questId));
         PacketSendUtility.sendPacket(player, new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
     }
 

@@ -232,6 +232,10 @@ public class Quest extends AdminCommand {
 			QuestEngine.getInstance().onLvlUp(env);
 			target.getController().updateNearbyQuests();
 			qs.setCompleteCount(qs.getCompleteCount() + 1);
+			// 置为 COMPLETE 会把该行移出客户端活动列表，action3 必须与已完成列表成对，否则该行滞留活动列表直到重登。
+			// Setting COMPLETE moves the row out of the client's active list; action3 must be paired with the
+			// completed list, otherwise the row lingers in the active list until the next login.
+			PacketSendUtility.sendPacket(target, SM_QUEST_ACTION.removeQuestFromClientList(questId));
 			PacketSendUtility.sendPacket(target, new SM_QUEST_COMPLETED_LIST(target.getQuestStateList().getAllFinishedQuests()));
 		}
 
