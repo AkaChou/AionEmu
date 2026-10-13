@@ -11,22 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameProtectorConquerorLifecycleTest {
 
     @Test
-    void usesProtectorConquerorGatewayCollaborator() {
-        assertEquals(GameProtectorConquerorGateway.class, fieldType("protectorConquerorGateway"));
-    }
-
-    @Test
-    void protectorConquerorGatewayBridgesLegacyServiceThroughSpringProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorGateway.class, "protectorConquerorServiceProvider"));
+    void protectorConquerorLifecycleBridgesLegacyServiceThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorLifecycle.class, "protectorConquerorServiceProvider"));
     }
 
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(
-            new RecordingGameProtectorConquerorGateway(events, null)
-        );
+        GameProtectorConquerorLifecycle lifecycle = new RecordingGameProtectorConquerorLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,9 +34,7 @@ class GameProtectorConquerorLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("protector conqueror failed");
-        GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(
-            new RecordingGameProtectorConquerorGateway(events, failure)
-        );
+        GameProtectorConquerorLifecycle lifecycle = new RecordingGameProtectorConquerorLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -58,10 +49,6 @@ class GameProtectorConquerorLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameProtectorConquerorLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -71,18 +58,18 @@ class GameProtectorConquerorLifecycleTest {
         }
     }
 
-    private static final class RecordingGameProtectorConquerorGateway extends GameProtectorConquerorGateway {
+    private static final class RecordingGameProtectorConquerorLifecycle extends GameProtectorConquerorLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameProtectorConquerorGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameProtectorConquerorLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             events.add("protectorConqueror");
             if (events.size() == 2 && firstFailure != null) {

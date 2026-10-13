@@ -11,24 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameEventBootstrapLifecycleTest {
 
     @Test
-    void usesEventBootstrapGatewayCollaborator() {
-        assertEquals(GameEventBootstrapGateway.class, fieldType("eventBootstrapGateway"));
-    }
-
-    @Test
-    void eventBootstrapGatewayBridgesEventServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "lunaShopServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "minionServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "shugoSweepServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "atreianPassportServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "eventWindowServiceProvider"));
+    void eventBootstrapLifecycleBridgesEventServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "lunaShopServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "minionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "shugoSweepServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "atreianPassportServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "eventWindowServiceProvider"));
     }
 
     @Test
     void startRunsEventBootstrappersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameEventBootstrapLifecycle lifecycle = new GameEventBootstrapLifecycle(
-            new RecordingGameEventBootstrapGateway(events, null));
+        GameEventBootstrapLifecycle lifecycle = new RecordingGameEventBootstrapLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -43,8 +37,7 @@ class GameEventBootstrapLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("event window failed");
-        GameEventBootstrapLifecycle lifecycle = new GameEventBootstrapLifecycle(
-            new RecordingGameEventBootstrapGateway(events, failure));
+        GameEventBootstrapLifecycle lifecycle = new RecordingGameEventBootstrapLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -70,8 +63,36 @@ class GameEventBootstrapLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameEventBootstrapLifecycle.class, name);
+    @Test
+    void startReportsProgressForEventStartupSteps() {
+        List<String> events = new ArrayList<>();
+        GameEventBootstrapLifecycle lifecycle = new ProgressRecordingGameEventBootstrapLifecycle(
+            events,
+            new RecordingStartupProgressReporter(events)
+        );
+
+        lifecycle.start();
+
+        assertTrue(lifecycle.isLoaded());
+        assertEquals(List.of(
+            "progress:start:game event systems",
+            "progress:started:Luna Shop System",
+            "load:Luna Shop System",
+            "progress:finished:Luna Shop System",
+            "progress:started:Minion System",
+            "load:Minion System",
+            "progress:finished:Minion System",
+            "progress:started:Shugo Sweep System",
+            "load:Shugo Sweep System",
+            "progress:finished:Shugo Sweep System",
+            "progress:started:Atreian Passport System",
+            "load:Atreian Passport System",
+            "progress:finished:Atreian Passport System",
+            "progress:started:Event Window System",
+            "load:Event Window System",
+            "progress:finished:Event Window System",
+            "progress:finish:game event systems"
+        ), events);
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -83,18 +104,18 @@ class GameEventBootstrapLifecycleTest {
         }
     }
 
-    private static final class RecordingGameEventBootstrapGateway extends GameEventBootstrapGateway {
+    private static final class RecordingGameEventBootstrapLifecycle extends GameEventBootstrapLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameEventBootstrapGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameEventBootstrapLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void bootstrap() {
+        protected void runStage() {
             events.add("luna");
             events.add("minion");
             events.add("shugoSweep");
@@ -103,6 +124,41 @@ class GameEventBootstrapLifecycleTest {
             if (events.size() == 5 && firstFailure != null) {
                 throw firstFailure;
             }
+        }
+    }
+
+    private static final class ProgressRecordingGameEventBootstrapLifecycle extends GameEventBootstrapLifecycle {
+
+        private final List<String> events;
+
+        private ProgressRecordingGameEventBootstrapLifecycle(List<String> events, StartupProgressReporter progressReporter) {
+            super(progressReporter);
+            this.events = events;
+        }
+
+        @Override
+        protected void initializeLunaShopSystem() {
+            events.add("load:Luna Shop System");
+        }
+
+        @Override
+        protected void initializeMinionSystem() {
+            events.add("load:Minion System");
+        }
+
+        @Override
+        protected void initializeShugoSweepSystem() {
+            events.add("load:Shugo Sweep System");
+        }
+
+        @Override
+        protected void initializeAtreianPassportSystem() {
+            events.add("load:Atreian Passport System");
+        }
+
+        @Override
+        protected void initializeEventWindowSystem() {
+            events.add("load:Event Window System");
         }
     }
 }

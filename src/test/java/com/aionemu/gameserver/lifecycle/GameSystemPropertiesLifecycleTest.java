@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,16 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameSystemPropertiesLifecycleTest {
 
     @Test
-    void usesSystemPropertiesGatewayCollaborator() {
-        assertEquals(GameSystemPropertiesGateway.class, fieldType("systemPropertiesGateway"));
-    }
-
-    @Test
     void startInitializesSystemPropertiesOnce() {
         List<String> events = new ArrayList<>();
-        GameSystemPropertiesLifecycle lifecycle = new GameSystemPropertiesLifecycle(
-            new RecordingGameSystemPropertiesGateway(events, null)
-        );
+        GameSystemPropertiesLifecycle lifecycle = new RecordingGameSystemPropertiesLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -34,9 +26,7 @@ class GameSystemPropertiesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("properties failed");
-        GameSystemPropertiesLifecycle lifecycle = new GameSystemPropertiesLifecycle(
-            new RecordingGameSystemPropertiesGateway(events, failure)
-        );
+        GameSystemPropertiesLifecycle lifecycle = new RecordingGameSystemPropertiesLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -51,28 +41,19 @@ class GameSystemPropertiesLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameSystemPropertiesLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameSystemPropertiesGateway extends GameSystemPropertiesGateway {
+    private static final class RecordingGameSystemPropertiesLifecycle extends GameSystemPropertiesLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
         private boolean failed;
 
-        private RecordingGameSystemPropertiesGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameSystemPropertiesLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("properties:start");
             if (firstFailure != null && !failed) {
                 failed = true;

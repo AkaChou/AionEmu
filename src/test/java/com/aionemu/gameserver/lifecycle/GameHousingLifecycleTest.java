@@ -11,25 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameHousingLifecycleTest {
 
     @Test
-    void usesHousingGatewayCollaborator() {
-        assertEquals(GameHousingGateway.class, fieldType("housingGateway"));
-    }
-
-    @Test
-    void housingGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "housingBidServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "maintenanceTaskProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "townServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "housingServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "challengeTaskServiceProvider"));
+    void housingLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameHousingLifecycle.class, "housingBidServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingLifecycle.class, "maintenanceTaskProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingLifecycle.class, "townServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingLifecycle.class, "housingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingLifecycle.class, "challengeTaskServiceProvider"));
     }
 
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameHousingLifecycle lifecycle = new GameHousingLifecycle(
-            new RecordingGameHousingGateway(events, null, eventNames())
-        );
+        GameHousingLifecycle lifecycle = new RecordingGameHousingLifecycle(events, null, eventNames());
 
         lifecycle.start();
         lifecycle.start();
@@ -44,9 +37,7 @@ class GameHousingLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("housing failed");
-        GameHousingLifecycle lifecycle = new GameHousingLifecycle(
-            new RecordingGameHousingGateway(events, failure, List.of("housingBid", "maintenance"))
-        );
+        GameHousingLifecycle lifecycle = new RecordingGameHousingLifecycle(events, failure, List.of("housingBid", "maintenance"));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -71,15 +62,6 @@ class GameHousingLifecycleTest {
         );
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameHousingLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -89,13 +71,13 @@ class GameHousingLifecycleTest {
         }
     }
 
-    private static final class RecordingGameHousingGateway extends GameHousingGateway {
+    private static final class RecordingGameHousingLifecycle extends GameHousingLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
         private final List<String> eventNames;
 
-        private RecordingGameHousingGateway(
+        private RecordingGameHousingLifecycle(
             List<String> events,
             RuntimeException firstFailure,
             List<String> eventNames
@@ -106,7 +88,7 @@ class GameHousingLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             for (String eventName : eventNames) {
                 events.add(eventName);

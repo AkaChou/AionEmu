@@ -11,13 +11,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameScheduledServicesLifecycleTest {
 
     @Test
-    void usesScheduledServicesGatewayCollaborator() {
-        assertEquals(GameScheduledServicesGateway.class, fieldType("scheduledServicesGateway"));
-    }
-
-    @Test
-    void scheduledServicesGatewayBridgesImperialTombThroughSpringProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "shugoImperialTombSpawnManagerProvider"));
+    void scheduledServicesLifecycleBridgesImperialTombThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesLifecycle.class, "shugoImperialTombSpawnManagerProvider"));
     }
 
 
@@ -50,8 +45,7 @@ class GameScheduledServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("scheduled service failed");
-        GameScheduledServicesLifecycle lifecycle = new GameScheduledServicesLifecycle(
-            new RecordingGameScheduledServicesGateway(events, true, true, true, failure));
+        GameScheduledServicesLifecycle lifecycle = new RecordingGameScheduledServicesLifecycle(events, true, true, true, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -80,17 +74,13 @@ class GameScheduledServicesLifecycleTest {
         boolean abyssEventEnabled,
         boolean imperialTombEnabled
     ) {
-        return new GameScheduledServicesLifecycle(new RecordingGameScheduledServicesGateway(
+        return new RecordingGameScheduledServicesLifecycle(
             events,
             pigPoppyEventEnabled,
             abyssEventEnabled,
             imperialTombEnabled,
             null
-        ));
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameScheduledServicesLifecycle.class, name);
+        );
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -102,7 +92,7 @@ class GameScheduledServicesLifecycleTest {
         }
     }
 
-    private static final class RecordingGameScheduledServicesGateway extends GameScheduledServicesGateway {
+    private static final class RecordingGameScheduledServicesLifecycle extends GameScheduledServicesLifecycle {
 
         private final List<String> events;
         private final boolean pigPoppyEventEnabled;
@@ -110,7 +100,7 @@ class GameScheduledServicesLifecycleTest {
         private final boolean imperialTombEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameScheduledServicesGateway(
+        private RecordingGameScheduledServicesLifecycle(
             List<String> events,
             boolean pigPoppyEventEnabled,
             boolean abyssEventEnabled,
@@ -125,7 +115,7 @@ class GameScheduledServicesLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             if (pigPoppyEventEnabled) {
                 events.add("pigPoppy");

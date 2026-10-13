@@ -11,22 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameSeasonRankingLifecycleTest {
 
     @Test
-    void usesSeasonRankingGatewayCollaborator() {
-        assertEquals(GameSeasonRankingGateway.class, fieldType("seasonRankingGateway"));
-    }
-
-    @Test
-    void seasonRankingGatewayBridgesLegacyServiceThroughSpringProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "seasonRankingUpdateServiceProvider"));
+    void seasonRankingLifecycleBridgesLegacyServiceThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingLifecycle.class, "seasonRankingUpdateServiceProvider"));
     }
 
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(
-            new RecordingGameSeasonRankingGateway(events, null)
-        );
+        GameSeasonRankingLifecycle lifecycle = new RecordingGameSeasonRankingLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,9 +34,7 @@ class GameSeasonRankingLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("season ranking failed");
-        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(
-            new RecordingGameSeasonRankingGateway(events, failure)
-        );
+        GameSeasonRankingLifecycle lifecycle = new RecordingGameSeasonRankingLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -58,10 +49,6 @@ class GameSeasonRankingLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameSeasonRankingLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -71,18 +58,18 @@ class GameSeasonRankingLifecycleTest {
         }
     }
 
-    private static final class RecordingGameSeasonRankingGateway extends GameSeasonRankingGateway {
+    private static final class RecordingGameSeasonRankingLifecycle extends GameSeasonRankingLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameSeasonRankingGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameSeasonRankingLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             events.add("seasonRanking");
             if (events.size() == 2 && firstFailure != null) {

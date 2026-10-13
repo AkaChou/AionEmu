@@ -1,87 +1,54 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 赛季排名服务的生命周期封装：幂等启动并记录加载耗时与失败原因。
- * Lifecycle wrapper for season ranking: idempotent start with load timing and failure capture.
+ * 赛季排名生命周期：打印分区并触发 {@link SeasonRankingUpdateService#onStart()}，加载状态由基类承载。
+ * Season-ranking lifecycle: prints the section and invokes {@link SeasonRankingUpdateService#onStart()};
+ * load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameSeasonRankingLifecycle {
+public class GameSeasonRankingLifecycle extends GameStartupStage {
 
     /**
-     * 赛季排名网关。
-     * Season ranking gateway.
+     * 赛季排名更新服务提供者（可选）。
+     * Optional provider for the season ranking update service.
      */
-    private final GameSeasonRankingGateway seasonRankingGateway;
+    private ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider;
+
 
     /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
+     * 注入赛季排名更新服务提供者。
+     * Inject the season ranking update service provider.
+     * @param seasonRankingUpdateServiceProvider 更新服务提供者 / Update service provider
      */
-    private boolean loaded;
+    @Autowired(required = false)
+    void setSeasonRankingUpdateServiceProvider(ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider) {
+        this.seasonRankingUpdateServiceProvider = seasonRankingUpdateServiceProvider;
+    }
+
 
     /**
-     * 最近一次启动耗时（毫秒）；未启动为 -1。
-     * Last start duration in milliseconds; -1 if never started.
+     * 启动本阶段：打印赛季排名分区并启动更新服务。
+     * Start this stage: print the season-ranking section and start the update service.
      */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败异常；成功时为 null。
-     * Last failure throwable; null after success.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 幂等启动赛季排名服务；已加载则直接返回。
-     * Idempotently start season ranking; no-op when already loaded.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            seasonRankingGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.season_ranking"));
+        seasonRankingUpdateService().onStart();
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     * @return 已加载为 {@code true} / {@code true} when loaded
+     * 解析赛季排名更新服务。
+     * Resolve the season ranking update service.
+     * @return 更新服务 / Update service
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * 最近一次启动耗时（毫秒）。
-     * Last start duration in milliseconds.
-     * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
-     */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近一次失败异常。
-     * Last failure throwable.
-     * @return 失败异常，无则为 null / throwable or null
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private SeasonRankingUpdateService seasonRankingUpdateService() {
+        return seasonRankingUpdateServiceProvider.getObject();
     }
 }

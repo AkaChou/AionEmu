@@ -11,9 +11,7 @@ class GameAdminPanelLifecycleTest {
     @Test
     void startRunsAdminPanelWhenEnabled() {
         List<String> events = new ArrayList<>();
-        GameAdminPanelLifecycle lifecycle = new GameAdminPanelLifecycle(
-            new RecordingGameAdminPanelGateway(events, true)
-        );
+        GameAdminPanelLifecycle lifecycle = new RecordingGameAdminPanelLifecycle(events, true);
 
         lifecycle.start();
         lifecycle.start();
@@ -27,9 +25,7 @@ class GameAdminPanelLifecycleTest {
     @Test
     void startSkipsAdminPanelWhenDisabled() {
         List<String> events = new ArrayList<>();
-        GameAdminPanelLifecycle lifecycle = new GameAdminPanelLifecycle(
-            new RecordingGameAdminPanelGateway(events, false)
-        );
+        GameAdminPanelLifecycle lifecycle = new RecordingGameAdminPanelLifecycle(events, false);
 
         lifecycle.start();
 
@@ -41,9 +37,7 @@ class GameAdminPanelLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("admin panel failed");
-        GameAdminPanelLifecycle lifecycle = new GameAdminPanelLifecycle(
-            new RecordingGameAdminPanelGateway(events, true, failure)
-        );
+        GameAdminPanelLifecycle lifecycle = new RecordingGameAdminPanelLifecycle(events, true, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -58,52 +52,33 @@ class GameAdminPanelLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    @Test
-    void usesAdminPanelGatewayCollaborator() {
-        assertEquals(GameAdminPanelGateway.class, fieldType("adminPanelGateway"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            return GameAdminPanelLifecycle.class.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameAdminPanelGateway extends GameAdminPanelGateway {
+    private static final class RecordingGameAdminPanelLifecycle extends GameAdminPanelLifecycle {
 
         private final List<String> events;
         private final boolean enabled;
         private final RuntimeException failure;
-        private long currentTimeMillis;
 
-        private RecordingGameAdminPanelGateway(List<String> events, boolean enabled) {
+        private RecordingGameAdminPanelLifecycle(List<String> events, boolean enabled) {
             this(events, enabled, null);
         }
 
-        private RecordingGameAdminPanelGateway(List<String> events, boolean enabled, RuntimeException failure) {
+        private RecordingGameAdminPanelLifecycle(List<String> events, boolean enabled, RuntimeException failure) {
             this.events = events;
             this.enabled = enabled;
             this.failure = failure;
         }
 
         @Override
-        public boolean isAdminPanelEnabled() {
+        protected boolean isAdminPanelEnabled() {
             return enabled;
         }
 
         @Override
-        public void startAdminPanel() {
+        protected void startAdminPanel() {
             events.add("adminPanel:start");
             if (failure != null && events.size() == 1) {
                 throw failure;
             }
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            return currentTimeMillis++;
         }
     }
 }

@@ -11,22 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameGeoPathLifecycleTest {
 
     @Test
-    void usesGeoPathGatewayCollaborator() {
-        assertEquals(GameGeoPathGateway.class, fieldType("geoPathGateway"));
-    }
-
-    @Test
-    void geoPathGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameGeoPathGateway.class, "geoServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameGeoPathGateway.class, "pathServiceProvider"));
+    void geoPathLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameGeoPathLifecycle.class, "geoServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameGeoPathLifecycle.class, "pathServiceProvider"));
     }
 
 
     @Test
     void startInitializesGeoThenPathOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameGeoPathLifecycle lifecycle = new GameGeoPathLifecycle(
-            new RecordingGameGeoPathGateway(events, null));
+        GameGeoPathLifecycle lifecycle = new RecordingGameGeoPathLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,8 +35,7 @@ class GameGeoPathLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("path failed");
-        GameGeoPathLifecycle lifecycle = new GameGeoPathLifecycle(
-            new RecordingGameGeoPathGateway(events, failure));
+        GameGeoPathLifecycle lifecycle = new RecordingGameGeoPathLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -57,10 +50,6 @@ class GameGeoPathLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameGeoPathLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -70,18 +59,18 @@ class GameGeoPathLifecycleTest {
         }
     }
 
-    private static final class RecordingGameGeoPathGateway extends GameGeoPathGateway {
+    private static final class RecordingGameGeoPathLifecycle extends GameGeoPathLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameGeoPathGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameGeoPathLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void initialize() {
+        protected void runStage() {
             events.add("section");
             events.add("geo");
             events.add("path");

@@ -11,22 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameSiegeScheduleLifecycleTest {
 
     @Test
-    void usesSiegeScheduleGatewayCollaborator() {
-        assertEquals(GameSiegeScheduleGateway.class, fieldType("siegeScheduleGateway"));
-    }
-
-    @Test
-    void siegeScheduleGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "siegeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "baseServiceProvider"));
+    void siegeScheduleLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleLifecycle.class, "siegeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleLifecycle.class, "baseServiceProvider"));
     }
 
 
     @Test
     void startRunsInitializersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(
-            new RecordingGameSiegeScheduleGateway(events, null));
+        GameSiegeScheduleLifecycle lifecycle = new RecordingGameSiegeScheduleLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,8 +35,7 @@ class GameSiegeScheduleLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("siege schedule failed");
-        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(
-            new RecordingGameSiegeScheduleGateway(events, failure));
+        GameSiegeScheduleLifecycle lifecycle = new RecordingGameSiegeScheduleLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -57,15 +50,6 @@ class GameSiegeScheduleLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameSiegeScheduleLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -75,18 +59,18 @@ class GameSiegeScheduleLifecycleTest {
         }
     }
 
-    private static final class RecordingGameSiegeScheduleGateway extends GameSiegeScheduleGateway {
+    private static final class RecordingGameSiegeScheduleLifecycle extends GameSiegeScheduleLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameSiegeScheduleGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameSiegeScheduleLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             events.add("sieges");
             events.add("bases");

@@ -11,9 +11,7 @@ class GameChatServerOverrideLifecycleTest {
     @Test
     void startAppliesChatServerOverrideOnce() {
         List<String> events = new ArrayList<>();
-        GameChatServerOverrideLifecycle lifecycle = new GameChatServerOverrideLifecycle(
-            new RecordingGameChatServerOverrideGateway(events)
-        );
+        GameChatServerOverrideLifecycle lifecycle = new RecordingGameChatServerOverrideLifecycle(events);
 
         lifecycle.start(true);
         lifecycle.start(false);
@@ -27,9 +25,7 @@ class GameChatServerOverrideLifecycleTest {
     @Test
     void startSkipsOverrideWhenValueIsNull() {
         List<String> events = new ArrayList<>();
-        GameChatServerOverrideLifecycle lifecycle = new GameChatServerOverrideLifecycle(
-            new RecordingGameChatServerOverrideGateway(events)
-        );
+        GameChatServerOverrideLifecycle lifecycle = new RecordingGameChatServerOverrideLifecycle(events);
 
         lifecycle.start(null);
 
@@ -41,9 +37,7 @@ class GameChatServerOverrideLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("chat override failed");
-        GameChatServerOverrideLifecycle lifecycle = new GameChatServerOverrideLifecycle(
-            new RecordingGameChatServerOverrideGateway(events, failure)
-        );
+        GameChatServerOverrideLifecycle lifecycle = new RecordingGameChatServerOverrideLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(true));
 
@@ -58,45 +52,26 @@ class GameChatServerOverrideLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    @Test
-    void usesChatServerOverrideGatewayCollaborator() {
-        assertEquals(GameChatServerOverrideGateway.class, fieldType("chatServerOverrideGateway"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            return GameChatServerOverrideLifecycle.class.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameChatServerOverrideGateway extends GameChatServerOverrideGateway {
+    private static final class RecordingGameChatServerOverrideLifecycle extends GameChatServerOverrideLifecycle {
 
         private final List<String> events;
         private final RuntimeException failure;
-        private long currentTimeMillis;
 
-        private RecordingGameChatServerOverrideGateway(List<String> events) {
+        private RecordingGameChatServerOverrideLifecycle(List<String> events) {
             this(events, null);
         }
 
-        private RecordingGameChatServerOverrideGateway(List<String> events, RuntimeException failure) {
+        private RecordingGameChatServerOverrideLifecycle(List<String> events, RuntimeException failure) {
             this.events = events;
             this.failure = failure;
         }
 
         @Override
-        public void overrideChatServerEnabled(boolean chatServerEnabled) {
+        protected void overrideChatServerEnabled(boolean chatServerEnabled) {
             events.add("chat:" + chatServerEnabled);
             if (failure != null && events.size() == 1) {
                 throw failure;
             }
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            return currentTimeMillis++;
         }
     }
 }

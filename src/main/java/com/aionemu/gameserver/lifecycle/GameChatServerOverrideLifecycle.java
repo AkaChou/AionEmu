@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.GSConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,14 +10,8 @@ import org.springframework.stereotype.Component;
  * Lifecycle for chat-server override: applies the optional override during startup and tracks load state.
  */
 @Component
-@RequiredArgsConstructor
+@Slf4j
 public class GameChatServerOverrideLifecycle {
-
-    /**
-     * 聊天服覆盖网关。
-     * Chat-server override gateway.
-     */
-    private final GameChatServerOverrideGateway chatServerOverrideGateway;
 
     /**
      * 是否已加载。
@@ -45,10 +41,10 @@ public class GameChatServerOverrideLifecycle {
             return;
         }
 
-        long start = chatServerOverrideGateway.currentTimeMillis();
+        long start = System.currentTimeMillis();
         try {
             if (chatServerEnabledOverride != null) {
-                chatServerOverrideGateway.overrideChatServerEnabled(chatServerEnabledOverride);
+                overrideChatServerEnabled(chatServerEnabledOverride);
             }
             loaded = true;
             lastFailure = null;
@@ -57,8 +53,18 @@ public class GameChatServerOverrideLifecycle {
             lastFailure = e;
             throw e;
         } finally {
-            loadTimeMillis = chatServerOverrideGateway.currentTimeMillis() - start;
+            loadTimeMillis = System.currentTimeMillis() - start;
         }
+    }
+
+    /**
+     * 覆盖聊天服启用配置并记录日志。
+     * Override the chat-server enabled flag and log it.
+     * @param chatServerEnabled 是否启用聊天服 / Whether chat server is enabled
+     */
+    protected void overrideChatServerEnabled(boolean chatServerEnabled) {
+        GSConfig.ENABLE_CHAT_SERVER = chatServerEnabled;
+        log.info(I18n.get("shutdown.chat_override", chatServerEnabled));
     }
 
     /**

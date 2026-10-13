@@ -11,9 +11,7 @@ class GameStartupCompletionLifecycleTest {
     @Test
     void startLogsStartupCompletionOnce() {
         List<String> messages = new ArrayList<>();
-        GameStartupCompletionLifecycle lifecycle = new GameStartupCompletionLifecycle(
-            new RecordingGameStartupCompletionGateway(messages)
-        );
+        GameStartupCompletionLifecycle lifecycle = new RecordingGameStartupCompletionLifecycle(messages);
 
         lifecycle.start(42);
         lifecycle.start(99);
@@ -32,9 +30,7 @@ class GameStartupCompletionLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> messages = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("completion log failed");
-        GameStartupCompletionLifecycle lifecycle = new GameStartupCompletionLifecycle(
-            new RecordingGameStartupCompletionGateway(messages, failure)
-        );
+        GameStartupCompletionLifecycle lifecycle = new RecordingGameStartupCompletionLifecycle(messages, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(7));
 
@@ -54,47 +50,28 @@ class GameStartupCompletionLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    @Test
-    void usesStartupCompletionGatewayCollaborator() {
-        assertEquals(GameStartupCompletionGateway.class, fieldType("startupCompletionGateway"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            return GameStartupCompletionLifecycle.class.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameStartupCompletionGateway extends GameStartupCompletionGateway {
+    private static final class RecordingGameStartupCompletionLifecycle extends GameStartupCompletionLifecycle {
 
         private final List<String> messages;
         private final RuntimeException failure;
-        private long currentTimeMillis;
 
-        private RecordingGameStartupCompletionGateway(List<String> messages) {
+        private RecordingGameStartupCompletionLifecycle(List<String> messages) {
             this(messages, null);
         }
 
-        private RecordingGameStartupCompletionGateway(List<String> messages, RuntimeException failure) {
+        private RecordingGameStartupCompletionLifecycle(List<String> messages, RuntimeException failure) {
             this.messages = messages;
             this.failure = failure;
         }
 
         @Override
-        public void logStartupComplete(long startupTime) {
+        protected void logStartupComplete(long startupTime) {
             messages.add("=== Server initialization COMPLETE ===" + ":" + null);
             if (failure != null && messages.size() == 1) {
                 throw failure;
             }
             messages.add("Total initialization time: {} seconds" + ":" + startupTime);
             messages.add("Server is now ready to accept connections" + ":" + null);
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            return currentTimeMillis++;
         }
     }
 }

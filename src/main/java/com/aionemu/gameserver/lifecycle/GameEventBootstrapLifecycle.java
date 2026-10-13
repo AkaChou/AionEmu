@@ -1,84 +1,237 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.EventWindowService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.player.LunaShopService;
+import com.aionemu.gameserver.services.toypet.MinionService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 事件引导生命周期：委托网关启动游戏事件子系统。
- * Event-bootstrap lifecycle: starts game-event subsystems via the gateway.
+ * 事件引导生命周期：按步骤初始化露娜商店、役从、修勾扫荡、护照与事件窗口，加载状态由基类承载。
+ * Event-bootstrap lifecycle: step-wise initialization of Luna shop, minion, Shugo sweep, passport,
+ * and event window; load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameEventBootstrapLifecycle {
+public class GameEventBootstrapLifecycle extends GameStartupStage {
 
     /**
-     * 事件引导网关。
-     * Event-bootstrap gateway.
+     * 启动进度报告器。
+     * Startup progress reporter.
      */
-    private final GameEventBootstrapGateway eventBootstrapGateway;
+    private final StartupProgressReporter progressReporter;
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
+     * 露娜商店服务提供者。
+     * Luna-shop service provider.
      */
-    private boolean loaded;
+    private ObjectProvider<LunaShopService> lunaShopServiceProvider;
     /**
-     * 最近一次加载耗时（毫秒）；未启动为 -1。
-     * Last load duration in milliseconds; -1 if never started.
+     * 宠物役从服务提供者。
+     * Minion service provider.
      */
-    private long loadTimeMillis = -1;
+    private ObjectProvider<MinionService> minionServiceProvider;
     /**
-     * 最近一次失败原因；成功时为 {@code null}。
-     * Last failure cause; {@code null} on success.
+     * 修勾扫荡服务提供者。
+     * Shugo-sweep service provider.
      */
-    private Throwable lastFailure;
+    private ObjectProvider<ShugoSweepService> shugoSweepServiceProvider;
+    /**
+     * 阿特里亚护照服务提供者。
+     * Atreian-passport service provider.
+     */
+    private ObjectProvider<AtreianPassportService> atreianPassportServiceProvider;
+    /**
+     * 事件窗口服务提供者。
+     * Event-window service provider.
+     */
+    private ObjectProvider<EventWindowService> eventWindowServiceProvider;
 
     /**
-     * 启动事件引导（幂等）。
-     * Start event bootstrap (idempotent).
+     * 使用当前控制台进度报告器构造。
+     * Construct with the current console progress reporter.
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
+    public GameEventBootstrapLifecycle() {
+        this(ConsoleStartupProgressReporter.forCurrentConsole());
+    }
 
+    /**
+     * 使用指定进度报告器构造，供包内测试覆写使用。
+     * Construct with the given progress reporter; package-scope injection point for tests.
+     * @param progressReporter 进度报告器 / Progress reporter
+     */
+    GameEventBootstrapLifecycle(StartupProgressReporter progressReporter) {
+        this.progressReporter = progressReporter;
+    }
+
+    /**
+     * 可选注入露娜商店服务提供者。
+     * Optionally inject the Luna-shop service provider.
+     * @param lunaShopServiceProvider 露娜商店服务提供者 / Luna-shop service provider
+     */
+    @Autowired(required = false)
+    void setLunaShopServiceProvider(ObjectProvider<LunaShopService> lunaShopServiceProvider) {
+        this.lunaShopServiceProvider = lunaShopServiceProvider;
+    }
+
+    /**
+     * 可选注入宠物役从服务提供者。
+     * Optionally inject the minion service provider.
+     * @param minionServiceProvider 宠物役从服务提供者 / Minion service provider
+     */
+    @Autowired(required = false)
+    void setMinionServiceProvider(ObjectProvider<MinionService> minionServiceProvider) {
+        this.minionServiceProvider = minionServiceProvider;
+    }
+
+    /**
+     * 可选注入修勾扫荡服务提供者。
+     * Optionally inject the Shugo-sweep service provider.
+     * @param shugoSweepServiceProvider 修勾扫荡服务提供者 / Shugo-sweep service provider
+     */
+    @Autowired(required = false)
+    void setShugoSweepServiceProvider(ObjectProvider<ShugoSweepService> shugoSweepServiceProvider) {
+        this.shugoSweepServiceProvider = shugoSweepServiceProvider;
+    }
+
+    /**
+     * 可选注入阿特里亚护照服务提供者。
+     * Optionally inject the Atreian-passport service provider.
+     * @param atreianPassportServiceProvider 阿特里亚护照服务提供者 / Atreian-passport service provider
+     */
+    @Autowired(required = false)
+    void setAtreianPassportServiceProvider(ObjectProvider<AtreianPassportService> atreianPassportServiceProvider) {
+        this.atreianPassportServiceProvider = atreianPassportServiceProvider;
+    }
+
+    /**
+     * 可选注入事件窗口服务提供者。
+     * Optionally inject the event-window service provider.
+     * @param eventWindowServiceProvider 事件窗口服务提供者 / Event-window service provider
+     */
+    @Autowired(required = false)
+    void setEventWindowServiceProvider(ObjectProvider<EventWindowService> eventWindowServiceProvider) {
+        this.eventWindowServiceProvider = eventWindowServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：引导全部游戏事件子系统并报告进度。
+     * Start this stage: bootstrap all game-event subsystems and report progress.
+     */
+    @Override
+    protected void runStage() {
         long start = System.currentTimeMillis();
+        progressReporter.start("game event systems");
         try {
-            eventBootstrapGateway.bootstrap();
-            loaded = true;
-            lastFailure = null;
+            loadStep("Luna Shop System", this::initializeLunaShopSystem);
+            loadStep("Minion System", this::initializeMinionSystem);
+            loadStep("Shugo Sweep System", this::initializeShugoSweepSystem);
+            loadStep("Atreian Passport System", this::initializeAtreianPassportSystem);
+            loadStep("Event Window System", this::initializeEventWindowSystem);
+            progressReporter.finish("game event systems", System.currentTimeMillis() - start);
         } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
+            progressReporter.failed();
             throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
         }
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 初始化露娜商店系统。
+     * Initialize the Luna-shop system.
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    protected void initializeLunaShopSystem() {
+        lunaShopService().init();
     }
 
     /**
-     * 最近一次加载耗时（毫秒）。
-     * Last load duration in milliseconds.
-     * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
+     * 初始化宠物役从系统。
+     * Initialize the minion system.
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    protected void initializeMinionSystem() {
+        minionService().init();
     }
 
     /**
-     * 最近一次失败原因。
-     * Last failure cause.
-     * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
+     * 初始化修勾扫荡系统。
+     * Initialize the Shugo-sweep system.
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    protected void initializeShugoSweepSystem() {
+        shugoSweepService().initShugoSweep();
+    }
+
+    /**
+     * 初始化阿特里亚护照系统。
+     * Initialize the Atreian-passport system.
+     */
+    protected void initializeAtreianPassportSystem() {
+        atreianPassportService().onStart();
+    }
+
+    /**
+     * 初始化事件窗口系统。
+     * Initialize the event-window system.
+     */
+    protected void initializeEventWindowSystem() {
+        eventWindowService().initialize();
+    }
+
+    /**
+     * 解析露娜商店服务。
+     * Resolve the Luna-shop service.
+     * @return 露娜商店服务 / Luna-shop service
+     */
+    private LunaShopService lunaShopService() {
+        return lunaShopServiceProvider.getObject();
+    }
+
+    /**
+     * 解析宠物役从服务。
+     * Resolve the minion service.
+     * @return 宠物役从服务 / Minion service
+     */
+    private MinionService minionService() {
+        return minionServiceProvider.getObject();
+    }
+
+    /**
+     * 解析修勾扫荡服务。
+     * Resolve the Shugo-sweep service.
+     * @return 修勾扫荡服务 / Shugo-sweep service
+     */
+    private ShugoSweepService shugoSweepService() {
+        return shugoSweepServiceProvider.getObject();
+    }
+
+    /**
+     * 解析阿特里亚护照服务。
+     * Resolve the Atreian-passport service.
+     * @return 阿特里亚护照服务 / Atreian-passport service
+     */
+    private AtreianPassportService atreianPassportService() {
+        return atreianPassportServiceProvider.getObject();
+    }
+
+    /**
+     * 解析事件窗口服务。
+     * Resolve the event-window service.
+     * @return 事件窗口服务 / Event-window service
+     */
+    private EventWindowService eventWindowService() {
+        return eventWindowServiceProvider.getObject();
+    }
+
+
+    /**
+     * 执行并报告单个加载步骤。
+     * Execute and report a single load step.
+     * @param stepName 步骤名 / Step name
+     * @param loader 加载逻辑 / Loader logic
+     */
+    private void loadStep(String stepName, Runnable loader) {
+        progressReporter.stepStarted(stepName);
+        loader.run();
+        progressReporter.stepFinished(stepName);
     }
 }

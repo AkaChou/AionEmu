@@ -11,22 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameCleaningLifecycleTest {
 
     @Test
-    void usesCleaningGatewayCollaborator() {
-        assertEquals(GameCleaningGateway.class, fieldType("cleaningGateway"));
-    }
-
-    @Test
-    void cleaningGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameCleaningGateway.class, "databaseCleaningServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameCleaningGateway.class, "abyssRankCleaningServiceProvider"));
+    void cleaningLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameCleaningLifecycle.class, "databaseCleaningServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCleaningLifecycle.class, "abyssRankCleaningServiceProvider"));
     }
 
 
     @Test
     void startRunsCleanersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameCleaningLifecycle lifecycle = new GameCleaningLifecycle(
-            new RecordingGameCleaningGateway(events, null));
+        GameCleaningLifecycle lifecycle = new RecordingGameCleaningLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,8 +35,7 @@ class GameCleaningLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("cleaning failed");
-        GameCleaningLifecycle lifecycle = new GameCleaningLifecycle(
-            new RecordingGameCleaningGateway(events, failure));
+        GameCleaningLifecycle lifecycle = new RecordingGameCleaningLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -57,10 +50,6 @@ class GameCleaningLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameCleaningLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -70,18 +59,18 @@ class GameCleaningLifecycleTest {
         }
     }
 
-    private static final class RecordingGameCleaningGateway extends GameCleaningGateway {
+    private static final class RecordingGameCleaningLifecycle extends GameCleaningLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameCleaningGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameCleaningLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void clean() {
+        protected void runStage() {
             events.add("database");
             events.add("abyssRank");
             if (events.size() == 2 && firstFailure != null) {

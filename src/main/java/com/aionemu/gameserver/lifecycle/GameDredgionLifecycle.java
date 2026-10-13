@@ -1,87 +1,95 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.AutoGroupConfig;
+import com.aionemu.gameserver.services.instance.AsyunatarService;
+import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 挖掘场生命周期：在启动序列中触发 gateway 并记录加载状态。
- * Lifecycle for dredgion: drives the gateway during startup and tracks load state.
+ * 挖掘场生命周期：打印分区并在自动组队开启时初始化挖掘场与 Asyunatar 服务。
+ * Dredgion lifecycle: prints the section and initializes Dredgion and Asyunatar services when
+ * auto-group is enabled.
  */
 @Component
-@RequiredArgsConstructor
-public class GameDredgionLifecycle {
+public class GameDredgionLifecycle extends GameStartupStage {
 
     /**
-     * 挖掘场网关。
-     * Dredgion gateway.
+     * 挖掘场服务提供者。
+     * Dredgion service provider.
      */
-    private final GameDredgionGateway dredgionGateway;
+    private ObjectProvider<DredgionService2> dredgionServiceProvider;
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
+     * Asyunatar 服务提供者。
+     * Asyunatar service provider.
      */
-    private boolean loaded;
+    private ObjectProvider<AsyunatarService> asyunatarServiceProvider;
+
 
     /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
+     * 可选注入挖掘场服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of Dredgion service.
+     * @param dredgionServiceProvider 服务提供者 / Service provider
      */
-    private long loadTimeMillis = -1;
+    @Autowired(required = false)
+    void setDredgionServiceProvider(ObjectProvider<DredgionService2> dredgionServiceProvider) {
+        this.dredgionServiceProvider = dredgionServiceProvider;
+    }
 
     /**
-     * 最近一次失败。
-     * Last failure, if any.
+     * 可选注入 Asyunatar 服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of Asyunatar service.
+     * @param asyunatarServiceProvider 服务提供者 / Service provider
      */
-    private Throwable lastFailure;
+    @Autowired(required = false)
+    void setAsyunatarServiceProvider(ObjectProvider<AsyunatarService> asyunatarServiceProvider) {
+        this.asyunatarServiceProvider = asyunatarServiceProvider;
+    }
+
 
     /**
-     * 启动本阶段：初始化挖掘场相关实例服务。
-     * Start this stage: initialize dredgion-related instance services.
+     * 启动本阶段：打印分区并在自动组队开启时初始化相关服务。
+     * Start this stage: print section and init related services when auto-group is on.
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.dredgion"));
+        if (isAutoGroupEnabled()) {
+            dredgionService().initDredgion();
         }
-
-        long start = System.currentTimeMillis();
-        try {
-            dredgionGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
+        if (isAutoGroupEnabled()) {
+            asyunatarService().initAsyunatar();
         }
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 自动组队是否已启用。
+     * Whether auto-group is enabled.
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    protected boolean isAutoGroupEnabled() {
+        return AutoGroupConfig.AUTO_GROUP_ENABLED;
     }
 
     /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
+     * 解析挖掘场服务：优先 Spring，否则经运行时桥回退。
+     * Resolve Dredgion service: prefer Spring, otherwise fall back via runtime bridge.
+     * @return 服务实例 / Service instance
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    private DredgionService2 dredgionService() {
+        return dredgionServiceProvider.getObject();
     }
 
     /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
+     * 解析 Asyunatar 服务。
+     * Resolve Asyunatar service.
+     * @return 服务实例 / Service instance
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private AsyunatarService asyunatarService() {
+        return asyunatarServiceProvider.getObject();
     }
 }

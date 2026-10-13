@@ -11,23 +11,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameDisputeLandLifecycleTest {
 
     @Test
-    void usesDisputeLandGatewayCollaborator() {
-        assertEquals(GameDisputeLandGateway.class, fieldType("disputeLandGateway"));
-    }
-
-    @Test
-    void disputeLandGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "disputeLandServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "outpostServiceProvider"));
+    void disputeLandLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandLifecycle.class, "disputeLandServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandLifecycle.class, "outpostServiceProvider"));
     }
 
 
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(
-            new RecordingGameDisputeLandGateway(events, null)
-        );
+        GameDisputeLandLifecycle lifecycle = new RecordingGameDisputeLandLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -42,9 +35,7 @@ class GameDisputeLandLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("dispute land failed");
-        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(
-            new RecordingGameDisputeLandGateway(events, failure)
-        );
+        GameDisputeLandLifecycle lifecycle = new RecordingGameDisputeLandLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -59,10 +50,6 @@ class GameDisputeLandLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameDisputeLandLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -72,18 +59,18 @@ class GameDisputeLandLifecycleTest {
         }
     }
 
-    private static final class RecordingGameDisputeLandGateway extends GameDisputeLandGateway {
+    private static final class RecordingGameDisputeLandLifecycle extends GameDisputeLandLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameDisputeLandGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameDisputeLandLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             events.add("disputeLand");
             events.add("outposts");

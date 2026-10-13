@@ -11,16 +11,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameCustomEventsLifecycleTest {
 
     @Test
-    void usesCustomEventsGatewayCollaborator() {
-        assertEquals(GameCustomEventsGateway.class, fieldType("customEventsGateway"));
-    }
-
-    @Test
-    void customEventsGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "ffaServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "ladderServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "bgServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "banditServiceProvider"));
+    void customEventsLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsLifecycle.class, "ffaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsLifecycle.class, "ladderServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsLifecycle.class, "bgServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsLifecycle.class, "banditServiceProvider"));
     }
 
 
@@ -53,8 +48,7 @@ class GameCustomEventsLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("custom event failed");
-        GameCustomEventsLifecycle lifecycle = new GameCustomEventsLifecycle(
-            new RecordingGameCustomEventsGateway(events, true, true, failure));
+        GameCustomEventsLifecycle lifecycle = new RecordingGameCustomEventsLifecycle(events, true, true, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -84,21 +78,12 @@ class GameCustomEventsLifecycleTest {
         boolean ffaEnabled,
         boolean battlegroundEnabled
     ) {
-        return new GameCustomEventsLifecycle(new RecordingGameCustomEventsGateway(
+        return new RecordingGameCustomEventsLifecycle(
             events,
             ffaEnabled,
             battlegroundEnabled,
             null
-        ));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameCustomEventsLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
+        );
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -110,14 +95,14 @@ class GameCustomEventsLifecycleTest {
         }
     }
 
-    private static final class RecordingGameCustomEventsGateway extends GameCustomEventsGateway {
+    private static final class RecordingGameCustomEventsLifecycle extends GameCustomEventsLifecycle {
 
         private final List<String> events;
         private final boolean ffaEnabled;
         private final boolean battlegroundEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameCustomEventsGateway(
+        private RecordingGameCustomEventsLifecycle(
             List<String> events,
             boolean ffaEnabled,
             boolean battlegroundEnabled,
@@ -130,7 +115,7 @@ class GameCustomEventsLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             if (ffaEnabled) {
                 events.add("ffa");

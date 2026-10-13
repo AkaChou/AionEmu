@@ -1,14 +1,10 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.io.IOException;
-import java.lang.reflect.Proxy;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,9 +14,7 @@ class GameNetworkStartupLifecycleTest {
     void startRunsServerStarterAndRegistersShutdownHookOutsideBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
         Thread hook = new Thread();
-        GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            new RecordingGameNetworkStartupGateway(events, false, hook)
-        );
+        GameNetworkStartupLifecycle lifecycle = new RecordingGameNetworkStartupLifecycle(events, false, hook);
 
         lifecycle.start(() -> events.add("startServers"));
         lifecycle.start(() -> events.add("startServersAgain"));
@@ -34,9 +28,7 @@ class GameNetworkStartupLifecycleTest {
     @Test
     void startSkipsShutdownHookInBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
-        GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            new RecordingGameNetworkStartupGateway(events, true, new Thread())
-        );
+        GameNetworkStartupLifecycle lifecycle = new RecordingGameNetworkStartupLifecycle(events, true, new Thread());
 
         lifecycle.start(() -> events.add("startServers"));
 
@@ -48,9 +40,7 @@ class GameNetworkStartupLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("network failed");
-        GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            new RecordingGameNetworkStartupGateway(events, true, new Thread())
-        );
+        GameNetworkStartupLifecycle lifecycle = new RecordingGameNetworkStartupLifecycle(events, true, new Thread());
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(() -> {
             events.add("startServers");
@@ -71,21 +61,8 @@ class GameNetworkStartupLifecycleTest {
     }
 
     @Test
-    void usesNetworkStartupGatewayCollaborator() {
-        assertEquals(GameNetworkStartupGateway.class, fieldType("networkStartupGateway"));
-    }
-
-    @Test
-    void networkStartupGatewayBridgesShutdownHookThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "shutdownHookProvider"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            return GameNetworkStartupLifecycle.class.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
+    void networkStartupLifecycleBridgesShutdownHookThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupLifecycle.class, "shutdownHookProvider"));
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -96,74 +73,41 @@ class GameNetworkStartupLifecycleTest {
         }
     }
 
-    private static final class RecordingGameNetworkStartupGateway extends GameNetworkStartupGateway {
+    private static final class RecordingGameNetworkStartupLifecycle extends GameNetworkStartupLifecycle {
 
         private final List<String> events;
         private final boolean bootEmbedded;
         private final Thread shutdownHook;
-        private long currentTimeMillis;
 
-        private RecordingGameNetworkStartupGateway(List<String> events, boolean bootEmbedded, Thread shutdownHook) {
+        private RecordingGameNetworkStartupLifecycle(List<String> events, boolean bootEmbedded, Thread shutdownHook) {
             this.events = events;
             this.bootEmbedded = bootEmbedded;
             this.shutdownHook = shutdownHook;
         }
 
         @Override
-        public void printNetworkSection() {
+        protected void printNetworkSection() {
             events.add("section");
         }
 
         @Override
-        public void printMiscSection() {
+        protected void printMiscSection() {
             events.add("misc");
         }
 
         @Override
-        public boolean isBootEmbedded() {
+        protected boolean isBootEmbedded() {
             return bootEmbedded;
         }
 
         @Override
-        public Thread shutdownHook() {
+        protected Thread shutdownHook() {
             return shutdownHook;
         }
 
         @Override
-        public void registerShutdownHook(Thread shutdownHook) {
+        protected void registerShutdownHook(Thread shutdownHook) {
             events.add(shutdownHook == this.shutdownHook ? "shutdownHook" : "wrongHook");
         }
-
-        @Override
-        public long currentTimeMillis() {
-            return currentTimeMillis++;
-        }
-    }
-
-    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
-        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        beanFactory.registerSingleton(type.getName(), instance);
-        return beanFactory.getBeanProvider(type);
-    }
-
-    private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
-        return (ObjectProvider) Proxy.newProxyInstance(
-			ObjectProvider.class.getClassLoader(),
-			new Class<?>[]{ObjectProvider.class},
-			(proxy, method, args) -> {
-				if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "throwingProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-				}
-				throw exception;
-			}
-		);
-    }
-
-    private static final class ProviderUsedException extends RuntimeException {
     }
 }

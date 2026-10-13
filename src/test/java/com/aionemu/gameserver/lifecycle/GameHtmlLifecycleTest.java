@@ -11,22 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameHtmlLifecycleTest {
 
     @Test
-    void usesHtmlGatewayCollaborator() {
-        assertEquals(GameHtmlGateway.class, fieldType("htmlGateway"));
-    }
-
-    @Test
-    void htmlGatewayBridgesLegacyCacheThroughSpringProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameHtmlGateway.class, "htmlCacheProvider"));
+    void htmlLifecycleBridgesLegacyCacheThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameHtmlLifecycle.class, "htmlCacheProvider"));
     }
 
 
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(
-            new RecordingGameHtmlGateway(events, null)
-        );
+        GameHtmlLifecycle lifecycle = new RecordingGameHtmlLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -41,7 +34,7 @@ class GameHtmlLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("html failed");
-        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(new RecordingGameHtmlGateway(events, failure));
+        GameHtmlLifecycle lifecycle = new RecordingGameHtmlLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -69,18 +62,18 @@ class GameHtmlLifecycleTest {
         }
     }
 
-    private static final class RecordingGameHtmlGateway extends GameHtmlGateway {
+    private static final class RecordingGameHtmlLifecycle extends GameHtmlLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameHtmlGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameHtmlLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             events.add("html");
             if (events.size() == 2 && firstFailure != null) {

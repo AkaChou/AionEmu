@@ -1,87 +1,54 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 守护者/征服者系统生命周期：在启动序列中触发 gateway 并记录加载状态。
- * Lifecycle for protector/conqueror: drives the gateway during startup and tracks load state.
+ * 守护者/征服者系统生命周期：打印分区并初始化守护者/征服者服务，加载状态由基类承载。
+ * Protector/Conqueror lifecycle: prints the section and initializes the protector/conqueror
+ * service; load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameProtectorConquerorLifecycle {
+public class GameProtectorConquerorLifecycle extends GameStartupStage {
 
     /**
-     * 守护者/征服者系统网关。
-     * Protector/Conqueror gateway.
+     * 守护者/征服者服务提供者。
+     * Protector/Conqueror service provider.
      */
-    private final GameProtectorConquerorGateway protectorConquerorGateway;
+    private ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
+
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
+     * 可选注入守护者/征服者服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of protector/conqueror service.
+     * @param protectorConquerorServiceProvider 服务提供者 / Service provider
      */
-    private boolean loaded;
+    @Autowired(required = false)
+    void setProtectorConquerorServiceProvider(ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider) {
+        this.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
+    }
+
 
     /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
+     * 启动本阶段：打印分区并初始化守护者/征服者服务。
+     * Start this stage: print the section and initialize the service.
      */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败。
-     * Last failure, if any.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 启动本阶段：初始化守护者/征服者系统。
-     * Start this stage: initialize the protector/conqueror system.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            protectorConquerorGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.protector_conqueror"));
+        protectorConquerorService().initSystem();
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 解析守护者/征服者服务：优先 Spring，否则经运行时桥回退。
+     * Resolve protector/conqueror service: prefer Spring, otherwise fall back via runtime bridge.
+     * @return 服务实例 / Service instance
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
-     */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private ProtectorConquerorService protectorConquerorService() {
+        return protectorConquerorServiceProvider.getObject();
     }
 }

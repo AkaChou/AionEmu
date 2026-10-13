@@ -11,41 +11,35 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameLocationBootstrapLifecycleTest {
 
     @Test
-    void usesLocationBootstrapGatewayCollaborator() {
-        assertEquals(GameLocationBootstrapGateway.class, fieldType("locationBootstrapGateway"));
-    }
-
-    @Test
-    void locationBootstrapGatewayBridgesLocationServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "siegeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "baseServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "outpostServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "vortexServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "beritraServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "agentServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "anohaServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "svsServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "rvrServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "iuServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "nightmareCircusServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "dynamicRiftServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "instanceRiftServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "zorshivDredgionServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "moltenusServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "riftServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "conquestServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "idianDepthsServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "towerOfEternityServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "landingUpdateServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingSpecialServiceProvider"));
+    void locationBootstrapLifecycleBridgesLocationServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "siegeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "baseServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "outpostServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "vortexServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "beritraServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "agentServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "anohaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "svsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "rvrServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "iuServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "nightmareCircusServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "dynamicRiftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "instanceRiftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "zorshivDredgionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "moltenusServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "riftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "conquestServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "idianDepthsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "towerOfEternityServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "abyssLandingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "landingUpdateServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapLifecycle.class, "abyssLandingSpecialServiceProvider"));
     }
 
     @Test
     void startRunsLocationBootstrappersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameLocationBootstrapLifecycle lifecycle = new GameLocationBootstrapLifecycle(
-            new RecordingGameLocationBootstrapGateway(events, null));
+        GameLocationBootstrapLifecycle lifecycle = new RecordingGameLocationBootstrapLifecycle(events, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -60,8 +54,7 @@ class GameLocationBootstrapLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("location failed");
-        GameLocationBootstrapLifecycle lifecycle = new GameLocationBootstrapLifecycle(
-            new RecordingGameLocationBootstrapGateway(events, failure));
+        GameLocationBootstrapLifecycle lifecycle = new RecordingGameLocationBootstrapLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -76,10 +69,6 @@ class GameLocationBootstrapLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameLocationBootstrapLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -89,18 +78,18 @@ class GameLocationBootstrapLifecycleTest {
         }
     }
 
-    private static final class RecordingGameLocationBootstrapGateway extends GameLocationBootstrapGateway {
+    private static final class RecordingGameLocationBootstrapLifecycle extends GameLocationBootstrapLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
 
-        private RecordingGameLocationBootstrapGateway(List<String> events, RuntimeException firstFailure) {
+        private RecordingGameLocationBootstrapLifecycle(List<String> events, RuntimeException firstFailure) {
             this.events = events;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void bootstrap() {
+        protected void runStage() {
             events.add("siege");
             events.add("base");
             if (events.size() == 2 && firstFailure != null) {

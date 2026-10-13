@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,16 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameSystemLifecycleTest {
 
     @Test
-    void usesSystemGatewayCollaborator() {
-        assertEquals(GameSystemGateway.class, fieldType("systemGateway"));
-    }
-
-    @Test
     void startRunsInitializersLogsSystemInfoAndRecordsStartupTime() {
         List<String> events = new ArrayList<>();
-        GameSystemLifecycle lifecycle = new GameSystemLifecycle(
-            new RecordingGameSystemGateway(events, null, legacyEventNames(), 2)
-        );
+        GameSystemLifecycle lifecycle = new RecordingGameSystemLifecycle(events, null, legacyEventNames(), 2);
 
         long startupTime = lifecycle.start(8_000);
         long repeatedStartupTime = lifecycle.start(8_000);
@@ -46,19 +38,17 @@ class GameSystemLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("system failed");
-        GameSystemLifecycle lifecycle = new GameSystemLifecycle(
-            new RecordingGameSystemGateway(
-                events,
-                failure,
-                List.of(
-                    "section:system",
-                    "versions",
-                    "banner:line1",
-                    "memory:512:128:384:1024",
-                    "startup:2"
-                ),
-                2
-            )
+        GameSystemLifecycle lifecycle = new RecordingGameSystemLifecycle(
+            events,
+            failure,
+            List.of(
+                "section:system",
+                "versions",
+                "banner:line1",
+                "memory:512:128:384:1024",
+                "startup:2"
+            ),
+            2
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(8_000));
@@ -97,16 +87,7 @@ class GameSystemLifecycleTest {
         );
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameSystemLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameSystemGateway extends GameSystemGateway {
+    private static final class RecordingGameSystemLifecycle extends GameSystemLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
@@ -114,7 +95,7 @@ class GameSystemLifecycleTest {
         private final long startupTimeSeconds;
         private boolean failed;
 
-        private RecordingGameSystemGateway(
+        private RecordingGameSystemLifecycle(
             List<String> events,
             RuntimeException firstFailure,
             List<String> eventNames,
@@ -127,7 +108,7 @@ class GameSystemLifecycleTest {
         }
 
         @Override
-        public long start(long serverStartTimeMillis) {
+        protected long printSystemFinalization(long serverStartTimeMillis) {
             for (String eventName : eventNames) {
                 events.add(eventName);
                 if (events.size() == 2 && firstFailure != null && !failed) {

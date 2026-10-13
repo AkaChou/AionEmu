@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,14 +9,8 @@ import org.springframework.stereotype.Component;
  * Lifecycle wrapper for startup completion: idempotent completion logging with timing.
  */
 @Component
-@RequiredArgsConstructor
+@Slf4j
 public class GameStartupCompletionLifecycle {
-
-    /**
-     * 启动完成网关。
-     * Startup completion gateway.
-     */
-    private final GameStartupCompletionGateway startupCompletionGateway;
 
     /**
      * 是否已成功加载。
@@ -45,9 +40,9 @@ public class GameStartupCompletionLifecycle {
             return;
         }
 
-        long start = startupCompletionGateway.currentTimeMillis();
+        long start = System.currentTimeMillis();
         try {
-            startupCompletionGateway.logStartupComplete(startupTime);
+            logStartupComplete(startupTime);
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
@@ -55,8 +50,19 @@ public class GameStartupCompletionLifecycle {
             lastFailure = e;
             throw e;
         } finally {
-            loadTimeMillis = startupCompletionGateway.currentTimeMillis() - start;
+            loadTimeMillis = System.currentTimeMillis() - start;
         }
+    }
+
+    /**
+     * 记录启动完成相关日志。
+     * Log startup-completion messages.
+     * @param startupTime 总初始化耗时（毫秒） / Total initialization time in milliseconds
+     */
+    protected void logStartupComplete(long startupTime) {
+        log.info(I18n.get("console.startup.init_complete"));
+        log.info(I18n.get("console.startup.total_init_time", startupTime));
+        log.info(I18n.get("console.startup.ready"));
     }
 
     /**

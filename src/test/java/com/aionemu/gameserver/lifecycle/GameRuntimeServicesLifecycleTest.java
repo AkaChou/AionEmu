@@ -15,36 +15,31 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameRuntimeServicesLifecycleTest {
 
     @Test
-    void usesRuntimeServicesGatewayCollaborator() {
-        assertEquals(GameRuntimeServicesGateway.class, fieldType("runtimeServicesGateway"));
-    }
-
-    @Test
-    void runtimeGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "adminServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "playerTransferServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "periodicSaveServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "territoryServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "gameTimeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "serverVariableDaoProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "announcementServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "debugServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "weatherServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "brokerServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "legionServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "influenceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "exchangeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "petitionServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "flyRingServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "curingZoneServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "springZoneServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "boostEventServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "taskManagerFromDBProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "limitedItemTradeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "webshopServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "surveyServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "findGroupServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "inGameShopEnProvider"));
+    void runtimeServicesLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "adminServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "playerTransferServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "periodicSaveServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "territoryServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "gameTimeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "serverVariableDaoProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "announcementServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "debugServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "weatherServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "brokerServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "legionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "influenceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "exchangeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "petitionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "flyRingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "curingZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "springZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "boostEventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "taskManagerFromDBProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "limitedItemTradeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "webshopServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "surveyServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "findGroupServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "inGameShopEnProvider"));
     }
 
     @Test
@@ -74,9 +69,7 @@ class GameRuntimeServicesLifecycleTest {
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(
-            new RecordingGameRuntimeServicesGateway(events, null, eventNames())
-        );
+        GameRuntimeServicesLifecycle lifecycle = new RecordingGameRuntimeServicesLifecycle(events, null, eventNames());
 
         lifecycle.start();
         lifecycle.start();
@@ -118,9 +111,7 @@ class GameRuntimeServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("runtime services failed");
-        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(
-            new RecordingGameRuntimeServicesGateway(events, failure, List.of("periodicSave", "admin"))
-        );
+        GameRuntimeServicesLifecycle lifecycle = new RecordingGameRuntimeServicesLifecycle(events, failure, List.of("periodicSave", "admin"));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -165,10 +156,6 @@ class GameRuntimeServicesLifecycleTest {
         );
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameRuntimeServicesLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -195,13 +182,13 @@ class GameRuntimeServicesLifecycleTest {
         }
     }
 
-    private static final class RecordingGameRuntimeServicesGateway extends GameRuntimeServicesGateway {
+    private static final class RecordingGameRuntimeServicesLifecycle extends GameRuntimeServicesLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
         private final List<String> eventNames;
 
-        private RecordingGameRuntimeServicesGateway(
+        private RecordingGameRuntimeServicesLifecycle(
             List<String> events,
             RuntimeException firstFailure,
             List<String> eventNames
@@ -212,7 +199,7 @@ class GameRuntimeServicesLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             for (String eventName : eventNames) {
                 events.add(eventName);

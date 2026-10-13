@@ -11,17 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameEventRuntimeLifecycleTest {
 
     @Test
-    void usesEventRuntimeGatewayCollaborator() {
-        assertEquals(GameEventRuntimeGateway.class, fieldType("eventRuntimeGateway"));
-    }
-
-    @Test
-    void eventRuntimeGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "eventServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "playerEventServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "crazyDaevaServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "abyssRankUpdateServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "packetBroadcasterProvider"));
+    void eventRuntimeLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeLifecycle.class, "eventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeLifecycle.class, "playerEventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeLifecycle.class, "crazyDaevaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeLifecycle.class, "abyssRankUpdateServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeLifecycle.class, "packetBroadcasterProvider"));
     }
 
     @Test
@@ -80,15 +75,14 @@ class GameEventRuntimeLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("event runtime failed");
-        GameEventRuntimeLifecycle lifecycle = new GameEventRuntimeLifecycle(
-            new RecordingGameEventRuntimeGateway(
-                events,
-                true,
-                true,
-                false,
-                false,
-                failure
-            ));
+        GameEventRuntimeLifecycle lifecycle = new RecordingGameEventRuntimeLifecycle(
+            events,
+            true,
+            true,
+            false,
+            false,
+            failure
+        );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -121,18 +115,14 @@ class GameEventRuntimeLifecycleTest {
         boolean crazyEventEnabled,
         boolean topRankingUpdateEnabled
     ) {
-        return new GameEventRuntimeLifecycle(new RecordingGameEventRuntimeGateway(
+        return new RecordingGameEventRuntimeLifecycle(
             events,
             eventServiceEnabled,
             playerEventEnabled,
             crazyEventEnabled,
             topRankingUpdateEnabled,
             null
-        ));
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameEventRuntimeLifecycle.class, name);
+        );
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -144,7 +134,7 @@ class GameEventRuntimeLifecycleTest {
         }
     }
 
-    private static final class RecordingGameEventRuntimeGateway extends GameEventRuntimeGateway {
+    private static final class RecordingGameEventRuntimeLifecycle extends GameEventRuntimeLifecycle {
 
         private final List<String> events;
         private final boolean eventServiceEnabled;
@@ -153,7 +143,7 @@ class GameEventRuntimeLifecycleTest {
         private final boolean topRankingUpdateEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameEventRuntimeGateway(
+        private RecordingGameEventRuntimeLifecycle(
             List<String> events,
             boolean eventServiceEnabled,
             boolean playerEventEnabled,
@@ -170,7 +160,7 @@ class GameEventRuntimeLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             if (eventServiceEnabled) {
                 events.add("eventService");

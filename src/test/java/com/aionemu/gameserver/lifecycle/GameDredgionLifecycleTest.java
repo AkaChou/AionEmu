@@ -13,14 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameDredgionLifecycleTest {
 
     @Test
-    void usesDredgionGatewayCollaborator() {
-        assertEquals(GameDredgionGateway.class, fieldType("dredgionGateway"));
-    }
-
-    @Test
-    void dredgionGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "dredgionServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "asyunatarServiceProvider"));
+    void dredgionLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionLifecycle.class, "dredgionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionLifecycle.class, "asyunatarServiceProvider"));
     }
 
 
@@ -53,9 +48,7 @@ class GameDredgionLifecycleTest {
     void startReadsAutoGroupFlagForEachInitializerLikeLegacyCode() {
         List<String> events = new ArrayList<>();
         AtomicInteger reads = new AtomicInteger();
-        GameDredgionLifecycle lifecycle = new GameDredgionLifecycle(
-            new RecordingGameDredgionGateway(events, () -> reads.incrementAndGet() == 1, null)
-        );
+        GameDredgionLifecycle lifecycle = new RecordingGameDredgionLifecycle(events, () -> reads.incrementAndGet() == 1, null);
 
         lifecycle.start();
 
@@ -68,8 +61,7 @@ class GameDredgionLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("dredgion failed");
-        GameDredgionLifecycle lifecycle = new GameDredgionLifecycle(
-            new RecordingGameDredgionGateway(events, () -> true, failure));
+        GameDredgionLifecycle lifecycle = new RecordingGameDredgionLifecycle(events, () -> true, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -85,15 +77,11 @@ class GameDredgionLifecycleTest {
     }
 
     private static GameDredgionLifecycle newLifecycle(List<String> events, boolean autoGroupEnabled) {
-        return new GameDredgionLifecycle(new RecordingGameDredgionGateway(
+        return new RecordingGameDredgionLifecycle(
             events,
             () -> autoGroupEnabled,
             null
-        ));
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameDredgionLifecycle.class, name);
+        );
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -105,13 +93,13 @@ class GameDredgionLifecycleTest {
         }
     }
 
-    private static final class RecordingGameDredgionGateway extends GameDredgionGateway {
+    private static final class RecordingGameDredgionLifecycle extends GameDredgionLifecycle {
 
         private final List<String> events;
         private final BooleanSupplier autoGroupEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameDredgionGateway(
+        private RecordingGameDredgionLifecycle(
             List<String> events,
             BooleanSupplier autoGroupEnabled,
             RuntimeException firstFailure
@@ -122,17 +110,22 @@ class GameDredgionLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
-            if (autoGroupEnabled.getAsBoolean()) {
+            if (isAutoGroupEnabled()) {
                 events.add("dredgion");
             }
-            if (autoGroupEnabled.getAsBoolean()) {
+            if (isAutoGroupEnabled()) {
                 events.add("asyunatar");
                 if (events.size() == 3 && firstFailure != null) {
                     throw firstFailure;
                 }
             }
+        }
+
+        @Override
+        protected boolean isAutoGroupEnabled() {
+            return autoGroupEnabled.getAsBoolean();
         }
     }
 }

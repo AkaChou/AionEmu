@@ -3,8 +3,6 @@ package com.aionemu.gameserver.lifecycle;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,12 +11,8 @@ class GameUtilityServicesLifecycleTest {
     @Test
     void startInitializesUtilityServicesOnce() {
         List<String> events = new ArrayList<>();
-        GameThreadPoolLifecycle threadPoolLifecycle = new GameThreadPoolLifecycle(
-            new RecordingGameThreadPoolGateway(events)
-        );
-        GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
-            new RecordingGameUtilityServicesGateway(events)
-        );
+        GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
+        GameUtilityServicesLifecycle lifecycle = new RecordingGameUtilityServicesLifecycle(events);
 
         lifecycle.start(threadPoolLifecycle);
         lifecycle.start(threadPoolLifecycle);
@@ -43,12 +37,8 @@ class GameUtilityServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("utility failed");
-        GameThreadPoolLifecycle threadPoolLifecycle = new GameThreadPoolLifecycle(
-            new RecordingGameThreadPoolGateway(events)
-        );
-        GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
-            new RecordingGameUtilityServicesGateway(events, failure)
-        );
+        GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
+        GameUtilityServicesLifecycle lifecycle = new RecordingGameUtilityServicesLifecycle(events, failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(threadPoolLifecycle));
 
@@ -78,61 +68,42 @@ class GameUtilityServicesLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    @Test
-    void usesUtilityServicesGatewayCollaborator() {
-        assertEquals(GameUtilityServicesGateway.class, fieldType("utilityServicesGateway"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameUtilityServicesLifecycle.class, name);
-    }
-
-    private static Class<?> fieldType(Class<?> type, String name) {
-        try {
-            return type.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameUtilityServicesGateway extends GameUtilityServicesGateway {
+    private static final class RecordingGameUtilityServicesLifecycle extends GameUtilityServicesLifecycle {
 
         private final List<String> events;
         private final RuntimeException configFailure;
-        private long currentTimeMillis;
 
-        private RecordingGameUtilityServicesGateway(List<String> events) {
+        private RecordingGameUtilityServicesLifecycle(List<String> events) {
             this(events, null);
         }
 
-        private RecordingGameUtilityServicesGateway(List<String> events, RuntimeException configFailure) {
-            super();
+        private RecordingGameUtilityServicesLifecycle(List<String> events, RuntimeException configFailure) {
             this.events = events;
             this.configFailure = configFailure;
         }
 
         @Override
-        public void initializeExceptionHandler() {
+        protected void initializeExceptionHandler() {
             events.add("exceptionHandler");
         }
 
         @Override
-        public void reportCallbackSupport() {
+        protected void reportCallbackSupport() {
             events.add("callbackSupport");
         }
 
         @Override
-        public void initializeCronService() {
+        protected void initializeCronService() {
             events.add("cron");
         }
 
         @Override
-        public void printConfigSection() {
+        protected void printConfigSection() {
             events.add("config:section");
         }
 
         @Override
-        public void loadConfig() {
+        protected void loadConfig() {
             events.add("config:load");
             if (configFailure != null && events.size() == 5) {
                 throw configFailure;
@@ -140,48 +111,37 @@ class GameUtilityServicesLifecycleTest {
         }
 
         @Override
-        public void initializeDateTime() {
+        protected void initializeDateTime() {
             events.add("dateTime");
         }
 
         @Override
-        public void printDatabaseSection() {
+        protected void printDatabaseSection() {
             events.add("database:section");
         }
 
         @Override
-        public void loadThreadConfig() {
+        protected void loadThreadConfig() {
             events.add("threadConfig");
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            return currentTimeMillis++;
         }
     }
 
-    private static final class RecordingGameThreadPoolGateway extends GameThreadPoolGateway {
+    private static final class RecordingGameThreadPoolLifecycle extends GameThreadPoolLifecycle {
 
         private final List<String> events;
 
-        private RecordingGameThreadPoolGateway(List<String> events) {
+        private RecordingGameThreadPoolLifecycle(List<String> events) {
             this.events = events;
         }
 
         @Override
-        public void start() {
+        protected void startThreadPool() {
             events.add("threadPool:start");
         }
 
         @Override
-        public void stop() {
+        protected void stopThreadPool() {
             events.add("threadPool:stop");
         }
-    }
-
-    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
-        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        beanFactory.registerSingleton(type.getName(), instance);
-        return beanFactory.getBeanProvider(type);
     }
 }

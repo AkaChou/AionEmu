@@ -1,87 +1,114 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.FFAConfig;
+import com.aionemu.gameserver.configs.main.PvPModConfig;
+import com.aionemu.gameserver.services.events.BGService;
+import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 自定义活动生命周期：在启动序列中触发 gateway 并记录加载状态。
- * Lifecycle for custom events: drives the gateway during startup and tracks load state.
+ * 自定义活动生命周期：按配置启动 FFA、天梯/BG 与强盗活动服务，加载状态由基类承载。
+ * Custom-events lifecycle: starts FFA, ladder/BG and bandit event services by configuration;
+ * load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameCustomEventsLifecycle {
+public class GameCustomEventsLifecycle extends GameStartupStage {
 
     /**
-     * 自定义活动网关。
-     * Custom-events gateway.
+     * FFA 服务提供者。
+     * FFA service provider.
      */
-    private final GameCustomEventsGateway customEventsGateway;
+    private ObjectProvider<FFAService> ffaServiceProvider;
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
+     * 天梯服务提供者。
+     * Ladder service provider.
      */
-    private boolean loaded;
+    private ObjectProvider<LadderService> ladderServiceProvider;
 
     /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
+     * 战场（BG）服务提供者。
+     * Battleground (BG) service provider.
      */
-    private long loadTimeMillis = -1;
+    private ObjectProvider<BGService> bgServiceProvider;
 
     /**
-     * 最近一次失败。
-     * Last failure, if any.
+     * 强盗活动服务提供者。
+     * Bandit event service provider.
      */
-    private Throwable lastFailure;
+    private ObjectProvider<BanditService> banditServiceProvider;
+
 
     /**
-     * 启动本阶段：初始化自定义活动服务。
-     * Start this stage: initialize custom event services.
+     * 可选注入 FFA 服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of FFA service.
+     * @param ffaServiceProvider 服务提供者 / Service provider
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
+    @Autowired(required = false)
+    void setFfaServiceProvider(ObjectProvider<FFAService> ffaServiceProvider) {
+        this.ffaServiceProvider = ffaServiceProvider;
+    }
+
+    /**
+     * 可选注入天梯服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of ladder service.
+     * @param ladderServiceProvider 服务提供者 / Service provider
+     */
+    @Autowired(required = false)
+    void setLadderServiceProvider(ObjectProvider<LadderService> ladderServiceProvider) {
+        this.ladderServiceProvider = ladderServiceProvider;
+    }
+
+    /**
+     * 可选注入 BG 服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of BG service.
+     * @param bgServiceProvider 服务提供者 / Service provider
+     */
+    @Autowired(required = false)
+    void setBgServiceProvider(ObjectProvider<BGService> bgServiceProvider) {
+        this.bgServiceProvider = bgServiceProvider;
+    }
+
+    /**
+     * 可选注入强盗活动服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of bandit service.
+     * @param banditServiceProvider 服务提供者 / Service provider
+     */
+    @Autowired(required = false)
+    void setBanditServiceProvider(ObjectProvider<BanditService> banditServiceProvider) {
+        this.banditServiceProvider = banditServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：打印分区并按开关初始化 FFA、天梯/BG 与强盗服务。
+     * Start this stage: print section and init FFA, ladder/BG and bandit services by switches.
+     */
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.custom_events"));
+        if (FFAConfig.FFA_ENABLED) {
+            ffaServiceProvider.getObject();
         }
-
-        long start = System.currentTimeMillis();
-        try {
-            customEventsGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
+        if (PvPModConfig.BG_ENABLED) {
+            ladderServiceProvider.getObject();
+            bgServiceProvider.getObject();
         }
+        banditService().onInit();
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 解析强盗活动服务。
+     * Resolve bandit service.
+     * @return 服务实例 / Service instance
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
-     */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private BanditService banditService() {
+        return banditServiceProvider.getObject();
     }
 }

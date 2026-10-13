@@ -1,7 +1,12 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.configs.main.ThreadConfig;
+import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -10,15 +15,8 @@ import org.springframework.stereotype.Component;
  * Utility-services lifecycle: initializes exception handler/config/DB/DAO/thread config and starts the thread pool.
  */
 @Component
-@RequiredArgsConstructor
 @Slf4j
 public class GameUtilityServicesLifecycle {
-
-    /**
-     * 工具服务网关。
-     * Utility-services gateway.
-     */
-    private final GameUtilityServicesGateway utilityServicesGateway;
 
     /**
      * 是否已加载。
@@ -48,19 +46,19 @@ public class GameUtilityServicesLifecycle {
             return;
         }
 
-        long start = utilityServicesGateway.currentTimeMillis();
+        long start = System.currentTimeMillis();
         try {
-            utilityServicesGateway.initializeExceptionHandler();
-            utilityServicesGateway.reportCallbackSupport();
-            utilityServicesGateway.initializeCronService();
-            utilityServicesGateway.printConfigSection();
-            long configStart = utilityServicesGateway.currentTimeMillis();
-            utilityServicesGateway.loadConfig();
-            long configTime = utilityServicesGateway.currentTimeMillis() - configStart;
+            initializeExceptionHandler();
+            reportCallbackSupport();
+            initializeCronService();
+            printConfigSection();
+            long configStart = System.currentTimeMillis();
+            loadConfig();
+            long configTime = System.currentTimeMillis() - configStart;
             log.info(I18n.get("console.startup.config_loaded", configTime));
-            utilityServicesGateway.initializeDateTime();
-            utilityServicesGateway.printDatabaseSection();
-            utilityServicesGateway.loadThreadConfig();
+            initializeDateTime();
+            printDatabaseSection();
+            loadThreadConfig();
             threadPoolLifecycle.start();
             loaded = true;
             lastFailure = null;
@@ -69,8 +67,76 @@ public class GameUtilityServicesLifecycle {
             lastFailure = e;
             throw e;
         } finally {
-            loadTimeMillis = utilityServicesGateway.currentTimeMillis() - start;
+            loadTimeMillis = System.currentTimeMillis() - start;
         }
+    }
+
+    /**
+     * 初始化默认未捕获异常处理器。
+     * Initialize the default uncaught-exception handler.
+     */
+    protected void initializeExceptionHandler() {
+        Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
+    }
+
+    /**
+     * 报告 Java Agent 回调支持状态。
+     * Report Java-agent callback support status.
+     */
+    protected void reportCallbackSupport() {
+        // 构建期织入后回调系统恒就绪：仅保留启动提示，不再保留 javaagent 探测外壳。
+        // The callback system is always ready after build-time weaving: keep the startup hint only.
+        log.info(I18n.get("console.startup.callback_ok"));
+    }
+
+    /**
+     * 初始化 Cron 服务。
+     * Initialize the cron service.
+     */
+    protected void initializeCronService() {
+        GameCronServices.initialize();
+    }
+
+    /**
+     * 打印配置分区标题。
+     * Print the config section header.
+     */
+    protected void printConfigSection() {
+        Util.printSection(I18n.get("console.section.config"));
+    }
+
+    /**
+     * 加载配置并应用国家码到 I18n。
+     * Load configuration and apply the country code to I18n.
+     */
+    protected void loadConfig() {
+        Config.load();
+        GSConfig.resolveServerCountryCode();
+        I18n.applyCountryCode(GSConfig.SERVER_COUNTRY_CODE);
+    }
+
+    /**
+     * 初始化日期时间工具。
+     * Initialize date-time utilities.
+     */
+    protected void initializeDateTime() {
+        DateTimeUtil.init();
+    }
+
+    /**
+     * 打印数据库分区标题。
+     * Print the database section header.
+     */
+    protected void printDatabaseSection() {
+        Util.printSection(I18n.get("console.section.database"));
+    }
+
+    /**
+     * 加载线程配置。
+     * Load thread configuration.
+     */
+    protected void loadThreadConfig() {
+        ThreadConfig.load();
     }
 
     /**

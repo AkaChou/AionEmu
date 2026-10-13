@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -10,16 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameStartupLogLifecycleTest {
 
     @Test
-    void usesStartupLogGatewayCollaborator() {
-        assertEquals(GameStartupLogGateway.class, fieldType("startupLogGateway"));
-    }
-
-    @Test
     void startLogsStartupAndReturnsStartTimeOnce() {
         List<String> events = new ArrayList<>();
-        GameStartupLogLifecycle lifecycle = new GameStartupLogLifecycle(
-            new RecordingGameStartupLogGateway(events, null, 123L)
-        );
+        GameStartupLogLifecycle lifecycle = new RecordingGameStartupLogLifecycle(events, null, 123L);
 
         long firstStartTime = lifecycle.start();
         long secondStartTime = lifecycle.start();
@@ -36,9 +28,7 @@ class GameStartupLogLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("startup log failed");
-        GameStartupLogLifecycle lifecycle = new GameStartupLogLifecycle(
-            new RecordingGameStartupLogGateway(events, failure, 456L)
-        );
+        GameStartupLogLifecycle lifecycle = new RecordingGameStartupLogLifecycle(events, failure, 456L);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -54,23 +44,14 @@ class GameStartupLogLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameStartupLogLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static final class RecordingGameStartupLogGateway extends GameStartupLogGateway {
+    private static final class RecordingGameStartupLogLifecycle extends GameStartupLogLifecycle {
 
         private final List<String> events;
         private final RuntimeException firstFailure;
         private final long startupTimeMillis;
         private boolean failed;
 
-        private RecordingGameStartupLogGateway(
+        private RecordingGameStartupLogLifecycle(
             List<String> events,
             RuntimeException firstFailure,
             long startupTimeMillis
@@ -81,7 +62,7 @@ class GameStartupLogLifecycleTest {
         }
 
         @Override
-        public long start() {
+        protected long captureStartupLog() {
             events.add("GameServer starting...");
             if (firstFailure != null && !failed) {
                 failed = true;

@@ -1,84 +1,165 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
+import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.HousingService;
+import com.aionemu.gameserver.services.HousingBidService;
+import com.aionemu.gameserver.services.TownService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 房屋系统生命周期：委托网关启动房屋相关服务。
- * Housing lifecycle: starts housing-related services via the gateway.
+ * 房屋系统生命周期：启动竞拍、维护、城镇、房屋与挑战任务服务，加载状态由基类承载。
+ * Housing lifecycle: starts bid, maintenance, town, housing, and challenge-task services;
+ * load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameHousingLifecycle {
+public class GameHousingLifecycle extends GameStartupStage {
 
     /**
-     * 房屋系统网关。
-     * Housing gateway.
+     * 房屋竞拍服务提供者。
+     * Housing-bid service provider.
      */
-    private final GameHousingGateway housingGateway;
+    private ObjectProvider<HousingBidService> housingBidServiceProvider;
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
+     * 房屋维护任务提供者。
+     * Maintenance-task provider.
      */
-    private boolean loaded;
+    private ObjectProvider<MaintenanceTask> maintenanceTaskProvider;
     /**
-     * 最近一次加载耗时（毫秒）；未启动为 -1。
-     * Last load duration in milliseconds; -1 if never started.
+     * 城镇服务提供者。
+     * Town-service provider.
      */
-    private long loadTimeMillis = -1;
+    private ObjectProvider<TownService> townServiceProvider;
     /**
-     * 最近一次失败原因；成功时为 {@code null}。
-     * Last failure cause; {@code null} on success.
+     * 房屋服务提供者。
+     * Housing-service provider.
      */
-    private Throwable lastFailure;
+    private ObjectProvider<HousingService> housingServiceProvider;
+    /**
+     * 挑战任务服务提供者。
+     * Challenge-task service provider.
+     */
+    private ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
 
     /**
-     * 启动房屋系统（幂等）。
-     * Start the housing system (idempotent).
+     * 可选注入房屋竞拍服务提供者。
+     * Optionally inject the housing-bid service provider.
+     * @param housingBidServiceProvider 房屋竞拍服务提供者 / Housing-bid service provider
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            housingGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Autowired(required = false)
+    void setHousingBidServiceProvider(ObjectProvider<HousingBidService> housingBidServiceProvider) {
+        this.housingBidServiceProvider = housingBidServiceProvider;
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 可选注入房屋维护任务提供者。
+     * Optionally inject the maintenance-task provider.
+     * @param maintenanceTaskProvider 房屋维护任务提供者 / Maintenance-task provider
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    @Autowired(required = false)
+    void setMaintenanceTaskProvider(ObjectProvider<MaintenanceTask> maintenanceTaskProvider) {
+        this.maintenanceTaskProvider = maintenanceTaskProvider;
     }
 
     /**
-     * 最近一次加载耗时（毫秒）。
-     * Last load duration in milliseconds.
-     * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
+     * 可选注入城镇服务提供者。
+     * Optionally inject the town-service provider.
+     * @param townServiceProvider 城镇服务提供者 / Town-service provider
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    @Autowired(required = false)
+    void setTownServiceProvider(ObjectProvider<TownService> townServiceProvider) {
+        this.townServiceProvider = townServiceProvider;
     }
 
     /**
-     * 最近一次失败原因。
-     * Last failure cause.
-     * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
+     * 可选注入房屋服务提供者。
+     * Optionally inject the housing-service provider.
+     * @param housingServiceProvider 房屋服务提供者 / Housing-service provider
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    @Autowired(required = false)
+    void setHousingServiceProvider(ObjectProvider<HousingService> housingServiceProvider) {
+        this.housingServiceProvider = housingServiceProvider;
+    }
+
+    /**
+     * 可选注入挑战任务服务提供者。
+     * Optionally inject the challenge-task service provider.
+     * @param challengeTaskServiceProvider 挑战任务服务提供者 / Challenge-task service provider
+     */
+    @Autowired(required = false)
+    void setChallengeTaskServiceProvider(ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider) {
+        this.challengeTaskServiceProvider = challengeTaskServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：启动房屋相关服务。
+     * Start this stage: start housing-related services.
+     */
+    @Override
+    protected void runStage() {
+        printHousingSection();
+        housingBidService().start();
+        maintenanceTask();
+        townService();
+        housingService();
+        challengeTaskService();
+    }
+
+    /**
+     * 打印房屋分区标题。
+     * Print the housing section header.
+     */
+    private void printHousingSection() {
+        Util.printSection(I18n.get("console.section.housing"));
+    }
+
+    /**
+     * 解析房屋竞拍服务。
+     * Resolve the housing-bid service.
+     * @return 房屋竞拍服务 / Housing-bid service
+     */
+    private HousingBidService housingBidService() {
+        return housingBidServiceProvider.getObject();
+    }
+
+    /**
+     * 解析房屋维护任务。
+     * Resolve the maintenance task.
+     * @return 房屋维护任务 / Maintenance task
+     */
+    private MaintenanceTask maintenanceTask() {
+        return maintenanceTaskProvider.getObject();
+    }
+
+    /**
+     * 解析城镇服务。
+     * Resolve the town service.
+     * @return 城镇服务 / Town service
+     */
+    private TownService townService() {
+        return townServiceProvider.getObject();
+    }
+
+    /**
+     * 解析房屋服务。
+     * Resolve the housing service.
+     * @return 房屋服务 / Housing service
+     */
+    private HousingService housingService() {
+        return housingServiceProvider.getObject();
+    }
+
+    /**
+     * 解析挑战任务服务。
+     * Resolve the challenge-task service.
+     * @return 挑战任务服务 / Challenge-task service
+     */
+    private ChallengeTaskService challengeTaskService() {
+        return challengeTaskServiceProvider.getObject();
     }
 }

@@ -1,87 +1,21 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.GameServer;
 import org.springframework.stereotype.Component;
 
 /**
- * 启动钩子阶段的生命周期封装：幂等执行启动钩子并记录耗时。
- * Lifecycle wrapper for startup hooks: idempotent hook execution with timing.
+ * 启动钩子阶段的生命周期：幂等执行启动钩子，加载状态由基类承载。
+ * Lifecycle for startup hooks: idempotent hook execution; load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameStartupHooksLifecycle {
+public class GameStartupHooksLifecycle extends GameStartupStage {
 
     /**
-     * 启动钩子网关。
-     * Startup hooks gateway.
+     * 启动本阶段：运行游戏服启动钩子。
+     * Start this stage: run game-server startup hooks.
      */
-    private final GameStartupHooksGateway startupHooksGateway;
-
-    /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     */
-    private boolean loaded;
-
-    /**
-     * 最近一次启动耗时（毫秒）；未启动为 -1。
-     * Last start duration in milliseconds; -1 if never started.
-     */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败异常；成功时为 null。
-     * Last failure throwable; null after success.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 幂等执行启动钩子；已加载则直接返回。
-     * Idempotently run startup hooks; no-op when already loaded.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            startupHooksGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
-    }
-
-    /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     * @return 已加载为 {@code true} / {@code true} when loaded
-     */
-    public synchronized boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * 最近一次启动耗时（毫秒）。
-     * Last start duration in milliseconds.
-     * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
-     */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近一次失败异常。
-     * Last failure throwable.
-     * @return 失败异常，无则为 null / throwable or null
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    @Override
+    protected void runStage() {
+        GameServer.runStartupHooks();
     }
 }

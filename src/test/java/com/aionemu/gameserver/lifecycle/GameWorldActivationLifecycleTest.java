@@ -12,13 +12,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameWorldActivationLifecycleTest {
 
     @Test
-    void usesWorldActivationGatewayCollaborator() {
-        assertEquals(GameWorldActivationGateway.class, fieldType("worldActivationGateway"));
-    }
-
-    @Test
-    void worldActivationGatewayBridgesDropRegistrationThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "dropRegistrationServiceProvider"));
+    void worldActivationLifecycleBridgesDropRegistrationThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationLifecycle.class, "dropRegistrationServiceProvider"));
     }
 
 
@@ -26,8 +21,7 @@ class GameWorldActivationLifecycleTest {
     void startRunsDropRegistrationServerActivationAndOfflineMarkerOnce() {
         List<String> events = new ArrayList<>();
         GameServer server = new GameServer();
-        GameWorldActivationLifecycle lifecycle = new GameWorldActivationLifecycle(
-            new RecordingGameWorldActivationGateway(events, server, null));
+        GameWorldActivationLifecycle lifecycle = new RecordingGameWorldActivationLifecycle(events, server, null);
 
         GameServer firstServer = lifecycle.start();
         GameServer secondServer = lifecycle.start();
@@ -45,8 +39,7 @@ class GameWorldActivationLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("active server failed");
         GameServer server = new GameServer();
-        GameWorldActivationLifecycle lifecycle = new GameWorldActivationLifecycle(
-            new RecordingGameWorldActivationGateway(events, server, failure));
+        GameWorldActivationLifecycle lifecycle = new RecordingGameWorldActivationLifecycle(events, server, failure);
 
         IllegalStateException thrown = assertThrows(
             IllegalStateException.class,
@@ -68,15 +61,6 @@ class GameWorldActivationLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameWorldActivationLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -86,13 +70,13 @@ class GameWorldActivationLifecycleTest {
         }
     }
 
-    private static final class RecordingGameWorldActivationGateway extends GameWorldActivationGateway {
+    private static final class RecordingGameWorldActivationLifecycle extends GameWorldActivationLifecycle {
 
         private final List<String> events;
         private final GameServer server;
         private final RuntimeException firstFailure;
 
-        private RecordingGameWorldActivationGateway(
+        private RecordingGameWorldActivationLifecycle(
             List<String> events,
             GameServer server,
             RuntimeException firstFailure
@@ -103,7 +87,7 @@ class GameWorldActivationLifecycleTest {
         }
 
         @Override
-        public GameServer activate() {
+        protected GameServer activate() {
             events.add("dropRegistration");
             events.add("activeServer");
             if (events.size() == 2 && firstFailure != null) {

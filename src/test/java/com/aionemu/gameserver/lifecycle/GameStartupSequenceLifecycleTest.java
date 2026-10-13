@@ -97,7 +97,6 @@ class GameStartupSequenceLifecycleTest {
     private static final class RecordingGameThreadPoolLifecycle extends GameThreadPoolLifecycle {
 
         private RecordingGameThreadPoolLifecycle() {
-            super(new GameThreadPoolGateway());
         }
     }
 
@@ -106,12 +105,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStaticDataLifecycle(List<String> events) {
-            super(new GameStaticDataGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("staticData:start");
         }
     }
@@ -121,12 +119,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameWorldBootstrapLifecycle(List<String> events) {
-            super(new GameWorldBootstrapGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("worldBootstrap:start");
         }
     }
@@ -136,12 +133,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameEventBootstrapLifecycle(List<String> events) {
-            super(new GameEventBootstrapGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("eventBootstrap:start");
         }
     }
@@ -151,12 +147,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameGeoPathLifecycle(List<String> events) {
-            super(new GameGeoPathGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("geoPath:start");
         }
     }
@@ -166,7 +161,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameWorldActivationLifecycle(List<String> events) {
-            super(new GameWorldActivationGateway());
             this.events = events;
         }
 
@@ -182,7 +176,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameEnginesLifecycle(List<String> events) {
-            super(new GameEnginesGateway());
             this.events = events;
         }
 
@@ -192,7 +185,7 @@ class GameStartupSequenceLifecycleTest {
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("engines:start");
         }
     }
@@ -202,12 +195,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameLocationBootstrapLifecycle(List<String> events) {
-            super(new GameLocationBootstrapGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("locationBootstrap:start");
         }
     }
@@ -217,12 +209,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSpawnLifecycle(List<String> events) {
-            super(new GameSpawnGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("spawn:start");
         }
     }
@@ -232,12 +223,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameEventRuntimeLifecycle(List<String> events) {
-            super(new GameEventRuntimeGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("eventRuntime:start");
         }
     }
@@ -247,12 +237,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameCleaningLifecycle(List<String> events) {
-            super(new GameCleaningGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("cleaning:start");
         }
     }
@@ -262,12 +251,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameScheduledServicesLifecycle(List<String> events) {
-            super(new GameScheduledServicesGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("scheduledServices:start");
         }
     }
@@ -277,12 +265,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameCustomEventsLifecycle(List<String> events) {
-            super(new GameCustomEventsGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("customEvents:start");
         }
     }
@@ -292,12 +279,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSiegeScheduleLifecycle(List<String> events) {
-            super(new GameSiegeScheduleGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("siegeSchedule:start");
         }
     }
@@ -307,12 +293,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameDredgionLifecycle(List<String> events) {
-            super(new GameDredgionGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("dredgion:start");
         }
     }
@@ -322,12 +307,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameBattlefieldLifecycle(List<String> events) {
-            super(new GameBattlefieldGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("battlefield:start");
         }
     }
@@ -337,12 +321,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameProtectorConquerorLifecycle(List<String> events) {
-            super(new GameProtectorConquerorGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("protectorConqueror:start");
         }
     }
@@ -352,12 +335,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameDisputeLandLifecycle(List<String> events) {
-            super(new GameDisputeLandGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("disputeLand:start");
         }
     }
@@ -367,12 +349,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameHtmlLifecycle(List<String> events) {
-            super(new GameHtmlGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("html:start");
         }
     }
@@ -382,12 +363,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRewardServicesLifecycle(List<String> events) {
-            super(new GameRewardServicesGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("rewardServices:start");
         }
     }
@@ -397,7 +377,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRuntimeServicesLifecycle(List<String> events) {
-            super(new GameRuntimeServicesGateway());
             this.events = events;
         }
 
@@ -407,7 +386,7 @@ class GameStartupSequenceLifecycleTest {
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("runtimeServices:start");
         }
     }
@@ -417,12 +396,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameOptionalServicesLifecycle(List<String> events) {
-            super(new GameOptionalServicesGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("optionalServices:start");
         }
     }
@@ -432,12 +410,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSeasonRankingLifecycle(List<String> events) {
-            super(new GameSeasonRankingGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("seasonRanking:start");
         }
     }
@@ -447,12 +424,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameHousingLifecycle(List<String> events) {
-            super(new GameHousingGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("housing:start");
         }
     }
@@ -462,7 +438,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSystemLifecycle(List<String> events) {
-            super(new GameSystemGateway());
             this.events = events;
         }
 
@@ -478,7 +453,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameServerNetworkLifecycle(List<String> events) {
-            super(new GameServerNetworkGateway());
             this.events = events;
         }
 
@@ -493,7 +467,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameNetworkStartupLifecycle(List<String> events) {
-            super(new GameNetworkStartupGateway());
             this.events = events;
         }
 
@@ -509,12 +482,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRatioLimitLifecycle(List<String> events) {
-            super(new GameRatioLimitGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("ratioLimit:start");
         }
     }
@@ -524,12 +496,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupHooksLifecycle(List<String> events) {
-            super(new GameStartupHooksGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("startupHooks:start");
         }
     }
@@ -539,7 +510,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupCompletionLifecycle(List<String> events) {
-            super(new GameStartupCompletionGateway());
             this.events = events;
         }
 
@@ -554,12 +524,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameLoggingLifecycle(List<String> events) {
-            super(new GameLoggingGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("logging:start");
         }
     }
@@ -569,7 +538,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameUtilityServicesLifecycle(List<String> events) {
-            super(new GameUtilityServicesGateway());
             this.events = events;
         }
 
@@ -584,12 +552,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameAdminPanelLifecycle(List<String> events) {
-            super(new GameAdminPanelGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("adminPanel:start");
         }
     }
@@ -599,12 +566,11 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSystemPropertiesLifecycle(List<String> events) {
-            super(new GameSystemPropertiesGateway());
             this.events = events;
         }
 
         @Override
-        public synchronized void start() {
+        protected void runStage() {
             events.add("systemProperties:start");
         }
     }
@@ -614,7 +580,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupLogLifecycle(List<String> events) {
-            super(new GameStartupLogGateway());
             this.events = events;
         }
 
@@ -630,7 +595,6 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameChatServerOverrideLifecycle(List<String> events) {
-            super(new GameChatServerOverrideGateway());
             this.events = events;
         }
 

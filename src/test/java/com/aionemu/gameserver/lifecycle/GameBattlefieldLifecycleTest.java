@@ -25,21 +25,16 @@ class GameBattlefieldLifecycleTest {
     );
 
     @Test
-    void usesBattlefieldGatewayCollaborator() {
-        assertEquals(GameBattlefieldGateway.class, fieldType("battlefieldGateway"));
-    }
-
-    @Test
-    void battlefieldGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "kamarBattlefieldServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "engulfedOphidanBridgeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "suspiciousOphidanBridgeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "ironWallWarfrontServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeLandmarkServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "hallOfTenacityServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "grandArenaTrainingCampServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idRunServiceProvider"));
+    void battlefieldLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "kamarBattlefieldServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "engulfedOphidanBridgeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "suspiciousOphidanBridgeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "ironWallWarfrontServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "idgelDomeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "idgelDomeLandmarkServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "hallOfTenacityServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "grandArenaTrainingCampServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldLifecycle.class, "idRunServiceProvider"));
     }
 
     @Test
@@ -71,9 +66,7 @@ class GameBattlefieldLifecycleTest {
     void startReadsAutoGroupFlagForEachInitializerLikeLegacyCode() {
         List<String> events = new ArrayList<>();
         AtomicInteger reads = new AtomicInteger();
-        GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
-            new RecordingGameBattlefieldGateway(events, () -> reads.incrementAndGet() % 2 == 1, null)
-        );
+        GameBattlefieldLifecycle lifecycle = new RecordingGameBattlefieldLifecycle(events, () -> reads.incrementAndGet() % 2 == 1, null);
 
         lifecycle.start();
 
@@ -86,9 +79,7 @@ class GameBattlefieldLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("battlefield failed");
-        GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
-            new RecordingGameBattlefieldGateway(events, () -> true, failure, List.of("kamar", "ophidan"))
-        );
+        GameBattlefieldLifecycle lifecycle = new RecordingGameBattlefieldLifecycle(events, () -> true, failure, List.of("kamar", "ophidan"));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -104,21 +95,12 @@ class GameBattlefieldLifecycleTest {
     }
 
     private static GameBattlefieldLifecycle newLifecycle(List<String> events, boolean autoGroupEnabled) {
-        return new GameBattlefieldLifecycle(new RecordingGameBattlefieldGateway(
+        return new RecordingGameBattlefieldLifecycle(
             events,
             () -> autoGroupEnabled,
             null,
             EVENT_NAMES
-        ));
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameBattlefieldLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
+        );
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -130,14 +112,14 @@ class GameBattlefieldLifecycleTest {
         }
     }
 
-    private static final class RecordingGameBattlefieldGateway extends GameBattlefieldGateway {
+    private static final class RecordingGameBattlefieldLifecycle extends GameBattlefieldLifecycle {
 
         private final List<String> events;
         private final BooleanSupplier autoGroupEnabled;
         private final RuntimeException firstFailure;
         private final List<String> eventNames;
 
-        private RecordingGameBattlefieldGateway(
+        private RecordingGameBattlefieldLifecycle(
             List<String> events,
             BooleanSupplier autoGroupEnabled,
             RuntimeException firstFailure
@@ -145,7 +127,7 @@ class GameBattlefieldLifecycleTest {
             this(events, autoGroupEnabled, firstFailure, EVENT_NAMES);
         }
 
-        private RecordingGameBattlefieldGateway(
+        private RecordingGameBattlefieldLifecycle(
             List<String> events,
             BooleanSupplier autoGroupEnabled,
             RuntimeException firstFailure,
@@ -158,18 +140,23 @@ class GameBattlefieldLifecycleTest {
         }
 
         @Override
-        public void start() {
+        protected void runStage() {
             events.add("section");
             eventNames.forEach(this::maybeRun);
         }
 
+        @Override
+        protected boolean isAutoGroupEnabled() {
+            return autoGroupEnabled.getAsBoolean();
+        }
+
         private void maybeRun(String event) {
-            if (autoGroupEnabled.getAsBoolean()) {
+            runIfAutoGroupEnabled(() -> {
                 events.add(event);
                 if (events.size() == 3 && firstFailure != null) {
                     throw firstFailure;
                 }
-            }
+            });
         }
     }
 }

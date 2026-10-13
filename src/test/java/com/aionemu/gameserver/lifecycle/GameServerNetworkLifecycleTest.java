@@ -18,9 +18,7 @@ class GameServerNetworkLifecycleTest {
         List<String> events = new ArrayList<>();
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
-        GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            new RecordingGameServerNetworkGateway(events, false, true, loginServer, chatServer)
-        );
+        GameServerNetworkLifecycle lifecycle = new RecordingGameServerNetworkLifecycle(events, false, true, loginServer, chatServer);
 
         lifecycle.start(new GameServer());
         events.clear();
@@ -41,9 +39,7 @@ class GameServerNetworkLifecycleTest {
         List<String> events = new ArrayList<>();
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
-        GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            new RecordingGameServerNetworkGateway(events, false, true, loginServer, chatServer)
-        );
+        GameServerNetworkLifecycle lifecycle = new RecordingGameServerNetworkLifecycle(events, false, true, loginServer, chatServer);
 
         lifecycle.start(new GameServer());
 
@@ -64,14 +60,12 @@ class GameServerNetworkLifecycleTest {
     void startAttachesLifecycleToServerForLegacyStop() throws Exception {
         List<String> events = new ArrayList<>();
         GameServer server = new GameServer();
-        GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            new RecordingGameServerNetworkGateway(
-                events,
-                false,
-                false,
-                new RecordingNetworkPeer("login", events),
-                new RecordingNetworkPeer("chat", events)
-            )
+        GameServerNetworkLifecycle lifecycle = new RecordingGameServerNetworkLifecycle(
+            events,
+            false,
+            false,
+            new RecordingNetworkPeer("login", events),
+            new RecordingNetworkPeer("chat", events)
         );
 
         lifecycle.start(server);
@@ -82,19 +76,10 @@ class GameServerNetworkLifecycleTest {
     }
 
     @Test
-    void usesServerNetworkGatewayCollaborator() {
-        assertEquals(GameServerNetworkGateway.class, fieldType("networkGateway"));
-    }
-
-    @Test
-    void networkGatewayBridgesNetworkServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "bannedMacManagerProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "loginServerProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "chatServerProvider"));
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameServerNetworkLifecycle.class, name);
+    void serverNetworkLifecycleBridgesNetworkServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkLifecycle.class, "bannedMacManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkLifecycle.class, "loginServerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkLifecycle.class, "chatServerProvider"));
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -105,16 +90,15 @@ class GameServerNetworkLifecycleTest {
         }
     }
 
-    private static final class RecordingGameServerNetworkGateway extends GameServerNetworkGateway {
+    private static final class RecordingGameServerNetworkLifecycle extends GameServerNetworkLifecycle {
 
         private final List<String> events;
         private final boolean bootEmbedded;
         private final boolean chatServerEnabled;
         private final RecordingNetworkPeer loginServer;
         private final RecordingNetworkPeer chatServer;
-        private final IncrementingClock clock = new IncrementingClock();
 
-        private RecordingGameServerNetworkGateway(
+        private RecordingGameServerNetworkLifecycle(
             List<String> events,
             boolean bootEmbedded,
             boolean chatServerEnabled,
@@ -129,38 +113,33 @@ class GameServerNetworkLifecycleTest {
         }
 
         @Override
-        public boolean isBootEmbedded() {
+        protected boolean isBootEmbedded() {
             return bootEmbedded;
         }
 
         @Override
-        public boolean isChatServerEnabled() {
+        protected boolean isChatServerEnabled() {
             return chatServerEnabled;
         }
 
         @Override
-        public ServerTransport createNettyTransport() {
+        protected ServerTransport createNettyTransport() {
             return new RecordingTransport("netty", events);
         }
 
         @Override
-        public void initializeBannedMacManager() {
+        protected void initializeBannedMacManager() {
             events.add("bannedMac:init");
         }
 
         @Override
-        public GameServerNetworkLifecycle.NetworkPeer loginServer() {
+        protected NetworkPeer loginServer() {
             return loginServer;
         }
 
         @Override
-        public GameServerNetworkLifecycle.NetworkPeer chatServer() {
+        protected NetworkPeer chatServer() {
             return chatServer;
-        }
-
-        @Override
-        public long currentTimeMillis() {
-            return clock.getAsLong();
         }
     }
 
@@ -205,13 +184,4 @@ class GameServerNetworkLifecycleTest {
                 return 0;
             }
         }
-
-    private static final class IncrementingClock {
-
-        private long value;
-
-        private long getAsLong() {
-            return value++;
-        }
-    }
 }

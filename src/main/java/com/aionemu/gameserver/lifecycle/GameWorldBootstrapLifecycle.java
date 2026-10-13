@@ -1,87 +1,254 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.services.RoadService;
+import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.zone.ZoneService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 世界引导生命周期：驱动世界引导网关并记录加载状态。
- * World-bootstrap lifecycle: drives the world-bootstrap gateway and tracks load state.
+ * 世界引导生命周期：并行加载 IDFactory / Zone / Hotspot / Road / World，加载状态由基类承载。
+ * World-bootstrap lifecycle: loads IDFactory / Zone / Hotspot / Road / World in parallel; load
+ * state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameWorldBootstrapLifecycle {
+public class GameWorldBootstrapLifecycle extends GameStartupStage {
 
     /**
-     * 世界引导网关。
-     * World-bootstrap gateway.
+     * 启动进度报告器。
+     * Startup progress reporter.
      */
-    private final GameWorldBootstrapGateway worldBootstrapGateway;
+    private final StartupProgressReporter progressReporter;
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
+     * IDFactory 的可选提供者。
+     * Optional provider for IDFactory.
      */
-    private boolean loaded;
+    private ObjectProvider<IDFactory> idFactoryProvider;
 
     /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
+     * ZoneService 的可选提供者。
+     * Optional provider for ZoneService.
      */
-    private long loadTimeMillis = -1;
+    private ObjectProvider<ZoneService> zoneServiceProvider;
 
     /**
-     * 最近一次失败。
-     * Last failure, if any.
+     * HotspotTeleportService 的可选提供者。
+     * Optional provider for HotspotTeleportService.
      */
-    private Throwable lastFailure;
+    private ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider;
 
     /**
-     * 启动本阶段：执行世界引导。
-     * Start this stage: run world bootstrap.
+     * RoadService 的可选提供者。
+     * Optional provider for RoadService.
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
+    private ObjectProvider<RoadService> roadServiceProvider;
 
+    /**
+     * World 的可选提供者。
+     * Optional provider for World.
+     */
+    private ObjectProvider<World> worldProvider;
+
+
+    /**
+     * 默认构造：使用当前控制台进度报告器。
+     * Default constructor: uses the current-console progress reporter.
+     */
+    public GameWorldBootstrapLifecycle() {
+        this(ConsoleStartupProgressReporter.forCurrentConsole());
+    }
+
+    /**
+     * 使用指定进度报告器构造（包内/测试用）。
+     * Construct with a given progress reporter (package/test use).
+     * @param progressReporter 启动进度报告器 / Startup progress reporter
+     */
+    GameWorldBootstrapLifecycle(StartupProgressReporter progressReporter) {
+        this.progressReporter = progressReporter;
+    }
+
+    /**
+     * 注入 IDFactory 提供者。
+     * Inject the IDFactory provider.
+     * @param idFactoryProvider IDFactory 提供者 / IDFactory provider
+     */
+    @Autowired(required = false)
+    void setIdFactoryProvider(ObjectProvider<IDFactory> idFactoryProvider) {
+        this.idFactoryProvider = idFactoryProvider;
+    }
+
+    /**
+     * 注入 ZoneService 提供者。
+     * Inject the ZoneService provider.
+     * @param zoneServiceProvider ZoneService 提供者 / ZoneService provider
+     */
+    @Autowired(required = false)
+    void setZoneServiceProvider(ObjectProvider<ZoneService> zoneServiceProvider) {
+        this.zoneServiceProvider = zoneServiceProvider;
+    }
+
+    /**
+     * 注入 HotspotTeleportService 提供者。
+     * Inject the HotspotTeleportService provider.
+     * @param hotspotTeleportServiceProvider HotspotTeleportService 提供者 / HotspotTeleportService provider
+     */
+    @Autowired(required = false)
+    void setHotspotTeleportServiceProvider(ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider) {
+        this.hotspotTeleportServiceProvider = hotspotTeleportServiceProvider;
+    }
+
+    /**
+     * 注入 RoadService 提供者。
+     * Inject the RoadService provider.
+     * @param roadServiceProvider RoadService 提供者 / RoadService provider
+     */
+    @Autowired(required = false)
+    void setRoadServiceProvider(ObjectProvider<RoadService> roadServiceProvider) {
+        this.roadServiceProvider = roadServiceProvider;
+    }
+
+    /**
+     * 注入 World 提供者。
+     * Inject the World provider.
+     * @param worldProvider World 提供者 / World provider
+     */
+    @Autowired(required = false)
+    void setWorldProvider(ObjectProvider<World> worldProvider) {
+        this.worldProvider = worldProvider;
+    }
+
+
+    /**
+     * 启动本阶段：并行执行各引导步骤并报告进度。
+     * Start this stage: run bootstrap steps in parallel and report progress.
+     */
+    @Override
+    protected void runStage() {
         long start = System.currentTimeMillis();
+        progressReporter.start("game world");
         try {
-            worldBootstrapGateway.bootstrap();
-            loaded = true;
-            lastFailure = null;
+            loadStepsInParallel(List.of(
+                new BootstrapStep("IDFactory", this::initializeIDFactory),
+                new BootstrapStep("Zone", this::loadZoneService),
+                new BootstrapStep("Hotspot Teleport", this::initializeHotspotTeleportService),
+                new BootstrapStep("Road", this::initializeRoadService),
+                new BootstrapStep("World", this::initializeWorld)
+            ));
+            progressReporter.finish("game world", System.currentTimeMillis() - start);
         } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
+            progressReporter.failed();
             throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
         }
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 初始化 IDFactory。
+     * Initialize IDFactory.
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    protected void initializeIDFactory() {
+        idFactoryProvider.getObject();
     }
 
     /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
+     * 加载 ZoneService。
+     * Load ZoneService.
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    protected void loadZoneService() {
+        zoneServiceProvider.getObject().load(null);
     }
 
     /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
+     * 初始化 HotspotTeleportService。
+     * Initialize HotspotTeleportService.
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    protected void initializeHotspotTeleportService() {
+        hotspotTeleportServiceProvider.getObject();
+    }
+
+    /**
+     * 初始化 RoadService。
+     * Initialize RoadService.
+     */
+    protected void initializeRoadService() {
+        roadServiceProvider.getObject();
+    }
+
+    /**
+     * 初始化 World。
+     * Initialize World.
+     */
+    protected void initializeWorld() {
+        worldProvider.getObject();
+    }
+
+
+    /**
+     * 执行单步加载并报告开始/结束。
+     * Run a single load step and report start/finish.
+     * @param stepName 步骤名 / Step name
+     * @param loader 加载逻辑 / Loader logic
+     */
+    private void loadStep(String stepName, Runnable loader) {
+        progressReporter.stepStarted(stepName);
+        loader.run();
+        progressReporter.stepFinished(stepName);
+    }
+
+    /**
+     * 用虚拟线程并行执行引导步骤。
+     * Run bootstrap steps in parallel with virtual threads.
+     * @param steps 引导步骤列表 / Bootstrap step list
+     */
+    private void loadStepsInParallel(List<BootstrapStep> steps) {
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<?>> futures = new ArrayList<>(steps.size());
+            for (BootstrapStep step : steps) {
+                futures.add(executor.submit(() -> loadStep(step.name(), step.loader())));
+            }
+            for (Future<?> future : futures) {
+                await(future);
+            }
+        }
+    }
+
+    /**
+     * 等待 Future 完成并展开异常。
+     * Await a Future and unwrap exceptions.
+     * @param future 待等待的 Future / Future to await
+     */
+    private void await(Future<?> future) {
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while loading game world", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            throw new IllegalStateException("Failed to load game world", cause);
+        }
+    }
+
+    /**
+     * 引导步骤：名称与加载逻辑。
+     * Bootstrap step: name and loader.
+     * 加载逻辑 / Loader logic
+     */
+    private record BootstrapStep(String name, Runnable loader) {
     }
 }

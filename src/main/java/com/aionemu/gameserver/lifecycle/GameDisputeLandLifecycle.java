@@ -1,87 +1,81 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.DisputeLandService;
+import com.aionemu.gameserver.services.OutpostService;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 争议之地生命周期：在启动序列中触发 gateway 并记录加载状态。
- * Lifecycle for dispute land: drives the gateway during startup and tracks load state.
+ * 争议之地生命周期：打印分区并初始化争议之地与前哨服务，加载状态由基类承载。
+ * Dispute-land lifecycle: prints the section and initializes dispute-land and outpost services;
+ * load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameDisputeLandLifecycle {
+public class GameDisputeLandLifecycle extends GameStartupStage {
 
     /**
-     * 争议之地网关。
-     * Dispute-land gateway.
+     * 争议之地服务提供者。
+     * Dispute-land service provider.
      */
-    private final GameDisputeLandGateway disputeLandGateway;
+    private ObjectProvider<DisputeLandService> disputeLandServiceProvider;
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
+     * 前哨服务提供者。
+     * Outpost service provider.
      */
-    private boolean loaded;
+    private ObjectProvider<OutpostService> outpostServiceProvider;
+
 
     /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
+     * 可选注入争议之地服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of dispute-land service.
+     * @param disputeLandServiceProvider 服务提供者 / Service provider
      */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败。
-     * Last failure, if any.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 启动本阶段：初始化争议之地与前哨。
-     * Start this stage: initialize dispute land and outposts.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            disputeLandGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Autowired(required = false)
+    void setDisputeLandServiceProvider(ObjectProvider<DisputeLandService> disputeLandServiceProvider) {
+        this.disputeLandServiceProvider = disputeLandServiceProvider;
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 可选注入前哨服务 {@link ObjectProvider}。
+     * Optionally inject the {@link ObjectProvider} of outpost service.
+     * @param outpostServiceProvider 服务提供者 / Service provider
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    @Autowired(required = false)
+    void setOutpostServiceProvider(ObjectProvider<OutpostService> outpostServiceProvider) {
+        this.outpostServiceProvider = outpostServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：打印分区并初始化争议之地与前哨。
+     * Start this stage: print section and init dispute land and outposts.
+     */
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.dispute_land"));
+        disputeLandService().initDisputeLand();
+        outpostService().initOutposts();
     }
 
     /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
+     * 解析争议之地服务：优先 Spring，否则经运行时桥回退。
+     * Resolve dispute-land service: prefer Spring, otherwise fall back via runtime bridge.
+     * @return 服务实例 / Service instance
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    private DisputeLandService disputeLandService() {
+        return disputeLandServiceProvider.getObject();
     }
 
     /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
+     * 解析前哨服务。
+     * Resolve outpost service.
+     * @return 服务实例 / Service instance
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private OutpostService outpostService() {
+        return outpostServiceProvider.getObject();
     }
 }

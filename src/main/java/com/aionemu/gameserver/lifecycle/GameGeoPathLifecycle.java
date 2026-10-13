@@ -1,84 +1,79 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 地理与 PATH 生命周期：委托网关初始化地理数据和真实 PATH。
- * Geo/path lifecycle: initializes geodata and retail path data via the gateway.
+ * 地理与 PATH 生命周期：初始化地理数据和真实 PATH，加载状态由基类承载。
+ * Geo/path lifecycle: initializes geodata and retail path data; load state is hosted by the
+ * base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameGeoPathLifecycle {
+public class GameGeoPathLifecycle extends GameStartupStage {
 
     /**
-     * 地理与 PATH 网关。
-     * Geo/path gateway.
+     * 地理服务提供者。
+     * Geo-service provider.
      */
-    private final GameGeoPathGateway geoPathGateway;
+    private ObjectProvider<GeoService> geoServiceProvider;
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
+     * PATH 服务提供者。
+     * Path-service provider.
      */
-    private boolean loaded;
-    /**
-     * 最近一次加载耗时（毫秒）；未启动为 -1。
-     * Last load duration in milliseconds; -1 if never started.
-     */
-    private long loadTimeMillis = -1;
-    /**
-     * 最近一次失败原因；成功时为 {@code null}。
-     * Last failure cause; {@code null} on success.
-     */
-    private Throwable lastFailure;
+    private ObjectProvider<PathService> pathServiceProvider;
 
     /**
-     * 启动地理与 PATH 初始化（幂等）。
-     * Start geo/path initialization (idempotent).
+     * 可选注入地理服务提供者。
+     * Optionally inject the geo-service provider.
+     * @param geoServiceProvider 地理服务提供者 / Geo-service provider
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            geoPathGateway.initialize();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Autowired(required = false)
+    void setGeoServiceProvider(ObjectProvider<GeoService> geoServiceProvider) {
+        this.geoServiceProvider = geoServiceProvider;
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 可选注入 PATH 服务提供者。
+     * Optionally inject the path-service provider.
+     * @param pathServiceProvider PATH 服务提供者 / Path-service provider
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    @Autowired(required = false)
+    void setPathServiceProvider(ObjectProvider<PathService> pathServiceProvider) {
+        this.pathServiceProvider = pathServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：初始化地理数据与 PATH。
+     * Start this stage: initialize geodata and path data.
+     */
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.geodata"));
+        geoService().initializeGeo();
+        pathService().initializePath();
     }
 
     /**
-     * 最近一次加载耗时（毫秒）。
-     * Last load duration in milliseconds.
-     * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
+     * 解析地理服务。
+     * Resolve the geo service.
+     * @return 地理服务 / Geo service
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    private GeoService geoService() {
+        return geoServiceProvider.getObject();
     }
 
     /**
-     * 最近一次失败原因。
-     * Last failure cause.
-     * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
+     * 解析 PATH 服务。
+     * Resolve the path service.
+     * @return PATH 服务 / Path service
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private PathService pathService() {
+        return pathServiceProvider.getObject();
     }
 }

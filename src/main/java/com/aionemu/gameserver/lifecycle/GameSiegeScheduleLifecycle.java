@@ -1,87 +1,80 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.BaseService;
+import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 攻城日程的生命周期封装：幂等启动并记录加载耗时与失败原因。
- * Lifecycle wrapper for siege schedule: idempotent start with load timing and failure capture.
+ * 攻城日程生命周期：初始化攻城与基地日程，加载状态由基类承载。
+ * Siege-schedule lifecycle: initializes sieges and bases; load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameSiegeScheduleLifecycle {
+public class GameSiegeScheduleLifecycle extends GameStartupStage {
 
     /**
-     * 攻城日程网关。
-     * Siege schedule gateway.
+     * 攻城服务提供者（可选）。
+     * Optional provider for the siege service.
      */
-    private final GameSiegeScheduleGateway siegeScheduleGateway;
+    private ObjectProvider<SiegeService> siegeServiceProvider;
 
     /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
+     * 基地服务提供者（可选）。
+     * Optional provider for the base service.
      */
-    private boolean loaded;
+    private ObjectProvider<BaseService> baseServiceProvider;
+
 
     /**
-     * 最近一次启动耗时（毫秒）；未启动为 -1。
-     * Last start duration in milliseconds; -1 if never started.
+     * 注入攻城服务提供者。
+     * Inject the siege service provider.
+     * @param siegeServiceProvider 攻城服务提供者 / Siege service provider
      */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败异常；成功时为 null。
-     * Last failure throwable; null after success.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 幂等启动攻城日程；已加载则直接返回。
-     * Idempotently start the siege schedule; no-op when already loaded.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            siegeScheduleGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
+    @Autowired(required = false)
+    void setSiegeServiceProvider(ObjectProvider<SiegeService> siegeServiceProvider) {
+        this.siegeServiceProvider = siegeServiceProvider;
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     * @return 已加载为 {@code true} / {@code true} when loaded
+     * 注入基地服务提供者。
+     * Inject the base service provider.
+     * @param baseServiceProvider 基地服务提供者 / Base service provider
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    @Autowired(required = false)
+    void setBaseServiceProvider(ObjectProvider<BaseService> baseServiceProvider) {
+        this.baseServiceProvider = baseServiceProvider;
+    }
+
+
+    /**
+     * 启动本阶段：打印攻城分区并初始化攻城与基地。
+     * Start this stage: print the sieges section and initialize sieges and bases.
+     */
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.sieges"));
+        siegeService().initSieges();
+        baseService().initBases();
     }
 
     /**
-     * 最近一次启动耗时（毫秒）。
-     * Last start duration in milliseconds.
-     * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
+     * 解析攻城服务。
+     * Resolve the siege service.
+     * @return 攻城服务 / Siege service
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    private SiegeService siegeService() {
+        return siegeServiceProvider.getObject();
     }
 
     /**
-     * 最近一次失败异常。
-     * Last failure throwable.
-     * @return 失败异常，无则为 null / throwable or null
+     * 解析基地服务。
+     * Resolve the base service.
+     * @return 基地服务 / Base service
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private BaseService baseService() {
+        return baseServiceProvider.getObject();
     }
 }

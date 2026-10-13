@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,14 +9,8 @@ import org.springframework.stereotype.Component;
  * Lifecycle for startup-log timing: idempotently capture the startup epoch and phase duration.
  */
 @Component
-@RequiredArgsConstructor
+@Slf4j
 public class GameStartupLogLifecycle {
-
-    /**
-     * 启动日志网关。
-     * Startup log gateway.
-     */
-    private final GameStartupLogGateway startupLogGateway;
 
     /**
      * 是否已成功加载。
@@ -53,7 +48,7 @@ public class GameStartupLogLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            startupTimeMillis = startupLogGateway.start();
+            startupTimeMillis = captureStartupLog();
             loaded = true;
             lastFailure = null;
             return startupTimeMillis;
@@ -65,6 +60,17 @@ public class GameStartupLogLifecycle {
         } finally {
             loadTimeMillis = System.currentTimeMillis() - start;
         }
+    }
+
+    /**
+     * 记录启动开始日志并返回当前时间作为启动计时原点。
+     * Log that the game server is starting and return the current time as the timing origin.
+     * @return 启动起点毫秒时间戳 / Startup epoch millis
+     */
+    protected long captureStartupLog() {
+        long startupTimeMillis = System.currentTimeMillis();
+        log.info(I18n.get("console.startup.gameserver_starting"));
+        return startupTimeMillis;
     }
 
     /**

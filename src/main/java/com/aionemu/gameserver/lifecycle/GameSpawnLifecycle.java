@@ -1,87 +1,25 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 /**
- * 刷怪/生成阶段的生命周期封装：幂等启动并记录加载耗时与失败原因。
- * Lifecycle wrapper for the spawn phase: idempotent start with load timing and failure capture.
+ * 刷怪/生成生命周期：打印 spawns 分区并调用 {@link SpawnEngine#spawnAll()}，加载状态由基类承载。
+ * Spawn lifecycle: prints the spawns section and invokes {@link SpawnEngine#spawnAll()};
+ * load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameSpawnLifecycle {
+public class GameSpawnLifecycle extends GameStartupStage {
 
     /**
-     * 刷怪网关。
-     * Spawn gateway.
+     * 启动本阶段：打印刷怪分区并生成全部刷怪点。
+     * Start this stage: print the spawns section and spawn all entities.
      */
-    private final GameSpawnGateway spawnGateway;
-
-    /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     */
-    private boolean loaded;
-
-    /**
-     * 最近一次启动耗时（毫秒）；未启动为 -1。
-     * Last start duration in milliseconds; -1 if never started.
-     */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败异常；成功时为 null。
-     * Last failure throwable; null after success.
-     */
-    private Throwable lastFailure;
-
-    /**
-     * 幂等执行全图刷怪；已加载则直接返回。
-     * Idempotently run world-wide spawns; no-op when already loaded.
-     */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = System.currentTimeMillis();
-        try {
-            spawnGateway.spawn();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
-        }
-    }
-
-    /**
-     * 是否已成功加载。
-     * Whether loading completed successfully.
-     * @return 已加载为 {@code true} / {@code true} when loaded
-     */
-    public synchronized boolean isLoaded() {
-        return loaded;
-    }
-
-    /**
-     * 最近一次启动耗时（毫秒）。
-     * Last start duration in milliseconds.
-     * @return 耗时毫秒；未启动为 -1 / duration ms, or -1 if never started
-     */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近一次失败异常。
-     * Last failure throwable.
-     * @return 失败异常，无则为 null / throwable or null
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    @Override
+    protected void runStage() {
+        Util.printSection(I18n.get("console.section.spawns"));
+        SpawnEngine.spawnAll();
     }
 }

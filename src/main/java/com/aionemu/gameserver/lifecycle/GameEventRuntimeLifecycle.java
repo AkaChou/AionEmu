@@ -1,84 +1,224 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.configs.main.EventsConfig;
+import com.aionemu.gameserver.configs.main.RankingConfig;
+import com.aionemu.gameserver.services.EventService;
+import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
+import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 事件运行时生命周期：委托网关启动事件与排名相关运行时服务。
- * Event-runtime lifecycle: starts event and ranking runtime services via the gateway.
+ * 事件运行时生命周期：按配置启动事件、排名更新、广播与临时刷怪，加载状态由基类承载。
+ * Event-runtime lifecycle: starts events, ranking updates, broadcasting, and temporary spawns per
+ * config; load state is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameEventRuntimeLifecycle {
+public class GameEventRuntimeLifecycle extends GameStartupStage {
 
     /**
-     * 事件运行时网关。
-     * Event-runtime gateway.
+     * 事件服务提供者。
+     * Event-service provider.
      */
-    private final GameEventRuntimeGateway eventRuntimeGateway;
+    private ObjectProvider<EventService> eventServiceProvider;
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
+     * 玩家事件服务提供者。
+     * Player-event service provider.
      */
-    private boolean loaded;
+    private ObjectProvider<PlayerEventService> playerEventServiceProvider;
     /**
-     * 最近一次加载耗时（毫秒）；未启动为 -1。
-     * Last load duration in milliseconds; -1 if never started.
+     * 疯狂守护者服务提供者。
+     * Crazy-Daeva service provider.
      */
-    private long loadTimeMillis = -1;
+    private ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
     /**
-     * 最近一次失败原因；成功时为 {@code null}。
-     * Last failure cause; {@code null} on success.
+     * 欧比斯排名更新服务提供者。
+     * Abyss-rank update service provider.
      */
-    private Throwable lastFailure;
+    private ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
+    /**
+     * 数据包广播器提供者。
+     * Packet-broadcaster provider.
+     */
+    private ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
 
     /**
-     * 启动事件运行时（幂等）。
-     * Start the event runtime (idempotent).
+     * 可选注入事件服务提供者。
+     * Optionally inject the event-service provider.
+     * @param eventServiceProvider 事件服务提供者 / Event-service provider
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
+    @Autowired(required = false)
+    void setEventServiceProvider(ObjectProvider<EventService> eventServiceProvider) {
+        this.eventServiceProvider = eventServiceProvider;
+    }
+
+    /**
+     * 可选注入玩家事件服务提供者。
+     * Optionally inject the player-event service provider.
+     * @param playerEventServiceProvider 玩家事件服务提供者 / Player-event service provider
+     */
+    @Autowired(required = false)
+    void setPlayerEventServiceProvider(ObjectProvider<PlayerEventService> playerEventServiceProvider) {
+        this.playerEventServiceProvider = playerEventServiceProvider;
+    }
+
+    /**
+     * 可选注入疯狂守护者服务提供者。
+     * Optionally inject the Crazy-Daeva service provider.
+     * @param crazyDaevaServiceProvider 疯狂守护者服务提供者 / Crazy-Daeva service provider
+     */
+    @Autowired(required = false)
+    void setCrazyDaevaServiceProvider(ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider) {
+        this.crazyDaevaServiceProvider = crazyDaevaServiceProvider;
+    }
+
+    /**
+     * 可选注入欧比斯排名更新服务提供者。
+     * Optionally inject the abyss-rank update service provider.
+     * @param abyssRankUpdateServiceProvider 欧比斯排名更新服务提供者 / Abyss-rank update service provider
+     */
+    @Autowired(required = false)
+    void setAbyssRankUpdateServiceProvider(ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider) {
+        this.abyssRankUpdateServiceProvider = abyssRankUpdateServiceProvider;
+    }
+
+    /**
+     * 可选注入数据包广播器提供者。
+     * Optionally inject the packet-broadcaster provider.
+     * @param packetBroadcasterProvider 数据包广播器提供者 / Packet-broadcaster provider
+     */
+    @Autowired(required = false)
+    void setPacketBroadcasterProvider(ObjectProvider<PacketBroadcaster> packetBroadcasterProvider) {
+        this.packetBroadcasterProvider = packetBroadcasterProvider;
+    }
+
+    /**
+     * 启动本阶段：按开关启停各子系统并调度排名更新。
+     * Start this stage: enable subsystems per flags and schedule ranking updates.
+     */
+    @Override
+    protected void runStage() {
+        printEventsSection();
+        if (isEventServiceEnabled()) {
+            eventService().start();
         }
-
-        long start = System.currentTimeMillis();
-        try {
-            eventRuntimeGateway.start();
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
+        if (isPlayerEventEnabled()) {
+            playerEventService();
         }
+        if (isCrazyDaevaEnabled()) {
+            crazyDaevaService().startTimer();
+        }
+        AbyssRankUpdateService abyssRankUpdateService = abyssRankUpdateService();
+        if (isTopRankingUpdateEnabled()) {
+            abyssRankUpdateService.scheduleUpdateHour();
+        } else {
+            abyssRankUpdateService.scheduleUpdateMinute();
+        }
+        abyssRankUpdateService.initRewardWeeklyManager();
+        packetBroadcaster();
+        spawnTemporarySpawns();
     }
 
     /**
-     * 是否已成功加载。
-     * Whether loading has completed successfully.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 打印事件分区标题。
+     * Print the events section header.
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    private void printEventsSection() {
+        Util.printSection(I18n.get("console.section.events"));
     }
 
     /**
-     * 最近一次加载耗时（毫秒）。
-     * Last load duration in milliseconds.
-     * @return 耗时毫秒数；未启动为 -1 / Duration ms; -1 if never started
+     * 事件服务是否启用。
+     * Whether the event service is enabled.
+     * @return 启用则 true / true when enabled
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
+    private boolean isEventServiceEnabled() {
+        return EventsConfig.ENABLE_EVENT_SERVICE;
     }
 
     /**
-     * 最近一次失败原因。
-     * Last failure cause.
-     * @return 失败异常；成功为 {@code null} / Failure throwable; {@code null} on success
+     * 玩家事件是否启用。
+     * Whether player events are enabled.
+     * @return 启用则 true / true when enabled
      */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    private boolean isPlayerEventEnabled() {
+        return EventsConfig.EVENT_ENABLED;
+    }
+
+    /**
+     * 疯狂守护者是否启用。
+     * Whether Crazy Daeva is enabled.
+     * @return 启用则 true / true when enabled
+     */
+    private boolean isCrazyDaevaEnabled() {
+        return EventsConfig.ENABLE_CRAZY;
+    }
+
+    /**
+     * 排名更新开关是否为小时级。
+     * Whether the ranking update switch is hourly.
+     * @return 小时级则 true / true for hourly
+     */
+    private boolean isTopRankingUpdateEnabled() {
+        return RankingConfig.TOP_RANKING_UPDATE_SETTING;
+    }
+
+    /**
+     * 生成临时刷怪。
+     * Spawn the temporary spawns.
+     */
+    private void spawnTemporarySpawns() {
+        TemporarySpawnEngine.spawnAll();
+    }
+
+    /**
+     * 解析事件服务。
+     * Resolve the event service.
+     * @return 事件服务 / Event service
+     */
+    private EventService eventService() {
+        return eventServiceProvider.getObject();
+    }
+
+    /**
+     * 解析玩家事件服务。
+     * Resolve the player-event service.
+     * @return 玩家事件服务 / Player-event service
+     */
+    private PlayerEventService playerEventService() {
+        return playerEventServiceProvider.getObject();
+    }
+
+    /**
+     * 解析疯狂守护者服务。
+     * Resolve the Crazy-Daeva service.
+     * @return 疯狂守护者服务 / Crazy-Daeva service
+     */
+    private CrazyDaevaService crazyDaevaService() {
+        return crazyDaevaServiceProvider.getObject();
+    }
+
+    /**
+     * 解析欧比斯排名更新服务。
+     * Resolve the abyss-rank update service.
+     * @return 欧比斯排名更新服务 / Abyss-rank update service
+     */
+    private AbyssRankUpdateService abyssRankUpdateService() {
+        return abyssRankUpdateServiceProvider.getObject();
+    }
+
+    /**
+     * 解析数据包广播器。
+     * Resolve the packet broadcaster.
+     * @return 数据包广播器 / Packet broadcaster
+     */
+    private PacketBroadcaster packetBroadcaster() {
+        return packetBroadcasterProvider.getObject();
     }
 }

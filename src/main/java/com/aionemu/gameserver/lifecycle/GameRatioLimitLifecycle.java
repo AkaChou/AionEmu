@@ -1,89 +1,42 @@
 package com.aionemu.gameserver.lifecycle;
 
-import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.GameServer;
+import com.aionemu.gameserver.configs.main.GSConfig;
 import org.springframework.stereotype.Component;
 
 /**
- * 种族比例限制生命周期：在启动序列中触发 gateway 并记录加载状态。
- * Lifecycle for race-ratio limit: drives the gateway during startup and tracks load state.
+ * 种族比例限制生命周期：若启用则注册比例限制启动钩子，加载状态由基类承载。
+ * Lifecycle for race-ratio limit: registers the ratio-limit startup hook when enabled; load state
+ * is hosted by the base class.
  */
 @Component
-@RequiredArgsConstructor
-public class GameRatioLimitLifecycle {
-
-    /**
-     * 种族比例限制网关。
-     * Race-ratio-limit gateway.
-     */
-    private final GameRatioLimitGateway ratioLimitGateway;
-
-    /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     */
-    private boolean loaded;
-
-    /**
-     * 加载耗时毫秒；未启动前为 -1。
-     * Load time in milliseconds; {@code -1} before start.
-     */
-    private long loadTimeMillis = -1;
-
-    /**
-     * 最近一次失败。
-     * Last failure, if any.
-     */
-    private Throwable lastFailure;
+public class GameRatioLimitLifecycle extends GameStartupStage {
 
     /**
      * 启动本阶段：若启用则注册比例限制启动钩子。
      * Start this stage: register the ratio-limit startup hook when enabled.
      */
-    public synchronized void start() {
-        if (loaded) {
-            return;
-        }
-
-        long start = ratioLimitGateway.currentTimeMillis();
-        try {
-            if (ratioLimitGateway.isRatioLimitationEnabled()) {
-                ratioLimitGateway.registerRatioLimitStartupHook();
-            }
-            loaded = true;
-            lastFailure = null;
-        } catch (RuntimeException | Error e) {
-            loaded = false;
-            lastFailure = e;
-            throw e;
-        } finally {
-            loadTimeMillis = ratioLimitGateway.currentTimeMillis() - start;
+    @Override
+    protected void runStage() {
+        if (isRatioLimitationEnabled()) {
+            registerRatioLimitStartupHook();
         }
     }
 
     /**
-     * 是否已加载。
-     * Whether this stage is loaded.
-     * @return 已加载为 {@code true} / {@code true} if loaded
+     * 种族比例限制是否已启用。
+     * Whether race-ratio limitation is enabled.
+     * @return 已启用为 {@code true} / {@code true} if enabled
      */
-    public synchronized boolean isLoaded() {
-        return loaded;
+    protected boolean isRatioLimitationEnabled() {
+        return GSConfig.ENABLE_RATIO_LIMITATION;
     }
 
     /**
-     * 加载耗时毫秒。
-     * Load time in milliseconds.
-     * @return 耗时毫秒，未启动为 -1 / Elapsed millis, or {@code -1} if not started
+     * 注册种族比例限制启动钩子。
+     * Register the race-ratio-limit startup hook.
      */
-    public synchronized long getLoadTimeMillis() {
-        return loadTimeMillis;
-    }
-
-    /**
-     * 最近失败。
-     * Last failure.
-     * @return 最近异常，无则为 null / Last throwable, or {@code null}
-     */
-    public synchronized Throwable getLastFailure() {
-        return lastFailure;
+    protected void registerRatioLimitStartupHook() {
+        GameServer.registerRatioLimitStartupHook();
     }
 }

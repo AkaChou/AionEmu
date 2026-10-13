@@ -13,14 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameRewardServicesLifecycleTest {
 
     @Test
-    void usesRewardServicesGatewayCollaborator() {
-        assertEquals(GameRewardServicesGateway.class, fieldType("rewardServicesGateway"));
-    }
-
-    @Test
-    void rewardGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "rewardServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "veteranRewardsServiceProvider"));
+    void rewardLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesLifecycle.class, "rewardServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesLifecycle.class, "veteranRewardsServiceProvider"));
     }
 
 
@@ -43,19 +38,17 @@ class GameRewardServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         AtomicInteger rewardReads = new AtomicInteger();
         AtomicInteger veteranReads = new AtomicInteger();
-        GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
-            new RecordingGameRewardServicesGateway(
-                events,
-                () -> {
-                    rewardReads.incrementAndGet();
-                    return false;
-                },
-                () -> {
-                    veteranReads.incrementAndGet();
-                    return false;
-                },
-                null
-            )
+        GameRewardServicesLifecycle lifecycle = new RecordingGameRewardServicesLifecycle(
+            events,
+            () -> {
+                rewardReads.incrementAndGet();
+                return false;
+            },
+            () -> {
+                veteranReads.incrementAndGet();
+                return false;
+            },
+            null
         );
 
         lifecycle.start();
@@ -70,13 +63,11 @@ class GameRewardServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("reward services failed");
-        GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
-            new RecordingGameRewardServicesGateway(
-                events,
-                () -> true,
-                () -> true,
-                failure
-            )
+        GameRewardServicesLifecycle lifecycle = new RecordingGameRewardServicesLifecycle(
+            events,
+            () -> true,
+            () -> true,
+            failure
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
@@ -97,18 +88,12 @@ class GameRewardServicesLifecycleTest {
         boolean rewardEnabled,
         boolean veteranRewardsEnabled
     ) {
-        return new GameRewardServicesLifecycle(
-            new RecordingGameRewardServicesGateway(
-                events,
-                () -> rewardEnabled,
-                () -> veteranRewardsEnabled,
-                null
-            )
+        return new RecordingGameRewardServicesLifecycle(
+            events,
+            () -> rewardEnabled,
+            () -> veteranRewardsEnabled,
+            null
         );
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameRewardServicesLifecycle.class, name);
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -120,14 +105,14 @@ class GameRewardServicesLifecycleTest {
         }
     }
 
-    private static final class RecordingGameRewardServicesGateway extends GameRewardServicesGateway {
+    private static final class RecordingGameRewardServicesLifecycle extends GameRewardServicesLifecycle {
 
         private final List<String> events;
         private final BooleanSupplier rewardEnabled;
         private final BooleanSupplier veteranRewardsEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameRewardServicesGateway(
+        private RecordingGameRewardServicesLifecycle(
             List<String> events,
             BooleanSupplier rewardEnabled,
             BooleanSupplier veteranRewardsEnabled,
@@ -140,16 +125,26 @@ class GameRewardServicesLifecycleTest {
         }
 
         @Override
-        public void start() {
-            if (rewardEnabled.getAsBoolean()) {
+        protected void runStage() {
+            if (isRewardServiceEnabled()) {
                 events.add("reward");
                 if (events.size() == 1 && firstFailure != null) {
                     throw firstFailure;
                 }
             }
-            if (veteranRewardsEnabled.getAsBoolean()) {
+            if (isVeteranRewardsEnabled()) {
                 events.add("veteranRewards");
             }
+        }
+
+        @Override
+        protected boolean isRewardServiceEnabled() {
+            return rewardEnabled.getAsBoolean();
+        }
+
+        @Override
+        protected boolean isVeteranRewardsEnabled() {
+            return veteranRewardsEnabled.getAsBoolean();
         }
     }
 }

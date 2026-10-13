@@ -15,36 +15,30 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameEnginesLifecycleTest {
 
     @Test
-    void usesEnginesGatewayCollaborator() {
-        assertEquals(GameEnginesGateway.class, fieldType("enginesGateway"));
-    }
-
-    @Test
-    void enginesGatewayBridgesEnginesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "questEngineProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "instanceEngineProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "ai2EngineProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "chatProcessorProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "threadPoolManagerProvider"));
+    void enginesLifecycleBridgesEnginesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesLifecycle.class, "questEngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesLifecycle.class, "instanceEngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesLifecycle.class, "ai2EngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesLifecycle.class, "chatProcessorProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesLifecycle.class, "threadPoolManagerProvider"));
     }
 
     @Test
     void startSubmitsEachEngineLoadOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         List<Runnable> submittedTasks = new ArrayList<>();
-        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            new RecordingGameEnginesGateway(
-                List.of(
-                    new RecordingEngine("quest", events),
-                    new RecordingEngine("instance", events),
-                    new RecordingEngine("ai", events),
-                    new RecordingEngine("chat", events)
-                ),
-                task -> {
-                    submittedTasks.add(task);
-                    task.run();
-                }
-            ));
+        GameEnginesLifecycle lifecycle = new RecordingGameEnginesLifecycle(
+            List.of(
+                new RecordingEngine("quest", events),
+                new RecordingEngine("instance", events),
+                new RecordingEngine("ai", events),
+                new RecordingEngine("chat", events)
+            ),
+            task -> {
+                submittedTasks.add(task);
+                task.run();
+            }
+        );
 
         lifecycle.start();
         lifecycle.start();
@@ -59,13 +53,12 @@ class GameEnginesLifecycleTest {
     @Test
     void preloadProductionCatalogStartsOnceWithoutMarkingEnginesLoaded() {
         List<String> events = new ArrayList<>();
-        RecordingGameEnginesGateway gateway = new RecordingGameEnginesGateway(List.of(), Runnable::run);
-        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(gateway);
+        RecordingGameEnginesLifecycle lifecycle = new RecordingGameEnginesLifecycle(List.of(), Runnable::run);
 
         lifecycle.preloadProductionCatalog();
         lifecycle.preloadProductionCatalog();
 
-        assertEquals(1, gateway.preloadCount);
+        assertEquals(1, lifecycle.preloadCount);
         assertFalse(lifecycle.isLoaded());
         assertTrue(events.isEmpty());
     }
@@ -80,12 +73,11 @@ class GameEnginesLifecycleTest {
         for (int i = 0; i < engineCount; i++) {
             engines.add(new BlockingEngine(allStarted, releaseEngines));
         }
-        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            new RecordingGameEnginesGateway(engines, task -> {
-                Thread worker = new Thread(task);
-                workers.add(worker);
-                worker.start();
-            }));
+        GameEnginesLifecycle lifecycle = new RecordingGameEnginesLifecycle(engines, task -> {
+            Thread worker = new Thread(task);
+            workers.add(worker);
+            worker.start();
+        });
 
         Thread starter = new Thread(lifecycle::start);
         starter.start();
@@ -111,8 +103,7 @@ class GameEnginesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("engine failed");
         FailingOnceEngine engine = new FailingOnceEngine(events, failure);
-        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            new RecordingGameEnginesGateway(List.of(engine), Runnable::run));
+        GameEnginesLifecycle lifecycle = new RecordingGameEnginesLifecycle(List.of(engine), Runnable::run);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -129,8 +120,7 @@ class GameEnginesLifecycleTest {
 
     @Test
     void interruptedWaitRestoresInterruptFlagAndMarksLoaded() {
-        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            new RecordingGameEnginesGateway(List.of(), Runnable::run));
+        GameEnginesLifecycle lifecycle = new RecordingGameEnginesLifecycle(List.of(), Runnable::run);
 
         Thread.currentThread().interrupt();
         try {
@@ -143,10 +133,6 @@ class GameEnginesLifecycleTest {
         }
     }
 
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameEnginesLifecycle.class, name);
-    }
-
     private static Class<?> fieldType(Class<?> type, String name) {
         try {
             Field field = type.getDeclaredField(name);
@@ -156,13 +142,13 @@ class GameEnginesLifecycleTest {
         }
     }
 
-    private static final class RecordingGameEnginesGateway extends GameEnginesGateway {
+    private static final class RecordingGameEnginesLifecycle extends GameEnginesLifecycle {
 
         private final List<GameEngine> engines;
         private final Consumer<Runnable> taskExecutor;
         private int preloadCount;
 
-        private RecordingGameEnginesGateway(
+        private RecordingGameEnginesLifecycle(
             List<GameEngine> engines,
             Consumer<Runnable> taskExecutor
         ) {
@@ -171,21 +157,21 @@ class GameEnginesLifecycleTest {
         }
 
         @Override
-        public void printSection() {
+        protected void printSection() {
         }
 
         @Override
-        public List<GameEngine> engines() {
+        protected List<GameEngine> engines() {
             return engines;
         }
 
         @Override
-        public void execute(Runnable runnable) {
+        protected void execute(Runnable runnable) {
             taskExecutor.accept(runnable);
         }
 
         @Override
-        public void preloadProductionCatalog() {
+        protected void preloadQuestCatalog() {
             preloadCount++;
         }
     }

@@ -32,7 +32,7 @@ class GameMovementLoopServicesTest {
                 .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/PlayerMoveTaskManager.java")))
                 .filter(path -> !path.endsWith(Path.of("world/zone/ZoneUpdateService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameMovementLoopServices.java")))
-                .filter(path -> !path.endsWith(Path.of("lifecycle/GameMovementLoopGateway.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameStaticDataLifecycle.java")))
                 .toList();
         }
 

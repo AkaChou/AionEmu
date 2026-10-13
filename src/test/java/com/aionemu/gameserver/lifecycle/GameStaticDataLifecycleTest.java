@@ -25,13 +25,12 @@ class GameStaticDataLifecycleTest {
     private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
-    void usesStaticDataGatewayCollaborator() {
-        assertEquals(GameStaticDataGateway.class, fieldType("staticDataGateway"));
-    }
-
-    @Test
-    void staticDataGatewayBridgesLegacyDataManagerThroughSpringProvider() {
-        assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "dataManagerProvider"));
+    void staticDataLifecycleBridgesLegacyDataManagerAndMovementLoopsThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "dataManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "movementNotifyTaskProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "moveTaskManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "playerMoveTaskManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "zoneUpdateServiceProvider"));
     }
 
 
@@ -73,8 +72,7 @@ class GameStaticDataLifecycleTest {
     void staticDataLifecycleInitializesMovementLoopsAfterStaticData() {
         AtomicInteger loads = new AtomicInteger();
         AtomicInteger movementLoops = new AtomicInteger();
-        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
-        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(movementLoops)));
+        GameStaticDataLifecycle lifecycle = new RecordingGameStaticDataLifecycle(loads, movementLoops, null);
 
         lifecycle.start();
         lifecycle.start();
@@ -103,8 +101,7 @@ class GameStaticDataLifecycleTest {
     @Test
     void startLoadsStaticDataOnceAndRecordsLoadTime() {
         AtomicInteger loads = new AtomicInteger();
-        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
-        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
+        GameStaticDataLifecycle lifecycle = new RecordingGameStaticDataLifecycle(loads, new AtomicInteger(), null);
 
         lifecycle.start();
         lifecycle.start();
@@ -119,8 +116,7 @@ class GameStaticDataLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         AtomicInteger loads = new AtomicInteger();
         IllegalStateException failure = new IllegalStateException("static data failed");
-        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, failure));
-        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
+        GameStaticDataLifecycle lifecycle = new RecordingGameStaticDataLifecycle(loads, new AtomicInteger(), failure);
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -135,35 +131,28 @@ class GameStaticDataLifecycleTest {
 		assertNull(lifecycle.getLastFailure());
     }
 
-    private static final class RecordingGameStaticDataGateway extends GameStaticDataGateway {
+    private static final class RecordingGameStaticDataLifecycle extends GameStaticDataLifecycle {
 
         private final AtomicInteger loads;
+        private final AtomicInteger movementLoops;
         private final RuntimeException firstFailure;
 
-        private RecordingGameStaticDataGateway(AtomicInteger loads, RuntimeException firstFailure) {
+        private RecordingGameStaticDataLifecycle(AtomicInteger loads, AtomicInteger movementLoops, RuntimeException firstFailure) {
             this.loads = loads;
+            this.movementLoops = movementLoops;
             this.firstFailure = firstFailure;
         }
 
         @Override
-        public void load() {
+        protected void loadStaticData() {
             if (loads.incrementAndGet() == 1 && firstFailure != null) {
                 throw firstFailure;
             }
         }
-    }
-
-    private static final class RecordingGameMovementLoopGateway extends GameMovementLoopGateway {
-
-        private final AtomicInteger starts;
-
-        private RecordingGameMovementLoopGateway(AtomicInteger starts) {
-            this.starts = starts;
-        }
 
         @Override
-        public void initialize() {
-            starts.incrementAndGet();
+        protected void initializeMovementLoops() {
+            movementLoops.incrementAndGet();
         }
     }
 
@@ -171,10 +160,6 @@ class GameStaticDataLifecycleTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
-    }
-
-    private static Class<?> fieldType(String name) {
-        return fieldType(GameStaticDataLifecycle.class, name);
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {

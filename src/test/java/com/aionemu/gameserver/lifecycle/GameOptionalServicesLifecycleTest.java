@@ -13,15 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameOptionalServicesLifecycleTest {
 
     @Test
-    void usesOptionalServicesGatewayCollaborator() {
-        assertEquals(GameOptionalServicesGateway.class, fieldType("optionalServicesGateway"));
-    }
-
-    @Test
-    void optionalServicesGatewayBridgesLegacyServicesThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "playerLimitServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "npcShoutsServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "shieldServiceProvider"));
+    void optionalServicesLifecycleBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesLifecycle.class, "playerLimitServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesLifecycle.class, "npcShoutsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesLifecycle.class, "shieldServiceProvider"));
     }
 
 
@@ -45,23 +40,21 @@ class GameOptionalServicesLifecycleTest {
         AtomicInteger limitReads = new AtomicInteger();
         AtomicInteger shoutReads = new AtomicInteger();
         AtomicInteger shieldReads = new AtomicInteger();
-        GameOptionalServicesLifecycle lifecycle = new GameOptionalServicesLifecycle(
-            new RecordingGameOptionalServicesGateway(
-                events,
-                () -> {
-                    limitReads.incrementAndGet();
-                    return false;
-                },
-                () -> {
-                    shoutReads.incrementAndGet();
-                    return true;
-                },
-                () -> {
-                    shieldReads.incrementAndGet();
-                    return false;
-                },
-                null
-            )
+        GameOptionalServicesLifecycle lifecycle = new RecordingGameOptionalServicesLifecycle(
+            events,
+            () -> {
+                limitReads.incrementAndGet();
+                return false;
+            },
+            () -> {
+                shoutReads.incrementAndGet();
+                return true;
+            },
+            () -> {
+                shieldReads.incrementAndGet();
+                return false;
+            },
+            null
         );
 
         lifecycle.start();
@@ -77,14 +70,12 @@ class GameOptionalServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("optional services failed");
-        GameOptionalServicesLifecycle lifecycle = new GameOptionalServicesLifecycle(
-            new RecordingGameOptionalServicesGateway(
-                events,
-                () -> true,
-                () -> true,
-                () -> true,
-                failure
-            )
+        GameOptionalServicesLifecycle lifecycle = new RecordingGameOptionalServicesLifecycle(
+            events,
+            () -> true,
+            () -> true,
+            () -> true,
+            failure
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
@@ -106,24 +97,13 @@ class GameOptionalServicesLifecycleTest {
         boolean npcShoutsEnabled,
         boolean siegeShieldEnabled
     ) {
-        return new GameOptionalServicesLifecycle(
-            new RecordingGameOptionalServicesGateway(
-                events,
-                () -> limitsEnabled,
-                () -> npcShoutsEnabled,
-                () -> siegeShieldEnabled,
-                null
-            )
+        return new RecordingGameOptionalServicesLifecycle(
+            events,
+            () -> limitsEnabled,
+            () -> npcShoutsEnabled,
+            () -> siegeShieldEnabled,
+            null
         );
-    }
-
-    private static Class<?> fieldType(String name) {
-        try {
-            Field field = GameOptionalServicesLifecycle.class.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {
@@ -135,7 +115,7 @@ class GameOptionalServicesLifecycleTest {
         }
     }
 
-    private static final class RecordingGameOptionalServicesGateway extends GameOptionalServicesGateway {
+    private static final class RecordingGameOptionalServicesLifecycle extends GameOptionalServicesLifecycle {
 
         private final List<String> events;
         private final BooleanSupplier limitsEnabled;
@@ -143,7 +123,7 @@ class GameOptionalServicesLifecycleTest {
         private final BooleanSupplier siegeShieldEnabled;
         private final RuntimeException firstFailure;
 
-        private RecordingGameOptionalServicesGateway(
+        private RecordingGameOptionalServicesLifecycle(
             List<String> events,
             BooleanSupplier limitsEnabled,
             BooleanSupplier npcShoutsEnabled,
@@ -158,19 +138,34 @@ class GameOptionalServicesLifecycleTest {
         }
 
         @Override
-        public void start() {
-            if (limitsEnabled.getAsBoolean()) {
+        protected void runStage() {
+            if (isLimitsEnabled()) {
                 events.add("playerLimit");
             }
-            if (npcShoutsEnabled.getAsBoolean()) {
+            if (isNpcShoutsEnabled()) {
                 events.add("npcShouts");
                 if (events.size() == 2 && firstFailure != null) {
                     throw firstFailure;
                 }
             }
-            if (siegeShieldEnabled.getAsBoolean()) {
+            if (isSiegeShieldEnabled()) {
                 events.add("shield");
             }
+        }
+
+        @Override
+        protected boolean isLimitsEnabled() {
+            return limitsEnabled.getAsBoolean();
+        }
+
+        @Override
+        protected boolean isNpcShoutsEnabled() {
+            return npcShoutsEnabled.getAsBoolean();
+        }
+
+        @Override
+        protected boolean isSiegeShieldEnabled() {
+            return siegeShieldEnabled.getAsBoolean();
         }
     }
 }

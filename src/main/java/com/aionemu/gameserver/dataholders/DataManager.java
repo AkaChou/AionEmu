@@ -179,11 +179,11 @@ public final class DataManager {
      * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
      * Returns the instance, which must be supplied by Spring.
      * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
-     * 静态数据加载由启动流程（{@code GameStaticDataGateway.load()}）在 Spring 单例锁之外显式触发，
+     * 静态数据加载由启动流程（{@code GameStaticDataLifecycle.loadStaticData()}）在 Spring 单例锁之外显式触发，
      * 本方法只负责解析实例，不再承担"补齐加载"的职责。
      * The legacy static fallback is retired: a missing provider now fails fast instead of silently creating
      * a second instance outside the container. Static-data loading is triggered explicitly by the startup
-     * flow ({@code GameStaticDataGateway.load()}) outside Spring's singleton lock; this method only
+     * flow ({@code GameStaticDataLifecycle.loadStaticData()}) outside Spring's singleton lock; this method only
      * resolves the instance.</p>
      * @return  由 Spring 提供的 DataManager 实例 / the Spring-provided DataManager instance.
      * @throws IllegalStateException provider 未注入或容器中没有该 Bean /

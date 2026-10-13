@@ -16,7 +16,6 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.aionemu.gameserver.lifecycle.GameServerNetworkGateway;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import org.slf4j.LoggerFactory;
@@ -151,7 +150,7 @@ public class GameServer {
 	 * Starts network services for client, login and chat servers.
 	 */
 	public void startServers() {
-		networkLifecycle = new GameServerNetworkLifecycle(new GameServerNetworkGateway());
+		networkLifecycle = new GameServerNetworkLifecycle();
 		networkLifecycle.start(this);
 	}
 
