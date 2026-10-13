@@ -57,6 +57,7 @@ import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -334,12 +335,17 @@ public final class QuestService {
 			PacketSendUtility.sendMessage(player, "You're GM! So system won't apply countNextRepeatTime()");
 		}
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-		// 完成即从客户端活动列表移除（进世界同步同型，见 PlayerEnterWorldService 的
-		// removeQuestFromClientList）：可重复任务下一轮接取由 addQuest 重新插入。2026-10-03
-		// 真机 80790：只发 action2 更新不移除 ⇒ 每轮接取的 action1 添加在客户端累积成多行。
-		// Completion also removes the row from the client's active list (same shape as the
-		// enter-world sync): without it, every re-accept's add-action piles up duplicate rows.
+		// 完成 = action2（UPDATE status=COMPLETE）+ action3（把它从客户端活动列表移入已完成列表）+ 已完成
+		// 列表。action3 必须与 SM_QUEST_COMPLETED_LIST 成对（同 PlayerEnterWorldService 登录同步的做法），
+		// 二者缺一都会损坏客户端任务列表：只发 action2 ⇒ 完成行留在活动列表，可重复任务下轮接取的 action1
+		// 在同一 id 上累积成多行；只发 action3 ⇒ 客户端按被移除处理并弹出「任务失败」（真机 80788）。
+		// Completion = action2 (UPDATE COMPLETE) + action3 (move the row into the completed list) + the
+		// completed list packet. action3 must be paired with SM_QUEST_COMPLETED_LIST (the same pairing the
+		// login sync uses); either half alone corrupts the client list — action2 alone leaves the completed
+		// row in the active list (duplicate rows on re-accept), action3 alone pops "quest failed" (live 80788).
 		PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(id));
+		PacketSendUtility.sendPacket(player,
+			new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
 		if (player.getController() != null) {
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();

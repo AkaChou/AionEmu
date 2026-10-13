@@ -87,6 +87,14 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 			: SM_QUEST_ACTION.updateQuest(plan.questId(), plan.nextStatus(), plan.nextPackedVariables());
 		PacketSendUtility.sendPacket(player, statePacket);
 		if (mode == QuestStateSyncMode.COMPLETION) {
+			// 完成 = action2（上方 UPDATE status=COMPLETE）+ action3（把该行从客户端活动列表移入已完成列表）
+			// + 已完成列表，action3 必须与 SM_QUEST_COMPLETED_LIST 成对（同 PlayerEnterWorldService 登录
+			// 同步）：只发 action2 ⇒ 完成行留在活动列表，可重复任务下轮接取的 action1 累积成多行；只发
+			// action3 ⇒ 客户端按被移除处理并弹出「任务失败」。
+			// Completion = the UPDATE above + action3 (move the row into the completed list) + the completed
+			// list; action3 must be paired with SM_QUEST_COMPLETED_LIST (the login-sync pairing). action2
+			// alone leaves the row in the active list (duplicate rows on re-accept); action3 alone pops
+			// "quest failed".
 			PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(plan.questId()));
 			PacketSendUtility.sendPacket(player,
 				new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
