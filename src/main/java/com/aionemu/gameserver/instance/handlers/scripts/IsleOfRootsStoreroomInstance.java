@@ -14,7 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -92,7 +92,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		if (dropItems == null) {
 			return;
 		}
@@ -105,19 +105,19 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215133: //Treasurer Hittite.
 				switch (Rnd.get(1, 3)) {
 					case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000056, 1)); //Krotan Armory Key.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 185000056, 1)); //Krotan Armory Key.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000057, 1)); //Krotan Supply Base Key.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 185000057, 1)); //Krotan Supply Base Key.
 					break;
 					case 3:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000058, 1)); //Krotan Operations Room Key.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 185000058, 1)); //Krotan Operations Room Key.
 					break;
 				}
 			break;
 			case 215135: //Weakened Krotan Lord.
 			case 215136: //Awakened Krotan Lord.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000060, 1)); //Krotan Gold Room Key.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 185000060, 1)); //Krotan Gold Room Key.
 			break;
         }
     }

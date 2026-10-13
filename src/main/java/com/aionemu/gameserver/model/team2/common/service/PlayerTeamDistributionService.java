@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 
@@ -14,7 +15,6 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -176,7 +176,7 @@ public class PlayerTeamDistributionService {
 			return;
 		}
 		if (winner.equals(team) && (!owner.getAi2().getName().equals("chest") || filteredStats.mentorCount == 0)) {
-			GameWorldServices.dropRegistrationService().registerDrop(owner, mostDamagePlayer, filteredStats.highestLevel, filteredStats.players);
+			DropRegistrationService.getInstance().registerDrop(owner, mostDamagePlayer, filteredStats.highestLevel, filteredStats.players);
 		}
 	}
 

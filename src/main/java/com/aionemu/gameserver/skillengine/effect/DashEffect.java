@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.skillengine.model.DashStatus;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 冲刺效果：对目标造成物理伤害，并将施法者位移到目标附近（避免完全重叠）。
@@ -74,7 +74,7 @@ public class DashEffect extends DamageEffect {
 			  vx = (x1 - x2) * (boundRadius/distance),
 			  vy = (y1 - y2) * (boundRadius/distance),
 			  vz = (z1 - z2) * (boundRadius/distance);
-		Vector3f pos = GameWorldServices.geoService().getClosestCollision(effected, x2 + vx, y2 + vy, z2 + vz, false, CollisionIntention.PHYSICAL.getId());
+		Vector3f pos = GeoService.getInstance().getClosestCollision(effected, x2 + vx, y2 + vy, z2 + vz, false, CollisionIntention.PHYSICAL.getId());
 		
 		effect.getSkill().setTargetPosition(pos.x, pos.y, pos.z, newHeading);
 	}

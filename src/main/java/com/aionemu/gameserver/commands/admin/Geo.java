@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.controllers.movement.NpcMoveController;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
@@ -37,9 +37,9 @@ public class Geo extends AdminCommand {
 			com.aionemu.gameserver.model.gameobjects.Creature subject = target instanceof com.aionemu.gameserver.model.gameobjects.Creature c ? c : player;
 			int worldId = subject.getWorldId();
 			float curZ = subject.getZ();
-			float geoZ = GameWorldServices.geoService().getZ(worldId, subject.getX(), subject.getY(), curZ, 100, subject.getInstanceId());
-			float terrainZ = GameWorldServices.geoService().getTerrainZ(worldId, subject.getX(), subject.getY());
-			float[] pathGround = GameWorldServices.pathService().projectGroundPoint(subject, subject.getX(), subject.getY(), curZ);
+			float geoZ = GeoService.getInstance().getZ(worldId, subject.getX(), subject.getY(), curZ, 100, subject.getInstanceId());
+			float terrainZ = GeoService.getInstance().getTerrainZ(worldId, subject.getX(), subject.getY());
+			float[] pathGround = PathService.getInstance().projectGroundPoint(subject, subject.getX(), subject.getY(), curZ);
 			String spawnInfo = "";
 			if (subject.getSpawn() != null) {
 				spawnInfo = " spawnZ=" + subject.getSpawn().getZ();
@@ -50,7 +50,7 @@ public class Geo extends AdminCommand {
 			return;
 		}
 		if ("path".startsWith(params[0])) {
-			PathService.Metrics metrics = GameWorldServices.pathService().metrics();
+			PathService.Metrics metrics = PathService.getInstance().metrics();
 			PacketSendUtility.sendMessage(player, String.format(
 					"PATH submitted=%d completed=%d rejected=%d timedOut=%d queueExpired=%d cacheHits=%d queued=%d active=%d avgQueueMicros=%d avgSearchMicros=%d",
 					metrics.submitted(), metrics.completed(), metrics.rejected(), metrics.timedOut(), metrics.queueExpired(),

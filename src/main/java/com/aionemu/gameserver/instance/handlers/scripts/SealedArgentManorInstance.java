@@ -20,7 +20,7 @@ import com.aionemu.gameserver.model.instance.instancereward.SealedArgentManorRew
 import com.aionemu.gameserver.model.instance.playerreward.SealedArgentManorPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -126,39 +126,39 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler {
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 237190: //Manor Usher.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000242, 1)); //Rechargeable Electric Fuel.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000242, 1)); //Rechargeable Electric Fuel.
 				break;
 			case 702816: //Argent Manor Treasure Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054117, 1)); //Argent Manor Composite Manastone Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054118, 1)); //Argent Manor Ancient Coin Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166100008, 5)); //Greater Supplements (Eternal).
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166100011, 5)); //Greater Supplements (Mythic).
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000119, 2)); //Superior Life Potion.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000122, 2)); //Superior Life Serum.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000120, 2)); //Superior Mana Potion.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000123, 2)); //Superior Mana Serum.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054117, 1)); //Argent Manor Composite Manastone Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054118, 1)); //Argent Manor Ancient Coin Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166100008, 5)); //Greater Supplements (Eternal).
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166100011, 5)); //Greater Supplements (Mythic).
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000119, 2)); //Superior Life Potion.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000122, 2)); //Superior Life Serum.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000120, 2)); //Superior Mana Potion.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000123, 2)); //Superior Mana Serum.
 				break;
 			case 237193: //Forgotten Zadra.
 			case 237194: //Lost Zadra.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //低级随从契约。 / Lesser Minion Contract.
 						break;
 					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //高级随从契约。 / Greater Minion Contract.
 						break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //大型随从契约。 / Major Minion Contract.
 						break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //可爱随从契约。 / Cute Minion Contract.
 						break;
 					case 5:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 						break;
 				}
 				break;

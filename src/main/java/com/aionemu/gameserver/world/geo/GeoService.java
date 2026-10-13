@@ -28,6 +28,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
  * 地理服务：统一入口，提供高度、视线、通行与碰撞查询。
@@ -39,6 +40,10 @@ public class GeoService {
 	 * 可选 Spring 单例提供者 / Optional Spring singleton provider
 	 */
 	private static volatile ObjectProvider<GeoService> instanceProvider;
+	/**
+	 * 已解析实例缓存；setInstanceProvider 重置。 / Resolved-instance cache; reset on provider change.
+	 */
+	private static volatile GeoService resolvedInstance;
 	/**
 	 * NPC ids excluded from geo handling / NPC ids excluded from geo handling
 	 * -- GETTER --
@@ -64,14 +69,19 @@ public class GeoService {
 	 *                               when no provider or bean is available
 	 */
 	public static GeoService getInstance() {
+		GeoService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<GeoService> provider = instanceProvider;
-		GeoService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("GeoService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -82,6 +92,7 @@ public class GeoService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<GeoService> instanceProvider) {
 		GeoService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -117,7 +128,7 @@ public class GeoService {
 	public void setDoorState(int worldId, int instanceId, int doorId, boolean isOpened) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).setDoorState(instanceId, doorId, isOpened);
-			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
+			PathService.getInstance().obstacleChanged(worldId, instanceId);
 		}
 	}
 
@@ -144,7 +155,7 @@ public class GeoService {
 	public void spawnPlaceableObject(int worldId, int instanceId, int staticId) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).spawnPlaceableObject(instanceId, staticId);
-			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
+			PathService.getInstance().obstacleChanged(worldId, instanceId);
 		}
 	}
 
@@ -159,7 +170,7 @@ public class GeoService {
 	public void despawnPlaceableObject(int worldId, int instanceId, int staticId) {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).despawnPlaceableObject(instanceId, staticId);
-			com.aionemu.gameserver.lifecycle.GameWorldServices.pathService().obstacleChanged(worldId, instanceId);
+			PathService.getInstance().obstacleChanged(worldId, instanceId);
 		}
 	}
 

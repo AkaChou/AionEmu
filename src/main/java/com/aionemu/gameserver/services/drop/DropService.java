@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -685,7 +684,7 @@ public class DropService {
 	}
 
 	private DropRegistrationService dropRegistrationService() {
-		return GameWorldServices.dropRegistrationService();
+		return DropRegistrationService.getInstance();
 	}
 
 	private static final class TempTradeDropPredicate extends ItemUpdatePredicate {

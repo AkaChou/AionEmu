@@ -18,7 +18,7 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.CoreGameplayServiceBindings;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
@@ -58,7 +58,7 @@ class RetailConditionSpawnEngineTest {
 	 * 测试内构造的世界服务门面。
 	 * World-service facade constructed by the test.
 	 */
-	private GameWorldServices gameWorldServices;
+	private WorldServiceBindings worldServiceBindings;
 
 	@BeforeEach
 	void installRetiredServiceProvider() {
@@ -71,14 +71,14 @@ class RetailConditionSpawnEngineTest {
 		// gameplay and world facades explicitly so despawn paths can resolve the drop service.
 		coreGameplayServices = new CoreGameplayServiceBindings(
 			provider(DropService.class, dropService), null, null, null, null, null, null, null);
-		gameWorldServices = new GameWorldServices(null, null,
+		worldServiceBindings = new WorldServiceBindings(null, null,
 			provider(DropRegistrationService.class, dropRegistrationService));
 	}
 
 	@AfterEach
 	void clearRetiredServiceProvider() {
 		coreGameplayServices.destroy();
-		gameWorldServices.destroy();
+		worldServiceBindings.destroy();
 		TestServiceProviders.clear(DropService.class);
 		TestServiceProviders.clear(DropRegistrationService.class);
 	}

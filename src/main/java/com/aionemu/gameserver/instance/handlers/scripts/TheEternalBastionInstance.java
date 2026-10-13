@@ -25,7 +25,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -135,7 +135,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -148,13 +148,13 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 					if (player.isOnline()) {
 						switch (Rnd.get(1, 3)) {
 							case 1:
-								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052591, 1)); //Weapon Box Of The Iron Wall Fighter.
+								dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052591, 1)); //Weapon Box Of The Iron Wall Fighter.
 								break;
 							case 2:
-								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052592, 1)); //Armor Box Of The Iron Wall Fighter.
+								dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052592, 1)); //Armor Box Of The Iron Wall Fighter.
 								break;
 							case 3:
-								dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052593, 1)); //Firm Equipment Support Box Of Iron Wall.
+								dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052593, 1)); //Firm Equipment Support Box Of Iron Wall.
 								break;
 						}
 					}
@@ -165,23 +165,23 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 			case 801269:
 				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 					}
 				}
 				break;
 			case 831328: //Cannon Supplies Box.
 			case 831329: //Ammo Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10)); //Case Shot.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10)); //Armor-Piercing Shot.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006996, 10)); //Case Shot.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006997, 10)); //Armor-Piercing Shot.
 				break;
 			case 831330: //Siege Mine.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1)); //Mobile Turret Key.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000137, 1)); //Mobile Turret Key.
 				break;
 			case 802185: //The Eternal Bastion Opportunity Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
 				break;
 		}
 	}

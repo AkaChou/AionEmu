@@ -60,6 +60,7 @@ import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.instance.InstanceScaler;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -82,7 +83,6 @@ import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.lifecycle.GameMaintenanceServices;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 
 /**
@@ -329,7 +329,7 @@ public class Config {
 			GameRuntimeServices.surveyService().reload();
 			GameRuntimeServices.inGameShopEn().reload();
 			GameRuntimeServices.playerTransferService().reload();
-			GameWorldServices.dropRegistrationService().reload();
+			DropRegistrationService.getInstance().reload();
 			DateTimeUtil.init();
 			ProtectorConquerorService.getInstance().initSystem();
 			GameEventServices.playerEventService().reload();

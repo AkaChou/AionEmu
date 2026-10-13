@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.siege.SiegeModType;
@@ -313,7 +314,7 @@ public class SpawnEngine {
 	 */
 	static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
 		float z = spawn.isResolveZ() ? SpawnSurfaceResolver.resolve(spawn, instanceIndex)
-			: projectedSpawnZ(visibleObject, spawn, npc -> GameWorldServices.pathService()
+			: projectedSpawnZ(visibleObject, spawn, npc -> PathService.getInstance()
 			.projectGroundPoint(npc, spawn.getX(), spawn.getY(), spawn.getZ()));
 		bringIntoWorld(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), z,
 			spawn.getHeading());
@@ -321,8 +322,8 @@ public class SpawnEngine {
 
 	static float projectedSpawnZ(VisibleObject visibleObject, SpawnTemplate spawn, Function<Npc, float[]> projector) {
 		return projectedSpawnZ(visibleObject, spawn, projector, npc ->
-			GameWorldServices.geoService().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY()), npc ->
-			GameWorldServices.geoService().projectGroundZ(spawn.getWorldId(), spawn.getX(), spawn.getY(),
+			GeoService.getInstance().getTerrainZ(npc.getWorldId(), spawn.getX(), spawn.getY()), npc ->
+			GeoService.getInstance().projectGroundZ(spawn.getWorldId(), spawn.getX(), spawn.getY(),
 				spawn.getZ(), npc.getInstanceId()));
 	}
 

@@ -420,7 +420,7 @@ class GameLegacyServiceBridgeConfigurationTest {
 	void createsSpringManagedGeoPathServicesInsteadOfLegacySingletons() {
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
 			assertThrows(IllegalStateException.class, GeoService::getInstance);
-			assertNotSame(PathService.getInstance(), context.getBean(PathService.class));
+			assertThrows(IllegalStateException.class, PathService::getInstance);
 		}
 	}
 

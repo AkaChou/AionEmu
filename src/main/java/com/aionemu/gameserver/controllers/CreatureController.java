@@ -29,7 +29,6 @@ import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.controllers.observer.TerrainZoneCollisionMaterialActor;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -49,6 +48,7 @@ import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.Map;
@@ -721,7 +721,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public void onAfterSpawn() {
 		super.onAfterSpawn();
 		getOwner().revalidateZones();
-		if (terrainMaterialActor == null && GameWorldServices.geoService().worldHasTerrainMaterials(getOwner().getWorldId())) {
+		if (terrainMaterialActor == null && GeoService.getInstance().worldHasTerrainMaterials(getOwner().getWorldId())) {
 			terrainMaterialActor = new TerrainZoneCollisionMaterialActor(getOwner());
 			getOwner().getObserveController().addObserver(terrainMaterialActor);
 		}

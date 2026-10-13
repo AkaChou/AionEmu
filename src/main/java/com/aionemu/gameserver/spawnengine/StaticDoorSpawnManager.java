@@ -2,7 +2,6 @@ package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.model.templates.staticdoor.DoorType;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
 import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
@@ -49,7 +49,7 @@ public class StaticDoorSpawnManager {
 			StaticDoor staticDoor = new StaticDoor(objectId, new StaticObjectController(), spawn, data, instanceIndex);
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);
-			GameWorldServices.geoService().setDoorState(worldId, instanceIndex, data.getDoorId(), staticDoor.isOpen());
+			GeoService.getInstance().setDoorState(worldId, instanceIndex, data.getDoorId(), staticDoor.isOpen());
 			counter++;
 		}
 		if (counter > 0) {

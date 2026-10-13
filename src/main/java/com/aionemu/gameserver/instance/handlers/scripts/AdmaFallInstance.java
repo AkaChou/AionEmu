@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -38,7 +38,7 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		if (dropItems == null) {
 			return;
 		}
@@ -46,21 +46,21 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 220418: //Lady Karemiwen Adma.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000263, 1)); //Cursed Key.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000263, 1)); //Cursed Key.
 			break;
 			case 220427: //Reaper Of Adma Castle.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188057620, 1)); //Chaotic Dimension Stone Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
+                        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188057620, 1)); //Chaotic Dimension Stone Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
 						switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054906, 1)); //Adma Weapon Box.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054906, 1)); //Adma Weapon Box.
 				            break;
 					        case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054907, 1)); //Adma Armor Box.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054907, 1)); //Adma Armor Box.
 				            break;
 						}
 					}
@@ -69,10 +69,10 @@ public class AdmaFallInstance extends GeneralInstanceHandler
 			case 806220: //Adma Family Coffers.
 				switch (Rnd.get(1, 2)) {
 				    case 1:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110000048, 1)); //Karemiwen's Gown.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110000048, 1)); //Karemiwen's Gown.
 					break;
 					case 2:
-				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125004517, 1)); //Karemiwen's Hairpin.
+				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125004517, 1)); //Karemiwen's Hairpin.
 					break;
 				}
 			break;

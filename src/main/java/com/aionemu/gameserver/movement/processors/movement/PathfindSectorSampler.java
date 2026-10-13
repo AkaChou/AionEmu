@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.movement.processors.movement;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.geoEngine.math.Vector2f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 扇形采样寻路器：在可见扇形内采样可通行点，用于跟随与步进路径选择。
@@ -64,7 +64,7 @@ public class PathfindSectorSampler {
 
 			double newRotatedDistance = MathUtil.getDistance(sourcePoint.x, sourcePoint.y, sourcePoint.z, rotated.x,
 					rotated.y, rotated.z);
-			boolean canPassTemp = GameWorldServices.geoService().canPass(mapId, sourcePoint.x, sourcePoint.y,
+			boolean canPassTemp = GeoService.getInstance().canPass(mapId, sourcePoint.x, sourcePoint.y,
 					sourcePoint.z + zOffset, rotated.x, rotated.y, rotated.z + newZOffset, (float) newRotatedDistance,
 					instanceId);
 			if (!canPassTemp)
@@ -117,7 +117,7 @@ public class PathfindSectorSampler {
 		degrees = (float) ((double) degrees + beginDeg);
 		double x = (double) cx + radius * Math.cos((double) degrees * Math.PI / 180.0);
 		double y = (double) cy + radius * Math.sin((double) degrees * Math.PI / 180.0);
-		double z = GameWorldServices.geoService().getZ(owner.getWorldId(), (float) x, (float) y, defaultZ, 100.0f,
+		double z = GeoService.getInstance().getZ(owner.getWorldId(), (float) x, (float) y, defaultZ, 100.0f,
 				owner.getInstanceId());
 		return new Vector3f((float) x, (float) y, (float) z);
 	}

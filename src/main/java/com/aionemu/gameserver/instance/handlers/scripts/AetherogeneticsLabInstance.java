@@ -7,7 +7,7 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 
 import java.util.Set;
 
@@ -28,34 +28,34 @@ public class AetherogeneticsLabInstance extends GeneralInstanceHandler {
 	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 212341: //The Keykeeper.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000001, 1)); //Lepharist Research Center Key 1.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000001, 1)); //Lepharist Research Center Key 1.
 				break;
 			case 212175: //Expert Lab Scholar.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000002, 1)); //Lepharist Research Center Key 2.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000002, 1)); //Lepharist Research Center Key 2.
 				break;
 			case 212193: //Pretor Key Keeper.
 				switch (Rnd.get(1, 2)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000003, 1)); //Lepharist Research Center Key 3.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000003, 1)); //Lepharist Research Center Key 3.
 						break;
 					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000004, 1)); //Lepharist Research Center Key 4.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000004, 1)); //Lepharist Research Center Key 4.
 						break;
 				}
 				break;
 			case 212202: //Gatekeeper.
 			case 212342: //Key Eater.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000005, 1)); //Lepharist Research Center Key 5.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000005, 1)); //Lepharist Research Center Key 5.
 				break;
 			case 212211: //RM-78C.
 				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 					}
 				}
 				break;

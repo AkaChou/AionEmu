@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2.manager;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -28,6 +27,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.spawnengine.WalkerRouteValidator;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * NPC 行走管理器：路径巡航与随机游荡、到达点切换、卡住/Z 轴校正与停止行走。
@@ -367,7 +367,7 @@ public class WalkManager {
 
 					if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isFlying()) {
 						try {
-							targetZ = GameWorldServices.geoService().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
+							targetZ = GeoService.getInstance().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
 						} catch (Exception e) {
 							targetZ = owner.getSpawn().getEffectiveZ();
 						}
@@ -375,7 +375,7 @@ public class WalkManager {
 
 					if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
 						byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId() | CollisionIntention.WALK.getId());
-						Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
+						Vector3f loc = GeoService.getInstance().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
 
 						if (loc != null && (Math.abs(loc.x - targetX) > 0.5f || Math.abs(loc.y - targetY) > 0.5f)) {
 							owner.getMoveController().moveToPoint(loc.x, loc.y, loc.z);
@@ -448,14 +448,14 @@ public class WalkManager {
 	private static boolean isTargetPointValid(Npc owner, float x, float y, float z) {
 		if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
 			try {
-				float actualZ = GameWorldServices.geoService().getZ(owner.getWorldId(), x, y, z, 0.5F, owner.getInstanceId());
+				float actualZ = GeoService.getInstance().getZ(owner.getWorldId(), x, y, z, 0.5F, owner.getInstanceId());
 
 				if (!isTerrainReachableByAngle(owner, x, y, owner.getZ(), actualZ)) {
 					return false;
 				}
 
 				byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.WALK.getId());
-				Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, x, y, actualZ, true, flags);
+				Vector3f loc = GeoService.getInstance().getClosestCollision(owner, x, y, actualZ, true, flags);
 
 				if (loc != null && (Math.abs(loc.x - x) > 1.0f || Math.abs(loc.y - y) > 1.0f)) {
 					return false;
@@ -539,7 +539,7 @@ public class WalkManager {
 
 	private static float getValidGeoZ(Npc npc, float x, float y, float currentZ) {
 		try {
-			return GameWorldServices.geoService().getZ(npc.getWorldId(), x, y, currentZ, 0.5F, npc.getInstanceId());
+			return GeoService.getInstance().getZ(npc.getWorldId(), x, y, currentZ, 0.5F, npc.getInstanceId());
 		} catch (Exception e) {
 			return Float.NaN;
 		}

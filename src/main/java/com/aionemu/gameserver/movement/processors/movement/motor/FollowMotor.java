@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.movement.processors.movement.motor;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 import com.aionemu.gameserver.movement.processors.movement.PathfindSectorSampler;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 跟随电机：周期重算目标点，按速度插值更新 NPC 位置并广播移动包。
@@ -113,11 +113,11 @@ public class FollowMotor extends AMovementMotor {
 		}
 		boolean directionChanged = false;
 		this._lastMovePoint = new Vector3f(this._owner.getX(), this._owner.getY(), this._owner.getZ());
-		boolean canPass = GameWorldServices.geoService().canPass(this._owner, target);
+		boolean canPass = GeoService.getInstance().canPass(this._owner, target);
 		if (this.canMove() && !canPass && pathfindRevalidationTime < System.currentTimeMillis()) {
 			this._targetPosition = PathfindSectorSampler.selectFollowStep(this._owner, target);
 		} else if (this.canMove() && canPass) {
-			float newZ = GameWorldServices.geoService().getZ(this._owner.getWorldId(), target.getX(), target.getY(),
+			float newZ = GeoService.getInstance().getZ(this._owner.getWorldId(), target.getX(), target.getY(),
 					target.getZ(), 100.0f, this._owner.getInstanceId());
 			Vector3f getTargetPos = new Vector3f(target.getX(), target.getY(), newZ);
 			float range = (float) this._owner.getGameStats().getAttackRange().getCurrent() / 1000.0f;
@@ -176,7 +176,7 @@ public class FollowMotor extends AMovementMotor {
 				Vector3f dir = GeomUtil.getDirection3D(lastMove, targetMove);
 				Vector3f position = GeomUtil.getNextPoint3D(lastMove, dir, distPassed);
 				if (FollowMotor.this._owner.getWorldId() != 300230000) {
-					float newZ = GameWorldServices.geoService().getZ(FollowMotor.this._owner.getWorldId(), position.x,
+					float newZ = GeoService.getInstance().getZ(FollowMotor.this._owner.getWorldId(), position.x,
 							position.y, position.z, 100.0f, FollowMotor.this._owner.getInstanceId());
 					position.z = lastMove.getZ() < newZ & Math.abs(lastMove.getZ() - newZ) > 1.0f
 							? newZ + FollowMotor.this._owner.getObjectTemplate().getBoundRadius().getUpper()

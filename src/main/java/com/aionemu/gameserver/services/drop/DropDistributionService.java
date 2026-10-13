@@ -10,7 +10,6 @@ import java.util.Set;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
@@ -89,13 +88,13 @@ public class DropDistributionService {
 	 * @param index 掉落索引 / drop index
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
-		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
 		synchronized (dropNpc) {
 			DropItem requestedItem = findRequestedItem(player, dropNpc,
-					GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npcId), 2, itemId, index);
+					DropRegistrationService.getInstance().getCurrentDropMap().get(npcId), 2, itemId, index);
 			if (requestedItem == null) {
 				return;
 			}
@@ -131,13 +130,13 @@ public class DropDistributionService {
 	 * @param index 掉落索引 / drop index
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
-		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
 		synchronized (dropNpc) {
 			DropItem requestedItem = findRequestedItem(player, dropNpc,
-					GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npcId), 3, itemId, index);
+					DropRegistrationService.getInstance().getCurrentDropMap().get(npcId), 3, itemId, index);
 			if (requestedItem == null) {
 				return;
 			}

@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,7 +52,7 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	 */
 	public void onBeforeSpawn() {
 		if (getOwner().getSpawn() != null && getOwner().getSpawn().getStaticId() > 0) {
-			GameWorldServices.geoService().spawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
+			GeoService.getInstance().spawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
 					getOwner().getSpawn().getStaticId());
 		}
 	}
@@ -70,7 +70,7 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	 */
 	public void onDespawn() {
 		if (getOwner().getSpawn() != null && getOwner().getSpawn().getStaticId() > 0) {
-			GameWorldServices.geoService().despawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
+			GeoService.getInstance().despawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
 					getOwner().getSpawn().getStaticId());
 		}
 	}

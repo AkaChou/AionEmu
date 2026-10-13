@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -19,6 +18,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.commons.utils.Rnd;
 
 /**
@@ -110,9 +111,9 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
         float targetY = (float) (y + Math.sin(radian) * FLEE_DISTANCE);
         
         npc.getMoveController().resetMove();
-        if (!GameWorldServices.pathService().hasPathingData(npc)) {
+        if (!PathService.getInstance().hasPathingData(npc)) {
             byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-            Vector3f collision = GameWorldServices.geoService().getClosestCollision(npc, targetX, targetY, z, true, intentions);
+            Vector3f collision = GeoService.getInstance().getClosestCollision(npc, targetX, targetY, z, true, intentions);
             targetX = collision.getX();
             targetY = collision.getY();
             z = collision.getZ();

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 绕后位移伤害效果：将施法者移动到目标身后并结算伤害。
@@ -53,10 +53,10 @@ public class MoveBehindEffect extends DamageEffect {
 		double radian = Math.toRadians(MathUtil.convertHeadingToDegree(effected.getHeading()));
 		float x1 = (float) (Math.cos(Math.PI + radian) * 1.3F);
 		float y1 = (float) (Math.sin(Math.PI + radian) * 1.3F);
-		float z = GameWorldServices.geoService().getZAfterMoveBehind(effected.getWorldId(), effected.getX() + x1,
+		float z = GeoService.getInstance().getZAfterMoveBehind(effected.getWorldId(), effected.getX() + x1,
 				effected.getY() + y1, effected.getZ(), effected.getInstanceId());
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effected.getX() + x1,
+		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effector, effected.getX() + x1,
 				effected.getY() + y1, z, false, intentions);
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		effect.setDashStatus(DashStatus.MOVEBEHIND);

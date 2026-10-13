@@ -59,6 +59,10 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 public class DropRegistrationService {
 	private final DropService dropService;
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
+	/**
+	 * 已解析实例缓存；setInstanceProvider 重置。 / Resolved-instance cache; reset on provider change.
+	 */
+	private static volatile DropRegistrationService resolvedInstance;
 
 	private final ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<>();
 	private final ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<>();
@@ -443,14 +447,19 @@ public class DropRegistrationService {
 	 *         when no provider or bean is available
 	 */
 	public static DropRegistrationService getInstance() {
+		DropRegistrationService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<DropRegistrationService> provider = instanceProvider;
-		DropRegistrationService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("DropRegistrationService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -460,5 +469,6 @@ public class DropRegistrationService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<DropRegistrationService> instanceProvider) {
 		DropRegistrationService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

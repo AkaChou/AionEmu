@@ -61,6 +61,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldType;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import lombok.extern.slf4j.Slf4j;
@@ -698,7 +699,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (!MathUtil.isInAttackRange(getOwner(), target, (getOwner().getGameStats().getAttackRange().getCurrent() / 1000f) + 1)) {
 			return;
 		}
-		if (!GameWorldServices.geoService().canSee(getOwner(), target)) {
+		if (!GeoService.getInstance().canSee(getOwner(), target)) {
 			PacketSendUtility.sendPacket(getOwner(), SM_SYSTEM_MESSAGE.STR_ATTACK_OBSTACLE_EXIST);
 			return;
 		}

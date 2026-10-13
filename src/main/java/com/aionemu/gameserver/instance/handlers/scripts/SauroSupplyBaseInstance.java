@@ -12,7 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -38,18 +38,18 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 233258: //Deranak The Reaver.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053219, 1)); //[Event] Sauro Commander's Accessory Box.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053219, 1)); //[Event] Sauro Commander's Accessory Box.
 			break;
 			case 230846: //Sauro Base Grave Robber.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052578, 1)); //Looted Sauro Supplies.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000237, 20)); //Ancient Coin.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052578, 1)); //Looted Sauro Supplies.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 186000237, 20)); //Ancient Coin.
 					}
 				}
 			break;
@@ -58,23 +58,23 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 				sendMsgByRace(1401946, Race.PC_ALL, 0);
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000179, 1)); //Danuar Omphanium Key.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000179, 1)); //Danuar Omphanium Key.
 					}
 				}
 			break;
 			case 230852: //Commander Ranodim.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000176, 1)); //Red Storeroom Key.
+				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000176, 1)); //Red Storeroom Key.
 				        break;
 					    case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000177, 1)); //Blue Storeroom Key.
+				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000177, 1)); //Blue Storeroom Key.
 				        break;
 					    case 3:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000178, 1)); //Green Storeroom Key.
+				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000178, 1)); //Green Storeroom Key.
 				        break;
 					}
 				}
@@ -85,7 +85,7 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230853: //Chief Of Staff Moriata.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
 					}
 				}
 			break;
@@ -93,30 +93,30 @@ public class SauroSupplyBaseInstance extends GeneralInstanceHandler
 			case 230858: //Brigade General Sheba.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053211, 1)); //[Event] Sauro Commander's Weapon Box.
+				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053211, 1)); //[Event] Sauro Commander's Weapon Box.
 				        break;
 					    case 2:
-				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053219, 1)); //[Event] Sauro Commander's Accessory Box.
+				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053219, 1)); //[Event] Sauro Commander's Accessory Box.
 				        break;
 					}
 				}
 			break;
 			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
 			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 802181: //Sauro Supply Base Opportunity Bundle.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
 			break;
 		}
 	}

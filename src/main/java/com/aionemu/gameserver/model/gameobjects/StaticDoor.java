@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.EnumSet;
 
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorState;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.Getter;
 
 /**
@@ -68,7 +68,7 @@ public class StaticDoor extends StaticObject {
 			states.remove(StaticDoorState.OPENED); // 1010
 			packetState = 0xA;
 		}
-		GameWorldServices.geoService().setDoorState(getWorldId(), getInstanceId(), getSpawn().getStaticId(), open);
+		GeoService.getInstance().setDoorState(getWorldId(), getInstanceId(), getSpawn().getStaticId(), open);
 		// int stateFlags = StaticDoorState.getFlags(states);
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, packetState));
 	}

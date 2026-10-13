@@ -26,7 +26,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -106,7 +106,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 	 */
 	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		if (dropItems == null) {
 			return;
 		}
@@ -114,10 +114,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler {
 		int index = dropItems.size() + 1;
 		if (npcId == 834168) {
 			//Bomb Support Box.
-			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 164000413, 1));
+			dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 164000413, 1));
 		} else if (npcId == 834169) {
 			//Bomb Restraint Support Box.
-			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 164000414, 1));
+			dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 164000414, 1));
 		}
 	}
 

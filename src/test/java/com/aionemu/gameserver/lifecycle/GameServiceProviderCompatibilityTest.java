@@ -454,7 +454,7 @@ class GameServiceProviderCompatibilityTest {
         PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
         GMService gmService = instance(GMService.class);
 
-            GameWorldServices worldServices = new GameWorldServices(
+            WorldServiceBindings worldServices = new WorldServiceBindings(
                 provider(GeoService.class, geoService), provider(PathService.class, pathService),
                 provider(DropRegistrationService.class, dropRegistrationService));
             GameMaintenanceServices maintenanceServices = new GameMaintenanceServices(
@@ -675,9 +675,7 @@ class GameServiceProviderCompatibilityTest {
             GMService.setInstanceProvider(provider(GMService.class, gmService));
 
             assertSame(geoService, GeoService.getInstance());
-            assertSame(geoService, GameWorldServices.geoService());
             assertSame(pathService, PathService.getInstance());
-            assertSame(pathService, GameWorldServices.pathService());
             assertSame(dropRegistrationService, DropRegistrationService.getInstance());
             assertSame(landingUpdateService, LandingUpdateService.getInstance());
             assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());
@@ -814,7 +812,6 @@ class GameServiceProviderCompatibilityTest {
             GeoService.setInstanceProvider(null);
             PathService.setInstanceProvider(null);
             DropRegistrationService.setInstanceProvider(null);
-            GameWorldServices.clearResolvedServices();
             LandingUpdateService.setInstanceProvider(null);
             AbyssLandingSpecialService.setInstanceProvider(null);
             DisputeLandService.setInstanceProvider(null);

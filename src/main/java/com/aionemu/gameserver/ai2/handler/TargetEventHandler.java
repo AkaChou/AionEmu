@@ -11,13 +11,13 @@ import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcPathBehaviorData;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
  * 目标事件处理器，负责到达目标、目标过远、放弃目标与切换目标。
@@ -189,7 +189,7 @@ public class TargetEventHandler {
 		float x = owner.getX() + (float) Math.cos(radians);
 		float y = owner.getY() + (float) Math.sin(radians);
 		float z = owner.getZ();
-		if (!GameWorldServices.pathService().canReachWaypoint(owner, x, y, z)) {
+		if (!PathService.getInstance().canReachWaypoint(owner, x, y, z)) {
 			x = owner.getX();
 			y = owner.getY();
 		}

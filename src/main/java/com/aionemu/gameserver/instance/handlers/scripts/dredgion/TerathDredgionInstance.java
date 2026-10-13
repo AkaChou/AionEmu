@@ -31,7 +31,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -142,16 +142,16 @@ public class TerathDredgionInstance extends GeneralInstanceHandler {
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 219264: //Captain Anusa.
 				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //大型烙印之石支援包。 / Major Stigma Support Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 				break;
@@ -171,28 +171,28 @@ public class TerathDredgionInstance extends GeneralInstanceHandler {
 			case 219286: //Auditor Zhantri.
 				for (Player player : instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 				break;
 			case 219266: //Archivist Davorkar.
 			case 219271: //Master At Arms Vandukar.
 				for (Player player : instance.getPlayersInside()) {
-					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001270, 1)); //Ksanat's Belt.
+					dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001270, 1)); //Ksanat's Belt.
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 				break;
 			case 219269: //Gatekeeper Payad.
 				for (Player player : instance.getPlayersInside()) {
-					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000117, 1)); //Captain's Cabin Passage Key.
-					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
+					dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000117, 1)); //Captain's Cabin Passage Key.
+					dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //龙之征服者印记箱。 / Dragon's Conquerer Mark Box.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //淬炼溶液箱。 / Tempering Solution Chest.
 					}
 				}
 				break;

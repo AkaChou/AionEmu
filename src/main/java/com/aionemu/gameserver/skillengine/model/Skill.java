@@ -8,7 +8,6 @@ import com.aionemu.gameserver.services.MotionLoggingService;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -63,6 +62,7 @@ import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 运行时技能实例：驱动施法流程、目标选择、效果应用与结束。
@@ -1202,11 +1202,11 @@ public class Skill {
 		// 生物离地至少 2 米时无法施加地面技能。 / If creature is at least 2 meters above the terrain, ground skill cannot be applied
 		if (GeoDataConfig.GEO_ENABLE) {
 			if (isGroundSkill()) {
-				if ((object.getZ() - GameWorldServices.geoService().getZ(object) > 1.0f) || (object.getZ() - GameWorldServices.geoService().getZ(object) < -2.0f)) {
+				if ((object.getZ() - GeoService.getInstance().getZ(object) > 1.0f) || (object.getZ() - GeoService.getInstance().getZ(object) < -2.0f)) {
 					return false;
 				}
 			}
-			return GameWorldServices.geoService().canSeeSkill(getFirstTarget(), object, skillTemplate.getObstacle());
+			return GeoService.getInstance().canSeeSkill(getFirstTarget(), object, skillTemplate.getObstacle());
 		}
 		return true;
 	}

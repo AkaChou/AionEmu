@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SecretMunitionsFactoryReward;
 import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactoryPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -152,31 +152,31 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 245185: // 机械图尔克的核心 / Mechaturerk’s Core.
 				switch (Rnd.get(1, 7)) {
 					case 1:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150000, 2)); // 未切割的水晶 / Uncut Crystal.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150000, 2)); // 未切割的水晶 / Uncut Crystal.
 						break;
 					case 2:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150001, 2)); // 有缺口的水晶 / Chipped Crystal.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150001, 2)); // 有缺口的水晶 / Chipped Crystal.
 						break;
 					case 3:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150002, 2)); // 浑浊的水晶 / Cloudy Crystal.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150002, 2)); // 浑浊的水晶 / Cloudy Crystal.
 						break;
 					case 4:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150003, 2)); // 透明的水晶 / Clear Crystal.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150003, 2)); // 透明的水晶 / Clear Crystal.
 						break;
 					case 5:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150004, 2)); // 无瑕的水晶 / Flawless Crystal.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150004, 2)); // 无瑕的水晶 / Flawless Crystal.
 						break;
 					case 6:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150005, 2)); // 露娜之光 / Luna’s Light.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150005, 2)); // 露娜之光 / Luna’s Light.
 						break;
 					case 7:
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150006, 2)); // 露娜的祝福 / Luna’s Blessing.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150006, 2)); // 露娜的祝福 / Luna’s Blessing.
 						break;
 				}
 				break;

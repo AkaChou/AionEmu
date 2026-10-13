@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 踉跄失衡效果：将目标击退一段距离并施加 STAGGER 物理控制。
@@ -83,7 +83,7 @@ public class StaggerEffect extends EffectTemplate {
 		float y1 = (float) (Math.sin(radian) * 3);
 		float z;
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effected.getX() + x1,
+		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effected, effected.getX() + x1,
 				effected.getY() + y1, effected.getZ(), true, intentions);
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;

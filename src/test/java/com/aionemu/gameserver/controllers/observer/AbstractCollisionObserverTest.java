@@ -19,7 +19,7 @@ import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.path.PathService;
@@ -49,7 +49,7 @@ class AbstractCollisionObserverTest {
 		beanFactory.registerSingleton(GeoService.class.getName(), geoService);
 		ThreadPoolManager threadPoolManager = new ThreadPoolManager();
 		beanFactory.registerSingleton(ThreadPoolManager.class.getName(), threadPoolManager);
-		GameWorldServices worldServices = new GameWorldServices(beanFactory.getBeanProvider(GeoService.class),
+		WorldServiceBindings worldServices = new WorldServiceBindings(beanFactory.getBeanProvider(GeoService.class),
 				beanFactory.getBeanProvider(PathService.class), beanFactory.getBeanProvider(DropRegistrationService.class));
 		// D1a 后 holder 定位器不再回退到单例：显式构造线程池门面，碰撞回调才能被异步执行。
 		// After D1a the holder locator no longer falls back to the singleton: construct the

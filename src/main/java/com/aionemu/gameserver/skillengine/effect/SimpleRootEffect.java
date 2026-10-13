@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 简易击退/定身效果：将目标小幅击退并施加击退异常。
@@ -50,7 +50,7 @@ public class SimpleRootEffect extends EffectTemplate {
 		final Creature effector = effect.getEffector();
 		final Creature effected = effect.getEffected();
 		byte moveAwayHeading = PositionUtil.getMoveAwayHeading(effector, effected);
-		Vector3f closestCollision = GameWorldServices.geoService().findMovementCollision(effected,
+		Vector3f closestCollision = GeoService.getInstance().findMovementCollision(effected,
 				MathUtil.convertHeadingToDegree(moveAwayHeading), 0.7f);
 		effect.setTargetLoc(closestCollision.x, closestCollision.y, closestCollision.z);
 	}

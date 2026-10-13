@@ -5,13 +5,13 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import java.util.Collection;
 
 import com.aionemu.gameserver.controllers.observer.DialogObserver;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -115,7 +115,7 @@ public class AI2Actions {
 	 * @param registeredPlayers 已登记玩家集合 / registered players
 	 */
 	public static void registerDrop(AbstractAI ai2, Player player, Collection<Player> registeredPlayers) {
-		GameWorldServices.dropRegistrationService().registerDrop((Npc) ai2.getOwner(), player, registeredPlayers);
+		DropRegistrationService.getInstance().registerDrop((Npc) ai2.getOwner(), player, registeredPlayers);
 	}
 
 	/**

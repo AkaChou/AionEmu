@@ -6,9 +6,8 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import lombok.Setter;
+import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
@@ -60,8 +59,11 @@ public final class PathService implements DisposableBean {
 	/** 路径结果 TTL；对齐 NpcMoveController 500ms replan。 / Result TTL. */
 	private static final long RESULT_CACHE_TTL_MS = 500;
 	private static final int RESULT_CACHE_MAX = 1024;
-	@Setter
-    private static volatile ObjectProvider<PathService> instanceProvider;
+	private static volatile ObjectProvider<PathService> instanceProvider;
+	/**
+	 * 已解析实例缓存；setInstanceProvider 重置。 / Resolved-instance cache; reset on provider change.
+	 */
+	private static volatile PathService resolvedInstance;
 	private final PathData data = new PathData();
 	private final WaterVolumeStore waterVolumes = new WaterVolumeStore();
 	private final AtomicLong sequence = new AtomicLong();
@@ -157,7 +159,7 @@ public final class PathService implements DisposableBean {
 				|| owner.getWorldId() != target.getWorldId()) {
 			return CompletableFuture.completedFuture(null);
 		}
-		float targetZ = !usesSpatialPath(owner) && target.isFlying() ? GameWorldServices.geoService().getZ(target) : target.getZ();
+		float targetZ = !usesSpatialPath(owner) && target.isFlying() ? GeoService.getInstance().getZ(target) : target.getZ();
 		return navigateToTargetAsync(owner, target.getX(), target.getY(), targetZ);
 	}
 
@@ -230,7 +232,7 @@ public final class PathService implements DisposableBean {
 		if (owner == null || !GeoDataConfig.GEO_ENABLE || usesSpatialPath(owner)) {
 			return true;
 		}
-		GeoMap map = GameWorldServices.geoService().getGeoMap(owner.getWorldId());
+		GeoMap map = GeoService.getInstance().getGeoMap(owner.getWorldId());
 		int instanceId = owner.getInstanceId();
 		float ownerZ = owner.getZ();
 		if (Float.isNaN(groundProbeZ(map, owner.getX(), owner.getY(), ownerZ, instanceId))) {
@@ -380,7 +382,7 @@ public final class PathService implements DisposableBean {
 		// 避免每个地形采样点都做一次 worldId 二分查找（play-7 有 174 个 CPU 样本停在该查找里）。
 		// Resolve the world map once per search: getTerrainZ resolves geoData.getMap on every sample, so hoist
 		// it out of the lambda instead of paying a world-id lookup per terrain sample.
-		GeoMap map = GameWorldServices.geoService().getGeoMap(worldId);
+		GeoMap map = GeoService.getInstance().getGeoMap(worldId);
 		return map::getTerrainPathHeight;
 	}
 
@@ -781,7 +783,7 @@ public final class PathService implements DisposableBean {
 		if (direct != null) {
 			return direct;
 		}
-		Vector3f collision = GameWorldServices.geoService().getClosestCollision(owner, target[0], target[1], target[2], true,
+		Vector3f collision = GeoService.getInstance().getClosestCollision(owner, target[0], target[1], target[2], true,
 				CollisionIntention.DEFAULT_COLLISIONS.getId());
 		return partialGroundPath(start, new float[] {collision.x, collision.y, collision.z}, allowed);
 	}
@@ -847,7 +849,7 @@ public final class PathService implements DisposableBean {
 		// the first keeps every "swimming" position acceptable to waterEdge (no dead zone between the two
 		// path modes), the second matches the client's submerge-below-the-nose presentation.
 		float immersionMargin = immersionMargin(owner);
-		float ground = GameWorldServices.geoService().getTerrainZ(owner.getWorldId(), x, y);
+		float ground = GeoService.getInstance().getTerrainZ(owner.getWorldId(), x, y);
 		WaterVolumeStore.Volume volume = waterVolumes.find(owner.getWorldId(), x, y, z);
 		if (volume != null) {
 			float surface = volume.surfaceZ(x, y);
@@ -955,9 +957,9 @@ public final class PathService implements DisposableBean {
 		float dz = endZ - startZ;
 		float distance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
 		return spatial
-				? GameWorldServices.geoService().canPass(worldId, startX, startY, startZ, endX, endY, endZ,
+				? GeoService.getInstance().canPass(worldId, startX, startY, startZ, endX, endY, endZ,
 					distance + 0.1f, instanceId)
-				: GameWorldServices.geoService().canPassWalker(worldId, startX, startY, startZ, endX, endY,
+				: GeoService.getInstance().canPassWalker(worldId, startX, startY, startZ, endX, endY,
 					endZ, distance + 0.1f, instanceId);
 	}
 
@@ -1140,9 +1142,42 @@ public final class PathService implements DisposableBean {
 		return value * value;
 	}
 
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
 	public static PathService getInstance() {
+		PathService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PathService> provider = instanceProvider;
-		return provider == null ? Holder.INSTANCE : provider.getIfAvailable(() -> Holder.INSTANCE);
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("PathService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 单例提供者。
+	 * Injects the Spring singleton provider.
+	 *
+	 * @param instanceProvider Spring 提供者 / spring provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PathService> instanceProvider) {
+		PathService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     public enum PathResultStatus {
@@ -1282,9 +1317,5 @@ public final class PathService implements DisposableBean {
 		QueueExpiredException(String message) {
 			super(message);
 		}
-	}
-
-	private static final class Holder {
-		private static final PathService INSTANCE = new PathService();
 	}
 }

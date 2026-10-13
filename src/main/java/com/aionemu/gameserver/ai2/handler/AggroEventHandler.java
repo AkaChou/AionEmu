@@ -6,7 +6,6 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 import java.util.Collections;
 import java.util.function.BiPredicate;
@@ -75,7 +75,7 @@ public class AggroEventHandler {
 		VisibleObject myTarget = notMyTarget.getTarget();
 		if (myTarget instanceof Creature targetCreature && (targetCreature.getLifeStats() == null || !targetCreature.getLifeStats().isAlreadyDead())) {
 			if (canReceiveSupport(owner, notMyTarget, targetCreature, owner.getAggroRange(),
-					GameWorldServices.geoService()::canSee)) {
+					GeoService.getInstance()::canSee)) {
 				if (npcAI.poll(AIQuestion.CAN_SHOUT)) {
 					ShoutEventHandler.onSupport(npcAI, targetCreature);
 				}
@@ -133,7 +133,7 @@ public class AggroEventHandler {
 		if (target instanceof Player playerTarget && (playerTarget.getLifeStats() == null || !playerTarget.getLifeStats().isAlreadyDead())) {
 			if (!owner.isEnemy(playerTarget) && owner.isEnemy(attacker)
 					&& MathUtil.isInRange(owner, playerTarget, owner.getAggroRange())
-					&& GameWorldServices.geoService().canSee(owner, attacker)) {
+					&& GeoService.getInstance().canSee(owner, attacker)) {
 				owner.getAggroList().startHate(attacker);
 				return true;
 			}

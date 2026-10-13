@@ -8,7 +8,6 @@ import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -18,6 +17,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
@@ -125,9 +126,9 @@ public class ConfuseEffect extends EffectTemplate {
             float targetX = effected.getX() + (float) Math.cos(radian) * distance;
             float targetY = effected.getY() + (float) Math.sin(radian) * distance;
             byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-            Vector3f destination = GameWorldServices.geoService().getClosestCollision(effected, targetX, targetY,
+            Vector3f destination = GeoService.getInstance().getClosestCollision(effected, targetX, targetY,
                     effected.getZ(), true, intentions);
-            if (!GameWorldServices.pathService().hasStandableGround(effected, destination.getX(), destination.getY(),
+            if (!PathService.getInstance().hasStandableGround(effected, destination.getX(), destination.getY(),
                     destination.getZ())) {
                 return false;
             }

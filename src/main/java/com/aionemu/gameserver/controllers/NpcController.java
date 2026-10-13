@@ -2,6 +2,7 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,6 @@ import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.controllers.attack.AggroList;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
@@ -64,6 +64,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
@@ -234,7 +235,7 @@ public class NpcController extends CreatureController<Npc> {
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
 				if (owner.getSpawn() != null && owner.getSpawn().getStaticId() > 0) {
-					GameWorldServices.geoService().despawnPlaceableObject(owner.getWorldId(), owner.getInstanceId(),
+					GeoService.getInstance().despawnPlaceableObject(owner.getWorldId(), owner.getInstanceId(),
 						owner.getSpawn().getStaticId());
 				}
 			}
@@ -345,7 +346,7 @@ public class NpcController extends CreatureController<Npc> {
 						}
 					}
 					if (attacker.equals(winner)) {
-						GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, player.getLevel(), null);
+						DropRegistrationService.getInstance().registerDrop(getOwner(), player, player.getLevel(), null);
 					}
 					// 伯丁之星。 / Berdin's Star.
 					if (getOwner().getLevel() >= 10) {

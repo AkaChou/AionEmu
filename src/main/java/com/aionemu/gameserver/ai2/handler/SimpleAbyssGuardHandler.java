@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2.handler;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 欧比斯简易守卫处理器，对可攻击 / 敌对 NPC 做仇恨检查，其余委托 {@link CreatureEventHandler}。
@@ -62,7 +62,7 @@ public class SimpleAbyssGuardHandler {
 		}
 		if (!ai.isInState(AIState.FIGHT)
 				&& (MathUtil.isIn3dRange(owner, creature, owner.getObjectTemplate().getAggroRange()))) {
-			if (GameWorldServices.geoService().canSee(owner, creature)) {
+			if (GeoService.getInstance().canSee(owner, creature)) {
 				if (!ai.isInState(AIState.RETURNING))
 					ai.getOwner().getMoveController().storeStep();
 				ai.onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.model.TeleportAnimation;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 根据聊天位置链接传送的管理员命令（依赖 Geo）。
@@ -76,7 +76,7 @@ public class Warp extends AdminCommand {
 				layerI = Integer.parseInt(lm.group(1));
 			}
 
-			z = GameWorldServices.geoService().getZ(mapL, x, y);
+			z = GeoService.getInstance().getZ(mapL, x, y);
 			PacketSendUtility.sendMessage(player, "Map ID (" + mapL + ")\n" + "x: " + x + "y: " + y + "z: " + z + " L(" + layerI + ")");
 
 			//if (mapL == 400010000) {
@@ -121,7 +121,7 @@ public class Warp extends AdminCommand {
 				layerI = Integer.parseInt(lm.group(1));
 			}
 
-			zF = GameWorldServices.geoService().getZ(mapL, xF, yF);
+			zF = GeoService.getInstance().getZ(mapL, xF, yF);
 			PacketSendUtility.sendMessage(player, "MapId (" + mapL + ")\n" + "x:" + xF + " y:" + yF + " z:" + zF + " l(" + layerI + ")");
 
 			//if (mapL == 400010000) {

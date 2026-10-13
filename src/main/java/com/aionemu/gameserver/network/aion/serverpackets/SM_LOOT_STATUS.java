@@ -3,10 +3,10 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import java.util.Collections;
 import java.util.Set;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import lombok.Getter;
 
 /**
@@ -46,7 +46,7 @@ public class SM_LOOT_STATUS extends AionServerPacket {
 	 * effect id, or 0 if none
 	 */
 	private static int getLootEffect(int targetObjectId) {
-		Set<DropItem> items = GameWorldServices.dropRegistrationService().getCurrentDropMap()
+		Set<DropItem> items = DropRegistrationService.getInstance().getCurrentDropMap()
 				.getOrDefault(targetObjectId, Collections.emptySet());
 		synchronized (items) {
 			return items.stream().mapToInt(DropItem::getLootEffectId).filter(id -> id != 0).findAny().orElse(0);

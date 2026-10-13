@@ -18,8 +18,8 @@ import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -109,11 +109,11 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      */
     @Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
          if (npcId == 247546) {
          	//IDInfinity Heal 02.
-         	dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000530, 1));
+         	dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000530, 1));
          }
     }
 

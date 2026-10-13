@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.controllers.movement;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
+import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
  * 可玩单位（玩家/召唤物）移动控制器基类，处理强制移动包、速度插值与恐惧控制。
@@ -132,7 +132,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		// 该位移并把角色拉回原位，形成“跑出去又瞬间回位”的循环；拦下后由周期任务重选方向。
 		// Forced movement (fear/confuse) must not push a grounded playable off walkable ground: the client
 		// rejects an in-air step and snaps the character back, looping until the effect ends.
-		if (isControlled() && !GameWorldServices.pathService().hasStandableGround(owner, newX, newY, newZ)) {
+		if (isControlled() && !PathService.getInstance().hasStandableGround(owner, newX, newY, newZ)) {
 			abortMove();
 			return;
 		}

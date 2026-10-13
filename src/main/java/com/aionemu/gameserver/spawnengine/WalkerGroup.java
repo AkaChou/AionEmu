@@ -395,8 +395,8 @@ public class WalkerGroup {
 	 */
 	private float getHeight(SpawnTemplate template) {
 		/*
-		 * if (GameWorldServices.geoService().isGeoOn()) { return
-		 * GameWorldServices.geoService().getZ(template.getWorldId(), x, y, z, ); }
+		 * if (GeoService.getInstance().isGeoOn()) { return
+		 * GeoService.getInstance().getZ(template.getWorldId(), x, y, z, ); }
 		 */
 		return template.getZ();
 	}

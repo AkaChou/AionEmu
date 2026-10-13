@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.properties;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.properties.Properties.CastState;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 首要目标距离属性：校验施法者与首要目标的攻击距离与视线。
@@ -61,7 +61,7 @@ public class FirstTargetRangeProperty {
 
 		// 召唤小队成员异常 / Summon Group Member exception
 		if (skill.getSkillTemplate().getSkillId() != 3777) { // 4.8
-			if (!GameWorldServices.geoService().canSeeSkill(effector, firstTarget, skill.getSkillTemplate().getObstacle())) {
+			if (!GeoService.getInstance().canSeeSkill(effector, firstTarget, skill.getSkillTemplate().getObstacle())) {
 				if (effector instanceof Player) {
 					PacketSendUtility.sendPacket((Player) effector, SM_SYSTEM_MESSAGE.STR_SKILL_OBSTACLE);
 				}

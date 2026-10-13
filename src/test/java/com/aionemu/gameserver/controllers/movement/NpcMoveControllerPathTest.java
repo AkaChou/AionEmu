@@ -23,7 +23,6 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -857,9 +856,9 @@ class NpcMoveControllerPathTest {
 	@Test
 	void waypointReturnUsesTheSameGroundHeightCorrectionAsPatrol() throws ReflectiveOperationException {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class, "GEO_ENABLE", "GEO_NPC_MOVE");
-		Field resolvedGeoService = GameWorldServices.class.getDeclaredField("resolvedGeoService");
-		resolvedGeoService.setAccessible(true);
-		Object oldGeoService = resolvedGeoService.get(null);
+		Field resolvedInstance = GeoService.class.getDeclaredField("resolvedInstance");
+		resolvedInstance.setAccessible(true);
+		Object oldGeoService = resolvedInstance.get(null);
 		Npc owner = new ObjenesisStd().newInstance(Npc.class);
 		owner.setPosition(new WorldPosition(210030000));
 		NpcMoveController controller = new NpcMoveController(owner);
@@ -868,7 +867,7 @@ class NpcMoveControllerPathTest {
 		try {
 			GeoDataConfig.GEO_ENABLE = true;
 			GeoDataConfig.GEO_NPC_MOVE = true;
-			resolvedGeoService.set(null, new GeoService() {
+			resolvedInstance.set(null, new GeoService() {
 				@Override
 				public float getZ(int worldId, float x, float y, float z, float defaultUp, int instanceId) {
 					assertEquals(210030000, worldId);
@@ -882,7 +881,7 @@ class NpcMoveControllerPathTest {
 			assertEquals(102.5f, controller.getHomeReturnDestination().getZ());
 		} finally {
 			snapshot.restore();
-			resolvedGeoService.set(null, oldGeoService);
+			resolvedInstance.set(null, oldGeoService);
 		}
 	}
 

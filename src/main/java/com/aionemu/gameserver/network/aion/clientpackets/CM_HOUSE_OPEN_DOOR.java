@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 打开/进入房屋门（或离开房屋）的客户端包。
@@ -75,9 +75,9 @@ public class CM_HOUSE_OPEN_DOOR extends AionClientPacket {
 				if (GeoDataConfig.GEO_ENABLE) {
 					Npc sign = house.getCurrentSign();
 					byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-					Vector3f colSign = GameWorldServices.geoService().getClosestCollision(sign, player.getX(), player.getY(),
+					Vector3f colSign = GeoService.getInstance().getClosestCollision(sign, player.getX(), player.getY(),
 							player.getZ() + 2, false, flags);
-					Vector3f colWall = GameWorldServices.geoService().getClosestCollision(player, colSign.getX(),
+					Vector3f colWall = GeoService.getInstance().getClosestCollision(player, colSign.getX(),
 							colSign.getY(), colSign.getZ(), true, flags);
 					double radian = Math
 							.toRadians(MathUtil.calculateAngleFrom(player.getX(), player.getY(), colWall.x, colWall.y));

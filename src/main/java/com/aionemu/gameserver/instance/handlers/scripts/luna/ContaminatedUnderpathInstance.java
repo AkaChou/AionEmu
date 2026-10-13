@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.playerreward.ContaminatedUnderpathPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -185,17 +185,17 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler {
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 703384: // 感染的骨头堆 / Infected Bone Mound.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216109, 1)); // MAAD-S 臼齿 / Maad-S Molar.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182216109, 1)); // MAAD-S 臼齿 / Maad-S Molar.
 				break;
 			case 703385: // 感染的肉块 / Infected Flesh Lump.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182216110, 1)); // MAAD-S 皮肤组织 / Maad-S Skin Tissue.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182216110, 1)); // MAAD-S 皮肤组织 / Maad-S Skin Tissue.
 				break;
 			case 833866: // 不稳定的奥德能量 / Unstable Aether Energy.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182007405, 3)); // 明亮的奥德 / Bright Aether.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182007405, 3)); // 明亮的奥德 / Bright Aether.
 				break;
 			case 834253: // Maedrunerk 军团宝藏 / Maedrunerk Legion Treasures.
 				break;

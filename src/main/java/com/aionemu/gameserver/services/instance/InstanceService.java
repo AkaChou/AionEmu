@@ -14,7 +14,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +47,7 @@ import com.aionemu.gameserver.world.WorldMap2DInstance;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 import com.aionemu.gameserver.world.WorldMapType;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
@@ -249,7 +249,7 @@ public class InstanceService {
 			return;
 		}
 		int instanceId = instance.getInstanceId();
-		var pathService = GameWorldServices.pathService();
+		var pathService = PathService.getInstance();
 		map.removeWorldMapInstance(instanceId);
 		try {
 			RetailConditionSpawnEngine.clear(instance);

@@ -7,7 +7,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 原生任务车道的刷怪端口：DD 附加动作 case 5（`Spawn Npcs`，原版执行器 case 5 →
@@ -67,7 +67,7 @@ public interface NativeSpawnPort {
 			float baseZ = relative ? player.getZ() : z;
 			int worldId = player.getWorldId();
 			int instanceId = player.getInstanceId();
-			GeoMap geo = GameWorldServices.geoService().getGeoMap(worldId);
+			GeoMap geo = GeoService.getInstance().getGeoMap(worldId);
 			for (int index = 0; index < count; index++) {
 				float spawnX = baseX;
 				float spawnY = baseY;

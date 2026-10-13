@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -67,7 +67,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 		if (npc == null || instance == null) {
 			return;
 		}
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		if (dropItems == null) {
 			return;
 		}
@@ -109,7 +109,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 
 	private void addDrop(Set<DropItem> dropItems, int playerObjectId, int npcObjectId, int itemId, long count) {
 		int nextIndex = dropItems.stream().mapToInt(DropItem::getIndex).max().orElse(0) + 1;
-		dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(
+		dropItems.add(DropRegistrationService.getInstance().regDropItem(
 			nextIndex, playerObjectId, npcObjectId, itemId, count));
 	}
 

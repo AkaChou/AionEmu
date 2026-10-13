@@ -4,7 +4,6 @@ package com.aionemu.gameserver.ai.siege;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Set;
@@ -92,9 +92,9 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 	public void onDropRegistered(Npc npc) {
 		int npcId = TREASURE_CHEST_ID;
 
-		GameWorldServices.dropRegistrationService().getCurrentDropMap().remove(npc.getObjectId());
+		DropRegistrationService.getInstance().getCurrentDropMap().remove(npc.getObjectId());
 		Set<DropItem> dropItems = new HashSet<>();
-		GameWorldServices.dropRegistrationService().getCurrentDropMap().put(npc.getObjectId(), dropItems);
+		DropRegistrationService.getInstance().getCurrentDropMap().put(npc.getObjectId(), dropItems);
 
 		switch (npcId) {
 			case TREASURE_CHEST_ID:
@@ -127,13 +127,13 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
 				for (DropChance drop : DropList) {
 					if (Rnd.chance(drop.chance)) {
-						dropItems.add(GameWorldServices.dropRegistrationService()
+						dropItems.add(DropRegistrationService.getInstance()
 							.regDropItem(1, 0, npc.getObjectId(), drop.itemId, drop.count));
 					}
 				}
 				break;
 		}
-		GameWorldServices.dropRegistrationService().normalizeDropIndices(dropItems);
+		DropRegistrationService.getInstance().normalizeDropIndices(dropItems);
 	}
 
 	private class DropChance {

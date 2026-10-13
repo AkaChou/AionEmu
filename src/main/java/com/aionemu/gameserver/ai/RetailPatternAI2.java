@@ -19,7 +19,6 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.*;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -48,6 +47,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
 import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -2029,10 +2029,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		Point3D target = fleePoint(getOwner().getX(), getOwner().getY(), getOwner().getZ(),
 			Math.max(1, getOwner().getGameStats().getMovementSpeedFloat()), heading, Rnd.get(-45, 45));
 		// 逃跑终点 Z 取目标 XY 处地表高度，避免水平射线撞坡面侧壁后悬在坡下上方（视觉"上天"）
-		float groundZ = GameWorldServices.geoService().getZ(getOwner().getWorldId(), target.getX(), target.getY(),
+		float groundZ = GeoService.getInstance().getZ(getOwner().getWorldId(), target.getX(), target.getY(),
 			getOwner().getZ(), 100, getOwner().getInstanceId());
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f destination = GameWorldServices.geoService().getClosestCollision(getOwner(), target.getX(), target.getY(),
+		Vector3f destination = GeoService.getInstance().getClosestCollision(getOwner(), target.getX(), target.getY(),
 			groundZ, true, intentions);
 		getOwner().getMoveController().resetMove();
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());

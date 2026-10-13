@@ -9,7 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -64,32 +64,32 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702658: //修道院箱子。 / Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[活动] 修道院礼包。 / [Event] Abbey Bundle.
 		    break;
 			case 702659: //高级修道院箱子。 / Noble Abbey Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[活动] 高级修道院礼包。 / [Event] Noble Abbey Bundle.
 		    break;
 			case 215796: //Gradarim The Collector.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000087, 1)); //Jotun Vault Key.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000087, 1)); //Jotun Vault Key.
 		    break;
 			case 215786: //Garha The Punisher.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000086, 1)); //Shadowy Prison Key.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000086, 1)); //Shadowy Prison Key.
 		    break;
 			case 215797: //Bergrisar.
 			case 216149: //Udas Temple Treasure Box.
 			case 216150: //Udas Temple Treasure Box.
-				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188052306, 1)); //Udas Temple Contribution Bundle.
+				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188052306, 1)); //Udas Temple Contribution Bundle.
 		    break;
 			case 215783: //Nexus.
 			case 215795: //Debilkarim The Maker.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundlele.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundlele.
                     }
                 }
             break;

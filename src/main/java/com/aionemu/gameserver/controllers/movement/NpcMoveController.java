@@ -18,7 +18,6 @@ import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.NpcActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -39,6 +38,7 @@ import com.aionemu.gameserver.spawnengine.WalkerGroupShift;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -931,7 +931,7 @@ public class NpcMoveController
                     if (tryFollowCatchupTeleport(creature)) {
                         return;
                     }
-                    float targetZ = getTargetZ(GameWorldServices.pathService().usesSpatialPath(owner), creature);
+                    float targetZ = getTargetZ(PathService.getInstance().usesSpatialPath(owner), creature);
                     updateFollowTrail(creature, targetZ);
                     advanceFollowTrail(creature, targetZ);
                     Point3D waypoint = selectFollowWaypoint(creature, targetZ);
@@ -955,7 +955,7 @@ public class NpcMoveController
                     long now = System.currentTimeMillis();
                     if (targetMoved(target.getX(), target.getY(), target.getZ())) {
                         float attackDistance = owner.getController().getAttackDistanceToTarget();
-                        boolean spatialPath = GameWorldServices.pathService().usesSpatialPath(owner);
+                        boolean spatialPath = PathService.getInstance().usesSpatialPath(owner);
                         float targetZ = getTargetZ(spatialPath, creature);
                         updateTargetDestination(creature, spatialPath, targetZ, attackDistance);
                         trackedTargetX = target.getX();
@@ -988,7 +988,7 @@ public class NpcMoveController
                         TargetEventHandler.onPathFindFailed((NpcAI2) owner.getAi2());
                         return;
                     }
-                    if (!cachedPathValid && GameWorldServices.pathService().hasPathingData(owner) && retryFailedPath) {
+                    if (!cachedPathValid && PathService.getInstance().hasPathingData(owner) && retryFailedPath) {
                         if (System.currentTimeMillis() >= pathRetryAt) {
                             requestTargetPath(creature);
                         }
@@ -998,7 +998,7 @@ public class NpcMoveController
                         float[] p1 = path[0];
                         assert p1.length == 3;
                         moveToLocation(p1[0], p1[1], p1[2], pathMoveOffset(path), path);
-                    } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
+                    } else if (!PathService.getInstance().hasPathingData(owner)) {
                         moveToLocation(pointX, pointY, pointZ, offset);
                     } else {
                         stopForPath();
@@ -1026,7 +1026,7 @@ public class NpcMoveController
                     moveToLocation(pointX, pointY, pointZ, offset);
                     break;
                 }
-                if (GameWorldServices.pathService().hasPathingData(owner)
+                if (PathService.getInstance().hasPathingData(owner)
                         && shouldRequestHomePath(cachedPathValid, retryFailedPath, pendingPath != null, now, pathRetryAt)) {
                     requestLocationPath();
                 }
@@ -1039,7 +1039,7 @@ public class NpcMoveController
                 if (path != null && path.length > 0) {
                     float[] p1 = path[0];
                     moveToLocation(p1[0], p1[1], p1[2], pathMoveOffset(path), path);
-                } else if (!GameWorldServices.pathService().hasPathingData(owner)) {
+                } else if (!PathService.getInstance().hasPathingData(owner)) {
                     moveToLocation(pointX, pointY, pointZ, offset);
                 } else {
                     stopForPath();
@@ -1058,7 +1058,7 @@ public class NpcMoveController
      */
     private float getTargetZ(boolean spatialPath, Creature creature) {
         float targetZ = creature.getZ();
-        float groundZ = spatialPath ? targetZ : GameWorldServices.geoService().getZ(creature);
+        float groundZ = spatialPath ? targetZ : GeoService.getInstance().getZ(creature);
         return resolvedTargetZ(spatialPath, targetZ, groundZ);
     }
 
@@ -1119,7 +1119,7 @@ public class NpcMoveController
             int adjustment = TARGET_SLOT_ADJUSTMENTS[index];
             float[] candidate = attackSlotCandidate(owner.getX(), owner.getY(), target.getX(), target.getY(), targetZ,
                     radius, baseOffset + adjustment);
-            float[] projected = GameWorldServices.pathService().projectGroundPoint(owner, candidate[0], candidate[1],
+            float[] projected = PathService.getInstance().projectGroundPoint(owner, candidate[0], candidate[1],
                     candidate[2]);
             if (projected != null) {
                 chaseSlotAdjustment = index;
@@ -1238,7 +1238,7 @@ public class NpcMoveController
         if (!GeoDataConfig.GEO_ENABLE) {
             return followTrail.isEmpty();
         }
-        return GameWorldServices.geoService().canPass(owner, target);
+        return GeoService.getInstance().canPass(owner, target);
     }
 
     boolean tryFollowCatchupTeleport(Creature target) {
@@ -1268,7 +1268,7 @@ public class NpcMoveController
         abortMove();
         float targetZ = target.getZ();
         if (GeoDataConfig.GEO_ENABLE && !owner.isFlying()) {
-            targetZ = GameWorldServices.geoService().getZ(target);
+            targetZ = GeoService.getInstance().getZ(target);
         }
         float oldX = owner.getX();
         float oldY = owner.getY();
@@ -1395,7 +1395,7 @@ public class NpcMoveController
         // switch). Only enabled on legs judged to need the Path: flat legs cost one passability probe.
         if (GeoDataConfig.GEO_NPC_WALK_COLLISION_ENABLE && walkingRoute && walkerLegNeedsPath
                 && GeoDataConfig.GEO_ENABLE) {
-            float[] resolvedStep = resolveWalkerCollisionStep(GameWorldServices.geoService().getGeoMap(owner.getWorldId()),
+            float[] resolvedStep = resolveWalkerCollisionStep(GeoService.getInstance().getGeoMap(owner.getWorldId()),
                     owner.getInstanceId(), ownerX, ownerY, ownerZ, newX, newY, newZ);
             if (resolvedStep != null) {
                 newX = resolvedStep[0];
@@ -1410,14 +1410,14 @@ public class NpcMoveController
         if (shouldApplyGeoHeightCorrection(AIConfig.ENHANCED_HOME_RETURN, returning, spawnDestination,
                 path != null && !walkingRoute)
                 && GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE
-                && !GameWorldServices.pathService().usesSpatialPath(owner)) {
+                && !PathService.getInstance().usesSpatialPath(owner)) {
             // 每 tick 采地表并半步插值：600ms 节流会在中间 5 个 tick 让 Z 漂回线性值，
             // 坡面不齐处表现为上下抖动。每 tick 平滑贴地消除锯齿。
             // 行走态（WALK_PATH）同样贴地：原版地面 NPC 每步做碰撞/地表解算；服务端位置贴地也是
             // 贴地短段下发的前提（否则短段重锚的起点会把客户端拉回弦线）。
             // Walkers ground-follow too: the retail server resolves collisions and the walkable
             // surface on every movement step for ground NPCs.
-            float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
+            float geoZ = GeoService.getInstance().getZ(owner.getWorldId(), newX, newY, newZ, 100, owner.getInstanceId());
             // 障碍物顶面等离散跳变：按移动速度限制单 tick Z 爬升幅度，避免瞬抬/瞬降
             float maxZStep = Math.max(0.5f, currentSpeed * elapsedMillis / 1000.0f * 1.5f);
             float zDelta = geoZ - newZ;
@@ -1761,7 +1761,7 @@ public class NpcMoveController
         }
         boolean walkingRoute = owner != null && owner.getAi2().getSubState() == AISubState.WALK_PATH;
         long now = System.currentTimeMillis();
-        if (!cachedPathValid && GameWorldServices.pathService().hasPathingData(owner)
+        if (!cachedPathValid && PathService.getInstance().hasPathingData(owner)
                 && now >= pathRetryAt) {
             requestLocationPath();
         }
@@ -1769,7 +1769,7 @@ public class NpcMoveController
         if (path != null && path.length > 0) {
             float[] waypoint = path[0];
             moveToLocation(waypoint[0], waypoint[1], waypoint[2], pathMoveOffset(path), path);
-        } else if (walkingRoute || !GameWorldServices.pathService().hasPathingData(owner)) {
+        } else if (walkingRoute || !PathService.getInstance().hasPathingData(owner)) {
             // 行走者无 Path / 已走完 / 请求失败：回退直线走完本段，绝不进入追击的停车阶梯
             // （stopForPath / finishFailedPointMove 会让巡逻停走）。到点由 isReachedPoint 判定、
             // 换段由 WalkManager.targetReached 收口；本段走完前 Path 若晚到，下一 tick 自然切回沿 Path。
@@ -1821,7 +1821,7 @@ public class NpcMoveController
 
     private boolean usesSpatialArrival() {
         return owner != null && (owner.isFlying()
-                || GeoDataConfig.GEO_ENABLE && GameWorldServices.pathService().usesSpatialPath(owner));
+                || GeoDataConfig.GEO_ENABLE && PathService.getInstance().usesSpatialPath(owner));
     }
 
     private boolean canReachWaypointCached(float x, float y, float z) {
@@ -1833,7 +1833,7 @@ public class NpcMoveController
                 x, y, z, reachToX, reachToY, reachToZ)) {
             return reachResult;
         }
-        reachResult = GameWorldServices.pathService().canReachWaypoint(owner, x, y, z);
+        reachResult = PathService.getInstance().canReachWaypoint(owner, x, y, z);
         reachFromX = fromX;
         reachFromY = fromY;
         reachFromZ = fromZ;
@@ -1851,7 +1851,7 @@ public class NpcMoveController
         }
         lastWaypointSkipAt = now;
         waypointSkipAttempts.increment();
-        int firstIndex = GameWorldServices.pathService().waypointSkipIndex(owner, path, lookahead);
+        int firstIndex = PathService.getInstance().waypointSkipIndex(owner, path, lookahead);
         if (firstIndex == 0) {
             return path;
         }
@@ -1887,7 +1887,7 @@ public class NpcMoveController
     }
 
     private float[] projectLocalAvoidanceStep(float x, float y, float z) {
-        return stableAvoidanceProjection(z, GameWorldServices.pathService().projectLocalStep(owner, x, y, z));
+        return stableAvoidanceProjection(z, PathService.getInstance().projectLocalStep(owner, x, y, z));
     }
 
     static float[] stableAvoidanceProjection(float intendedZ, float[] projected) {
@@ -1913,7 +1913,7 @@ public class NpcMoveController
         float oldY = owner.getY();
         float oldZ = owner.getZ();
         float[] step = projectLocalAvoidanceStep(desired[0], desired[1], desired[2]);
-        if (step == null || !GameWorldServices.pathService().canMoveStraight(owner, step[0], step[1], step[2])) {
+        if (step == null || !PathService.getInstance().canMoveStraight(owner, step[0], step[1], step[2])) {
             return false;
         }
         moveToLocation(step[0], step[1], step[2], 0);
@@ -1935,7 +1935,7 @@ public class NpcMoveController
     private synchronized void tryStuckRecovery(float fromX, float fromY, float fromZ, float waypointX,
             float waypointY, float waypointZ, long now) {
         if (owner == null || !GeoDataConfig.GEO_PATH_RECOVERY_ENABLE
-                || GameWorldServices.pathService().usesSpatialPath(owner)) {
+                || PathService.getInstance().usesSpatialPath(owner)) {
             return;
         }
         Creature target = owner.getTarget() instanceof Creature creature ? creature : null;
@@ -1970,8 +1970,8 @@ public class NpcMoveController
         recordPathFailure(pendingPathX, pendingPathY, pendingPathZ, false);
         pathRequested(true);
         pendingPath = destination == Destination.TARGET_OBJECT
-                ? GameWorldServices.pathService().navigateToTargetAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked)
-                : GameWorldServices.pathService().navigateToLocationAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked);
+                ? PathService.getInstance().navigateToTargetAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked)
+                : PathService.getInstance().navigateToLocationAsync(owner, pendingPathX, pendingPathY, pendingPathZ, blocked);
         logPathRequest("stuck-recovery-" + stuckReplanAttemptCount);
     }
 
@@ -1998,7 +1998,7 @@ public class NpcMoveController
         }
         nearestRecoveryAttempted = true;
         nearestNodeAttempts.increment();
-        float[] point = GameWorldServices.pathService().nearestGroundPoint(owner, NEAREST_PATH_RECOVERY_RADIUS,
+        float[] point = PathService.getInstance().nearestGroundPoint(owner, NEAREST_PATH_RECOVERY_RADIUS,
                 NEAREST_PATH_RECOVERY_VERTICAL);
         if (point == null) {
             return;
@@ -2045,7 +2045,7 @@ public class NpcMoveController
         if (!usesPath()) {
             return true;
         }
-        if (!GameWorldServices.pathService().hasPathingData(owner)) {
+        if (!PathService.getInstance().hasPathingData(owner)) {
             clearPathFailureContext();
             resetPath();
             return true;
@@ -2054,7 +2054,7 @@ public class NpcMoveController
             return true;
         }
         long now = System.currentTimeMillis();
-        long obstacleVersion = GameWorldServices.pathService().obstacleVersion(owner.getWorldId(), owner.getInstanceId());
+        long obstacleVersion = PathService.getInstance().obstacleVersion(owner.getWorldId(), owner.getInstanceId());
         if (obstacleVersion != cachedObstacleVersion) {
             resetPath();
             return true;
@@ -2155,7 +2155,7 @@ public class NpcMoveController
             pendingPathY = pointY;
             pendingPathZ = pointZ;
             pathRequested();
-            pendingPath = GameWorldServices.pathService().navigateToTargetAsync(owner, pendingPathX, pendingPathY, pendingPathZ);
+            pendingPath = PathService.getInstance().navigateToTargetAsync(owner, pendingPathX, pendingPathY, pendingPathZ);
             logPathRequest("target");
         }
         collectPath();
@@ -2167,7 +2167,7 @@ public class NpcMoveController
             pendingPathY = pointY;
             pendingPathZ = pointZ;
             pathRequested();
-            pendingPath = GameWorldServices.pathService().navigateToLocationAsync(owner, pointX, pointY, pointZ);
+            pendingPath = PathService.getInstance().navigateToLocationAsync(owner, pointX, pointY, pointZ);
             logPathRequest("location");
         }
         collectPath();
@@ -2443,7 +2443,7 @@ public class NpcMoveController
      */
     private float resolveGroundZ(float x, float y, float fallbackZ) {
         if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isInFlyingState()) {
-            return GameWorldServices.geoService().getZ(owner.getWorldId(), x, y, fallbackZ - 1, 100f, 1);
+            return GeoService.getInstance().getZ(owner.getWorldId(), x, y, fallbackZ - 1, 100f, 1);
         }
         return fallbackZ;
     }
@@ -2529,7 +2529,7 @@ public class NpcMoveController
     }
 
     private long currentObstacleVersion() {
-        return GameWorldServices.pathService().obstacleVersion(owner.getWorldId(), owner.getInstanceId());
+        return PathService.getInstance().obstacleVersion(owner.getWorldId(), owner.getInstanceId());
     }
 
     private void finishFailedHomeReturn() {
@@ -2679,7 +2679,7 @@ public class NpcMoveController
         boolean follower = isFormationFollower(owner.getWalkerGroup() != null, shift != null,
                 shift == null ? 0f : shift.sagittalShift(), shift == null ? 0f : shift.coronalShift());
         if (!walkerPathEligible(GeoDataConfig.GEO_PATH_ENABLE, follower, owner.isFlying(),
-                GameWorldServices.pathService().usesSpatialPath(owner))) {
+                PathService.getInstance().usesSpatialPath(owner))) {
             this.walkerLegNeedsPath = false;
             return;
         }
@@ -2702,7 +2702,7 @@ public class NpcMoveController
         // Single place to drop the previous leg's path cache and in-flight request (chase/home never
         // enter through setRouteStep).
         resetPath();
-        if (!always && GameWorldServices.pathService().canWalkStraightLine(owner.getWorldId(),
+        if (!always && PathService.getInstance().canWalkStraightLine(owner.getWorldId(),
                 owner.getX(), owner.getY(), owner.getZ(), pointX, pointY, pointZ)) {
             return;
         }

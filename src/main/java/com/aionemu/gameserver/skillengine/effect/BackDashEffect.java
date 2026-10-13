@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * 后撤斩击效果：造成物理伤害并沿朝向后方位移。
@@ -59,7 +59,7 @@ public class BackDashEffect extends DamageEffect {
 		float x1 = (float) (Math.cos(Math.PI + radian) * distance);
 		float y1 = (float) (Math.sin(Math.PI + radian) * distance);
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effector.getX() + x1,
+		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effector, effector.getX() + x1,
 				effector.getY() + y1, effector.getZ(), false, intentions);
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effector.getHeading());

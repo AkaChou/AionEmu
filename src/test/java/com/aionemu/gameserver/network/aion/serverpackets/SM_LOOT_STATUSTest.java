@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashSet;
 import java.util.Spliterator;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class SM_LOOT_STATUSTest {
 
-	private GameWorldServices worldServices;
+	private WorldServiceBindings worldServices;
 
 	@BeforeEach
 	void installRetiredServiceProvider() {
@@ -30,7 +30,7 @@ class SM_LOOT_STATUSTest {
 		// facade explicitly so the loot-status packet resolves the same registration instance.
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		beanFactory.registerSingleton(DropRegistrationService.class.getName(), dropRegistrationService);
-		worldServices = new GameWorldServices(null, null,
+		worldServices = new WorldServiceBindings(null, null,
 			beanFactory.getBeanProvider(DropRegistrationService.class));
 	}
 

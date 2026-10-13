@@ -26,13 +26,14 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.summons.SummonsService;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -110,7 +111,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 215456: //Shishir.
@@ -162,7 +163,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		boolean alreadyRegistered = dropItems.stream()
 			.anyMatch(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
 		if (!alreadyRegistered) {
-			dropItems.add(GameWorldServices.dropRegistrationService()
+			dropItems.add(DropRegistrationService.getInstance()
 				.regDropItem(1, 0, npc.getObjectId(), itemId, count));
 		}
 	}
@@ -209,7 +210,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 				RetailConditionSpawnEngine.setVariable(instance, "IDElim_1F_StartRush", 2, 0);
 				// entity 51 is a static GEO placeable collision node, not a normal StaticDoor state pair.
 				// entity 51 是静态 GEO 可放置碰撞节点，不是普通 StaticDoor 的门状态对。
-				GameWorldServices.geoService().despawnPlaceableObject(instance.getMapId(), instance.getInstanceId(), 51);
+				GeoService.getInstance().despawnPlaceableObject(instance.getMapId(), instance.getInstanceId(), 51);
 			break;
 			case 215480, 246240: //Queen Mosqua / special-server Queen Mosqua.
                 deleteNpc(700738); //Huge Insect Egg.

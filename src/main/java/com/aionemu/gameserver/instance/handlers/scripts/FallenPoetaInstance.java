@@ -16,7 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -90,7 +90,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	 */
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -98,24 +98,24 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 703373: //Kroban's Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188057622, 1)); //Base Major Enchant Supplement Bundle.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188057622, 1)); //Base Major Enchant Supplement Bundle.
 						switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057623, 1)); //Kroban's Accessory Box.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057623, 1)); //Kroban's Accessory Box.
 				            break;
 							case 2:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //Krobans Treasure.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //Krobans Treasure.
 				            break;
 					        case 3:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055389, 1)); //Kroban's Illusion Godstone Bundle.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055389, 1)); //Kroban's Illusion Godstone Bundle.
 				            break;
 							case 4:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //Krobans Conditioning Bundle.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //Krobans Conditioning Bundle.
 				            break;
 							case 5:
-				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053783, 1)); //Stigma Sack.
+				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053783, 1)); //Stigma Sack.
 				            break;
 						}
 				    }
@@ -124,7 +124,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 833862: //Supply Box.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 164002346, 2)); //Thorn Tentacle Trap.
+						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 164002346, 2)); //Thorn Tentacle Trap.
 				    }
 				}
 			break;

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2.manager;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * NPC 普通攻击管理器：调度并执行近战/远程普通攻击，含重复调度与射程检查。
@@ -112,7 +112,7 @@ public class SimpleAttackManager {
     }
 
     try {
-        if (!GameWorldServices.geoService().canSee(npc, target)) {
+        if (!GeoService.getInstance().canSee(npc, target)) {
             return false;
         }
     } catch (NullPointerException e) {

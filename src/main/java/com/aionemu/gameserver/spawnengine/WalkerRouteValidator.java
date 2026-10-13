@@ -2,9 +2,10 @@ package com.aionemu.gameserver.spawnengine;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -151,7 +152,7 @@ public final class WalkerRouteValidator {
 		if (!GeoDataConfig.GEO_ENABLE) {
 			return step.getZ();
 		}
-		return GameWorldServices.geoService().projectGroundZ(worldId, step.getX(), step.getY(),
+		return GeoService.getInstance().projectGroundZ(worldId, step.getX(), step.getY(),
 				step.getZ(), SAMPLE_INSTANCE_ID);
 	}
 
@@ -173,7 +174,7 @@ public final class WalkerRouteValidator {
 	 * @return 直线可达返回 true / true when a straight line works
 	 */
 	private static boolean canWalkStraight(int worldId, RouteStep from, RouteStep to, float fromZ, float toZ) {
-		return GameWorldServices.pathService().canWalkStraightLine(worldId, from.getX(), from.getY(), fromZ,
+		return PathService.getInstance().canWalkStraightLine(worldId, from.getX(), from.getY(), fromZ,
 				to.getX(), to.getY(), toZ);
 	}
 }

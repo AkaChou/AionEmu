@@ -2,8 +2,9 @@ package com.aionemu.gameserver.spawnengine;
 
 import java.util.function.Supplier;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.path.PathService;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
 
@@ -12,11 +13,11 @@ final class SpawnSurfaceResolver {
 
 	static float resolve(SpawnTemplate spawn, int instanceId) {
 		return resolve(spawn,
-			() -> GameWorldServices.geoService().projectGroundZ(spawn.getWorldId(), spawn.getX(), spawn.getY(),
+			() -> GeoService.getInstance().projectGroundZ(spawn.getWorldId(), spawn.getX(), spawn.getY(),
 				spawn.getZ(), instanceId),
-			() -> GameWorldServices.pathService().projectGroundPoint(spawn.getWorldId(), spawn.getX(), spawn.getY(),
+			() -> PathService.getInstance().projectGroundPoint(spawn.getWorldId(), spawn.getX(), spawn.getY(),
 				spawn.getZ()),
-			() -> GameWorldServices.geoService().getTerrainZ(spawn.getWorldId(), spawn.getX(), spawn.getY()));
+			() -> GeoService.getInstance().getTerrainZ(spawn.getWorldId(), spawn.getX(), spawn.getY()));
 	}
 
 	static float resolve(SpawnTemplate spawn, Supplier<Float> geoProjection, Supplier<float[]> pathProjection,

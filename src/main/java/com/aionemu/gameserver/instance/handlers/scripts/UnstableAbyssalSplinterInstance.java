@@ -15,7 +15,7 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -75,7 +75,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 	 */
 
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
 		if (dropItems == null) {
 			return;
 		}
@@ -83,7 +83,7 @@ public class UnstableAbyssalSplinterInstance extends GeneralInstanceHandler {
 		int index = dropItems.size() + 1;
  		if (npcId == 219548) {
  			//Unstable Enos Watcher.
- 			dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index, 0, npcId, 185000104, 1));
+ 			dropItems.add(DropRegistrationService.getInstance().regDropItem(index, 0, npcId, 185000104, 1));
  		}
 	}
 
