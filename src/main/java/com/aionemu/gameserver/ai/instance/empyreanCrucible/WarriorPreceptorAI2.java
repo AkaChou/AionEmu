@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -10,12 +8,14 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Warrior Preceptor（@AIName "warrior_preceptor"），继承 AggressiveNpcAI2。
@@ -56,7 +56,7 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSkillTask() {
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			} else {
@@ -72,10 +72,10 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSkillEvent() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
 			}
 		}, 6000);
 	}

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import lombok.Getter;
@@ -244,7 +244,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 
 	private void spawnRaidWave(final int npcId, int delay, final List<Future<?>> taskList) {
-		taskList.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		taskList.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -404,7 +404,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 				break;
 			case 855843: //Vision Of Guardian General.
 				points = 42000;
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -438,7 +438,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 
 	private void scheduleNextRound(long delay, Runnable task) {
-		GameThreadPoolServices.threadPoolManager().schedule(task, delay);
+		ThreadPoolManager.getInstance().schedule(task, delay);
 	}
 
 	/**
@@ -447,7 +447,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask1() {
-		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -472,7 +472,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 60000)); //…1 分钟 / ...1Min
 
-		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -489,7 +489,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 120000)); //...2Min
 
-		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -500,7 +500,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 180000)); //...3Min
 
-		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -513,7 +513,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 240000)); //...4Min
 
-		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -534,7 +534,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask2() {
-		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -549,7 +549,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 60000)); //…1 分钟 / ...1Min
 
-		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -565,7 +565,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 120000)); //...2Min
 
-		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -576,7 +576,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 180000)); //...3Min
 
-		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -589,7 +589,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 240000)); //...4Min
 
-		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -610,7 +610,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask3() {
-		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -625,7 +625,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 60000)); //…1 分钟 / ...1Min
 
-		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -641,7 +641,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 120000)); //...2Min
 
-		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -652,7 +652,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 180000)); //...3Min
 
-		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -665,7 +665,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 240000)); //...4Min
 
-		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -686,7 +686,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask4() {
-		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -701,7 +701,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 60000)); //…1 分钟 / ...1Min
 
-		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -717,7 +717,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 120000)); //...2Min
 
-		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -728,7 +728,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 180000)); //...3Min
 
-		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -741,7 +741,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
 		}, 240000)); //...4Min
 
-		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -798,7 +798,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startCountDown() {
-		stonespearTask5.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		stonespearTask5.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -821,7 +821,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 
 	private void stoneSpearRaid(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -905,7 +905,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -1090,7 +1090,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

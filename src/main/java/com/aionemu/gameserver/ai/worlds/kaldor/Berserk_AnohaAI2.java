@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.worlds.kaldor;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -17,8 +15,11 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		ThreadPoolManager.getInstance().schedule(() -> World.getInstance().doOnAllPlayers(player -> {
 			AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
 			// 狂暴阿诺哈已消失。 / Berserk Anoha has disappeared.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_DeSpawn);
@@ -87,14 +88,14 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 					case 23:
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						GameEngineServices.skillEngine().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
 						// 我为埃雷什基伽尔而战。你不得打扰她。 / I fight for Ereshkigal. You shall not distrub her.
 						sendMsg(1501393, getObjectId(), false, 0);
 						// 离开埃雷什基伽尔的要塞！ / Leave Ereshkigal's fortress!
 						sendMsg(1501394, getObjectId(), false, 5000);
-						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						ThreadPoolManager.getInstance().schedule(() -> {
 							if (!isAlreadyDead()) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
 								startThinkTask();
 								int total = explosiveSacrifice(855262); // 爆炸性牺牲 / Explosive Sacrifice.
 								if (total == 0 || (6 - total) != 0) {
@@ -132,7 +133,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startThinkTask() {
-		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		thinkTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				think = true;
 				Creature creature = getAggroList().getMostHated();
@@ -155,12 +156,12 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
 		// 你一定是想找死。那就如你所愿！ / You must want to perish. So be it!
 		sendMsg(1501395, getObjectId(), false, 0);
 		// 冻结并面对遗忘！ / Freeze and face oblivion!
 		sendMsg(1501397, getObjectId(), false, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				deleteNpcs(282746); // 熔岩 / Lava.
 int total = explosiveSacrifice(282746); // 熔岩 / Lava.
@@ -175,22 +176,22 @@ if (total == 0 || (8 - total) != 0) {
 	}
 
 	private void startSpecialSkillTask() {
-		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
-				specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
+				specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
-						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						SkillEngine.getInstance().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
+						specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 							if (!isAlreadyDead()) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
 								if (curentPercent <= 63) {
-									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+									specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 										if (!isAlreadyDead()) {
-											GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
+											SkillEngine.getInstance().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
 											// 哈哈哈！见识真正的力量！ / Muhahaha! Experience true power!
 											sendMsg(1501157, getObjectId(), false, 0);
-											GameThreadPoolServices.threadPoolManager().schedule(() -> {
+											ThreadPoolManager.getInstance().schedule(() -> {
 												if (!isAlreadyDead()) {
 													deleteNpcs(282747); // 熔岩 / Lava.
 													rndSpawn(282747); // 熔岩 / Lava.
@@ -286,7 +287,7 @@ if (total == 0 || (8 - total) != 0) {
 		if (p != null) {
 			sendBerserkAnohaGuide();
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 狂暴阿诺哈已被击败。 / Berserk Anoha has been defeated.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Anoha_Die);
 		});
@@ -295,7 +296,7 @@ if (total == 0 || (8 - total) != 0) {
 	}
 
 	private void sendBerserkAnohaGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				HTMLService.sendGuideHtml(player, "Berserk_Anoha");
 			}

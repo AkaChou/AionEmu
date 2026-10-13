@@ -10,7 +10,7 @@ import java.util.concurrent.ScheduledFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 
 /**
@@ -42,7 +42,7 @@ public class BGService {
 		if (futures.isEmpty()) {
 			BattlegroundEvent bgEvent = new BattlegroundEvent();
 			bgEvent.setPriority(1);
-			futures.add(GameEventServices.eventScheduler().scheduleAtFixedRate(bgEvent, delay, 6 * 60 * 1000));
+			futures.add(EventScheduler.getInstance().scheduleAtFixedRate(bgEvent, delay, 6 * 60 * 1000));
 		}
 	}
 

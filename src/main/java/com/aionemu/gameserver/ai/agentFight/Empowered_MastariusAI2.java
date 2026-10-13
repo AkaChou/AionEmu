@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai.agentFight;
 import com.aionemu.gameserver.services.AgentService;
 
 import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -14,8 +13,10 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -73,14 +74,14 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 	}
 
 	private void sendMastariusGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				HTMLService.sendGuideHtml(player, "Agent_Fight");
 			}
 		});
 	}
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				AbyssPointsService.addGp(player, 500);
 			}
@@ -88,7 +89,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceKilledMarchutan() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				// “种族”的“玩家名”击杀了玛尔库坦代理人玛斯塔里乌斯。 / "Player Name" of the "Race" has killed Marchutan's Agent Mastarius.
@@ -97,13 +98,13 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceAgentUnderAttack() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 玛尔库坦代理人玛斯塔里乌斯遭受攻击！ / Marchutan's Agent Mastarius is under attack!
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DARKBOSS_ATTACKED);
 		});
 	}
 	private void announceJusinOdSpawn() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 主神代理人召唤了奥德集中器。 / The Empyrean Lord Agent summoned the Aether Concentrator.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_OdSpawn, 0);
 			// 主神代理人已启用奥德集中器。 / The Empyrean Lord Agent has enabled the Aether Concentrator.
@@ -111,29 +112,29 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpyreanLordAgentHP50() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 主神代理人生命值已降至 50% 以下。 / The Empyrean Lord Agent's HP has dropped below 50%
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_Hp50);
 		});
 	}
 	private void announceEmpyreanLordAgentHP10() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 主神代理人生命值已降至 10% 以下。 / The Empyrean Lord Agent's HP has dropped below 10%
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Jusin_Hp10);
 		});
 	}
 	private void announceEmpoweredMastariusDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 代理人之战已结束。 / The Agent battle has ended.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite_time_03);
 		});
 	}
 
 	public void applyVeilleEnergy() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
-				GameEngineServices.skillEngine().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
-				GameEngineServices.skillEngine().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
+				SkillEngine.getInstance().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
+				SkillEngine.getInstance().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
 			}
 		});
 	}

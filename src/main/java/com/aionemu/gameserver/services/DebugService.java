@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
 
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 调试诊断服务，周期性检查在线玩家连接与心跳异常。
@@ -59,7 +60,7 @@ public class DebugService {
 	 * Starts the periodic player-health check task.
 	 */
 	public DebugService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::analyzeWorldPlayers, ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(this::analyzeWorldPlayers, ANALYZE_PLAYERS_INTERVAL, ANALYZE_PLAYERS_INTERVAL);
 		log.info(I18n.get("log.c0807adf5cd7", ANALYZE_PLAYERS_INTERVAL));
 	}
 
@@ -70,7 +71,7 @@ public class DebugService {
 	private void analyzeWorldPlayers() {
 		log.info(I18n.get("log.25e39c719d4a", System.currentTimeMillis()));
 
-		Iterator<Player> playersIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> playersIterator = World.getInstance().getPlayersIterator();
 		while (playersIterator.hasNext()) {
 			Player player = playersIterator.next();
 

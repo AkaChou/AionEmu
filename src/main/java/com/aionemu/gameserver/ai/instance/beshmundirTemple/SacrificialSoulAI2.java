@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.model.actions.NpcActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Sacrificial Soul（@AIName "templeSoul"），继承 AggressiveNpcAI2。
@@ -44,7 +44,7 @@ public class SacrificialSoulAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleMoveArrived() {
 		if (boss != null && !NpcActions.isAlreadyDead(boss)) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); // 死亡召唤 / Call Of The Grave.
+			SkillEngine.getInstance().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); // 死亡召唤 / Call Of The Grave.
 			AI2Actions.deleteOwner(this);
 		}
 	}

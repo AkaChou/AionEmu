@@ -6,9 +6,6 @@ import com.aionemu.gameserver.ai.RetailNpcPartyEngine;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,9 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import com.aionemu.gameserver.services.HousingService;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
@@ -431,7 +431,7 @@ public class SpawnEngine {
 	 */
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
 									  float z, byte h) {
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		// 目标实例可能已在副本销毁流程中注销：destroyInstance 先 removeWorldMapInstance 再逐个删除场内对象，
 		// 期间 AI 的 despawn 链仍会执行 spawn 动作（AI 路径不在实例处理器的 isInstanceDestroyed 护栏内）；
 		// 此时 setPosition 会静默失败、mapRegion 保持 null，继续 spawn 必然在 onBeforeSpawn 处 NPE，
@@ -480,7 +480,7 @@ public class SpawnEngine {
 	public static void bringIntoWorld(VisibleObject visibleObject) {
 		if (visibleObject.getPosition() == null)
 			throw new IllegalArgumentException("Position is null");
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		world.storeObject(visibleObject);
 		world.spawn(visibleObject);
 	}
@@ -606,7 +606,7 @@ public class SpawnEngine {
 	public static void spawnInstance(int worldId, int instanceId, int difficultId, int spawnPage, int ownerId) {
 		List<SpawnGroup2> worldSpawns = DataManager.SPAWNS_DATA2.getSpawnsByWorldId(worldId);
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
-		WorldMap worldMap = GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap worldMap = World.getInstance().getWorldMap(worldId);
 		WorldMapInstance instance = worldMap.getWorldMapInstanceById(instanceId);
 		long instanceCreatedAt = System.currentTimeMillis();
 		StaticDoorSpawnManager.spawnTemplate(worldId, instanceId);
@@ -630,7 +630,7 @@ public class SpawnEngine {
 					if (deadline <= now) {
 						spawnedCounter += spawnGroup(spawn, instanceId);
 					} else {
-						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						ThreadPoolManager.getInstance().schedule(() -> {
 							if (worldMap.getWorldMapInstanceById(instanceId) == instance) {
 								spawnGroup(spawn, instanceId);
 							}
@@ -643,7 +643,7 @@ public class SpawnEngine {
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
 		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
-		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
+		HousingService.getInstance().spawnHouses(worldId, instanceId, ownerId);
 		RetailNpcPartyEngine.initialize(instance);
 		RetailConditionSpawnEngine.initialize(instance);
 	}
@@ -711,7 +711,7 @@ public class SpawnEngine {
 	 */
 	public static void printWorldSpawnStats() {
 		StatsCollector visitor = new StatsCollector();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(visitor);
+		World.getInstance().doOnAllObjects(visitor);
 		log.info(I18n.get("log.6931cfbae670", visitor.getNpcCount()));
 		log.info(I18n.get("log.a6e250bd76ce", visitor.getGatherableCount()));
 	}
@@ -765,7 +765,7 @@ public class SpawnEngine {
 			spawn.resetTemplates(instanceIndex);
 			for (int i = 0; i < spawn.getPool(); i++) {
 				SpawnTemplate template = spawn.getRndTemplate(instanceIndex);
-				int objectId = GameWorldBootstrapServices.idFactory().nextId();
+				int objectId = IDFactory.getInstance().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
 					objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
@@ -773,7 +773,7 @@ public class SpawnEngine {
 			}
 		} else {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
-				int objectId = GameWorldBootstrapServices.idFactory().nextId();
+				int objectId = IDFactory.getInstance().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
 					objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
@@ -787,7 +787,7 @@ public class SpawnEngine {
 	 * Stores, positions and spawns the static object into the world.
 	 */
 	private static void bringStaticObjectIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		World world = GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
 			spawn.getHeading());

@@ -5,9 +5,6 @@ import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameCraftServices;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -33,12 +30,14 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SELL_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRADELIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRADE_IN_LIST;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.item.ItemChargeService;
 import com.aionemu.gameserver.services.teleport.PortalService;
@@ -188,7 +187,7 @@ public class DialogService {
 		if (dispatchQuest) {
 			QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
 			env.setExtendedRewardIndex(extendedRewardIndex);
-			if (GameEngineServices.questEngine().onDialog(env)) {
+			if (QuestEngine.getInstance().onDialog(env)) {
 				return;
 			}
 			if (questId != 0 && dialogId != QuestDialogAction.QUEST_SELECT.id()
@@ -401,7 +400,7 @@ public class DialogService {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA);
 					return;
 				}
-				GameCraftServices.craftSkillUpdateService().learnSkill(player, npc);
+				CraftSkillUpdateService.getInstance().learnSkill(player, npc);
 			}
 			case 47 -> CubeExpandService.expandCube(player, npc);
 			case 48 -> WarehouseService.expandWarehouse(player, npc);
@@ -452,11 +451,11 @@ public class DialogService {
 				PacketSendUtility.sendPacket(player, new SM_TRADE_IN_LIST(npc, tradeListTemplate, 100));
 			}
 			case 79 -> {
-				GameCraftServices.relinquishCraftStatus();
+				RelinquishCraftStatus.getInstance();
 				RelinquishCraftStatus.relinquishExpertStatus(player, npc);
 			}
 			case 80 -> {
-				GameCraftServices.relinquishCraftStatus();
+				RelinquishCraftStatus.getInstance();
 				RelinquishCraftStatus.relinquishMasterStatus(player, npc);
 			}
 			case 84 -> {
@@ -472,7 +471,7 @@ public class DialogService {
 			case 93 -> PacketSendUtility.sendPacket(player, new SM_PET(17));
 			case 94 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 42));
 			case 95 -> ItemChargeService.startChargingEquippedItems(player, targetObjectId, 2);
-			case 96 -> GameHousingServices.housingService().recreatePlayerStudio(player);
+			case 96 -> HousingService.getInstance().recreatePlayerStudio(player);
 			case 100 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 43));
 			case 103 -> {
 				// 购买列表。 / Purchase List.

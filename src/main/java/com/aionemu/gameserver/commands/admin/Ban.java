@@ -2,10 +2,12 @@ package com.aionemu.gameserver.commands.admin;
 
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员封禁命令：按账号/IP/全量封禁玩家。
@@ -40,7 +42,7 @@ public class Ban extends AdminCommand {
 		String accountIp = "";
 
 		// 首先尝试在世界中查找玩家 / First, try to find player in the World
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
+		Player player = World.getInstance().findPlayer(name);
 		if (player != null) {
 			accountId = player.getClientConnection().getAccount().getId();
 			accountIp = player.getClientConnection().getIP();
@@ -83,7 +85,7 @@ public class Ban extends AdminCommand {
 			}
 		}
 
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket(type, accountId, accountIp, time, admin.getObjectId());
+		LoginServer.getInstance().sendBanPacket(type, accountId, accountIp, time, admin.getObjectId());
 	}
 
 	/**

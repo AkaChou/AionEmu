@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -13,7 +11,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -41,7 +41,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2 {
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			if (getNpcId() == 236227) { //Lava Protector.
-				lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				lavaProtectorTask = ThreadPoolManager.getInstance().schedule(() -> {
 					AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
 					// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
@@ -60,8 +60,8 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void shareSource() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
+		SkillEngine.getInstance().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
+		SkillEngine.getInstance().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
 
 	private void checkPercentage(int hpPercentage) {
@@ -78,12 +78,12 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startMagmaGluttenTask() {
-		magmaGluttenTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		magmaGluttenTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelMagmaGluttenTask();
 				cancelLavaProtectorTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+				SkillEngine.getInstance().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -110,7 +110,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2 {
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(855621, x, y, z, (byte) 0); //Magma Glutten.
 				}

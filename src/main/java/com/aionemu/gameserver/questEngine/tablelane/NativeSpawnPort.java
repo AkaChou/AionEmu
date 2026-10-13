@@ -3,10 +3,10 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -82,7 +82,7 @@ public interface NativeSpawnPort {
 					SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, spawnX, spawnY, spawnZ, heading),
 					instanceId);
 				if (object != null && lifeSeconds > 0) {
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (object.isSpawned()) {
 							object.getController().delete();
 						}

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
@@ -16,6 +15,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Panesterra 区域 NPC AI：Soul Anchor Barrier（@AIName "Soul_Anchor_Barrier"），继承 NpcAI2。
@@ -48,7 +49,7 @@ public class Soul_Anchor_BarrierAI2 extends NpcAI2 {
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(() -> {
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
 				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
 				player.getObserveController().removeObserver(observer);
@@ -97,7 +98,7 @@ public class Soul_Anchor_BarrierAI2 extends NpcAI2 {
 
 	@Override
 	protected void handleDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				AI2Actions.deleteOwner(Soul_Anchor_BarrierAI2.this);

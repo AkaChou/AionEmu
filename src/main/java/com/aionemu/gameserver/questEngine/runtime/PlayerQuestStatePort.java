@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.runtime;
 import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 
 import java.sql.SQLException;
@@ -16,7 +17,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.IntFunction;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 
@@ -35,7 +35,7 @@ public final class PlayerQuestStatePort implements QuestStatePort {
 
 	public PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestDao questDao) {
 		this(players, questDao,
-			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+			questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	PlayerQuestStatePort(QuestPlayerPort players, PlayerQuestDao questDao,

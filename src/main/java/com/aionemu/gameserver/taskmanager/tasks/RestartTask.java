@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +8,8 @@ import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 数据库调度的自动重启任务处理器。
@@ -68,9 +69,9 @@ public class RestartTask extends TaskFromDBHandler {
 		announceInterval = Integer.parseInt(params[1]);
 		warnCountDown = Integer.parseInt(params[2]);
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will restart in "
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will restart in "
 				+ warnCountDown + " seconds ! Please find a safe place and disconnect your character."));
 
-		GameThreadPoolServices.threadPoolManager().schedule(() -> GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.RESTART), warnCountDown * 1000L);
+		ThreadPoolManager.getInstance().schedule(() -> GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.RESTART), warnCountDown * 1000L);
 	}
 }

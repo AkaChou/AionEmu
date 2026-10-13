@@ -10,13 +10,13 @@ import com.aionemu.gameserver.ai2.manager.FollowManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcPathBehaviorData;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
@@ -195,7 +195,7 @@ public class TargetEventHandler {
 		}
 		byte heading = (byte) Math.floorMod(owner.getHeading() + 60, 120);
 		target.getMoveController().abortMove();
-		GameWorldBootstrapServices.world().updatePosition(target, x, y, z, heading);
+		World.getInstance().updatePosition(target, x, y, z, heading);
 		PacketSendUtility.broadcastPacketAndReceive(target, new SM_FORCED_MOVE(owner, target.getObjectId(), x, y, z));
 	}
 

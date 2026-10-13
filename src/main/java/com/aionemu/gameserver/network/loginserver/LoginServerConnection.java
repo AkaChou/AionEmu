@@ -5,8 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -16,6 +14,7 @@ import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 表示游戏服与登录服之间的一条网络连接。
@@ -86,7 +85,7 @@ public class LoginServerConnection extends AConnection {
 	 * Initialize packet handler and connection state, then log the connect event.
 	 */
 	private void init() {
-		LsPacketHandlerFactory lsPacketHandlerFactory = GameServerNetworkServices.lsPacketHandlerFactory();
+		LsPacketHandlerFactory lsPacketHandlerFactory = LsPacketHandlerFactory.getInstance();
 		this.lsPacketHandler = lsPacketHandlerFactory.getPacketHandler();
 		state = State.CONNECTED;
 		log.info(I18n.get("log.344132a769b8"));
@@ -112,7 +111,7 @@ public class LoginServerConnection extends AConnection {
 		log.debug("received packet: {}", pck);
 
 		if (pck != null && pck.read()) {
-			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
+			ThreadPoolManager.getInstance().executeLsPacket(pck);
 		}
 		return true;
 	}
@@ -151,7 +150,7 @@ public class LoginServerConnection extends AConnection {
 	 */
 	@Override
 	protected final void onDisconnect() {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().loginServerDown();
+		LoginServer.getInstance().loginServerDown();
 	}
 
 	/**

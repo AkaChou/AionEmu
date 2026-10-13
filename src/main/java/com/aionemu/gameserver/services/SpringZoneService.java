@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +11,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.springzone.SpringObject;
 import com.aionemu.gameserver.model.templates.springzones.SpringTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 泉水区域服务，刷出泉水对象并为范围内玩家施加守护祝福。
@@ -43,13 +43,13 @@ public class SpringZoneService {
 	 * Periodically applies skill 17560 to players in spring range without the effect.
 	 */
 	private void startSpring() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			for (final SpringObject obj : springObjects)
 				obj.getKnownList().doOnAllPlayers(player -> {
 					if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 							&& (!player.getEffectController().hasAbnormalEffect(17560))) { // Bless Of Guardian
 																							// 泉。 / Spring.
-						GameEngineServices.skillEngine().getSkill(player, 17560, 1, player).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(player, 17560, 1, player).useNoAnimationSkill();
 					}
 				});
 		}, 1000, 1000);

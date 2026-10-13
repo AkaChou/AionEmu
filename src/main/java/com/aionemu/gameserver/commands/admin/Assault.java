@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.ArrayList;
@@ -180,7 +180,7 @@ public class Assault extends AdminCommand {
 	 * @param despawnList 待删除可见对象列表 / list of visible objects to despawn
 	 */
 	private void despawnThem(final Player admin, final List<VisibleObject> despawnList, final int despawnTime) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			int despawnCount = 0;
 			for(VisibleObject visObj : despawnList)	{
 				if(visObj != null && visObj.isSpawned()) {

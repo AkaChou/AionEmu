@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员伊迪安深渊活动命令：按地点 ID 启动或停止 Idian Depths。
@@ -56,7 +57,7 @@ public class IdianDepths extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Idian Depths> is now open !!!"));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Idian Depths> is now open !!!"));
 				IdianDepthsService.getInstance().startIdianDepths(idianDepthsId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

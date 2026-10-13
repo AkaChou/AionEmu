@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.housing;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,9 +7,11 @@ import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -29,7 +30,7 @@ public class StudioPortalAI2 extends ActionItemNpcAI2
 	@Override
     protected void handleUseItemFinish(Player player) {
 		int ownerId = player.getPosition().getWorldMapInstance().getOwnerId();
-		House studio = GameHousingServices.housingService().getPlayerStudio(player.getObjectId());
+		House studio = HousingService.getInstance().getPlayerStudio(player.getObjectId());
 		if (studio == null && ownerId == 0) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_HOUSING_ENTER_NEED_HOUSE);
 			return;
@@ -39,12 +40,12 @@ public class StudioPortalAI2 extends ActionItemNpcAI2
 		byte heading = 0;
 		int instanceId = 0;
 		if (ownerId > 0) {
-			studio = GameHousingServices.housingService().getPlayerStudio(ownerId);
+			studio = HousingService.getInstance().getPlayerStudio(ownerId);
 			if (studio == null) {
 				return;
 			}
 			exitMapId = studio.getAddress().getExitMapId();
-			instanceId = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
+			instanceId = World.getInstance().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
 			x = studio.getAddress().getExitX();
 			y = studio.getAddress().getExitY();
 			z = studio.getAddress().getExitZ();

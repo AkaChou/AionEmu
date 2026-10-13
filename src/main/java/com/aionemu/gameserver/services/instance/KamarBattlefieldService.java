@@ -2,14 +2,12 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.Objects;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -43,13 +43,8 @@ public class KamarBattlefieldService {
 	public KamarBattlefieldService(@NonNull AutoGroupService autoGroupService) {
 		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
 	}
-    /**
-     * -- SETTER --
-     *  设置服务提供者。
-     *  Sets the service provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<KamarBattlefieldService> instanceProvider;
+	private static volatile ObjectProvider<KamarBattlefieldService> instanceProvider;
+	private static volatile KamarBattlefieldService resolvedInstance;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
@@ -63,16 +58,16 @@ public class KamarBattlefieldService {
 		if (AutoGroupConfig.KAMAR_ENABLED) {
 			log.info(I18n.get("log.f91ec0a50ddc"));
 			// 卡玛尔战场 周五 23:00–00:00 / Kamar Battlefield FRI "11PM-0AM"
-            GameCronServices.cronService().schedule(this::startKamarRegistration, AutoGroupConfig.KAMAR_SCHEDULE_MIDNIGHT);
+            CronService.requireCurrent().schedule(this::startKamarRegistration, AutoGroupConfig.KAMAR_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterKamarTask() {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 autoGroupService.unRegisterInstance(maskId);
-			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();
 				 if (player.getLevel() > minLevel) {
@@ -93,7 +88,7 @@ public class KamarBattlefieldService {
 	public void startKamarRegistration() {
 		this.registerAvailable = true;
 		startUregisterKamarTask();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {
@@ -175,14 +170,30 @@ public class KamarBattlefieldService {
 	 *         when no provider or bean is available
 	 */
 	public static KamarBattlefieldService getInstance() {
+		KamarBattlefieldService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<KamarBattlefieldService> provider = instanceProvider;
-		KamarBattlefieldService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("KamarBattlefieldService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<KamarBattlefieldService> instanceProvider) {
+		KamarBattlefieldService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

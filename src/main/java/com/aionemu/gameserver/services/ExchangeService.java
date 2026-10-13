@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,7 @@ import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
@@ -45,6 +44,7 @@ public class ExchangeService {
 	private final ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<>();
 
 	private static volatile ObjectProvider<ExchangeService> instanceProvider;
+	private static volatile ExchangeService resolvedInstance;
 	private final InventoryDao inventoryDAO;
 
 	/**
@@ -58,14 +58,19 @@ public class ExchangeService {
 	 *         when no provider or bean is available
 	 */
 	public static ExchangeService getInstance() {
+		ExchangeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ExchangeService> provider = instanceProvider;
-		ExchangeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ExchangeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -75,6 +80,7 @@ public class ExchangeService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ExchangeService> instanceProvider) {
 		ExchangeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -199,7 +205,7 @@ public class ExchangeService {
 		if (partner == null) {
 			return;
 		}
-		if (!GameTaskManagerServices.temporaryTradeTimeTask().canTrade(item, partner.getObjectId())) {
+		if (!TemporaryTradeTimeTask.getInstance().canTrade(item, partner.getObjectId())) {
 			if (!item.isTradeable(activePlayer)) {
 				return;
 			}
@@ -226,7 +232,7 @@ public class ExchangeService {
 		if (currentExchange.isExchangeListFull()) {
 			return;
 		}
-		if (!GameRuntimeServices.adminService().canOperate(activePlayer, partner, item, "trade")) {
+		if (!AdminService.getInstance().canOperate(activePlayer, partner, item, "trade")) {
 			return;
 		}
 		ExchangeItem exchangeItem = currentExchange.getItems().get(item.getObjectId());

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Cradle Of Eternity 副本 NPC AI：Altar Of Earth（@AIName "Altar_Of_Earth"），继承 ActionItemNpcAI2。
@@ -35,7 +35,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834006: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(834006);
 					AI2Actions.deleteOwner(Altar_Of_EarthAI2.this);
 					spawn(834006, 1025.1476f, 774.97748f, 1033.6420f, (byte) 0, 291);
@@ -44,7 +44,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834019: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(834019);
 					AI2Actions.deleteOwner(Altar_Of_EarthAI2.this);
 					spawn(834019, 1027.2802f, 771.84601f, 1033.6420f, (byte) 0, 340);
@@ -53,7 +53,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834020: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(834020);
 					AI2Actions.deleteOwner(Altar_Of_EarthAI2.this);
 					spawn(834020, 1027.4769f, 777.98260f, 1033.6420f, (byte) 0, 299);
@@ -62,7 +62,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834021: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(834021);
 					AI2Actions.deleteOwner(Altar_Of_EarthAI2.this);
 					spawn(834021, 1031.0382f, 776.67932f, 1033.6420f, (byte) 0, 387);
@@ -71,7 +71,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834022: // 大地祭坛 / Altar Of Earth.
 				// 大地孔雀石发出光芒并开始漂浮。 / The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(834017);
 					despawnNpc(834022);
 					AI2Actions.deleteOwner(Altar_Of_EarthAI2.this);

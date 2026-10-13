@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.archivesOfEternity;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Archives Of Eternity 副本 NPC AI：Leibo Steward（@AIName "leibo"），继承 GeneralNpcAI2。
@@ -46,7 +46,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -61,7 +61,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -76,7 +76,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -91,7 +91,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 		WalkManager.startWalking(this);
 		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-                GameThreadPoolServices.threadPoolManager().schedule(() -> {
+                ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -106,7 +106,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 	       		WalkManager.startWalking(this);
 	       		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				despawn();
 			}
@@ -121,7 +121,7 @@ public class Leibo_StewardAI2 extends GeneralNpcAI2
 	       		WalkManager.startWalking(this);
 	       		getOwner().setState(1);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				despawn();
 			}

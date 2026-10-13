@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -21,9 +19,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -81,7 +81,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 220729: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -105,7 +105,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221015: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -123,7 +123,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221016: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -139,7 +139,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221017: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -155,7 +155,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221018: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -211,7 +211,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			// 指挥官泽达斯。 / Commander Zedas.
 			case 220705:
 				despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -263,7 +263,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 					sendMovie(player, 950);
 					// 战舰已被摧毁。 / The Dredgion was destroyed.
 					sendMsgByRace(1403958, Race.PC_ALL, 0);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -366,7 +366,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220716); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 国会大厦被弗里吉达军团占领。 / The Capitol Building has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403786, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -395,7 +395,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220717); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 黄金神殿被弗里吉达军团占领。 / The Temple of Gold has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403787, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -424,7 +424,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220718); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 潘达梦宁大神殿被弗里吉达军团占领。 / The Great Temple in Pandaemonium has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403788, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -456,7 +456,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220780: //Boardable Pandaemonium Defense Turret.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220783: //Turret Generator.
 				sp(221022, 2244.9700f, 1277.0400f, 187.97000f, (byte) 0, 239, 2000, 0, null);
@@ -588,7 +588,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 
 	protected void startInstanceTask() {
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -609,7 +609,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				sp(703406, 1466.8002f, 1375.8978f, 177.06723f, (byte) 90, 20000); //Frigida Drakan Commander [Flag].
             }
         }, 60000)); //1 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -665,7 +665,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}
             }
         }, 180000)); //3 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -676,7 +676,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(703404, 1685.2803f, 1400.4742f, 195.3448f, (byte) 60); //Zallad [Flag].
             }
         }, 300000)); //5 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -690,7 +690,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(703402, 1363.3180f, 1439.0773f, 209.09084f, (byte) 50); //Hemerinerk [Flag].
             }
         }, 900000)); //15 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -708,7 +708,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(834517, 978.90906f, 1113.4866f, 201.09975f, (byte) 0, 2477); //Turret Core 4.
             }
         }, 1200000)); //20 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -760,7 +760,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				sp(220705, 1275.5393f, 1357.4648f, 204.47417f, (byte) 30, 52000); //Commander Zedas.
             }
         }, 1800000)); //30 Min.
-		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -887,7 +887,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -905,7 +905,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1001,7 +1001,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

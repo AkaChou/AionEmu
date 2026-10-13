@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤图腾效果：生成图腾或特殊技能区域型侍从。
@@ -58,7 +58,7 @@ public class SummonTotemEffect extends SummonServantEffect {
 			SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 			final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, effect.getSkillId(),
 					effect.getSkillLevel(), NpcObjectType.SKILLAREA);
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> servant.getController().delete(), time * 1000L);
+			Future<?> task = ThreadPoolManager.getInstance().schedule(() -> servant.getController().delete(), time * 1000L);
 			servant.getController().addTask(TaskId.DESPAWN, task);
 			return;
 		default:

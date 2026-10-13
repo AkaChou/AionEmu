@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.ai.classAi;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -17,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 职业技能召唤物/陷阱 AI：Mage（@AIName "mage"），继承 AggressiveNpcAI2。
@@ -50,7 +50,7 @@ public class MageAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
@@ -80,7 +80,7 @@ public class MageAI2 extends AggressiveNpcAI2 {
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					switch (Rnd.get(1, 4)) {
 						case 1:
@@ -332,35 +332,35 @@ public class MageAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void iceClawBlessing() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
+		SkillEngine.getInstance().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
 	}
 
 	private void mistShadeBlessing() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
+		SkillEngine.getInstance().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
 	}
 
 	private void anuhartBravery() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+		SkillEngine.getInstance().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 
 	private void survivalInstinct() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
+		SkillEngine.getInstance().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
 
 	private void conquerorPassion() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
+		SkillEngine.getInstance().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
 
 	private void midnightRobe() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
+		SkillEngine.getInstance().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
 	}
 
 	private void ereshkigalRage() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+		SkillEngine.getInstance().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
 
 	private void brokenMorale() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
+		SkillEngine.getInstance().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
 
 	@Override

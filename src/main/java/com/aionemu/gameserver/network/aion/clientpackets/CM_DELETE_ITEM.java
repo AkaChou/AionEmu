@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -52,7 +52,7 @@ public class CM_DELETE_ITEM extends AionClientPacket {
 				// （确认后放弃相关任务并删物品；不可放弃/拒绝/在途请求各有提示），物品暂不删。
 				// The quest-reference gate (retail User_DestroyItem): the engine claims the destroy when
 				// in-progress quests reference the item (confirm → stop the quests + delete).
-				if (GameEngineServices.questEngine().tryQuestItemDestroy(player, item)) {
+				if (QuestEngine.getInstance().tryQuestItemDestroy(player, item)) {
 					return;
 				}
 				inventory.delete(item, ItemDeleteType.DISCARD);

@@ -2,8 +2,8 @@ package com.aionemu.gameserver.model.ingameshop;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_PREMIUM_CONTR
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.NonNull;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 游戏内商城引擎：加载商品、处理购买请求并与登录服点数同步。
@@ -38,12 +39,8 @@ import lombok.NonNull;
 @Slf4j(topic = "INGAMESHOP_LOG")
 public class InGameShopEn {
 
-	/**
-	 * -- SETTER --
-	 * 设置实例提供者。 / Sets the instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
+	private static volatile InGameShopEn resolvedInstance;
 	private volatile Map<Byte, List<IGItem>> items = Collections.emptyMap();
 	private final IngameshopDao dao;
 	private volatile InGameShopProperty iGProperty;
@@ -64,14 +61,30 @@ public class InGameShopEn {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static InGameShopEn getInstance() {
+		InGameShopEn resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<InGameShopEn> provider = instanceProvider;
-		InGameShopEn provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("InGameShopEn 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<InGameShopEn> instanceProvider) {
+		InGameShopEn.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -201,7 +214,7 @@ public class InGameShopEn {
 		lastRequestId++;
 		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), itemObjId);
 		request.accountId = player.getClientConnection().getAccount().getId();
-		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
+		if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
 			activeRequests.add(request);
 		if (InGameShopConfig.GAMESHOP_LIMIT) {
 			if (item.getCategory() == InGameShopConfig.GAMESHOP_CATEGORY) {
@@ -218,7 +231,7 @@ public class InGameShopEn {
 			lastRequestId++;
 			IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), 0);
 			request.accountId = player.getClientConnection().getAccount().getId();
-			if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
+			if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
 				activeRequests.add(request);
 			}
 		} else {
@@ -243,7 +256,7 @@ public class InGameShopEn {
 			return;
 		}
 
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(foundRequest.playerId);
+		Player player = World.getInstance().findPlayer(foundRequest.playerId);
 		if (player != null) {
 			if (result == 1) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_ERROR);

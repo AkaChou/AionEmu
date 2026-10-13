@@ -72,18 +72,18 @@ public class EngineBeans {
     }
 
     /**
-     * 技能引擎 Bean：直接暴露静态单例，使其成为容器可解析的 Bean。
-     * Skill-engine bean: exposes the static singleton so the container can resolve it.
+     * 技能引擎 Bean：由容器直接构造唯一实例。
+     * Skill-engine bean: the container constructs the single instance directly.
      * <p>不得改写成 {@code SkillEngine.getInstance()}：该方法会回头向本容器索取
-     * {@code SkillEngine}，构成 Bean 创建期循环引用。返回静态字段是行为等价的。</p>
+     * {@code SkillEngine}，构成 Bean 创建期循环引用。</p>
      * <p>Must not call {@code SkillEngine.getInstance()}: it would ask this very container for
-     * {@code SkillEngine} and create a creation-time cycle. Returning the static field is equivalent.</p>
+     * {@code SkillEngine} and create a creation-time cycle.</p>
      * @return 技能引擎 / skill engine
      */
     @Bean
     @Lazy
     public SkillEngine skillEngine() {
-        return SkillEngine.skillEngine;
+        return new SkillEngine();
     }
 
     @Bean

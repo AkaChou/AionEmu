@@ -3,24 +3,24 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.GameServerError;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.*;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.List;
+import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 
 
 /**
@@ -51,7 +51,7 @@ public class Reload extends AdminCommand {
 		switch (params[0]) {
 			case "quest":
 				try {
-					QuestEngine questEngine = GameEngineServices.questEngine();
+					QuestEngine questEngine = QuestEngine.getInstance();
 					QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
 					QuestsData newQuestData = QuestsData.fromCatalog(com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
 					reloadQuests(newQuestData.getQuestsData(), prepared);
@@ -63,7 +63,7 @@ public class Reload extends AdminCommand {
 				break;
 			case "skill":
 				try {
-					DataManager.SKILL_DATA = GameStaticDataServices.xmlDataLoader().loadSkillData();
+					DataManager.SKILL_DATA = XmlDataLoader.getInstance().loadSkillData();
 					PacketSendUtility.sendMessage(admin, "Skill reload Success!");
 				} catch (Exception e) {
 					PacketSendUtility.sendMessage(admin, "Skill reload failed!");
@@ -86,7 +86,7 @@ public class Reload extends AdminCommand {
 				break;
 			case "commands":
 				try {
-					GameEngineServices.chatProcessor().reload();
+					ChatProcessor.getInstance().reload();
 					PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
 				} catch (GameServerError e) {
 					PacketSendUtility.sendMessage(admin, "Admin command reload failed; existing commands were kept.");
@@ -102,7 +102,7 @@ public class Reload extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 				break;
 			case "gameshop":
-				GameRuntimeServices.inGameShopEn().reload();
+				InGameShopEn.getInstance().reload();
 				PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
 				break;
 			case "events":
@@ -118,13 +118,13 @@ public class Reload extends AdminCommand {
 					return;
 				}
 				if (data != null) {
-					GameEventServices.eventService().stop();
+					EventService.getInstance().stop();
 					String text = data.getActiveText();
 					if (text == null || text.trim().isEmpty())
 						text = "NONE";
 					DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
 					PacketSendUtility.sendMessage(admin, "Active events: " + text);
-					GameEventServices.eventService().start();
+					EventService.getInstance().start();
 				}
 				break;
 			default:
@@ -143,7 +143,7 @@ public class Reload extends AdminCommand {
 	private void reloadQuests(List<QuestTemplate> quests,
 			QuestEngine.PreparedProductionDefinitions prepared) {
 		List<QuestTemplate> oldQuests = DataManager.QUEST_DATA.getQuestsData();
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		QuestEngine.PreparedProductionDefinitions previous = questEngine.currentProductionDefinitions();
 		questEngine.shutdown();
 		try {

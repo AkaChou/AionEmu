@@ -45,6 +45,7 @@ public class World {
 
 	/** Spring 实例提供者 / Spring instance provider */
 	private static volatile ObjectProvider<World> instanceProvider;
+	private static volatile World resolvedInstance;
 	/** 在线玩家容器 / online player container */
 	private final PlayerContainer allPlayers;
 	/** 全部可见对象 / all visible objects */
@@ -97,14 +98,19 @@ public class World {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static World getInstance() {
+		World resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<World> provider = instanceProvider;
-		World provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("World 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -114,6 +120,7 @@ public class World {
 	 */
 	public static void setInstanceProvider(ObjectProvider<World> instanceProvider) {
 		World.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

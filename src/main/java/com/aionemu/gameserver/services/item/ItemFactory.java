@@ -3,11 +3,11 @@ package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 物品工厂，按模板与数量创建物品实例。
@@ -32,7 +32,7 @@ public class ItemFactory {
 			log.error(I18n.get("log.c0940ff7ef75", itemId));
 			return null;
 		}
-		return new Item(GameWorldBootstrapServices.idFactory().nextId(), itemTemplate);
+		return new Item(IDFactory.getInstance().nextId(), itemTemplate);
 	}
 
 	/**

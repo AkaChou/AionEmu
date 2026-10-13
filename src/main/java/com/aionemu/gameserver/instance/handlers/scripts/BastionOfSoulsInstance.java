@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -26,7 +24,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -350,7 +350,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
 	private void bastionToStartRoom(Player player) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -372,7 +372,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
 			}
 		}, 3000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -488,7 +488,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				sendMsgByRace(1404218, Race.ELYOS, 30000);
 				// 收割者正在攻击巴蒂斯坎队长。恢复其生命以清除因卡纳根。 / The Harvesters are attacking Captain Batiskan. Restore Batiskan's HP to get rid of the Incarna roots.
 				sendMsgByRace(1404219, Race.ASMODIANS, 30000);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -636,10 +636,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    GameEngineServices.skillEngine().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
+					    SkillEngine.getInstance().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
 					break;
 					case 2:
-					    GameEngineServices.skillEngine().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
+					    SkillEngine.getInstance().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
 					break;
 				}
 			break;
@@ -872,7 +872,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -900,7 +900,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 60000)); //…1 分钟 / ...1Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -929,7 +929,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 120000)); //...2Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -958,7 +958,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 180000)); //...3Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -987,7 +987,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 240000)); //...4Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1016,7 +1016,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 300000)); //...5Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1045,7 +1045,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 360000)); //...6Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1074,7 +1074,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 420000)); //...7Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1103,7 +1103,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 480000)); //...8Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1132,7 +1132,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 540000)); //...9Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1161,7 +1161,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 600000)); //...10Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1190,7 +1190,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 660000)); //...11Min
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1221,7 +1221,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
 	private void rushBastion(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1242,7 +1242,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA2() {
-		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1255,7 +1255,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1271,7 +1271,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA3() {
-		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1284,7 +1284,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1300,7 +1300,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA4() {
-		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1313,7 +1313,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1329,7 +1329,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA5() {
-		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1342,7 +1342,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1358,7 +1358,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA6() {
-		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1371,7 +1371,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1387,7 +1387,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA7() {
-		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1400,7 +1400,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1416,7 +1416,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA8() {
-		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1429,7 +1429,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1445,7 +1445,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA9() {
-		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA9 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1458,7 +1458,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA9 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1474,7 +1474,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA10() {
-		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA10 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1487,7 +1487,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA10 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1503,7 +1503,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA11() {
-		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA11 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1516,7 +1516,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA11 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1532,7 +1532,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 
 	private void startBastionA12() {
-		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA12 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1545,7 +1545,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTaskA12 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1582,7 +1582,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1600,7 +1600,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1634,7 +1634,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.
@@ -1647,7 +1647,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

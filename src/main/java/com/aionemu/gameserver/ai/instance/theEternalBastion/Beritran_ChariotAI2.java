@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.theEternalBastion;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -36,7 +36,7 @@ public class Beritran_ChariotAI2 extends NpcAI2
 		    if (getNpcId() == 701624 || getNpcId() == 702689) {
 		    	//待命中的布里特拉战车 / Beritran Chariot.
 		    	//待命中的布里特拉战车 / Beritran Chariot.
-		    	GameEngineServices.skillEngine().getSkill(player, 21141, 1, player).useNoAnimationSkill();
+		    	SkillEngine.getInstance().getSkill(player, 21141, 1, player).useNoAnimationSkill();
 		    }
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

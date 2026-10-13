@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.model.gameobjects.math;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.MathController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
@@ -40,7 +40,7 @@ public class MathObject extends VisibleObject {
 
 	public MathObject(SpawnTemplate spawnTemplate, MathObjectType type, MathObjectReaction reaction, double minRange,
 			double maxRange) {
-		super(GameWorldBootstrapServices.idFactory().nextId(), new MathController(), spawnTemplate, null,
+		super(IDFactory.getInstance().nextId(), new MathController(), spawnTemplate, null,
 				new WorldPosition(spawnTemplate.getWorldId()));
 		this.type = type;
 		this.reaction = reaction;

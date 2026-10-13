@@ -3,10 +3,10 @@ package com.aionemu.gameserver.ai.worlds.heiron;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai.AggressiveFirstSkillAI2;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
@@ -89,26 +89,26 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	private void firstSkill() {
 		int hpPercent = getLifeStats().getHpPercentage();
 		if (50 >= hpPercent && hpPercent > 25) {
-			firstTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			firstTask = ThreadPoolManager.getInstance().schedule(() -> {
 				useSkill(18034);
 				rndSpawnInRange(280804);
 			}, 10000);
 		} else if(hpPercent <= 25) {
 			useSkill(18037);
 		}
-		secondTask = GameThreadPoolServices.threadPoolManager().schedule(this::skillThree, 31000);
+		secondTask = ThreadPoolManager.getInstance().schedule(this::skillThree, 31000);
 	}
 
 	private void skillThree() {
 		useSkill(17899);
-		thirdTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		thirdTask = ThreadPoolManager.getInstance().schedule(() -> {
 			int hpPercent = getLifeStats().getHpPercentage();
 			if (75 >= hpPercent && hpPercent > 50) {
 				useSkill(18025);
 				firstSkill();
 			} else if (25 >= hpPercent) {
 				useSkill(18027);
-				lastTask = GameThreadPoolServices.threadPoolManager().schedule(this::skillThree, 11000);
+				lastTask = ThreadPoolManager.getInstance().schedule(this::skillThree, 11000);
 			} else if (50 >= hpPercent) {
 				useSkill(18025);
 				firstSkill();
@@ -135,7 +135,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	}
 
 	private void useSkill(int skillId) {
-		GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 50, getTarget()).useSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), skillId, 50, getTarget()).useSkill();
 	}
 
 	private void addPercent() {

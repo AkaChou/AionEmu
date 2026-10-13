@@ -2,16 +2,17 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
+import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_LIST;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 登录服对 SM_GS_AUTH 的响应包，通知游戏服注册是否成功及失败原因。
@@ -58,14 +59,14 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 	public void runImpl() {
 		if (response == 0) {
 			getConnection().setState(State.AUTHED);
-			sendPacket(new SM_ACCOUNT_LIST(com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().getLoggedInAccounts()));
-			GameServerNetworkServices.networkController().setServerCount(serverCount);
+			sendPacket(new SM_ACCOUNT_LIST(LoginServer.getInstance().getLoggedInAccounts()));
+			NetworkController.getInstance().setServerCount(serverCount);
 		} else if (response == 1) {
 			log.error(I18n.get("log.c84f1ba0857b"));
 			GameServerAuthFailure.notAuthenticated("LoginServer");
 		} else if (response == 2) {
 			log.info(I18n.get("log.6902a6765b66"));
-            GameThreadPoolServices.threadPoolManager().schedule(() -> CM_GS_AUTH_RESPONSE.this.sendPacket(new SM_GS_AUTH()), 10000);
+            ThreadPoolManager.getInstance().schedule(() -> CM_GS_AUTH_RESPONSE.this.sendPacket(new SM_GS_AUTH()), 10000);
 		}
 	}
 }

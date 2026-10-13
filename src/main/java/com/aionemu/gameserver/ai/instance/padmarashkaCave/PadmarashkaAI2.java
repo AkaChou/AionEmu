@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.padmarashkaCave;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -13,6 +11,8 @@ import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -78,11 +78,11 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19938, 1, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19938, 1, getOwner()).useNoAnimationSkill();
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -153,7 +153,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(281829, x, y, z, (byte) 0); //Votaic Column.
 					// 伏泰克之柱。 / Votaic Column.

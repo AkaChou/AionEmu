@@ -2,10 +2,20 @@ package com.aionemu.gameserver.controllers;
 
 import com.aionemu.boot.i18n.I18n;
 
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.PvpService;
 import java.sql.Timestamp;
 
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
+import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import com.aionemu.gameserver.ai.RetailAreaEngine;
@@ -228,7 +238,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (zone.getAreaTemplate().getZoneName() == null) {
 			log.error(I18n.get("log.f297922b6249", zone.getAreaTemplate().getWorldId()));
 		} else {
-			GameEngineServices.questEngine().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
+			QuestEngine.getInstance().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
 		}
 		SpawnTemplate template;
 		if (zone.getAreaTemplate().getZoneName() == ZoneName.get("REIAN_REFUGEE_CAMP_210070000")) {
@@ -407,7 +417,7 @@ public class PlayerController extends CreatureController<Player> {
 			log.warn(I18n.get("log.cdc4102324ff", zone.getAreaTemplate().getWorldId()));
 			return;
 		}
-		GameEngineServices.questEngine().onLeaveZone(new QuestEnv(null, player, 0, 0), zoneName);
+		QuestEngine.getInstance().onLeaveZone(new QuestEnv(null, player, 0, 0), zoneName);
 	}
 
 	/**
@@ -421,7 +431,7 @@ public class PlayerController extends CreatureController<Player> {
 		TeleportService2.archdaevaTransformation(getOwner());
 		// 原版表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
 		// DataDriven LevelUpLogIn acquire walk (best-effort; no-op until the switch batch).
-		GameEngineServices.questEngine().onLoggedIn(getOwner());
+		QuestEngine.getInstance().onLoggedIn(getOwner());
 		if (getOwner().getPosition().getWorldMapInstance().getParent().isExceptBuff()) {
 			getOwner().getEffectController().removeAllEffects();
 		}
@@ -489,7 +499,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 		if (moveToBind) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(getOwner(), mapId, x, y, z, h);
+			World.getInstance().setPosition(getOwner(), mapId, x, y, z, h);
 		}
 	}
 
@@ -514,7 +524,7 @@ public class PlayerController extends CreatureController<Player> {
 			}
 		}
 		if (EventsConfig.ENABLE_CRAZY && master instanceof Player pMaster && pMaster.getRace() != player.getRace()) {
-			GameEventServices.crazyDaevaService().crazyOnDie(player, master, true);
+			CrazyDaevaService.getInstance().crazyOnDie(player, master, true);
 		}
 		AbyssRank ar = player.getAbyssRank();
 		if (AbyssService.isOnPvpMap(player) && ar != null) {
@@ -524,14 +534,14 @@ public class PlayerController extends CreatureController<Player> {
 				}
 			}
 		}
-		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
-			if (master != null && GameGameplayServices.duelService().isDueling(player.getObjectId(), master.getObjectId())) {
-				GameGameplayServices.duelService().loseDuel(player);
+		if (DuelService.getInstance().isDueling(player.getObjectId())) {
+			if (master != null && DuelService.getInstance().isDueling(player.getObjectId(), master.getObjectId())) {
+				DuelService.getInstance().loseDuel(player);
 				player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 				player.getLifeStats().setCurrentHp(player.getLifeStats().getMaxHp() / 3);
 				return;
 			}
-			GameGameplayServices.duelService().loseDuel(player);
+			DuelService.getInstance().loseDuel(player);
 		}
 		player.getCommonData().setDp(0);
 		if (FFAService.getInstance().isInArena(player) && player.isFFA()) {
@@ -562,7 +572,7 @@ public class PlayerController extends CreatureController<Player> {
 
 		Minion minion = player.getMinion();
 		if (minion != null) {
-			GameEventBootstrapServices.minionService().despawnMinion(player, minion.getObjectId());
+			MinionService.getInstance().despawnMinion(player, minion.getObjectId());
 		}
 
 		if (player.isInState(CreatureState.FLYING)) {
@@ -597,7 +607,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		super.onDie(lastAttacker);
 		sendDieFromCreature(lastAttacker, showPacket);
-		GameEngineServices.questEngine().onDie(new QuestEnv(null, player, 0, 0));
+		QuestEngine.getInstance().onDie(new QuestEnv(null, player, 0, 0));
 		if (player.isInGroup2()) {
 			player.getPlayerGroup2().sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_COMBAT_FRIENDLY_DEATH(player.getName()), new ExcludePlayerFilter(player));
 		}
@@ -705,7 +715,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 		if (target instanceof Npc) {
-			GameEngineServices.questEngine().onAttack(new QuestEnv(target, getOwner(), 0, 0));
+			QuestEngine.getInstance().onAttack(new QuestEnv(target, getOwner(), 0, 0));
 		}
 
 		int attackSpeed = gameStats.getAttackSpeed().getCurrent();
@@ -765,7 +775,7 @@ public class PlayerController extends CreatureController<Player> {
 	public void useSkill(int skillId, int targetType, float x, float y, float z, int time) {
 		Player player = getOwner();
 
-		Skill skill = GameEngineServices.skillEngine().getSkillFor(player, skillId, player.getTarget());
+		Skill skill = SkillEngine.getInstance().getSkillFor(player, skillId, player.getTarget());
 
 		if (skill != null) {
 			if (!RestrictionsManager.canUseSkill(player, skill)) {
@@ -792,11 +802,11 @@ public class PlayerController extends CreatureController<Player> {
 	public void useSkill(SkillTemplate template, int targetType, float x, float y, float z, int clientHitTime, int skillLevel) {
 		Player player = getOwner();
 
-		Skill skill = GameEngineServices.skillEngine().getSkillFor(player, template, player.getTarget());
+		Skill skill = SkillEngine.getInstance().getSkillFor(player, template, player.getTarget());
 		if ((skill == null) && (player.isTransformed())) {
 			SkillPanel panel = DataManager.PANEL_SKILL_DATA.getSkillPanel(player.getTransformModel().getPanelId());
 			if ((panel != null) && (panel.canUseSkill(template.getSkillId(), skillLevel))) {
-				skill = GameEngineServices.skillEngine().getSkillFor(player, template, player.getTarget(), skillLevel);
+				skill = SkillEngine.getInstance().getSkillFor(player, template, player.getTarget(), skillLevel);
 			}
 		}
 
@@ -838,7 +848,7 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	@Override
 	public void onStopMove() {
-		GameMovementLoopServices.playerMoveTaskManager().removePlayer(getOwner());
+		PlayerMoveTaskManager.getInstance().removePlayer(getOwner());
 		getOwner().getObserveController().notifyMoveObservers();
 		getOwner().getMoveController().setInMove(false);
 		cancelCurrentSkill();
@@ -853,7 +863,7 @@ public class PlayerController extends CreatureController<Player> {
 	@Override
 	public void onStartMove() {
 		getOwner().getMoveController().setInMove(true);
-		GameMovementLoopServices.playerMoveTaskManager().addPlayer(getOwner());
+		PlayerMoveTaskManager.getInstance().addPlayer(getOwner());
 		cancelUseItem();
 		cancelCurrentSkill();
 		super.onStartMove();
@@ -930,7 +940,7 @@ public class PlayerController extends CreatureController<Player> {
 	public void updatePassiveStats() {
 		Player player = getOwner();
 		for (PlayerSkillEntry skillEntry : player.getSkillList().getAllSkills()) {
-			Skill skill = GameEngineServices.skillEngine().getSkillFor(player, skillEntry.getSkillId(), player.getTarget());
+			Skill skill = SkillEngine.getInstance().getSkillFor(player, skillEntry.getSkillId(), player.getTarget());
 			if (skill != null && skill.isPassive()) {
 				skill.useSkill();
 			}
@@ -971,7 +981,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * @return 决斗中则为 true / true if dueling
 	 */
 	public boolean isDueling(Player player) {
-		return GameGameplayServices.duelService().isDueling(player.getObjectId(), getOwner().getObjectId());
+		return DuelService.getInstance().isDueling(player.getObjectId(), getOwner().getObjectId());
 	}
 
 	/**
@@ -1007,13 +1017,13 @@ public class PlayerController extends CreatureController<Player> {
 			HTMLService.sendGuideHtml(player);
 		}
 		ClassChangeService.showClassChangeDialog(player);
-		GameEngineServices.questEngine().onLvlUp(new QuestEnv(null, player, 0, 0));
+		QuestEngine.getInstance().onLvlUp(new QuestEnv(null, player, 0, 0));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		player.getController().updatePassiveStats();
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		if (level == 10) {
-			GameCraftServices.craftSkillUpdateService().setMorphRecipe(player);
+			CraftSkillUpdateService.getInstance().setMorphRecipe(player);
 			// 你已达到可加入军团的等级。 / You reached the level where you can join a legion.
 			// 使用军团搜索查找你想要的军团。 / Use the legion search to find the legion you want.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GUILD_CAN_JOIN_LEVEL);
@@ -1060,7 +1070,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 		if (player.isInTeam()) {
-			GameTaskManagerServices.teamEffectUpdater().startTask(player);
+			TeamEffectUpdater.getInstance().startTask(player);
 		}
 		if (player.isLegionMember()) {
 			LegionService.getInstance().updateMemberInfo(player);
@@ -1077,7 +1087,7 @@ public class PlayerController extends CreatureController<Player> {
 			reachedPlayerLvl(player);
 		}
 		player.getNpcFactions().onLevelUp();
-		GameCreativityServices.creativityEssenceService().pointPerLevel(player);
+		CreativityEssenceService.getInstance().pointPerLevel(player);
 	}
 
 	/**
@@ -1085,7 +1095,7 @@ public class PlayerController extends CreatureController<Player> {
 	 * Signature keeps {@code final}: pinned by the {@code PlayerControllerLevelUpTest} source gate.
 	 */
 	public static final void reachedPlayerLvl(final Player player) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+		World.getInstance().doOnAllPlayers(players -> {
 			// “玩家名”已达到 %1 级。 / "Player Name" has reached level %1.
 			byte playerLevel = player.getLevel();
 			PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1300086, player.getName(), playerLevel));
@@ -1105,7 +1115,7 @@ public class PlayerController extends CreatureController<Player> {
 			AttackUtil.cancelCastOn(getOwner());
 			AttackUtil.removeTargetFrom(getOwner());
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()), true);
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(this::stopProtectionActiveTask, 60000);
+			Future<?> task = ThreadPoolManager.getInstance().schedule(this::stopProtectionActiveTask, 60000);
 			addTask(TaskId.PROTECTION_ACTIVE, task);
 		}
 	}
@@ -1168,7 +1178,7 @@ public class PlayerController extends CreatureController<Player> {
 			updateZone();
 			SummonsService.restoreAfterTeleport(player);
 			// 飞行传送结束：把被收起的守护灵放回主人身边。 / Fly teleport ended: restore the hidden minion next to the master.
-			GameEventBootstrapServices.minionService().restoreAfterFlyTeleport(player);
+			MinionService.getInstance().restoreAfterFlyTeleport(player);
 		}
 	}
 
@@ -1243,7 +1253,7 @@ public class PlayerController extends CreatureController<Player> {
 			if (skillId == 0) {
 				skillId = 8291;
 			}
-			GameEngineServices.skillEngine().getSkill(player, skillId, deathCount, player).useSkill();
+			SkillEngine.getInstance().getSkill(player, skillId, deathCount, player).useSkill();
 		}
 	}
 

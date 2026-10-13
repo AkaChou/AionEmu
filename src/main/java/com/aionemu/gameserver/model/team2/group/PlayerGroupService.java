@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 import java.util.List;
@@ -37,6 +36,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -194,7 +194,7 @@ public class PlayerGroupService {
 	}
 
 	private static void initializeOfflineCheck() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerChecker(), 1000, 30 * 1000);
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(new OfflinePlayerChecker(), 1000, 30 * 1000);
 	}
 
 	/**

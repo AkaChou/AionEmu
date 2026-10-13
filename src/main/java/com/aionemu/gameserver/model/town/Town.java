@@ -18,6 +18,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TOWNS_LIST;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import lombok.Getter;
@@ -103,7 +104,7 @@ public class Town {
 		Map<Integer, Town> data = new HashMap<>(1);
 		data.put(this.id, this);
 		final SM_TOWNS_LIST packet = new SM_TOWNS_LIST(data);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+		World.getInstance().doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 访问 / visit.
 			 */

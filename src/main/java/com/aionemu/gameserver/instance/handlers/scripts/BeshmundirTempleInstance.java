@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -21,6 +20,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -437,7 +437,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
      */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        beshmundirTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -466,7 +466,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
      */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        beshmundirTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -491,7 +491,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

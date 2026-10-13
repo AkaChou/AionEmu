@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Time Slow（@AIName "timeslow"），继承 AggressiveNpcAI2。
@@ -26,7 +26,7 @@ public class TimeSlowAI2 extends AggressiveNpcAI2
 	}
 
 	private void toDespawn(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(TimeSlowAI2.this), delay);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(TimeSlowAI2.this), delay);
 	}
 
 	@Override

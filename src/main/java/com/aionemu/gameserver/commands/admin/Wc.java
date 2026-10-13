@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员世界频道广播（按种族或全体）。
@@ -72,7 +73,7 @@ public class Wc extends AdminCommand {
 		final boolean toAll = params[0].equals("ALL");
 		final Race race = adminRace;
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (toAll || player.getRace() == race || player.getAccessLevel() >= getLevel()) {
 				PacketSendUtility.sendMessage(player, sMessage);
 			}

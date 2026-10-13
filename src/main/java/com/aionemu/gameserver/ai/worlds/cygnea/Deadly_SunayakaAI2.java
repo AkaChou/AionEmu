@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Cygnea 区域 NPC AI：Deadly Sunayaka（@AIName "deadly_sunayaka"），继承 AggressiveNpcAI2。
@@ -33,11 +33,11 @@ public class Deadly_SunayakaAI2 extends AggressiveNpcAI2
 	}
 
 	private void simmeringRage() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); //Simmering Rage.
+		SkillEngine.getInstance().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); //Simmering Rage.
 		getOwner().getEffectController().removeEffect(8763);
 	}
 
 	private void rageOfTheDragonLords() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); //Rage of the Dragon Lords
+		SkillEngine.getInstance().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); //Rage of the Dragon Lords
 	}
 }

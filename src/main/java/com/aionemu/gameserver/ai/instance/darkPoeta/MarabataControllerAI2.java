@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dark Poeta 副本 NPC AI：Marabata Controller（@AIName "marabatacontroller"），继承 NpcAI2。
@@ -64,7 +64,7 @@ public class MarabataControllerAI2 extends NpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		applyEffect(false);
-		GameThreadPoolServices.threadPoolManager().schedule(this::useSkill, 2000);
+		ThreadPoolManager.getInstance().schedule(this::useSkill, 2000);
 	}
 
 	private void useSkill() {

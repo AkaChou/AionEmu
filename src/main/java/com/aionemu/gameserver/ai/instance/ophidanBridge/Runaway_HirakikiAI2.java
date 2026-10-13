@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.ophidanBridge;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Ophidan Bridge 副本 NPC AI：Runaway Hirakiki（@AIName "runaway_hirakiki"），继承 GeneralNpcAI2。
@@ -49,7 +49,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402861, 240000);
 					// 逃犯将在 1 分钟后逃脱！ / The fugitive will get away in 1 minute!
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402862, 420000);
-					hirakikiTask = GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Runaway_HirakikiAI2.this), 480000);
+					hirakikiTask = ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Runaway_HirakikiAI2.this), 480000);
 				break;
 			}
 		}
@@ -68,7 +68,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
         		getOwner().setState(1);
             	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -94,7 +94,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -110,7 +110,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -126,7 +126,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}
@@ -142,7 +142,7 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						despawn();
 					}

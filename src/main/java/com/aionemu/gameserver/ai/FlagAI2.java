@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_UPDATE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 旗帜 AI：战场/据点旗帜交互逻辑。
@@ -23,7 +24,7 @@ public class FlagAI2 extends NoActionAI2
     @Override
     public void handleSpawned() {
         super.handleSpawned();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+        World.getInstance().doOnAllPlayers(player -> ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (player.getWorldId() == getOwner().getWorldId()) {
 				if (getOwner().isSpawned()) {
 					PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, getOwner()));
@@ -39,7 +40,7 @@ public class FlagAI2 extends NoActionAI2
     @Override
     protected void handleDespawned() {
         super.handleDespawned();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+        World.getInstance().doOnAllPlayers(player -> ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (player.getWorldId() == getOwner().getWorldId()) {
 				PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE(getOwner()));
 				AI2Actions.deleteOwner(FlagAI2.this);

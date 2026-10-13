@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UPGRADE_ARCADE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 街机升级活动服务，管理街机升级窗口、抽奖与奖励发放。
@@ -225,7 +225,7 @@ public class ArcadeUpgradeService {
 	public void getPlaySuccesArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		arcade.setFrenzyLevel(arcade.getFrenzyLevel() + 1);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, true, arcade.getFrenzyPoints()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel())), 3000);
+		ThreadPoolManager.getInstance().schedule(() -> PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel())), 3000);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class ArcadeUpgradeService {
 	 */
 	public void getPlayFailedArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, false, arcade.getFrenzyPoints()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			PacketSendUtility.sendPacket(player,
 				new SM_UPGRADE_ARCADE(player, 5, arcade.isReTry() ? arcade.getFailedLevel() : 1));
 			if (arcade.getFrenzyLevel() < 8 && !arcade.isReTry()) {
@@ -272,7 +272,7 @@ public class ArcadeUpgradeService {
 		// 升级狂热！ / Upgrade Frenzy!
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVERTIME_START);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 90, arcade.getFrenzyCount()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			PlayerUpgradeArcade arcade1 = player.getUpgradeArcade();
 			PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, 0, arcade1.getFrenzyCount()));
 			player.getUpgradeArcade().setFrenzy(false);

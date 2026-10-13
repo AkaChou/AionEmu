@@ -5,9 +5,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -25,6 +23,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 热点传送服务，处理地图热点（快捷传送点）的读条、打断与扣费传送。
@@ -39,13 +38,8 @@ public class HotspotTeleportService {
 	private static final int ASMODIAN_GELKMAROS_WORLD_ID = 220070000;
 	private static final int ASMODIAN_GELKMAROS_MASTER_WORLD_ID = 220140000;
 
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
+	private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
+	private static volatile HotspotTeleportService resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -58,14 +52,30 @@ public class HotspotTeleportService {
 	 *         when no provider or bean is available
 	 */
 	public static HotspotTeleportService getInstance() {
+		HotspotTeleportService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<HotspotTeleportService> provider = instanceProvider;
-		HotspotTeleportService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("HotspotTeleportService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<HotspotTeleportService> instanceProvider) {
+		HotspotTeleportService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**
@@ -93,8 +103,8 @@ public class HotspotTeleportService {
 		final int cooldown = TransportConfig.HOTSPOT_COOLDOWN_SECONDS;
 		final int castTimeMillis = castTimeMillis(TransportConfig.HOTSPOT_CAST_TIME_SECONDS);
 		final AtomicReference<Future<?>> castTask = new AtomicReference<>();
-		Future<?> scheduledCast = GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			Future<?> teleportTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		Future<?> scheduledCast = ThreadPoolManager.getInstance().schedule(() -> {
+			Future<?> teleportTask = ThreadPoolManager.getInstance().schedule(() -> {
 				TeleportService2.teleportTo(player, worldId, getX, getY, getZ, player.getHeading(), TeleportAnimation.NO_ANIMATION);
 				player.getInventory().decreaseKinah(price);
 				PacketSendUtility.sendPacket(player,

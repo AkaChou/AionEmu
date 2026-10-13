@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -65,13 +65,13 @@ public class Detachment_Captain_BastikanAI2 extends GeneralNpcAI2
 	}
 
 	private void startBastionOfSoulsWave() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
 			attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
 			attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);
 			attackBastionOfSouls((Npc)spawn(246523, 244.47363f, 733.99384f, 421.38748f, (byte) 33), 238.8924f, 748.75555f, 421.254f, false);
 		}, 1000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			attackBastionOfSouls((Npc)spawn(246520, 260.62317f, 753.64874f, 421.74033f, (byte) 67), 238.8924f, 748.75555f, 421.254f, false);
 			attackBastionOfSouls((Npc)spawn(246521, 229.63022f, 773.9174f, 421.83142f, (byte) 94), 238.8924f, 748.75555f, 421.254f, false);
 			attackBastionOfSouls((Npc)spawn(246522, 220.49199f, 743.5425f, 421.625f, (byte) 14), 238.8924f, 748.75555f, 421.254f, false);

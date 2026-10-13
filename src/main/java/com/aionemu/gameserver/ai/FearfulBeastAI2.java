@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import com.aionemu.commons.utils.Rnd;
@@ -119,7 +119,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
             z = collision.getZ();
         }
         npc.getMoveController().moveToPoint(targetX, targetY, z);
-        GameThreadPoolServices.threadPoolManager().schedule(this::onFleeEnd, FLEE_DURATION);
+        ThreadPoolManager.getInstance().schedule(this::onFleeEnd, FLEE_DURATION);
     }
     
     private synchronized void onFleeEnd() {

@@ -1,12 +1,8 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -40,30 +36,6 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "surveyServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "findGroupServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesLifecycle.class, "inGameShopEnProvider"));
-    }
-
-    @Test
-    void gameServerCodeUsesRuntimeServicesBridgeInsteadOfDirectSingletons() throws IOException {
-        Map<String, Path> serviceSources = Map.of(
-            "FindGroupService", Path.of("services/FindGroupService.java"),
-            "InGameShopEn", Path.of("model/ingameshop/InGameShopEn.java"));
-
-        for (Map.Entry<String, Path> serviceSource : serviceSources.entrySet()) {
-            assertNoDirectSingletonAccess(serviceSource.getKey(), serviceSource.getValue());
-        }
-    }
-
-    @Test
-    void shutdownAndAdminCommandsUseRuntimeServicesBridgeInsteadOfDirectSingletons() throws IOException {
-        Map<String, Path> singletonCallers = Map.of(
-            "PeriodicSaveService", Path.of("src/main/java/com/aionemu/gameserver/ShutdownHook.java"),
-            "AnnouncementService", Path.of("src/main/java/com/aionemu/gameserver/commands/admin/Announcements.java"));
-
-        for (Map.Entry<String, Path> singletonCaller : singletonCallers.entrySet()) {
-            String source = Files.readString(singletonCaller.getValue());
-
-            assertFalse(source.contains(singletonCaller.getKey() + ".getInstance()"), singletonCaller.getValue().toString());
-        }
     }
 
     @Test
@@ -162,23 +134,6 @@ class GameRuntimeServicesLifecycleTest {
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static void assertNoDirectSingletonAccess(String serviceName, Path serviceSource) throws IOException {
-        List<Path> sources;
-        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
-            sources = stream
-                .filter(path -> path.toString().endsWith(".java"))
-                .filter(path -> !path.endsWith(serviceSource))
-                .filter(path -> !path.endsWith(Path.of("lifecycle/GameRuntimeServices.java")))
-                .toList();
-        }
-
-        for (Path source : sources) {
-            String content = Files.readString(source);
-
-            assertFalse(content.contains(serviceName + ".getInstance()"), source.toString());
         }
     }
 

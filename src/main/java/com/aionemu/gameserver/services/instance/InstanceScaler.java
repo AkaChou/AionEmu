@@ -9,13 +9,13 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import com.aionemu.gameserver.configs.main.InstanceConfig;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -64,7 +64,7 @@ public final class InstanceScaler implements StatOwner {
 		}
 		if (InstanceConfig.SCALING_ENABLE) {
 			Set<WorldMapInstance> instances = new HashSet<>();
-			for (Player player : GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player player : World.getInstance().getAllPlayers()) {
 				if (player.isSpawned()) {
 					instances.add(player.getPosition().getWorldMapInstance());
 				}

@@ -10,6 +10,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.SocialService;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 请求添加好友的客户端包。
@@ -47,7 +48,7 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 	protected void runImpl() {
 
 		final Player activePlayer = getConnection().getActivePlayer();
-		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
+		final Player targetPlayer = World.getInstance().findPlayer(targetName);
 
 		// 不允许将自己加入好友列表——客户端默认会拦截，无需发送错误
 		// Adding self to the friend list is blocked by the client by default; no error is needed.

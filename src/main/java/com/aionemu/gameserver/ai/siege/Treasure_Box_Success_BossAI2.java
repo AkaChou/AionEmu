@@ -3,7 +3,6 @@ package com.aionemu.gameserver.ai.siege;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -18,6 +17,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 攻城战相关 NPC AI：Treasure Box Success Boss（@AIName "treasure_box_success_boss"），继承 AggressiveNpcAI2。
@@ -49,7 +49,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 	protected void handleDied() {
 		if (SPAWN_CHEST_IDS.contains(getNpcId())) {
 			treasureChest();
-			GameThreadPoolServices.threadPoolManager().schedule(this::spawnTreasureChestTask, 10000);
+			ThreadPoolManager.getInstance().schedule(this::spawnTreasureChestTask, 10000);
 		}
 		super.handleDied();
 	}

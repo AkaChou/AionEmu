@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.assemblednpc.AssembledNpc;
@@ -14,6 +13,8 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 组装 NPC 生成指令；按模板 ID 向全服玩家广播组装 NPC 数据包。
@@ -53,10 +54,10 @@ public class SpawnAssembledNpc  extends AdminCommand {
 		}
 		List<AssembledNpcPart> assembledPatrs = new ArrayList<>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
-			assembledPatrs.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
+			assembledPatrs.add(new AssembledNpcPart(IDFactory.getInstance().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(), assembledPatrs);
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		Player findedPlayer = null;
 		while (iter.hasNext()) {
 			findedPlayer = iter.next();

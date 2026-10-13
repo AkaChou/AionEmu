@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 贝里特拉入侵相关 NPC AI：Terracrusher（@AIName "terracrusher"），继承 AggressiveNpcAI2。
@@ -33,14 +34,14 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	}
 
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				AbyssPointsService.addGp(player, 500);
 			}
 		});
 	}
 	private void announceEreshkigalDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 埃雷什基伽尔军团的魔法武器已被摧毁。 / The Ereshkigal Legion's magic weapon has been destroyed.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_Ere_MESSAGE_DIE_01);
 		});
@@ -48,7 +49,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	private void announceKilledEreshkigal() {
 		Npc npc = getOwner();
 		final DescriptionId NameId = new DescriptionId(npc.getObjectTemplate().getNameId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+		World.getInstance().doOnAllPlayers(players -> {
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				// %0 摧毁了 %0，登陆点已增强。 / %0 has destroyed %0 and the Landing is now enhanced.
@@ -58,7 +59,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	}
 
 	private void updateTerracrusherLanding() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 24, 0);

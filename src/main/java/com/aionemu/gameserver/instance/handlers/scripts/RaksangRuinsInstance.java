@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -271,7 +271,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 * Terror's Vault Raid A1/A2
 	 */
 	private void startRaksangRaidA1() {
-		raksangRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -288,7 +288,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}, 20000);
 	}
 	private void startRaksangRaidA1Bis() {
-		raksangRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -305,7 +305,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}, 20000);
 	}
 	private void startRaksangRaidA2() {
-		raksangRaidTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -322,7 +322,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		}, 20000);
 	}
 	private void startRaksangRaidA2Bis() {
-		raksangRaidTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -355,7 +355,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -365,7 +365,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB1();
 				    }
 			    }, 5000);
-				raksangRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -386,7 +386,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -396,7 +396,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB2();
 				    }
 			    }, 5000);
-				raksangRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -417,7 +417,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -427,7 +427,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB3();
 				    }
 			    }, 5000);
-				raksangRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -448,7 +448,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -458,7 +458,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB4();
 				    }
 			    }, 5000);
-				raksangRaidTaskB2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -479,7 +479,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -489,7 +489,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB6();
 				    }
 			    }, 5000);
-				raksangRaidTaskB2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -510,7 +510,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
 				//只剩少数敌人！ / Only a few enemies left!
 				sendMsgByRace(1402834, Race.PC_ALL, 50000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -520,7 +520,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 						startRaksangRaidB5();
 				    }
 			    }, 5000);
-				raksangRaidTaskB2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				raksangRaidTaskB2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -650,7 +650,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		sendMsgByRace(1402833, Race.PC_ALL, 60000);
 		//只剩少数敌人！ / Only a few enemies left!
 		sendMsgByRace(1402834, Race.PC_ALL, 110000);
-		raksangRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -665,7 +665,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				raksangRaid((Npc)spawn(236021, 325.99796f, 635.8432f, 146.51385f, (byte) 93));
 			}
 		}, 5000);
-		raksangRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -688,7 +688,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 		sendMsgByRace(1402833, Race.PC_ALL, 60000);
 		//只剩少数敌人！ / Only a few enemies left!
 		sendMsgByRace(1402834, Race.PC_ALL, 110000);
-		raksangRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -703,7 +703,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 				raksangRaid((Npc)spawn(236098, 334.89322f, 801.4367f, 146.65071f, (byte) 92));
 			}
 		}, 5000);
-		raksangRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		raksangRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -721,7 +721,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	}
 
 	private void raksangRaid(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -750,7 +750,7 @@ public class RaksangRuinsInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

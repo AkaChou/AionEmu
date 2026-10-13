@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects.player.emotion;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ public class EmotionList {
 
 		if (isNew) {
 			if (emotion.getExpireTime() != 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(emotion, owner);
+				ExpireTimerTask.getInstance().addTask(emotion, owner);
 			}
 			PlayerService.daos().playerEmotionListDAO().insertEmotion(owner, emotion);
 			PacketSendUtility.sendPacket(owner, new SM_EMOTION_LIST((byte) 1, Collections.singletonList(emotion)));

@@ -20,6 +20,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 简易 AWT 管理面板：关服、在线查询、踢人、发物、公告与监狱等控制台操作。
@@ -151,7 +152,7 @@ public class ServerCommandProcessor {
 	 * List-online-players listener.
 	 */
 	ActionListener al_who = _ -> {
-		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+		Collection<Player> players = World.getInstance().getAllPlayers();
 		if (players.isEmpty()) {
 			log.info(I18n.get("log.b09026e40703"));
 			return;
@@ -172,7 +173,7 @@ public class ServerCommandProcessor {
 		Player receiver;
 		String playerName = playerNameFieled.getText();
 
-		receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
+		receiver = World.getInstance().findPlayer(playerName);
 
 		if (itemID.getText() != null) {
 			if (itemId != 0) {
@@ -197,14 +198,14 @@ public class ServerCommandProcessor {
 	 */
 	ActionListener al_kick = _ -> {
 		if (playerNameFieled.getText() != null && "All".equalsIgnoreCase(playerNameFieled.getText())) {
-			for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (final Player player : World.getInstance().getAllPlayers()) {
 				if (!player.isGM()) {
 					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 					log.info(I18n.get("log.9d66bf0d9920", player.getName()));
 				}
 			}
 		} else {
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
+			Player player = World.getInstance().findPlayer(playerNameFieled.getText());
 			if (player == null) {
 				log.info(I18n.get("log.e98bca3b524f"));
 				return;
@@ -220,7 +221,7 @@ public class ServerCommandProcessor {
 	 */
 	ActionListener al_announce = _ -> {
 		if (!"Announce message".equals(messageAnnounce.getText())) {
-			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			Iterator<Player> iter = World.getInstance().getPlayersIterator();
 
 			while (iter.hasNext()) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), messageAnnounce.getText());
@@ -235,7 +236,7 @@ public class ServerCommandProcessor {
 	ActionListener al_sendPrison = _ -> {
 		if (playerNameFieled.getText() != null) {
 			try {
-				Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
+				Player playerToPrison = World.getInstance().findPlayer(playerNameFieled.getText());
 				int delay = 30;
 				String reason = "Ban from Admin";
 
@@ -256,7 +257,7 @@ public class ServerCommandProcessor {
 	ActionListener al_rescuePrison = _ -> {
 		if (playerNameFieled.getText() != null) {
 			try {
-				Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
+				Player playerFromPrison = World.getInstance().findPlayer(playerNameFieled.getText());
 
 				if (playerFromPrison != null) {
 					PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -16,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：King Consierd（@AIName "king_consierd"），继承 AggressiveNpcAI2。
@@ -62,23 +62,23 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		checkPercentage(getLifeStats().getHpPercentage());
 		if (isHome.compareAndSet(true, false)) {
 			startBloodThirstTask();
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill(), 4000);
+			ThreadPoolManager.getInstance().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
+				ThreadPoolManager.getInstance().schedule(() -> SkillEngine.getInstance().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill(), 4000);
 			}, 2000);
 		}
 	}
 
 	private void startBloodThirstTask() {
-		eventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill(), 180 * 1000);
+		eventTask = ThreadPoolManager.getInstance().schedule(() -> SkillEngine.getInstance().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill(), 180 * 1000);
 	}
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTasks();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -93,7 +93,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 								break;
 							}
 							spawnBabyConsierd(players.get(Rnd.get(players.size())));
-							GameEngineServices.skillEngine().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
+							SkillEngine.getInstance().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
 						}
 					}
 				}
@@ -106,7 +106,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(282378, x, y, z, (byte) 0); // 小 Consierd / Baby Consierd
 				}
@@ -139,7 +139,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 				if (percent == 75) {
 					startSkillTask();
 				} else if (percent == 25) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19690, 1, getTarget()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19690, 1, getTarget()).useNoAnimationSkill();
 				}
 				break;
 			}

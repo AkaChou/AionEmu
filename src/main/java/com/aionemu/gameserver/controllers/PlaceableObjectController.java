@@ -14,6 +14,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 可放置房屋物件控制器，处理可见性同步与对话请求。
@@ -68,9 +69,9 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 	 */
 	public void delete() {
 		if (getOwner().isSpawned()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(getOwner(), false);
+			World.getInstance().despawn(getOwner(), false);
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(getOwner());
+		World.getInstance().removeObject(getOwner());
 	}
 
 	/**

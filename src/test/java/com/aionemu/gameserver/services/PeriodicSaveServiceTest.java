@@ -20,7 +20,7 @@ import com.aionemu.gameserver.persistence.dao.impl.PlayerDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerQuestDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerSkillDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerStigmasEquippedDaoImpl;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.ThreadPoolServiceBindings;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
  */
 class PeriodicSaveServiceTest {
 
-	private GameThreadPoolServices threadPoolServices;
+	private ThreadPoolServiceBindings threadPoolServices;
 	private ThreadPoolManager threadPoolManager;
 
 	/**
@@ -45,7 +45,7 @@ class PeriodicSaveServiceTest {
 		threadPoolManager = new ThreadPoolManager();
 		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 		beanFactory.registerSingleton(ThreadPoolManager.class.getName(), threadPoolManager);
-		threadPoolServices = new GameThreadPoolServices(beanFactory.getBeanProvider(ThreadPoolManager.class));
+		threadPoolServices = new ThreadPoolServiceBindings(beanFactory.getBeanProvider(ThreadPoolManager.class));
 	}
 
 	@AfterEach

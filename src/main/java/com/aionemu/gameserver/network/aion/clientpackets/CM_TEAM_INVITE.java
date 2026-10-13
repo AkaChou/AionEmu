@@ -11,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端队伍/联盟/军团同盟邀请请求包。
@@ -58,7 +59,7 @@ public class CM_TEAM_INVITE extends AionClientPacket {
 			return;
 		}
 
-		final Player invited = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
+		final Player invited = World.getInstance().findPlayer(playerName);
 		if (invited != null) {
 			if (invited.getPlayerSettings().isInDeniedStatus(DeniedStatus.GROUP)) {
 				sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_REJECTED_INVITE_PARTY(invited.getName()));

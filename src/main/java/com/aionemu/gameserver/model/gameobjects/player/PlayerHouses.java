@@ -2,9 +2,9 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.List;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseStatus;
+import com.aionemu.gameserver.services.HousingService;
 
 /**
  * 玩家房屋域。
@@ -31,7 +31,7 @@ final class PlayerHouses {
 		if (houses != null) {
 			return houses;
 		}
-		List<House> found = GameHousingServices.housingService().searchPlayerHouses(player.getObjectId());
+		List<House> found = HousingService.getInstance().searchPlayerHouses(player.getObjectId());
 		if (!found.isEmpty()) {
 			player.setHouses(found);
 		}

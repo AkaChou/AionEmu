@@ -7,13 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.utils.ThreadPoolManager;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -26,12 +20,7 @@ class GameThreadPoolLifecycleTest {
     private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
-    void threadPoolLifecycleBridgesLegacyManagerThroughSpringProviders() {
-        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolLifecycle.class, "threadPoolManagerProvider"));
-    }
-
-    @Test
-    void threadPoolSingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
+    void threadPoolSingletonAccessorUsesSpringProvider() {
         ThreadPoolManager threadPoolManager = objenesis.newInstance(ThreadPoolManager.class);
 
         try {
@@ -44,102 +33,20 @@ class GameThreadPoolLifecycleTest {
     }
 
     @Test
-    void gameCronRunnerUsesThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
-        String cronRunnerSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/utils/cron/ThreadPoolManagerRunnableRunner.java"));
+    void threadPoolManagerFailsFastOutsideSpringContainerInsteadOfLocalFallback() {
+        ThreadPoolManager.setInstanceProvider(null);
 
-        assertFalse(cronRunnerSource.contains("ThreadPoolManager.getInstance()"));
-        assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().execute(r)"));
-        assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().executeLongRunning(r)"));
+        assertThrows(IllegalStateException.class, ThreadPoolManager::getInstance);
     }
 
     @Test
-    void threadPoolServicesFailFastOutsideSpringContainerInsteadOfLocalFallback() throws IOException {
-        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameThreadPoolServices.java"));
-
-        assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
-        assertFalse(servicesSource.contains("new ThreadPoolManager()"));
-
-        new GameThreadPoolServices(null).destroy();
-        assertThrows(IllegalStateException.class, GameThreadPoolServices::threadPoolManager);
-    }
-
-    @Test
-    void gameThreadPoolServicesCachesResolvedSpringManager() {
-        GameThreadPoolServices services = new GameThreadPoolServices(prototypeProvider(ThreadPoolManager.class));
+    void threadPoolServiceBindingsWireSpringManagerIntoFailFastAccessor() {
+        ThreadPoolServiceBindings bindings = new ThreadPoolServiceBindings(prototypeProvider(ThreadPoolManager.class));
 
         try {
-            assertSame(GameThreadPoolServices.threadPoolManager(), GameThreadPoolServices.threadPoolManager());
+            assertSame(ThreadPoolManager.getInstance(), ThreadPoolManager.getInstance());
         } finally {
-            services.destroy();
-        }
-    }
-
-    @Test
-    void gameServicesUseLifecycleSchedulerBridgesInsteadOfDirectSingletons() throws IOException {
-        List<Path> sources;
-        try (Stream<Path> stream = Stream.concat(
-            Files.walk(Path.of("src/main/java/com/aionemu/gameserver/services")),
-            Files.walk(Path.of("src/main/java/com/aionemu/gameserver/spawnengine"))
-        )) {
-            sources = stream
-                .filter(path -> path.toString().endsWith(".java"))
-                .toList();
-        }
-
-        for (Path source : sources) {
-            String content = Files.readString(source);
-
-            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
-            assertFalse(content.contains("CronService.getInstance()"), source.toString());
-        }
-    }
-
-    @Test
-    void gameAiUsesLifecycleSchedulerBridgeInsteadOfDirectThreadPoolSingleton() throws IOException {
-        List<Path> sources;
-        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/ai"))) {
-            sources = stream
-                .filter(path -> path.toString().endsWith(".java"))
-                .toList();
-        }
-
-        for (Path source : sources) {
-            String content = Files.readString(source);
-
-            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
-        }
-    }
-
-    @Test
-    void gameInstancesUseLifecycleSchedulerBridgeInsteadOfDirectThreadPoolSingleton() throws IOException {
-        List<Path> sources;
-        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/instance"))) {
-            sources = stream
-                .filter(path -> path.toString().endsWith(".java"))
-                .toList();
-        }
-
-        for (Path source : sources) {
-            String content = Files.readString(source);
-
-            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
-        }
-    }
-
-    @Test
-    void gameServerCodeUsesLifecycleSchedulerBridgesInsteadOfDirectSingletons() throws IOException {
-        List<Path> sources;
-        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
-            sources = stream
-                .filter(path -> path.toString().endsWith(".java"))
-                .toList();
-        }
-
-        for (Path source : sources) {
-            String content = Files.readString(source);
-
-            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
-            assertFalse(content.contains("CronService.getInstance()"), source.toString());
+            bindings.destroy();
         }
     }
 
@@ -171,15 +78,6 @@ class GameThreadPoolLifecycleTest {
 
         assertFalse(lifecycle.isStarted());
         assertEquals(0, stops.get());
-    }
-
-    private static Class<?> fieldType(Class<?> type, String name) {
-        try {
-            Field field = type.getDeclaredField(name);
-            return field.getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
     }
 
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {

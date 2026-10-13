@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员次元入侵活动命令：按漩涡地点 ID 启动或停止 Invasion。
@@ -58,13 +59,13 @@ public class Invasion extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player2 -> {
+				World.getInstance().doOnAllPlayers(player2 -> {
 					if (player2.getCommonData().getRace() == Race.ELYOS) {
 						// 通往布鲁斯特豪宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
 						PacketSendUtility.sendPacket(player2, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_INVADE_DIRECT_PORTAL_OPEN);
 					}
 				});
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+				World.getInstance().doOnAllPlayers(player1 -> {
 					if (player1.getCommonData().getRace() == Race.ASMODIANS) {
 						// 通往泰奥勃莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
 						PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_INVADE_DIRECT_PORTAL_OPEN);

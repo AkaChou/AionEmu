@@ -2,13 +2,12 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.Objects;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 @Slf4j
 
 
@@ -55,22 +56,22 @@ public class DredgionService2 {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
 			log.info(I18n.get("log.e829b9492ce7"));
 			// 战舰 周一至周日 12:00–13:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
-			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
+			CronService.requireCurrent().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
 			// 战舰 周一至周日 20:00–21:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
-			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
+			CronService.requireCurrent().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
 			// 战舰 周一至周日 23:00–00:00 / Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
-			GameCronServices.cronService().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
+			CronService.requireCurrent().schedule(this::startDredgionRegistration, AutoGroupConfig.DREDGION_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterDredgionTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 autoGroupService.unRegisterInstance(maskLvlGradeA);
 			 autoGroupService.unRegisterInstance(maskLvlGradeB);
 			 autoGroupService.unRegisterInstance(maskLvlGradeC);
-			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();
 				 if (player.getLevel() > minLevel) {
@@ -86,7 +87,7 @@ public class DredgionService2 {
 	private void startDredgionRegistration() {
 		this.registerAvailable = true;
 		startUregisterDredgionTask();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

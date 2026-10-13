@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.PunishmentConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.google.common.base.Preconditions;
 
@@ -47,7 +46,7 @@ public class AuditLogger {
 		log.info(message);
 
 		if (SecurityConfig.GM_AUDIT_MESSAGE_BROADCAST) {
-			GameRuntimeServices.gmService().broadcastMesage(message);
+			GMService.getInstance().broadcastMesage(message);
 		}
 	}
 }

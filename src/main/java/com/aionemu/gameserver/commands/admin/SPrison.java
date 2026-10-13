@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 入狱指令；将在线玩家送入监狱并记录时长与原因。
@@ -30,7 +31,7 @@ public class SPrison extends AdminCommand {
 		}
 
 		try {
-			Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+			Player playerToPrison = World.getInstance().findPlayer(Util.convertName(params[0]));
 			int delay = Integer.parseInt(params[1]);
 			
 			String reason = Util.convertName(params[2]);

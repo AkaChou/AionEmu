@@ -3,10 +3,7 @@ package com.aionemu.gameserver.services.player;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +14,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -41,6 +39,8 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -57,14 +57,8 @@ public class LunaShopService {
 	static final int LUNA_INSTANCE_PRICE = 20;
 	static final int TREASURE_CHEST_PRICE = 5;
 
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<LunaShopService> instanceProvider;
+	private static volatile ObjectProvider<LunaShopService> instanceProvider;
+	private static volatile LunaShopService resolvedInstance;
 	private final PlayerLunaShopDao playerLunaShopDAO;
 	private final PlayerWardrobeDao playerWardrobeDAO;
 	private boolean dailyGenerated = true;
@@ -101,13 +95,13 @@ public class LunaShopService {
 			generateSpecialCraft();
 		}
 
-		GameCronServices.cronService().schedule(() -> {
+		CronService.requireCurrent().schedule(() -> {
 			dailyGenerated = false;
 			generateDailyCraft();
 			resetFreeLuna();
 		}, daily);
 
-		GameCronServices.cronService().schedule(() -> {
+		CronService.requireCurrent().schedule(() -> {
 			specialGenerated = false;
 			generateSpecialCraft();
 		}, weekly);
@@ -187,11 +181,11 @@ public class LunaShopService {
 	}
 
 	private void updateSpecialCraft() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, SpecialCraft)));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, SpecialCraft)));
 	}
 
 	private void updateFreeLuna() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			PlayerLunaShop pls = new PlayerLunaShop(true, true, true);
 			pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			player.setPlayerLunaShop(pls);
@@ -223,7 +217,7 @@ public class LunaShopService {
 	}
 
 	private void updateDailyCraft() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, DailyCraft));
 			dailyGenerated = true;
 		});
@@ -619,7 +613,7 @@ public class LunaShopService {
 			int key = keys.get(i);
 			mt.put(key, hm.get(key));
 		}
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			 for (Map.Entry<Integer, Long> e : mt.entrySet()) {
 				 ItemService.addItem(player, e.getKey(), e.getValue());
 				 ItemTemplate t = DataManager.ITEM_DATA.getItemTemplate(e.getKey());
@@ -749,14 +743,30 @@ public class LunaShopService {
 	 *         when no provider or bean is available
 	 */
 	public static LunaShopService getInstance() {
+		LunaShopService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LunaShopService> provider = instanceProvider;
-		LunaShopService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LunaShopService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<LunaShopService> instanceProvider) {
+		LunaShopService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
 
@@ -12,7 +11,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GAME_TIME;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 游戏时间同步服务，定期向在线玩家推送游戏时间并持久化。
@@ -63,8 +64,8 @@ public class GameTimeService {
 	 * Starts the scheduled task that sends game time to all online players and saves it.
 	 */
 	public GameTimeService() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-			Iterator<Player> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
+			Iterator<Player> iterator = World.getInstance().getPlayersIterator();
 			while (iterator.hasNext()) {
 				Player next = iterator.next();
 				PacketSendUtility.sendPacket(next, new SM_GAME_TIME());

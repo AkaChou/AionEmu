@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Rentus Base 副本 NPC AI：Sensory Area（@AIName "sensory_area"），继承 AggressiveNpcAI2。
@@ -40,7 +40,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
 							// 萨斯塔受伤从空中坠落！ / Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
-							GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(217309, 445.6442f, 439.13187f, 168.64172f, (byte) 40), 10000);
+							ThreadPoolManager.getInstance().schedule(() -> spawn(217309, 445.6442f, 439.13187f, 168.64172f, (byte) 40), 10000);
 							AI2Actions.deleteOwner(SensoryAreaAI2.this);
 				        break;
 					} switch (player.getWorldId()) {
@@ -51,7 +51,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
 							// 萨斯塔受伤从空中坠落！ / Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
-							GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(236296, 445.6442f, 439.13187f, 168.64172f, (byte) 40), 10000);
+							ThreadPoolManager.getInstance().schedule(() -> spawn(236296, 445.6442f, 439.13187f, 168.64172f, (byte) 40), 10000);
 							AI2Actions.deleteOwner(SensoryAreaAI2.this);
 				        break;
 					}

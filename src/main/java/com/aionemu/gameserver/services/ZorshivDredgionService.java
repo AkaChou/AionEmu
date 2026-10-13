@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.DredgionSchedule;
 import com.aionemu.gameserver.configs.schedule.DredgionSchedule.Dredgion;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.services.zorshivdredgionservice.Zorshiv;
 import com.aionemu.gameserver.services.zorshivdredgionservice.ZorshivDredgion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 佐西夫无畏舰服务，管理无畏舰降落地点、刷怪与入侵特效。
@@ -88,7 +89,7 @@ public class ZorshivDredgionService {
 	 */
 	public synchronized void reloadSchedule() {
 		DredgionSchedule newSchedule = CustomConfig.ZORSHIV_DREDGION_ENABLED ? DredgionSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		dredgionSchedule = newSchedule;
 		if (dredgionSchedule != null) {
@@ -96,7 +97,7 @@ public class ZorshivDredgionService {
 				for (String zorshivTime : dredgion.getZorshivTimes()) {
 					Runnable task = new DredgionStartRunnable(dredgion.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, zorshivTime);
+					CronService.requireCurrent().schedule(task, zorshivTime);
 				}
 			}
 		}
@@ -114,7 +115,7 @@ public class ZorshivDredgionService {
 			return;
 		}
 		zorshiv.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopZorshivDredgion(id), (long) CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopZorshivDredgion(id), (long) CustomConfig.ZORSHIV_DREDGION_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -193,7 +194,7 @@ public class ZorshivDredgionService {
 	public boolean levinshorMsg(int id) {
 		return switch (id) {
 			case 1, 2 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.sendSys3Message(player, "\uE050",
 						"The <Zorshiv Dredgion> to lands at levinshor !!!");
 					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
@@ -222,7 +223,7 @@ public class ZorshivDredgionService {
 	public boolean inggisonMsg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.sendSys3Message(player, "\uE050",
 						"The <Zorshiv Dredgion> to lands at inggison !!!");
 					// 龙族战舰已出现。 / The Balaur Dredgion has appeared.
@@ -433,15 +434,15 @@ public class ZorshivDredgionService {
 			ZorshivDredgionService.getInstance().clearAdventObjects(id);
 			// 入侵传送门。 / Invasion Portal.
 			ZorshivDredgionService.getInstance().adventPortalSP(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				// 入侵激光。 / Invasion Lazer.
 				ZorshivDredgionService.getInstance().adventDirectingSP(id);
 			}, 180000);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				// 入侵黑空。 / Invasion Black Sky.
 				ZorshivDredgionService.getInstance().adventControlSP(id);
 			}, 300000);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
 					.getZorshivDredgionLocations();
 				for (ZorshivDredgionLocation loc : locations.values()) {

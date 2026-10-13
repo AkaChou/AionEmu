@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 向客户端播放物品使用动画的服务端包。
@@ -78,7 +79,7 @@ public class SM_ITEM_USAGE_ANIMATION extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		if (time > 0) {
-			final Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
+			final Player player = World.getInstance().findPlayer(playerObjId);
 			final Item item = player.getInventory().getItemByObjId(itemObjId);
 			player.setUsingItem(item);
 		}

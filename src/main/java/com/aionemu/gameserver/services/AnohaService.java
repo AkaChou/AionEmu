@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule.Anoha;
@@ -38,6 +37,8 @@ import com.aionemu.gameserver.services.anohaservice.DanuarHero;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 狂暴阿诺哈（Berserk Anoha）世界 Boss 活动服务。
@@ -93,7 +94,7 @@ public class AnohaService {
 	 */
 	public synchronized void reloadSchedule() {
 		AnohaSchedule newSchedule = CustomConfig.ANOHA_ENABLED ? AnohaSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		anohaSchedule = newSchedule;
 		if (anohaSchedule != null) {
@@ -101,7 +102,7 @@ public class AnohaService {
 				for (String berserkTime : anoha.getBerserkTimes()) {
 					Runnable task = new AnohaStartRunnable(anoha.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, berserkTime);
+					CronService.requireCurrent().schedule(task, berserkTime);
 				}
 			}
 		}
@@ -119,7 +120,7 @@ public class AnohaService {
 			return;
 		}
 		danuarhero.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopAnoha(id), (long) CustomConfig.ANOHA_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopAnoha(id), (long) CustomConfig.ANOHA_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -214,7 +215,7 @@ public class AnohaService {
 	public boolean berserkAnohaMsg1(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System, 0); // Berserk Anoha will return to Kaldor in 30 minutes.
 				});
 				yield true;
@@ -233,7 +234,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg1(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_01, 0); // Enraged Wealhtheow Guardian will appear in 5 minutes.
 				});
 				yield true;
@@ -252,7 +253,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg2(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_02, 0); // Enraged Wealhtheow Guardian will appear in 3 minutes.
 				});
 				yield true;
@@ -271,7 +272,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg3(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_03, 0); // Enraged Wealhtheow Guardian will appear in 1 minute.
 				});
 				yield true;
@@ -309,7 +310,7 @@ public class AnohaService {
 			}
 		};
 
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {
 				boolean requested = player.getResponseRequester().putRequest(902247, responseHandler);
 				if (requested) {

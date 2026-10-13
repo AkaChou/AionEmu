@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.GenericValidator;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -25,12 +23,15 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.persistence.dao.PlayerRegisteredItemDao;
 import com.aionemu.gameserver.persistence.entity.PlayerRegisteredItemPo;
 import com.aionemu.gameserver.persistence.mapper.PlayerRegisteredItemMapper;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家已注册房屋物品数据访问实现。
@@ -72,10 +73,10 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 	 */
 	@Override
 	public void loadRegistry(int playerId) {
-		House house = GameHousingServices.housingService().getPlayerStudio(playerId);
+		House house = HousingService.getInstance().getPlayerStudio(playerId);
 		if (house == null) {
-			int address = GameHousingServices.housingService().getPlayerAddress(playerId);
-			house = GameHousingServices.housingService().getHouseByAddress(address);
+			int address = HousingService.getInstance().getPlayerAddress(playerId);
+			house = HousingService.getInstance().getHouseByAddress(address);
 		}
 
 		if (house == null) {
@@ -151,7 +152,7 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 	 */
 	private HouseObject<?> constructObject(final HouseRegistry registry, House house, PlayerRegisteredItemPo po) {
 		int itemUniqueId = po.getItemUniqueId();
-		VisibleObject visObj = GameWorldBootstrapServices.world().findVisibleObject(itemUniqueId);
+		VisibleObject visObj = World.getInstance().findVisibleObject(itemUniqueId);
 		HouseObject<?> obj;
 
 		if (visObj != null) {
@@ -284,7 +285,7 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 		if (!objectsToDelete.isEmpty()) {
 			for (HouseObject<?> obj : objectsToDelete) {
 				if (obj != null && obj.getObjectId() != 0) {
-					GameWorldBootstrapServices.idFactory().releaseId(obj.getObjectId());
+					IDFactory.getInstance().releaseId(obj.getObjectId());
 				}
 			}
 		}
@@ -292,7 +293,7 @@ public class PlayerRegisteredItemDaoImpl extends ServiceImpl<PlayerRegisteredIte
 		if (!partsToDelete.isEmpty()) {
 			for (HouseDecoration part : partsToDelete) {
 				if (part != null && part.getObjectId() != 0) {
-					GameWorldBootstrapServices.idFactory().releaseId(part.getObjectId());
+					IDFactory.getInstance().releaseId(part.getObjectId());
 				}
 			}
 		}

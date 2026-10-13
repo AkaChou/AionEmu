@@ -10,7 +10,6 @@ import java.util.List;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.DialogPage;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -449,7 +449,7 @@ public class StigmaService {
 			if (questState == null || !keepsStigmaSlotsOpen(questState.getStatus())) {
 				continue;
 			}
-			QuestMetadata metadata = GameEngineServices.questEngine().questCatalog()
+			QuestMetadata metadata = QuestEngine.getInstance().questCatalog()
 				.findMetadata(questState.getQuestId()).orElse(null);
 			if (extendsStigmaSlots(metadata)) {
 				return true;
@@ -483,7 +483,7 @@ public class StigmaService {
 	 * @return 声明扩展时为 true / true when the extension is declared
 	 */
 	public static boolean declaresStigmaSlotExtension(int questId) {
-		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog()
+		QuestMetadata metadata = QuestEngine.getInstance().questCatalog()
 			.findMetadata(questId).orElse(null);
 		return extendsStigmaSlots(metadata);
 	}

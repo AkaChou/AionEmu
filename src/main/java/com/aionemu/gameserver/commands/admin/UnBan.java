@@ -2,6 +2,7 @@ package com.aionemu.gameserver.commands.admin;
 
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -59,7 +60,7 @@ public class UnBan extends AdminCommand {
 		}
 
 		// 发送时间 -1 以解封 / Sends time -1 to unban
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket(type, accountId, "", -1, admin.getObjectId());
+		LoginServer.getInstance().sendBanPacket(type, accountId, "", -1, admin.getObjectId());
 	}
 
 	/**

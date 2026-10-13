@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.model.account.AccountTime;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
@@ -51,7 +52,7 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 
 	@Override
 	public void runImpl() {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountAuthenticationResponse(
+		LoginServer.getInstance().accountAuthenticationResponse(
 			accountId, accountName, result, accountTime, accessLevel, membership, toll, luna, vipLevel, vipExp,
 			vipExpireTime);
 	}

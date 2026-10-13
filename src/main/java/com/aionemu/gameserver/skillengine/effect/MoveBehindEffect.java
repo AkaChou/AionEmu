@@ -15,6 +15,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -61,7 +62,7 @@ public class MoveBehindEffect extends DamageEffect {
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		effect.setDashStatus(DashStatus.MOVEBEHIND);
 		effect.setSkillMoveType(SkillMoveType.MOVEBEHIND);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, closestCollision.getX(), closestCollision.getY(),
+		World.getInstance().updatePosition(effector, closestCollision.getX(), closestCollision.getY(),
 				closestCollision.getZ(), effected.getHeading());
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effected.getHeading());

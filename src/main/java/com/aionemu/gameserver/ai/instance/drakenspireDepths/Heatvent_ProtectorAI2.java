@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -15,7 +13,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -52,7 +52,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402685, 240000);
 					// 片刻后，分遣队突击小队将怀着牺牲决心攻击泉源。 / In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402686, 270000);
-					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					heatventProtectorTask = ThreadPoolManager.getInstance().schedule(() -> {
 						AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
 						// 多亏分遣队突击小队的牺牲，守护者之泉已被摧毁。 / Thanks to the sacrifice of the Detachment's Rush Squad, the Protectors' Fount has been destroyed.
 						PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDSeal_Twin_06, 0);
@@ -72,8 +72,8 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void shareSource() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20770, 1, getOwner()).useNoAnimationSkill(); //Heatvent Protector.
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
+	    SkillEngine.getInstance().getSkill(getOwner(), 20770, 1, getOwner()).useNoAnimationSkill(); //Heatvent Protector.
+		SkillEngine.getInstance().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
 
 	private void checkPercentage(int percentage) {
@@ -89,13 +89,13 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startTornadoTask() {
-		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		tornadoTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTornadoTask();
 				cancelFlamekiteGeistTask();
 				cancelHeatventProtectorTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+				SkillEngine.getInstance().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -118,7 +118,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 
 	private void startFlamekiteGeistTask() {
-		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		flamekiteGeistTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTornadoTask();
 				cancelFlamekiteGeistTask();
@@ -150,7 +150,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(855625, x, y, z, (byte) 0); //Tornado.
 				}
@@ -163,7 +163,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(855622, x, y, z, (byte) 0); //Flamekite Geist.
 				}

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 public class PacketLoggerService {
 
 	private static volatile ObjectProvider<PacketLoggerService> instanceProvider;
+	private static volatile PacketLoggerService resolvedInstance;
 
 	/**
 	 * 记录客户端包名（CM）。
@@ -50,14 +51,19 @@ public class PacketLoggerService {
 	 *         when no provider or bean is available
 	 */
 	public static PacketLoggerService getInstance() {
+		PacketLoggerService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PacketLoggerService> provider = instanceProvider;
-		PacketLoggerService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PacketLoggerService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -67,5 +73,6 @@ public class PacketLoggerService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<PacketLoggerService> instanceProvider) {
 		PacketLoggerService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

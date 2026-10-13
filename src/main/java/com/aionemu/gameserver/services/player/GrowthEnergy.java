@@ -3,16 +3,17 @@ package com.aionemu.gameserver.services.player;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 成长能量服务，管理成长能量计时与发放。
@@ -33,7 +34,7 @@ public class GrowthEnergy {
 	public void init() {
 		log.info(I18n.get("log.bfa6a6e66239"));
 		String daily = "0 0 9 1/1 * ? *";
-		GameCronServices.cronService().schedule(new Runnable() {
+		CronService.requireCurrent().schedule(new Runnable() {
 			/**
 			 * 执行任务。
 			 * Runs the task.
@@ -46,7 +47,7 @@ public class GrowthEnergy {
 	}
 
 	private void updateGrowthEnergy() {
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+        World.getInstance().doOnAllPlayers(player -> {
 			 player.getCommonData().setAuraOfGrowth(0);
 			 PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 			 playerDAO.storePlayer(player);

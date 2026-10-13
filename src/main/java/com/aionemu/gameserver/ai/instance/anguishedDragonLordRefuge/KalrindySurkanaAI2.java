@@ -1,14 +1,14 @@
 package com.aionemu.gameserver.ai.instance.anguishedDragonLordRefuge;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Anguished Dragon Lord Refuge 副本 NPC AI：Kalrindy Surkana（@AIName "kalrindy_surkana"），继承 NpcAI2。
@@ -29,7 +29,7 @@ public class KalrindySurkanaAI2 extends NpcAI2
 	}
 
 	private void reflect() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> GameEngineServices.skillEngine().applyEffectDirectly(20891, getOwner(), kalrindy, 0), 3000, 10000);
+		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> SkillEngine.getInstance().applyEffectDirectly(20891, getOwner(), kalrindy, 0), 3000, 10000);
 	}
 
 	@Override

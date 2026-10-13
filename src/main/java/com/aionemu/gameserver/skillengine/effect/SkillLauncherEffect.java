@@ -5,12 +5,12 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 技能发射效果：立即以配置的 skill_id 对目标再施放一个技能。
@@ -36,7 +36,7 @@ public class SkillLauncherEffect extends EffectTemplate {
 	public void applyEffect(Effect effect) {
 		Runnable launch = () -> launch(effect);
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(launch, delay);
+			ThreadPoolManager.getInstance().schedule(launch, delay);
 		} else {
 			launch.run();
 		}

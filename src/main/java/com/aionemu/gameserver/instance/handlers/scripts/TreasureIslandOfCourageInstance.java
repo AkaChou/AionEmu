@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -19,7 +17,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -62,7 +62,7 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
 
 				/**
 				 * 处理 run。
@@ -108,25 +108,25 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		switch (npc.getNpcId()) {
 			case 835544: // Ancient Hero's Shoe
 			case 835592:
-				GameEngineServices.skillEngine().applyEffectDirectly(11277, player, player, 4000);
+				SkillEngine.getInstance().applyEffectDirectly(11277, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835545: // 古代英雄之盾 / Ancient Hero's Shield
 			case 835593:
-				GameEngineServices.skillEngine().applyEffectDirectly(11278, player, player, 4000);
+				SkillEngine.getInstance().applyEffectDirectly(11278, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835546: // Ancient Hero's Trap
 			case 835594:
-				GameEngineServices.skillEngine().applyEffectDirectly(11279, player, player, 4000);
+				SkillEngine.getInstance().applyEffectDirectly(11279, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835547: // Ancient Hero's Hook
 			case 835794:
-				GameEngineServices.skillEngine().applyEffectDirectly(11280, player, player, 4000);
+				SkillEngine.getInstance().applyEffectDirectly(11280, player, player, 4000);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;

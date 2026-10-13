@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.model.instance.playerreward;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.List;
 
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
 import lombok.Getter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * Harmony 队伍奖励，用于副本相关逻辑。
@@ -21,7 +21,7 @@ public class HarmonyGroupReward extends PvPArenaPlayerReward {
 	public HarmonyGroupReward(Integer object, int timeBonus, byte buffId, List<AGPlayer> players) {
 		super(object, timeBonus, buffId);
 		this.players = players;
-		id = GameWorldBootstrapServices.idFactory().nextId();
+		id = IDFactory.getInstance().nextId();
 	}
 
 	/** 返回 ag players / Returns the ag players */

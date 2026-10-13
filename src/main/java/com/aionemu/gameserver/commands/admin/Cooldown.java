@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 重置技能与物品冷却时间的管理命令（{@code //cooldown}）。
@@ -33,7 +34,7 @@ public class Cooldown extends AdminCommand {
 
         if (params.length > 0) {
             String targetName = params[0];
-            target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
+            target = World.getInstance().findPlayer(targetName);
 
             if (target == null) {
                 PacketSendUtility.sendMessage(admin, "Player " + targetName + " not found online.");

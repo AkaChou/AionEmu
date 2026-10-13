@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -31,6 +30,8 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 土匪活动服务，管理土匪变身、宣战与结算。
@@ -74,7 +75,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(() -> {
 			player.getObserveController().removeObserver(observer);
 			if (player.getLifeStats().isAlreadyDead()) {
 				PlayerReviveService.skillRevive(player);
@@ -126,7 +127,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(() -> {
 			player.getObserveController().removeObserver(observer);
 			if (player.getLifeStats().isAlreadyDead()) {
 				PlayerReviveService.skillRevive(player);
@@ -179,7 +180,7 @@ public class BanditService {
 			100);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (player.isBandit()) {
 				if (player.getLifeStats().isAlreadyDead()) {
 					PlayerReviveService.banditRevive(player);
@@ -234,7 +235,7 @@ public class BanditService {
 	 * @param player 玩家 / player
 	 */
 	public void sendAnnounce(final Player player) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+		World.getInstance().doOnAllPlayers(pl -> {
 			if (pl.getWorldId() == player.getWorldId() && pl != player) {
 				PacketSendUtility.sendSys3Message(pl, "[PK] Bandit", "A player just passed <Outlaw>, RUN!");
 			}
@@ -248,7 +249,7 @@ public class BanditService {
 	 * killer
 	 */
 	public void sendDieAnnounce(final Player looser, final Player killer) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+		World.getInstance().doOnAllPlayers(pl -> {
 			if (pl.getWorldId() == looser.getWorldId()) {
 				PacketSendUtility.sendSys3Message(pl, "[PK] Bandit",
 					killer.getName() + " stop the <Outlaw> (" + looser.getName() + ") !");

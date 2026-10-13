@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2pAccount;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ACCOUNT_PROPERTIES;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PACKAGE_INFO_NOTIFY;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,7 +33,7 @@ public class F2pService {
 		boolean isGM = player.getAccessLevel() >= AdminConfig.GM_PANEL;
 		if (player.getF2p().getF2pAccount() != null) {
 			playerBoostPack(player);
-			GameTaskManagerServices.expireTimerTask().addTask(player.getF2p().getF2pAccount(), player);
+			ExpireTimerTask.getInstance().addTask(player.getF2p().getF2pAccount(), player);
 			PacketSendUtility.sendPacket(player,
 					new SM_ACCOUNT_PROPERTIES(isGM, 0, 8, player.getF2p().getF2pAccount().getRemainingTime()));
 			PacketSendUtility.sendPacket(player,
@@ -77,7 +77,7 @@ public class F2pService {
 		player.getF2p().add(f2pAccount, true);
 		PacketSendUtility.sendPacket(player,
 				new SM_ACCOUNT_PROPERTIES(isGM, 0, 8, player.getF2p().getF2pAccount().getRemainingTime()));
-		GameTaskManagerServices.expireTimerTask().addTask(player.getF2p().getF2pAccount(), player);
+		ExpireTimerTask.getInstance().addTask(player.getF2p().getF2pAccount(), player);
 		playerBoostPack(player);
 	}
 

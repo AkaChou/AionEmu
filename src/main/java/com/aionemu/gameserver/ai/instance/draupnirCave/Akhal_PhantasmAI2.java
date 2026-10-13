@@ -2,11 +2,11 @@ package com.aionemu.gameserver.ai.instance.draupnirCave;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Draupnir Cave 副本 NPC AI：Akhal Phantasm（@AIName "akhal_phantasm"），继承 NpcAI2。
@@ -33,7 +33,7 @@ public class Akhal_PhantasmAI2 extends NpcAI2
 				sendMsg(1403085, getObjectId(), false, 10000);
 				// 我们的命运计划遭破坏了吗？阻截入侵者，巴卡尔玛。吾主全靠你了！ / Hath our fated plans fallen prey to sabatoge? Impede the intruders, Bakarma. Our Lord depends upon it!
 				sendMsg(1403067, getObjectId(), false, 14000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Akhal_PhantasmAI2.this), 18000);
+				ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Akhal_PhantasmAI2.this), 18000);
 			break;
 		}
 	}

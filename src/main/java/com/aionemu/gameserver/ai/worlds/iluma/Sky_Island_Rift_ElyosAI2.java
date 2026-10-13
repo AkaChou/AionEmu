@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Iluma 区域 NPC AI：Sky Island Rift Elyos（@AIName "sky_island_rift_E"），继承 NpcAI2。
@@ -38,7 +38,7 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this), 3600000); // 1 小时后消失 / 1Hrs.
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this), 3600000); // 1 小时后消失 / 1Hrs.
 	}
 
 	@Override

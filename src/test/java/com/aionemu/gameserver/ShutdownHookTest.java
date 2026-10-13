@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
@@ -12,14 +13,11 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.controllers.NpcController;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -35,7 +33,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class ShutdownHookTest {
 
     private final ObjenesisStd objenesis = new ObjenesisStd();
-    private GameWorldBootstrapServices worldBootstrapServices;
+    private WorldBootstrapServiceBindings worldBootstrapServices;
     private final ConfigSnapshot shutdownConfigSnapshot =
         ConfigSnapshot.of(ShutdownConfig.class, "DESPAWN_NPCS");
 
@@ -69,7 +67,7 @@ class ShutdownHookTest {
         TestWorld world = objenesis.newInstance(TestWorld.class);
         world.npcs = List.of();
         world.players = new CopyOnWriteArrayList<>(List.of(objenesis.newInstance(Player.class)));
-        worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
+        worldBootstrapServices = new WorldBootstrapServiceBindings(null, null, null, null, provider(World.class, world));
         Thread logout = Thread.ofPlatform().start(() -> {
             try {
                 Thread.sleep(100);
@@ -106,22 +104,11 @@ class ShutdownHookTest {
         TestWorld world = objenesis.newInstance(TestWorld.class);
         world.npcs = liveNpcs;
         world.players = List.of();
-        worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
+        worldBootstrapServices = new WorldBootstrapServiceBindings(null, null, null, null, provider(World.class, world));
 
         assertDoesNotThrow(() -> invokeSendShutdownStatus(true));
         assertEquals(List.of(), liveNpcs);
     }
-
-    @Test
-    void finalShutdownUsesLifecycleBridgesInsteadOfDirectServiceSingletons() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/ShutdownHook.java"));
-
-        assertFalse(source.contains("import com.aionemu.commons.services.CronService;"));
-        assertFalse(source.contains("import com.aionemu.gameserver.utils.ThreadPoolManager;"));
-		assertFalse(source.contains("CronService.getInstance()"));
-		assertFalse(source.contains("ThreadPoolManager.getInstance()"));
-		assertTrue(source.contains("GameEngineServices.questEngine().shutdown()"));
-	}
 
     private void invokeSendShutdownStatus(boolean status) throws ReflectiveOperationException {
         Method method = ShutdownHook.class.getDeclaredMethod("sendShutdownStatus", boolean.class);

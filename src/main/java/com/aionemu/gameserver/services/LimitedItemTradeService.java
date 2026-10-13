@@ -2,12 +2,12 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.TradeListData;
@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LimitedItemTradeService {
 	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
+	private static volatile LimitedItemTradeService resolvedInstance;
 	private final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	/** NPC ID 到限购交易数据 / NPC id to limited-trade data*/
@@ -57,7 +58,7 @@ public class LimitedItemTradeService {
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
 			for (final LimitedItem limitedItem : limitedTradeNpc.limitedItems()) {
-				GameCronServices.cronService().schedule(limitedItem::setToDefault, limitedItem.getSalesTime());
+				CronService.requireCurrent().schedule(limitedItem::setToDefault, limitedItem.getSalesTime());
 			}
 		}
 		log.info(I18n.get("log.5a5db961d623", limitedTradeNpcs.size()));
@@ -112,14 +113,19 @@ public class LimitedItemTradeService {
 	 *         when no provider or bean is available
 	 */
 	public static LimitedItemTradeService getInstance() {
+		LimitedItemTradeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LimitedItemTradeService> provider = instanceProvider;
-		LimitedItemTradeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LimitedItemTradeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -129,5 +135,6 @@ public class LimitedItemTradeService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<LimitedItemTradeService> instanceProvider) {
 		LimitedItemTradeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

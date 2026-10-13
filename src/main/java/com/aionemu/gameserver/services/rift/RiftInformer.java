@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RIFT_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 裂隙信息同步器，负责向玩家广播裂隙开启/关闭与统计公告。
@@ -124,7 +125,7 @@ public class RiftInformer {
 	}
 
 	private static void syncRiftsState(int worldId, final List<AionServerPacket> packets, final boolean isDespawnInfo) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance().doOnAllPlayers(player -> syncRiftsState(player, packets));
+		World.getInstance().getWorldMap(worldId).getMainWorldMapInstance().doOnAllPlayers(player -> syncRiftsState(player, packets));
 	}
 
 	private static Map<Integer, Integer> getAnnounceData(int worldId) {

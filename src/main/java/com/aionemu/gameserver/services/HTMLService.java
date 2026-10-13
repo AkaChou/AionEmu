@@ -4,11 +4,8 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.ObjectProvider;
 
 
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,6 +25,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.GuideDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * HTML 问卷/引导服务，向客户端推送原始 HTML 并处理引导奖励。
@@ -81,7 +80,7 @@ public class HTMLService {
 	 * HTML string
 	 */
 	public static String getHTMLTemplate(GuideTemplate template) {
-		String context = GameStaticDataServices.htmlCache().getHTML("guideTemplate.xhtml");
+		String context = HTMLCache.getInstance().getHTML("guideTemplate.xhtml");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<reward_items multi_count='").append(template.getRewardCount()).append("'>\n");
@@ -104,7 +103,7 @@ public class HTMLService {
 	 * HTML content
 	 */
 	public static void showHTML(Player player, String html) {
-		sendData(player, GameWorldBootstrapServices.idFactory().nextId(), html);
+		sendData(player, IDFactory.getInstance().nextId(), html);
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class HTMLService {
 				if (!template.isActivated()) {
 					continue;
 				}
-				int id = GameWorldBootstrapServices.idFactory().nextId();
+				int id = IDFactory.getInstance().nextId();
 				sendData(player, id, getHTMLTemplate(template));
 				getInstance().guideDAO.saveGuide(id, player, template.getTitle());
 			}
@@ -186,7 +185,7 @@ public class HTMLService {
 			return;
 		}
 
-		if (GameRuntimeServices.surveyService().isActive(player, messageId)) {
+		if (SurveyService.getInstance().isActive(player, messageId)) {
 			return;
 		}
 
@@ -249,7 +248,7 @@ public class HTMLService {
 	public static void sendGuideHtml(Player player, String title) {
 		GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(title);
 		if (template != null) {
-			int id = GameWorldBootstrapServices.idFactory().nextId();
+			int id = IDFactory.getInstance().nextId();
 			getInstance().guideDAO.saveGuide(id, player, title);
 			sendData(player, id, getHTMLTemplate(template));
 		}

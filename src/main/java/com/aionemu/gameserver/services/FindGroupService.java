@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -33,13 +31,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class FindGroupService {
 
-	/**
-	 * -- SETTER --
-	 *  注入 Spring 的实例提供者。
-	 *  Injects the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<FindGroupService> instanceProvider;
+	private static volatile FindGroupService resolvedInstance;
 	private static final AtomicBoolean LISTENERS_REGISTERED = new AtomicBoolean();
 	/** 天族招募列表。 / Elyos recruit listings. */
 	private final Map<Integer, FindGroup> elyosRecruitFindGroups = new LinkedHashMap<>();
@@ -62,69 +55,69 @@ public class FindGroupService {
 		PlayerGroupService.addListener(new PlayerGroupService.PlayerGroupListener() {
 			@Override
 			public void onGroupCreated(Player leader) {
-				FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+				FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
 						leader.getRace(), 0x00, leader.getObjectId());
 				if (inviterFindGroup == null) {
-					inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+					inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
 							leader.getRace(), 0x04, leader.getObjectId());
 				}
 				if (inviterFindGroup != null) {
-					GameRuntimeServices.findGroupService().addFindGroupList(leader, 0x02,
+					FindGroupService.getInstance().addFindGroupList(leader, 0x02,
 							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
 				}
 			}
 
 			@Override
 			public void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {
-				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 			}
 
 			@Override
 			public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
 				if (group.isFull()) {
-					GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getObjectId());
+					FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getObjectId());
 				}
 			}
 
 			@Override
 			public void onGroupDisbanded(PlayerGroup group) {
-				GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getTeamId());
+				FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getTeamId());
 			}
 		});
 
 		PlayerAllianceService.addListener(new PlayerAllianceService.PlayerAllianceListener() {
 			@Override
 			public void onAllianceCreated(Player leader) {
-				FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+				FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
 						leader.getRace(), 0x00, leader.getObjectId());
 				if (inviterFindGroup == null) {
-					inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(
+					inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
 							leader.getRace(), 0x04, leader.getObjectId());
 				}
 				if (inviterFindGroup != null) {
-					GameRuntimeServices.findGroupService().addFindGroupList(leader, 0x02,
+					FindGroupService.getInstance().addFindGroupList(leader, 0x02,
 							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
 				}
 			}
 
 			@Override
 			public void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
-				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-				GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 			}
 
 			@Override
 			public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
 				if (alliance.isFull()) {
-					GameRuntimeServices.findGroupService().removeFindGroup(
+					FindGroupService.getInstance().removeFindGroup(
 							alliance.getRace(), 0, alliance.getObjectId());
 				}
 			}
 
 			@Override
 			public void onBeforeAllianceDisbanded(PlayerAlliance alliance) {
-				GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
+				FindGroupService.getInstance().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
 			}
 		});
 	}
@@ -329,14 +322,30 @@ public class FindGroupService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static FindGroupService getInstance() {
+		FindGroupService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<FindGroupService> provider = instanceProvider;
-		FindGroupService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("FindGroupService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<FindGroupService> instanceProvider) {
+		FindGroupService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

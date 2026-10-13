@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -11,6 +9,8 @@ import com.aionemu.gameserver.ai2.poll.AIAnswer;
 import com.aionemu.gameserver.ai2.poll.AIAnswers;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.concurrent.Future;
@@ -26,7 +26,7 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 	private Future<?> task;
 
 	private void startTask() {
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			} else {
@@ -63,13 +63,13 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 		if (getNpcId() == 282996 || getNpcId() == 282997) {
 			startTask();
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill(), 500);
+			ThreadPoolManager.getInstance().schedule(() -> SkillEngine.getInstance().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill(), 500);
 			starLifeTask();
 		}
 	}
 
 	private void starLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(this::despawn, 4000);
+		ThreadPoolManager.getInstance().schedule(this::despawn, 4000);
 	}
 
 	private void despawn() {

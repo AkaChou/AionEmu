@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -14,7 +12,10 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
     }
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask1();
 			} else {
@@ -166,19 +167,19 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
         switch (Rnd.get(1, 2)) {
             case 1:
                 AI2Actions.targetSelf(Crazed_ModorAI2.this);
-                GameEngineServices.skillEngine().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
+                SkillEngine.getInstance().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
             break;
             case 2:
                 AI2Actions.targetSelf(Crazed_ModorAI2.this);
-                GameEngineServices.skillEngine().getSkill(getOwner(), 21176, 60, getOwner()).useNoAnimationSkill();
+                SkillEngine.getInstance().getSkill(getOwner(), 21176, 60, getOwner()).useNoAnimationSkill();
             break;
         }
     }
 
 	private void VengefullOrbEvent() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(this::spawnSorcererQueenModor, 11000);
+		SkillEngine.getInstance().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(this::spawnSorcererQueenModor, 11000);
 	}
 
 	private void spawnSorcererQueenModor() {
@@ -190,18 +191,18 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 modorNpc();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284, 262, 249, (byte) 63);
+			World.getInstance().updatePosition(getOwner(), 284, 262, 249, (byte) 63);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
     private void Teleport2() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        ThreadPoolManager.getInstance().schedule(() -> {
 			float[][] pos1 = {
 				{
 					232.426f, 263.818f, 248.6419f, 115
@@ -212,29 +213,29 @@ modorNpc();
 				}
 			};
 			float[] pos = pos1[Rnd.get(0, 2)];
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
     }
 
 	private void Teleport3() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			modorNpc();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+			World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
 	private void skillfear() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			AI2Actions.targetSelf(Crazed_ModorAI2.this);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
+			SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+			ThreadPoolManager.getInstance().schedule(() -> {
+				World.getInstance().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}, 2000);
 		}, 3000);
@@ -243,18 +244,18 @@ modorNpc();
 	private void Teleport4() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			modorNpc();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+			World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
     private void Teleport5() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        ThreadPoolManager.getInstance().schedule(() -> {
 			float[][] pos1 = {
 				{
 					232.426f, 263.818f, 248.6419f, 115
@@ -265,7 +266,7 @@ modorNpc();
 				}
 			};
 			float[] pos = pos1[Rnd.get(0, 2)];
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
     }
@@ -273,18 +274,18 @@ modorNpc();
 	private void Teleport6() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			modorNpc2();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+			World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
     private void Teleport7() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        ThreadPoolManager.getInstance().schedule(() -> {
 			float[][] pos1 = {
 				{
 					232.426f, 263.818f, 248.6419f, 115
@@ -295,7 +296,7 @@ modorNpc();
 				}
 			};
 			float[] pos = pos1[Rnd.get(0, 2)];
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
     }
@@ -303,16 +304,16 @@ modorNpc();
 	private void Teleport8() {
 		// 起来，我的孩子们，起来！ / Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
 			modorNpc2();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+			World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
 	private void modorNpc() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 spawn(284659, 271.12497f, 247.17401f, 242.625f, (byte) 90);
 spawn(284660, 244.12497f, 245.17401f, 242.625f, (byte) 90);
 spawn(284664, 243.12497f, 270.17401f, 242.625f, (byte) 90);
@@ -321,7 +322,7 @@ spawn(284660, 268.12497f, 271.17401f, 242.625f, (byte) 90);
 	}
 
 	private void modorNpc2() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 spawn(284663, 271.12497f, 247.17401f, 242.625f, (byte) 90);
 spawn(284662, 244.12497f, 245.17401f, 242.625f, (byte) 90);
 spawn(284664, 243.12497f, 270.17401f, 242.625f, (byte) 90);
@@ -392,7 +393,7 @@ spawn(284663, 268.12497f, 271.17401f, 242.625f, (byte) 90);
 	}
 
 	private void eternalGrudge() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); // 永恒怨恨 / Eternal Grudge.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); // 永恒怨恨 / Eternal Grudge.
 	}
 
 }

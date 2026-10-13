@@ -6,6 +6,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Iterator;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员阵营公告命令：向天族或魔族玩家广播消息。
@@ -33,7 +34,7 @@ public class AnnounceFaction extends AdminCommand {
 		}
 		else {
 			StringBuilder message = new StringBuilder();
-			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			Iterator<Player> iter = World.getInstance().getPlayersIterator();
 
 			if (params[0].equals("ely"))
 				message.append("Elyos : ");

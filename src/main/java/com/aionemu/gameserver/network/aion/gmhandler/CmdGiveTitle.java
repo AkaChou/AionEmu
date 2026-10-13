@@ -4,6 +4,7 @@ import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：为目标玩家授予称号。
@@ -36,7 +37,7 @@ public class CmdGiveTitle extends AbstractGMHandler {
 		}
 
 		if (admin.getTarget() != null && admin.getTarget() instanceof Player) {
-			t = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(admin.getTarget().getName()));
+			t = World.getInstance().findPlayer(Util.convertName(admin.getTarget().getName()));
 		}
 		Integer titleId = Integer.parseInt(params);
 		if (t != null) {

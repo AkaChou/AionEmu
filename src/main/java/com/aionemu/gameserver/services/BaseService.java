@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +10,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.base.BaseLocation;
@@ -19,6 +19,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_INFO;
 import com.aionemu.gameserver.persistence.dao.BaseLocationDao;
 import com.aionemu.gameserver.services.base.Base;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 据点（Base）服务，管理据点位置初始化、启停、占领与旗帜同步。
@@ -74,7 +75,7 @@ public class BaseService {
 		Race race = null;
 		log.info(I18n.get("log.0b82f7fdbd34"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(() -> {
+		CronService.requireCurrent().schedule(() -> {
 			// 埃尔特内。 / Elten.
 			capture(45, Race.NPC);
 			capture(46, Race.NPC);
@@ -236,7 +237,7 @@ public class BaseService {
 	 * base location
 	 */
 	public void broadcastUpdate(final BaseLocation baseLocation) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(baseLocation.getWorldId()).getMainWorldMapInstance()
+		World.getInstance().getWorldMap(baseLocation.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(player -> {
 					if (isActive(baseLocation.getId())) {
 						Base<?> base = getActiveBase(baseLocation.getId());

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 死亡竞赛：单人自由混战，击杀数最高者获胜。
@@ -789,7 +789,7 @@ public class DeathmatchBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(this::endDeathmatch, getMatchLength() * 1000L));
+		super.setExpireTask(ThreadPoolManager.getInstance().schedule(this::endDeathmatch, getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -830,7 +830,7 @@ public class DeathmatchBg extends Battleground {
 			killer.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 1000 + 200 * killer.getKillStreak());
 			killer.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 1000 + 200 * killer.getKillStreak());
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg) {
 				spawnPlayer(player, true);
 			}

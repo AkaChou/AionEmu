@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Electrocute（@AIName "electrocute"），继承 NpcAI2。
@@ -25,12 +25,12 @@ public class ElectrocuteAI2 extends NpcAI2
     @Override
     protected void handleSpawned() {
 	    super.handleSpawned();
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(ElectrocuteAI2.this, 20757),0, 2000);
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> AI2Actions.useSkill(ElectrocuteAI2.this, 20757),0, 2000);
 	    despawn();
     }
 
     private void despawn() {
-	    GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 10000);
+	    ThreadPoolManager.getInstance().schedule(() -> getOwner().getController().onDelete(), 10000);
     }
 
 	@Override

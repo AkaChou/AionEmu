@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤追踪弹/自导弹效果：生成若干次攻击次数受限的追踪单位。
@@ -84,7 +84,7 @@ public class SummonHomingEffect extends SummonEffect {
 				effect.setActionObserver(observer, position);
 			}
 			// 以防万一调度取消生成 / Schedule a despawn just in case
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			Future<?> task = ThreadPoolManager.getInstance().schedule(() -> {
 				if (homing.isSpawned()) {
 					homing.getController().onDelete();
 				}

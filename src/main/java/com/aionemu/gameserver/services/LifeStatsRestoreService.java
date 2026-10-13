@@ -1,10 +1,8 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -12,6 +10,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.CreatureLifeStats;
 import com.aionemu.gameserver.model.stats.container.PlayerLifeStats;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 生命值恢复服务，调度 HP/MP/飞行值的恢复与消耗任务。
@@ -20,14 +20,8 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
  */
 public class LifeStatsRestoreService {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
+	private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
+	private static volatile LifeStatsRestoreService resolvedInstance;
 
 	/** 默认生命/魔法恢复间隔（毫秒） / Default HP/MP restore interval in ms*/
 	private static final int DEFAULT_DELAY = 6000;
@@ -36,7 +30,6 @@ public class LifeStatsRestoreService {
 	/** 飞行值恢复默认间隔（毫秒）。 / Default FP restore interval in ms. */
 	private static final int DEFAULT_FPRESTORE_DELAY = 2000;
 
-	private static final LifeStatsRestoreService instance = new LifeStatsRestoreService();
 
 	/**
 	 * 调度 HP 与 MP 恢复任务。
@@ -45,7 +38,7 @@ public class LifeStatsRestoreService {
 	 * scheduled future
 	 */
 	public Future<?> scheduleRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpMpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new HpMpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
@@ -55,7 +48,7 @@ public class LifeStatsRestoreService {
 	 * scheduled future
 	 */
 	public Future<?> scheduleHpRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new HpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
@@ -66,7 +59,7 @@ public class LifeStatsRestoreService {
 	 * scheduled future
 	 */
 	public Future<?> scheduleFpReduceTask(final PlayerLifeStats lifeStats, Integer costFp) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpReduceTask(lifeStats, costFp), 2000,
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new FpReduceTask(lifeStats, costFp), 2000,
 				DEFAULT_FPREDUCE_DELAY);
 	}
 
@@ -77,21 +70,45 @@ public class LifeStatsRestoreService {
 	 * scheduled future
 	 */
 	public Future<?> scheduleFpRestoreTask(PlayerLifeStats lifeStats) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpRestoreTask(lifeStats), 2000,
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new FpRestoreTask(lifeStats), 2000,
 				DEFAULT_FPRESTORE_DELAY);
 	}
 
 	/**
-	 * 获取服务单例，优先走 Spring ObjectProvider。
-	 * Returns the service singleton, preferring Spring ObjectProvider when available.
-	 * service instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static LifeStatsRestoreService getInstance() {
-		ObjectProvider<LifeStatsRestoreService> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> instance);
+		LifeStatsRestoreService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return instance;
+		ObjectProvider<LifeStatsRestoreService> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("LifeStatsRestoreService 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<LifeStatsRestoreService> instanceProvider) {
+		LifeStatsRestoreService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**
@@ -108,7 +125,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
+			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
 			AIState state = lifeStats.getOwner().getAi2().getState();
 			// FIGHT/FEAR 都算战斗中：逃跑中被追击不应回血
 			if (!inWorld || lifeStats.isAlreadyDead() || lifeStats.isFullyRestoredHp()
@@ -135,7 +152,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
+			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
 			if (!inWorld || lifeStats.isAlreadyDead() || lifeStats.isFullyRestoredHpMp()) {
 				lifeStats.cancelRestoreTask();
 				lifeStats = null;
@@ -162,7 +179,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
+			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
 			if (!inWorld || lifeStats.isAlreadyDead()) {
 				lifeStats.cancelFpReduce();
 				lifeStats = null;

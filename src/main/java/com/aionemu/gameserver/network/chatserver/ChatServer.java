@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.chatserver;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_AUTH
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_LOGOUT;
 import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_AUTH_RESPONSE;
 import com.aionemu.gameserver.network.chatserver.clientpackets.CM_CS_PLAYER_AUTH_RESPONSE;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 游戏服连接聊天服的门面：负责建连、重连、断开以及玩家登录/登出通知。
@@ -30,6 +30,7 @@ public class ChatServer {
 	 * Spring-injected singleton provider (preferred over internal SingletonHolder).
 	 */
 	private static volatile ObjectProvider<ChatServer> instanceProvider;
+	private static volatile ChatServer resolvedInstance;
 
 	/**
 	 * 当前与聊天服的活动连接。
@@ -71,14 +72,19 @@ public class ChatServer {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static ChatServer getInstance() {
+		ChatServer resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ChatServer> provider = instanceProvider;
-		ChatServer provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ChatServer 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -88,6 +94,7 @@ public class ChatServer {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ChatServer> instanceProvider) {
 		ChatServer.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -139,7 +146,7 @@ public class ChatServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		connectionTask = ThreadPoolManager.getInstance().schedule(() -> {
 			connectionTaskQueued.set(false);
 			connectionTask = null;
 			if (serverShutdown || chatServer != null) {

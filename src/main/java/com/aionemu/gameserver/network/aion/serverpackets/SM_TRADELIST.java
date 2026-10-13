@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.LimitedItemTradeService;
 
 /**
  * 打开 NPC 普通商店交易列表的服务端包（含限购信息）。
@@ -54,8 +54,8 @@ public class SM_TRADELIST extends AionServerPacket {
 			}
 			int i = 0;
 			LimitedTradeNpc limitedTradeNpc = null;
-			if (GameRuntimeServices.limitedItemTradeService().isLimitedTradeNpc(npcId)) {
-				limitedTradeNpc = GameRuntimeServices.limitedItemTradeService().getLimitedTradeNpc(npcId);
+			if (LimitedItemTradeService.getInstance().isLimitedTradeNpc(npcId)) {
+				limitedTradeNpc = LimitedItemTradeService.getInstance().getLimitedTradeNpc(npcId);
 				i = limitedTradeNpc.limitedItems().size();
 			}
 			writeH(i);

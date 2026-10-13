@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 复活熔岩领主（Resurrected Moltenus）活动启停管理员命令。
@@ -58,7 +59,7 @@ public class Moltenus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!"));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!"));
 				MoltenusService.getInstance().startMoltenus(moltenusId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

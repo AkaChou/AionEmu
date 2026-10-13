@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.controllers.observer;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -61,7 +61,7 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	@Override
 	public void moved() {
 		if (!isRunning.getAndSet(true)) {
-			GameThreadPoolServices.threadPoolManager().execute(() -> {
+			ThreadPoolManager.getInstance().execute(() -> {
 				try {
 					Vector3f pos;
 					Vector3f dir;

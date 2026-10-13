@@ -6,7 +6,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
-import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
@@ -130,7 +130,7 @@ public class DespawnableNode extends Node {
 		if (DataManager.EVENT_DATA == null) {
 			return 0;
 		}
-		return GameEventServices.eventService().getEventType().getId();
+		return EventService.getInstance().getEventType().getId();
 	}
 
 	/** 按 ID 查找攻城地点；失败返回 null / Looks up siege location by id; null on failure */

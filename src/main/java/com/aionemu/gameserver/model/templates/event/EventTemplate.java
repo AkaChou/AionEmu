@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.event;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -32,8 +31,10 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import lombok.Getter;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 活动模板（静态数据/XML）。
@@ -148,7 +149,7 @@ public class EventTemplate {
 			int spawnCount = 0;
 			for (SpawnMap map : spawns.getTemplates()) {
 				DataManager.SPAWNS_DATA2.addNewSpawnMap(map);
-				Collection<Integer> instanceIds = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(map.getMapId()).getAvailableInstanceIds();
+				Collection<Integer> instanceIds = World.getInstance().getWorldMap(map.getMapId()).getAvailableInstanceIds();
 				for (Integer instanceId : instanceIds) {
 					for (Spawn spawn : map.getSpawns()) {
 						spawn.setEventTemplate(this);
@@ -168,8 +169,8 @@ public class EventTemplate {
 		if (inventoryDrops != null) {
 			invDropTasks = new ArrayList<>();
 			for (InventoryDrop inventoryDrop : inventoryDrops) {
-				invDropTasks.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> dropInventoryItem(player, inventoryDrop)),
+				invDropTasks.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(
+					() -> World.getInstance().doOnAllPlayers(player -> dropInventoryItem(player, inventoryDrop)),
 					inventoryDrop.getInterval() * 60000L, inventoryDrop.getInterval() * 60000L));
 			}
 		}

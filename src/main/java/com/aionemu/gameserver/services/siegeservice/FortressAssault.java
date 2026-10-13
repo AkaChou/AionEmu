@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.siegeservice;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 要塞龙族突击：按延迟调度并在首领附近刷出突击部队。
@@ -53,7 +54,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 	 */
 	@Override
 	protected void scheduleAssault(int delay) {
-		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTask = GameThreadPoolServices.threadPoolManager().schedule(this::spawnAttackers, Rnd.get(240, 300) * 1000L), delay * 1000L);
+		dredgionTask = ThreadPoolManager.getInstance().schedule(() -> spawnTask = ThreadPoolManager.getInstance().schedule(this::spawnAttackers, Rnd.get(240, 300) * 1000L), delay * 1000L);
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 			return;
 		}
 		if (captured) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			World.getInstance().doOnAllPlayers(player -> {
 				// 龙族击杀了守护者将军。 / The Balaur have killed the Guardian General.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_BOSS_KILLED);
 			});
@@ -128,7 +129,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 				SpawnEngine.spawnObject(spawn, 1);
 			}
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 战舰吐出一大群龙族士兵。 / The Dredgion has disgorged a horde of Balaur troopers.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_ABYSS_CARRIER_DROP_DRAGON, 0);
 			// 龙族传送袭击者已出现。 / The Balaur Teleport Raiders appeared.

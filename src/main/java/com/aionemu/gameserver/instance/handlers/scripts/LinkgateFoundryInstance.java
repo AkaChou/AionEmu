@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -33,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 传送门铸造厂副本实例处理器。
@@ -238,7 +238,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		this.sendMessage(1402458, 19 * 60 * 1000);
 		//All monsters except Belsagos have disappeared from the Linkgate Foundry.
 		this.sendMessage(1402461, 20 * 60 * 1000);
-		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		linkgateTask = ThreadPoolManager.getInstance().schedule(() -> {
 			// Dimensional Research Security 阶段 / Dimensional Research Security phase
 			Drs.get(0).getController().onDelete();
 			Drs.get(1).getController().onDelete();
@@ -357,7 +357,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(() -> sendMsg(msgId), delay);
+            ThreadPoolManager.getInstance().schedule(() -> sendMsg(msgId), delay);
         }
     }
 }

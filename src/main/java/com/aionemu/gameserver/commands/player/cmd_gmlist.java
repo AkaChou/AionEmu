@@ -8,6 +8,7 @@ import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：列出当前在线的 GM/团队成员。
@@ -33,7 +34,7 @@ public class cmd_gmlist extends PlayerCommand {
     @Override
     public void execute(Player player, String... params) {
         final List<Player> admins = new ArrayList<>();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+        World.getInstance().doOnAllPlayers(object -> {
 			if (object.getAccessLevel() > 0 && object.getFriendList().getStatus() != FriendList.Status.OFFLINE) {
 				admins.add(object);
 			}

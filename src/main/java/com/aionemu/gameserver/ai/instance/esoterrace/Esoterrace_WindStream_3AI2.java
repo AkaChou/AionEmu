@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Esoterrace 副本 NPC AI：Esoterrace Wind Stream 3（@AIName "Esoterrace_WindStream_3"），继承 NpcAI2。
@@ -30,7 +30,7 @@ public class Esoterrace_WindStream_3AI2 extends NpcAI2
     }
 
 	private void startWindStream(final Npc npc) {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			Npc npc2 = (Npc) spawn(300250000, 703057, 392.27563f, 543.89026f, 318.3265f, (byte) 18, 0, 1);
 			windStreamAnnounce(npc2, 1);
 			despawnNpc(703056);

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.events.FFAService;
 
 
@@ -1792,7 +1793,7 @@ public class Player extends Creature {
 			PacketSendUtility.sendMessage(this, "Invalid Luna balance.");
 			return;
 		}
-		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(
+		if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(
 			this.getClientConnection().getAccount().getToll(), luna, this.getAcountName()))) {
 			this.getClientConnection().getAccount().setLuna(luna);
 		} else {

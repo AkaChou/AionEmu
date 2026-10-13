@@ -2,12 +2,12 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
+import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -95,22 +95,22 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		case 0x00:
 		case 0x04:
 		case 0x0A:
-			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
+			FindGroupService.getInstance().sendFindGroups(player, action);
 			break;
 		case 0x01:
 		case 0x05:
-			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), action - 1, playerObjId);
+			FindGroupService.getInstance().removeFindGroup(player.getRace(), action - 1, playerObjId);
 			break;
 		case 0x02:
 		case 0x06:
-			GameRuntimeServices.findGroupService().addFindGroupList(player, action, message, groupType);
+			FindGroupService.getInstance().addFindGroupList(player, action, message, groupType);
 			break;
 		case 0x03:
 		case 0x07:
-			GameRuntimeServices.findGroupService().updateFindGroupList(player, action, message, playerObjId);
+			FindGroupService.getInstance().updateFindGroupList(player, action, message, playerObjId);
 			break;
 		case 0x08:
-			GameRuntimeServices.findGroupService().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
+			FindGroupService.getInstance().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
 					groupType);
 			break;
 		default:

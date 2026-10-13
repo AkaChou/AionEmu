@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.danuarReliquary;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Set;
@@ -83,7 +83,7 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					danuarReliquaryTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					danuarReliquaryTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -204,7 +204,7 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -232,7 +232,7 @@ public class DanuarReliquaryInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.

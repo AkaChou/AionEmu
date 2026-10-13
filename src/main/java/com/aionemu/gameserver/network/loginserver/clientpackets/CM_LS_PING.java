@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import java.lang.management.ManagementFactory;
 
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_LS_PONG;
 
@@ -41,6 +42,6 @@ public class CM_LS_PING extends LsClientPacket {
 		} catch (Exception ex) {
 		}
 
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_LS_PONG(pid));
+		LoginServer.getInstance().sendPacket(new SM_LS_PONG(pid));
 	}
 }

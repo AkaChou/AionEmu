@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：向全服世界频道发送付费消息。
@@ -76,7 +77,7 @@ public class cmd_world_channel extends PlayerCommand {
 		final String sMessage = message.substring(0, CustomConfig.MAX_CHAT_TEXT_LENGHT > messageLenght ? messageLenght : CustomConfig.MAX_CHAT_TEXT_LENGHT);
 		if (player.isGM()) {
 
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player2 -> PacketSendUtility.sendMessage(player2, sMessage));
+			World.getInstance().doOnAllPlayers(player2 -> PacketSendUtility.sendMessage(player2, sMessage));
 		}
 		else if (!player.isGM() && !player.isInPrison()) {
 			if (player.getAbyssRank().getAp() < ap) {
@@ -84,7 +85,7 @@ public class cmd_world_channel extends PlayerCommand {
 			}
 			else {
 				AbyssPointsService.addAp(player, -ap);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendMessage(player1, sMessage));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendMessage(player1, sMessage));
 			}
 		}
 		else {

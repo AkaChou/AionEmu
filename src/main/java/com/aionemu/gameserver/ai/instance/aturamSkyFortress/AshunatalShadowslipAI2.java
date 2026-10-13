@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -14,7 +12,9 @@ import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -49,7 +49,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 80 && !isSummoned) {
 			isSummoned = true;
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
 			doSchedule();
 		}
 	}
@@ -83,12 +83,12 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					// 阿舒纳塔尔已撤到另一房间。追击她！ / Ashunatal has retreated to another room. Hunt her down!
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401391, 0);
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					SkillEngine.getInstance().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							WorldPosition p = getPosition();
 							spawn(219186, p.getX(), p.getY(), p.getZ(), p.getHeading());
@@ -98,7 +98,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 							think();
 							getOwner().setState(1);
 							PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-							GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							ThreadPoolManager.getInstance().schedule(() -> {
 								if (!isAlreadyDead()) {
 									despawn();
 								}

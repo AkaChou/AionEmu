@@ -27,6 +27,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class BoostEventService implements StatOwner {
 
 	private static volatile ObjectProvider<BoostEventService> instanceProvider;
+	private static volatile BoostEventService resolvedInstance;
 
 	public Map<Integer, BoostEvents> data = new HashMap<>(1);
 
@@ -112,14 +113,19 @@ public class BoostEventService implements StatOwner {
 	 *                               when no provider or bean is available
 	 */
 	public static BoostEventService getInstance() {
+		BoostEventService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<BoostEventService> provider = instanceProvider;
-		BoostEventService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("BoostEventService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -130,5 +136,6 @@ public class BoostEventService implements StatOwner {
 	 */
 	public static void setInstanceProvider(ObjectProvider<BoostEventService> instanceProvider) {
 		BoostEventService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

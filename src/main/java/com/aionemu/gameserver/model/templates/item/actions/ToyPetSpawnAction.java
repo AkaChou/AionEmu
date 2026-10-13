@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.templates.item.actions;
 
 import com.aionemu.gameserver.services.KiskService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Toy 宠物刷新点动作模板（静态数据/XML）。
@@ -133,7 +133,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcid, x, y, z, heading);
 				final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 				Integer objOwnerId = player.getObjectId();
-				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/** 运行 / run. */
 					@Override
 					public void run() {

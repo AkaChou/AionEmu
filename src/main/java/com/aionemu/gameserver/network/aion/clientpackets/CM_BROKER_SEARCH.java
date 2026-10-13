@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.BrokerService;
 
 /**
  * 按条件搜索交易行物品的客户端包。
@@ -56,7 +56,7 @@ public class CM_BROKER_SEARCH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		GameRuntimeServices.brokerService().showRequestedItems(player, mask, sortType, page, itemList);
+		BrokerService.getInstance().showRequestedItems(player, mask, sortType, page, itemList);
 		// log.info(I18n.get("log.922e1d1969ac", brokerId, sortType, page, unk1, unk2, mask, unk3, minLvl, maxLvl, minUnk, maxUnk, unk4, itemCount));
 	}
 }

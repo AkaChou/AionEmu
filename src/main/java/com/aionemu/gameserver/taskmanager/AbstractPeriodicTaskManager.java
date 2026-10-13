@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.taskmanager;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.AccessLevel;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.GameServer.StartupHook;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 周期性任务管理器抽象基类：服务器启动后按固定间隔调度 {@link #run()}。
@@ -48,7 +48,7 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 	 */
 	@Override
 	public final synchronized void onStartup() {
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, 1000 + Rnd.get(period),
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, 1000 + Rnd.get(period),
 				Rnd.get(period - 5, period + 5));
 	}
 

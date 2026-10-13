@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.BrokerService;
 
 /**
  * 客户端拍卖行上架物品请求包。
@@ -40,6 +40,6 @@ public class CM_REGISTER_BROKER_ITEM extends AionClientPacket {
 		if (player.isTrading() || PricePerItem < 1 || itemCount < 1) {
 			return;
 		}
-		GameRuntimeServices.brokerService().registerItem(player, itemUniqueId, itemCount, PricePerItem, isSplitSell);
+		BrokerService.getInstance().registerItem(player, itemUniqueId, itemCount, PricePerItem, isSplitSell);
 	}
 }

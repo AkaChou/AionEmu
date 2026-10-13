@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ItemId;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -13,6 +13,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员添加物品命令：向玩家发放物品、基纳或查询限制物品。
@@ -362,7 +363,7 @@ public class Add extends AdminCommand {
             }
             receiver = player;
         } catch (NumberFormatException e) {
-            receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+            receiver = World.getInstance().findPlayer(Util.convertName(params[0]));
 
             if (receiver == null) {
                 PacketSendUtility.sendMessage(player, "Could not find a player by that name.");
@@ -422,7 +423,7 @@ public class Add extends AdminCommand {
             }
         }
 
-        if (!GameRuntimeServices.adminService().canOperate(player, receiver, itemId, "command //add")) {
+        if (!AdminService.getInstance().canOperate(player, receiver, itemId, "command //add")) {
             return;
         }
 

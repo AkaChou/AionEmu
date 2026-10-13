@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.loginserver;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ public class LoginServer {
 	 * Spring ObjectProvider used to override the static singleton.
 	 */
 	private static volatile ObjectProvider<LoginServer> instanceProvider;
+	private static volatile LoginServer resolvedInstance;
 
 	/**
 	 * 内嵌模式进程内直连通道所需的登录服网络组件。
@@ -113,14 +113,19 @@ public class LoginServer {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static LoginServer getInstance() {
+		LoginServer resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LoginServer> provider = instanceProvider;
-		LoginServer provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LoginServer 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -130,6 +135,7 @@ public class LoginServer {
 	 */
 	public static void setInstanceProvider(ObjectProvider<LoginServer> instanceProvider) {
 		LoginServer.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -188,7 +194,7 @@ public class LoginServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		connectionTask = com.aionemu.gameserver.utils.ThreadPoolManager.getInstance().schedule(() -> {
 			connectionTaskQueued.set(false);
 			connectionTask = null;
 			if (serverShutdown || loginServer != null) {
@@ -449,7 +455,7 @@ public class LoginServer {
 	private void closeClientWithCheck(AionConnection client, final int accountId) {
 		log.info(I18n.get("log.2e4538832cae", accountId));
 		client.close(/* closePacket, */false);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		com.aionemu.gameserver.utils.ThreadPoolManager.getInstance().schedule(() -> {
 			AionConnection client1 = loggedInAccounts.get(accountId);
 			if (client1 != null) {
 				log.warn(I18n.get("log.9300ce8c338a"));

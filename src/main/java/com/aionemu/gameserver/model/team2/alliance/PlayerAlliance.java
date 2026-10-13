@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.team2.alliance;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.model.team2.league.League;
 import com.google.common.base.Preconditions;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 玩家联盟，用于团队2相关逻辑。
@@ -36,7 +36,7 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	private int bgIndex = -1;
 
 	public PlayerAlliance(PlayerAllianceMember leader, TeamType type) {
-		super(GameWorldBootstrapServices.idFactory().nextId());
+		super(IDFactory.getInstance().nextId());
 		this.type = type;
 		initializeTeam(leader);
 		for (int groupId = 1000; groupId <= 1003; groupId++) {

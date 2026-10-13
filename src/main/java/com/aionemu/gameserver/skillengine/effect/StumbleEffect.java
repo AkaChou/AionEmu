@@ -18,6 +18,7 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -46,7 +47,7 @@ public class StumbleEffect extends EffectTemplate {
 			if (!(effected instanceof Npc)) {
 				effected.getMoveController().abortMove();
 			}
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+			World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 					effected.getHeading());
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),
 					effect.getEffected().getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));

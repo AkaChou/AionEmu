@@ -23,6 +23,7 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -50,7 +51,7 @@ public class RandomMoveLocEffect extends EffectTemplate {
 		final Player effector = (Player) effect.getEffector();
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		Skill skill = effect.getSkill();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
+		World.getInstance().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
 	/**

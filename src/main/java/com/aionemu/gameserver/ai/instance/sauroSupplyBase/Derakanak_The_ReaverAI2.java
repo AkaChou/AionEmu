@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Sauro Supply Base 副本 NPC AI：Derakanak The Reaver（@AIName "derakanak_the_reaver"），继承 AggressiveNpcAI2。
@@ -33,7 +33,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 	}
 
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 	private void stage1() {
 		int delay = 45000;
 		if (!isAlreadyDead() && isStart) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); // 恐惧施法 / Fear Casting.
+			SkillEngine.getInstance().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); // 恐惧施法 / Fear Casting.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -68,20 +68,20 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 	private void stage2() {
 		int delay = 15000;
 		if (!isAlreadyDead() && isStart) { // 16918: 火焰喷射 与 16881: 魔法飞弹 / 16918: Flame Spurt & 16881: Magic Missile.
-			GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
 			scheduleDelayStage2(delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage2, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage2, delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage1, delay);
 		}
 	}
 

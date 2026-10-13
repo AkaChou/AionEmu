@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -14,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Queen Alukina（@AIName "alukina_emp"），继承 AggressiveNpcAI2。
@@ -59,7 +59,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startEvent(int percent) {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
 		switch (percent) {
 			case 75:
 				scheduleSkill(17900, 4500);
@@ -72,11 +72,11 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 				scheduleSkill(17902, 8000);
 			break;
 			case 25:
-				task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 					if (isAlreadyDead()) {
 						cancelTask();
 					} else {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
 						scheduleSkill(17902, 5500);
 						scheduleSkill(17902, 7500);
 					}
@@ -91,9 +91,9 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleSkill(final int skillId , int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
 			}
 		}, delay);
 	}

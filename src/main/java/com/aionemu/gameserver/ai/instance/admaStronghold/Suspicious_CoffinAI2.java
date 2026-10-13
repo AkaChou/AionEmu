@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.admaStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Adma Stronghold 副本 NPC AI：Suspicious Coffin（@AIName "suspicious_coffin"），继承 AggressiveNpcAI2。
@@ -28,7 +28,7 @@ public class Suspicious_CoffinAI2 extends AggressiveNpcAI2
     }
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Suspicious_CoffinAI2.this), 5000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Suspicious_CoffinAI2.this), 5000);
 	}
 
 	private void rushZombies(final Npc npc, float x, float y, float z, boolean despawn) {

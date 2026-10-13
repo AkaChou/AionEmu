@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员小队召唤命令：将指定玩家所在小队成员传送至管理员身边。
@@ -30,7 +31,7 @@ public class GroupToMe extends AdminCommand {
 			return;
 		}
 
-		Player groupToMove = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player groupToMove = World.getInstance().findPlayer(Util.convertName(params[0]));
 		if (groupToMove == null) {
 			PacketSendUtility.sendMessage(admin, "The player is not online.");
 			return;

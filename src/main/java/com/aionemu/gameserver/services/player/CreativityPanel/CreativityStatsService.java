@@ -1,12 +1,16 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_APPLY;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -14,14 +18,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Creativity panel stats service applying essence stat bonuses.
  */
 public class CreativityStatsService {
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     * 提供者 / provider
-     */
-    @Setter
-    private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
+	private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
+	private static volatile CreativityStatsService resolvedInstance;
 
 	/**
 	 * 应用精华属性。
@@ -38,27 +36,27 @@ public class CreativityStatsService {
 			switch (id) {
 			case 1:
 				player.setCPSlot1(point);
-				GameCreativityServices.power().onChange(player, point);
+				Power.getInstance().onChange(player, point);
 				break;
 			case 2:
 				player.setCPSlot2(point);
-				GameCreativityServices.health().onChange(player, point);
+				Health.getInstance().onChange(player, point);
 				break;
 			case 3:
 				player.setCPSlot3(point);
-				GameCreativityServices.agility().onChange(player, point);
+				Agility.getInstance().onChange(player, point);
 				break;
 			case 4:
 				player.setCPSlot4(point);
-				GameCreativityServices.precision().onChange(player, point);
+				Precision.getInstance().onChange(player, point);
 				break;
 			case 5:
 				player.setCPSlot5(point);
-				GameCreativityServices.knowledge().onChange(player, point);
+				Knowledge.getInstance().onChange(player, point);
 				break;
 			case 6:
 				player.setCPSlot6(point);
-				GameCreativityServices.will().onChange(player, point);
+				Will.getInstance().onChange(player, point);
 				break;
 			}
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));
@@ -76,14 +74,30 @@ public class CreativityStatsService {
 	 *         when no provider or bean is available
 	 */
 	public static CreativityStatsService getInstance() {
+		CreativityStatsService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<CreativityStatsService> provider = instanceProvider;
-		CreativityStatsService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("CreativityStatsService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<CreativityStatsService> instanceProvider) {
+		CreativityStatsService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

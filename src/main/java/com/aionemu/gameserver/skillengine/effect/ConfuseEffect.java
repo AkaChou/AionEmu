@@ -7,7 +7,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_IMMOBILIZE;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -76,7 +76,7 @@ public class ConfuseEffect extends EffectTemplate {
 			((NpcAI2) effected.getAi2()).setStateIfNot(AIState.FEAR);
 		}
 		if (GeoDataConfig.FEAR_ENABLE) {
-			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager()
+			ScheduledFuture<?> task = ThreadPoolManager.getInstance()
 					.scheduleAtFixedRate(new ConfuseTask(effected), 0, 1000);
 			effect.setPeriodicTask(task, position);
 		}

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.elementisForest;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Elementis Forest 副本 NPC AI：Trapped Terma（@AIName "terma"），继承 NpcAI2。
@@ -56,7 +56,7 @@ public class TrappedTermaAI2 extends NpcAI2 {
 	}
 
 	private void dead() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().die(), 16000);
+		ThreadPoolManager.getInstance().schedule(() -> getOwner().getController().die(), 16000);
 	}
 
 	@Override

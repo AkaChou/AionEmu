@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services.rift;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +19,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,13 +34,8 @@ import java.util.List;
 
 public class RiftManager {
 
-    /**
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<RiftManager> instanceProvider;
+	private static volatile ObjectProvider<RiftManager> instanceProvider;
+	private static volatile RiftManager resolvedInstance;
 	private static final List<Npc> rifts = new CopyOnWriteArrayList<>();
 	private static final Map<String, SpawnTemplate> riftGroups = new HashMap<>();
 
@@ -91,7 +85,7 @@ public class RiftManager {
 		}
 
 		int spawned = 0;
-		int instanceCount = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
+		int instanceCount = World.getInstance().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
 
 		if (slaveTemplate.hasPool()) {
 			slaveTemplate = slaveTemplate.changeTemplate(1);
@@ -119,12 +113,12 @@ public class RiftManager {
 
 	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
 		NpcTemplate masterObjectTemplate = DataManager.NPC_DATA.getNpcTemplate(template.getNpcId());
-		Npc npc = new Npc(GameWorldBootstrapServices.idFactory().nextId(), controller, template, masterObjectTemplate);
+		Npc npc = new Npc(IDFactory.getInstance().nextId(), controller, template, masterObjectTemplate);
 
 		npc.setKnownlist(new NpcKnownList(npc));
 		npc.setEffectController(new EffectController(npc));
 
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		world.storeObject(npc);
 		world.setPosition(npc, template.getWorldId(), instance, template.getX(), template.getY(), template.getZ(), template.getHeading());
 		world.spawn(npc);
@@ -154,19 +148,40 @@ public class RiftManager {
     }
 
 	/**
-	 * 获取 {@link RiftManager} 单例（优先 Spring 提供的实例）。
-	 * Returns the {@link RiftManager} singleton (prefers Spring-provided instance).
-	 * @return 管理器实例 / Manager instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static RiftManager getInstance() {
-		ObjectProvider<RiftManager> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> RiftManagerHolder.INSTANCE);
+		RiftManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return RiftManagerHolder.INSTANCE;
+		ObjectProvider<RiftManager> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("RiftManager 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
-    private static class RiftManagerHolder {
-		private static final RiftManager INSTANCE = new RiftManager();
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<RiftManager> instanceProvider) {
+		RiftManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
+
 }

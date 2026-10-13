@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AI2Actions;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Macunbello Right Hand（@AIName "MacunbelloRightHand"），继承 AggressiveNpcAI2。
@@ -30,6 +30,6 @@ public class Macunbello_Right_HandAI2 extends AggressiveNpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Macunbello_Right_HandAI2.this), 33000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Macunbello_Right_HandAI2.this), 33000);
 	}
 }

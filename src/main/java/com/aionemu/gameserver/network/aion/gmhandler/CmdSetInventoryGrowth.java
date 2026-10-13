@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.CubeExpandService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.Collection;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：为指定玩家扩展背包（Cube）格子。
@@ -55,7 +56,7 @@ public final class CmdSetInventoryGrowth extends AbstractGMHandler {
 
         if (playerToExpand == null && commandArgs.length > 0 && !commandArgs[0].isEmpty()) {
             String targetPlayerName = commandArgs[0];
-            Collection<Player> allPlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+            Collection<Player> allPlayers = World.getInstance().getAllPlayers();
             for (Player p : allPlayers) {
                 if (p.getName().equalsIgnoreCase(targetPlayerName)) {
                     playerToExpand = p;

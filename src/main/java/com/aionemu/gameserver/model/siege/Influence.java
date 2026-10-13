@@ -10,6 +10,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INFLUENCE_RATIO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Influence，用于要塞相关逻辑。
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class Influence {
 	private static volatile ObjectProvider<Influence> instanceProvider;
+	private static volatile Influence resolvedInstance;
 
 	// 欧比斯 / ABYSS
 	private float abyss_e = 0;
@@ -48,14 +50,19 @@ public class Influence {
 	 *                               when no provider or bean is available
 	 */
 	public static Influence getInstance() {
+		Influence resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<Influence> provider = instanceProvider;
-		Influence provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("Influence 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -63,6 +70,7 @@ public class Influence {
 	 */
 	public static void setInstanceProvider(ObjectProvider<Influence> instanceProvider) {
 		Influence.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -138,7 +146,7 @@ public class Influence {
 	@SuppressWarnings("unused")
 	private void broadcastInfluencePacket() {
 		SM_INFLUENCE_RATIO pkt = new SM_INFLUENCE_RATIO();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			PacketSendUtility.sendPacket(player, pkt);

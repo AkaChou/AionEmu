@@ -18,8 +18,8 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.dataholders.QuestsData;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
+import com.aionemu.gameserver.lifecycle.MovementLoopServiceBindings;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -60,12 +60,12 @@ class EventQuestNativeMaintenanceTest {
 	void installBareProductionSurfaces() {
 		// 目录面：空 QuestsData（与「目录行 = 733 行、native 行取不到模板」的生产形状等价，
 		// 且无需装载 733 行静态数据）；引擎面：裸引擎（native 侧不依赖 typed 目录）同时装入
-		// QuestEngine 单例与 holder provider（D1a 后 QuestService 走 GameEngineServices）；
+		// QuestEngine 单例与 holder provider（D1a 后 QuestService 走 EngineServiceBindings）；
 		// 收尾面：真实构造的 ZoneUpdateService 装入移动循环解析缓存（startEventQuest 的
 		// updateZone 收尾走它；构造器仅注册启动钩子，无线程启动）。
 		// Empty QuestsData mirrors the production shape for native rows (no template reachable);
 		// a bare engine serves the native metadata surface for both the QuestEngine singleton and
-		// the holder provider (post-D1a QuestService goes through GameEngineServices); a real
+		// the holder provider (post-D1a QuestService goes through EngineServiceBindings); a real
 		// ZoneUpdateService fills the movement-loop resolve cache for the updateZone tail.
 		previousQuestsData = QuestService.questsData;
 		QuestService.questsData = new QuestsData();
@@ -182,7 +182,7 @@ class EventQuestNativeMaintenanceTest {
 	/** 装入移动循环的 ZoneUpdateService 解析缓存（updateZone 收尾依赖）。 / Fills the movement-loop resolve cache. */
 	private static ZoneUpdateService installZoneUpdateService() {
 		try {
-			Field field = GameMovementLoopServices.class.getDeclaredField("resolvedZoneUpdateService");
+			Field field = ZoneUpdateService.class.getDeclaredField("resolvedInstance");
 			field.setAccessible(true);
 			ZoneUpdateService previous = (ZoneUpdateService) field.get(null);
 			field.set(null, new ZoneUpdateService());
@@ -194,7 +194,7 @@ class EventQuestNativeMaintenanceTest {
 
 	private static void restoreZoneUpdateService(ZoneUpdateService previous) {
 		try {
-			Field field = GameMovementLoopServices.class.getDeclaredField("resolvedZoneUpdateService");
+			Field field = ZoneUpdateService.class.getDeclaredField("resolvedInstance");
 			field.setAccessible(true);
 			field.set(null, previous);
 		} catch (ReflectiveOperationException e) {
@@ -222,7 +222,7 @@ class EventQuestNativeMaintenanceTest {
 	@SuppressWarnings("unchecked")
 	private static ObjectProvider<QuestEngine> installHolderEngineProvider(QuestEngine engine) {
 		try {
-			Field field = GameEngineServices.class.getDeclaredField("questEngineProvider");
+			Field field = QuestEngine.class.getDeclaredField("instanceProvider");
 			field.setAccessible(true);
 			ObjectProvider<QuestEngine> previous = (ObjectProvider<QuestEngine>) field.get(null);
 			DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
@@ -236,7 +236,7 @@ class EventQuestNativeMaintenanceTest {
 
 	private static void restoreHolderEngineProvider(ObjectProvider<QuestEngine> previous) {
 		try {
-			Field field = GameEngineServices.class.getDeclaredField("questEngineProvider");
+			Field field = QuestEngine.class.getDeclaredField("instanceProvider");
 			field.setAccessible(true);
 			field.set(null, previous);
 		} catch (ReflectiveOperationException e) {

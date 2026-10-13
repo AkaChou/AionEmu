@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Isbariya Servants（@AIName "isbariyaServants"），继承 AggressiveNpcAI2。
@@ -22,6 +22,6 @@ public class IsbariyaServantsAI2 extends AggressiveNpcAI2
 	}
 
 	private void toDespawn(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(IsbariyaServantsAI2.this), delay);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(IsbariyaServantsAI2.this), delay);
 	}
 }

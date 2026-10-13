@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -22,6 +21,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -146,7 +146,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
     protected void startInstanceTask() {
 	instanceTime = System.currentTimeMillis();
 	instanceReward.setInstanceStartTime();
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -164,7 +164,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 				}
             }
         }, 60000));
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -244,7 +244,7 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
      */
 
     protected void sendMsg(final int msg, final Race race, int time) {
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.

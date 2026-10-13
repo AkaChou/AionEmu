@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +26,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 守护者与征服者排行服务，管理跨图杀戮等级、增益与图标同步。
@@ -80,7 +81,7 @@ public class ProtectorConquerorService {
 			WorldType type = worldType > 0 ? worldType > 1 ? WorldType.ASMODIANS : WorldType.ELYOS : WorldType.USEALL;
 			handledWorlds.put(worldId, type);
 		}
-			refreshTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::decayProtectorConquerorRanks, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
+			refreshTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(this::decayProtectorConquerorRanks, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L, CustomConfig.PROTECTOR_CONQUEROR_REFRESH * 60000L);
 		}
 
 	void decayProtectorConquerorRanks() {
@@ -207,7 +208,7 @@ public class ProtectorConquerorService {
 				world.put(objId, player);
 			}
 			protectorBuff.applyRankEffect(player, info.getRank());
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
+			World.getInstance().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
 					.doOnAllPlayers(victim -> {
 						if (!player.getRace().equals(victim.getRace())) {
 							PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
@@ -234,7 +235,7 @@ public class ProtectorConquerorService {
 				world.put(objId, player);
 			}
 			conquerorBuff.applyEffect(player, infoConqueror.getRank());
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
+			World.getInstance().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
 					.doOnAllPlayers(victim -> {
 						if (!player.getRace().equals(victim.getRace())) {
 							PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
@@ -268,7 +269,7 @@ public class ProtectorConquerorService {
 			if (info.getRank() > 0) {
 				info.setRank(0);
 				protectorBuff.endEffect(player);
-				for (Player victim : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId)
+				for (Player victim : World.getInstance().getWorldMap(worldId)
 						.getWorldMapInstanceById(player.getInstanceId()).getPlayersInside()) {
 					if (!player.getRace().equals(victim.getRace())) {
 						PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(kill));
@@ -284,7 +285,7 @@ public class ProtectorConquerorService {
 			if (info.getRank() > 0) {
 				info.setRank(0);
 				conquerorBuff.endEffect(player);
-				for (Player victim : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId)
+				for (Player victim : World.getInstance().getWorldMap(worldId)
 						.getWorldMapInstanceById(player.getInstanceId()).getPlayersInside()) {
 					if (!player.getRace().equals(victim.getRace())) {
 						PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(kill));
@@ -337,7 +338,7 @@ public class ProtectorConquerorService {
 					protectorBuff.applyRankEffect(killer, rank);
 					final Map<Integer, Player> guards = getWorldProtector(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
+					World.getInstance().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
 							.doOnAllPlayers(observed -> {
 								if (!killer.getRace().equals(observed.getRace())) {
 									PacketSendUtility.sendPacket(observed,
@@ -370,7 +371,7 @@ public class ProtectorConquerorService {
 					conquerorBuff.applyEffect(killer, rank);
 					final Map<Integer, Player> killers = getWorldConqueror(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
+					World.getInstance().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
 							.doOnAllPlayers(observed -> {
 								if (!killer.getRace().equals(observed.getRace())) {
 									PacketSendUtility.sendPacket(observed,

@@ -5,6 +5,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Iterator;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 向全服在线玩家广播居中亮黄通知的管理员命令。
@@ -39,7 +40,7 @@ public class Notice extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Parameters should be text or number !");
 			return;
 		}
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information: " + message);

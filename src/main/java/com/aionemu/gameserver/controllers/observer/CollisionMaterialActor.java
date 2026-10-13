@@ -1,10 +1,7 @@
 package com.aionemu.gameserver.controllers.observer;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +21,10 @@ import com.aionemu.gameserver.model.templates.materials.MaterialActTime;
 import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
+import com.aionemu.gameserver.services.WeatherService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DayTime;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
@@ -113,7 +113,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 					continue;
 				}
 				int weatherZoneId = DataManager.ZONE_DATA.getWeatherZoneId(regionZone.getZoneTemplate());
-				weatherCode = GameRuntimeServices.weatherService().getWeatherCode(creature.getWorldId(), weatherZoneId);
+				weatherCode = WeatherService.getInstance().getWeatherCode(creature.getWorldId(), weatherZoneId);
 				break;
 			}
 		}
@@ -163,7 +163,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 				return;
 			}
 			final int[] secondsElapsed = new int[1];
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 				for (MaterialSkill actSkill : actSkills) {
 					if (secondsElapsed[0] % actSkill.getFrequency() != 0) {
 						continue;
@@ -171,7 +171,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 					if (creature.getEffectController().hasAbnormalEffect(actSkill.getId())) {
 						continue;
 					}
-					Skill skill = GameEngineServices.skillEngine().getSkill(creature, actSkill.getId(),
+					Skill skill = SkillEngine.getInstance().getSkill(creature, actSkill.getId(),
 							actSkill.getSkillLevel(), creature);
 					skill.getEffectedList().add(creature);
 					skill.useWithoutPropSkill();

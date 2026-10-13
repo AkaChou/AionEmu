@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -31,8 +29,10 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -110,7 +110,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		kamarBattlefieldReward.setInstanceStartTime();
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -127,7 +127,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 90000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -146,7 +146,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				sp(801961, 1262.3992f, 1609.1414f, 585.90643f, (byte) 53, 0);
 			}
 		}, 110000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -162,7 +162,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				sp(701908, 1353.0874f, 1413.4635f, 598.66101f, (byte) 0, 68); //Reian Supply Items.
 			}
 		}, 220000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -188,7 +188,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				sp(802019, 1527.2150f, 1561.5153f, 611.90063f, (byte) 0, 224);
 			}
 		}, 300000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -231,7 +231,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				sp(701910, 1396.8196f, 1437.6923f, 599.3814f, (byte) 42, 0);
 			}
 		}, 600000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -339,7 +339,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 900000));
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -547,7 +547,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -792,7 +792,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 				// 瓦尔加指挥官已死亡。 / Commander Varga has died.
 				sendMsgByRace(1401846, Race.PC_ALL, 0);
 				RaceKilledVarga = mostPlayerDamage.getRace();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -906,17 +906,17 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 			case 701909: //Kamar Tank Elyos.
 			case 701912: //Kamar Tank Elyos.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
 				break;
 			case 701910: //Kamar Tank Asmodians.
 			case 701911: //Kamar Tank Asmodians.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
 				break;
 			case 701806: //Kamar Cannon.
 			case 701902: //Kamar Cannon.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
 				break;
 		}
 		updateScore(player, npc, point, false);
@@ -1051,7 +1051,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1082,7 +1082,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1108,7 +1108,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.controllers.movement;
 
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 攻城兵器召唤物移动控制器，持续追踪目标位置并插值推进。
@@ -67,7 +68,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	@Override
 	public void moveToTargetObject() {
 		updateLastMove();
-		GameMovementLoopServices.moveTaskManager().addCreature(owner);
+		MoveTaskManager.getInstance().addCreature(owner);
 	}
 
 	/**
@@ -111,7 +112,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 		float newX = (targetDestX - ownerX) * distFraction + ownerX;
 		float newY = (targetDestY - ownerY) * distFraction + ownerY;
 		float newZ = (targetDestZ - ownerZ) * distFraction + ownerZ;
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, newX, newY, newZ, heading, false);
+		World.getInstance().updatePosition(owner, newX, newY, newZ, heading, false);
 		if (directionChanged) {
 			movementMask = -32;
 			PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));

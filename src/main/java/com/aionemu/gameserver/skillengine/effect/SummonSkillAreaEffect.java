@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.NpcObjectType;
 import com.aionemu.gameserver.model.gameobjects.Servant;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤技能区域效果：在落点生成区域侍从，周期性释放技能。
@@ -56,7 +56,7 @@ public class SummonSkillAreaEffect extends SummonServantEffect {
 		final Servant servant = spawnServant(effect, useTime, NpcObjectType.SKILLAREA, x, y, z);
 		final int finalSkillId = servant.getSkillList() != null ? servant.getSkillList().getRandomSkill().getSkillId()
 				: 0;
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> servant.getController().useSkill(finalSkillId), 0, 3000);
+		Future<?> task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> servant.getController().useSkill(finalSkillId), 0, 3000);
 		servant.getController().addTask(TaskId.SKILL_USE, task);
 	}
 }

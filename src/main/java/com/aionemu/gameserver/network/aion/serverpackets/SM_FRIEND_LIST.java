@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.HousingService;
 
 /**
  * 好友列表包：下发全部好友的在线状态、地图、备注与房屋信息。
@@ -28,11 +28,11 @@ public class SM_FRIEND_LIST extends AionServerPacket {
 			writeD(friend.getLastOnlineTime());
 			writeS(friend.getNote());
 			writeC(friend.getStatus().getId());
-			int address = GameHousingServices.housingService().getPlayerAddress(friend.getOid());
+			int address = HousingService.getInstance().getPlayerAddress(friend.getOid());
 			if (address > 0) {
-				House house = GameHousingServices.housingService().getPlayerStudio(friend.getOid());
+				House house = HousingService.getInstance().getPlayerStudio(friend.getOid());
 				if (house == null) {
-					house = GameHousingServices.housingService().getHouseByAddress(address);
+					house = HousingService.getInstance().getHouseByAddress(address);
 					writeD(house.getAddress().getId());
 				} else {
 					writeD(address);

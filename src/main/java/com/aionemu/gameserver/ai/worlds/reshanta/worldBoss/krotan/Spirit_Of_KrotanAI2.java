@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.krotan;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -12,6 +11,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Reshanta 区域 NPC AI：Spirit Of Krotan（@AIName "spirit_of_krotan"），继承 AggressiveNpcAI2。
@@ -34,7 +35,7 @@ public class Spirit_Of_KrotanAI2 extends AggressiveNpcAI2
     }
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		ThreadPoolManager.getInstance().schedule(() -> World.getInstance().doOnAllPlayers(player -> {
 			AI2Actions.deleteOwner(Spirit_Of_KrotanAI2.this);
 			// 克罗坦狂战士之魂已消失。 / The Krotan Berserker Soul has disappeared.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Despawn_Crotan);
@@ -42,7 +43,7 @@ public class Spirit_Of_KrotanAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceSpiritOfKrotan() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 克罗坦守护者出现。 / Krotan Guardian Appears.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Crotan_Named_Spawn_In);
 		});
@@ -51,7 +52,7 @@ public class Spirit_Of_KrotanAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		updateKrotanLanding();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 克罗坦狂战士之魂已被击杀。 / The Krotan Berserker Soul has been slain.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Die_Crotan);
 		});
@@ -60,7 +61,7 @@ public class Spirit_Of_KrotanAI2 extends AggressiveNpcAI2
 	}
 
 	private void updateKrotanLanding() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 13, 0);

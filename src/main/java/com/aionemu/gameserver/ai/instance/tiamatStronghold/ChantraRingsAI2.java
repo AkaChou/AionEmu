@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Chantra Rings（@AIName "chantrarings"），继承 NpcAI2。
@@ -47,7 +47,7 @@ public class ChantraRingsAI2 extends NpcAI2
     }
 
     private void despawn() {
-	    GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 20000);
+	    ThreadPoolManager.getInstance().schedule(() -> getOwner().getController().onDelete(), 20000);
     }
 
     @Override

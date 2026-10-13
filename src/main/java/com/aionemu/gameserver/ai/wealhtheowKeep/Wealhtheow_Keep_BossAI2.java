@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -11,6 +10,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	 * Every 15s spawns explosive sacrifices near living players: one per player when fewer than 6, otherwise a random 6 to size count.
 	 */
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
@@ -116,7 +117,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(855262, x, y, z, (byte) 0); //Explosive Sacrifice.
 				}
@@ -159,7 +160,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 			deleteNpcs(p.getWorldMapInstance().getNpcs(855262)); //Explosive Sacrifice.
 		}
 		// 死亡后 10 秒在固定位置生成 3 个宝箱。 / Spawns 3 treasure chests at fixed spots 10s after death.
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
 spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
 spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
@@ -185,6 +186,6 @@ spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
 	}
 
 	private void announceWealhtheowKeepBoss() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
 	}
 }

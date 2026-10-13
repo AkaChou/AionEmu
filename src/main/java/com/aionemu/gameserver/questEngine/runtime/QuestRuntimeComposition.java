@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.IntFunction;
+import com.aionemu.gameserver.world.World;
 
 /** 类型化任务必需与提交后能力的生产对象图。 / Production object graph for typed quest required and after-commit capabilities. */
 public final class QuestRuntimeComposition {
@@ -49,7 +50,7 @@ public final class QuestRuntimeComposition {
 	}
 
 	public static QuestRuntimeComposition production() {
-		return production(questId -> com.aionemu.gameserver.lifecycle.GameEngineServices.questEngine()
+		return production(questId -> QuestEngine.getInstance()
 			.questCatalog().findMetadata(questId).orElse(null));
 	}
 
@@ -60,7 +61,7 @@ public final class QuestRuntimeComposition {
 	}
 
 	private static QuestRuntimeComposition production(IntFunction<QuestMetadata> metadata) {
-		QuestPlayerPort players = playerId -> GameWorldBootstrapServices.world().findPlayer(playerId);
+		QuestPlayerPort players = playerId -> World.getInstance().findPlayer(playerId);
 		QuestSpawnRegistry spawns = QuestSpawnRegistry.global();
 		return new QuestRuntimeComposition(TypedQuestAfterCommitPort.fullyComposed(
 			new PlayerQuestDialogPort(players),
@@ -70,7 +71,7 @@ public final class QuestRuntimeComposition {
 			new PlayerQuestAiPort(players, spawns),
 			new PlayerQuestTimerPort(players), new PlayerQuestStateSyncPort(players, metadata),
 			new PlayerQuestStatsPort(players), new PlayerQuestEffectPort(players, metadata),
-			new PlayerQuestNpcPort(GameWorldBootstrapServices::world),
+			new PlayerQuestNpcPort(World::getInstance),
 			new PlayerQuestSystemMessagePort(players, metadata)),
 			new PlayerQuestEventPort(players, new PlayerQuestStartEligibilityPort(players, metadata)),
 			new LazyProductionActionPort(players), new LazyProductionStatePort(players, metadata),

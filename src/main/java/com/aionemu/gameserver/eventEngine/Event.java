@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.eventEngine;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 游戏事件抽象基类：支持优先级、冷却、广播与重置。
@@ -135,7 +136,7 @@ public abstract class Event implements Runnable {
 	 */
 	protected void announce(final Player pl, final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendSys3Message(pl, "Event", msg), delay);
+			ThreadPoolManager.getInstance().schedule(() -> PacketSendUtility.sendSys3Message(pl, "Event", msg), delay);
 		} else {
 			PacketSendUtility.sendSys3Message(pl, "Event", msg);
 		}
@@ -158,13 +159,13 @@ public abstract class Event implements Runnable {
 	 */
 	protected void announceAll(final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			ThreadPoolManager.getInstance().schedule(() -> World.getInstance().doOnAllPlayers(pl -> {
 				if (pl.getBattleground() == null) {
 					PacketSendUtility.sendSys3Message(pl, "Event", msg);
 				}
 			}), delay);
 		} else {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+			World.getInstance().doOnAllPlayers(pl -> {
 				if (pl.getBattleground() == null) {
 					PacketSendUtility.sendSys3Message(pl, "Event", msg);
 				}

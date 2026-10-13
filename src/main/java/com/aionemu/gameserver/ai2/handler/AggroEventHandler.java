@@ -5,7 +5,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 import java.util.Collections;
@@ -51,7 +51,7 @@ public class AggroEventHandler {
 		PacketSendUtility.broadcastPacket(owner, new SM_ATTACK(owner, myTarget, 0, 633, 0,
 				Collections.singletonList(new AttackResult(0, AttackStatus.NORMALHIT))));
 
-		GameThreadPoolServices.threadPoolManager().schedule(new AggroNotifier(owner, myTarget, true), 500);
+		ThreadPoolManager.getInstance().schedule(new AggroNotifier(owner, myTarget, true), 500);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class AggroEventHandler {
 				}
 				PacketSendUtility.broadcastPacket(owner, new SM_ATTACK(owner, targetCreature, 0, 633, 0,
 						Collections.singletonList(new AttackResult(0, AttackStatus.NORMALHIT))));
-				GameThreadPoolServices.threadPoolManager().schedule(new AggroNotifier(owner, targetCreature, false), 500);
+				ThreadPoolManager.getInstance().schedule(new AggroNotifier(owner, targetCreature, false), 500);
 				return true;
 			}
 		}

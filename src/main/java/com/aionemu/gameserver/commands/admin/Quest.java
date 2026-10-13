@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -11,12 +9,14 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestVars;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.regex.Matcher;
@@ -140,7 +140,7 @@ public class Quest extends AdminCommand {
             PacketSendUtility.sendMessage(admin, "Quest started.");
         }
         else {
-            var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(id).orElse(null);
+            var metadata = QuestEngine.getInstance().questCatalog().findMetadata(id).orElse(null);
             if (metadata != null) {
                 // 备选起始条件组是 OR 分支，只有全局必填的前置条件才能单独上报，避免产生误诊断。
                 // Alternative start-condition groups are OR branches. Only globally mandatory
@@ -229,7 +229,7 @@ public class Quest extends AdminCommand {
 
 		QuestEnv env = new QuestEnv(null, target, questId, 0);
 		if (questStatus == QuestStatus.COMPLETE) {
-			GameEngineServices.questEngine().onLvlUp(env);
+			QuestEngine.getInstance().onLvlUp(env);
 			target.getController().updateNearbyQuests();
 			qs.setCompleteCount(qs.getCompleteCount() + 1);
 			PacketSendUtility.sendPacket(target, new SM_QUEST_COMPLETED_LIST(target.getQuestStateList().getAllFinishedQuests()));
@@ -296,7 +296,7 @@ public class Quest extends AdminCommand {
             return;
         }
 
-        var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+        var metadata = QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null);
 
         if (metadata != null) {
             for (var workItem : metadata.questWorkItems()) {
@@ -331,7 +331,7 @@ public class Quest extends AdminCommand {
         target.getController().updateZone();
         target.getController().updateNearbyQuests();
 
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			if (target.isOnline()) {
 				target.getController().updateNearbyQuests();
 			}

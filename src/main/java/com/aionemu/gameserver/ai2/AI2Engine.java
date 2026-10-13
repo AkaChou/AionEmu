@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai2;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -36,13 +35,8 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 @Slf4j
 public class AI2Engine implements GameEngine {
 
-	/**
-	 * -- SETTER --
-	 * 设置 Spring 实例 Provider。
-	 * Sets the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
+	private static volatile AI2Engine resolvedInstance;
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<>();
 	/**
 	 * 这些自定义物品与任务交互协议、跟随与交付处理器拥有专属交互协议；零售 pattern 不能覆盖它们。
@@ -241,14 +235,30 @@ public class AI2Engine implements GameEngine {
 	 *                               when no provider or bean is available
 	 */
 	public static AI2Engine getInstance() {
+		AI2Engine resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AI2Engine> provider = instanceProvider;
-		AI2Engine provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AI2Engine 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AI2Engine> instanceProvider) {
+		AI2Engine.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

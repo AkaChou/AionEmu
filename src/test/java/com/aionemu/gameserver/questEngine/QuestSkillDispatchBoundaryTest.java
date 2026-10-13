@@ -28,7 +28,7 @@ class QuestSkillDispatchBoundaryTest {
 			"src/main/java/com/aionemu/gameserver/skillengine/model/Skill.java"));
 
 		assertEquals(1, occurrences(source, ".onUseSkill("));
-		assertTrue(source.contains("GameEngineServices.questEngine().onUseSkill(env, skillTemplate.getSkillId());"));
+		assertTrue(source.contains("QuestEngine.getInstance().onUseSkill(env, skillTemplate.getSkillId());"));
 	}
 
 	private static int occurrences(String source, String needle) {

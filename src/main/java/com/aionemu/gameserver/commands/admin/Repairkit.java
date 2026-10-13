@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 离线角色修复工具；支持送回主城、按物品 ID 删除、全服清物与背包擦除等高危数据库操作。
@@ -91,7 +92,7 @@ public class Repairkit extends AdminCommand {
     }
 
     private void wipeInventoryExceptEquiped(final Player admin, final String playerToWipe){
-        Player checkPOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToWipe);
+        Player checkPOnline = World.getInstance().findPlayer(playerToWipe);
         if(checkPOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot proceed if the player is Online!");
             return;
@@ -127,7 +128,7 @@ public class Repairkit extends AdminCommand {
     }
 
     private void removeItemByID(final Player admin, final String playerToRemoveFrom, final int itemID){
-        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToRemoveFrom);
+        Player checkPlayerOnline = World.getInstance().findPlayer(playerToRemoveFrom);
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You can only remove items from Offline Player using this Command, If you want to remove item from Online Players, use '//remove'!!");
             return;
@@ -163,7 +164,7 @@ public class Repairkit extends AdminCommand {
     }
 
     private void returnPlayer(final Player admin, final String playerToReturn, final String race){
-        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(playerToReturn));
+        Player checkPlayerOnline = World.getInstance().findPlayer(Util.convertName(playerToReturn));
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot return a player while he's Online!");
             return;

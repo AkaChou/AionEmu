@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -44,7 +44,7 @@ public class SteamTachysphereAI2 extends NpcAI2
 				// 蒸汽速球喷出灼热德拉纳！可将该技能放入快捷栏。 / The Steam Tachysphere spews hot Drana! You may put that skill in your QuickBar.
 				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400925, 0);
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, 0, 471, 16777216));
-				GameEngineServices.skillEngine().getSkill(player, 19502, 1, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(player, 19502, 1, player).useNoAnimationSkill();
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

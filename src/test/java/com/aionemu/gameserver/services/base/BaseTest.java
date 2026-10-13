@@ -14,7 +14,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.controllers.NpcController;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.base.BaseLocation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.base.BaseNpc;
@@ -23,7 +23,7 @@ import com.aionemu.gameserver.world.World;
 class BaseTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private GameWorldBootstrapServices worldBootstrapServices;
+	private WorldBootstrapServiceBindings worldBootstrapServices;
 
 	@AfterEach
 	void tearDown() {
@@ -43,7 +43,7 @@ class BaseTest {
 		liveNpcs.add(thirdNpc);
 		TestWorld world = objenesis.newInstance(TestWorld.class);
 		world.npcs = liveNpcs;
-		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
+		worldBootstrapServices = new WorldBootstrapServiceBindings(null, null, null, null, provider(World.class, world));
 
 		assertDoesNotThrow(() -> new Base<>(new TestBaseLocation()).stop());
 		assertTrue(liveNpcs.isEmpty());

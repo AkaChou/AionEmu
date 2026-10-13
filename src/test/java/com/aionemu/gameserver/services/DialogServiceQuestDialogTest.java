@@ -7,7 +7,7 @@ import com.aionemu.gameserver.ai.QuestItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -43,7 +43,7 @@ class DialogServiceQuestDialogTest {
 	private static final int NPC_OBJECT_ID = 900_007;
 	private static final int QUEST_ID = 1109;
 
-	private GameEngineServices engineServices;
+	private EngineServiceBindings engineServices;
 	private UnhandledQuestEngine questEngine;
 
 	@BeforeAll
@@ -57,7 +57,7 @@ class DialogServiceQuestDialogTest {
 	@BeforeEach
 	void installUnhandledQuestEngine() {
 		questEngine = new UnhandledQuestEngine();
-		engineServices = new GameEngineServices(provider(questEngine), null, null, null, null);
+		engineServices = new EngineServiceBindings(provider(questEngine), null, null, null, null);
 	}
 
 	@AfterEach

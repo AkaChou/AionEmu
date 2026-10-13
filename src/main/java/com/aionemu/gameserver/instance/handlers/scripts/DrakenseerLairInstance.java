@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -18,7 +16,9 @@ import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -102,7 +102,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		sendMsgByRace(1403376, Race.PC_ALL, 5000);
 		Npc npc = instance.getNpc(220450); //Akhal The Oracle.
 		if (npc != null) {
-			GameEngineServices.skillEngine().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
+			SkillEngine.getInstance().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
 		}
 	}
 
@@ -157,7 +157,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		this.sendMessage(1403375, 60 * 1000);
 		// 你还剩 1 分钟摧毁剩余护盾导管。 / You have one minute left to destroy the remaining Shielding Conduits.
 		this.sendMessage(1403382, 9 * 60 * 1000);
-		drakenseerLairTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		drakenseerLairTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -265,7 +265,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -293,7 +293,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.

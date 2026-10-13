@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.rvr.tetran;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
@@ -11,10 +10,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.world.World;
 
 /**
  * RvR 相关 NPC AI：Light Armored Carrier Beta（@AIName "Light_Armored_Carrier_Beta"），继承 GeneralNpcAI2。
@@ -38,7 +39,7 @@ public class Light_Armored_Carrier_BetaAI2 extends GeneralNpcAI2
 	}
 
 	private void F6RewardTrans() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 17774, 1, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 17774, 1, getOwner()).useNoAnimationSkill();
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class Light_Armored_Carrier_BetaAI2 extends GeneralNpcAI2
 	}
 
 	private void announceF6RaidSumAtta01Light() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (player.isOnline()) {
 				// 敌人正在取回我们的碎片。 / The enemy is retrieving our fragment.
 				// 摧毁敌方运输体，阻止其夺走碎片！ / Destroy the enemy's carrier and stop them from taking the fragment!
@@ -76,7 +77,7 @@ public class Light_Armored_Carrier_BetaAI2 extends GeneralNpcAI2
 		});
 	}
 	private void announceF6RaidSumKill02LightDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (player.isOnline()) {
 				// 轻甲运输贝塔被摧毁，部分玩家获得特殊效果。 / Light Armored Carrier Beta was destroyed, and some users were given a special effect.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404271));

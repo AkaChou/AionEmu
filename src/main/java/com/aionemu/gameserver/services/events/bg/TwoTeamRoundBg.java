@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services.events.bg;
 
 import com.aionemu.gameserver.services.events.LadderService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 多回合双队战场公共骨架：死亡判定、回合推进与终局结算流程。
@@ -138,7 +138,7 @@ public abstract class TwoTeamRoundBg extends Battleground {
 		synchronized (super.getGroups()) {
 			for (final PlayerGroup group : super.getGroups()) {
 				for (final Player pl : group.getMembers()) {
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!pl.isAfk()) {
 							preparePlayer(pl, 8000, false);
 							SpawnPosition pos = getSpawnPositions().get(group.getBgIndex());
@@ -153,9 +153,9 @@ public abstract class TwoTeamRoundBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
+		super.setExpireTask(ThreadPoolManager.getInstance().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			endCalled = false;
 			for (PlayerGroup group : getGroups()) {
 				if (group.isEmpty()) {

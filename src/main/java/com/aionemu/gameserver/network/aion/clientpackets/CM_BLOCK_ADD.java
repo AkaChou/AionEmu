@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BLOCK_RESPONSE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.SocialService;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 将玩家加入黑名单的客户端包。
@@ -41,7 +42,7 @@ public class CM_BLOCK_ADD extends AionClientPacket {
 
 		Player activePlayer = getConnection().getActivePlayer();
 
-		Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
+		Player targetPlayer = World.getInstance().findPlayer(targetName);
 
 		// 试图屏蔽自己 / Trying to block self
 		if (activePlayer.getName().equalsIgnoreCase(targetName)) {

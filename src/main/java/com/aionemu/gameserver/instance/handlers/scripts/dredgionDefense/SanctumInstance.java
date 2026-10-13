@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -21,9 +19,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -81,7 +81,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 220729: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -97,7 +97,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221015: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -113,7 +113,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221016: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -129,7 +129,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221017: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -145,7 +145,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221018: //弗里吉达龙族监督者。 / Frigida Drakan Overseer.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -203,7 +203,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			// 指挥官泽达斯。 / Commander Zedas.
 			case 220705:
 				despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -255,7 +255,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 					sendMovie(player, 949);
 					// 战舰已被摧毁。 / The Dredgion was destroyed.
 					sendMsgByRace(1403958, Race.PC_ALL, 0);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -358,7 +358,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220716); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 圣所学园被弗里吉达军团摧毁。 / The Lyceum in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403780, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -387,7 +387,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220717); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 圣所繁荣大厅被弗里吉达军团摧毁。 / The Hall of Prosperity in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403781, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -416,7 +416,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220718); //弗里吉达龙族指挥官。 / Frigida Drakan Commander.
 				// 圣所的守护者之厅被弗里吉达军团摧毁。 / The Protector's Hall in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403782, Race.PC_ALL, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -448,7 +448,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220778: //Boardable Sanctum Defense Turret.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220782: //Turret Generator.
 				sp(221022, 1794.3324f, 2132.3911f, 545.47992f, (byte) 0, 624, 2000, 0, null);
@@ -582,7 +582,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 
 	protected void startInstanceTask() {
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -603,7 +603,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(703406, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106, 20000); //Frigida Drakan Commander [Flag].
             }
         }, 60000)); //1 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -651,7 +651,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}
             }
         }, 180000)); //3 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -662,7 +662,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(703403, 1680.2438f, 1615.4294f, 566.652f, (byte) 61); //Sald [Flag].
             }
         }, 300000)); //5 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -676,7 +676,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(703401, 1436.4160f, 1458.1833f, 572.87780f, (byte) 1); //Idorunerk [Flag].
             }
         }, 900000)); //15 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -694,7 +694,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(834507, 1366.2908f, 1478.9144f, 569.04498f, (byte) 0, 234); //Turret Core 4.
             }
         }, 1200000)); //20 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -746,7 +746,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(220705, 1532.3103f, 1511.6292f, 565.8826f, (byte) 61, 52000); //Commander Zedas.
             }
         }, 1800000)); //30 Min.
-		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -873,7 +873,7 @@ public class SanctumInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -891,7 +891,7 @@ public class SanctumInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -987,7 +987,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

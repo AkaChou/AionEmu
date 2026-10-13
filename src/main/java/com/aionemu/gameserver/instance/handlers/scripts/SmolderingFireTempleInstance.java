@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -22,7 +20,9 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -253,7 +253,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 				points = 500000;
 				despawnNpc(npc);
 				spawn(834068, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Old Fire Temple Fortune Server.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -297,33 +297,33 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 				if (player.getCommonData().getRace() == Race.ELYOS) {
 					effectController.removeEffect(21376);
 					effectController.removeEffect(21377);
-					GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21379);
 					effectController.removeEffect(21380);
-					GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
 				}
 				break;
 			case 834056: //GM Shine.
 				if (player.getCommonData().getRace() == Race.ELYOS) {
 					effectController.removeEffect(21375);
 					effectController.removeEffect(21377);
-					GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21378);
 					effectController.removeEffect(21380);
-					GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
 				}
 				break;
 			case 834057: //GM Iris.
 				if (player.getCommonData().getRace() == Race.ELYOS) {
 					effectController.removeEffect(21375);
 					effectController.removeEffect(21376);
-					GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21378);
 					effectController.removeEffect(21379);
-					GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
 				}
 				break;
 		}
@@ -410,7 +410,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask() {
-		smolderingTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		smolderingTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -474,7 +474,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -623,7 +623,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

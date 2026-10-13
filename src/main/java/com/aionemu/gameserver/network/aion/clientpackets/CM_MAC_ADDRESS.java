@@ -3,7 +3,7 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAC_INFO;
@@ -51,7 +51,7 @@ public class CM_MAC_ADDRESS extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		if (GameServerNetworkServices.bannedMacManager().isBanned(macAddress)) {
+		if (BannedMacManager.getInstance().isBanned(macAddress)) {
 			this.getConnection().closeNow();
 			log.info(I18n.get("log.b98aa791e284", macAddress, this.getConnection().getIP()));
 			log.info(I18n.get("log.78e831553084", HardName, HardName));

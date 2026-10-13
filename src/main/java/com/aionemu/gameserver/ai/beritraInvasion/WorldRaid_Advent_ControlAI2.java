@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.ai.beritraInvasion;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 贝里特拉入侵相关 NPC AI：World Raid Advent Control（@AIName "advent_control"），继承 NpcAI2。
@@ -17,11 +17,11 @@ public class WorldRaid_Advent_ControlAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(this::startLifeTask, 1000);
+		ThreadPoolManager.getInstance().schedule(this::startLifeTask, 1000);
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(WorldRaid_Advent_ControlAI2.this), 13800000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(WorldRaid_Advent_ControlAI2.this), 13800000);
 	}
 
 	@Override

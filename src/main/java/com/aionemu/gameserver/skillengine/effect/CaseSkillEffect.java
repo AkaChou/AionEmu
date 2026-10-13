@@ -3,7 +3,7 @@ package com.aionemu.gameserver.skillengine.effect;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HealType;
 
@@ -51,7 +51,7 @@ public class CaseSkillEffect extends EffectTemplate {
 					: effect.getEffected().getLifeStats().getMaxMp();
 				if (currentValue <= maxValue * threshold / 100f && Rnd.chance(probability)) {
 					triggered = true;
-					GameEngineServices.skillEngine().applyEffect(skillId, effect.getEffected(), effect.getEffected());
+					SkillEngine.getInstance().applyEffect(skillId, effect.getEffected(), effect.getEffected());
 				}
 			}
 		};

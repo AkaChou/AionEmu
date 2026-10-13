@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai2.handler;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.BoundRadius;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.geo.GeoService;
@@ -34,7 +34,7 @@ public class CreatureEventHandler {
 	public static void onCreatureMoved(NpcAI2 npcAI, Creature creature) {
 		checkAggro(npcAI, creature);
 		if (creature instanceof Player player) {
-			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
+			QuestEngine.getInstance().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class CreatureEventHandler {
 		}
 		checkAggro(npcAI, creature);
 		if (creature instanceof Player player) {
-			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
+			QuestEngine.getInstance().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.util.Map.Entry;
 
@@ -20,6 +19,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.TownService;
 
 /**
  * NPC/召唤物外观与状态信息同步服务端包。
@@ -172,7 +172,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 		writeH(_npc.getNpcObjectType().getId());
 		writeC(0x00);
 		writeD(_npc.getTarget() == null ? 0 : _npc.getTarget().getObjectId());
-		writeD(GameHousingServices.townService().getTownIdByPosition(_npc));
+		writeD(TownService.getInstance().getTownIdByPosition(_npc));
 		writeD(0x00);
 	}
 }

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 
 /**
  * 客户端登录会话校验（playOk/loginOk）的客户端包。
@@ -53,6 +54,6 @@ public class CM_L2AUTH_LOGIN_CHECK extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().requestAuthenticationOfClient(accountId, getConnection(), loginOk, playOk1, playOk2);
+		LoginServer.getInstance().requestAuthenticationOfClient(accountId, getConnection(), loginOk, playOk1, playOk2);
 	}
 }

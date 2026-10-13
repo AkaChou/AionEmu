@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2.manager;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * NPC 技能攻击管理器：调度技能攻击、执行施法并选择下一个可用技能。
@@ -53,7 +53,7 @@ public class SkillAttackManager {
 			if (delay > 0) {
 				// 延迟执行技能攻击
 				// Execute the skill attack after a delay
-				GameThreadPoolServices.threadPoolManager().schedule(
+				ThreadPoolManager.getInstance().schedule(
 						() -> skillAction(npcAI, target, skillId, skillLevel, fightStartingTime), delay);
 			} else {
 				skillAction(npcAI, target, skillId, skillLevel, fightStartingTime);

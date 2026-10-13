@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -12,23 +11,23 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.EventType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.runtime.PlayerQuestStartEligibilityPort;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 活动服务，管理限时活动启停及活动任务的发放与维护。
@@ -40,14 +39,8 @@ public class EventService {
 	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
-	/**
-	 * -- SETTER --
-	 *  注入 Spring ObjectProvider 以覆盖默认单例。
-	 *  Injects a Spring ObjectProvider to override the default singleton.
-	 *  provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<EventService> instanceProvider;
+	private static volatile EventService resolvedInstance;
 
 	/** 活动状态检查周期（毫秒）。 / Event status check period in ms. */
 
@@ -83,14 +76,30 @@ public class EventService {
 	 *         when no provider or bean is available
 	 */
 	public static EventService getInstance() {
+		EventService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<EventService> provider = instanceProvider;
-		EventService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("EventService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<EventService> instanceProvider) {
+		EventService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -144,7 +153,7 @@ public class EventService {
 	 * @param start true 表示可新开任务 / true to start new quests
 	 */
 	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, Map<Integer, List<EventTemplate>> templateMap, boolean start) {
-		var engine = GameEngineServices.questEngine();
+		var engine = QuestEngine.getInstance();
 		var catalog = engine.questCatalog();
 		// 元数据双源：目录缺行时回退原版 quest.xml（事件清单 318 行中 315 行已迁入原生车道，
 		// 原版等价物是 QuestDB 全量表）。缺回退则整个维护门被 null 短路。
@@ -237,7 +246,7 @@ public class EventService {
 		}
 		isStarted = true;
 
-		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::checkEvents, 0, CHECK_TIME_PERIOD);
+		checkTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(this::checkEvents, 0, CHECK_TIME_PERIOD);
 	}
 
 	/**

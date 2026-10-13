@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai2.handler;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
@@ -11,7 +9,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -29,7 +29,7 @@ public class TalkEventHandler {
 	public static void onTalk(NpcAI2 npcAI, Creature creature) {
 		onSimpleTalk(npcAI, creature);
 		if (creature instanceof Player player) {
-			if (GameEngineServices.questEngine().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
+			if (QuestEngine.getInstance().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
 				return;
 			}
 			switch (npcAI.getOwner().getObjectTemplate().getTitleId()) {
@@ -68,8 +68,8 @@ public class TalkEventHandler {
 			case 831234:
 			case 831236:
 			case 831237:
-				int playerTownId = GameHousingServices.townService().getTownResidence(player);
-				int currentTownId = GameHousingServices.townService().getTownIdByPosition(player);
+				int playerTownId = TownService.getInstance().getTownResidence(player);
+				int currentTownId = TownService.getInstance().getTownIdByPosition(player);
 				if (playerTownId != currentTownId) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcAI.getOwner().getObjectId(), 44));
 					return;

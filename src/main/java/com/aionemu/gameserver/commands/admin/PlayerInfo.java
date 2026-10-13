@@ -18,6 +18,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 查询在线玩家详细信息（位置、物品、队伍、技能、军团、AP/GP 等）的管理员命令。
@@ -44,7 +45,7 @@ public class PlayerInfo extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist[info|add|remove] | visual[see|notsee]> ");
 			return;
 		}
-		Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player target = World.getInstance().findPlayer(Util.convertName(params[0]));
 		if (target == null) {
 			PacketSendUtility.sendMessage(admin, "Selected player is not online!");
 			return;
@@ -202,7 +203,7 @@ public class PlayerInfo extends AdminCommand {
 							return;
 						}
 						int objId = Integer.parseInt(params[3]);
-						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
+						VisibleObject obj = World.getInstance().findVisibleObject(objId);
 						if (obj != null && !target.getKnownList().getKnownObjects().containsKey(objId)) {
 							target.getKnownList().getKnownObjects().put(objId, obj);
 						}
@@ -213,7 +214,7 @@ public class PlayerInfo extends AdminCommand {
 							return;
 						}
 						int objId = Integer.parseInt(params[3]);
-						VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
+						VisibleObject obj = World.getInstance().findVisibleObject(objId);
 						if (obj != null) {
 							target.getKnownList().getKnownObjects().remove(objId);
 						}
@@ -238,7 +239,7 @@ public class PlayerInfo extends AdminCommand {
 							return;
 						}
 						int objId = Integer.parseInt(params[3]);
-						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+						Player player = World.getInstance().findPlayer(objId);
 						if (player != null) {
 							target.getController().see(player);
 						}
@@ -249,7 +250,7 @@ public class PlayerInfo extends AdminCommand {
 							return;
 						}
 						int objId = Integer.parseInt(params[3]);
-						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+						Player player = World.getInstance().findPlayer(objId);
 						if (player != null) {
 							target.getController().notSee(player, true);
 						}

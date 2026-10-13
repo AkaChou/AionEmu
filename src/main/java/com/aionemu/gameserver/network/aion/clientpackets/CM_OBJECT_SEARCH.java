@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.Race;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SHOW_NPC_ON_MAP;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldType;
 
 import java.util.ArrayList;
@@ -338,7 +338,7 @@ public class CM_OBJECT_SEARCH extends AionClientPacket {
 			locations = filterLocationsByRace(locations, player.getRace());
 		}
 		boolean allowStaticFallback = gm || (player != null && !locations.isEmpty());
-		return selectSearchTarget(npcId, locations, GameWorldBootstrapServices.world().getNpcs(),
+		return selectSearchTarget(npcId, locations, World.getInstance().getNpcs(),
 				allowStaticFallback);
 	}
 

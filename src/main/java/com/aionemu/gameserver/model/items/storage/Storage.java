@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.items.storage;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.List;
 import java.util.LinkedHashMap;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ItemId;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService;
@@ -179,7 +179,7 @@ public abstract class Storage implements IStorage {
 		item.setItemLocation(storageType.getId());
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
 		ItemPacketService.sendStorageUpdatePacket(actor, storageType, item);
-		GameEngineServices.questEngine().onItemGet(new QuestEnv(null, actor, 0, 0), item.getItemTemplate().getTemplateId());
+		QuestEngine.getInstance().onItemGet(new QuestEnv(null, actor, 0, 0), item.getItemTemplate().getTemplateId());
 		if (item.getItemTemplate().isQuestUpdateItem()) {
 			actor.getController().updateZone();
 			actor.getController().updateNearbyQuests();

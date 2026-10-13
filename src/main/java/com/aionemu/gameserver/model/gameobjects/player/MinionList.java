@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +8,8 @@ import com.aionemu.gameserver.services.player.PlayerService;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 守护灵列表。
@@ -37,7 +37,7 @@ public class MinionList {
 		}
 		for (MinionCommonData minionCommonData : loadedMinions) {
 			if (minionCommonData.getExpireTime() > 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(minionCommonData, player);
+				ExpireTimerTask.getInstance().addTask(minionCommonData, player);
 			}
 			minions.put(minionCommonData.getObjectId(), minionCommonData);
 		}
@@ -65,7 +65,7 @@ public class MinionList {
 	public MinionCommonData addNewMinion(Player player, int minionId, String name, String grade, int level, int growthPoint) {
 		MinionCommonData minionCommonData = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, growthPoint);
 		if (!PlayerService.daos().playerMinionsDAO().insertPlayerMinion(minionCommonData)) {
-			GameWorldBootstrapServices.idFactory().releaseId(minionCommonData.getObjectId());
+			IDFactory.getInstance().releaseId(minionCommonData.getObjectId());
 			return null;
 		}
 		PlayerService.daos().playerMinionsDAO().saveBirthday(minionCommonData);
@@ -77,7 +77,7 @@ public class MinionList {
 													  List<Integer> materialObjectIds) {
 		MinionCommonData replacement = new MinionCommonData(minionId, player.getObjectId(), name, grade, level, growthPoint);
 		if (!PlayerService.daos().playerMinionsDAO().replacePlayerMinions(replacement, materialObjectIds)) {
-			GameWorldBootstrapServices.idFactory().releaseId(replacement.getObjectId());
+			IDFactory.getInstance().releaseId(replacement.getObjectId());
 			return null;
 		}
 		PlayerService.daos().playerMinionsDAO().saveBirthday(replacement);
@@ -108,7 +108,7 @@ public class MinionList {
 
 	public void removeFromMemory(int minionObjId) {
 		if (minions.remove(minionObjId) != null) {
-			GameWorldBootstrapServices.idFactory().releaseId(minionObjId);
+			IDFactory.getInstance().releaseId(minionObjId);
 		}
 	}
 

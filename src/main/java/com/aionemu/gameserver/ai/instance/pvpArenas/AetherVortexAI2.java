@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.ai.instance.pvpArenas;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Pvp Arenas 副本 NPC AI：Aether Vortex（@AIName "aether_vortex"），继承 AggressiveNpcAI2。
@@ -45,11 +45,11 @@ public class AetherVortexAI2 extends AggressiveNpcAI2
 	}
 
 	private void startEventTask() {
-		eventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		eventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelEventTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 20059, 60, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 20059, 60, getOwner()).useNoAnimationSkill();
 			}
 		}, 1000, 1000);
 	}

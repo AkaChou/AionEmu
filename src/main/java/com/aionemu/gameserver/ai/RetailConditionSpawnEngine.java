@@ -6,8 +6,6 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawn;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -15,6 +13,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public final class RetailConditionSpawnEngine {
 			return false;
 		}
 		boolean updated = false;
-		for (WorldMapInstance instance : GameWorldBootstrapServices.world().getWorldMap(worldId).getInstances()) {
+		for (WorldMapInstance instance : World.getInstance().getWorldMap(worldId).getInstances()) {
 			updated |= setVariable(instance, variable, set, modify);
 		}
 		return updated;
@@ -161,7 +161,7 @@ public final class RetailConditionSpawnEngine {
 					if (delay == 0) {
 						spawn(instance, state, condition.id(), active, choice.partyId(), npc);
 					} else {
-						active.tasks.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						active.tasks.add(ThreadPoolManager.getInstance().schedule(() -> {
 							synchronized (state) {
 								if (STATES.get(instance) == state && state.active.get(condition.id()) == active) {
 									spawn(instance, state, condition.id(), active, choice.partyId(), npc);

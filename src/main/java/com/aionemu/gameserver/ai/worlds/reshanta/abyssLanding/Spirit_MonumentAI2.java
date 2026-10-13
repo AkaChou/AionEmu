@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Reshanta 区域 NPC AI：Spirit Monument（@AIName "spirit_monument"），继承 NpcAI2。
@@ -45,7 +46,7 @@ public class Spirit_MonumentAI2 extends NpcAI2
 	}
 
 	private void updateGuardianLanding(final int id) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onDieMonuments(Race.ASMODIANS, id, 20000);

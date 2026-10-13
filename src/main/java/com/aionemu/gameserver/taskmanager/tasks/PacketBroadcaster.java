@@ -3,7 +3,6 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -13,15 +12,8 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Creature> {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
+	private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
+	private static volatile PacketBroadcaster resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -34,14 +26,30 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	 *         when no provider or bean is available
 	 */
 	public static PacketBroadcaster getInstance() {
+		PacketBroadcaster resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PacketBroadcaster> provider = instanceProvider;
-		PacketBroadcaster provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PacketBroadcaster 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PacketBroadcaster> instanceProvider) {
+		PacketBroadcaster.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

@@ -2,27 +2,29 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.BrokerService;
+import com.aionemu.gameserver.services.DuelService;
+import com.aionemu.gameserver.services.ExchangeService;
+import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.services.events.EventWindowService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.RepurchaseService;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
-
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
-
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
-
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+
+
 
 import java.sql.Timestamp;
 
@@ -43,7 +45,10 @@ import com.aionemu.gameserver.services.StigmaLinkedService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.audit.GMService;
 
 /**
  * 玩家离线服务，处理延迟下线与资源清理。
@@ -62,7 +67,7 @@ public class PlayerLeaveWorldService {
 	 */
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> startLeaveWorld(player), delay);
+		ThreadPoolManager.getInstance().schedule(() -> startLeaveWorld(player), delay);
 	}
 
 	/**
@@ -74,19 +79,19 @@ public class PlayerLeaveWorldService {
 	public static final void startLeaveWorld(Player player) {
 		log.info(I18n.get("log.6e504269f536", player.getName(), (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
 			: "Disconnected")));
-		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
 		PetService.getInstance().onPlayerLogout(player);
-		GameRuntimeServices.brokerService().removePlayerCache(player);
-		GameRuntimeServices.exchangeService().cancelExchange(player);
+		BrokerService.getInstance().removePlayerCache(player);
+		ExchangeService.getInstance().cancelExchange(player);
 		RepurchaseService.getInstance().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 			AutoGroupService.getInstance().onPlayerLogOut(player);
 		}
 		ProtectorConquerorService.getInstance().onLogout(player);
 		InstanceService.onLogOut(player);
-		GameRuntimeServices.gmService().onPlayerLogedOut(player);
+		GMService.getInstance().onPlayerLogedOut(player);
 		KiskService.getInstance().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
@@ -105,7 +110,7 @@ public class PlayerLeaveWorldService {
 		PlayerService.daos().playerLifeStatsDAO().updatePlayerLifeStat(player);
 		PlayerService.daos().eventItemsDAO().storeItems(player);
 		// 术古扫荡 / SHUGO SWEEP
-		GameEventBootstrapServices.shugoSweepService().onLogout(player);
+		ShugoSweepService.getInstance().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
 		LegionService.getInstance().LegionWhUpdate(player);
@@ -117,8 +122,8 @@ public class PlayerLeaveWorldService {
 			} else {
 				PlayerReviveService.bindRevive(player);
 			}
-		} else if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
-			GameGameplayServices.duelService().loseDuel(player);
+		} else if (DuelService.getInstance().isDueling(player.getObjectId())) {
+			DuelService.getInstance().loseDuel(player);
 		}
 
 		if (player.getSummon() != null) {
@@ -130,7 +135,7 @@ public class PlayerLeaveWorldService {
 		}
 
 		if (player.getMinion() != null) {
-			GameEventBootstrapServices.minionService().despawnMinion(player, player.getMinion().getObjectId());
+			MinionService.getInstance().despawnMinion(player, player.getMinion().getObjectId());
 		}
 
 		if (player.getPostman() != null) {
@@ -142,7 +147,7 @@ public class PlayerLeaveWorldService {
 		if (player.isLegionMember()) {
 			LegionService.getInstance().onLogout(player);
 		}
-		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
+		QuestEngine.getInstance().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();
 		// 重置楼层“试炼尖塔 5.6” / Reset Floor "Crucible Spire 5.6"
 		player.getCommonData().setFloor(0);
@@ -154,7 +159,7 @@ public class PlayerLeaveWorldService {
 			ChatService.onPlayerLogout(player);
 		}
 		PlayerService.storePlayer(player);
-		GameTaskManagerServices.expireTimerTask().removePlayer(player);
+		ExpireTimerTask.getInstance().removePlayer(player);
 		if (player.getCraftingTask() != null) {
 			player.getCraftingTask().stop(true);
 		}
@@ -166,7 +171,7 @@ public class PlayerLeaveWorldService {
 		PlayerAccountData pad = player.getPlayerAccount().getPlayerAccountData(player.getObjectId());
 		pad.setEquipment(player.getEquipment().getEquippedItems());
 		StigmaLinkedService.onLogOut(player);
-		GameEventBootstrapServices.eventWindowService().onLogout(player);
+		EventWindowService.getInstance().onLogout(player);
 	}
 
 	/**

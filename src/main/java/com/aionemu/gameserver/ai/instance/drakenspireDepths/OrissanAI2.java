@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -15,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Drakenspire Depths 副本 NPC AI：Orissan（@AIName "orissan"），继承 AggressiveNpcAI2。
@@ -56,11 +56,11 @@ public class OrissanAI2 extends AggressiveNpcAI2
 	}
 
 	private void spawnFrigidCrystal() {
-		crystalTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		crystalTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21635, 46, getOwner()).useNoAnimationSkill(); //Summon Crystal.
+				SkillEngine.getInstance().getSkill(getOwner(), 21635, 46, getOwner()).useNoAnimationSkill(); //Summon Crystal.
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -87,7 +87,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(855699, x, y, z, (byte) 0); //Frigid Crystal.
 				}

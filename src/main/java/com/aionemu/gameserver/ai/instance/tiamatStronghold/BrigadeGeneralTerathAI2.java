@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -14,7 +12,9 @@ import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelskillTask();
 			} else {
@@ -74,9 +74,9 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	}
 
 	private void gravityDistortionEvent() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20739, 55, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 20739, 55, getOwner()).useNoAnimationSkill();
 			spawn(283096, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 20741, 55, getOwner()).useNoAnimationSkill(), 5000);
+			ThreadPoolManager.getInstance().schedule(() -> SkillEngine.getInstance().getSkill(getOwner(), 20741, 55, getOwner()).useNoAnimationSkill(), 5000);
 	}
 
 	private synchronized void checkPercentage(int hpPercentage) {
@@ -88,8 +88,8 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 				cancelskillTask();
 				spawn(283158, 1056.8f, 297.6f, 409.9f, (byte) 0);
 				spawn(283158, 1002.07f, 297.4f, 409.85f, (byte) 0);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 20737, 55, getOwner()).useNoAnimationSkill();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 20737, 55, getOwner()).useNoAnimationSkill();
+				ThreadPoolManager.getInstance().schedule(() -> {
 					EmoteManager.emoteStopAttacking(getOwner());
 					setStateIfNot(AIState.WALKING);
 					getOwner().getMoveController().moveToPoint(getOwner().getSpawn().getX(), getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
@@ -97,11 +97,11 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
 				}, 4000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					spawn(283109, 1029.93f, 297.31f, 409.08f, (byte) 0);
 					spawn(283110, 1029.9f, 297.26f, 409.08f, (byte) 0);
 				}, 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					WorldMapInstance instance = getPosition().getWorldMapInstance();
 					deleteNpcs(instance.getNpcs(283158));
 					deleteNpcs(instance.getNpcs(283109));

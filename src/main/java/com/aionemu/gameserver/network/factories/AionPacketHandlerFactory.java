@@ -4,7 +4,6 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.AionPacketHandler;
 import com.aionemu.gameserver.network.aion.clientpackets.*;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -13,14 +12,8 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class AionPacketHandlerFactory {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-     *  Injects Spring ObjectProvider to override the static singleton.
-     * Spring Provider / Spring provider
-     */
-    @Setter
-    private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
+	private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
+	private static volatile AionPacketHandlerFactory resolvedInstance;
 	private final AionPacketHandler handler;
 
 	/**
@@ -33,14 +26,30 @@ public class AionPacketHandlerFactory {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static AionPacketHandlerFactory getInstance() {
+		AionPacketHandlerFactory resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AionPacketHandlerFactory> provider = instanceProvider;
-		AionPacketHandlerFactory provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AionPacketHandlerFactory 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AionPacketHandlerFactory> instanceProvider) {
+		AionPacketHandlerFactory.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
@@ -123,7 +123,7 @@ public class ItemSplitService {
 		if (source.getKinah() < splitAmount) {
 			return;
 		}
-		if (GameRuntimeServices.exchangeService().isPlayerInExchange(player)) {
+		if (ExchangeService.getInstance().isPlayerInExchange(player)) {
 			return;
 		}
 		switch (source.getStorageType()) {

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.kysis;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -9,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Reshanta 区域 NPC AI：Kysis Crystal Sword（@AIName "kysis_crystal_sword"），继承 NpcAI2。
@@ -36,14 +37,14 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 				case 702844: //Kysis's Crystal Sword [Elyos]
 				    announceSpiritOfKysis30Min();
 					announceSpiritOfKysisAppears();
-				    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				    ThreadPoolManager.getInstance().schedule(() -> {
 						spawn(883663, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Kysis.
 					}, 1800000); //30 Minutes.
 			    break;
 				case 702845: //Kysis's Crystal Sword [Asmodians]
 					announceSpiritOfKysis30Min();
 					announceSpiritOfKysisAppears();
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						spawn(884029, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); //Spirit Of Kysis.
 					}, 1800000); //30 Minutes.
 				break;
@@ -58,7 +59,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 	}
 
 	private void announceSpiritOfKysisAppears() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 基西斯守护之灵将在 5 分钟后出现。 / The Kysis Protector Spirit will appear after 5 minutes.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_BossNamed_SpawnAlarm_1231_05, 1500000);
 			// 基西斯守护之灵将在 3 分钟后出现。 / The Kysis Protector Spirit will appear after 3 minutes.
@@ -69,7 +70,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 	}
 
 	private void announceSpiritOfKysis30Min() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 基西斯之灵将在 30 分钟后从基西斯水晶剑中被召唤。 / Spirit of Kysis will be summoned from Kysis's Crystal Sword in 30 minutes.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn_System);
 		});

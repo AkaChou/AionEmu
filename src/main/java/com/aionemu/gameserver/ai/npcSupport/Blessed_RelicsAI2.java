@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.npcSupport;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -45,7 +45,7 @@ public class Blessed_RelicsAI2 extends NpcAI2
 				case 831988: //小型祝福遗物 / Minor Blessed Relics.
 				case 831989: //大型祝福遗物 / Major Blessed Relics.
 				case 831990: //高级祝福遗物 / Greater Blessed Relics.
-					GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000); //威名祝福 / Prestigious Blessing.
+					SkillEngine.getInstance().applyEffectDirectly(21650, player, player, 1800000); //威名祝福 / Prestigious Blessing.
 				break;
 			}
 		}

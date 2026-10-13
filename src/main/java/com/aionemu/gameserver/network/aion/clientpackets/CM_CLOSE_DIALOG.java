@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HEADING_UPDATE;
 import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.mail.MailboxState;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 关闭与 NPC 对话或邮箱界面的客户端包。
@@ -51,7 +51,7 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 		if (obj instanceof Npc npc) {
 			npc.getAi2().onCreatureEvent(AIEventType.DIALOG_FINISH, player);
 			DialogService.onCloseDialog(npc, player);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, obj.getHeading())), 1200);
+			ThreadPoolManager.getInstance().schedule(() -> client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, obj.getHeading())), 1200);
 		}
 		var mailbox = player.getMailbox();
 		if (mailbox != null && mailbox.mailBoxState != MailboxState.CLOSED) {

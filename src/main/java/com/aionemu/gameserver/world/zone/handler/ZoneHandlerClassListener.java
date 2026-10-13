@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.world.zone.ZoneService;
 
 /**
  * 脚本类加载监听器：将有效的 {@link ZoneHandler} 实现注册到区域服务。
@@ -35,7 +35,7 @@ public class ZoneHandlerClassListener implements ClassListener {
 			if (ClassUtils.isSubclass(c, ZoneHandler.class)) {
 				Class<? extends ZoneHandler> tmp = (Class<? extends ZoneHandler>) c;
 				if (tmp != null) {
-					GameWorldBootstrapServices.zoneService().addZoneHandlerClass(tmp);
+					ZoneService.getInstance().addZoneHandlerClass(tmp);
 				}
 			}
 		}

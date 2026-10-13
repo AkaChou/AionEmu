@@ -2,7 +2,6 @@ package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.configs.main.CraftConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -28,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import com.aionemu.gameserver.services.EventService;
 
 /** 真实 {@link QuestEventPort}：为单个任务拥有者冻结事件前玩家事实。 / Real {@link QuestEventPort}: freezes the pre-event player facts for one owner. */
 public final class PlayerQuestEventPort implements QuestEventPort {
@@ -41,12 +41,12 @@ public final class PlayerQuestEventPort implements QuestEventPort {
 	private final EventActivitySource eventActivitySource;
 
 	public PlayerQuestEventPort(QuestPlayerPort players) {
-		this(players, null, questId -> GameEventServices.eventService().checkQuestIsActive(questId));
+		this(players, null, questId -> EventService.getInstance().checkQuestIsActive(questId));
 	}
 
 	public PlayerQuestEventPort(QuestPlayerPort players, QuestStartEligibilityPort startEligibilityPort) {
 		this(players, startEligibilityPort,
-			questId -> GameEventServices.eventService().checkQuestIsActive(questId));
+			questId -> EventService.getInstance().checkQuestIsActive(questId));
 	}
 
 	PlayerQuestEventPort(QuestPlayerPort players, QuestStartEligibilityPort startEligibilityPort,

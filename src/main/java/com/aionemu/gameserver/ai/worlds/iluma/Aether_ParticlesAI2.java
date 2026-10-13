@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,7 +30,7 @@ public class Aether_ParticlesAI2 extends AggressiveNpcAI2
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
-					GameEngineServices.skillEngine().getSkill(player, 22894, 1, player).useNoAnimationSkill(); // 消失技能 / Vanish.
+					SkillEngine.getInstance().getSkill(player, 22894, 1, player).useNoAnimationSkill(); // 消失技能 / Vanish.
 					AI2Actions.deleteOwner(Aether_ParticlesAI2.this);
 					AI2Actions.scheduleRespawn(this);
 				}

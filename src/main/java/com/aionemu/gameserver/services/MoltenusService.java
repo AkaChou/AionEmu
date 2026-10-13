@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule.Moltenus;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.services.moltenusservice.Boss;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 熔岩领主（Moltenus）服务：按 MoltenusSchedule 调度战斗，管理刷怪与欧比斯堡垒公告。
@@ -86,7 +87,7 @@ public class MoltenusService {
 	 */
 	public synchronized void reloadSchedule() {
 		MoltenusSchedule newSchedule = CustomConfig.MOLTENUS_ENABLED ? MoltenusSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		moltenusSchedule = newSchedule;
 		if (moltenusSchedule != null) {
@@ -94,7 +95,7 @@ public class MoltenusService {
 				for (String fightTime : moltenus.getFightTimes()) {
 					Runnable task = new MoltenusStartRunnable(moltenus.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, fightTime);
+					CronService.requireCurrent().schedule(task, fightTime);
 				}
 			}
 		}
@@ -113,7 +114,7 @@ public class MoltenusService {
 		}
 		boss.start();
 		moltenusMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopMoltenus(id), (long) CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopMoltenus(id), (long) CustomConfig.MOLTENUS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -159,7 +160,7 @@ public class MoltenusService {
 	public boolean moltenusMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE005",
 					"<Resurrected Moltenus> appear in the abyss !!!"));
 				yield true;
 			}
@@ -177,7 +178,7 @@ public class MoltenusService {
 	public boolean sulfurFortressMsg(int id) {
 		return switch (id) {
 			case 4, 7 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 暴怒的硫磺守护者将在 10 分钟后出现。 / Enraged Sulfur Guardian will appear in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_01, 0);
@@ -198,7 +199,7 @@ public class MoltenusService {
 	public boolean westernFortressMsg(int id) {
 		return switch (id) {
 			case 5, 8 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 暴怒的西部守护者将在 10 分钟后出现。 / Enraged Western Guardian will appear in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_02, 10000);
@@ -219,7 +220,7 @@ public class MoltenusService {
 	public boolean easternFortressMsg(int id) {
 		return switch (id) {
 			case 6, 9 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_Ab1_BossNamed_65_Al_Spawnmsg_03, 20000);
@@ -344,7 +345,7 @@ public class MoltenusService {
 			MoltenusService.getInstance().westernFortressMsg(id);
 			// 暴怒的东部守护者将在 10 分钟后出现。 / Enraged Eastern Guardian will appear in 10 minutes.
 			MoltenusService.getInstance().easternFortressMsg(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();
 				for (final MoltenusLocation loc : locations.values()) {
 					if (loc.getId() == id) {

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 反作弊服务，检测异常移动与加速外挂。
@@ -147,7 +148,7 @@ public class AntiHackService {
 		if (SecurityConfig.TELEPORTATION) {
 			double delta = MathUtil.getDistance(x, y, player.getX(), player.getY()) / speed;
 			if (speed > 5.0 && delta > 5.0 && (type & MovementMask.GLIDE) != MovementMask.GLIDE) {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, player.getX(), player.getY(), player.getZ(),
+				World.getInstance().updatePosition(player, player.getX(), player.getY(), player.getZ(),
 						player.getHeading());
 				return punish(player, x, y, type, normalMove, "Detected illegal action (Teleportation)" + " S:" + speed
 						+ " D:" + Math.rint(1000.0 * delta) / 1000.0 + " type:" + type);

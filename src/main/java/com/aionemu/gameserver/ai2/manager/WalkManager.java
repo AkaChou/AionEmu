@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai2.manager;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.spawnengine.WalkerRouteValidator;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -312,7 +312,7 @@ public class WalkManager {
 			npcAI.getOwner().getMoveController().abortMove();
 			npcAI.getOwner().getMoveController().chooseNextStep();
 
-			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(() -> {
 				pendingWalkTasks.remove(npcAI.getOwner().getObjectId());
 				if (isNpcRegionActive(npcAI.getOwner()) && npcAI.isInState(AIState.WALKING)) {
 					npcAI.getOwner().getMoveController().moveToNextPoint();
@@ -335,7 +335,7 @@ public class WalkManager {
 		final boolean outsideWalkRange = isOutsideRandomWalkRange(owner.getX(), owner.getY(),
 			owner.getSpawn().getX(), owner.getSpawn().getY(), walkRange);
 
-		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(() -> {
 			pendingWalkTasks.remove(npcObjectId);
 
 			if (!isNpcRegionActive(owner)) {
@@ -483,7 +483,7 @@ public class WalkManager {
 			return;
 		}
 
-		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(WalkManager::performZCheck, Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
+		zCheckTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(WalkManager::performZCheck, Z_CHECK_INTERVAL, Z_CHECK_INTERVAL);
 	}
 
 	private static void performZCheck() {

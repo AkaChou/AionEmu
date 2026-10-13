@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -17,7 +15,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -89,7 +89,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		Npc npc = instance.getNpc(277224); //Ahserion.
 		if (npc != null) {
-			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
+			SkillEngine.getInstance().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
 		}
 	}
 
@@ -112,7 +112,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			sendMsgByRace(1401181, Race.PC_ALL, 50000);
 			// 特兰西迪姆附楼效果削弱了机库路障。 / The effect of the Transidium Annex has weakened the Hangar Barricade.
 			sendMsgByRace(1402638, Race.PC_ALL, 1200000);
-			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -168,7 +168,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				// 你即将返回要塞。 / You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -200,7 +200,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				// 你即将返回要塞。 / You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -232,7 +232,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				// 你即将返回要塞。 / You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -264,7 +264,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				// 你即将返回要塞。 / You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -420,43 +420,43 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			case 277227: //Atanatos Camp Defense Cannon.
 			case 277228: //Disilon Camp Defense Cannon.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21652, 60, player).useNoAnimationSkill(); //Armaments Thief.
+				SkillEngine.getInstance().getSkill(npc, 21652, 60, player).useNoAnimationSkill(); //Armaments Thief.
 			break;
 			//** ///////// / /////////* *//
 			//** ///////// / /////////* *//
 			case 297331: //Belus Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21582, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				SkillEngine.getInstance().getSkill(npc, 21582, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297332: //Aspida Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21589, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				SkillEngine.getInstance().getSkill(npc, 21589, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297333: //Atanatos Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21590, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				SkillEngine.getInstance().getSkill(npc, 21590, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297334: //Disilon Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21591, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				SkillEngine.getInstance().getSkill(npc, 21591, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			//** ///////// / /////////* *//
 			//** ///////// / /////////* *//
 			case 297472: //Belus Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				SkillEngine.getInstance().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297473: //Aspida Chariot.
                 despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				SkillEngine.getInstance().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297474: //Atanatos Chariot.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21587, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				SkillEngine.getInstance().getSkill(npc, 21587, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297475: //Disilon Chariot.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21588, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				SkillEngine.getInstance().getSkill(npc, 21588, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 		}
 	}
@@ -546,7 +546,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

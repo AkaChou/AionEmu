@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 延迟 FP 攻击效果：延迟后削减敌对玩家的飞行点数。
@@ -36,7 +36,7 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	public void applyEffect(final Effect effect) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (effect.getEffector().isEnemy(effect.getEffected())) {
 				DelayedFpAtkInstantEffect.this.calculateAndApplyDamage(effect);
 			}

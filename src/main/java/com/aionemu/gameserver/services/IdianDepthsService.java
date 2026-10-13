@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -29,6 +28,8 @@ import com.aionemu.gameserver.services.idiandepthsservice.Idian;
 import com.aionemu.gameserver.services.idiandepthsservice.IdianDepths;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 伊迪安深渊服务：按计划开启各地点，管理刷怪与活动生命周期。
@@ -55,11 +56,11 @@ public class IdianDepthsService {
 			}
 			log.info(I18n.get("log.35480b35b73c", idianDepths.size()));
 
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				for (IdianDepthsLocation loc : getIdianDepthsLocations().values()) {
 					startIdianDepths(loc.getId());
 				}
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!"));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!"));
 			}, () -> CustomConfig.IDIAN_DEPTHS_SCHEDULE);
 		} else {
 			log.info(I18n.get("log.b09d3ab19771"));
@@ -88,7 +89,7 @@ public class IdianDepthsService {
 			return;
 		}
 		idian.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopIdianDepths(id), (long) CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopIdianDepths(id), (long) CustomConfig.IDIAN_DEPTHS_DURATION * 3600 * 1000);
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤陷阱效果：在落点生成陷阱，并限制同一主人的陷阱数量。
@@ -59,7 +59,7 @@ public class SummonTrapEffect extends SummonEffect {
 		maxTraps(effector);
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Trap trap = VisibleObjectSpawner.spawnTrap(spawn, instanceId, effector);
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> trap.getController().onDelete(), time * 1000L);
+		Future<?> task = ThreadPoolManager.getInstance().schedule(() -> trap.getController().onDelete(), time * 1000L);
 		trap.getController().addTask(TaskId.DESPAWN, task);
 	}
 

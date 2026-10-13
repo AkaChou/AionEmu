@@ -3,11 +3,8 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -52,6 +49,8 @@ import com.aionemu.gameserver.services.mail.AuctionResult;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.LinkedHashMap;
@@ -65,13 +64,8 @@ import java.util.Map;
 
 public class HousingBidService extends AbstractCronTask {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<HousingBidService> instanceProvider;
+	private static volatile HousingBidService resolvedInstance;
 	private final HouseBidDao houseBidsDAO;
 	private final ServerVariableDao serverVariablesDAO;
 	private final PlayerDao playerDAO;
@@ -130,14 +124,30 @@ public class HousingBidService extends AbstractCronTask {
 	 *                               when no provider or bean is available
 	 */
 	public static HousingBidService getInstance() {
+		HousingBidService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<HousingBidService> provider = instanceProvider;
-		HousingBidService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("HousingBidService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<HousingBidService> instanceProvider) {
+		HousingBidService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 
@@ -189,7 +199,7 @@ public class HousingBidService extends AbstractCronTask {
 
 	private int fillBidData() {
 		int count = 0;
-		List<House> houses = GameHousingServices.housingService().getCustomHouses();
+		List<House> houses = HousingService.getInstance().getCustomHouses();
 		while (!houses.isEmpty()) {
 			House house = houses.get(Rnd.get(houses.size()));
 			houses.remove(house);
@@ -255,7 +265,7 @@ public class HousingBidService extends AbstractCronTask {
 		List<PlayerHouseBid> sortedBids = new ArrayList<>(playerBidData);
 		Collections.sort(sortedBids);
 		Map<Integer, House> housesById = new LinkedHashMap<>();
-		for (House house : GameHousingServices.housingService().getCustomHouses()) {
+		for (House house : HousingService.getInstance().getCustomHouses()) {
 			housesById.put(house.getObjectId(), house);
 		}
 		int entryIndex = 1;
@@ -314,7 +324,7 @@ public class HousingBidService extends AbstractCronTask {
 			if (houseBid == null) {
 				continue;
 			}
-			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
+			House house = HousingService.getInstance().getHouseByAddress(houseBid.getAddress());
 			// 住宅记录缺失时跳过该条竞拍，避免空指针中断整场拍卖结算。
 			// Skip the bid when its house record is missing instead of aborting the whole auction pass.
 			if (house == null) {
@@ -330,7 +340,7 @@ public class HousingBidService extends AbstractCronTask {
 			}
 		}
 		for (HouseBidEntry houseBid : houseBids.values()) {
-			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
+			House house = HousingService.getInstance().getHouseByAddress(houseBid.getAddress());
 			if (houseBid.getBidCount() > 0) {
 				continue;
 			}
@@ -348,7 +358,7 @@ public class HousingBidService extends AbstractCronTask {
 			log.info(I18n.get("log.19cd043d5e48"));
 		}
 		for (Entry<HouseBidEntry, Integer> winData : winners.entrySet()) {
-			House wonHouse = GameHousingServices.housingService().getHouseByAddress(winData.getKey().getAddress());
+			House wonHouse = HousingService.getInstance().getHouseByAddress(winData.getKey().getAddress());
 			// 成交前再次校验住宅记录，缺失时不能进入过户流程。 / Re-check the house record; a missing one must not enter the transfer flow.
 			if (wonHouse == null) {
 				log.warn(I18n.get("log.15485b0c4e93", winData.getKey().getAddress()));
@@ -366,7 +376,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		for (Entry<HouseBidEntry, Integer> sellData : successSell.entrySet()) {
 			// 获取房屋对象 / Get house object
-			House soldHouse = GameHousingServices.housingService().getHouseByAddress(sellData.getKey().getAddress());
+			House soldHouse = HousingService.getInstance().getHouseByAddress(sellData.getKey().getAddress());
 			// 检查房屋对象是否为空 / Check if house object is null
 			if (soldHouse == null) {
 				// 记录警告日志，包含未找到的房屋地址 / Log warning with the address of the missing house
@@ -388,7 +398,7 @@ public class HousingBidService extends AbstractCronTask {
 			long returnKinah = sellData.getKey().getBidPrice() + sellData.getKey().getRefundKinah();
 			if (soldHouse.isInGracePeriod()) {
 				soldHouse.revokeOwner();
-				House newHouse = GameHousingServices.housingService().activateBoughtHouse(sellerPcd.getPlayerObjId());
+				House newHouse = HousingService.getInstance().activateBoughtHouse(sellerPcd.getPlayerObjId());
 				if (sellerPcd.isOnline()) {
 					PacketSendUtility.sendPacket(sellerPcd.getPlayer(), new SM_HOUSE_ACQUIRE(sellerPcd.getPlayerObjId(), newHouse.getAddress().getId(), true));
 					PacketSendUtility.sendPacket(sellerPcd.getPlayer(), new SM_HOUSE_OWNER_INFO(sellerPcd.getPlayer(), newHouse));
@@ -404,7 +414,7 @@ public class HousingBidService extends AbstractCronTask {
 		for (Entry<HouseBidEntry, Integer> notSoldData : failedSell.entrySet()) {
 			HouseBidEntry bidEntry = notSoldData.getKey();
 			PlayerCommonData sellerPcd = getPlayerData(notSoldData.getValue());
-			House bidHouse = GameHousingServices.housingService().getHouseByAddress(bidEntry.getAddress());
+			House bidHouse = HousingService.getInstance().getHouseByAddress(bidEntry.getAddress());
 			if (bidHouse == null) {
 				log.warn(I18n.get("log.15485b0c4e93", bidEntry.getAddress()));
 				continue;
@@ -418,7 +428,7 @@ public class HousingBidService extends AbstractCronTask {
 				long timePassed = (getAuctionStartTime() - bidHouse.getSellStarted().getTime()) / 1000;
 				if (timePassed > 7 * 24 * 3600) {
 					bidHouse.revokeOwner();
-					House activatedHouse = GameHousingServices.housingService().activateBoughtHouse(sellerPcd.getPlayerObjId());
+					House activatedHouse = HousingService.getInstance().activateBoughtHouse(sellerPcd.getPlayerObjId());
 					if (sellerPcd.isOnline()) {
 						if (activatedHouse != null) {
 							PacketSendUtility.sendPacket(sellerPcd.getPlayer(), new SM_HOUSE_ACQUIRE(sellerPcd.getPlayerObjId(), activatedHouse.getAddress().getId(), true));
@@ -446,7 +456,7 @@ public class HousingBidService extends AbstractCronTask {
 			log.info(I18n.get("log.f4db49f3f010"));
 		}
 		for (HouseBidEntry houseBid : copy) {
-			House house = GameHousingServices.housingService().getHouseByAddress(houseBid.getAddress());
+			House house = HousingService.getInstance().getHouseByAddress(houseBid.getAddress());
 			if (house == null) {
 				log.warn(I18n.get("log.15485b0c4e93", houseBid.getAddress()));
 				continue;
@@ -523,7 +533,7 @@ public class HousingBidService extends AbstractCronTask {
 	}
 
 	private PlayerCommonData getPlayerData(int objectId) {
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
+		Player player = World.getInstance().findPlayer(objectId);
 		if (player == null) {
 			return this.playerDAO.loadPlayerCommonData(objectId);
 		}
@@ -539,15 +549,15 @@ public class HousingBidService extends AbstractCronTask {
 	 *               auction result
 	 */
 	public AuctionResult completeHouseSell(PlayerCommonData winner, House obtainedHouse) {
-		House winnerHouse = GameHousingServices.housingService().getPlayerStudio(winner.getPlayerObjId());
+		House winnerHouse = HousingService.getInstance().getPlayerStudio(winner.getPlayerObjId());
 		AuctionResult result = AuctionResult.WIN_BID;
 		long time = System.currentTimeMillis();
 		if (winnerHouse != null) {
 			winnerHouse.revokeOwner();
 		} else {
-			int address = GameHousingServices.housingService().getPlayerAddress(winner.getPlayerObjId());
+			int address = HousingService.getInstance().getPlayerAddress(winner.getPlayerObjId());
 			if (address > 0) {
-				winnerHouse = GameHousingServices.housingService().getHouseByAddress(address);
+				winnerHouse = HousingService.getInstance().getHouseByAddress(address);
 				winnerHouse.setSellStarted(new Timestamp(getAuctionStartTime()));
 				obtainedHouse.setStatus(HouseStatus.INACTIVE);
 				result = AuctionResult.GRACE_START;
@@ -699,13 +709,13 @@ public class HousingBidService extends AbstractCronTask {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_NOT_ENOUGH_MONEY);
 			return;
 		}
-		House bidHouse = GameHousingServices.housingService().getHouseByAddress(entry.getAddress());
+		House bidHouse = HousingService.getInstance().getHouseByAddress(entry.getAddress());
 		if (player.getObjectId() == bidHouse.getOwnerId()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_BID_MY_HOUSE);
 			return;
 		}
-		int playerAddress = GameHousingServices.housingService().getPlayerAddress(player.getObjectId());
-		House playerHouse = GameHousingServices.housingService().getHouseByAddress(playerAddress);
+		int playerAddress = HousingService.getInstance().getPlayerAddress(player.getObjectId());
+		House playerHouse = HousingService.getInstance().getHouseByAddress(playerAddress);
 		if (playerHouse != null && playerHouse.isInGracePeriod()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_BID_GRACE_HOUSE);
 			return;
@@ -737,7 +747,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		if (minutesLeft < 5 && timeProlonged < 30) {
 			timeProlonged += 5;
-			GameThreadPoolServices.threadPoolManager().execute(() -> this.serverVariablesDAO.store("auctionProlonged", timeProlonged));
+			ThreadPoolManager.getInstance().execute(() -> this.serverVariablesDAO.store("auctionProlonged", timeProlonged));
 		} else if (!isBiddingAllowed()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_BID_TIMEOUT);
 			return;

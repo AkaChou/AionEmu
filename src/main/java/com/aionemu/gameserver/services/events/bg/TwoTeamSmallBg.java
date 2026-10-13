@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 小型双队对抗：多回合小队对战，胜回合最多的队伍获胜。
@@ -792,7 +792,7 @@ public class TwoTeamSmallBg extends TwoTeamRoundBg {
 				}
 			}
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
+		super.setExpireTask(ThreadPoolManager.getInstance().schedule(() -> endTwoTeamMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 

@@ -50,6 +50,7 @@ import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMap;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.KnownList;
 import com.google.common.collect.Maps;
@@ -302,7 +303,7 @@ public class PlayerService {
 								   Account account) {
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
 		LocationData ld = playerInitialData.getSpawnLocation(playerCommonData.getRace());
-		WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
+		WorldPosition position = World.getInstance().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
 			ld.getHeading(), 0);
 		playerCommonData.setPosition(position);
 		Player newPlayer = new Player(new PlayerController(), playerCommonData, playerAppearance, account);
@@ -479,7 +480,7 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+		World.getInstance().doOnAllPlayers(object -> {
 			if (playerObjIdsCopy.contains(object.getObjectId())) {
 				result.put(object.getObjectId(), object.getName());
 				playerObjIdsCopy.remove(object.getObjectId());

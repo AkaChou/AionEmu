@@ -4,11 +4,9 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -49,6 +47,8 @@ import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 经纪行（交易行）服务：上架、购买、结算、缓存与周期落库。
@@ -68,6 +68,7 @@ public class BrokerService {
 	private Future<?> expiredItemsTask;
 	private final ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
+	private static volatile BrokerService resolvedInstance;
 	private final BrokerDao brokerDAO;
 	private final InventoryDao inventoryDAO;
 
@@ -83,14 +84,19 @@ public class BrokerService {
 	 *                               when no provider or bean is available
 	 */
 	public static BrokerService getInstance() {
+		BrokerService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<BrokerService> provider = instanceProvider;
-		BrokerService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("BrokerService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -101,6 +107,7 @@ public class BrokerService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<BrokerService> instanceProvider) {
 		BrokerService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -130,7 +137,7 @@ public class BrokerService {
 
 	private void scheduleExpiredItemsTask() {
 		int delay = Math.max(BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000, 60000);
-		expiredItemsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this::checkExpiredItems, delay, delay);
+		expiredItemsTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(this::checkExpiredItems, delay, delay);
 	}
 
 	private void initBrokerService() {
@@ -447,7 +454,7 @@ public class BrokerService {
 	}
 
 	private void notifySellerOfSale(BrokerItem brokerItem) {
-		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
+		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
 			PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(brokerItem.getItem().getNameId()));
@@ -536,7 +543,7 @@ public class BrokerService {
 			settledMap.put(brokerItem.getItemUniqueId(), brokerItem);
 		}
 
-		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
+		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
 		}
@@ -596,7 +603,7 @@ public class BrokerService {
 			return;
 		}
 
-		if (!GameRuntimeServices.adminService().canOperate(player, null, itemToRegister, "broker")) {
+		if (!AdminService.getInstance().canOperate(player, null, itemToRegister, "broker")) {
 			return;
 		}
 

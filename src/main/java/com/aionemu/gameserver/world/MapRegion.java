@@ -2,7 +2,6 @@ package com.aionemu.gameserver.world;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.model.gameobjects.base.BaseNpc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
@@ -194,7 +194,7 @@ public class MapRegion {
 	 * Delayed activation of self and neighbour AI.
 	 */
 	final void startActivation() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			log.debug("Activating in map {} region {}", getMapId(), regionId);
 			MapRegion.this.activateObjects();
 			for (MapRegion neighbor : getNeighbours()) {
@@ -208,7 +208,7 @@ public class MapRegion {
 	 * Delayed check whether neighbours can deactivate.
 	 */
 	final void startDeactivation() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			log.debug("Deactivating in map {} region {}", getMapId(), regionId);
 			for (MapRegion neighbor : getNeighbours()) {
 				if (!neighbor.isNeighboursActive()) {

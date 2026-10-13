@@ -2,10 +2,9 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.InstanceRiftService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.services.instanceriftservice.Rift;
 import com.aionemu.gameserver.services.instanceriftservice.RiftInstance;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 副本裂隙服务：按 InstanceSchedule 调度开启，管理刷怪与生命周期。
@@ -83,7 +84,7 @@ public class InstanceRiftService {
 	 */
 	public synchronized void reloadSchedule() {
 		InstanceSchedule newSchedule = CustomConfig.INSTANCE_RIFT_ENABLED ? InstanceSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		instanceSchedule = newSchedule;
 		if (instanceSchedule != null) {
@@ -91,7 +92,7 @@ public class InstanceRiftService {
 				for (String instanceTime : instance.getInstanceTimes()) {
 					Runnable task = new InstanceStartRunnable(this, instance.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, instanceTime);
+					CronService.requireCurrent().schedule(task, instanceTime);
 				}
 			}
 		}
@@ -110,7 +111,7 @@ public class InstanceRiftService {
 		}
 		rift.start();
 		instanceRiftMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopInstanceRift(id), (long) CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopInstanceRift(id), (long) CustomConfig.INSTANCE_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -156,7 +157,7 @@ public class InstanceRiftService {
 	public void instanceRiftMsg(int id) {
 		switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!"));
 			}
 			default -> {
 			}

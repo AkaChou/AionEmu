@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 发送系统邮件（含黑云邮件）的管理员命令。
@@ -161,7 +162,7 @@ public class SysMail extends AdminCommand {
 				SystemMailService.getInstance().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
 		}
 		else {
-			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player player : World.getInstance().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getRace())) {
 					if (letterType == LetterType.BLACKCLOUD)
 						MailFormatter.sendBlackCloudMail(player.getName(), item, count);
@@ -248,14 +249,14 @@ public class SysMail extends AdminCommand {
 				shouldExpress = false;
 			}
 			else if (letterType == LetterType.EXPRESS) {
-				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) == null) {
+				if (World.getInstance().findPlayer(recipient) == null) {
 					PacketSendUtility.sendMessage(admin, "This Recipient is offline.");
 					return null;
 				}
 				shouldExpress = true;
 			}
 			else { // Black cloud
-				shouldExpress = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) != null;
+				shouldExpress = World.getInstance().findPlayer(recipient) != null;
 			}
 		} else {
 			shouldExpress = letterType != LetterType.NORMAL;

@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,9 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.curingzone.CuringObject;
 import com.aionemu.gameserver.model.templates.curingzones.CuringTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 治愈区域服务，生成治愈物并周期性对范围内玩家施加治愈效果。
@@ -47,12 +47,12 @@ public class CuringZoneService {
 	 * Starts the per-second scan that casts the curing skill on in-range players without the effect.
 	 */
 	private void startTask() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			for (final CuringObject obj : curingObjects)
 				obj.getKnownList().doOnAllPlayers(player -> {
 					if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 							&& (!player.getEffectController().hasAbnormalEffect(8751))) {
-						GameEngineServices.skillEngine().getSkill(player, 8751, 1, player).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(player, 8751, 1, player).useNoAnimationSkill();
 					}
 				});
 		}, 1000, 1000);

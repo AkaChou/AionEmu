@@ -2,13 +2,13 @@ package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dragon Lord Refuge 副本 NPC AI：Tiamat Woman Form（@AIName "tiamat_woman_form"），继承 AggressiveNpcAI2。
@@ -25,7 +25,7 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			startLifeTask();
 			// 你……在威胁我？你们就是这样开玩笑的吗？ / Are you... threatening me? Is this what passes for a joke among you people?.
 			sendMsg(1500613, getObjectId(), false, 3000);
@@ -37,12 +37,12 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 			sendMsg(1500616, getObjectId(), false, 21000);
 			// 我……是的。我们很感激。没有你的帮助不知该怎么办…… / I... yes. We are grateful. I don't know what we'd have done without your help...
 			sendMsg(1500617, getObjectId(), false, 27000);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
+			SkillEngine.getInstance().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
 		}, 1000);
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(219359, 470.5909f, 515.02856f, 417.40436f, (byte) 119); //Calindi.
 			spawn(283174, 457.7215f, 514.4464f, 417.53998f, (byte) 0);
 			AI2Actions.deleteOwner(Tiamat_Woman_FormAI2.this);

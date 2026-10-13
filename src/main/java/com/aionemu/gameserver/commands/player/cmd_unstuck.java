@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.player;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.TimeUnit;
 
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
 /**
@@ -48,7 +48,7 @@ public class cmd_unstuck extends PlayerCommand {
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
 		PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, 0, 0, (int) TimeUnit.SECONDS.toMillis(10), 0));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
 			player.getEffectController().updatePlayerEffectIcons();
 			player.getEffectController().broadCastEffects();

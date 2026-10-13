@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.event.prestigeCoins;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -34,7 +34,7 @@ public class Prestige_Society_Medical_AttendantAI2 extends NpcAI2
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000344, 1)) { // 声望硬币 / Prestige Coin.
  		    if (getNpcId() == 833764) {
  		    	//声望协会医疗服务员 / Prestige Society Medical Attendant.
- 		    	GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000);
+ 		    	SkillEngine.getInstance().applyEffectDirectly(21650, player, player, 1800000);
  		    }
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

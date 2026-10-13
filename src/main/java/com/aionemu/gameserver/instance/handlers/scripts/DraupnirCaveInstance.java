@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Set;
@@ -52,7 +52,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		// 须击杀阿弗兰、萨拉斯瓦蒂、拉克希米与宁巴卡，指挥官巴卡尔玛才会出现。 / You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
 		sendMsgByRace(1400757, Race.PC_ALL, 10000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -160,7 +160,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 					    spawn(702659, 787.32513f, 431.49173f, 319.62155f, (byte) 33); //高级修道院箱子。 / Noble Abbey Box.
 					break;
 				}
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -196,7 +196,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403063, Race.PC_ALL, 0);
 				// 龙族已察觉入侵者的存在。 / The Balaur have been alerted to the presence of intruders.
 				sendMsgByRace(1403064, Race.PC_ALL, 4000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -206,7 +206,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 						startAbyssGateRaid1();
 				    }
 			    }, 5000);
-				abyssGateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				abyssGateTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -262,7 +262,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 
 	private void abyssGateRaid(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -308,7 +308,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

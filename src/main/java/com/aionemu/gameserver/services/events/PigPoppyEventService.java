@@ -3,12 +3,11 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -21,6 +20,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 小猪波比活动服务，按 cron 调度刷怪与结算。
@@ -79,7 +80,7 @@ public class PigPoppyEventService {
 	 */
 	public static void ScheduleCron() {
 		// To change body of generated methods, choose Tools | Templates.
-		GameCronServices.cronService().schedule(PigPoppyEventService::startEvent, PIG_POPPY_EVENT_SCHEDULE);
+		CronService.requireCurrent().schedule(PigPoppyEventService::startEvent, PIG_POPPY_EVENT_SCHEDULE);
 		log.info(I18n.get("log.5df8f3db8e1d", EventsConfig.PIG_POPPY_EVENT_SCHEDULE));
 	}
 
@@ -96,7 +97,7 @@ public class PigPoppyEventService {
 		initPigAsmo();
 		initPigEly();
         // To change body of generated methods, choose Tools | Templates.
-        GameThreadPoolServices.threadPoolManager().schedule(PigPoppyEventService::endEvent, 30 * 60 * 1000);
+        ThreadPoolManager.getInstance().schedule(PigPoppyEventService::endEvent, 30 * 60 * 1000);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class PigPoppyEventService {
 	 */
 	private static void announceAll(final String msg) {
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE058", msg));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE058", msg));
 	}
 
 	/**

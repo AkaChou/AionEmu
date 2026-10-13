@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -80,7 +80,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(219364, 893.3504f, 1446.1143f, 495.64215f, (byte) 91);
 			break;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -214,7 +214,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500681, tiamatEye1.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500682, tiamatEye1.getObjectId(), 0, 21000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -245,7 +245,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500681, tiamatEye2.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500682, tiamatEye2.getObjectId(), 0, 21000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -279,7 +279,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500681, tiamatEye3.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500682, tiamatEye3.getObjectId(), 0, 21000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -318,7 +318,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500681, tiamatEye4.getObjectId(), 0, 15000);
 				// 亲爱的龙主，请安息。让我为你复仇！ / Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500682, tiamatEye4.getObjectId(), 0, 21000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -371,7 +371,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 		if (despawn) {
-		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		    ThreadPoolManager.getInstance().schedule(new Runnable() {
 			    /**
 			     * 处理 run。
 			     * Handle run.
@@ -476,7 +476,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

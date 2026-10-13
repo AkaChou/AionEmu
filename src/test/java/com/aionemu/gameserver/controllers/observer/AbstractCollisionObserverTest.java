@@ -18,7 +18,7 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Node;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.ThreadPoolServiceBindings;
 import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -54,7 +54,7 @@ class AbstractCollisionObserverTest {
 		// D1a 后 holder 定位器不再回退到单例：显式构造线程池门面，碰撞回调才能被异步执行。
 		// After D1a the holder locator no longer falls back to the singleton: construct the
 		// thread-pool facade explicitly so the collision callback can run asynchronously.
-		GameThreadPoolServices threadPoolServices = new GameThreadPoolServices(
+		ThreadPoolServiceBindings threadPoolServices = new ThreadPoolServiceBindings(
 				beanFactory.getBeanProvider(ThreadPoolManager.class));
 
 		AtomicReference<Ray> capturedRay = new AtomicReference<>();

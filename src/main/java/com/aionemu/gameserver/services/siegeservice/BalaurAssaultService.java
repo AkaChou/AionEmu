@@ -4,11 +4,10 @@ package com.aionemu.gameserver.services.siegeservice;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
+import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.services.SiegeService;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_ASSEMBLER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 龙族自动突击服务：按影响力概率对要塞/神器发起突击。
@@ -81,55 +82,55 @@ public class BalaurAssaultService {
 			}
 			switch (rvrId) {
 			case 1011:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <DIVINE FORTRESS> !"));
 				break;
 			case 1131:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <SIEL'S WESTERN FORTRESS> !"));
 				break;
 			case 1132:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <SIEL'S EASTERN FORTRESS> !"));
 				break;
 			case 1141:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <SULFUR FORTRESS> !"));
 				break;
 			case 1221:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <KROTAN REFUGE> !"));
 				break;
 			case 1231:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <KYSIS FORTRESS> !"));
 				break;
 			case 1241:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <MIREN FORTRESS> !"));
 				break;
 			case 7011:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <WEALHTHEOW'S KEEP> !"));
 				break;
 			case 10111:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <ARCADIAN FORTRESS> !"));
 				break;
 			case 10211:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <UMBRAL FORTRESS> !"));
 				break;
 			case 10311:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <ETERNUM FORTRESS> !"));
 				break;
 			case 10411:
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys4Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur launch an assault on <SKYCLASH FORTRESS> !"));
 				break;
 			}
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			World.getInstance().doOnAllPlayers(player -> {
 				// 龙族摧毁了城门。 / The Balaur have destroyed the Castle Gate.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_FIELDABYSS_DRAGON_DOOR_BROKEN,
 						600000);
@@ -163,57 +164,57 @@ public class BalaurAssaultService {
 				log.info(I18n.get("log.9641cecdac43", siege.getSiegeLocationId()));
 				switch (locId) {
 				case 1011:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <DIVINE FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 1131:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <SIEL'S WESTERN FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 1132:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <SIEL'S EASTERN FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 1141:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <SULFUR FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 1221:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <KROTAN REFUGE> has been captured by Balaur Assault!"));
 					break;
 				case 1231:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <KYSIS FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 1241:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <MIREN FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 7011:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <WEALHTHEOW'S KEEP> has been captured by Balaur Assault!"));
 					break;
 				case 10111:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <ARCADIAN FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 10211:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <UMBRAL FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 10311:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <ETERNUM FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				case 10411:
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
+					World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys5Message(player, "\uE005",
 							"[RVR/SIEGE]: <SKYCLASH FORTRESS> has been captured by Balaur Assault!"));
 					break;
 				}
 			} else {
 				log.info(I18n.get("log.b8e0e2aae381", siege.getSiegeLocationId()));
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys6Message(player, "\uE005",
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys6Message(player, "\uE005",
 						"[RVR/SIEGE]: the Balaur failed to capture fortress"));
 			}
 		}
@@ -306,8 +307,8 @@ public class BalaurAssaultService {
 			}
 			influence = ownedForts >= 2 ? 0.25f : 0.1f;
 		} else {
-			influence = locationRace.equals(SiegeRace.ASMODIANS) ? GameRuntimeServices.influence().getGlobalAsmodiansInfluence()
-					: GameRuntimeServices.influence().getGlobalElyosInfluence();
+			influence = locationRace.equals(SiegeRace.ASMODIANS) ? Influence.getInstance().getGlobalAsmodiansInfluence()
+					: Influence.getInstance().getGlobalElyosInfluence();
 		}
 		return Rnd.get() < influence * SiegeConfig.BALAUR_ASSAULT_RATE;
 	}
@@ -320,11 +321,11 @@ public class BalaurAssaultService {
 		AssembledNpcTemplate template = DataManager.ASSEMBLED_NPC_DATA.getAssembledNpcTemplate(spawnId);
 		List<AssembledNpcPart> assembledParts = new ArrayList<>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
-			assembledParts.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
+			assembledParts.add(new AssembledNpcPart(IDFactory.getInstance().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(),
 				assembledParts);
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		Player findedPlayer;
 		while (iter.hasNext()) {
 			findedPlayer = iter.next();

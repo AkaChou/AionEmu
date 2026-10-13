@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.theEternalBastion;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -47,7 +47,7 @@ public class Defense_CannonAI2 extends NpcAI2
 			    case 701605:
 			    case 701606:
 			    case 701607:
-				    GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
+				    SkillEngine.getInstance().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 				break;
 				// 防御加农 魔族。 / Defense Cannon Asmodians.
 				case 701610:
@@ -62,7 +62,7 @@ public class Defense_CannonAI2 extends NpcAI2
 				case 701619:
 				case 701620:
 				case 701621:
-				    GameEngineServices.skillEngine().getSkill(player, 21066, 1, player).useNoAnimationSkill();
+				    SkillEngine.getInstance().getSkill(player, 21066, 1, player).useNoAnimationSkill();
 				break;
 			}
 		}

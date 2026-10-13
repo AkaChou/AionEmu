@@ -5,7 +5,6 @@ import com.aionemu.gameserver.configs.main.LoggingConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
@@ -176,7 +176,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_NEED_FINISH_QUEST);
 			return;
 		}
-		HandlerResult result = GameEngineServices.questEngine().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
+		HandlerResult result = QuestEngine.getInstance().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
 		if (result == HandlerResult.FAILED) {
 			return;
 		}

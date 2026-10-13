@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -14,9 +12,11 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -57,7 +57,7 @@ public class Investigative_BatiskanAI2 extends GeneralNpcAI2
 		int instanceId = getPosition().getInstanceId();
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
+		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
 			return true;
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
@@ -77,7 +77,7 @@ public class Investigative_BatiskanAI2 extends GeneralNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							WorldPosition worldPosition = player.getPosition();
 							if (worldPosition.isInstanceMap()) {

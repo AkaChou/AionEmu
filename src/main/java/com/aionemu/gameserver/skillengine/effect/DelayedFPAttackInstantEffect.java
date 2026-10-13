@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -9,6 +8,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 延迟飞行值攻击即时效果：延迟后按固定值或百分比削减目标 FP。
@@ -53,6 +53,6 @@ public class DelayedFPAttackInstantEffect extends EffectTemplate {
 		final Player effected = (Player) effect.getEffected();
 		final int newValue = effect.getReserved2();
 
-		GameThreadPoolServices.threadPoolManager().schedule(() -> effected.getLifeStats().reduceFp(newValue), delay);
+		ThreadPoolManager.getInstance().schedule(() -> effected.getLifeStats().reduceFp(newValue), delay);
 	}
 }

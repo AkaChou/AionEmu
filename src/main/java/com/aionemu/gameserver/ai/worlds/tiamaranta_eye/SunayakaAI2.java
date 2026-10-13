@@ -2,19 +2,19 @@ package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamaranta eye 区域 NPC AI：Sunayaka（@AIName "sunayaka"），继承 AggressiveNpcAI2。
@@ -29,12 +29,12 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 	private final AtomicBoolean isAggred = new AtomicBoolean(false);
 
 	private void simmeringRage() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); // 积攒的怒火 / Simmering Rage.
+		SkillEngine.getInstance().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); // 积攒的怒火 / Simmering Rage.
 		getOwner().getEffectController().removeEffect(8763);
 	}
 
 	private void rageOfTheDragonLords() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); // 龙帝之怒 / Rage Of The Dragon Lords
+		SkillEngine.getInstance().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); // 龙帝之怒 / Rage Of The Dragon Lords
 	}
 
 	@Override
@@ -53,7 +53,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 							PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900)); // 15 分钟 / 15 Minutes.
 						}
 					});
-					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					sunayakaRageTask = ThreadPoolManager.getInstance().schedule(() -> {
 						// 狂战士苏纳亚卡已狂暴。 / Berserker Sunayaka has gone berserk.
 						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401460, 0);
 						getPosition().getWorldMapInstance().doOnAllPlayers(player -> {

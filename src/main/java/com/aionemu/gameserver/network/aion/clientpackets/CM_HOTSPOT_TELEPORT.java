@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -48,7 +47,7 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 			return;
 		}
 		if (action == 1) {
-			GameWorldBootstrapServices.hotspotTeleportService().doTeleport(player, teleportId, price);
+			HotspotTeleportService.getInstance().doTeleport(player, teleportId, price);
 		} else if (action == 2) {
 			if (player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT) != null) {
 				HotspotTeleportService.cancelCastBar(player);

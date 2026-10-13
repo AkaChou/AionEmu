@@ -2,10 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule.Vortex;
@@ -33,10 +31,13 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.rift.RiftInformer;
+import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.vortexservice.DimensionalVortex;
 import com.aionemu.gameserver.services.vortexservice.Invasion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 漩涡入侵活动服务，管理次元漩涡开启、刷怪与入侵玩家。
@@ -84,7 +85,7 @@ public class VortexService {
 	 */
 	public synchronized void reloadSchedule() {
 		VortexSchedule newSchedule = CustomConfig.VORTEX_ENABLED ? VortexSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		vortexSchedule = newSchedule;
 		if (vortexSchedule != null) {
@@ -92,7 +93,7 @@ public class VortexService {
 				for (String invasionTime : vortex.getInvasionTimes()) {
 					Runnable task = new VortexStartRunnable(vortex.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, invasionTime);
+					CronService.requireCurrent().schedule(task, invasionTime);
 				}
 			}
 		}
@@ -113,7 +114,7 @@ public class VortexService {
 		theobomosVortexMsg(id);
 		brusthoninVortexMsg(id);
 		dimensionalVortexCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!invasion.isGeneratorDestroyed()) {
 				stopInvasion(id);
 			}
@@ -143,7 +144,7 @@ public class VortexService {
 	 */
 	public void spawn(VortexLocation loc, VortexStateType state) {
 		if (state.equals(VortexStateType.INVASION)) {
-			GameGameplayServices.riftManager().spawnVortex(loc);
+			RiftManager.getInstance().spawnVortex(loc);
 			RiftInformer.sendRiftsInfo(loc.getHomeWorldId());
 		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getVortexSpawnsByLocId(loc.getId());
@@ -167,7 +168,7 @@ public class VortexService {
 	public boolean theobomosVortexMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ASMODIANS) {
 						// 通往泰奥勃莫斯的次元漩涡已出现。 / A Dimensional Vortex leading to Theobomos has appeared.
 						PacketSendUtility.sendPacket(player,
@@ -190,7 +191,7 @@ public class VortexService {
 	public boolean brusthoninVortexMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 通往布鲁斯特豪宁的次元漩涡已出现。 / A Dimensional Vortex leading to Brusthonin has appeared.
 						PacketSendUtility.sendPacket(player,
@@ -213,7 +214,7 @@ public class VortexService {
 	public boolean dimensionalVortexCountdownMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 次元漩涡将在 90 分钟后关闭。关闭后联盟 / The Dimensional Vortex will close in 90 minutes. When it closes, the alliance
 					// 将被解散，所有渗透者将被送回。 / will be disbanded and all infiltrators will be returned home.
 					PacketSendUtility.playerSendPacketTime(player,
@@ -417,7 +418,7 @@ public class VortexService {
 			float y = loc.getHomePoint().getY();
 			float z = loc.getHomePoint().getZ();
 			byte h = loc.getHomePoint().getHeading();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, mapId, x, y, z, h);
+			World.getInstance().setPosition(player, mapId, x, y, z, h);
 		}
 	}
 

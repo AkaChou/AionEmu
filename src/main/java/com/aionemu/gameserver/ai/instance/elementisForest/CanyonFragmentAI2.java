@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Elementis Forest 副本 NPC AI：Canyon Fragment（@AIName "canyonfragment"），继承 AggressiveNpcAI2。
@@ -37,7 +37,7 @@ public class CanyonFragmentAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void schedule() {
-		task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		task = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				spawn(282430, getPosition().getX(), getPosition().getY(), getPosition().getZ(), (byte) 0);
 				AI2Actions.deleteOwner(CanyonFragmentAI2.this);

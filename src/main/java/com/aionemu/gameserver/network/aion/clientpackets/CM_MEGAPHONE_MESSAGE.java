@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MEGAPHONE_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 使用喇叭道具发送全服/阵营喊话的客户端包。
@@ -61,7 +62,7 @@ public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
 		if (!deleteItem) {
 			return;
 		}
-		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> players = World.getInstance().getPlayersIterator();
 		while (players.hasNext()) {
 			Player player = players.next();
 			if (this.isAll) {

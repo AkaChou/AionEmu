@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
 /**
  * F2p 游戏对象。
@@ -29,7 +29,7 @@ public class F2p {
 		f2pacc.setActive(true);
 		if (isNew) {
 			if (f2pacc.getExpireTime() != 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
+				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
 			}
 			PlayerService.daos().f2pDAO().storeF2p(owner.getObjectId(), f2pacc.getExpireTime());
 		}
@@ -43,7 +43,7 @@ public class F2p {
 		f2pacc.setActive(true);
 		if (isNew) {
 			if (f2pacc.getExpireTime() != 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
+				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
 			}
 			PlayerService.daos().f2pDAO().storeF2p(owner.getObjectId(), f2pacc.getExpireTime());
 		}

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -200,7 +200,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 			isStartTimer = true;
 			System.currentTimeMillis();
 			elementSealingStone.add((Npc) spawn(237253, 477.88632f, 230.60364f, 173.06987f, (byte) 90)); //Fiery Sealing Stone.
-			elementSealingStoneTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			elementSealingStoneTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -256,7 +256,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
             break;
 			case 237250: //Sealed Unstable Triroan.
 				despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -292,7 +292,7 @@ public class TheobomosLabInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

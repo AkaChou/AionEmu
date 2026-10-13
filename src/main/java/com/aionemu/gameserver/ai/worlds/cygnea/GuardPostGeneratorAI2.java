@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -10,11 +8,13 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Cygnea 区域 NPC AI：Guard Post Generator（@AIName "vritra_power_device"），继承 NpcAI2。
@@ -29,10 +29,10 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
-			GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
-			GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
+			SkillEngine.getInstance().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
 		}, 1000);
     }
 
@@ -44,7 +44,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 				deviceBroken1.setEntityId(951);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken1, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(230417);
 					SpawnTemplate deviceBroken2 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230413, 1513.6941f, 2400.3616f, 190.09221f, (byte) 0);
 					deviceBroken2.setEntityId(953);
@@ -56,7 +56,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 				deviceBroken3.setEntityId(1192);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken3, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(230417);
 					SpawnTemplate deviceBroken4 = SpawnEngine.addNewSingleTimeSpawn(210070000, 230416, 1755.8412f, 1714.2434f, 199.66138f, (byte) 0);
 					deviceBroken4.setEntityId(1191);

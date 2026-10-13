@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 维尔索要塞相关 NPC AI：Explosive Sacrifice（@AIName "explosive_sacrifice"），继承 AggressiveNpcAI2。
@@ -24,7 +24,7 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		// 施加爆炸技能并启动 5 秒自毁计时。 / Applies the explosion skill and starts the 5s self-destruct timer.
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21760, 46, getOwner()).useNoAnimationSkill(); // 爆炸 / Explosion.
+		SkillEngine.getInstance().getSkill(getOwner(), 21760, 46, getOwner()).useNoAnimationSkill(); // 爆炸 / Explosion.
 		startLifeTask();
 	}
 
@@ -33,7 +33,7 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	 * Deletes itself after 5 seconds (explosive self-destruct).
 	 */
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Explosive_SacrificeAI2.this), 5000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Explosive_SacrificeAI2.this), 5000);
 	}
 
 	@Override

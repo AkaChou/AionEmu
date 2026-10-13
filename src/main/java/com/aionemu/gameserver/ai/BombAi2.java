@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.ai.BombTemplate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 炸弹 AI：延迟后对周围造成爆炸伤害并消失。
@@ -28,13 +28,13 @@ public class BombAi2 extends AggressiveNpcAI2
 
 	private void bombSkill() {
 		template = DataManager.AI_DATA.getAiTemplate().get(getNpcId()).getBombs().getBombTemplate();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> useSkill(template.getSkillId()), template.getCd());
+		ThreadPoolManager.getInstance().schedule(() -> useSkill(template.getSkillId()), template.getCd());
 	}
 
 	private void useSkill(int skill) {
 		AI2Actions.targetSelf(this);
 		AI2Actions.useSkill(this, skill);
 		int duration = DataManager.SKILL_DATA.getSkillTemplate(skill).getDuration();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(BombAi2.this), duration != 0 ? duration + 1000 : 0);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(BombAi2.this), duration != 0 ? duration + 1000 : 0);
 	}
 }

@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端取消使用房屋物件请求包。
@@ -36,7 +37,7 @@ public class CM_RELEASE_HOUSE_OBJECT extends AionClientPacket {
 			return;
 		}
 		if (player.getController().hasTask(TaskId.HOUSE_OBJECT_USE)) {
-			VisibleObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
+			VisibleObject object = World.getInstance().findVisibleObject(targetObjectId);
 			if (!(object instanceof UseableItemObject) || player.getController().hasScheduledTask(TaskId.HOUSE_OBJECT_USE)) {
 				player.getController().cancelTask(TaskId.HOUSE_OBJECT_USE);
 				sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_OBJECT_CANCEL_USE);

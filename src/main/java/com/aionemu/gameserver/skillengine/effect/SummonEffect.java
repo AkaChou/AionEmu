@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤效果基类：为玩家创建召唤物，并在时限到达后自动解散。
@@ -44,7 +44,7 @@ public class SummonEffect extends EffectTemplate {
 		SummonsService.createSummon(effected, npcId, effect.getSkillId(), effect.getSkillLevel(), time);
 		if (time > 0 && (effect.getEffected() instanceof Player effector)) {
 			final Summon summon = effector.getSummon();
-			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> SummonsService.expire(summon), time * 1000L);
+			Future<?> task = ThreadPoolManager.getInstance().schedule(() -> SummonsService.expire(summon), time * 1000L);
 			summon.getController().addTask(TaskId.DESPAWN, task);
 		}
 	}

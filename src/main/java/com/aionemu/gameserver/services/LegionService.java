@@ -7,7 +7,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -56,6 +55,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.container.LegionContainer;
 import com.aionemu.gameserver.world.container.LegionMemberContainer;
@@ -149,14 +149,14 @@ public class LegionService {
 
 	private static World safeWorld() {
 		try {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+			return World.getInstance();
 		} catch (Exception ignored) {
 			return null;
 		}
 	}
 
 	private World getWorld() {
-		return world != null ? world : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		return world != null ? world : World.getInstance();
 	}
 
 	/**
@@ -442,7 +442,7 @@ public class LegionService {
 	 */
 	public void createLegion(Player activePlayer, String legionName, Npc creatorNpc) {
 		if (restrictions().canCreateLegion(activePlayer, legionName, creatorNpc)) {
-			Legion legion = new Legion(GameWorldBootstrapServices.idFactory().nextId(), legionName);
+			Legion legion = new Legion(IDFactory.getInstance().nextId(), legionName);
 			legion.addLegionMember(activePlayer.getObjectId());
 
 			activePlayer.getInventory().decreaseKinah(LegionConfig.LEGION_CREATE_REQUIRED_KINAH);

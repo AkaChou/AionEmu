@@ -4,11 +4,8 @@ package com.aionemu.gameserver.controllers;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +39,21 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_CANCEL;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillType;
+import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.Map;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
 /**
  * 生物控制器基类，管理 NPC/玩家等生物的移动、攻击、技能与区域逻辑。
@@ -116,7 +118,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * Notify everyone in the known list about the move event.
 	 */
 	protected void notifyAIOnMove() {
-		GameMovementLoopServices.movementNotifyTask().add(getOwner());
+		MovementNotifyTask.getInstance().add(getOwner());
 	}
 
 	/**
@@ -132,7 +134,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * Zone update mask management.
 	 */
 	public final void updateZone() {
-		GameMovementLoopServices.zoneUpdateService().add(getOwner());
+		ZoneUpdateService.getInstance().add(getOwner());
 	}
 
 	/**
@@ -371,7 +373,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		if (time == 0) {
 			target.getController().onAttack(getOwner(), damage, true, attackStatus);
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage, attackStatus), time);
+			ThreadPoolManager.getInstance().schedule(new DelayedOnAttack(target, creature, damage, attackStatus), time);
 		}
 	}
 
@@ -381,7 +383,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void stopMoving() {
 		Creature owner = getOwner();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
+		World.getInstance().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
 		PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));
 	}
 
@@ -501,7 +503,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * @param delay 延迟毫秒 / delay in milliseconds
 	 */
 	protected void scheduleTaskExecution(Runnable task, long delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(task, delay);
+		ThreadPoolManager.getInstance().schedule(task, delay);
 	}
 
 	/**
@@ -581,7 +583,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public boolean useSkill(int skillId, int skillLevel) {
 		try {
 			Creature creature = getOwner();
-			Skill skill = GameEngineServices.skillEngine().getSkill(creature, skillId, skillLevel, creature.getTarget());
+			Skill skill = SkillEngine.getInstance().getSkill(creature, skillId, skillLevel, creature.getTarget());
 			if (skill != null) {
 				return skill.useSkill();
 			}

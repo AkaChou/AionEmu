@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Kaldor 区域 NPC AI：Anoha Lava（@AIName "anoha_lava"），继承 AggressiveNpcAI2。
@@ -23,12 +23,12 @@ public class Anoha_LavaAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 46, getOwner()).useNoAnimationSkill(); // 炼狱火焰爆炸 / Infernal Flame Explosion.
+		SkillEngine.getInstance().getSkill(getOwner(), 21767, 46, getOwner()).useNoAnimationSkill(); // 炼狱火焰爆炸 / Infernal Flame Explosion.
 		startLifeTask();
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Anoha_LavaAI2.this), 4000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Anoha_LavaAI2.this), 4000);
 	}
 
 	@Override

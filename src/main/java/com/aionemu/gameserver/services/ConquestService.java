@@ -3,12 +3,11 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule.Conquest;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.conquest.ConquestStateType;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 征服/供奉（Conquest/Offering）世界活动服务：稀有怪与限时副本开启通知。
@@ -79,7 +79,7 @@ public class ConquestService {
 	 */
 	public synchronized void reloadSchedule() {
 		ConquestSchedule newSchedule = CustomConfig.CONQUEST_ENABLED ? ConquestSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		conquestSchedule = newSchedule;
 		if (conquestSchedule != null) {
@@ -87,7 +87,7 @@ public class ConquestService {
 				for (String offeringTime : conquest.getOfferingTimes()) {
 					Runnable task = new ConquestStartRunnable(conquest.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, offeringTime);
+					CronService.requireCurrent().schedule(task, offeringTime);
 				}
 			}
 		}
@@ -105,7 +105,7 @@ public class ConquestService {
 			return;
 		}
 		offering.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopConquest(id), (long) CustomConfig.CONQUEST_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopConquest(id), (long) CustomConfig.CONQUEST_DURATION * 3600 * 1000);
 	}
 
 	/**

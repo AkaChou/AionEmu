@@ -15,6 +15,7 @@ import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -65,7 +66,7 @@ public class SimpleRootEffect extends EffectTemplate {
 		effect.setSpellStatus(SpellStatus.NONE);
 		effect.getEffected().getEffectController().setAbnormal(AbnormalState.KNOCKBACK.getId());
 		effect.setAbnormal(AbnormalState.KNOCKBACK.getId());
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(),
+		World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(),
 				effect.getTargetZ(), effected.getHeading(), false);
 		PacketSendUtility.broadcastPacketAndReceive(effected,
 				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));

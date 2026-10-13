@@ -1,10 +1,9 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
-		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/haramel.xhtml"));
+		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/haramel.xhtml"));
     }
 	/**
 	 * NPC 掉落表注册时处理。
@@ -134,7 +134,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

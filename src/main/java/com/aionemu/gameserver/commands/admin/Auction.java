@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;
@@ -9,6 +8,8 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseBidEntry;
 import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
+import com.aionemu.gameserver.services.HousingBidService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -53,7 +54,7 @@ public class Auction extends AdminCommand {
 				List<House> housesToRemove = new ArrayList<>();
 
 				if ("HOUSE".equals(param.split("_")[0])) {
-					House house = GameHousingServices.housingService().getHouseByName(params[1].toUpperCase());
+					House house = HousingService.getInstance().getHouseByName(params[1].toUpperCase());
 					if (house == null || house.getStatus() != HouseStatus.SELL_WAIT) {
 						PacketSendUtility.sendMessage(admin, "No such house!");
 					}
@@ -64,7 +65,7 @@ public class Auction extends AdminCommand {
 						PacketSendUtility.sendMessage(admin, "No such zone!");
 						return;
 					}
-					for (House house : GameHousingServices.housingService().getCustomHouses()) {
+					for (House house : HousingService.getInstance().getCustomHouses()) {
 						if (house.getStatus() != HouseStatus.SELL_WAIT) {
 							continue;
 						}
@@ -92,7 +93,7 @@ public class Auction extends AdminCommand {
 				}
 
 				for (House house : housesToRemove) {
-					if (GameHousingServices.housingBidService().removeHouseFromAuction(house, noSale)) {
+					if (HousingBidService.getInstance().removeHouseFromAuction(house, noSale)) {
 						PacketSendUtility.sendMessage(admin, "Succesfully removed house " + house.getName());
 					} else {
 						PacketSendUtility.sendMessage(admin, "Failed to remove house " + house.getName());
@@ -136,7 +137,7 @@ public class Auction extends AdminCommand {
 				boolean found = false;
 				int counter = 0;
 
-				for (House house : GameHousingServices.housingService().getCustomHouses()) {
+				for (House house : HousingService.getInstance().getCustomHouses()) {
 					if (house.getOwnerId() != 0 || house.getHouseType() != houseType) {
 						continue;
 					}
@@ -149,7 +150,7 @@ public class Auction extends AdminCommand {
 					if (house.getPosition().getMapRegion().isInsideZone(zoneName, x, y, z)) {
 						found = true;
 						long price = bidPrice > 0 ? bidPrice : house.getDefaultAuctionPrice();
-						if (GameHousingServices.housingBidService().addHouseToAuction(house, price)) {
+						if (HousingBidService.getInstance().addHouseToAuction(house, price)) {
 							house.save();
 							counter++;
 						}
@@ -219,7 +220,7 @@ public class Auction extends AdminCommand {
 				}
 
 				int counter = 0;
-				List<House> houses = GameHousingServices.housingService().getCustomHouses();
+				List<House> houses = HousingService.getInstance().getCustomHouses();
 				while (!houses.isEmpty() && counter < count) {
 					House house = houses.get(Rnd.get(houses.size()));
 					houses.remove(house);
@@ -243,7 +244,7 @@ public class Auction extends AdminCommand {
 					}
 
 					long price = bidPrice > 0 ? bidPrice : house.getDefaultAuctionPrice();
-					if (GameHousingServices.housingBidService().addHouseToAuction(house, price)) {
+					if (HousingBidService.getInstance().addHouseToAuction(house, price)) {
 						house.save();
 						counter++;
 					}
@@ -274,7 +275,7 @@ public class Auction extends AdminCommand {
 		}
 		if (house.getStatus() == HouseStatus.SELL_WAIT) {
 			// 检查竞价条目是否存在 / check to see if the bid entry exists
-			HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
+			HouseBidEntry entry = HousingBidService.getInstance().getHouseBid(house.getObjectId());
 			if (entry == null) {
 				// 重置状态 / reset status
 				house.setStatus(HouseStatus.ACTIVE);

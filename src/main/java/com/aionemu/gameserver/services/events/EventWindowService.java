@@ -3,9 +3,7 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -26,6 +24,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 活动窗口服务，管理限时活动计时器与登录同步。
@@ -37,14 +36,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class EventWindowService {
 
-	/**
-	 * -- SETTER --
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 * provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
+	private static volatile EventWindowService resolvedInstance;
 	private final PlayerEventsWindowDao playerEventsWindowDAO;
 	private volatile Map<Integer, EventsWindow> allEvents;
 	private final ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<>();
@@ -138,7 +131,7 @@ public class EventWindowService {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // 临时用于更新时间戳 / temp for updating Timestamp
 			}
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (player.isOnline()) {
 					if (recivedCount == eventsWindow.getMaxCountOfDay()) {
 						sendActiveEventsForPlayer.remove(eventsWindow.getId());
@@ -177,7 +170,7 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (player.isOnline()) {
 						if (recivedCount == eventsWindow.getMaxCountOfDay()) {
 							sendActiveEventsForPlayer.remove(eventsWindow.getId());
@@ -224,14 +217,30 @@ public class EventWindowService {
 	 *                               when no provider or bean is available
 	 */
 	public static EventWindowService getInstance() {
+		EventWindowService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<EventWindowService> provider = instanceProvider;
-		EventWindowService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("EventWindowService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<EventWindowService> instanceProvider) {
+		EventWindowService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

@@ -26,6 +26,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.RndSelector;
 import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 可采集物控制器，管理采集校验、任务、奖励与采集保护。
@@ -327,7 +328,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		if (!getOwner().isInInstance()) {
 			RespawnService.scheduleRespawnTask(owner);
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(owner);
+		World.getInstance().despawn(owner);
 	}
 
 	/**

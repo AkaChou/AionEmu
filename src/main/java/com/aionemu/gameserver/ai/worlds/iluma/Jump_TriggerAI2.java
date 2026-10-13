@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,35 +39,35 @@ public class Jump_TriggerAI2 extends AggressiveNpcAI2
 				            effectController.removeEffect(22884);
 				            effectController.removeEffect(22885);
 							effectController.removeEffect(22886);
-                            GameEngineServices.skillEngine().getSkill(player, 22882, 1, player).useNoAnimationSkill(); // 提升攻击力 / Boost Attack Power.
+                            SkillEngine.getInstance().getSkill(player, 22882, 1, player).useNoAnimationSkill(); // 提升攻击力 / Boost Attack Power.
 						break;
 						case 2:
 						    effectController.removeEffect(22884);
 				            effectController.removeEffect(22885);
 				            effectController.removeEffect(22886);
 							effectController.removeEffect(22882);
-                            GameEngineServices.skillEngine().getSkill(player, 22883, 1, player).useNoAnimationSkill(); // 提升移动速度 / Movement Speed Increase.
+                            SkillEngine.getInstance().getSkill(player, 22883, 1, player).useNoAnimationSkill(); // 提升移动速度 / Movement Speed Increase.
 						break;
 						case 3:
 						    effectController.removeEffect(22885);
 				            effectController.removeEffect(22886);
 				            effectController.removeEffect(22882);
 							effectController.removeEffect(22883);
-                            GameEngineServices.skillEngine().getSkill(player, 22884, 1, player).useNoAnimationSkill(); // 提升攻击速度 / Attack Speed Increased.
+                            SkillEngine.getInstance().getSkill(player, 22884, 1, player).useNoAnimationSkill(); // 提升攻击速度 / Attack Speed Increased.
 						break;
 						case 4:
 						    effectController.removeEffect(22886);
 				            effectController.removeEffect(22882);
 				            effectController.removeEffect(22883);
 							effectController.removeEffect(22884);
-                            GameEngineServices.skillEngine().getSkill(player, 22885, 1, player).useNoAnimationSkill(); // 提升防御力 / Boost Defense.
+                            SkillEngine.getInstance().getSkill(player, 22885, 1, player).useNoAnimationSkill(); // 提升防御力 / Boost Defense.
 						break;
 						case 5:
 						    effectController.removeEffect(22882);
 				            effectController.removeEffect(22883);
 				            effectController.removeEffect(22884);
 							effectController.removeEffect(22885);
-                            GameEngineServices.skillEngine().getSkill(player, 22886, 1, player).useNoAnimationSkill(); // 缩短施法时间 / Casting Time Reduced.
+                            SkillEngine.getInstance().getSkill(player, 22886, 1, player).useNoAnimationSkill(); // 缩短施法时间 / Casting Time Reduced.
 						break;
 					}
 					AI2Actions.deleteOwner(Jump_TriggerAI2.this);

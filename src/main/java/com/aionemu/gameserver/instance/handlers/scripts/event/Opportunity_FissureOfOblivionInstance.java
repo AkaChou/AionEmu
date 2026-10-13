@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -24,7 +22,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -708,7 +708,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			killCounters[idx]++;
 
 			if (killCounters[idx] == 4) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -732,7 +732,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 					}
 				}, 5000);
 			} else if (killCounters[idx] == 8) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -745,7 +745,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 					}
 				}, 5000);
 			} else if (killCounters[idx] == 12) {
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -857,7 +857,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			points = 1500;
 			despawnNpc(npc);
 			deleteNpc(245405);
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -918,7 +918,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 	}
 
 	protected void startInstanceTask() {
-		oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -979,12 +979,12 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			spawnByPlayerLevel(player);
 			spawned = true;
 		}
-		GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000);
+		SkillEngine.getInstance().applyEffectDirectly(4831, player, player, 1800000);
 	}
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -1265,7 +1265,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1283,7 +1283,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1300,7 +1300,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

@@ -13,6 +13,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 import com.aionemu.gameserver.movement.processors.movement.PathfindSectorSampler;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -183,7 +184,7 @@ public class FollowMotor extends AMovementMotor {
 									- FollowMotor.this._owner.getObjectTemplate().getHeight()
 							: newZ;
 				}
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
+				World.getInstance().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
 						FollowMotor.this.new_targetHeading, false);
 			} else {
 				PacketSendUtility.broadcastPacket(FollowMotor.this._owner,

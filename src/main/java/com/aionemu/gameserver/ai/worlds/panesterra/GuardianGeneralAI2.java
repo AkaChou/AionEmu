@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -9,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
@@ -30,26 +31,26 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2 {
 			case 277400: //Mirage Dance Guardian General.
 			case 277405: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 				break;
 			case 277415: //Mirage Dance Guardian General.
 			case 277420: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 				break;
 			case 277430: //Mirage Dance Guardian General.
 			case 277435: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 				break;
 			case 277445: //Mirage Dance Guardian General.
 			case 277450: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90), 480000);
 				break;
 		}
 		super.handleDied();
@@ -73,7 +74,7 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void killedTheGuardianGeneral() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
 			// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.

@@ -3,10 +3,10 @@ package com.aionemu.gameserver.ai.instance.kromedesTrial;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.instance.handlers.scripts.KromedesTrialInstance;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -63,7 +63,7 @@ public class Maga_Potion_Temple_VaultAI2 extends NpcAI2
 	public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, resolveQuestId(player, questId), dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (GameEngineServices.questEngine().onDialog(env)) {
+		if (QuestEngine.getInstance().onDialog(env)) {
 			if (dialogId == QuestDialogAction.SETPRO2.id()
 				&& getPosition().getWorldMapInstance().getInstanceHandler()
 					instanceof KromedesTrialInstance instanceHandler) {

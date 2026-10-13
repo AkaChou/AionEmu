@@ -3,7 +3,6 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -23,6 +22,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤侍从效果：生成会主动攻击的侍从型 NPC。
@@ -75,7 +75,7 @@ public class SummonServantEffect extends SummonEffect {
 		final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, skillId,
 				effect.getSkillLevel(), npcObjectType);
 
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> servant.getController().onDelete(), time * 1000L);
+		Future<?> task = ThreadPoolManager.getInstance().schedule(() -> servant.getController().onDelete(), time * 1000L);
 		servant.getController().addTask(TaskId.DESPAWN, task);
 		servant.getAi2().onCreatureEvent(AIEventType.ATTACK, target != null ? target : effected);
 		return servant;

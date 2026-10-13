@@ -5,7 +5,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +12,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -25,6 +25,7 @@ import com.aionemu.gameserver.persistence.dao.OutpostLocationDao;
 import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.services.outpost.Outpost;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 前哨（Outpost）服务，管理前哨点位初始化、占领、重置与旗帜广播。
@@ -83,7 +84,7 @@ public class OutpostService {
 		Race race = null;
 		log.info(I18n.get("log.9028be61d10e"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(() -> {
+		CronService.requireCurrent().schedule(() -> {
 			// 英吉斯温。 / Inggison.
 			capture(101, Race.NPC);
 			capture(102, Race.NPC);
@@ -254,7 +255,7 @@ public class OutpostService {
 	 * outpost location
 	 */
 	public void broadcastUpdate(final OutpostLocation outpostLocation) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
+		World.getInstance().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(player -> {
 					Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
 					if (outpost == null) {

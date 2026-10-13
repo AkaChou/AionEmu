@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -10,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -35,7 +35,7 @@ public class QuestStartAction extends AbstractItemAction {
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		QuestState qs = player.getQuestStateList().getQuestState(questid);
-		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questid).orElse(null);
+		var metadata = QuestEngine.getInstance().questCatalog().findMetadata(questid).orElse(null);
 		if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat(metadata)) {
 			return true;
 		}
@@ -53,6 +53,6 @@ public class QuestStartAction extends AbstractItemAction {
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 
-		GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questid, QuestDialogAction.ASK_QUEST_ACCEPT.id()));
+		QuestEngine.getInstance().onDialog(new QuestEnv(null, player, questid, QuestDialogAction.ASK_QUEST_ACCEPT.id()));
 	}
 }

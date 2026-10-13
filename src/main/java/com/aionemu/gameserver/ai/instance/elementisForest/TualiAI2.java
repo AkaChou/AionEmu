@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.elementisForest;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -12,6 +10,8 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import java.util.List;
@@ -40,9 +40,9 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
 			scheduleSkills();
 
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
 					int size = getPosition().getWorldMapInstance().getNpcs(282308).size();
 					for (int i = 0; i < 6; i++) {
 						if (size >= 12) {
@@ -77,7 +77,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void buff() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401041, 3500);
 	}
@@ -140,7 +140,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 		if (isAlreadyDead() || !isStart.get()) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			AI2Actions.useSkill(TualiAI2.this, 19512 + Rnd.get(5));
 			scheduleSkills();
 		}, Rnd.get(18, 22) * 1000L);

@@ -3,16 +3,14 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -23,6 +21,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 术古扫荡棋盘服务，管理骰子、棋盘进度与奖励。
@@ -31,14 +30,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class ShugoSweepService {
 
-	/**
-	 * Spring 实例提供者 / Spring instance provider
-	 * -- SETTER --
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider that overrides the default singleton.
-	 */
-	@Setter
 	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
+	private static volatile ShugoSweepService resolvedInstance;
 	private final PlayerShugoSweepDao playerShugoSweepDAO;
 	private final PlayerDao playerDAO;
 
@@ -66,7 +59,7 @@ public class ShugoSweepService {
 	public void initShugoSweep() {
 		log.info(I18n.get("log.a06db47829be"));
 		String weekly = "0 0 9 ? * WED *";
-		GameCronServices.cronService().schedule(playerShugoSweepDAO::delete, weekly);
+		CronService.requireCurrent().schedule(playerShugoSweepDAO::delete, weekly);
 	}
 
 	/**
@@ -197,7 +190,7 @@ public class ShugoSweepService {
 	 * @param move   步数（用于延迟） / move count (used for delay)
 	 */
 	private void rewardPlayer(final Player player, final int step, final int move) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (player.isOnline()) {
 				ShugoSweepReward reward = getRewardForBoard(boardId, step);
 				ItemService.addItem(player, reward.getItemId(), reward.getCount());
@@ -249,14 +242,30 @@ public class ShugoSweepService {
 	 *                               when no provider or bean is available
 	 */
 	public static ShugoSweepService getInstance() {
+		ShugoSweepService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ShugoSweepService> provider = instanceProvider;
-		ShugoSweepService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ShugoSweepService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<ShugoSweepService> instanceProvider) {
+		ShugoSweepService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

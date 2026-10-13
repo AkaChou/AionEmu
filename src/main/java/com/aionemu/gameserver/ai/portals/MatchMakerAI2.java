@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.ai.portals;
 
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -38,7 +38,7 @@ public class MatchMakerAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
+		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == DialogAction.MATCH_MAKER.id()) { //Infiltrate the Dredgion.
 			if (DredgionService2.getInstance().isDredgionAvailable()) {

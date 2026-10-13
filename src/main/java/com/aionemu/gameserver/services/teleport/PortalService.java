@@ -33,6 +33,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -390,7 +391,7 @@ public class PortalService {
 		if (instancecooltime != null && player.isMentor()) {
 			if (!instancecooltime.getCanEnterMentor()) {
 				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).getName()));
+						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(World.getInstance().getWorldMap(mapId).getName()));
 				return false;
 			}
 		}

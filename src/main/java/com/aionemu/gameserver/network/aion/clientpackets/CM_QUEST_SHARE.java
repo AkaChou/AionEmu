@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.configs.main.GroupConfig;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -40,7 +40,7 @@ public class CM_QUEST_SHARE extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		var engine = GameEngineServices.questEngine();
+		var engine = QuestEngine.getInstance();
 		var metadata = engine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null) {
 			// 行已迁入原生车道（不在目录中）：分享轴（cannot_share / 重复上限 / 等级）回退原版

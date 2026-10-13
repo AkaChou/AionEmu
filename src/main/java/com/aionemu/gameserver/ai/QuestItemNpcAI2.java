@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Actions.SelectDialogResult;
@@ -44,7 +43,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	 */
 	@Override
 	protected void handleDialogStart(Player player) {
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		boolean actionAllowed = questEngine.onCanAct(new QuestEnv(getOwner(), player, 0, 0),
 			getObjectTemplate().getTemplateId(), QuestActionType.ACTION_ITEM_USE);
 		QuestNpc questNpc = questEngine.getQuestNpc(getObjectTemplate().getTemplateId());
@@ -173,7 +172,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	 * @return 是否全部了结 / whether all related quests are finished
 	 */
 	private boolean relatedQuestsFinished(Player player) {
-		List<Integer> relatedQuests = GameEngineServices.questEngine()
+		List<Integer> relatedQuests = QuestEngine.getInstance()
 			.getQuestNpc(getObjectTemplate().getTemplateId()).getOnTalkEvent();
 		if (relatedQuests.isEmpty()) {
 			return false;

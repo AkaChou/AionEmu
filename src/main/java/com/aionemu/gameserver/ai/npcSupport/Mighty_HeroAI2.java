@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.ai.npcSupport;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -43,7 +44,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
+		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
 			int skillId = switch (getNpcId()) {
@@ -53,7 +54,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
                         21797;
                 default -> 0; //Mighty 的活力助威 I / Mighty's Energetic Cheer I.
             };
-            GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
+            SkillEngine.getInstance().getSkill(getOwner(), skillId, 1, player).useWithoutPropSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

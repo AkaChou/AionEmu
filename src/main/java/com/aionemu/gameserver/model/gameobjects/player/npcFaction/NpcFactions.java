@@ -10,7 +10,6 @@ import java.util.function.IntPredicate;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 import com.aionemu.gameserver.questEngine.retail.RetailSystemGrantDispatcher;
@@ -290,7 +290,7 @@ public class NpcFactions {
 				break;
 			}
 			if (questId == 0) {
-				var questEngine = GameEngineServices.questEngine();
+				var questEngine = QuestEngine.getInstance();
 				var catalog = questEngine.questCatalog();
 				PlayerQuestStartEligibilityPort eligibility = new PlayerQuestStartEligibilityPort(playerId -> owner,
 					id -> catalog.findMetadata(id).orElse(null));

@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.world;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 可见对象集合执行器：对集合中每个对象调用 {@link #run(AionObject)}。
@@ -53,7 +53,7 @@ public abstract class Executor<T extends AionObject> {
 		if (now) {
 			runImpl(objects);
 		} else {
-			GameThreadPoolServices.threadPoolManager().execute(() -> runImpl(objects));
+			ThreadPoolManager.getInstance().execute(() -> runImpl(objects));
 		}
 	}
 

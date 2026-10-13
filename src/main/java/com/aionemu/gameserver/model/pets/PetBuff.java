@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.pets;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 宠物 Buff，用于 pets 相关逻辑。
@@ -43,7 +43,7 @@ public class PetBuff implements StatOwner {
 			return;
 		}
 		if (time != 0) {
-			task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), time);
+			task = ThreadPoolManager.getInstance().schedule(new PetBuffTask(player), time);
 		}
 		for (PetPenaltyAttr petPenaltyAttr : petBonusAttr.getPenaltyAttr()) {
 			StatEnum stat = petPenaltyAttr.getStat();
@@ -59,7 +59,7 @@ public class PetBuff implements StatOwner {
 	}
 
 	private void loopEffect(Player player) {
-		task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), 300000);
+		task = ThreadPoolManager.getInstance().schedule(new PetBuffTask(player), 300000);
 		PacketSendUtility.sendPacket(player, new SM_PET(true, 0, 0));// start cheering
 	}
 

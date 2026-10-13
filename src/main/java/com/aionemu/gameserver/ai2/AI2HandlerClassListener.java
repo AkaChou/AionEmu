@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai2;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.lang.reflect.Modifier;
 
@@ -34,7 +33,7 @@ public class AI2HandlerClassListener implements ClassListener {
 			}
 			if (ClassUtils.isSubclass(c, AbstractAI.class)) {
 				Class<? extends AbstractAI> tmp = (Class<? extends AbstractAI>) c;
-				GameEngineServices.ai2Engine().registerAI(tmp);
+				AI2Engine.getInstance().registerAI(tmp);
 			}
 		}
 	}

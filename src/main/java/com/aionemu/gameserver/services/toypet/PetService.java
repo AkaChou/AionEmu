@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.toypet;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,6 +35,7 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 宠物服务，处理登录同步、喂食、增益、拾取与自动出售等功能。
@@ -168,7 +168,7 @@ public class PetService {
 	 * Schedule the next feed check after a short delay.
 	 */
 	private void schedule(final Pet pet, final Player player, final Item item, final int count, final int action) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!pet.getCommonData().getCancelFeed()) {
 				checkFeeding(pet, player, item, count, action);
 			}
@@ -286,7 +286,7 @@ public class PetService {
 				final int useAction = action;
 				final int useItemId = itemId;
 				final int useSlot = slot;
-				GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendPacket(player, new SM_PET(useAction, useItemId, useSlot)), useDelay);
+				ThreadPoolManager.getInstance().schedule(() -> PacketSendUtility.sendPacket(player, new SM_PET(useAction, useItemId, useSlot)), useDelay);
 				return;
 			}
 			if (!RestrictionsManager.canUseItem(player, useItem) || player.isProtectionActive()) {

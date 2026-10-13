@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.task;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CRAFT_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CRAFT_UPDATE;
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 变形任务：简化版制作，进度满后立即成功结算。
@@ -38,7 +38,7 @@ public class MorphingTask extends CraftingTask {
 	@Override
 	public void start() {
 		onInteractionStart();
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (participantsMissing()) {
 				stop(true);
 			}

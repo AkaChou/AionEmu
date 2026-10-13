@@ -20,7 +20,6 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.PlayerInitialData;
 import com.aionemu.gameserver.dataholders.PlayerInitialData.LocationData;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -35,6 +34,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.entity.PlayerPo;
 import com.aionemu.gameserver.persistence.mapper.PlayerMapper;
 import com.aionemu.gameserver.world.MapRegion;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.mybatisflex.core.query.FunctionQueryColumn;
@@ -273,7 +273,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 	 */
 	@Override
 	public PlayerCommonData loadPlayerCommonDataByName(final String name) {
-		Player player = GameWorldBootstrapServices.world().findPlayer(name);
+		Player player = World.getInstance().findPlayer(name);
 		if (player != null) {
 			return player.getCommonData();
 		}
@@ -389,7 +389,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 		int worldId = intValue(po.getWorldId());
 
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
-		WorldMapInstance mainInstance = GameWorldBootstrapServices.world().getWorldMap(worldId)
+		WorldMapInstance mainInstance = World.getInstance().getWorldMap(worldId)
 			.getMainWorldMapInstance();
 		MapRegion mr = mainInstance == null ? null : mainInstance.getRegion(x, y, z);
 
@@ -414,7 +414,7 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 			}
 		}
 
-		WorldPosition position = GameWorldBootstrapServices.world().createPosition(worldId, x, y, z, heading, 0);
+		WorldPosition position = World.getInstance().createPosition(worldId, x, y, z, heading, 0);
 		cd.setPosition(position);
 
 		cd.setWorldOwnerId(intValue(po.getWorldOwner()));

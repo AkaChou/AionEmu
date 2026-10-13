@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.taskmanager;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
 import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 从数据库加载并注册的全局定时任务管理器。
@@ -145,7 +145,7 @@ public class TaskManagerFromDB {
 		if (delay < 0) {
 			delay += 24 * 60 * 60 * 1000;
 		}
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(handler, delay, 24 * 60 * 60 * 1000);
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(handler, delay, 24 * 60 * 60 * 1000);
 	}
 
 	/**

@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.HallOfTenacityReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
+import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 
 /**
  * 自动 HallOfTenacity 副本，用于 autogroup 相关逻辑。
@@ -32,7 +32,7 @@ public class AutoHallOfTenacityInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
-		GameBattlefieldServices.hallOfTenacityService().addCoolDown(player);
+		HallOfTenacityService.getInstance().addCoolDown(player);
 		((HallOfTenacityReward) instance.getInstanceHandler().getInstanceReward()).portToHall(player);
 		instance.register(player.getObjectId());
 	}

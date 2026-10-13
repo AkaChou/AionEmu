@@ -9,7 +9,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.IntFunction;
 import java.util.function.Supplier;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.boot.i18n.I18n;
@@ -69,14 +68,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class QuestEngine implements GameEngine {
-	/** Spring ObjectProvider 覆盖钩子 / Spring ObjectProvider override hook
-	 * -- SETTER --
-	 *  设置 Spring ObjectProvider 覆盖点。
-	 *  Install a Spring ObjectProvider override.
-	 *  Spring provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
+	private static volatile QuestEngine resolvedInstance;
 	/** 任务事件注册表 / Quest event registry */
 	private final QuestEventRegistry registry = new QuestEventRegistry();
 	/** 对话平面路由 / Dialog-plane router */
@@ -182,14 +175,30 @@ public class QuestEngine implements GameEngine {
 	 *         when no provider or bean is available
 	 */
 	public static QuestEngine getInstance() {
+		QuestEngine resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<QuestEngine> provider = instanceProvider;
-		QuestEngine provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("QuestEngine 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<QuestEngine> instanceProvider) {
+		QuestEngine.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

@@ -1,17 +1,17 @@
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Transidium Annex 副本 NPC AI：Assult Pod3（@AIName "assult_pod_3"），继承 AggressiveNpcAI2。
@@ -32,8 +32,8 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 5) {
 				if (startedEvent.compareAndSet(false, true)) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19358, 60, getOwner()).useNoAnimationSkill();
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19922, 60, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19358, 60, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19922, 60, getOwner()).useNoAnimationSkill();
 					AI2Actions.deleteOwner(AssultPod3AI2.this);
 					spawn(297188, 625.5388f, 641.4815f, 688.8357f, (byte) 13);
 					spawn(297188, 636.06714f, 628.127f, 688.8357f, (byte) 17);
@@ -43,9 +43,9 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
 					spawn(297308, 645.25562f, 649.67334f, 688.83008f, (byte) 78, 166); // 阿塔纳托斯进阶走廊护盾 / Atanatos Advance Corridor Shield
-					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297190, 628.48737f, 643.67847f, 688.8357f, (byte) 13), 1000);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(297190, 639.0038f, 630.83386f, 688.8357f, (byte) 16), 3000);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> spawn(297190, 628.48737f, 643.67847f, 688.8357f, (byte) 13), 1000);
+					ThreadPoolManager.getInstance().schedule(() -> spawn(297190, 639.0038f, 630.83386f, 688.8357f, (byte) 16), 3000);
+					ThreadPoolManager.getInstance().schedule(() -> {
 						spawn(297194, 623.9741f, 628.6063f, 688.869f, (byte) 16);
 						spawn(297190, 639.4943f, 649.3327f, 688.9949f, (byte) 2);
 						spawn(297190, 645.90936f, 644.1133f, 688.9645f, (byte) 31);

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 延迟法术攻击效果：延迟后对敌对目标结算魔法伤害。
@@ -34,7 +34,7 @@ public class DelayedSpellAttackInstantEffect extends DamageEffect {
 	 */
 	@Override
 	public void applyEffect(final Effect effect) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (effect.getEffector().isEnemy(effect.getEffected())) {
 				calculateAndApplyDamage(effect);
 			}

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
@@ -21,6 +20,7 @@ import com.aionemu.gameserver.questEngine.runtime.QuestProductionEventWiring;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeRouter;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestDriver;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 生产 typed 目录准备器：把 raw catalog 组装为可发布的校验快照
@@ -74,7 +74,7 @@ final class QuestProductionPreparer {
 		QuestInteractionObjectValidator.validate(xmlDispatcher, aiNameByTemplate);
 		QuestInteractionObjectValidator.validate(retailDispatcher, aiNameByTemplate);
 		snapshotComposition.installBroadcastPort(new PlayerQuestBroadcastPort(
-			playerId -> GameWorldBootstrapServices.world().findPlayer(playerId),
+			playerId -> World.getInstance().findPlayer(playerId),
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.ZoneMissionEnd(), player.getObjectId(),
 				questIds, QuestDispatchContract.EXCLUSIVE),
 			(player, questIds) -> dispatcher.dispatchOwners(new QuestEvent.EventQuestRefresh(), player.getObjectId(),

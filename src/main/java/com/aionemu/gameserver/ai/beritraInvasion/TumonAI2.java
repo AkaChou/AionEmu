@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.beritraInvasion;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -16,6 +15,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -69,7 +70,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
@@ -99,7 +100,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(287261, x, y, z, (byte) 0); // 炮弹。 / Cannon Ball.
 				}
@@ -176,7 +177,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				AbyssPointsService.addGp(player, 500);
 			}
@@ -185,7 +186,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 
 	private void updateTumonLanding1() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 21, 0);
@@ -197,7 +198,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	private void updateTumonLanding2() {
 		final com.aionemu.gameserver.model.gameobjects.Creature mostHated = getOwner().getAggroList().getMostHated();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (mostHated != null && MathUtil.isIn3dRange(mostHated, getOwner(), 20)) {
 				if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 					AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 22, 0);
@@ -233,14 +234,14 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceTumonDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 恶魔部队的图蒙已被摧毁。 / The Devil Unit's Tumon has been destroyed.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_04);
 		});
 	}
 
 	private void announceRadeonDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 恶魔部队的雷登贝塔已被摧毁。 / The Devil Unit's Raedon Beta has been destroyed.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_05);
 		});

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 
@@ -14,10 +12,12 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MANTRA_EFFECT;
+import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
@@ -69,7 +69,7 @@ public class AuraEffect extends EffectTemplate {
 					* 100f);
 			for (Player player : onlinePlayers) {
 				if (MathUtil.isIn3dRange(effector, player, actualRange)) {
-					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
+					if (!DuelService.getInstance().isDueling(player.getObjectId()) && player != effector) {
 						applyAuraTo(player);
 					}
 				}
@@ -98,7 +98,7 @@ public class AuraEffect extends EffectTemplate {
 	 */
 	@Override
 	public void startEffect(final Effect effect) {
-		effect.setPeriodicTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
+		effect.setPeriodicTask(ThreadPoolManager.getInstance().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
 				position);
 	}
 

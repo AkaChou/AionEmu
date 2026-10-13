@@ -2,9 +2,7 @@ package com.aionemu.gameserver.model.house;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -21,10 +19,13 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.HousingBidService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Maintenance 任务，用于房屋相关逻辑。
@@ -34,12 +35,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class MaintenanceTask extends AbstractCronTask {
 
-	/**
-	 * -- SETTER --
-	 * 设置实例提供者。 / Sets the instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
+	private static volatile MaintenanceTask resolvedInstance;
 	private static final List<House> maintainedHouses;
 
 	static {
@@ -58,14 +55,30 @@ public class MaintenanceTask extends AbstractCronTask {
 	 *                               when no provider or bean is available
 	 */
 	public static MaintenanceTask getInstance() {
+		MaintenanceTask resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MaintenanceTask> provider = instanceProvider;
-		MaintenanceTask provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("MaintenanceTask 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<MaintenanceTask> instanceProvider) {
+		MaintenanceTask.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	public MaintenanceTask(String maintainTime, com.aionemu.gameserver.persistence.dao.ServerVariableDao serverVariablesDao)
@@ -108,7 +121,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			return;
 		}
 		Date now = new Date();
-		List<House> houses = GameHousingServices.housingService().getCustomHouses();
+		List<House> houses = HousingService.getInstance().getCustomHouses();
 		for (House house : houses) {
 			if (house.getStatus() == HouseStatus.INACTIVE) {
 				continue;
@@ -151,7 +164,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			long impoundTime;
 			int warnCount;
 			PlayerCommonData pcd;
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(house.getOwnerId());
+			Player player = World.getInstance().findPlayer(house.getOwnerId());
 			if (player == null) {
 				pcd = PlayerService.daos().playerDAO().loadPlayerCommonData(house.getOwnerId());
 			} else {
@@ -196,7 +209,7 @@ public class MaintenanceTask extends AbstractCronTask {
 
 	private void putHouseToAuction(House house, PlayerCommonData playerCommonData) {
 		house.revokeOwner();
-		GameHousingServices.housingBidService().addHouseToAuction(house);
+		HousingBidService.getInstance().addHouseToAuction(house);
 		house.save();
 		if (playerCommonData == null) {
 			return;

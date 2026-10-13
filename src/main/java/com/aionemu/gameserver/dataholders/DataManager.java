@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.templates.mail.Mails;
 import com.aionemu.gameserver.utils.Util;
 
@@ -29,6 +28,7 @@ import java.util.function.Supplier;
 @Slf4j
 public final class DataManager {
     private static volatile ObjectProvider<DataManager> instanceProvider;
+    private static volatile DataManager resolvedInstance;
     private static final AtomicBoolean CONSTRUCTED = new AtomicBoolean(false);
     /** 静态数据是否已加载完成 / whether static data has been loaded */
     private static final AtomicBoolean LOADED = new AtomicBoolean(false);
@@ -190,14 +190,19 @@ public final class DataManager {
      *         when no provider or bean is available
      */
     public static DataManager getInstance() {
-        ObjectProvider<DataManager> provider = instanceProvider;
-        DataManager manager = provider == null ? null : provider.getIfAvailable();
-        if (manager == null) {
-            throw new IllegalStateException("DataManager 未由 Spring 提供："
-                    + (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
-                    + "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+        DataManager resolved = resolvedInstance;
+        if (resolved != null) {
+        	return resolved;
         }
-        return manager;
+        ObjectProvider<DataManager> provider = instanceProvider;
+        resolved = provider == null ? null : provider.getIfAvailable();
+        if (resolved == null) {
+        	throw new IllegalStateException("DataManager 未由 Spring 提供："
+        		+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+        		+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+        }
+        resolvedInstance = resolved;
+        return resolved;
     }
 
     /**
@@ -207,6 +212,7 @@ public final class DataManager {
      */
     public static void setInstanceProvider(ObjectProvider<DataManager> instanceProvider) {
         DataManager.instanceProvider = instanceProvider;
+        resolvedInstance = null;
     }
 
     /**
@@ -249,7 +255,7 @@ public final class DataManager {
             try {
                 Util.printSection(I18n.get("console.section.static_data"));
                 log.info(I18n.get("log.821c9082e891"));
-                XmlDataLoader loader = GameStaticDataServices.xmlDataLoader();
+                XmlDataLoader loader = XmlDataLoader.getInstance();
                 long start = System.currentTimeMillis();
                 LoadedStaticData loadedData = loadStaticData(loader);
                 StaticData data = loadedData.staticData();

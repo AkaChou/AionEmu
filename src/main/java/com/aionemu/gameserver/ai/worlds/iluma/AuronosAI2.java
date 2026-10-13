@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Iluma 区域 NPC AI：Auronos（@AIName "auronos"），继承 AggressiveNpcAI2。
@@ -31,7 +31,7 @@ public class AuronosAI2 extends AggressiveNpcAI2
 	}
 
 	private void terraShield() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22847, 1, getOwner()).useNoAnimationSkill(); // 大地护盾 / Terrashield.
+		SkillEngine.getInstance().getSkill(getOwner(), 22847, 1, getOwner()).useNoAnimationSkill(); // 大地护盾 / Terrashield.
 	}
 
 	@Override

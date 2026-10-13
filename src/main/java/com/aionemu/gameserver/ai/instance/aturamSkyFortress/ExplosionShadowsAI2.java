@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -11,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Aturam Sky Fortress 副本 NPC AI：Explosion Shadows（@AIName "explosion_shadows"），继承 AggressiveNpcAI2。
@@ -26,7 +26,7 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 		if (isHome.compareAndSet(true, false)) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
 			getPosition().getWorldMapInstance().getDoors().get(2).setOpen(true);
 			getPosition().getWorldMapInstance().getDoors().get(17).setOpen(true);
 			doSchedule();
@@ -41,10 +41,10 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					SkillEngine.getInstance().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							check();
 						}
@@ -65,7 +65,7 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 				player.getEffectController().removeEffect(19502);
 				player.getEffectController().removeEffect(21807);
 				player.getEffectController().removeEffect(21808);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
 						npc.getController().onDelete();
 					}

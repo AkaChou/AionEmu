@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * The Hexway 副本 NPC AI：The Hexway Entrance（@AIName "hexway_portal"），继承 NpcAI2。
@@ -36,7 +37,7 @@ public class TheHexwayEntranceAI2 extends NpcAI2
     }
 
 	private void announceHexwayOpen() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 通往六角道的入口已开启。 / The entrance to The Hexway has opened.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_Underpass_IDUnderpassRe_Open);
 		});

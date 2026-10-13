@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：按技能名称描述为玩家添加技能。
@@ -37,7 +38,7 @@ public class CmdAddSkill extends AbstractGMHandler {
 		}
 
 		if (admin.getTarget() != null && admin.getTarget() instanceof Player) {
-			t = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(admin.getTarget().getName()));
+			t = World.getInstance().findPlayer(Util.convertName(admin.getTarget().getName()));
 		}
 		if (params == null) {
 			return;

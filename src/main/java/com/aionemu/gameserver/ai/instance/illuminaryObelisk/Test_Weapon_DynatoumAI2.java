@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -14,6 +12,8 @@ import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -51,7 +51,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402145, 300000);
 					// 试验武器迪纳图姆已引爆。 / Test Weapon Dynatoum has detonated.
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402146, 360000);
-					testDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Test_Weapon_DynatoumAI2.this), 360000);
+					testDynatoumFormTask = ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Test_Weapon_DynatoumAI2.this), 360000);
 				break;
 			}
 		}
@@ -75,7 +75,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
@@ -105,7 +105,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(284861, x, y, z, (byte) 0); //Maintenance Device.
 				}
@@ -186,7 +186,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 	}
 
 	private void boost() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); // 高速机动 I / Boost.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); // 高速机动 I / Boost.
 	}
 
 	private void deleteNpcs(List<Npc> npcs) {

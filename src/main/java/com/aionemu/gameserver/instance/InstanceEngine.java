@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.instance;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -28,14 +28,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 @Slf4j
 public class InstanceEngine implements GameEngine {
 
-	/**
-	 * Spring 实例提供者 / Spring instance provider
-	 * -- SETTER --
-	 * 设置 Spring 实例提供者。
-	 * Set the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<InstanceEngine> instanceProvider;
+	private static volatile InstanceEngine resolvedInstance;
 
 	/**
 	 * 无专用脚本时使用的默认（空操作）处理器。
@@ -128,7 +122,7 @@ public class InstanceEngine implements GameEngine {
 	 * @param instance 新建的世界地图实例 / newly created world-map instance
 	 */
 	public void onInstanceCreate(final WorldMapInstance instance) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 		});
 		instance.getInstanceHandler().onInstanceCreate(instance);
 	}
@@ -145,14 +139,30 @@ public class InstanceEngine implements GameEngine {
 	 *                               when no provider or bean is available
 	 */
 	public static InstanceEngine getInstance() {
+		InstanceEngine resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<InstanceEngine> provider = instanceProvider;
-		InstanceEngine provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("InstanceEngine 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<InstanceEngine> instanceProvider) {
+		InstanceEngine.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

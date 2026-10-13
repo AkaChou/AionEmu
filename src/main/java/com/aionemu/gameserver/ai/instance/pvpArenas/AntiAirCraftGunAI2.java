@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.pvpArenas;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Pvp Arenas 副本 NPC AI：Anti Air Craft Gun（@AIName "antiaircraftgun"），继承 ActionItemNpcAI2。
@@ -36,7 +36,7 @@ public class AntiAirCraftGunAI2 extends ActionItemNpcAI2
 			case 701213, 701323 -> 0x4E5238;
 			default -> 0;
 		};
-		GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
 		AI2Actions.scheduleRespawn(this);
 		AI2Actions.deleteOwner(this);
 	}

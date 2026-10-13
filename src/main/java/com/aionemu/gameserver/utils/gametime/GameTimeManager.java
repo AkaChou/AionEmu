@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.utils.gametime;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 游戏时间管理器：加载、启动、持久化与重载游戏时钟。
@@ -73,7 +73,7 @@ public class GameTimeManager {
 			throw new IllegalStateException("Clock is already started");
 		}
 		updater = new GameTimeUpdater(getGameTime());
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(updater, 0, 5000);
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(updater, 0, 5000);
 		clockStarted = true;
 	}
 
@@ -94,7 +94,7 @@ public class GameTimeManager {
 	 * @param time 自 01.01.0000 起的分钟数 / Minutes since 01.01.0000
 	 */
 	public static void reloadTime(int time) {
-		GameThreadPoolServices.threadPoolManager().purge();
+		ThreadPoolManager.getInstance().purge();
 		instance = new GameTime(time);
 		clockStarted = false;
 		startClock();

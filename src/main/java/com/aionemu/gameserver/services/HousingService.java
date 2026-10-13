@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
@@ -42,6 +41,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
@@ -51,13 +51,8 @@ import com.aionemu.gameserver.world.WorldPosition;
 @Slf4j
 public class HousingService {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 的实例提供者。
-	 * Injects the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<HousingService> instanceProvider;
+	private static volatile HousingService resolvedInstance;
 	private final HouseDao housesDAO;
 	/**
 	 * 地图 ID 到该图房屋 / Map id to houses on that map
@@ -84,14 +79,30 @@ public class HousingService {
 	 *                               when no provider or bean is available
 	 */
 	public static HousingService getInstance() {
+		HousingService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<HousingService> provider = instanceProvider;
-		HousingService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("HousingService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<HousingService> instanceProvider) {
+		HousingService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -141,13 +152,13 @@ public class HousingService {
 				if (addr.getMapId() != worldId) {
 					return;
 				}
-				VisibleObject existing = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(studio.getObjectId());
+				VisibleObject existing = World.getInstance().findVisibleObject(studio.getObjectId());
 				WorldPosition position = null;
 				if (existing != null) {
 					position = existing.getPosition();
 				}
 				if (position == null) {
-					position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
+					position = World.getInstance().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
 						addr.getZ(), (byte) 0, instanceId);
 					studio.setPosition(position);
 				}
@@ -155,7 +166,7 @@ public class HousingService {
 					SpawnEngine.bringIntoWorld(studio);
 				}
 				studio.spawn(instanceId);
-				Player enteredPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(registeredId);
+				Player enteredPlayer = World.getInstance().findPlayer(registeredId);
 				if (enteredPlayer != null) {
 					enteredPlayer.setHouseRegistry(studio.getRegistry());
 				}

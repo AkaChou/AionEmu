@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -10,6 +9,8 @@ import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -75,11 +76,11 @@ public class GaneshAI2 extends AggressiveNpcAI2
 	 * Starts a periodic task that summons adds near living players every interval (summons for all when few players are alive).
 	 */
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
-				//GameEngineServices.skillEngine().getSkill(getOwner(), -1, 60, getOwner()).useNoAnimationSkill();
+				//SkillEngine.getInstance().getSkill(getOwner(), -1, 60, getOwner()).useNoAnimationSkill();
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -107,7 +108,7 @@ public class GaneshAI2 extends AggressiveNpcAI2
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
 			spawn(246419, x, y, z, (byte) 0); //IDEternity_03_Def_Boss_Sum_01.
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(246419, x, y, z, (byte) 0); //IDEternity_03_Def_Boss_Sum_01.
 				}

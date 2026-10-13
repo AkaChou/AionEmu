@@ -5,7 +5,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 
 /**
@@ -23,7 +23,7 @@ public class IntervalSkillEffect extends AbstractOverTimeEffect {
 
 	@Override
 	public void onPeriodicAction(Effect effect) {
-		GameEngineServices.skillEngine().applyEffectDirectly(
+		SkillEngine.getInstance().applyEffectDirectly(
 			skillId, effect.getEffector(), effect.getEffected(), 0, skillLevel);
 	}
 }

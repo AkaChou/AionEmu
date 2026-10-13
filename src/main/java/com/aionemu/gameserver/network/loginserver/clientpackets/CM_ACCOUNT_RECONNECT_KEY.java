@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
@@ -45,6 +46,6 @@ public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().authReconnectionResponse(accountId, reconnectKey);
+		LoginServer.getInstance().authReconnectionResponse(accountId, reconnectKey);
 	}
 }

@@ -1,20 +1,22 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TOLL_INFO;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_TOLL_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.StringUtils;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员游戏商城命令：增删商品/排行、设置或增加 Toll 点数。
@@ -56,7 +58,7 @@ public class Gameshop extends AdminCommand {
 				PacketSendUtility.sendMessage(admin, "<itemId, category, subCategory, list> values must be int, byte, byte, int.");
 				return;
 			}
-			GameRuntimeServices.inGameShopEn().inGameShopDAO().deleteIngameShopItem(itemId, category, subCategory, list - 1);
+			InGameShopEn.getInstance().inGameShopDAO().deleteIngameShopItem(itemId, category, subCategory, list - 1);
 			PacketSendUtility.sendMessage(admin, "You remove [item:" + itemId + "]");
 		}
 		else if ("add".startsWith(params[0])) {
@@ -112,7 +114,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			GameRuntimeServices.inGameShopEn().inGameShopDAO().saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
+			InGameShopEn.getInstance().inGameShopDAO().saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
 				category, subCategory, list - 1, 1, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You add [item:" + itemId + "]");
 		}
@@ -123,7 +125,7 @@ public class Gameshop extends AdminCommand {
 			catch (NumberFormatException e) {
 				PacketSendUtility.sendMessage(admin, "<itemId> value must be an integer.");
 			}
-			GameRuntimeServices.inGameShopEn().inGameShopDAO().deleteIngameShopItem(itemId, (byte) -1, (byte) -1, -1);
+			InGameShopEn.getInstance().inGameShopDAO().deleteIngameShopItem(itemId, (byte) -1, (byte) -1, -1);
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}
 		else if ("addranking".startsWith(params[0])) {
@@ -154,7 +156,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			GameRuntimeServices.inGameShopEn().inGameShopDAO().saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
+			InGameShopEn.getInstance().inGameShopDAO().saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
 				(byte) -1, (byte) -1, -1, 0, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}
@@ -170,7 +172,7 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
+				player = World.getInstance().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;
@@ -224,14 +226,14 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
+				player = World.getInstance().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;
 				}
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + name);
-				GameRuntimeServices.inGameShopEn().addToll(player, toll);
+				InGameShopEn.getInstance().addToll(player, toll);
 			}
 			if (params.length == 2) {
 				try {
@@ -255,7 +257,7 @@ public class Gameshop extends AdminCommand {
 				player = targetPlayer;
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + player.getName());
-				GameRuntimeServices.inGameShopEn().addToll(player, toll);
+				InGameShopEn.getInstance().addToll(player, toll);
 			}
 		}
 		else {
@@ -269,7 +271,7 @@ public class Gameshop extends AdminCommand {
 	 * Sets the player's in-game-shop toll via the login server and syncs the client display.
 	 */
 	private static void setTollViaLoginServer(Player admin, Player player, long toll) {
-		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+		if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
 			player.getClientConnection().getAccount().setToll(toll);
 			PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 			PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");

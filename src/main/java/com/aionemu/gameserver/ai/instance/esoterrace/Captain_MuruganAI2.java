@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -14,6 +12,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Esoterrace 副本 NPC AI：Captain Murugan（@AIName "captain_murugan"），继承 AggressiveNpcAI2。
@@ -39,29 +39,29 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 	private void startTaskEvent() {
 		VisibleObject target = getTarget();
 		if (target != null && target instanceof Player) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 		}
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			} else {
 				// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
 				sendMsg(1500193, getObjectId(), false, 0);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
 				if (getLifeStats().getHpPercentage() <= 50) {
-					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							// 我先除掉被诅咒的那些！ / I'll get rid of the cursed ones first!
 							sendMsg(1500193, getObjectId(), false, 0);
 							VisibleObject target2 = getTarget();
 							if (target2 != null && target2 instanceof Player) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target2).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target2).useNoAnimationSkill();
 							}
-							specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+							specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 								if (!isAlreadyDead()) {
 									VisibleObject target1 = getTarget();
 									if (target1 != null && target1 instanceof Player) {
-										GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target1).useNoAnimationSkill();
+										SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target1).useNoAnimationSkill();
 									}
 								}
 							}, 4000);

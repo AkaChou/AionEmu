@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
 /**
@@ -39,6 +40,6 @@ public class CM_REQUEST_KICK_ACCOUNT extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().kickAccount(accountId);
+		LoginServer.getInstance().kickAccount(accountId);
 	}
 }

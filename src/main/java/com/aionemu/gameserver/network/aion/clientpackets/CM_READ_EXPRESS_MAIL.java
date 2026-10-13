@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 客户端快递邮件操作包：召唤或解散邮差。
@@ -67,7 +67,7 @@ public class CM_READ_EXPRESS_MAIL extends AionClientPacket {
 				return;
 			} else if (haveUnreadExpress) {
 				VisibleObjectSpawner.spawnPostman(player);
-				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				Future<?> task = ThreadPoolManager.getInstance().schedule(() -> {
 				}, TimeUnit.SECONDS.toMillis(Math.max(0, CustomConfig.EXPRESS_MAIL_COOLDOWN_SECONDS)));
 				player.getController().addTask(TaskId.EXPRESS_MAIL_USE, task);
 			}

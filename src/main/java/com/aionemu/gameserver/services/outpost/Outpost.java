@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services.outpost;
 
 import com.aionemu.gameserver.services.OutpostService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +24,8 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 前哨据点运行时对象，管理归属种族、旗帜/BOSS 与周期性袭击。
@@ -169,7 +170,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 */
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
-		Collection<OutpostNpc> outpostNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalOutpostNpcs(outpostLocationId);
+		Collection<OutpostNpc> outpostNpcs = World.getInstance().getLocalOutpostNpcs(outpostLocationId);
 		for (OutpostNpc npc : new ArrayList<>(outpostNpcs)) {
 			npc.getController().onDelete();
 		}
@@ -180,7 +181,7 @@ public class Outpost<OL extends OutpostLocation> {
 	 * Schedules the next assault after a random delay.
 	 */
 	private void delayedAssault() {
-		startAssault = GameThreadPoolServices.threadPoolManager().schedule(this::chooseAttackersRace, Rnd.get(120, 180) * 60000L);
+		startAssault = ThreadPoolManager.getInstance().schedule(this::chooseAttackersRace, Rnd.get(120, 180) * 60000L);
 	}
 
 	/**
@@ -229,7 +230,7 @@ public class Outpost<OL extends OutpostLocation> {
 				}
 			}
 			if (!getAttackers().isEmpty()) {
-				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				stopAssault = ThreadPoolManager.getInstance().schedule(() -> {
 					despawnAttackers();
 					delayedAssault();
 				}, 5 * 60000);

@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.model.stats.container;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,7 +11,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLY_TIME;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_HP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_MP;
+import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -69,7 +69,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 
 	private void sendGroupPacketUpdate() {
 		if (owner.isInTeam()) {
-			GameTaskManagerServices.teamEffectUpdater().startTask(owner);
+			TeamEffectUpdater.getInstance().startTask(owner);
 		}
 	}
 
@@ -281,7 +281,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		restoreLock.lock();
 		try {
 			if (flyRestoreTask == null && !alreadyDead && !isFlyTimeFullyRestored()) {
-				this.flyRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleFpRestoreTask(this);
+				this.flyRestoreTask = LifeStatsRestoreService.getInstance().scheduleFpRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();
@@ -323,7 +323,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		try {
 			if (flyReduceTask == null && !alreadyDead && owner.getAccessLevel() < AdminConfig.GM_FLIGHT_UNLIMITED
 				&& !owner.isUnderNoFPConsum()) {
-				this.flyReduceTask = GameGameplayServices.lifeStatsRestoreService().scheduleFpReduceTask(this, costFp);
+				this.flyReduceTask = LifeStatsRestoreService.getInstance().scheduleFpReduceTask(this, costFp);
 			}
 		} finally {
 			restoreLock.unlock();

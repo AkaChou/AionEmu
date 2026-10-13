@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.HousingService;
 
 /**
  * 向客户端下发军团成员列表（含在线状态与房屋信息）的服务端包。
@@ -49,11 +49,11 @@ public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 			writeS(legionMember.getSelfIntro());
 			writeS(legionMember.getNickname());
 			writeD(legionMember.getLastOnline());
-			int address = GameHousingServices.housingService().getPlayerAddress(legionMember.getObjectId());
+			int address = HousingService.getInstance().getPlayerAddress(legionMember.getObjectId());
 			if (address > 0) {
-				House house = GameHousingServices.housingService().getPlayerStudio(legionMember.getObjectId());
+				House house = HousingService.getInstance().getPlayerStudio(legionMember.getObjectId());
 				if (house == null) {
-					house = GameHousingServices.housingService().getHouseByAddress(address);
+					house = HousingService.getInstance().getHouseByAddress(address);
 				}
 				writeD(address);
 				writeD(house.getDoorState().getPacketValue());

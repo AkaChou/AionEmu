@@ -16,9 +16,6 @@ import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
 import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.*;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -39,6 +36,7 @@ import com.aionemu.gameserver.questEngine.model.RetailQuestState;
 import com.aionemu.gameserver.services.LimitedQuestService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
@@ -46,6 +44,8 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.extern.slf4j.Slf4j;
@@ -850,7 +850,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		long until = System.nanoTime() + 5_000_000_000L;
 		wakeUpUntil = until;
 		Future<?> previous = writableTimers().put(WAKE_UP_TIMER,
-			GameThreadPoolServices.threadPoolManager().schedule(() -> leaveWakeUpState(until), 5000));
+			ThreadPoolManager.getInstance().schedule(() -> leaveWakeUpState(until), 5000));
 		if (previous != null) {
 			previous.cancel(false);
 		}
@@ -977,7 +977,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		PacketSendUtility.broadcastPacket(player,
 			new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
 		player.getController().addTask(TaskId.ACTION_ITEM_NPC,
-			GameThreadPoolServices.threadPoolManager().schedule(() -> finishGauge(player, observer, delay), delay));
+			ThreadPoolManager.getInstance().schedule(() -> finishGauge(player, observer, delay), delay));
 		runEvent("on_gauge_begin", null, player);
 	}
 
@@ -1487,7 +1487,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 						}
 						return false;
 					});
-					Future<?> task = GameThreadPoolServices.threadPoolManager()
+					Future<?> task = ThreadPoolManager.getInstance()
 						.schedule(() -> executeActions(actions, next, eventTarget, message, false, false), delay);
 					writableActionTasks().add(task);
 					if (containsDespawnSelf(actions, next)) {
@@ -1851,7 +1851,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				getOwner().setTarget(getAggroList().getMostHated());
 				break;
 			case "change_direction":
-				GameWorldBootstrapServices.world().updatePosition(getOwner(), getOwner().getX(),
+				World.getInstance().updatePosition(getOwner(), getOwner().getX(),
 					getOwner().getY(), getOwner().getZ(), (byte) integer(action, "direction"));
 				break;
 			case "random_move":
@@ -1965,7 +1965,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private void teleportSelf(float x, float y, float z, byte heading) {
 		getMoveController().abortMove();
 		getKnownList().clear(true);
-		GameWorldBootstrapServices.world().updatePosition(getOwner(), x, y, z, heading, false);
+		World.getInstance().updatePosition(getOwner(), x, y, z, heading, false);
 		getOwner().updateKnownlist();
 	}
 
@@ -2011,13 +2011,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		fleeSource = source;
 		// 到达目标点后再选下一点（handleMoveArrived），定时器仅作卡死兜底
 		scheduleNextFlee(source, 0);
-		fleeStopTask = GameThreadPoolServices.threadPoolManager().schedule(
+		fleeStopTask = ThreadPoolManager.getInstance().schedule(
 			() -> stopFlee(source, pushState), Math.max(1L, integer(action, "seconds")) * 1000);
 		writableActionTasks().add(fleeStopTask);
 	}
 
 	private void scheduleNextFlee(Creature source, long delayMs) {
-		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source), delayMs);
+		fleeMoveTask = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source), delayMs);
 		writableActionTasks().add(fleeMoveTask);
 	}
 
@@ -2038,7 +2038,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
 		// 兜底：若迟迟未到达目标点（卡死/寻路失败），超时后重选
 		// Fallback: if the destination is not reached in time (stuck or pathfinding failure), reselect after the timeout.
-		fleeMoveTask = GameThreadPoolServices.threadPoolManager().schedule(() -> moveAwayFrom(source),
+		fleeMoveTask = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source),
 			FLEE_RESELECT_TIMEOUT_MS);
 		writableActionTasks().add(fleeMoveTask);
 	}
@@ -2153,7 +2153,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			return;
 		}
 		actionTasks.removeIf(Future::isDone);
-		writableActionTasks().add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		writableActionTasks().add(ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead() && getSubState() == AISubState.WALK_RANDOM) {
 				WalkManager.stopWalking(this);
 				runEvent("on_stop_to_random_move", null, null);
@@ -2252,7 +2252,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			integer(action, "param2"), owner, paramObject);
 		int range = integer(action, "range_as_meter");
 		// 广播走实例级快照遍历，避免为每条消息物化整张 NPC 列表。 / Broadcast through the instance snapshot visitor instead of materializing the whole NPC list per message.
-		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllNpcs(npc -> {
+		ThreadPoolManager.getInstance().schedule(() -> instance.doOnAllNpcs(npc -> {
 			if (npc != owner && npc.isSpawned() && MathUtil.isIn3dRange(owner, npc, range)
 				&& npc.getAi2() instanceof RetailPatternAI2 ai) {
 				ai.runEvent("on_message", null, message.paramObject(), message);
@@ -2268,7 +2268,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), getOwner(), paramObject);
 		List<Npc> members = RetailNpcParty.members(getOwner());
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			for (Npc member : members) {
 				if (member.isSpawned() && member.getAi2() instanceof RetailPatternAI2 ai) {
 					ai.runEvent("on_message", null, message.paramObject(), message);
@@ -2285,7 +2285,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		}
 		RetailMessage message = new RetailMessage(integer(action, "message_type"), integer(action, "param1"),
 			integer(action, "param2"), getOwner(), paramObject);
-		GameThreadPoolServices.threadPoolManager().schedule(
+		ThreadPoolManager.getInstance().schedule(
 			() -> runEvent("on_message", null, message.paramObject(), message), 1);
 	}
 
@@ -2421,7 +2421,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			}
 		}
 		int skillLevel = effectiveSkillLevel(skillEntry.getSkillLevel(), integer(action, "skill_level"));
-		Skill skill = GameEngineServices.skillEngine().getSkill(
+		Skill skill = SkillEngine.getInstance().getSkill(
 			getOwner(), skillEntry.getSkillId(), skillLevel, getOwner());
 		getOwner().getGameStats().renewLastSkillTime();
 		if (skill != null && skill.useSkillOnPreselectedTargets(targets, value(action, "broadcast_type").equals("AREA"))) {
@@ -2747,7 +2747,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			previous.cancel(false);
 		}
 		if (delay > 0 || !zeroCancels) {
-			writableTimers().put(timer, GameThreadPoolServices.threadPoolManager()
+			writableTimers().put(timer, ThreadPoolManager.getInstance()
 				.schedule(() -> runEvent(event, timer, eventTarget, message), delay));
 		}
 	}
@@ -2943,7 +2943,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				npc.getAggroList().addHate(attackTarget, integer(action, "hatepoints_to_add"));
 			}
 			if (liveTime > 0) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(spawned), liveTime * 1000L);
+				ThreadPoolManager.getInstance().schedule(() -> despawnForLifecycle(spawned), liveTime * 1000L);
 			}
 		}
 	}
@@ -2957,7 +2957,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		boolean duringAttack = object instanceof Npc npc && npc.getAi2() instanceof AbstractAI ai
 			&& ai.isInState(AIState.FIGHT);
 		if (shouldDelayLifecycleDespawn(despawnAtAttackState.getOrDefault(object, true), duringAttack)) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> despawnForLifecycle(object), 1000);
+			ThreadPoolManager.getInstance().schedule(() -> despawnForLifecycle(object), 1000);
 			return;
 		}
 		forgetDelayedDespawn(object);

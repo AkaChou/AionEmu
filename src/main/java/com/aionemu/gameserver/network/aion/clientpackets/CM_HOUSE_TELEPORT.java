@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,9 +18,11 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -58,7 +59,7 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		Player player1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId1);
+		Player player1 = World.getInstance().findPlayer(playerId1);
 		if (player1 == null || !player1.isOnline()) {
 			return;
 		}
@@ -71,11 +72,11 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 			int address;
 			while (friends.hasNext()) {
 				int friendId = friends.next().getOid();
-				address = GameHousingServices.housingService().getPlayerAddress(friendId);
+				address = HousingService.getInstance().getPlayerAddress(friendId);
 				if (address != 0) {
-					house = GameHousingServices.housingService().getPlayerStudio(friendId);
+					house = HousingService.getInstance().getPlayerStudio(friendId);
 					if (house == null) {
-						house = GameHousingServices.housingService().getHouseByAddress(address);
+						house = HousingService.getInstance().getHouseByAddress(address);
 					}
 					if (house.getDoorState() == HousePermissions.DOOR_CLOSED
 							|| house.getLevelRestrict() > player1.getLevel()) {
@@ -87,11 +88,11 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 			Legion legion = player1.getLegion();
 			if (legion != null) {
 				for (int memberId : legion.getLegionMembers()) {
-					address = GameHousingServices.housingService().getPlayerAddress(memberId);
+					address = HousingService.getInstance().getPlayerAddress(memberId);
 					if (address != 0) {
-						house = GameHousingServices.housingService().getPlayerStudio(memberId);
+						house = HousingService.getInstance().getPlayerStudio(memberId);
 						if (house == null) {
-							house = GameHousingServices.housingService().getHouseByAddress(address);
+							house = HousingService.getInstance().getHouseByAddress(address);
 						}
 						if (house.getDoorState() == HousePermissions.DOOR_CLOSED
 								|| house.getLevelRestrict() > player1.getLevel()) {
@@ -110,7 +111,7 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 		if (playerId2 == 0) {
 			return;
 		}
-		house = GameHousingServices.housingService().getPlayerStudio(playerId2);
+		house = HousingService.getInstance().getPlayerStudio(playerId2);
 		HouseAddress address;
 		int instanceId;
 		if (house != null) {
@@ -122,8 +123,8 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 			instanceId = instance.getInstanceId();
 			InstanceService.registerPlayerWithInstance(instance, player1);
 		} else {
-			int addressId = GameHousingServices.housingService().getPlayerAddress(playerId2);
-			house = GameHousingServices.housingService().getHouseByAddress(addressId);
+			int addressId = HousingService.getInstance().getPlayerAddress(playerId2);
+			house = HousingService.getInstance().getHouseByAddress(addressId);
 			if (house == null || house.getLevelRestrict() > player1.getLevel()) {
 				return;
 			}

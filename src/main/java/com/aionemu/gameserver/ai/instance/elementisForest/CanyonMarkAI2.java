@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Elementis Forest 副本 NPC AI：Canyon Mark（@AIName "canyonmark"），继承 AggressiveNpcAI2。
@@ -25,12 +25,12 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void markTarget() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			target = (Creature) getOwner().getTarget();
 			if (target != null) {
 				AI2Actions.useSkill(CanyonMarkAI2.this, 19504);
 
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						AI2Actions.targetCreature(CanyonMarkAI2.this, target);
 						AI2Actions.useSkill(CanyonMarkAI2.this, 19505);

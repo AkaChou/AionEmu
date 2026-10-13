@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Read 动作模板（静态数据/XML）。
@@ -36,7 +36,7 @@ public class ReadAction extends AbstractItemAction {
 
 		PacketSendUtility.broadcastPacket(player,
 				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 50, 0, 0), true);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {

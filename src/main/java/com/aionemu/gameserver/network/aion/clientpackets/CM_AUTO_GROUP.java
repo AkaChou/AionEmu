@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
@@ -15,6 +14,15 @@ import com.aionemu.gameserver.model.autogroup.EntryRequestType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
+import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
+import com.aionemu.gameserver.services.instance.HallOfTenacityService;
+import com.aionemu.gameserver.services.instance.IDRunService;
+import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
+import com.aionemu.gameserver.services.instance.IdgelDomeService;
+import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
+import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
+import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -65,20 +73,20 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			break;
 		case 104:
 			DredgionService2.getInstance().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
+			KamarBattlefieldService.getInstance().showWindow(player, instanceMaskId);
+			EngulfedOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
+			IronWallWarfrontService.getInstance().showWindow(player, instanceMaskId);
+			IdgelDomeService.getInstance().showWindow(player, instanceMaskId);
 			// 版本 5.1 / Ver. 5.1
 			AsyunatarService.getInstance().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
-			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
+			IdgelDomeLandmarkService.getInstance().showWindow(player, instanceMaskId);
+			SuspiciousOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
 			// 版本 5.3 / Ver. 5.3
-			GameBattlefieldServices.hallOfTenacityService().showWindow(player, instanceMaskId);
+			HallOfTenacityService.getInstance().showWindow(player, instanceMaskId);
 			// 版本 5.6 / Ver. 5.6
-			GameBattlefieldServices.grandArenaTrainingCampService().showWindow(player, instanceMaskId);
+			GrandArenaTrainingCampService.getInstance().showWindow(player, instanceMaskId);
 			// 版本 5.8 / Ver. 5.8
-			GameBattlefieldServices.idRunService().showWindow(player, instanceMaskId);
+			IDRunService.getInstance().showWindow(player, instanceMaskId);
 			break;
 		case 105:
 			break;

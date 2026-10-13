@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -15,14 +14,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Creativity panel skill service handling skill enchant and learning.
  */
 public class CreativitySkillService {
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     * 提供者 / provider
-     */
-    @Setter
-    private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
+	private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
+	private static volatile CreativitySkillService resolvedInstance;
 
 	/**
 	 * 附魔技能。
@@ -97,14 +90,30 @@ public class CreativitySkillService {
 	 *         when no provider or bean is available
 	 */
 	public static CreativitySkillService getInstance() {
+		CreativitySkillService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<CreativitySkillService> provider = instanceProvider;
-		CreativitySkillService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("CreativitySkillService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<CreativitySkillService> instanceProvider) {
+		CreativitySkillService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

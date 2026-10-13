@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Esoterrace 副本 NPC AI：Esoterrace Alarm（@AIName "esoterracealarm"），继承 AggressiveNpcAI2。
@@ -50,7 +50,7 @@ public class Esoterrace_AlarmAI2 extends AggressiveNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							despawn();
 							announceBridgeRaised();

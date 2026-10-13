@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.controllers.observer;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -11,8 +9,10 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.math.MathObject;
 import com.aionemu.gameserver.model.gameobjects.math.MathObjectType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 数学区域对象观察者：进入范围后周期施放技能。
@@ -95,7 +95,7 @@ public class MathObjectObserver extends ActionObserver {
 	private void shedulesEvent() {
 		int delay = this.template != null && this.template.getDuration() >= 1000 ? this.template.getDuration()
 				: (this.mathObject.getDuration() >= 1000 ? this.mathObject.getDuration() : 1000);
-		this.shedules = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		this.shedules = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (!MathObjectObserver.this.mathObject.isSpawned()) {
 				MathObjectObserver.this.creature.getObserveController().removeObserver(MathObjectObserver.this);
 				MathObjectObserver.this.clearShedules();
@@ -117,7 +117,7 @@ public class MathObjectObserver extends ActionObserver {
 			if (this.template == null) {
 				return;
 			}
-			GameEngineServices.skillEngine().applyEffectDirectly(this.mathObject.getSkillId(), this.mathObject.getMaster(),
+			SkillEngine.getInstance().applyEffectDirectly(this.mathObject.getSkillId(), this.mathObject.getMaster(),
 					this.creature, this.template.getDuration());
 			break;
 		}

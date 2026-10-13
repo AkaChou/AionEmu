@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -50,10 +51,10 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		Player admin = world.findPlayer(Util.convertName(adminName));
 		Player player = world.findPlayer(Util.convertName(playerName));
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountUpdate(accountId, param, type);
+		LoginServer.getInstance().accountUpdate(accountId, param, type);
 		switch (type) {
 		case 1:
 			if (!result) {

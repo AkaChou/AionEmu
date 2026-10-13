@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.List;
@@ -105,7 +105,7 @@ public class Sys extends AdminCommand {
                 }
 				break;
             case "threadpool":
-                List<String> stats = GameThreadPoolServices.threadPoolManager().getStats();
+                List<String> stats = ThreadPoolManager.getInstance().getStats();
                 for (String stat : stats) {
                     PacketSendUtility.sendMessage(player, stat.replace("\t", ""));
                 }

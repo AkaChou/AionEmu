@@ -3,7 +3,6 @@ package com.aionemu.gameserver.spawnengine;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.DoorType;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
@@ -45,7 +45,7 @@ public class StaticDoorSpawnManager {
 			SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(worldId, 300001), data.getX(), data.getY(),
 					data.getZ(), (byte) 0, 0, null, 0, 0);
 			spawn.setStaticId(data.getDoorId());
-			int objectId = GameWorldBootstrapServices.idFactory().nextId();
+			int objectId = IDFactory.getInstance().nextId();
 			StaticDoor staticDoor = new StaticDoor(objectId, new StaticObjectController(), spawn, data, instanceIndex);
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);
@@ -65,7 +65,7 @@ public class StaticDoorSpawnManager {
 	 * @param instanceIndex 实例索引 / instance index
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
 				spawn.getHeading());

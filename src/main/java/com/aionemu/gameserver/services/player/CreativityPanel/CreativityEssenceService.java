@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -26,6 +24,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerCpDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.SkillLearnService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -35,13 +39,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class CreativityEssenceService {
 
-	/** Spring 实例提供者 / Spring instance provider
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     */
-	@Setter
-    private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
+	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
+	private static volatile CreativityEssenceService resolvedInstance;
 
 	/** 玩家 creativitypointsDAO / Player creativity-points DAO */
 	private final PlayerCpDao cpDAO;
@@ -294,27 +293,27 @@ public class CreativityEssenceService {
 			switch (id) {
 			case 1:
 				player.setCPSlot1(point);
-				GameCreativityServices.power().onChange(player, point);
+				Power.getInstance().onChange(player, point);
 				break;
 			case 2:
 				player.setCPSlot2(point);
-				GameCreativityServices.health().onChange(player, point);
+				Health.getInstance().onChange(player, point);
 				break;
 			case 3:
 				player.setCPSlot3(point);
-				GameCreativityServices.agility().onChange(player, point);
+				Agility.getInstance().onChange(player, point);
 				break;
 			case 4:
 				player.setCPSlot4(point);
-				GameCreativityServices.precision().onChange(player, point);
+				Precision.getInstance().onChange(player, point);
 				break;
 			case 5:
 				player.setCPSlot5(point);
-				GameCreativityServices.knowledge().onChange(player, point);
+				Knowledge.getInstance().onChange(player, point);
 				break;
 			case 6:
 				player.setCPSlot6(point);
-				GameCreativityServices.will().onChange(player, point);
+				Will.getInstance().onChange(player, point);
 				break;
 			}
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));
@@ -343,12 +342,12 @@ public class CreativityEssenceService {
 		player.setCPSlot4(0);
 		player.setCPSlot5(0);
 		player.setCPSlot6(0);
-		GameCreativityServices.power().onChange(player, 0);
-		GameCreativityServices.health().onChange(player, 0);
-		GameCreativityServices.agility().onChange(player, 0);
-		GameCreativityServices.precision().onChange(player, 0);
-		GameCreativityServices.knowledge().onChange(player, 0);
-		GameCreativityServices.will().onChange(player, 0);
+		Power.getInstance().onChange(player, 0);
+		Health.getInstance().onChange(player, 0);
+		Agility.getInstance().onChange(player, 0);
+		Precision.getInstance().onChange(player, 0);
+		Knowledge.getInstance().onChange(player, 0);
+		Will.getInstance().onChange(player, 0);
 		List<Integer> a = new ArrayList<>();
 		a.add(8);
 		a.add(10);
@@ -620,14 +619,30 @@ public class CreativityEssenceService {
 	 *         when no provider or bean is available
 	 */
 	public static CreativityEssenceService getInstance() {
+		CreativityEssenceService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<CreativityEssenceService> provider = instanceProvider;
-		CreativityEssenceService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("CreativityEssenceService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<CreativityEssenceService> instanceProvider) {
+		CreativityEssenceService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

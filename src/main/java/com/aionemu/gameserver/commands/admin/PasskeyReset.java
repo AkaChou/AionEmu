@@ -3,6 +3,7 @@ package com.aionemu.gameserver.commands.admin;
 
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -59,7 +60,7 @@ public class PasskeyReset extends AdminCommand {
 		}
 
 		PlayerService.daos().playerPasskeyDAO().updateForcePlayerPasskey(accountId, newPasskey);
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, "", -1, player.getObjectId());
+		LoginServer.getInstance().sendBanPacket((byte) 2, accountId, "", -1, player.getObjectId());
 	}
 
 	/**

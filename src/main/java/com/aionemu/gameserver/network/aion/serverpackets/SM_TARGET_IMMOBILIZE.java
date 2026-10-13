@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.world.geo.GeoService;
@@ -33,7 +33,7 @@ public class SM_TARGET_IMMOBILIZE extends AionServerPacket {
 				creature.setXYZH(null, null, z, null);
 			}
 		}
-		GameServerNetworkServices.packetLoggerService().logPacketSM(this.getPacketName());
+		PacketLoggerService.getInstance().logPacketSM(this.getPacketName());
 		writeD(creature.getObjectId());
 		writeF(creature.getX());
 		writeF(creature.getY());

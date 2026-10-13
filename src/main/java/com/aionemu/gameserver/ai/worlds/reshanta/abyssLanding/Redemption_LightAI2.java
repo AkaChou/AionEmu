@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Reshanta 区域 NPC AI：Redemption Light（@AIName "redemption_light"），继承 NpcAI2。
@@ -41,7 +42,7 @@ public class Redemption_LightAI2 extends NpcAI2
 	}
 
 	private void updateRedemptionLanding1() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 6000);
@@ -52,7 +53,7 @@ AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 6000);
 		});
 	}
 	private void updateRedemptionLanding2() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 10000);
@@ -63,7 +64,7 @@ AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 10000);
 		});
 	}
 	private void updateRedemptionLanding3() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 16000);
@@ -74,7 +75,7 @@ AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 16000);
 		});
 	}
 	private void updateRedemptionLanding4() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 30000);

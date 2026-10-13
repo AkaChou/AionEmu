@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.craft;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CraftConfig;
@@ -27,14 +26,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class RelinquishCraftStatus {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring ObjectProvider，用于容器管理的实例解析。
-	 * Inject Spring ObjectProvider for container-managed instance resolution.
-	 * 实例提供者 / Instance provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<RelinquishCraftStatus> instanceProvider;
+	private static volatile RelinquishCraftStatus resolvedInstance;
 
 	/**
 	 * 专家最低等级 / Expert minimum skill level
@@ -101,14 +94,30 @@ public class RelinquishCraftStatus {
 	 *                               when no provider or bean is available
 	 */
 	public static RelinquishCraftStatus getInstance() {
+		RelinquishCraftStatus resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<RelinquishCraftStatus> provider = instanceProvider;
-		RelinquishCraftStatus provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("RelinquishCraftStatus 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<RelinquishCraftStatus> instanceProvider) {
+		RelinquishCraftStatus.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

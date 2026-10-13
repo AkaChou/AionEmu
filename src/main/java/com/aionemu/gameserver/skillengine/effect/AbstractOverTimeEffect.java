@@ -3,7 +3,6 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -14,6 +13,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 持续类效果基类：按 checktime 周期触发 onPeriodicAction（DoT/HoT 等）。
@@ -77,7 +77,7 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 			return;
 		}
 		try {
-			Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> onPeriodicAction(effect), checktime, checktime);
+			Future<?> task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> onPeriodicAction(effect), checktime, checktime);
 			effect.setPeriodicTask(task, position);
 		} catch (Exception e) {
 			log.warn(I18n.get("log.3cb547ba6faf", effect.getSkillId()), e);

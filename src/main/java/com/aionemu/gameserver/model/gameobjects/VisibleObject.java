@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.MapRegion;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldDropType;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.WorldType;
@@ -107,7 +108,7 @@ public abstract class VisibleObject extends AionObject {
 	 * 返回 WorldType 的当前 location。 / Return the WorldType of the current location
 	 */
 	public WorldType getWorldType() {
-		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldType();
+		return World.getInstance().getWorldMap(getWorldId()).getWorldType();
 	}
 
 	/**
@@ -166,7 +167,7 @@ public abstract class VisibleObject extends AionObject {
 	 * @return 是否在世界中 / whether in the world
 	 */
 	public boolean isInWorld() {
-		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(getObjectId()) != null;
+		return World.getInstance().findVisibleObject(getObjectId()) != null;
 	}
 
 	/**
@@ -277,6 +278,6 @@ public abstract class VisibleObject extends AionObject {
 
 	/** 获取世界掉落类型。 / Returns the world drop type. */
 	public WorldDropType getWorldDropType() {
-		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldDropType();
+		return World.getInstance().getWorldMap(getWorldId()).getWorldDropType();
 	}
 }

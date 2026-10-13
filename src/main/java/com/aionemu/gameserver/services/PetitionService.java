@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -22,6 +20,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PETITION;
 import com.aionemu.gameserver.persistence.dao.PetitionDao;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客服请愿（Petition）服务，管理工单注册、回复与排队。
@@ -32,8 +31,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public record PetitionService(PetitionDao petitionDAO) {
 
-	@Setter
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
+	private static volatile PetitionService resolvedInstance;
 	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<>();
 
 	/**
@@ -48,14 +47,30 @@ public record PetitionService(PetitionDao petitionDAO) {
 	 *                               when no provider or bean is available
 	 */
 	public static PetitionService getInstance() {
+		PetitionService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PetitionService> provider = instanceProvider;
-		PetitionService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PetitionService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PetitionService> instanceProvider) {
+		PetitionService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -111,8 +126,8 @@ public record PetitionService(PetitionDao petitionDAO) {
 			registeredPetitions.remove(p.petitionId());
 		}
 		petitionDAO.deletePetition(playerObjId);
-		if (playerObjId > 0 && GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
-			Player p = GameWorldBootstrapServices.world().findPlayer(playerObjId);
+		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
+			Player p = World.getInstance().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 		rebroadcastPlayerData();
@@ -132,8 +147,8 @@ public record PetitionService(PetitionDao petitionDAO) {
 		int playerObjId = petition.playerObjId();
 		petitionDAO.setReplied(petitionId);
 		rebroadcastPlayerData();
-		if (playerObjId > 0 && GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
-			Player p = GameWorldBootstrapServices.world().findPlayer(playerObjId);
+		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
+			Player p = World.getInstance().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 	}
@@ -145,7 +160,7 @@ public record PetitionService(PetitionDao petitionDAO) {
 	 */
 	private void rebroadcastPlayerData() {
 		for (Petition p : registeredPetitions.values()) {
-			Player player = GameWorldBootstrapServices.world().findPlayer(p.playerObjId());
+			Player player = World.getInstance().findPlayer(p.playerObjId());
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_PETITION(p));
 			}
@@ -160,7 +175,7 @@ public record PetitionService(PetitionDao petitionDAO) {
 	 * @param petitionId petition id
 	 */
 	private void broadcastMessageToGM(Player sender, int petitionId) {
-		Iterator<Player> players = GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> players = World.getInstance().getPlayersIterator();
 		while (players.hasNext()) {
 			Player p = players.next();
 			if (p.getAccessLevel() > 0) {

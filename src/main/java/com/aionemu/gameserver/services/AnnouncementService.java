@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import lombok.NonNull;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.Announcement;
@@ -24,6 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 自动公告服务，按间隔向在线玩家广播系统公告。
@@ -34,8 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AnnouncementService {
 
-	@Setter
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
+	private static volatile AnnouncementService resolvedInstance;
 
 	private final AnnouncementDao announcementsDAO;
 	/**
@@ -69,14 +69,30 @@ public class AnnouncementService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static AnnouncementService getInstance() {
+		AnnouncementService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AnnouncementService> provider = instanceProvider;
-		AnnouncementService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AnnouncementService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AnnouncementService> instanceProvider) {
+		AnnouncementService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -109,8 +125,8 @@ public class AnnouncementService {
 
 		try {
 			for (final Announcement announce : announcements) {
-				delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-					final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+				delays.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
+					final Iterator<Player> iter = World.getInstance().getPlayersIterator();
 					while (iter.hasNext()) {
 						Player player = iter.next();
 

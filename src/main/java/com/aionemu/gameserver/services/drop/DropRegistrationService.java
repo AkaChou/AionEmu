@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.services.drop;
 
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 
+import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.drop.DropService;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -134,7 +134,7 @@ public class DropRegistrationService {
 		currentDropMap.put(npcObjId, droppedItems);
 		index = QuestService.getQuestDrop(droppedItems, index, npc, groupMembers, genesis);
 		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			List<EventTemplate> activeEvents = GameEventServices.eventService().getActiveEvents();
+			List<EventTemplate> activeEvents = EventService.getInstance().getActiveEvents();
 			for (EventTemplate eventTemplate : activeEvents) {
 				if (eventTemplate.EventDrop() == null) {
 					continue;

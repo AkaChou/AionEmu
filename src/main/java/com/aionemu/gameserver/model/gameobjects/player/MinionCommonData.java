@@ -2,12 +2,12 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.sql.Timestamp;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 守护灵公共数据。
@@ -59,7 +59,7 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	private Timestamp minionFunctionTime;
 
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {
-		this(GameWorldBootstrapServices.idFactory().nextId(), minionId, masterObjectId, name, minionGrade, minionLevel,
+		this(IDFactory.getInstance().nextId(), minionId, masterObjectId, name, minionGrade, minionLevel,
 			miniongrowthpoint);
 	}
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -21,6 +20,7 @@ import com.aionemu.gameserver.services.player.PlayerVisualStateService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 隐身效果：设置视觉状态与观察者，攻击/施法/对话等可打破隐身。
@@ -91,7 +91,7 @@ public class HideEffect extends BuffEffect {
 
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_PLAYER_STATE(effected));
 
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AttackUtil.removeTargetFrom(effected, true), 500L);
+		ThreadPoolManager.getInstance().schedule(() -> AttackUtil.removeTargetFrom(effected, true), 500L);
 
 		if ((effected instanceof Player)) {
 			if (SecurityConfig.INVIS) {

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Crucible Challenge 副本 NPC AI：Crucible Rift（@AIName "cruciblerift"），继承 ActionItemNpcAI2。
@@ -37,9 +37,9 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 730459: // 试炼裂隙 / Crucible Rift.
-			    GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift1, 2000);
-				GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift2, 6000);
-				GameThreadPoolServices.threadPoolManager().schedule(this::announceCrucibleRift3, 10000);
+			    ThreadPoolManager.getInstance().schedule(this::announceCrucibleRift1, 2000);
+				ThreadPoolManager.getInstance().schedule(this::announceCrucibleRift2, 6000);
+				ThreadPoolManager.getInstance().schedule(this::announceCrucibleRift3, 10000);
 			break;
 		}
 		super.handleSpawned();

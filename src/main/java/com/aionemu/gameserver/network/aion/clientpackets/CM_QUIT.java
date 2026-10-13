@@ -5,6 +5,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 
 /**
@@ -35,7 +36,7 @@ public class CM_QUIT extends AionClientPacket {
 		if (client.getState() == State.IN_GAME) {
 			player = client.getActivePlayer();
 			if (!logout) {
-				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().aionClientDisconnected(client.getAccount().getId());
+				LoginServer.getInstance().aionClientDisconnected(client.getAccount().getId());
 			}
 			PlayerLeaveWorldService.startLeaveWorld(player);
 			client.setActivePlayer(null);

@@ -1,11 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -94,7 +96,7 @@ public class GameUtilityServicesLifecycle {
      * Initialize the cron service.
      */
     protected void initializeCronService() {
-        GameCronServices.initialize();
+        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
     }
 
     /**

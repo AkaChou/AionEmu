@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.controllers.attack;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 生物仇恨列表：维护攻击者伤害/仇恨，并提供最高仇恨、最高伤害与掉落归属等查询。
@@ -154,7 +154,7 @@ public class AggroList {
 		long token = aggroInfo.addVolatileHate(hate);
 		afterHateAdded(creature, previousMostHated);
 		int objectId = creature.getObjectId();
-		GameThreadPoolServices.threadPoolManager().schedule(
+		ThreadPoolManager.getInstance().schedule(
 			() -> removeTimedHate(objectId, aggroInfo, token), duration);
 	}
 

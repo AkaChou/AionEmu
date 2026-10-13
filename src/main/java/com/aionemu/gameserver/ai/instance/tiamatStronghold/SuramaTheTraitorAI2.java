@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -14,8 +12,10 @@ import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -43,7 +43,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(651, 1319, 487);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(this::startDialog, 10000);
+		ThreadPoolManager.getInstance().schedule(this::startDialog, 10000);
 	}
 
 	private void startDialog() {
@@ -51,10 +51,10 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
 		NpcShoutsService.getInstance().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			WorldMapInstance instance = getPosition().getWorldMapInstance();
 			laksyaka.setTarget(getOwner());
-			GameEngineServices.skillEngine().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
 			laksyaka.setNpcType(NpcType.ATTACKABLE);
 			for (Player player: instance.getPlayersInside()) {
 				if (MathUtil.isIn3dRange(player, laksyaka, 100)) {

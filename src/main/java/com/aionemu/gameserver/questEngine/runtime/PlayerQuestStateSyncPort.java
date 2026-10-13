@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -9,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
@@ -20,6 +19,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
+import com.aionemu.gameserver.world.World;
 
 /** 生产任务状态协议同步。仅在状态事务提交并发布后运行。 / Production quest-state protocol sync. It runs only after the state transaction committed and was published. */
 public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
@@ -33,20 +33,20 @@ public final class PlayerQuestStateSyncPort implements QuestStateSyncPort {
 
 	public PlayerQuestStateSyncPort(QuestPlayerPort players) {
 		this(players,
-			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null),
-			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
+			questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null),
+			objectId -> World.getInstance().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onQuestStateChanged(env),
+			env -> QuestEngine.getInstance().onQuestStateChanged(env),
 			StigmaService::onStigmaSlotQuestCommitted);
 	}
 
 	PlayerQuestStateSyncPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
 		this(players, metadata,
-			objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
+			objectId -> World.getInstance().findVisibleObject(objectId),
 			player -> player.getController().updateZone(),
 			player -> player.getController().updateNearbyQuests(),
-			env -> GameEngineServices.questEngine().onQuestStateChanged(env),
+			env -> QuestEngine.getInstance().onQuestStateChanged(env),
 			StigmaService::onStigmaSlotQuestCommitted);
 	}
 

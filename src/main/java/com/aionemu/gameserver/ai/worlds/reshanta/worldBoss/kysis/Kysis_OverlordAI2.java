@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.kysis;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -10,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
@@ -39,7 +40,7 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2 {
 			case 279639:
 			case 269011:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
 				break;
 		}
 		super.handleDied();
@@ -53,7 +54,7 @@ public class Kysis_OverlordAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void announceUnsealedKysis() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 解封的基西斯。 / Unsealed Kysis.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Dkisas_Named_Spawn);
 			// 基西斯龙族王子已出现！ / The Kysis Balaur Prince has appeared!

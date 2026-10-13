@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 列出在线玩家（可按种族/会员过滤）的管理员命令。
@@ -28,7 +29,7 @@ public class Who extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 
-		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+		Collection<Player> players = World.getInstance().getAllPlayers();
 
 		PacketSendUtility.sendMessage(admin, "Player :");
 

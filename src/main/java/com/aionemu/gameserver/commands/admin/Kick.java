@@ -5,6 +5,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员踢人命令：断开指定玩家或全部非 GM 玩家连接。
@@ -30,14 +31,14 @@ public class Kick extends AdminCommand {
 		}
 
 		if(params[0] != null && "All".equalsIgnoreCase(params[0])){
-			for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (final Player player : World.getInstance().getAllPlayers()) {
 				if(!player.isGM()){
 					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 					PacketSendUtility.sendMessage(admin, "Kicked player : " + player.getName());
 				}
 			}
 		}else{
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+			Player player = World.getInstance().findPlayer(Util.convertName(params[0]));
 			if (player == null) {
 				PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 				return;

@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 噩梦马戏团（Nightmare Circus）活动启停管理员命令。
@@ -58,7 +59,7 @@ public class NightmareCircus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE04C", "<Nightmare Circus 4.3> is now open !!!"));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "\uE04C", "<Nightmare Circus 4.3> is now open !!!"));
 				NightmareCircusService.getInstance().startNightmareCircus(nightmareId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

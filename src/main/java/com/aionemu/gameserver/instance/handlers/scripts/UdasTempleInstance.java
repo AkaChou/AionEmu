@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.Map;
@@ -128,7 +128,7 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
 
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(player -> {
+		ThreadPoolManager.getInstance().schedule(() -> instance.doOnAllPlayers(player -> {
 			if (player.getRace().equals(race) || race.equals(Race.PC_ALL)) {
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(msg));
 			}

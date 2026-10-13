@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Murugan（@AIName "murugan"），继承 GeneralNpcAI2。
@@ -70,7 +70,7 @@ public class MuruganAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(838, 1317, 396);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			forQuest(player);
 			AI2Actions.deleteOwner(MuruganAI2.this);
 		}, 10000);

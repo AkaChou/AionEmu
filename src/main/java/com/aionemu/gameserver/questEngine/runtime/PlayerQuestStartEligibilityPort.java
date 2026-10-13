@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -28,7 +28,7 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 
 	public PlayerQuestStartEligibilityPort(QuestPlayerPort players) {
 		this(players,
-			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null),
+			questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null),
 			(questId, metadata) -> LimitedQuestService.requiresAcquisitionByMetadata(questId,
 				metadata.maxCountLimitedQuest()));
 	}

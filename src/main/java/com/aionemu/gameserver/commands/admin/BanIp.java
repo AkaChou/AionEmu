@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -44,7 +45,7 @@ public class BanIp extends AdminCommand {
 			}
 		}
 
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, 0, mask, time, player.getObjectId());
+		LoginServer.getInstance().sendBanPacket((byte) 2, 0, mask, time, player.getObjectId());
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.team2.league;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +15,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 战团，用于团队2相关逻辑。
@@ -36,7 +36,7 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
 	private static final LeagueMemberComparator MEMBER_COMPARATOR = new LeagueMemberComparator();
 
 	public League(LeagueMember leader) {
-		super(GameWorldBootstrapServices.idFactory().nextId());
+		super(IDFactory.getInstance().nextId());
 		initializeTeam(leader);
 	}
 

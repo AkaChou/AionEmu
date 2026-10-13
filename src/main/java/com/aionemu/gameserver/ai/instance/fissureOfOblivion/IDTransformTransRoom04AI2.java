@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Fissure Of Oblivion 副本 NPC AI：ID Transform Trans Room04（@AIName "IDTransform_TransRoom_04"），继承 NpcAI2。
@@ -76,7 +76,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		// 延迟 2 秒刷 BOSS；块 lambda 保持刷怪语句与零售原文逐字一致（FissureOfOblivionInstanceTest 源码门钉住行文本）。
 		// Boss spawns 2s later; the block lambda keeps the spawn statement verbatim (pinned by the
 		// FissureOfOblivionInstanceTest source gate).
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244490, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
 		}, 2000);
 	}
@@ -94,7 +94,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244531, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244531, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 68 / Player Lvl 68
@@ -110,7 +110,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244572, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244572, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 69 / Player Lvl 69
@@ -126,7 +126,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244613, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244613, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 70 / Player Lvl 70
@@ -142,7 +142,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244654, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244654, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 71 / Player Lvl 71
@@ -158,7 +158,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244695, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244695, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 72 / Player Lvl 72
@@ -174,7 +174,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244736, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244736, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 73 / Player Lvl 73
@@ -190,7 +190,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244777, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244777, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 74 / Player Lvl 74
@@ -206,7 +206,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244818, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244818, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	// 玩家等级 75 / Player Lvl 75
@@ -222,7 +222,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2 {
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(244859, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
+		ThreadPoolManager.getInstance().schedule(() -> spawn(244859, 301.1525f, 512.97736f, 350.8281f, (byte) 0), 2000);
 	}
 
 	private void despawnNpc(int npcId) {

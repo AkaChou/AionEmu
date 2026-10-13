@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
 
 /**
  * 领取阿特雷亚通行证奖励的客户端包。
@@ -40,6 +40,6 @@ public class CM_ATREIAN_PASSPORT extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		GameEventBootstrapServices.atreianPassportService().getReward(player, passportId);
+		AtreianPassportService.getInstance().getReward(player, passportId);
 	}
 }

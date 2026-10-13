@@ -1,16 +1,17 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 延迟技能效果：效果持续结束后触发关联技能（可范围多目标）。
@@ -41,7 +42,7 @@ public class DelayedSkillEffect extends EffectTemplate {
 		if (effect.getSkill() == null) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (effect.getEffected().getEffectController().hasAbnormalEffect(effect.getSkill().getSkillId())) {
 				final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 				if (template == null) {
@@ -50,9 +51,9 @@ public class DelayedSkillEffect extends EffectTemplate {
 				int launchedSkillLevel = Math.max(1,
 					useCurrentLevel ? effect.getSkillLevel() : calculateValue(effect.getSkillLevel()));
 				if (template.getProperties().getTargetMaxCount() > 1) {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(object -> {
+					World.getInstance().doOnAllObjects(object -> {
 						if (object instanceof Creature target && MathUtil.getDistance(effect.getEffected(), target) <= template.getProperties().getRevisionDistance()) {
-							GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffector(),
+							SkillEngine.getInstance().applyEffectDirectly(template.getSkillId(), effect.getEffector(),
 								target, template.getDuration(), launchedSkillLevel);
 						}
 					});

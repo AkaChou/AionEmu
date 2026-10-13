@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.model.actions.NpcActions;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.concurrent.Future;
@@ -41,7 +41,7 @@ public class RestoredHetgolemAI2 extends AggressiveNpcAI2 {
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				getMoveController().abortMove();
 				setSubStateIfNot(AISubState.WALK_RANDOM);
@@ -61,7 +61,7 @@ public class RestoredHetgolemAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startLifeTask() {
-		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		lifeTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				spawnEvent();
 			}

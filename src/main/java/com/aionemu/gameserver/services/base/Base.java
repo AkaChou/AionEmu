@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.base;
 import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +29,8 @@ import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 据点运行时实例，管理占领、首领、袭击与相关广播。
@@ -159,7 +160,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedAssault() {
-		startAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		startAssault = ThreadPoolManager.getInstance().schedule(() -> {
 			chooseAttackersRace();
 			sendMsgKiller(getId());
 		}, Rnd.get(120, 180) * 60000L);
@@ -175,60 +176,60 @@ public class Base<BL extends BaseLocation> {
 	public boolean sendMsgKiller(int id) {
 		return switch (id) {
 			case 90 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v13));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v13));
 				yield true;
 			}
 			case 91 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v04));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v04));
 				yield true;
 			}
 			case 92 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v12));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v12));
 				yield true;
 			}
 			case 93 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v03));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v03));
 				yield true;
 			}
 			case 94 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v06));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v06));
 				yield true;
 			}
 			case 95 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v05));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v05));
 				yield true;
 			}
 			case 96 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v01));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v01));
 				yield true;
 			}
 			case 97 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v09));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v09));
 				yield true;
 			}
 			case 98 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v11));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v11));
 				yield true;
 			}
 			case 99 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v10));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v10));
 				yield true;
 			}
 			case 100 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v07));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v07));
 				yield true;
 			}
 			case 101 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v02));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v02));
 				yield true;
 			}
 			case 102 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v08));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v08));
 				yield true;
 			}
 			// 术古谈判者 5.3 / Shugo Negotiator 5.3
 			case 105 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
 						// 要塞。 / Fortress.
@@ -258,7 +259,7 @@ public class Base<BL extends BaseLocation> {
 				yield true;
 			}
 			case 106 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Joarin at Zephyr Island. As a reward, the ship
 						// 支援魔族。 / supports the Asmodians.
@@ -280,7 +281,7 @@ public class Base<BL extends BaseLocation> {
 				yield true;
 			}
 			case 107 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Temirun at Leibo Island. As a reward, the ship
 						// 支援魔族。 / supports the Asmodians.
@@ -302,7 +303,7 @@ public class Base<BL extends BaseLocation> {
 				yield true;
 			}
 			case 108 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族已救出……作为奖励，船只 / The Asmodians have rescued the Shairing at Storm Island. As a reward, the
 						// 船只支援魔族。 / ship supports the Asmodians.
@@ -316,7 +317,7 @@ public class Base<BL extends BaseLocation> {
 				yield true;
 			}
 			case 109 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 						// 西部要塞。 / Western Fortress.
@@ -346,7 +347,7 @@ public class Base<BL extends BaseLocation> {
 				yield true;
 			}
 			case 110 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
 						// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 						// 东部要塞。 / Eastern Fortress.
@@ -380,7 +381,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedSpawn(final Race race) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (getRace().equals(race) && getBoss() == null) {
 				spawnBoss();
 			}
@@ -616,7 +617,7 @@ public class Base<BL extends BaseLocation> {
 				}
 			}
 			if (!getAttackers().isEmpty()) {
-				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				stopAssault = ThreadPoolManager.getInstance().schedule(() -> {
 					despawnAttackers();
 					delayedAssault();
 				}, 5 * 60000);
@@ -641,7 +642,7 @@ public class Base<BL extends BaseLocation> {
 
 	protected void despawn(int baseLocationId) {
 		setFlag(null);
-		Collection<BaseNpc> baseNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalBaseNpcs(baseLocationId);
+		Collection<BaseNpc> baseNpcs = World.getInstance().getLocalBaseNpcs(baseLocationId);
 		for (BaseNpc npc : new ArrayList<>(baseNpcs)) {
 			npc.getController().onDelete();
 		}

@@ -14,6 +14,7 @@ import com.aionemu.gameserver.skillengine.model.DashStatus;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -37,7 +38,7 @@ public class DashEffect extends DamageEffect {
 
 		// 将施法者移至受影响者 / Move Effector to Effected
 		Skill skill = effect.getSkill();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
+		World.getInstance().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
 	/**

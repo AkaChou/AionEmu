@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.IExpirable;
@@ -17,15 +16,8 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
  */
 public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
+	private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
+	private static volatile ExpireTimerTask resolvedInstance;
 
 	/**
 	 * 可过期对象到所属玩家的映射。
@@ -52,14 +44,30 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	 *         when no provider or bean is available
 	 */
 	public static ExpireTimerTask getInstance() {
+		ExpireTimerTask resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ExpireTimerTask> provider = instanceProvider;
-		ExpireTimerTask provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ExpireTimerTask 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<ExpireTimerTask> instanceProvider) {
+		ExpireTimerTask.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

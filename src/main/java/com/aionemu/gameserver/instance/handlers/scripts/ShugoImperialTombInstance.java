@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -17,7 +15,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -247,7 +247,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * TOMB RAID A
 	 */
 	private void startTombRaidA1_1() {
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -262,7 +262,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 10000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -279,7 +279,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 30000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -294,7 +294,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 50000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -311,7 +311,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 70000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -326,7 +326,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 90000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -343,7 +343,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 110000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -358,7 +358,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 130000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -375,7 +375,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 150000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -390,7 +390,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219510, 209.68540f, 263.57240f, 550.5646f, (byte) 78, 9000, "ImperialTombUnderpath2");
 			}
 		}, 170000);
-		tombRaidTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -413,7 +413,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * TOMB RAID B
 	 */
 	private void startTombRaidB1_1() {
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -434,7 +434,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 10000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -457,7 +457,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 30000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -478,7 +478,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 50000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -501,7 +501,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 70000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -522,7 +522,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 90000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -545,7 +545,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 110000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -566,7 +566,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 130000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -589,7 +589,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 150000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -610,7 +610,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219516, 359.61240f, 421.5032f, 292.48206f, (byte) 82, 9000, "ImperialTombUnderpath6");
 			}
 		}, 170000);
-		tombRaidTaskB1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskB1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -639,7 +639,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * TOMB RAID C-1
 	 */
 	private void startTombRaidC1_1() {
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -657,7 +657,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 10000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -677,7 +677,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 30000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -695,7 +695,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 50000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -715,7 +715,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 70000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -733,7 +733,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 90000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -753,7 +753,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 110000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -771,7 +771,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 130000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -791,7 +791,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 150000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -809,7 +809,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219523, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 170000);
-		tombRaidTaskC1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -835,7 +835,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	 * TOMB RAID C-2
 	 */
 	private void startTombRaidC1_2() {
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -853,7 +853,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 10000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -873,7 +873,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 30000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -891,7 +891,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 50000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -911,7 +911,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 70000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -929,7 +929,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 90000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -949,7 +949,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 110000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -967,7 +967,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 130000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -987,7 +987,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 150000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1005,7 +1005,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 		        sp(219529, 419.37616f, 90.95251f, 214.33856f, (byte) 8, 9000, "ImperialTombUnderpath9");
 			}
 		}, 170000);
-		tombRaidTaskC2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		tombRaidTaskC2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1043,7 +1043,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
  		if (npc.getNpcId() == 831095) {
  			//Shugo Warrior Transformation Device.
- 			GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
+ 			SkillEngine.getInstance().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
  		}
 	}
 	/**
@@ -1108,7 +1108,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        imperialTombTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        imperialTombTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1125,7 +1125,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
     }
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

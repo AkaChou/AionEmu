@@ -8,7 +8,7 @@ import java.time.Instant;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
@@ -51,7 +51,7 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 		} else {
 			characterLimitCount = GSConfig.CHARACTER_LIMIT_COUNT;
 		}
-		characterLimitCount *= GameServerNetworkServices.networkController().getServerCount();
+		characterLimitCount *= NetworkController.getInstance().getServerCount();
 
 		if (GSConfig.CHARACTER_CREATION_MODE < 0 || GSConfig.CHARACTER_CREATION_MODE > 2) {
 			characterFactionsMode = 0;

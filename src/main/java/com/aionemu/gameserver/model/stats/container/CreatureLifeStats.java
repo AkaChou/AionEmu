@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.model.stats.container;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
+import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -259,7 +259,7 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		restoreLock.lock();
 		try {
 			if (lifeRestoreTask == null && !alreadyDead) {
-				lifeRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleRestoreTask(this);
+				lifeRestoreTask = LifeStatsRestoreService.getInstance().scheduleRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();

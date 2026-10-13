@@ -1,14 +1,13 @@
 package com.aionemu.gameserver.eventEngine;
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.springframework.beans.factory.ObjectProvider;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 事件调度器：从延迟队列取事件执行，并支持固定周期调度与暂停。
@@ -18,15 +17,8 @@ import org.springframework.beans.factory.ObjectProvider;
 @Slf4j
 public class EventScheduler implements Runnable {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<EventScheduler> instanceProvider;
+	private static volatile ObjectProvider<EventScheduler> instanceProvider;
+	private static volatile EventScheduler resolvedInstance;
 
 	/**
 	 * 单次事件最长执行超时（分钟）。
@@ -63,7 +55,7 @@ public class EventScheduler implements Runnable {
 	 * Constructs and starts the schedule loop.
 	 */
 	public EventScheduler() {
-		GameThreadPoolServices.threadPoolManager().schedule(this, 1);
+		ThreadPoolManager.getInstance().schedule(this, 1);
 		log.info(I18n.get("log.103bcf34081c"));
 	}
 
@@ -87,7 +79,7 @@ public class EventScheduler implements Runnable {
 	 * @return 调度 future / scheduled future
 	 */
 	public ScheduledFuture<?> scheduleAtFixedRate(Event event, int delay, int period) {
-		ScheduledFuture<?> future = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new EventScheduleWrapper(event),
+		ScheduledFuture<?> future = ThreadPoolManager.getInstance().scheduleAtFixedRate(new EventScheduleWrapper(event),
 				delay, period);
 		return future;
 	}
@@ -99,13 +91,13 @@ public class EventScheduler implements Runnable {
 	@Override
 	public void run() {
 		if (paused.get()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this, WORKING_DELAY);
+			ThreadPoolManager.getInstance().schedule(this, WORKING_DELAY);
 			return;
 		}
 
 		Event event = queue.poll();
 		if (event == null) {
-			GameThreadPoolServices.threadPoolManager().schedule(this, WORKING_DELAY);
+			ThreadPoolManager.getInstance().schedule(this, WORKING_DELAY);
 			return;
 		}
 		execute(event);
@@ -117,9 +109,9 @@ public class EventScheduler implements Runnable {
 	 * @param event 事件 / event
 	 */
 	private void execute(Event event) {
-		GameThreadPoolServices.threadPoolManager().schedule(event, 0);
+		ThreadPoolManager.getInstance().schedule(event, 0);
 		startTime = System.currentTimeMillis();
-		GameThreadPoolServices.threadPoolManager().schedule(new WaitForExecutionRunnable(event), WORKING_DELAY);
+		ThreadPoolManager.getInstance().schedule(new WaitForExecutionRunnable(event), WORKING_DELAY);
 	}
 
 	/**
@@ -130,13 +122,13 @@ public class EventScheduler implements Runnable {
 	private void waitForExecution(Event event) {
 		if (event.isFinished()) {
 			startTime = 0;
-			GameThreadPoolServices.threadPoolManager().schedule(this, event.getCooldown());
+			ThreadPoolManager.getInstance().schedule(this, event.getCooldown());
 		} else if ((System.currentTimeMillis() - startTime) > TIMEOUT * 60 * 1000) {
 			log.warn(I18n.get("log.645de9a4710b", event.getClass().getName(), TIMEOUT));
 			startTime = 0;
-			GameThreadPoolServices.threadPoolManager().schedule(this, event.getCooldown());
+			ThreadPoolManager.getInstance().schedule(this, event.getCooldown());
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new WaitForExecutionRunnable(event), WORKING_DELAY);
+			ThreadPoolManager.getInstance().schedule(new WaitForExecutionRunnable(event), WORKING_DELAY);
 		}
 	}
 
@@ -184,15 +176,31 @@ public class EventScheduler implements Runnable {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	static public EventScheduler getInstance() {
+	public static EventScheduler getInstance() {
+		EventScheduler resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<EventScheduler> provider = instanceProvider;
-		EventScheduler provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("EventScheduler 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<EventScheduler> instanceProvider) {
+		EventScheduler.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.retail;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
@@ -65,7 +64,7 @@ public final class RetailSystemGrantDispatcher {
 		if (player == null || questId <= 0) {
 return;
 		}
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		if (questEngine == null || !isSystemGranted(questEngine.questCatalog(), questId)) {
 return;
 		}

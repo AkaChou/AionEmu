@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.housing;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * 房屋相关 NPC AI：Gale Cyclone（@AIName "galecyclone"），继承 NpcAI2。
@@ -33,7 +33,7 @@ public class GaleCycloneAI2 extends NpcAI2
 				@Override
 				public void onMove() {
 					if (!blocked) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 20528, 50, player).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(getOwner(), 20528, 50, player).useNoAnimationSkill();
 					}
 				}
 			};

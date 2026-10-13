@@ -3,13 +3,13 @@ package com.aionemu.gameserver.commands.admin;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.GameServerError;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET.PacketElementType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
@@ -119,7 +119,7 @@ public class Send extends AdminCommand {
 
 			delay += packetTemplate.getDelay();
 
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				// log.debug("Sending: {}", packetTemplate);
 				PacketSendUtility.sendPacket(target, packet);
 			}, delay);

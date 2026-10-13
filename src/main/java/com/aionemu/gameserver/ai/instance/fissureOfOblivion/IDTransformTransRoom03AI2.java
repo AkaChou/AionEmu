@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Fissure Of Oblivion 副本 NPC AI：ID Transform Trans Room03（@AIName "IDTransform_TransRoom_03"），继承 NpcAI2。
@@ -74,7 +74,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244454, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244455, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244456, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -95,7 +95,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244495, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244496, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244497, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -116,7 +116,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244536, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244537, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244538, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -137,7 +137,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244577, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244578, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244579, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -158,7 +158,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244618, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244619, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244620, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -179,7 +179,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244659, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244660, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244661, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -200,7 +200,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244700, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244701, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244702, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -221,7 +221,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244741, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244742, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244743, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -242,7 +242,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244782, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244783, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244784, 384.6212f, 510.97125f, 350.37335f, (byte) 30);
@@ -263,7 +263,7 @@ public class IDTransformTransRoom03AI2 extends NpcAI2
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 22);
 		spawn(245404, 385.26727f, 513.22351f, 353.75681f, (byte) 0, 116);
 		AI2Actions.deleteOwner(IDTransformTransRoom03AI2.this);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(244823, 384.56375f, 515.2426f, 350.37335f, (byte) 91);
 			spawn(244824, 382.34543f, 513.1757f, 350.37335f, (byte) 0);
 			spawn(244825, 384.6212f, 510.97125f, 350.37335f, (byte) 30);

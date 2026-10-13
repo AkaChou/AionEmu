@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.fallenPoeta;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Fallen Poeta 副本 NPC AI：Balaur Explosives Stockpile（@AIName "Balaur_Explosives_Stockpile"），继承 AggressiveNpcAI2。
@@ -31,7 +31,7 @@ public class Balaur_Explosives_StockpileAI2 extends AggressiveNpcAI2
 	}
 
 	private void attackBoost() {
-		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		attackBoostTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			AI2Actions.targetCreature(Balaur_Explosives_StockpileAI2.this, getPosition().getWorldMapInstance().getNpc(243682)); //副官阿努哈尔特。 / Lieutenant Anuhart.
 			AI2Actions.useSkill(Balaur_Explosives_StockpileAI2.this, 0);
 		}, 3000, 8000);

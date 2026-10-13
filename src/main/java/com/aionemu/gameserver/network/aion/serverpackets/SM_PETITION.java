@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.services.PetitionService;
 
 /**
  * 同步客服工单（Petition）状态的服务端包；无工单时写出空结构。
@@ -35,12 +35,12 @@ public class SM_PETITION extends AionServerPacket {
 		} else {
 			writeC(0x01);
 			writeD(100);
-			writeH(GameRuntimeServices.petitionService().getWaitingPlayers(con.getActivePlayer().getObjectId()));
+			writeH(PetitionService.getInstance().getWaitingPlayers(con.getActivePlayer().getObjectId()));
 			writeS(Integer.toString(petition.petitionId()));
 			writeH(0x00);
 			writeC(50);
 			writeC(49);
-			writeH(GameRuntimeServices.petitionService().calculateWaitTime(petition.playerObjId()));
+			writeH(PetitionService.getInstance().calculateWaitTime(petition.playerObjId()));
 			writeD(0x00);
 		}
 	}

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * PvP 连杀（Spree）服务，统计连杀、升级公告与连杀终结。
@@ -90,7 +91,7 @@ public class PvPSpreeService {
 	 * @param level 连杀等级 / spree level
 	 */
 	private static void sendUpdateSpreeMessage(Player winner, int level) {
-		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+		for (Player p : World.getInstance().getAllPlayers()) {
 			if (level == 1)
 				PacketSendUtility.sendBrightYellowMessageOnCenter(p,
 						winner.getName() + " Of " + winner.getCommonData().getRace().toString().toLowerCase()
@@ -160,7 +161,7 @@ public class PvPSpreeService {
 	 */
 	private static void sendEndSpreeMessage(Player victim, Creature killer, boolean isPvPDeath, int killsBeforeDeath) {
 		String spreeEnder = isPvPDeath ? killer.getName() : "A monster";
-		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+		for (Player p : World.getInstance().getAllPlayers()) {
 			PacketSendUtility.sendWhiteMessageOnCenter(p, "The killing spree of " + victim.getName()
 					+ " has been stopped by " + spreeEnder + " after " + killsBeforeDeath + " uninterrupted murders !");
 		}

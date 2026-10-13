@@ -2,14 +2,13 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
+import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.services.LegionService;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,6 +62,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.NonNull;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 攻城战服务，管理要塞/神器攻城、刷怪、计划与状态广播。
@@ -194,9 +195,9 @@ public class SiegeService {
 			}
 		}
 		updateFortressNextState();
-		GameCronServices.cronService().schedule(() -> {
+		CronService.requireCurrent().schedule(() -> {
 			updateFortressNextState();
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+			World.getInstance().doOnAllPlayers(player -> {
 				for (FortressLocation fortress : getFortresses().values()) {
 					PacketSendUtility.sendPacket(player, new SM_FORTRESS_INFO(fortress.getLocationId(), false));
 				}
@@ -214,7 +215,7 @@ public class SiegeService {
 	 */
 	public synchronized void reloadSchedule() {
 		SiegeSchedule newSchedule = SiegeConfig.SIEGE_ENABLED ? SiegeSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		siegeSchedule = newSchedule;
 		if (siegeSchedule != null) {
@@ -222,7 +223,7 @@ public class SiegeService {
 				for (String siegeTime : fortress.getSiegeTimes()) {
 					Runnable task = new SiegeStartRunnable(fortress.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, siegeTime);
+					CronService.requireCurrent().schedule(task, siegeTime);
 				}
 			}
 		}
@@ -255,7 +256,7 @@ public class SiegeService {
 		if (siege.isEndless()) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopSiege(siegeLocationId), siege.getSiegeLocation().getSiegeDuration() * 1000L);
+		ThreadPoolManager.getInstance().schedule(() -> stopSiege(siegeLocationId), siege.getSiegeLocation().getSiegeDuration() * 1000L);
 	}
 
 	/**
@@ -282,13 +283,13 @@ public class SiegeService {
 		currentHourPlus1.set(Calendar.SECOND, 0);
 		currentHourPlus1.set(Calendar.MILLISECOND, 0);
 		currentHourPlus1.add(Calendar.HOUR, 1);
-		Map<Runnable, JobDetail> siegeStartRunables = GameCronServices.cronService().getRunnables();
+		Map<Runnable, JobDetail> siegeStartRunables = CronService.requireCurrent().getRunnables();
 		siegeStartRunables = Maps.filterKeys(siegeStartRunables, runnable -> (runnable instanceof SiegeStartRunnable));
 		Map<Integer, List<Trigger>> siegeIdToStartTriggers = Maps.newHashMap();
 		for (Map.Entry<Runnable, JobDetail> entry : siegeStartRunables.entrySet()) {
 			SiegeStartRunnable fssr = (SiegeStartRunnable) entry.getKey();
 			siegeIdToStartTriggers.computeIfAbsent(fssr.locationId(), _ -> Lists.newArrayList())
-				.addAll(GameCronServices.cronService().getJobTriggers(entry.getValue()));
+				.addAll(CronService.requireCurrent().getJobTriggers(entry.getValue()));
 		}
 		for (Map.Entry<Integer, List<Trigger>> entry : siegeIdToStartTriggers.entrySet()) {
 			List<Date> nextFireDates = Lists.newArrayListWithCapacity(entry.getValue().size());
@@ -486,7 +487,7 @@ public class SiegeService {
 	 * location id
 	 */
 	public void deSpawnNpcs(int siegeLocationId) {
-		Collection<SiegeNpc> siegeNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(siegeLocationId);
+		Collection<SiegeNpc> siegeNpcs = World.getInstance().getLocalSiegeNpcs(siegeLocationId);
 		for (SiegeNpc npc : new ArrayList<>(siegeNpcs)) {
 			npc.getController().onDelete();
 		}
@@ -520,7 +521,7 @@ public class SiegeService {
 	 * location
 	 */
 	public void broadcastUpdate(SiegeLocation loc) {
-		GameRuntimeServices.influence().recalculateInfluence();
+		Influence.getInstance().recalculateInfluence();
 		broadcast(new SM_SIEGE_LOCATION_INFO(loc), new SM_INFLUENCE_RATIO());
 	}
 
@@ -531,7 +532,7 @@ public class SiegeService {
 	 * packet 2
 	 */
 	public void broadcast(final AionServerPacket pkt1, final AionServerPacket pkt2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (pkt1 != null) {
 				PacketSendUtility.sendPacket(player, pkt1);
 			}
@@ -557,7 +558,7 @@ public class SiegeService {
 	}
 
 	private void broadcast(final AionServerPacket pkt, final AionServerPacket info, final SiegeRace race) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (player.getRace().getRaceId() == race.getRaceId()) {
 				PacketSendUtility.sendPacket(player, info);
 			}

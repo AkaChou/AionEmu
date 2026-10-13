@@ -2,17 +2,15 @@ package com.aionemu.gameserver.services.events;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -20,6 +18,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 疯狂大埃服务，管理限时 PvP 活动状态与奖励。
@@ -30,14 +30,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class CrazyDaevaService {
 
-	/**
-	 * Spring 实例提供者 / Spring instance provider
-	 * -- SETTER --
-	 * 注入 Spring ObjectProvider 以覆盖默认单例。
-	 * Injects a Spring ObjectProvider that overrides the default singleton.
-	 */
-	@Setter
 	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
+	private static volatile CrazyDaevaService resolvedInstance;
 
 	/**
 	 * 本轮已选出的疯狂大埃计数。 / Crazy Daeva count selected this round.
@@ -51,7 +45,7 @@ public class CrazyDaevaService {
 	 */
 	public synchronized void startTimer() {
 		for (Runnable schedule : schedules) {
-			GameCronServices.cronService().cancel(schedule);
+			CronService.requireCurrent().cancel(schedule);
 		}
 		schedules.clear();
 		if (!EventsConfig.ENABLE_CRAZY) {
@@ -61,7 +55,7 @@ public class CrazyDaevaService {
 		for (String cron : times) {
 			Runnable schedule = this::checkStart;
 			schedules.add(schedule);
-			GameCronServices.cronService().schedule(schedule, cron);
+			CronService.requireCurrent().schedule(schedule, cron);
 			log.info(I18n.get("log.22a3e7a99e76", cron, EventsConfig.CRAZY_ENDTIME));
 		}
 	}
@@ -82,7 +76,7 @@ public class CrazyDaevaService {
 	 */
 	public void startChoose() {
 		crazyCount = 0;
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			int rnd = 0;
 			rnd = Rnd.get(1, 100);
 			player.setRndCrazy(rnd);
@@ -157,7 +151,7 @@ public class CrazyDaevaService {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
 				final String spreeEnder = isPvPDeath ? killer.getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendYellowMessageOnCenter(player,
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendYellowMessageOnCenter(player,
 					"Crazier " + victim.getName() + " has slain by " + spreeEnder + "!"));
 				log.info(I18n.get("log.fe71cec0426c", victim.getName(), spreeEnder));
 			}
@@ -169,8 +163,8 @@ public class CrazyDaevaService {
 	 * Ends the event: clears state and stops after configured duration.
 	 */
 	public void clearCrazy() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
+			World.getInstance().doOnAllPlayers(player -> {
 				if (player.isInCrazy()) {
 					if (player.getCrazyLevel() == 1) {
 						AbyssPointsService.addAp(player, 5000);
@@ -211,14 +205,30 @@ public class CrazyDaevaService {
 	 *                               when no provider or bean is available
 	 */
 	public static CrazyDaevaService getInstance() {
+		CrazyDaevaService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<CrazyDaevaService> provider = instanceProvider;
-		CrazyDaevaService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("CrazyDaevaService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<CrazyDaevaService> instanceProvider) {
+		CrazyDaevaService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

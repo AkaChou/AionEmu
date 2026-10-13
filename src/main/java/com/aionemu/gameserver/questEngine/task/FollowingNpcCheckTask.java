@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.questEngine.task;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 import lombok.AllArgsConstructor;
@@ -51,7 +51,7 @@ public class FollowingNpcCheckTask implements Runnable {
 	 */
 	private final void onSuccess(QuestEnv env) {
 		stopFollowing(env);
-		GameEngineServices.questEngine().onNpcReachTarget(env);
+		QuestEngine.getInstance().onNpcReachTarget(env);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class FollowingNpcCheckTask implements Runnable {
 	 */
 	protected void onFail(QuestEnv env) {
 		stopFollowing(env);
-		GameEngineServices.questEngine().onNpcLostTarget(env);
+		QuestEngine.getInstance().onNpcLostTarget(env);
 	}
 
 	/**

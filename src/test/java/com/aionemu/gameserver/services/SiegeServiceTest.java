@@ -16,7 +16,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.controllers.NpcController;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.persistence.dao.impl.SiegeLocationDaoImpl;
 import com.aionemu.gameserver.world.World;
@@ -24,7 +24,7 @@ import com.aionemu.gameserver.world.World;
 class SiegeServiceTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
-	private GameWorldBootstrapServices worldBootstrapServices;
+	private WorldBootstrapServiceBindings worldBootstrapServices;
 
 	@AfterEach
 	void tearDown() {
@@ -49,7 +49,7 @@ class SiegeServiceTest {
 		liveNpcs.add(thirdNpc);
 		TestWorld world = objenesis.newInstance(TestWorld.class);
 		world.npcs = liveNpcs;
-		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
+		worldBootstrapServices = new WorldBootstrapServiceBindings(null, null, null, null, provider(World.class, world));
 
 		assertDoesNotThrow(() -> new SiegeService(new SiegeLocationDaoImpl(),
 			objenesis.newInstance(LegionService.class)).deSpawnNpcs(1011));

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -66,7 +66,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 	}
 
 	private void startMacumbelloRightHandEvent() {
-		rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		rightHandTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 				phase = Phase.RIGHT_HAND;
 				cancelActiveEventTask();
@@ -78,7 +78,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 				EmoteManager.emoteStopAttacking(getOwner());
 				setStateIfNot(AIState.WALKING);
 				spawnMacumbelloRightHandEvent();
-				rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				rightHandTask = ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.RIGHT_HAND)) {
 						phase = Phase.ACTIVE;
 						canThink = true;

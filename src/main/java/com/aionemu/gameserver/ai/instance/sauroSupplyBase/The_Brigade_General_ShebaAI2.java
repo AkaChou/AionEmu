@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -13,6 +11,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Sauro Supply Base 副本 NPC AI：The Brigade General Sheba（@AIName "the_brigade_general_sheba"），继承 AggressiveNpcAI2。
@@ -38,7 +38,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		int delay = 25000;
 		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500775);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); // 挥之不去的厄运 / Lingering Doom.
+			SkillEngine.getInstance().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); // 挥之不去的厄运 / Lingering Doom.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -80,7 +80,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	private void stage2() {
 		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500774);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
+			SkillEngine.getInstance().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); // Danuar 打手 / Danuar Henchman.
 			spawn(284435, 900.12497f, 879.17401f, 411.625f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
 			spawn(284435, 887.1312f, 889.20688f, 411.875f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
 			spawn(284435, 900.1312f, 901.20688f, 411.875f, (byte) 0); // 堕落的 Danuar / Corrupted Danuar.
@@ -91,7 +91,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		int delay = 40000;
 		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500777);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); // 灵魂出窍 / Out Of Body.
+			SkillEngine.getInstance().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); // 灵魂出窍 / Out Of Body.
 			scheduleDelayStage3(delay);
 		}
 	}
@@ -100,7 +100,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		int delay = 45000;
 		if (!isAlreadyDead() && isStart) {
 		   	sendMsg(1500776);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); // Danuar 引导 / Danuar Channeling.
+			SkillEngine.getInstance().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); // Danuar 引导 / Danuar Channeling.
 			switch (Rnd.get(1, 2)) {
 				case 1:
 					despawnNpcs(284436); // 被奴役的 Danuar / Enslaved Danuar.
@@ -123,19 +123,19 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 
 	private void scheduleDelayStage4(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage4, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage4, delay);
 		}
 	}
 
 	private void scheduleDelayStage3(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage3, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage3, delay);
 		}
 	}
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage1, delay);
 		}
 	}
 

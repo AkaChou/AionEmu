@@ -9,6 +9,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端召唤物移动同步请求包。
@@ -110,7 +111,7 @@ public class CM_SUMMON_MOVE extends AionClientPacket {
 			m.vehicleY = vehicleY;
 			m.vehicleZ = vehicleZ;
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(summon, x, y, z, heading);
+		World.getInstance().updatePosition(summon, x, y, z, heading);
 		if ((type & MovementMask.STARTMOVE) == MovementMask.STARTMOVE || type == 0) {
 			PacketSendUtility.broadcastPacket(summon, new SM_MOVE(summon));
 		}

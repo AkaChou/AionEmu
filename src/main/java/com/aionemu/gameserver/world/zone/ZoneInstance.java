@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.geometry.Area;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.handler.AdvencedZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
@@ -185,8 +186,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canFly() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPossibleFly();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY)) {
+			return World.getInstance().getWorldMap(mapId).isPossibleFly();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.FLY.getId()) != 0;
 	}
@@ -198,8 +199,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canGlide() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.GLIDE)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canGlide();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.GLIDE)) {
+			return World.getInstance().getWorldMap(mapId).canGlide();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.GLIDE.getId()) != 0;
 	}
@@ -211,8 +212,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canPutKisk() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.BIND)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canPutKisk();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.BIND)) {
+			return World.getInstance().getWorldMap(mapId).canPutKisk();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.BIND.getId()) != 0;
 	}
@@ -224,8 +225,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canRecall() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RECALL)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRecall();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RECALL)) {
+			return World.getInstance().getWorldMap(mapId).canRecall();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.RECALL.getId()) != 0;
 	}
@@ -237,8 +238,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canRide() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RIDE)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRide();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RIDE)) {
+			return World.getInstance().getWorldMap(mapId).canRide();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.RIDE.getId()) != 0;
 	}
@@ -250,8 +251,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean canFlyRide() {
 		if (template.zoneTemplate().getFlags() == -1 || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY_RIDE)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canFlyRide();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY_RIDE)) {
+			return World.getInstance().getWorldMap(mapId).canFlyRide();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.FLY_RIDE.getId()) != 0;
 	}
@@ -263,7 +264,7 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean isPvpAllowed() {
 		if (template.zoneTemplate().getZoneType() != ZoneClassName.PVP) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPvpAllowed();
+			return World.getInstance().getWorldMap(mapId).isPvpAllowed();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.PVP_ENABLED.getId()) != 0;
 	}
@@ -275,8 +276,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean isSameRaceDuelsAllowed() {
 		if (template.zoneTemplate().getZoneType() != ZoneClassName.DUEL || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_SAME_RACE_ENABLED)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isSameRaceDuelsAllowed();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_SAME_RACE_ENABLED)) {
+			return World.getInstance().getWorldMap(mapId).isSameRaceDuelsAllowed();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.DUEL_SAME_RACE_ENABLED.getId()) != 0;
 	}
@@ -288,8 +289,8 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 	 */
 	public boolean isOtherRaceDuelsAllowed() {
 		if (template.zoneTemplate().getZoneType() != ZoneClassName.DUEL || template.zoneTemplate().getFlags() == 0
-				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_OTHER_RACE_ENABLED)) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isOtherRaceDuelsAllowed();
+				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_OTHER_RACE_ENABLED)) {
+			return World.getInstance().getWorldMap(mapId).isOtherRaceDuelsAllowed();
 		}
 		return (template.zoneTemplate().getFlags() & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
 	}

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 快递/投递 NPC AI：由创建者派发并在超时后清理。
@@ -31,8 +31,8 @@ public class DeliveryManAI2 extends FollowingNpcAI2
 	 */
 	@Override
 	protected void handleSpawned() {
-		GameThreadPoolServices.threadPoolManager().schedule(new DeleteDeliveryMan(), SERVICE_TIME);
-		GameThreadPoolServices.threadPoolManager().schedule(new DeliveryManSpawnAction(), SPAWN_ACTION_DELAY);
+		ThreadPoolManager.getInstance().schedule(new DeleteDeliveryMan(), SERVICE_TIME);
+		ThreadPoolManager.getInstance().schedule(new DeliveryManSpawnAction(), SPAWN_ACTION_DELAY);
 		super.handleSpawned();
 	}
 

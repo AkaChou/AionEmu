@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.enshar;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -11,6 +10,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Enshar 区域 NPC AI：Negarton（@AIName "negarton"），继承 NpcAI2。
@@ -47,7 +48,7 @@ public class NegartonAI2 extends NpcAI2
 				case 804840: // 开启黑暗军团传送门的 NPC / Negarton.
 				    announceDarkLegionPortal();
 					spawn(702721, 1474.6984f, 1796.5096f, 330.69998f, (byte) 103);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(702721), 300000); //5 分钟。 / 5 Minutes.
+					ThreadPoolManager.getInstance().schedule(() -> despawnNpc(702721), 300000); //5 分钟。 / 5 Minutes.
 				break;
 			}
 		}
@@ -56,7 +57,7 @@ public class NegartonAI2 extends NpcAI2
 	}
 
 	private void announceDarkLegionPortal() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_LEGION_DIRECT_PORTAL_OPEN));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DARK_SIDE_LEGION_DIRECT_PORTAL_OPEN));
 	}
 
 	private void despawnNpc(int npcId) {

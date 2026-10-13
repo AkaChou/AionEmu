@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Rideable Antiaircraft Gun（@AIName "rideable_antiaircraft_gun"），继承 ActionItemNpcAI2。
@@ -28,7 +28,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
 			int morphSkill = getMorphSkill();
-			GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useWithoutPropSkill();
 			AI2Actions.deleteOwner(this);
 		}
 	}

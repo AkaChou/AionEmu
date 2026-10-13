@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -32,6 +31,7 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -102,7 +102,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		evergaleCanyonReward.setInstanceStartTime();
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -131,7 +131,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 90000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -153,7 +153,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 				sp(246703, 743.7306f, 487.89166f, 305.3329f, (byte) 23, 15000);
 			}
 		}, 120000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -165,7 +165,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 				sp(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90, 0);
 			}
 		}, 480000));
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -350,7 +350,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -521,7 +521,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 					ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
 				// “马霍特”被击杀后每 3 分钟再出现。 / "Mahot" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -545,7 +545,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 					ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
 				// “达格隆”被击杀后每 3 分钟再出现。 / "Daglon" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -569,7 +569,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 					ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
 				// “隐秘的凯桑”被击杀后每 3 分钟再出现。 / "Furtive Kaisan" appears every 3min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -593,7 +593,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 					ItemService.addItem(mostPlayerDamage, 186000470, 200); //战争点数。 / War Points.
 				}
 				// “腐化的巴加图尔”被击杀后每 8 分钟再出现。 / "Corrupt Bagatur" appears every 8min after being killed.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -1125,7 +1125,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1143,7 +1143,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1160,7 +1160,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

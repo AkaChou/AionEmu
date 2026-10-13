@@ -2,8 +2,8 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.List;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 /**
@@ -30,7 +30,7 @@ final class PlayerPvpRules {
 	static boolean canPvP(Player player, Player enemy) {
 		int worldId = enemy.getWorldId();
 		if (!enemy.getRace().equals(player.getRace())) {
-			if (GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).isPvpAllowed()) {
+			if (World.getInstance().getWorldMap(player.getWorldId()).isPvpAllowed()) {
 				return !isInDisablePvPZone(player) && !isInDisablePvPZone(enemy);
 			} else {
 				return isInPvPZone(player) && isInPvPZone(enemy);

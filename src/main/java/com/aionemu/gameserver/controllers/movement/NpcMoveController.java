@@ -15,9 +15,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.actions.NpcActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -35,9 +32,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.spawnengine.WalkerFormator;
 import com.aionemu.gameserver.spawnengine.WalkerGroup;
 import com.aionemu.gameserver.spawnengine.WalkerGroupShift;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.path.PathService;
 import lombok.Getter;
@@ -792,7 +792,7 @@ public class NpcMoveController
             }
         }
         updateLastMove();
-        GameMovementLoopServices.moveTaskManager().addCreature(owner);
+        MoveTaskManager.getInstance().addCreature(owner);
     }
 
     /**
@@ -815,7 +815,7 @@ public class NpcMoveController
             resetPath();
         }
         updateLastMove();
-        GameMovementLoopServices.moveTaskManager().addCreature(owner);
+        MoveTaskManager.getInstance().addCreature(owner);
     }
 
     /**
@@ -838,7 +838,7 @@ public class NpcMoveController
         pointY = target.getY();
         pointZ = target.getZ();
         updateLastMove();
-        GameMovementLoopServices.moveTaskManager().addCreature(owner);
+        MoveTaskManager.getInstance().addCreature(owner);
     }
 
     /**
@@ -867,7 +867,7 @@ public class NpcMoveController
             }
         }
         updateLastMove();
-        GameMovementLoopServices.moveTaskManager().addCreature(owner);
+        MoveTaskManager.getInstance().addCreature(owner);
     }
 
     /**
@@ -1273,7 +1273,7 @@ public class NpcMoveController
         float oldX = owner.getX();
         float oldY = owner.getY();
         float oldZ = owner.getZ();
-        GameWorldBootstrapServices.world().updatePosition(owner, target.getX(), target.getY(), targetZ, target.getHeading());
+        World.getInstance().updatePosition(owner, target.getX(), target.getY(), targetZ, target.getHeading());
         if (owner.getKnownList() != null) {
             PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner.getObjectId(), oldX, oldY, oldZ,
                     target.getX(), target.getY(), targetZ, target.getHeading(), MovementMask.IMMEDIATE));
@@ -1433,7 +1433,7 @@ public class NpcMoveController
         if (this.owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
         }
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
+        World.getInstance().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
         sampleStuckShadow(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ, currentSpeed, now, path,
                 (float) MathUtil.getDistance(owner.getX(), owner.getY(), owner.getZ(), targetX, targetY, targetZ), offset);
         boolean reachedWaypoint = reachedWaypoint(usesSpatialArrival(),
@@ -1636,7 +1636,7 @@ public class NpcMoveController
     @Override
     public void abortMove() {
         if (!this.started.get()) {
-            GameMovementLoopServices.moveTaskManager().removeCreature(owner);
+            MoveTaskManager.getInstance().removeCreature(owner);
             resetPath();
             return;
         }
@@ -1653,7 +1653,7 @@ public class NpcMoveController
         if (owner.getAi2().isLogging()) {
             AI2Logger.moveinfo(owner, "MC perform stop");
         }
-        GameMovementLoopServices.moveTaskManager().removeCreature(owner);
+        MoveTaskManager.getInstance().removeCreature(owner);
         cancelFollow();
         started.set(false);
         targetDestX = 0;
@@ -1699,7 +1699,7 @@ public class NpcMoveController
             return;
         }
         long generation = pauseStopGeneration.incrementAndGet();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> sendPauseStopAtDeadline(generation),
+        ThreadPoolManager.getInstance().schedule(() -> sendPauseStopAtDeadline(generation),
                 pauseStopDelayMs(deadline, System.currentTimeMillis()));
     }
 
@@ -2538,7 +2538,7 @@ public class NpcMoveController
         byte heading = homeReturnWaypoint == null ? spawn.getHeading() : owner.getHeading();
         clearPathFailureContext();
         abortMove();
-        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, target.getX(), target.getY(),
+        World.getInstance().updatePosition(owner, target.getX(), target.getY(),
                 target.getZ(), heading);
         owner.getAi2().onGeneralEvent(AIEventType.BACK_HOME);
     }

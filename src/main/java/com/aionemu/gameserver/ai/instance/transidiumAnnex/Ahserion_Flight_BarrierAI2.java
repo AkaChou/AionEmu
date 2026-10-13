@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -32,7 +32,7 @@ public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubCenterBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277230); // 阿塞里昂飞行屏障 / Ahserion Flight Barrier
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			GAb1SubCenterBarricadeDa65Ah.setTarget(getOwner());
 			GAb1SubCenterBarricadeDa65Ah.setNpcType(NpcType.ATTACKABLE);
 			WorldMapInstance instance = getPosition().getWorldMapInstance();

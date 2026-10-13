@@ -17,7 +17,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -30,13 +29,8 @@ import java.util.Map;
  */
 @Slf4j
 public class TownService {
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 实例提供者。
-	 * Injects the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<TownService> instanceProvider;
+	private static volatile TownService resolvedInstance;
 	private final TownDao townDAO;
 	private final Map<Integer, Town> elyosTowns;
 	private final Map<Integer, Town> asmosTowns;
@@ -53,14 +47,30 @@ public class TownService {
 	 *                               when no provider or bean is available
 	 */
 	public static TownService getInstance() {
+		TownService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<TownService> provider = instanceProvider;
-		TownService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("TownService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<TownService> instanceProvider) {
+		TownService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

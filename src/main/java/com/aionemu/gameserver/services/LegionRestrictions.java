@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LegionConfig;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.IStorage;
@@ -219,7 +218,7 @@ final class LegionRestrictions {
 			PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_CANT_LEVEL_UP);
 			return false;
 		} else if (LegionConfig.ENABLE_GUILD_TASK_REQ && legion.getLegionLevel() >= 5) {
-			if (!GameHousingServices.challengeTaskService().canRaiseLegionLevel(legion.getLegionId(),
+			if (!ChallengeTaskService.getInstance().canRaiseLegionLevel(legion.getLegionId(),
 					legion.getLegionLevel())) {
 				PacketSendUtility.sendPacket(activePlayer,
 						SM_SYSTEM_MESSAGE.STR_GUILD_LEVEL_UP_CHALLENGE_TASK(legion.getLegionLevel()));

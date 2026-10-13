@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -21,6 +20,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TELEPORT_BACK;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.SummonEffect;
 import com.aionemu.gameserver.skillengine.effect.TransformEffect;
@@ -59,7 +59,7 @@ public class SkillUseAction extends AbstractItemAction {
 	  */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
-		Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
+		Skill skill = SkillEngine.getInstance().getSkill(player, skillid, level, player.getTarget(),
 				parentItem.getItemTemplate());
 		if (skill == null) {
 			return false;
@@ -102,7 +102,7 @@ public class SkillUseAction extends AbstractItemAction {
 	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
-		final Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
+		final Skill skill = SkillEngine.getInstance().getSkill(player, skillid, level, player.getTarget(),
 				parentItem.getItemTemplate());
 		if (skill != null) {
 			if (skill.getSkillId() == 8198) {

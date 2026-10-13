@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -10,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Levinshor 区域 NPC AI：Destoyer Feld（@AIName "destoyer_feld"），继承 AggressiveNpcAI2。
@@ -30,10 +30,10 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 				if (!isAlreadyDead()) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19512, 1, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19512, 1, getOwner()).useNoAnimationSkill();
 				}
 			}, 20000, 50000);
 		}
@@ -61,7 +61,7 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 	}
 
 	private void buff() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
 	}
 
 	@Override

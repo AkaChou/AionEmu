@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员天族/魔族代理战命令：启动或停止指定代理战。
@@ -58,7 +59,7 @@ public class Agent extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendPacket(player1, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite));
 				AgentService.getInstance().startAgentFight(agentId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

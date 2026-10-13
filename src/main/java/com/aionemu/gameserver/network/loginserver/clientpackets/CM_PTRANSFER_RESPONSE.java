@@ -3,10 +3,10 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
+import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 
 /**
  * 登录服角色转移流程响应包。
@@ -40,20 +40,20 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 			String account = readS();
 			int len = readD();
 			byte[] db = this.readB(len);
-			GameRuntimeServices.playerTransferService().cloneCharacter(taskId, targetAccount, name, account, db);
+			PlayerTransferService.getInstance().cloneCharacter(taskId, targetAccount, name, account, db);
 		}
 			break;
 		case 21:// 成功 / ok
 		{
 			int taskId = readD();
-			GameRuntimeServices.playerTransferService().onOk(taskId);
+			PlayerTransferService.getInstance().onOk(taskId);
 		}
 			break;
 		case 22:// 错误 / error
 		{
 			int taskId = readD();
 			String reason = readS();
-			GameRuntimeServices.playerTransferService().onError(taskId, reason);
+			PlayerTransferService.getInstance().onError(taskId, reason);
 		}
 			break;
 		case 23: {
@@ -67,7 +67,7 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 				int targetAccount = readD();
 				int playerId = readD();
 				int taskId = readD();
-				GameRuntimeServices.playerTransferService().startTransfer(account, targetAccount, playerId, targetServerId,
+				PlayerTransferService.getInstance().startTransfer(account, targetAccount, playerId, targetServerId,
 						taskId);
 			}
 		}

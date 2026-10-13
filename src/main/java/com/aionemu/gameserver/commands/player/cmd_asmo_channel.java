@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：向魔族频道发送付费世界消息。
@@ -79,7 +80,7 @@ public class cmd_asmo_channel extends PlayerCommand {
 			final boolean toAll = params[0].equals("ALL");
 			final Race race = adminRace;
 
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+			World.getInstance().doOnAllPlayers(player1 -> {
 				if (toAll || player1.getRace() == race || (player1.getAccessLevel() > 0)) {
 					PacketSendUtility.sendMessage(player1, sMessage);
 				}

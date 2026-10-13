@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_SEARCH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端玩家搜索请求包，按名称/区域/职业/等级/LFG 等条件筛选在线玩家。
@@ -50,7 +51,7 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
-		Iterator<Player> it = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> it = World.getInstance().getPlayersIterator();
 		List<Player> matches = new ArrayList<>(MAX_RESULTS);
 		if (activePlayer.getLevel() < 10) {
 			// 10 级以下角色无法使用搜索功能。 / Characters under level 10 cannot use the search function.

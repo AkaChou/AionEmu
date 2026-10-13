@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -15,7 +13,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -80,7 +80,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		switch(npc.getNpcId()) {
 			case 215415: //Miren Chamber Artifact.
 				sendMsg("You win effect <Shield Of Compassion>");
-				GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 276, 10, player).useNoAnimationSkill();
 			break;
 		}
 	}
@@ -167,7 +167,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			case 215189: //Ranx Scout Captain.
 			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -181,7 +181,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			case 215200: //Ranx Deathbringer.
 			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -195,7 +195,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			case 215214: //Ranx Quaestor.
 			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -209,7 +209,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			case 215220: //Ebonlord Vershinak.
 			    //某处沉重的门已打开。 / A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -288,7 +288,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 			twilightBattlefieldChest.add((Npc) spawn(254574, 578.9111f,  874.7958f, 199.76036f, (byte) 9));
 			twilightBattlefieldChest.add((Npc) spawn(254574, 585.83545f, 855.7736f, 199.76036f, (byte) 3));
 			twilightBattlefieldChest.add((Npc) spawn(254574, 586.7527f, 835.4556f, 199.76036f, (byte) 116));
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -320,7 +320,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -352,7 +352,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -384,7 +384,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -416,7 +416,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -448,7 +448,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -480,7 +480,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -512,7 +512,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -544,7 +544,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -576,7 +576,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -608,7 +608,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -640,7 +640,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			twilightBattlefieldTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			twilightBattlefieldTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -706,7 +706,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

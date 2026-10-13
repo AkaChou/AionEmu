@@ -2,14 +2,13 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortal;
 import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortalEndpoint;
 import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortalGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.DirectPortalPoint;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -24,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 真实直达传送门引擎：管理传送门的开启、关闭与使用。
@@ -61,7 +61,7 @@ public final class RetailDirectPortalEngine {
 		ACTIVE.put(id, active);
 		BY_NPC.put(start.getObjectId(), active);
 		BY_NPC.put(destination.getObjectId(), active);
-		active.expiry = GameThreadPoolServices.threadPoolManager().schedule(
+		active.expiry = ThreadPoolManager.getInstance().schedule(
 			() -> closeIfActive(id, active), definition.time() * 1000L);
 		return true;
 	}
@@ -160,7 +160,7 @@ return;
 		if (!(object instanceof Npc npc)) {
 			return null;
 		}
-		GameEngineServices.ai2Engine().setupAI("retail_direct_portal", npc);
+		AI2Engine.getInstance().setupAI("retail_direct_portal", npc);
 		npc.getAi2().onGeneralEvent(AIEventType.SPAWNED);
 		return npc;
 	}

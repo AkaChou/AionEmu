@@ -11,6 +11,7 @@ import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Collection;
 import java.util.Iterator;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 活动报名召集管理命令（{@code //eventcaller}）。
@@ -51,7 +52,7 @@ public class EventCaller extends AdminCommand {
 				int count = 0;
 				PacketSendUtility.sendMessage(player, "\nRegistered Players for the following Event!");
 				PacketSendUtility.sendMessage(player, "==================================");
-				Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+				Collection<Player> players = World.getInstance().getAllPlayers();
 
 				for (Player p : players) {
 					if (p.isRegedEvent()) {
@@ -66,7 +67,7 @@ public class EventCaller extends AdminCommand {
 				if (params.length == 1) { //eventcaller start
 					player.setEventStarted(true);
 					player.setCountPlayers(500);
-					Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+					Iterator<Player> iter = World.getInstance().getPlayersIterator();
 					while (iter.hasNext()) {
 						Player p1 = iter.next();
 						PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Registering for Event has Started! Type .queue to register to the event!");
@@ -79,7 +80,7 @@ public class EventCaller extends AdminCommand {
 					player.setEventStarted(true);
 					player.setCountPlayers(countP);
 
-					Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+					Iterator<Player> ita = World.getInstance().getPlayersIterator();
 					while (ita.hasNext()) {
 						Player p1 = ita.next();
 						PacketSendUtility.sendSys3Message(p1, player.getName(), "[EVENT] Registering for Event has Started! Type .queue to register to the event! ( '" + countP + "' Slots Available)");
@@ -92,7 +93,7 @@ public class EventCaller extends AdminCommand {
 				AdminCommand test = new MoveToMe();
 				int count = 0;
 				player.setEventStarted(false);
-				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+				Iterator<Player> iter = World.getInstance().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player p1 = iter.next();
 
@@ -121,7 +122,7 @@ public class EventCaller extends AdminCommand {
 			}
 			case "cancel": {
 				player.setEventStarted(false);
-				Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+				Iterator<Player> ita = World.getInstance().getPlayersIterator();
 				while (ita.hasNext()) {
 					Player p1 = ita.next();
 

@@ -3,7 +3,6 @@ package com.aionemu.gameserver.model.templates.quest;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.List;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import lombok.Getter;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 
 /**
  * 任务 NPC 模板（静态数据/XML）。
@@ -50,7 +50,7 @@ public class QuestNpc {
 		}
 		String aiName = DataManager.NPC_DATA.getNpcTemplate(npcId).getAi();
 		if ("quest_use_item".equals(aiName)) {
-			GameEngineServices.questEngine().registerCanAct(questId, npcId);
+			QuestEngine.getInstance().registerCanAct(questId, npcId);
 		}
 	}
 

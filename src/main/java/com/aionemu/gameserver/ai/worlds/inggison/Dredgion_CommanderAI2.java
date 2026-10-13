@@ -10,6 +10,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
@@ -31,7 +32,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceKilledBattleship() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				// “种族”的“玩家名”摧毁了龙族战舰。 / "Player Name" of the "Race" has destroyed the Balaur Battleship Dredgion.
@@ -40,7 +41,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void sendDredgionGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				HTMLService.sendGuideHtml(player, "Dredgion_Guide");
 			}

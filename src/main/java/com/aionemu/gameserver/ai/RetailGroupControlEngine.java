@@ -6,7 +6,6 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData.GroupControlArea;
 import com.aionemu.gameserver.dataholders.RetailAiData.GroupController;
 import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +22,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import lombok.extern.slf4j.Slf4j;
 
@@ -96,7 +96,7 @@ public final class RetailGroupControlEngine {
 				requireArea(areas, definition.area1()), requireArea(areas, definition.area2())))
 			.toList();
 		InstanceState state = new InstanceState(instance, controllers);
-		state.task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+		state.task = ThreadPoolManager.getInstance().scheduleAtFixedRate(
 			() -> refreshSafely(state), REFRESH_INTERVAL, REFRESH_INTERVAL);
 		return state;
 	}

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -11,7 +9,9 @@ import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -36,16 +36,16 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 
 	private void startEvent(int percent) {
 		if (percent == 50 || percent == 25) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19606, 46, getTarget()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 19606, 46, getTarget()).useNoAnimationSkill();
 		} switch (percent) {
 			case 75:
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			break;
 			case 50:
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();
-						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						SkillEngine.getInstance().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();
+						ThreadPoolManager.getInstance().schedule(() -> {
 							WorldPosition p = getPosition();
 							switch (Rnd.get(1, 2)) {
 								case 1:
@@ -69,9 +69,9 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void scheduleSkill(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			}
 		}, delay);
 	}

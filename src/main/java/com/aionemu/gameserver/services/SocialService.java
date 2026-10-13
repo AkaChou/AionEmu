@@ -14,6 +14,7 @@ import com.aionemu.gameserver.persistence.dao.FriendDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
 import lombok.NonNull;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 社交服务，处理好友与黑名单的增删改。
@@ -142,7 +143,7 @@ return;
 		if (getInstance().friendListDAO.delFriends(deleter.getObjectId(), exFriend2Id)) {
 			Player friend2Player = PlayerService.getCachedPlayer(exFriend2Id);
 			if (friend2Player == null) {
-				friend2Player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(exFriend2Id);
+				friend2Player = World.getInstance().findPlayer(exFriend2Id);
 			}
 			String friend2Name = friend2Player != null ? friend2Player.getName()
 				: getInstance().playerDAO.loadPlayerCommonData(exFriend2Id).getName();

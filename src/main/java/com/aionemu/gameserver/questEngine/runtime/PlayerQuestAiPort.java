@@ -4,7 +4,6 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestNpcEmotion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.task.QuestTasks;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.List;
@@ -157,7 +157,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 					new SM_EMOTION(npc, EmotionType.EMOTE, emotion.id(), player.getObjectId()), true);
 				yield true;
 			}
-		}, objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
+		}, objectId -> World.getInstance().findVisibleObject(objectId),
 		(player, npc, questId, zone) -> QuestTasks.newFollowingToTargetCheckTask(
 			new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)),
 		(player, npc, questId, x, y, z) -> QuestTasks.newFollowingToTargetCheckTask(
@@ -166,7 +166,7 @@ public final class PlayerQuestAiPort implements QuestAiPort {
 	}
 
 	public PlayerQuestAiPort(QuestPlayerPort players, QuestSpawnRegistry registry, AiCall ai) {
-		this(players, registry, ai, objectId -> GameWorldBootstrapServices.world().findVisibleObject(objectId),
+		this(players, registry, ai, objectId -> World.getInstance().findVisibleObject(objectId),
 			(player, npc, questId, zone) -> QuestTasks.newFollowingToTargetCheckTask(
 				new QuestEnv(null, player, questId, 0), npc, ZoneName.get(zone)),
 			(player, npc, questId, x, y, z) -> QuestTasks.newFollowingToTargetCheckTask(

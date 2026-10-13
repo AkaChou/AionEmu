@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai2.handler;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutType;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * NPC 喊话事件处理器，按各类战斗 / 行走 / 死亡事件触发模板喊话。
@@ -216,7 +216,7 @@ public final class ShoutEventHandler {
 		if (!npc.mayShout(shout.getPollDelay() / 1000)) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			for (Player kObj : npc.getKnownList().getKnownPlayers().values()) {
 				if (kObj.getLifeStats().isAlreadyDead()) {
 					return;

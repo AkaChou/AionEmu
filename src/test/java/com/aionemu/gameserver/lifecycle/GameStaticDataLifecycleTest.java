@@ -2,27 +2,18 @@ package com.aionemu.gameserver.lifecycle;
 
 import aionemu.testkit.StubPersistenceDaos;
 
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
-import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.services.GameLegacyServiceBridgeConfiguration;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
-import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameStaticDataLifecycleTest {
-
-    private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
     void staticDataLifecycleBridgesLegacyDataManagerAndMovementLoopsThroughSpringProviders() {
@@ -31,41 +22,6 @@ class GameStaticDataLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "moveTaskManagerProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "playerMoveTaskManagerProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameStaticDataLifecycle.class, "zoneUpdateServiceProvider"));
-    }
-
-
-    @Test
-    void staticDataServicesXmlDataLoaderAccessorUsesSpringProviderBeforeLegacyFallback() {
-        XmlDataLoader xmlDataLoader = objenesis.newInstance(XmlDataLoader.class);
-        GameStaticDataServices staticDataServices = new GameStaticDataServices(
-            provider(DataManager.class, objenesis.newInstance(DataManager.class)),
-            provider(HTMLCache.class, objenesis.newInstance(HTMLCache.class)),
-            provider(XmlDataLoader.class, xmlDataLoader)
-        );
-
-        try {
-            assertSame(xmlDataLoader, GameStaticDataServices.xmlDataLoader());
-            assertSame(xmlDataLoader, XmlDataLoader.getInstance());
-        } finally {
-            staticDataServices.destroy();
-            XmlDataLoader.setInstanceProvider(null);
-        }
-    }
-
-    @Test
-    void dataManagerUsesStaticDataServicesBridgeForXmlDataLoader() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/dataholders/DataManager.java"));
-
-        assertFalse(source.contains("XmlDataLoader.getInstance()"));
-        assertTrue(source.contains("GameStaticDataServices.xmlDataLoader()"));
-    }
-
-    @Test
-    void adminReloadUsesStaticDataServicesBridgeForXmlDataLoader() throws IOException {
-        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/commands/admin/Reload.java"));
-
-        assertFalse(source.contains("XmlDataLoader.getInstance()"));
-        assertTrue(source.contains("GameStaticDataServices.xmlDataLoader()"));
     }
 
     @Test
@@ -89,7 +45,7 @@ class GameStaticDataLifecycleTest {
             assertDoesNotThrow(() -> {
                 try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
                     context.register(GameLegacyServiceBridgeConfiguration.class,
-                            StubPersistenceDaos.class, GameMovementLoopServices.class);
+                            StubPersistenceDaos.class, MovementLoopServiceBindings.class);
                     context.refresh();
                 }
             });
@@ -154,12 +110,6 @@ class GameStaticDataLifecycleTest {
         protected void initializeMovementLoops() {
             movementLoops.incrementAndGet();
         }
-    }
-
-    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
-        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        beanFactory.registerSingleton(type.getName(), instance);
-        return beanFactory.getBeanProvider(type);
     }
 
     private static Class<?> fieldType(Class<?> type, String name) {

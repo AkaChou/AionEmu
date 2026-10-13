@@ -5,6 +5,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Iterator;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员全服公告命令：以匿名或实名向全服居中广播。
@@ -47,7 +48,7 @@ public class Announce extends AdminCommand {
 		// 添加最后一项，末尾不加空格 / Add the last without the end space
 		message.append(params[params.length - 1]);
 
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), message.toString());

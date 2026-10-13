@@ -3,8 +3,6 @@ package com.aionemu.gameserver.spawnengine;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.ArrayList;
@@ -12,11 +10,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -32,6 +32,7 @@ public class ShugoImperialTombSpawnManager {
 	 * Optional Spring instance provider.
 	 */
 	private static volatile ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider;
+	private static volatile ShugoImperialTombSpawnManager resolvedInstance;
 
 	/**
 	 * 当前存活的皇陵裂隙对象队列。
@@ -46,7 +47,7 @@ public class ShugoImperialTombSpawnManager {
 	 */
 	public synchronized void start() {
 		for (Runnable schedule : schedules) {
-			GameCronServices.cronService().cancel(schedule);
+			CronService.requireCurrent().cancel(schedule);
 		}
 		schedules.clear();
 		if (!EventsConfig.IMPERIAL_TOMB_ENABLE) {
@@ -60,7 +61,7 @@ public class ShugoImperialTombSpawnManager {
 				}
 			};
 			schedules.add(schedule);
-			GameCronServices.cronService().schedule(schedule, cron);
+			CronService.requireCurrent().schedule(schedule, cron);
 			log.info(I18n.get("log.d50384b4d1f3", cron, EventsConfig.IMPERIAL_TOMB_TIMER));
 		}
 	}
@@ -85,7 +86,7 @@ public class ShugoImperialTombSpawnManager {
 	 * @param visObj 裂隙可见对象 / the visible rift object
 	 */
 	private static void scheduleDelete(final VisibleObject visObj) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (visObj != null && visObj.isSpawned()) {
 				visObj.getController().delete();
 				tomb.remove(visObj);
@@ -245,14 +246,19 @@ public class ShugoImperialTombSpawnManager {
 	 *         when no provider or bean is available
 	 */
 	public static ShugoImperialTombSpawnManager getInstance() {
+		ShugoImperialTombSpawnManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ShugoImperialTombSpawnManager> provider = instanceProvider;
-		ShugoImperialTombSpawnManager provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ShugoImperialTombSpawnManager 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -262,5 +268,6 @@ public class ShugoImperialTombSpawnManager {
 	 */
 	public static void setInstanceProvider(ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider) {
 		ShugoImperialTombSpawnManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

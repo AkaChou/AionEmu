@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services.craft;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AETHERFORGING_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -76,7 +76,7 @@ public class CraftService {
 		if (recipetemplate.getMaxProductionCount() != null) {
 			player.getRecipeList().deleteRecipe(player, recipetemplate.getId());
 			if (critCount == 0) {
-				GameEngineServices.questEngine().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
+				QuestEngine.getInstance().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
 			}
 		}
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(productItemId);

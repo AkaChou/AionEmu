@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HitType;
 import com.aionemu.gameserver.skillengine.model.ProvokeTarget;
@@ -92,7 +92,7 @@ public class ProvokerEffect extends ShieldEffect {
 			return;
 		}
 		Creature target = getProvokeTarget(provokeTarget, caster, opponent);
-		GameEngineServices.skillEngine().applyEffectDirectly(skillId, caster, target, 0, triggeredSkillLevel);
+		SkillEngine.getInstance().applyEffectDirectly(skillId, caster, target, 0, triggeredSkillLevel);
 	}
 
 	private boolean matchesOpponent(Creature caster, Creature opponent) {

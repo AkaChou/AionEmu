@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
 import com.aionemu.gameserver.model.account.Account;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.PlayerInfo;
+import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.player.PlayerService;
 
 /**
@@ -59,7 +59,7 @@ public class SM_CHARACTER_LIST extends PlayerInfo {
 				writeD(PlayerService.daos().mailDAO().haveUnread(pcd.getPlayerObjId()) ? 1 : 0); // mail
 				writeD(0); // 未知 / unk
 				writeD(0); // 未知 / unk
-				writeQ(GameRuntimeServices.brokerService().getCollectedMoney(pcd)); // collected money from broker
+				writeQ(BrokerService.getInstance().getCollectedMoney(pcd)); // collected money from broker
 				writeD(0);
 				writeB(new byte[122 + 24]); // 5.1 protocol
 			}

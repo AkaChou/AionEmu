@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.fallenPoeta;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -44,7 +44,7 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 	}
 
 	private void fireTornado() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(243961, 679.88f, 1068.88f, 497.88f, (byte) 0); //IDF6_LF1_Thor_SumStatue_PhyAtk.
 		}, 5000);
 	}

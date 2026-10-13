@@ -1,10 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
@@ -22,9 +19,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.summons.SummonsService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤物控制器，管理模式切换、攻击、技能与与主人的距离解除。
@@ -191,7 +191,7 @@ public class SummonController extends CreatureController<Summon> {
 
 		if (!master.equals(lastAttacker) && !owner.equals(lastAttacker) && !master.getLifeStats().isAlreadyDead()
 				&& !lastAttacker.getLifeStats().isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
+			ThreadPoolManager.getInstance().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
 		}
 	}
 
@@ -209,11 +209,11 @@ public class SummonController extends CreatureController<Summon> {
 			// 黑客！） / hackers!)
 			return;
 		}
-		Skill skill = GameEngineServices.skillEngine().getSkill(creature, skillId, 1, target);
+		Skill skill = SkillEngine.getInstance().getSkill(creature, skillId, 1, target);
 		if (skill != null) {
 			// 技能成功时，按需处理自动释放 / If skill succeeds, handle automatic release if expected
 			if (skill.useSkill() && skillId == releaseAfterSkill) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> SummonsService.release(getOwner(), UnsummonType.UNSPECIFIED, isAttacked), 1000);
+				ThreadPoolManager.getInstance().schedule(() -> SummonsService.release(getOwner(), UnsummonType.UNSPECIFIED, isAttacked), 1000);
 			}
 			setReleaseAfterSkill(-1);
 		}
@@ -228,7 +228,7 @@ public class SummonController extends CreatureController<Summon> {
 		super.onStartMove();
 		getOwner().getMoveController().setInMove(true);
 		getOwner().getObserveController().notifyMoveObservers();
-		GameMovementLoopServices.playerMoveTaskManager().addPlayer(getOwner());
+		PlayerMoveTaskManager.getInstance().addPlayer(getOwner());
 	}
 
 	/**
@@ -238,7 +238,7 @@ public class SummonController extends CreatureController<Summon> {
 	@Override
 	public void onStopMove() {
 		super.onStopMove();
-		GameMovementLoopServices.playerMoveTaskManager().removePlayer(getOwner());
+		PlayerMoveTaskManager.getInstance().removePlayer(getOwner());
 		getOwner().getObserveController().notifyMoveObservers();
 		getOwner().getMoveController().setInMove(false);
 	}

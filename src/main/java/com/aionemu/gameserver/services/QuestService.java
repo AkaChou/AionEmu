@@ -1,16 +1,13 @@
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.reward.BonusService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -78,6 +75,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 /**
@@ -167,7 +165,7 @@ public final class QuestService {
 			giveReward(env, rewards);
 			giveReward(env, extendedRewards);
 			if (template.getCategory() == QuestCategory.CHALLENGE_TASK) {
-				GameHousingServices.challengeTaskService().onChallengeQuestFinish(player, id);
+				ChallengeTaskService.getInstance().onChallengeQuestFinish(player, id);
 			}
 			return setFinishingState(env, template, reward);
 		}
@@ -221,7 +219,7 @@ public final class QuestService {
 		if (!template.getBonus().isEmpty()) {
 			QuestBonuses bonus = template.getBonus().getFirst();
 			// 处理器可在重复时添加额外奖励（活动任务无数据）。 / Handler can add additional bonuses on repeat (for event quests no data)
-			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType());
+			HandlerResult result = QuestEngine.getInstance().onBonusApplyEvent(env, bonus.getType());
 			if (result != HandlerResult.FAILED) {
 				QuestItems additional = BonusService.getInstance().getQuestBonus(player, template);
 				if (additional != null) {
@@ -346,7 +344,7 @@ public final class QuestService {
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
 		}
-		GameEngineServices.questEngine().onLvlUp(env);
+		QuestEngine.getInstance().onLvlUp(env);
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().completeQuest(template);
 		}
@@ -412,7 +410,7 @@ public final class QuestService {
 
 	private static boolean checkStartConditionsImpl(QuestEnv env, boolean warn) {
 		Player player = env.getPlayer();
-		QuestEngine engine = GameEngineServices.questEngine();
+		QuestEngine engine = QuestEngine.getInstance();
 		// 原生行没有 typed 模板：起始条件走原版 quest.xml 轴（owner 分流同 QE-113/QE-119）。
 		// warn 面只有 typed 的 startQuest 会用到，而该入口要求 typed 模板 ⇒ native 行不经过它。
 		// Native rows carry no typed template: their start conditions come from the retail quest.xml
@@ -477,7 +475,7 @@ public final class QuestService {
 		if (((template.isMaster()) && (!CraftSkillUpdateService.canLearnMoreMasterCraftingSkill(player))) || ((template.isExpert()) && (!CraftSkillUpdateService.canLearnMoreExpertCraftingSkill(player)))) {
 			return false;
 		}
-		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(env.getQuestId()).orElse(null);
+		QuestMetadata metadata = QuestEngine.getInstance().questCatalog().findMetadata(env.getQuestId()).orElse(null);
 		if (metadata != null && !metadata.prerequisites().isEmpty()) {
 			for (int prereqId : metadata.prerequisites()) {
 				QuestState state = player.getQuestStateList().getQuestState(prereqId);
@@ -632,7 +630,7 @@ public final class QuestService {
 		// the activity lists, not the quest.xml category (a client UI grouping).
 		QuestMetadata metadata = null;
 		if (template == null) {
-			metadata = GameEngineServices.questEngine().nativeMetadata(id).orElse(null);
+			metadata = QuestEngine.getInstance().nativeMetadata(id).orElse(null);
 			if (metadata == null) {
 				return false;
 			}
@@ -849,7 +847,7 @@ public final class QuestService {
 	}
 
 	private static void despawnQuestNpc(final Npc npc, int timeInMin) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
 				npc.getController().onDelete();
 			}
@@ -1034,7 +1032,7 @@ public final class QuestService {
 	 * level difference
 	 */
 	public static int getLevelRequirement(int questId, int playerLevel) {
-		QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		QuestMetadata metadata = QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null) {
 			return 999;
 		}
@@ -1082,8 +1080,8 @@ public final class QuestService {
 	 * 单行提示标记：{@code null} = 不入列表。 / One row's hint flag; {@code null} means "not listed".
 	 */
 	private static Integer nearbyQuestFlag(Player player, int questId) {
-		if (GameEngineServices.questEngine().isNativeOwner(questId)) {
-			return switch (GameEngineServices.questEngine().nativeZoneVerdict(player, questId)) {
+		if (QuestEngine.getInstance().isNativeOwner(questId)) {
+			return switch (QuestEngine.getInstance().nativeZoneVerdict(player, questId)) {
 				case ACQUIRABLE -> 0;
 				case LEVEL_SOON -> 1;
 				case OMITTED -> null;
@@ -1203,7 +1201,7 @@ public final class QuestService {
 	 * whether successful
 	 */
 	public static boolean abandonQuest(Player player, int questId) {
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null && questEngine.isNativeOwner(questId)) {
 			// 已切原生车道的行不在 typed 目录里：放弃的元数据轴（cannot_giveup / quest_work_item*）
@@ -1261,7 +1259,7 @@ public final class QuestService {
 		if (player == null || player.getQuestStateList() == null || questId <= 0) {
 			return false;
 		}
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		QuestMetadata metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null && questEngine.isNativeOwner(questId)) {
 			// 与 abandonQuest 同一条原生元数据回退链（cannot_giveup 轴）。
@@ -1291,7 +1289,7 @@ public final class QuestService {
 	 * drop collection
 	 */
 	public static Collection<QuestCatalogDrop> getQuestDrop(int npcId) {
-		return GameEngineServices.questEngine().questDrops(npcId);
+		return QuestEngine.getInstance().questDrops(npcId);
 	}
 
 	/**

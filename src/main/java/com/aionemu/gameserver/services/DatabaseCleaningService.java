@@ -4,7 +4,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 数据库清理服务，按配置周期多线程删除长期不活跃角色。
@@ -143,7 +143,7 @@ public class DatabaseCleaningService {
 		}
 
 		for (Worker w : workers) {
-			GameThreadPoolServices.threadPoolManager().executeLongRunning(w);
+			ThreadPoolManager.getInstance().executeLongRunning(w);
 		}
 	}
 

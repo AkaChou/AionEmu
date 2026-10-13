@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +9,14 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import lombok.RequiredArgsConstructor;
 import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 
 /**
  * 创造点数（CP）同步包：下发总点数、等级上限与各槽位分配，登录时并应用属性变更。
@@ -67,36 +74,36 @@ public class SM_CREATIVITY_POINTS extends AionServerPacket {
 				writeH(ce.getPoint());
 				if (ce.getSlot() == 1) {
 					activePlayer.setCPSlot1(ce.getPoint());
-					GameCreativityServices.power().onChange(activePlayer, ce.getPoint());
+					Power.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 2) {
 					activePlayer.setCPSlot2(ce.getPoint());
-					GameCreativityServices.health().onChange(activePlayer, ce.getPoint());
+					Health.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 3) {
 					activePlayer.setCPSlot3(ce.getPoint());
-					GameCreativityServices.agility().onChange(activePlayer, ce.getPoint());
+					Agility.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 4) {
 					activePlayer.setCPSlot4(ce.getPoint());
-					GameCreativityServices.precision().onChange(activePlayer, ce.getPoint());
+					Precision.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 5) {
 					activePlayer.setCPSlot5(ce.getPoint());
-					GameCreativityServices.knowledge().onChange(activePlayer, ce.getPoint());
+					Knowledge.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 6) {
 					activePlayer.setCPSlot6(ce.getPoint());
-					GameCreativityServices.will().onChange(activePlayer, ce.getPoint());
+					Will.getInstance().onChange(activePlayer, ce.getPoint());
 				}
 				/*
 				 * if (ce.getSlot() >= 15 && ce.getSlot() <= 372 && ce.getPoint() != 0) { //
 				 * Reduce Server Send Packet. its handled on login
-				 * GameCreativityServices.creativitySkillService().enchantSkill(activePlayer, ce.getSlot(),
+				 * CreativitySkillService.getInstance().enchantSkill(activePlayer, ce.getSlot(),
 				 * ce.getPoint()); }
-				 * GameCreativityServices.creativityTransfoService().enchantTransfo(activePlayer,
+				 * CreativityTransfoService.getInstance().enchantTransfo(activePlayer,
 				 * ce.getSlot(), ce.getPoint()); if (ce.getSlot() >= 373 && ce.getSlot() <= 400)
-				 * { GameCreativityServices.creativitySkillService().loginDaevaSkill(activePlayer,
+				 * { CreativitySkillService.getInstance().loginDaevaSkill(activePlayer,
 				 * ce.getSlot(), ce.getPoint()); }
 				 */
 			}

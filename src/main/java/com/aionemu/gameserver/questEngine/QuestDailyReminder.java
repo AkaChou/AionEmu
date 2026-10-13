@@ -3,12 +3,12 @@ package com.aionemu.gameserver.questEngine;
 import java.util.Calendar;
 import java.util.concurrent.ScheduledFuture;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 每日/周可重复任务提醒广播：09:00 起每日触发一次的可重复任务刷新与提醒包。
@@ -33,10 +33,10 @@ final class QuestDailyReminder {
 		if (sendingDate.getTime().getTime() < System.currentTimeMillis()) {
 			sendingDate.add(Calendar.HOUR, 24);
 		}
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			SM_SYSTEM_MESSAGE dailyMessage = new SM_SYSTEM_MESSAGE(1400854);
 			SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
-			for (Player player : GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player player : World.getInstance().getAllPlayers()) {
 				if (player == null) {
 					continue;
 				}

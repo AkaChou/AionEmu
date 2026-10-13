@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
@@ -11,7 +10,6 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import lombok.NonNull;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -36,6 +34,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 挑战任务服务，管理城镇/军团挑战任务列表、完成结算与奖励。
@@ -43,14 +42,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ChallengeTaskService {
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
+	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
+	private static volatile ChallengeTaskService resolvedInstance;
 	private final ChallengeTaskDao challengeTasksDAO;
 	private final TownDao townDAO;
 	private final LegionMemberDao legionMemberDAO;
@@ -71,14 +64,30 @@ public class ChallengeTaskService {
 	 *         when no provider or bean is available
 	 */
 	public static ChallengeTaskService getInstance() {
+		ChallengeTaskService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ChallengeTaskService> provider = instanceProvider;
-		ChallengeTaskService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ChallengeTaskService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<ChallengeTaskService> instanceProvider) {
+		ChallengeTaskService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**
@@ -113,7 +122,7 @@ public class ChallengeTaskService {
 				ownerLevel = player.getLegion().getLegionLevel();
 				break;
 			case TOWN:
-				ownerLevel = GameHousingServices.townService().getTownById(ownerId).getLevel();
+				ownerLevel = TownService.getInstance().getTownById(ownerId).getLevel();
 				break;
 			default:
 				break;
@@ -142,7 +151,7 @@ public class ChallengeTaskService {
 		} else if (challengeType == ChallengeType.TOWN) {
 			taskMap = cityTasks;
 		}
-		int playerTownId = GameHousingServices.townService().getTownResidence(player);
+		int playerTownId = TownService.getInstance().getTownResidence(player);
 		List<ChallengeTask> availableTasks = new ArrayList<>();
 		if (!taskMap.containsKey(ownerId)) {
 			Map<Integer, ChallengeTask> tasks = this.challengeTasksDAO.load(ownerId, challengeType);
@@ -213,9 +222,9 @@ public class ChallengeTaskService {
 	 * quest id
 	 */
 	private void onCityTaskFinish(Player player, ChallengeTaskTemplate taskTemplate, int questId) {
-		int townId = GameHousingServices.townService().getTownIdByPosition(player);
+		int townId = TownService.getInstance().getTownIdByPosition(player);
 		if (cityTasks.get(townId) == null) {
-			buildTaskList(player, ChallengeType.TOWN, townId, GameHousingServices.townService().getTownById(townId).getLevel());
+			buildTaskList(player, ChallengeType.TOWN, townId, TownService.getInstance().getTownById(townId).getLevel());
 			if (cityTasks.get(townId) == null) {
 				return;
 			}
@@ -232,7 +241,7 @@ public class ChallengeTaskService {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
 			this.challengeTasksDAO.storeTask(task);
-			Town town = GameHousingServices.townService().getTownById(townId);
+			Town town = TownService.getInstance().getTownById(townId);
 			if (town != null) {
 				int oldLevel = town.getLevel();
 				town.increasePoints(quest.getScorePerQuest());
@@ -287,7 +296,7 @@ public class ChallengeTaskService {
 			if (task.isCompleted()) {
 				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
-					Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberObjId);
+					Player member = World.getInstance().findPlayer(memberObjId);
 					if (member != null) {
 						int score = member.getLegionMember().getChallengeScore();
 						winnersByPoints.computeIfAbsent(score, _ -> new ArrayList<>()).add(member.getObjectId());

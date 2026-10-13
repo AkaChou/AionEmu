@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai2;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.Collection;
 
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -138,7 +138,7 @@ public class AI2Actions {
 	 */
 	public static SelectDialogResult selectDialog(AbstractAI ai2, Player player, int questId, int dialogId) {
 		QuestEnv env = new QuestEnv(ai2.getOwner(), player, questId, dialogId);
-		boolean result = GameEngineServices.questEngine().onDialog(env);
+		boolean result = QuestEngine.getInstance().onDialog(env);
 		return new SelectDialogResult(result, env);
 	}
 

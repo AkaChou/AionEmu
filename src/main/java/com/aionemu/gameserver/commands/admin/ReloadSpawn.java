@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -199,7 +200,7 @@ public class ReloadSpawn extends AdminCommand
 		final Player adm = admin;
 		final String dest = destinationMap;
 		if (IdWorld != 0) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(object -> {
+			World.getInstance().doOnAllObjects(object -> {
 				if (object.getWorldId() != IdWorld) {
 					return;
 				} if (object instanceof Npc || object instanceof Gatherable || object instanceof StaticObject) {

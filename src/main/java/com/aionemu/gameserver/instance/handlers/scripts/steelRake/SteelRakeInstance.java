@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.steelRake;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -347,7 +347,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+		ThreadPoolManager.getInstance().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

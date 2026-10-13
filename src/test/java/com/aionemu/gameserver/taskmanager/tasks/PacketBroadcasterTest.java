@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.effect.EffectController;
-import com.aionemu.gameserver.lifecycle.GameEventServices;
+import com.aionemu.gameserver.lifecycle.EventServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 class PacketBroadcasterTest {
 
 	/**
-	 * GameEventServices 已解析数据包广播器缓存字段。
-	 * Resolved packet-broadcaster cache field of GameEventServices.
+	 * EventServiceBindings 已解析数据包广播器缓存字段。
+	 * Resolved packet-broadcaster cache field of EventServiceBindings.
 	 */
 	private Field resolvedPacketBroadcasterField;
 
@@ -34,7 +34,7 @@ class PacketBroadcasterTest {
 		// D1a 后 holder 定位器不再回退到单例：预置已解析缓存，离线路径不再 fail-fast。
 		// After D1a the holder locator no longer falls back to the singleton: preset the
 		// resolved cache so offline paths do not fail fast.
-		resolvedPacketBroadcasterField = GameEventServices.class.getDeclaredField("resolvedPacketBroadcaster");
+		resolvedPacketBroadcasterField = PacketBroadcaster.class.getDeclaredField("resolvedInstance");
 		resolvedPacketBroadcasterField.setAccessible(true);
 		resolvedPacketBroadcasterField.set(null, packetBroadcaster);
 	}
@@ -62,7 +62,7 @@ class PacketBroadcasterTest {
 		BroadcastMode.BROAD_CAST_EFFECTS.trySendPacket(creature, creature.getPacketBroadcastMask());
 
 		assertEquals(BroadcastMode.BROAD_CAST_EFFECTS.mask(), creature.getPacketBroadcastMask());
-		GameEventServices.packetBroadcaster().run();
+		PacketBroadcaster.getInstance().run();
 		assertEquals(0, creature.getPacketBroadcastMask());
 	}
 
@@ -84,7 +84,7 @@ class PacketBroadcasterTest {
 			() -> BroadcastMode.BROAD_CAST_EFFECTS.trySendPacket(creature, creature.getPacketBroadcastMask()));
 
 		assertEquals(BroadcastMode.BROAD_CAST_EFFECTS.mask(), creature.getPacketBroadcastMask());
-		GameEventServices.packetBroadcaster().run();
+		PacketBroadcaster.getInstance().run();
 		assertEquals(0, creature.getPacketBroadcastMask());
 	}
 

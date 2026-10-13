@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Sauro Supply Base 副本 NPC AI：Chief Gunner Kurmata（@AIName "chief_gunner_kurmata"），继承 AggressiveNpcAI2。
@@ -32,8 +32,8 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 	}
 
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); // 钢铁守护 / Iron Guardian.
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); // 钢铁守护 / Iron Guardian.
+		SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 
 	@Override
@@ -59,21 +59,21 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		if (!isAlreadyDead() && isStart) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); // 鲜血祝福 / Blessing of Blood.
+			SkillEngine.getInstance().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); // 鲜血祝福 / Blessing of Blood.
 		}
 	}
 
 	private void stage2() {
 		int delay = 20000;
 		if (!isAlreadyDead() && isStart) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); // 雷霆冲击 / Thunder Crash Fallout.
+			SkillEngine.getInstance().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); // 雷霆冲击 / Thunder Crash Fallout.
 			scheduleDelayStage2(delay);
 		}
 	}
 
 	private void scheduleDelayStage2(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage2, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage2, delay);
 		}
 	}
 

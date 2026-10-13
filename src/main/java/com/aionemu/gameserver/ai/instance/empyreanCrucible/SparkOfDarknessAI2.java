@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Spark Of Darkness（@AIName "spark_of_darkness"），继承 GeneralNpcAI2。
@@ -28,15 +28,15 @@ public class SparkOfDarknessAI2 extends GeneralNpcAI2
 	}
 
 	private void startEventTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19554, 1, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19554, 1, getOwner()).useNoAnimationSkill();
 			}
 		}, 500);
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(SparkOfDarknessAI2.this), 6500);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(SparkOfDarknessAI2.this), 6500);
 	}
 
 	@Override

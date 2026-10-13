@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：报名参加 GM 正在举办的活动队列。
@@ -38,7 +39,7 @@ public class cmd_queue extends PlayerCommand {
             PacketSendUtility.sendMessage(player, "You cant register inside Prison!");
             return;
         }
-        Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+        Iterator<Player> ita = World.getInstance().getPlayersIterator();
 
         while(ita.hasNext()){
             Player player1 = ita.next();
@@ -77,7 +78,7 @@ public class cmd_queue extends PlayerCommand {
 
     private int checkRegedPlayers(){
         int count = 0;
-        Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+        Collection<Player> players = World.getInstance().getAllPlayers();
         for(Player p : players){
             if(p.isRegedEvent()){
                 count = count + 1;

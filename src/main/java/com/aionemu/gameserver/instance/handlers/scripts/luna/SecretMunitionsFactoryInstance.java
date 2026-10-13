@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.luna;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -24,7 +22,9 @@ import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactory
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -219,7 +219,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 				// 机械怪物的储物箱已出现在军需工厂内。 / The Machine Monster’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403645, Race.PC_ALL, 5000);
 				spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); // 机械怪物的储物箱 / Machine Monster’s Footlocker.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -248,7 +248,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 						spawn(834444, 149.65579f, 260.02966f, 191.8727f, (byte) 0); // 机械图尔克的特殊宝物箱 / Mechaturerk’s Special Treasure Box.
 						break;
 				}
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -346,7 +346,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 
 	private void startFactoryRaid1() {
 		// 机械图尔克维修士兵。 / Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -358,7 +358,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 1000);
 		// 机械图尔克维修士兵。 / Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -370,7 +370,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 30000);
 		// 机械图尔克维修士兵。 / Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -385,7 +385,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 
 	private void startFactoryRaid2() {
 		// 近战支援破坏魔像。 / Melee Support Destruction Golem.
-		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -397,7 +397,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 1000);
 		// 远程支援破坏魔像。 / Ranged Support Destruction Golem.
-		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -409,7 +409,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 30000);
 		// 近战+远程支援破坏魔像。 / Melee + Ranged Support Destruction Golem.
-		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -424,7 +424,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 
 	private void startFactoryRaid3() {
 		// 青色活体炸弹。 / Azure Living Bomb.
-		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -440,7 +440,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 1000);
 		// 金色活体炸弹。 / Golden Living Bomb.
-		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -456,7 +456,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 30000);
 		// 青色活体炸弹。 / Azure Living Bomb.
-		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -472,7 +472,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 			}
 		}, 60000);
 		// 金色活体炸弹。 / Golden Living Bomb.
-		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -524,7 +524,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	 * 副本实例。 / Raid Instance
 	 */
 	protected void startFactoryTask1() {
-		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -534,7 +534,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 				startFactoryRaid1();
 			}
 		}, 120000)); //...2 分钟 / ...2Min
-		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -548,7 +548,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); // 维护士兵的储物箱 / Maintenance Soldier’s Footlocker.
 			}
 		}, 240000)); //...4 分钟 / ...4Min
-		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -559,7 +559,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 				factoryTaskA2.cancel(true);
 			}
 		}, 360000)); //...6 分钟 / ...6Min
-		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -586,7 +586,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	 * 副本计时器 / Instance Timer
 	 */
 	protected void startFactoryTask2() {
-		factoryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -647,12 +647,12 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 		startPrepareTimer();
 		//spawnLunaDetachment();
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21348 : 21347;
-		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000);
+		SkillEngine.getInstance().applyEffectDirectly(lunaDetachement, player, player, 3000000);
 	}
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -821,7 +821,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -918,7 +918,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

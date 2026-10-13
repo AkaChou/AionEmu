@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.steelRake;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -15,10 +13,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Steel Rake 副本 NPC AI：Tamer Anikiki（@AIName "tamer_anikiki"），继承 AggressiveNpcAI2。
@@ -78,8 +78,8 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 		super.handleSpawned();
 		if (getNpcId() != 215412) { // 驯兽师阿尼基基 / Tamer Anikiki.
 			// 生成的巡逻怪 5 秒后获得增益并回满血。 / Spawned patrol mobs get the buff and full HP after 5 seconds.
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
+			ThreadPoolManager.getInstance().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
 				getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
 			}, 5000);
 		}

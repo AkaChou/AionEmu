@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,8 +33,8 @@ public class Sealed_FairyAI2 extends NpcAI2
 			    case 834009: // 封印的妖精 / Sealed Fairy.
 				    // 离开花园后，希尔法女王的力量将消失。 / Once you leave the garden, the Sylfae Queen’s power will disappear.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_41, 5000);
-					GameEngineServices.skillEngine().applyEffectDirectly(21340, player, player, 3600000); // 封印的妖精 / Sealed Fairy.
-					GameEngineServices.skillEngine().applyEffectDirectly(21344, player, player, 3600000); // 魅惑幻象 / Beguiling Visions.
+					SkillEngine.getInstance().applyEffectDirectly(21340, player, player, 3600000); // 封印的妖精 / Sealed Fairy.
+					SkillEngine.getInstance().applyEffectDirectly(21344, player, player, 3600000); // 魅惑幻象 / Beguiling Visions.
 			    break;
 			}
 		}

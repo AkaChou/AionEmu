@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 掉落物品模型。
@@ -84,7 +84,7 @@ public class DropItem {
 	 */
 	public Player getWinningPlayer() {
 		if (winningPlayer != null && !winningPlayer.isOnline()) {
-			Player onlinePlayer = GameWorldBootstrapServices.world().findPlayer(winningPlayer.getObjectId());
+			Player onlinePlayer = World.getInstance().findPlayer(winningPlayer.getObjectId());
 			if (onlinePlayer != null) {
 				return onlinePlayer;
 			}

@@ -23,7 +23,6 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -64,14 +63,8 @@ import java.util.function.Supplier;
 @Slf4j
 public class XmlDataLoader {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 侧实例提供者，供容器接管单例解析。
-	 * Sets the Spring ObjectProvider used to resolve the singleton.
-	 * 实例提供者 / instance provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
+	private static volatile XmlDataLoader resolvedInstance;
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 	private static final String ITEM_DATA_DIR = "./data/static_data/items";
 	private static final String ITEM_SHARD_DIR = ITEM_DATA_DIR + "/item";
@@ -130,14 +123,30 @@ public class XmlDataLoader {
 	 *                               when no provider or bean is available
 	 */
 	public static XmlDataLoader getInstance() {
+		XmlDataLoader resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<XmlDataLoader> provider = instanceProvider;
-		XmlDataLoader provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("XmlDataLoader 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<XmlDataLoader> instanceProvider) {
+		XmlDataLoader.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

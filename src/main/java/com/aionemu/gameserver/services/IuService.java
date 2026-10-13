@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -30,6 +29,8 @@ import com.aionemu.gameserver.services.iuservice.CircusBound;
 import com.aionemu.gameserver.services.iuservice.Iu;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 现场演唱会（IU）服务：按计划开启 Live Party Concert Hall，管理传送门刷怪与倒计时消息。
@@ -56,11 +57,11 @@ public class IuService {
 				spawn(loc, IuStateType.CLOSED);
 			}
 			log.info(I18n.get("log.521fbac2260d", iu.size()));
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				for (IuLocation loc : getIuLocations().values()) {
 					startConcert(loc.getId());
 				}
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN));
 			}, () -> CustomConfig.IU_SCHEDULE);
 		} else {
 			//log.info(I18n.get("log.14574ab2d3ba"));
@@ -93,7 +94,7 @@ public class IuService {
 		}
 		circusBound.start();
 		lPCHCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopConcert(id), (long) CustomConfig.IU_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopConcert(id), (long) CustomConfig.IU_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class IuService {
 	public boolean lPCHCountdownMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 现场派对音乐厅入口已出现。 / The entrance to the Live Party Concert Hall appeared.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN, 0);
 					// 现场派对音乐厅入口将在 90 分钟后关闭，将启动逃离。 / The entrance to the Live Party Concert Hall closes in 90 minutes. Escape will engage.

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_OBJECT_USE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Postbox 对象。
@@ -53,7 +53,7 @@ public class PostboxObject extends HouseObject<HousingPostbox> {
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_OBJECT_USE(getObjectTemplate().getNameId()));
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 
 					/** 运行 / Run. */
 					@Override

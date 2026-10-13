@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dredgion Defense 副本 NPC AI：Defence Tower Of Pandaemonium 1（@AIName "Defence_Tower_Of_Pandaemonium_1"），继承 ActionItemNpcAI2。
@@ -62,14 +62,14 @@ public class Defence_Tower_Of_Pandaemonium_1AI2 extends ActionItemNpcAI2
 	}
 
 	private void dreadgionDrakanATK() {
-		dreadgionDrakanATKTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		dreadgionDrakanATKTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			AI2Actions.targetCreature(Defence_Tower_Of_Pandaemonium_1AI2.this, getPosition().getWorldMapInstance().getNpc(220966));
 AI2Actions.useSkill(Defence_Tower_Of_Pandaemonium_1AI2.this, 18311);
 		}, 4000, 10000);
 	}
 
 	private void startDreadgionOverheatTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			cancelATKTask();
 			announceDreadgionOverheat();
 			//AI2Actions.useSkill(Defence_Tower_Of_Pandaemonium_1AI2.this, 18310); //Dreadgion Overheat.

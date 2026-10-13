@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.utils.gametime;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.security.InvalidParameterException;
 
+import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import lombok.Getter;
 
@@ -173,7 +173,7 @@ public class GameTime implements Cloneable {
 	 * Day-time change callback: check weather time.
 	 */
 	private void onDayTimeChange() {
-		GameRuntimeServices.weatherService().checkWeathersTime();
+		WeatherService.getInstance().checkWeathersTime();
 	}
 
 	/**

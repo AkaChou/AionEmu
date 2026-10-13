@@ -5,9 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,9 +44,11 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_PLAYER_APPEARANCE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.skillengine.effect.WeaponDualEffect;
@@ -269,9 +269,9 @@ public class Equipment {
 			notifyItemEquipped(item);
 			owner.getLifeStats().updateCurrentStats();
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
-			GameEngineServices.questEngine().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
+			QuestEngine.getInstance().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
 			if (item.getItemTemplate().isEstima()) {
-				GameCreativityServices.creativityEssenceService().addEstimaCp(owner, item.getObjectId());
+				CreativityEssenceService.getInstance().addEstimaCp(owner, item.getObjectId());
 			}
 			return item;
 		}
@@ -388,7 +388,7 @@ public class Equipment {
 			return;
 		}
 		if (item.getItemTemplate().isEstima()) {
-			GameCreativityServices.creativityEssenceService().removeEstimaCp(owner, item);
+			CreativityEssenceService.getInstance().removeEstimaCp(owner, item);
 		}
 		if (allSlots.length > 1) {
 			if (!item.getItemTemplate().isTwoHandWeapon()) {

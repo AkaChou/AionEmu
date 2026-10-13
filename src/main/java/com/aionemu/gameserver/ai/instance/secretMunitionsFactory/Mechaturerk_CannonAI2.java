@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.secretMunitionsFactory;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -10,7 +8,9 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -30,8 +30,8 @@ public class Mechaturerk_CannonAI2 extends ActionItemNpcAI2
 			if (worldPosition.getMapId() == 301640000) { //Secret Munitions Factory.
 				//某处沉重的门已打开。 / A heavy door has opened somewhere.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_Canon, 5000);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //破坏封印。 / Destroy Seal.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //破坏封印。 / Destroy Seal.
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(833869);
 					despawnNpc(833835);
 				}, 5000);

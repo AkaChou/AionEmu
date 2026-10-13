@@ -16,8 +16,8 @@ import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnChoice;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnGroup;
 import com.aionemu.gameserver.dataholders.RetailAiData.ConditionSpawnNpc;
 import com.aionemu.gameserver.lifecycle.CoreGameplayServiceBindings;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -95,9 +95,9 @@ class RetailConditionSpawnEngineTest {
 		WorldMapInstance instance = OBJENESIS.newInstance(TestWorldMapInstance.class);
 		AI2Engine ai2Engine = new AI2Engine();
 		ai2Engine.registerAI(DummyAI2.class);
-		GameEngineServices engineServices = new GameEngineServices(null, null, null,
+		EngineServiceBindings engineServices = new EngineServiceBindings(null, null, null,
 			provider(AI2Engine.class, ai2Engine), null);
-		GameWorldBootstrapServices worldServices = new GameWorldBootstrapServices(
+		WorldBootstrapServiceBindings worldServices = new WorldBootstrapServiceBindings(
 			provider(IDFactory.class, OBJENESIS.newInstance(TestIdFactory.class)), null, null, null,
 			provider(World.class, world));
 		try {

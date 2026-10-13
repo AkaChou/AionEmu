@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.controllers;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.controllers.observer.MathObjectObserver;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 数学区域对象控制器，按反应类型为进入范围的生物注册观察者。
@@ -76,7 +77,7 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * (Npc)SpawnEngine.spawnObject(template, instanceId); if (randomWalk > 0) { if
 	 * (master.getObjectTemplate().getStatsTemplate().getWalkSpeed() == 0.0f) { //
 	 * empty if block } WalkManager.startWalking((NpcAI2)master.getAi2()); } if (ai
-	 * != null) { GameEngineServices.ai2Engine().setupAI(ai, (Creature)master);
+	 * != null) { AI2Engine.getInstance().setupAI(ai, (Creature)master);
 	 * ((NpcAI2)master.getAi2()).setStateIfNot(AIState.IDLE); }
 	 * ((MathObject)this.getOwner()).setMaster(master); return
 	 * ((MathObject)this.getOwner()).getMaster(); }
@@ -88,7 +89,7 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * @param delay 延迟毫秒数 / delay in milliseconds
 	 */
 	public void onDelete(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(MathController.this::delete, delay);
+		ThreadPoolManager.getInstance().schedule(MathController.this::delete, delay);
 	}
 
 	/**

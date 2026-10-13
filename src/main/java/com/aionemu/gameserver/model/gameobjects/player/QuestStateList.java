@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
@@ -33,7 +33,7 @@ public class QuestStateList {
 	 * Creates an empty quests list
 	 */
 	public QuestStateList() {
-		this(questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+		this(questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	QuestStateList(IntFunction<QuestMetadata> metadata) {

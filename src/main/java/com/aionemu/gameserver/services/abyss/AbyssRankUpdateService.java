@@ -2,15 +2,13 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import java.util.Objects;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,7 +27,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 欧比斯军阶定时刷新与周奖励分发服务。
@@ -41,13 +41,8 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 @Slf4j
 public class AbyssRankUpdateService {
 	private final AbyssRankingCache abyssRankingCache;
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
+	private static volatile AbyssRankUpdateService resolvedInstance;
 	private final AbyssRankDao abyssRankDAO;
 	private final ServerVariableDao serverVariablesDAO;
 	private Race rewardRace;
@@ -80,14 +75,30 @@ public class AbyssRankUpdateService {
 	 *                               when no provider or bean is available
 	 */
 	public static AbyssRankUpdateService getInstance() {
+		AbyssRankUpdateService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AbyssRankUpdateService> provider = instanceProvider;
-		AbyssRankUpdateService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AbyssRankUpdateService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AbyssRankUpdateService> instanceProvider) {
+		AbyssRankUpdateService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -100,7 +111,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info(I18n.get("log.fd688613d2c1"));
-		GameCronServices.cronService().schedule(updateTask, RankingConfig.TOP_RANKING_UPDATE_RULE, true);
+		CronService.requireCurrent().schedule(updateTask, RankingConfig.TOP_RANKING_UPDATE_RULE, true);
 	}
 
 	/**
@@ -113,7 +124,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info(I18n.get("log.fd688613d2c1"));
-		minuteUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TimerTask() {
+		minuteUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				performUpdate();
@@ -126,7 +137,7 @@ public class AbyssRankUpdateService {
 	 * Cancel existing schedules and re-attach based on config.
 	 */
 	public synchronized void reload() {
-		GameCronServices.cronService().cancel(updateTask);
+		CronService.requireCurrent().cancel(updateTask);
 		if (minuteUpdateTask != null) {
 			minuteUpdateTask.cancel(false);
 			minuteUpdateTask = null;
@@ -145,7 +156,7 @@ public class AbyssRankUpdateService {
 	public void performUpdate() {
 		log.info(I18n.get("log.97b1fd95b293"));
 		long startTime = System.currentTimeMillis();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			AbyssPointsService.AbyssRankCheck(player);
 			if (player.getAbyssRank() != null) {
 				player.getAbyssRank().doUpdate();
@@ -164,7 +175,7 @@ public class AbyssRankUpdateService {
 	public void initRewardWeeklyManager() {
 		log.info(I18n.get("log.eacf3461fb47"));
 		String weekly = "0 0 12 ? * MON *";
-		GameCronServices.cronService().schedule(this::sendRewardWeekly, weekly);
+		CronService.requireCurrent().schedule(this::sendRewardWeekly, weekly);
 	}
 
 	/**
@@ -172,7 +183,7 @@ public class AbyssRankUpdateService {
 	 * Send weekly template-reward mail to online players by current rank.
 	 */
 	private void sendRewardWeekly() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			switch (player.getAbyssRank().getRank()) {
 				case SUPREME_COMMANDER:
 					final int reward1 = rewardRace == Race.ASMODIANS ? 10 : 1;
@@ -228,7 +239,7 @@ public class AbyssRankUpdateService {
 	 * Reload ranking cache after a 3-second delay.
 	 */
 	public void AbyssRankingCacheUpdate() {
-		GameThreadPoolServices.threadPoolManager().schedule(new TimerTask() {
+		ThreadPoolManager.getInstance().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				abyssRankingCache.reloadRankings();
@@ -325,7 +336,7 @@ public class AbyssRankUpdateService {
 	 */
 	protected void updateRankTo(AbyssRankEnum newRank, int playerId) {
 		// 检查在线玩家军阶是否变化 / check if rank is changed for online players
-		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+		Player onlinePlayer = World.getInstance().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();
@@ -347,7 +358,7 @@ public class AbyssRankUpdateService {
 	 */
 	protected void updateGpRankTo(AbyssRankEnum newRank, int playerId) {
 		// 检查在线玩家 rankGp 是否变化 / check if rankGp is changed for online players
-		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+		Player onlinePlayer = World.getInstance().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();

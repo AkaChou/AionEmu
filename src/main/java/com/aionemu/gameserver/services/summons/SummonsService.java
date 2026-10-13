@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.summons;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.controllers.SummonController;
@@ -19,6 +18,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 召唤物服务，处理召唤创建、模式切换与解散流程。
@@ -62,7 +63,7 @@ public class SummonsService {
 		}
 		synchronized (summon) {
 			if (summon.isSpawned()) {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(summon);
+				World.getInstance().despawn(summon);
 			}
 		}
 	}
@@ -85,9 +86,9 @@ public class SummonsService {
 				return;
 			}
 			if (!summon.isSpawned()) {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(summon, master.getWorldId(),
+				World.getInstance().setPosition(summon, master.getWorldId(),
 					master.getInstanceId(), master.getX(), master.getY(), master.getZ(), master.getHeading());
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
+				World.getInstance().spawn(summon);
 			}
 			PacketSendUtility.sendPacket(master, new SM_SUMMON_PANEL(summon));
 			PacketSendUtility.sendPacket(master, new SM_SUMMON_UPDATE(summon));
@@ -135,7 +136,7 @@ public class SummonsService {
 				break;
 		}
 		summon.getObserveController().notifySummonReleaseObservers();
-		summon.setReleaseTask(GameThreadPoolServices.threadPoolManager()
+		summon.setReleaseTask(ThreadPoolManager.getInstance()
 			.schedule(new ReleaseSummonTask(summon, unsummonType, isAttacked), 5000));
 	}
 
@@ -309,7 +310,7 @@ public class SummonsService {
 					if (target instanceof Creature lastAttacker) {
 						if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
 							&& isAttacked) {
-							GameThreadPoolServices.threadPoolManager().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
+							ThreadPoolManager.getInstance().schedule(() -> lastAttacker.getAggroList().addHate(master, 1), 1000);
 						}
 					}
 					break;

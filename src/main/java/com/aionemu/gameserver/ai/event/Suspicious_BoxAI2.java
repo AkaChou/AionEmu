@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.event;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 活动事件 NPC AI：Suspicious Box（@AIName "suspicious_box"），继承 NpcAI2。
@@ -52,12 +52,12 @@ public class Suspicious_BoxAI2 extends NpcAI2
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_TREASUREBOX_DESPAWN_ONE, 0);
 			} else if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
 				if (startedEvent.compareAndSet(false, true)) {
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(this::eventChestStart, 1000);
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(this::eventChestStart, 1000);
+					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(() -> {
 						getOwner().setNpcType(NpcType.ATTACKABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.ATTACKABLE.getId(), 0));
 					}, 3000);
-					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(() -> {
 						eventChestFail();
 						AI2Actions.deleteOwner(Suspicious_BoxAI2.this);
 						AI2Actions.scheduleRespawn(Suspicious_BoxAI2.this);

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Aturam Sky Fortress 副本 NPC AI：Alarm（@AIName "alarm"），继承 AggressiveNpcAI2。
@@ -47,7 +47,7 @@ public class AlarmAI2 extends AggressiveNpcAI2
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 					getPosition().getWorldMapInstance().getDoors().get(128).setOpen(true);
 					getPosition().getWorldMapInstance().getDoors().get(138).setOpen(true);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							despawn();
 						}

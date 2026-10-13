@@ -4,7 +4,6 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
 import java.util.ArrayList;
@@ -98,7 +97,7 @@ public class TradeService {
 			return false;
 		}
 		long tradeListPrice = tradeList.getRequiredKinah();
-		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		LimitedItemTradeService limitedItemService = LimitedItemTradeService.getInstance();
 		synchronized (limitedItemService) {
 			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
 			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {
@@ -150,7 +149,7 @@ public class TradeService {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300762));
 			return false;
 		}
-		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		LimitedItemTradeService limitedItemService = LimitedItemTradeService.getInstance();
 		synchronized (limitedItemService) {
 			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
 			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {
@@ -204,7 +203,7 @@ public class TradeService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
 			return false;
 		}
-		LimitedItemTradeService limitedItemService = GameRuntimeServices.limitedItemTradeService();
+		LimitedItemTradeService limitedItemService = LimitedItemTradeService.getInstance();
 		synchronized (limitedItemService) {
 			Map<LimitedItem, Long> limitedItems = getLimitedItems(limitedItemService, npc.getNpcId(), tradeList);
 			if (limitedItems == null || !canPurchaseLimitedItems(player, limitedItems)) {

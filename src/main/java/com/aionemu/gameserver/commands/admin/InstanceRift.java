@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import org.apache.commons.lang3.math.NumberUtils;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员副本裂隙活动命令：按地点 ID 启动或停止 Instance Rift。
@@ -56,7 +57,7 @@ public class InstanceRift extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " started!");
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Instance Rift> is now open !!!"));
+				World.getInstance().doOnAllPlayers(player1 -> PacketSendUtility.sendSys3Message(player1, "", "<Instance Rift> is now open !!!"));
 				InstanceRiftService.getInstance().startInstanceRift(instanceRiftId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {

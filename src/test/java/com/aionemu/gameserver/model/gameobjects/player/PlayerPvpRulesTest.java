@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
@@ -126,13 +126,13 @@ class PlayerPvpRulesTest {
 	}
 
 	private static World resolvedWorld() throws Exception {
-		Field field = GameWorldBootstrapServices.class.getDeclaredField("resolvedWorld");
+		Field field = World.class.getDeclaredField("resolvedInstance");
 		field.setAccessible(true);
 		return (World) field.get(null);
 	}
 
 	private static void setResolvedWorld(World world) throws Exception {
-		Field field = GameWorldBootstrapServices.class.getDeclaredField("resolvedWorld");
+		Field field = World.class.getDeclaredField("resolvedInstance");
 		field.setAccessible(true);
 		field.set(null, world);
 	}

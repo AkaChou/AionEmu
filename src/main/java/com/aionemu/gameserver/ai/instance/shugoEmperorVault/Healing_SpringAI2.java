@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.shugoEmperorVault;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Shugo Emperor Vault 副本 NPC AI：Healing Spring（@AIName "healing_spring"），继承 AggressiveNpcAI2。
@@ -21,7 +21,7 @@ public class Healing_SpringAI2 extends AggressiveNpcAI2
         CreatureEventHandler.onCreatureSee(this, creature);
 	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(17560)) { // 守护者之泉的祝福 / Bless Of Guardian Spring.
-		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, creature).useWithoutPropSkill(); // 守护者之泉的祝福 / Bless Of Guardian Spring.
+		    SkillEngine.getInstance().getSkill(getOwner(), 17560, 1, creature).useWithoutPropSkill(); // 守护者之泉的祝福 / Bless Of Guardian Spring.
 			}
 	}
     }

@@ -12,6 +12,7 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 要塞护盾控制器，为敌对阵营玩家注册护盾伤害观察者。
@@ -71,7 +72,7 @@ public class ShieldController extends VisibleObjectController<Shield> {
 	public void disable() {
 		for (Integer playerId : observed.keySet().toArray(Integer[]::new)) {
 			ActionObserver observer = observed.remove(playerId);
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+			Player player = World.getInstance().findPlayer(playerId);
 			if (player != null) {
 				player.getObserveController().removeObserver(observer);
 			}

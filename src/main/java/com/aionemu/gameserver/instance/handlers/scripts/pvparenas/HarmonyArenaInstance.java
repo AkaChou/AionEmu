@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -22,13 +20,16 @@ import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -211,7 +212,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		instanceReward.setInstanceStartTime();
 		spawnRings();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -225,7 +226,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 					instanceReward.sendPacket(10, null);
 					instanceReward.sendPacket(2, null);
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -240,7 +241,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 								changeZone();
 								// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 								sendMsgByRace(1401491, Race.PC_ALL, 2000);
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								ThreadPoolManager.getInstance().schedule(new Runnable() {
 									/**
 									 * 处理 run。
 									 * Handle run.
@@ -255,7 +256,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 											changeZone();
 											// 本轮击败更高军阶队伍可获得额外点数。 / If you defeat a higher rank group in this round, you can earn additional points.
 											sendMsgByRace(1401491, Race.PC_ALL, 2000);
-											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+											ThreadPoolManager.getInstance().schedule(new Runnable() {
 												/**
 												 * 处理 run。
 												 * Handle run.
@@ -301,7 +302,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 
 	private void changeZone() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -353,7 +354,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -425,7 +426,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -463,7 +464,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 				Integer winnerObj = winner.getObjectId();
 				instanceReward.getHarmonyGroupReward(winnerObj).addPvPKillToPlayer();
 				int worldId = winner.getWorldId();
-				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
+				QuestEngine.getInstance().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
 			}
 		}
 		updatePoints(player);
@@ -502,7 +503,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	 */
 
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
-		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}
 
 	/**

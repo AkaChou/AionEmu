@@ -2,12 +2,12 @@ package com.aionemu.gameserver.ai.rvr;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AI2Actions;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * RvR 相关 NPC AI：Archon Scout（@AIName "archon_scout"），继承 AggressiveNpcAI2。
@@ -39,7 +39,7 @@ public class Archon_ScoutAI2 extends AggressiveNpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Archon_ScoutAI2.this), 300000); //5 分钟。 / 5 Minutes.
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Archon_ScoutAI2.this), 300000); //5 分钟。 / 5 Minutes.
 	}
 
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {

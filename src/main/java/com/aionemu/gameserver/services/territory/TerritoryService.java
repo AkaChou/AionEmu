@@ -18,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TERRITORY_LIST;
 import com.aionemu.gameserver.persistence.dao.LegionDao;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 领地服务，管理军团领地占领、增益与传送。
@@ -26,6 +27,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class TerritoryService {
 	private final LegionService legionService;
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
+	private static volatile TerritoryService resolvedInstance;
 	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
 	private final LegionDao legionDAO;
 
@@ -123,7 +125,7 @@ public class TerritoryService {
 	 * @param terr 领地映射 / Territory map
 	 */
 	public void broadcastTerritoryList(TreeMap<Integer, LegionTerritory> terr) {
-		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+		Collection<Player> players = World.getInstance().getAllPlayers();
 		for (Player player : players) {
 			if (!player.isOnline()) {
 				return;
@@ -152,14 +154,19 @@ public class TerritoryService {
 	 *         when no provider or bean is available
 	 */
 	public static TerritoryService getInstance() {
+		TerritoryService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<TerritoryService> provider = instanceProvider;
-		TerritoryService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("TerritoryService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -169,5 +176,6 @@ public class TerritoryService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<TerritoryService> instanceProvider) {
 		TerritoryService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

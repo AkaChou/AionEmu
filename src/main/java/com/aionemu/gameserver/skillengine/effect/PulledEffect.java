@@ -11,6 +11,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 拉拽效果：将目标拉向施法者并限制其移动。
@@ -30,7 +31,7 @@ public class PulledEffect extends EffectTemplate {
 		final Creature effected = effect.getEffected();
 		effected.setPulledMulti(0);
 		effected.getController().cancelCurrentSkill();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+		World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 				effected.getHeading());
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_FORCED_MOVE(effect.getEffector(),
 				effected.getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));

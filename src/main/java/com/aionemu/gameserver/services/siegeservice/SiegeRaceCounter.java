@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 攻城种族计数器，按种族累计伤害/AP 并比较排名。
@@ -157,7 +158,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	public Integer getWinnerLegionId() {
 		Map<Player, AtomicLong> teamDamageMap = new HashMap<>();
 		for (Integer id : getCounterKeys(playerDamageCounter)) {
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(id);
+			Player player = World.getInstance().findPlayer(id);
 			if (player != null && player.getCurrentTeam() != null) {
 				Player teamLeader = player.getCurrentTeam().getLeaderObject();
 				long damage = playerDamageCounter.get(id).get();

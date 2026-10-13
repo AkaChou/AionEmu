@@ -4,7 +4,6 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -14,8 +13,10 @@ import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.XPLossEnum;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import lombok.Getter;
 import lombok.Setter;
@@ -313,7 +314,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 				break;
 			}
 			if (this.isArchDaeva()) {
-				GameCreativityServices.creativityEssenceService().pointPerExp(this.getPlayer());
+				CreativityEssenceService.getInstance().pointPerExp(this.getPlayer());
 			}
 		}
 	}
@@ -488,7 +489,7 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	 */
 	public Player getPlayer() {
 		if (online && getPosition() != null) {
-			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
+			return World.getInstance().findPlayer(playerObjId);
 		}
 		return null;
 	}

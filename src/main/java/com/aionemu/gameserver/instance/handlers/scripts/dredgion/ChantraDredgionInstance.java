@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -28,6 +26,7 @@ import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
@@ -36,6 +35,7 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -255,7 +255,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			openFirstDoors();
 			// 舱壁已激活，第一军械库与重力控制室之间的通道已封闭。 / The bulkhead has been activated and the passage between the First Armory and Gravity Control has been sealed.
 			sendMsgByRace(1400604, Race.PC_ALL, 5000);
@@ -280,18 +280,18 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 					break;
 			}
 		}, 60000));
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			// 紧急出口传送装置已激活。 / A teleport device has been activated in the Emergency Exit.
 			sendMsgByRace(1401424, Race.PC_ALL, 0);
 			spawn(730311, 415.07663f, 173.85265f, 432.53436f, (byte) 0, 34); //Portside Central Teleporter.
 			spawn(730312, 554.83081f, 173.87158f, 432.52448f, (byte) 0, 9); //Starboard Central Teleporter.
 		}, 600000));
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			// 军官卡曼亚已出现在重力控制室。 / Officer Kamanya has appeared in Gravity Control.
 			sendMsgByRace(1400633, Race.PC_ALL, 0);
 			spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
 		}, 900000));
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			if (!dredgionReward.isRewarded()) {
 				Race winningRace = dredgionReward.getWinningRaceByScore();
 				stopInstance(winningRace);
@@ -444,7 +444,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 				break;
 			case 216886: //Captain Zanata.
 				point = 1000;
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!dredgionReward.isRewarded()) {
 						Race winningRace = dredgionReward.getWinningRaceByScore();
 						stopInstance(winningRace);
@@ -531,12 +531,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 			}
 			AbyssPointsService.addAp(player, (int) abyssPoint);
 			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			GameEngineServices.questEngine().onDredgionReward(env);
+			QuestEngine.getInstance().onDredgionReward(env);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				for (Player player : instance.getPlayersInside()) {
 					if (PlayerActions.isAlreadyDead(player)) {
@@ -769,7 +769,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				spawn(npcId, x, y, z, h, entityId);
 				if (msg > 0) {
@@ -793,7 +793,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				Npc npc = (Npc) spawn(npcId, x, y, z, h);
 				npc.getSpawn().setWalkerId(walkerId);
@@ -812,7 +812,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
+		chantraTask.add(ThreadPoolManager.getInstance().schedule(() -> instance.doOnAllPlayers(new Visitor<>() {
 			/**
 			 * 处理 visit。
 			 * Handle visit.

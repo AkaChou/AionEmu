@@ -17,6 +17,7 @@ import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 发送密语聊天消息的客户端包。
@@ -43,7 +44,7 @@ public class CM_CHAT_MESSAGE_WHISPER extends AionClientPacket {
 		name = ChatUtil.getRealAdminName(name);
 		String formatname = Util.convertName(name);
 		Player sender = getConnection().getActivePlayer();
-		Player receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(formatname);
+		Player receiver = World.getInstance().findPlayer(formatname);
 		if (LoggingConfig.LOG_CHAT)
 			log.info(I18n.get("log.3ba72747261c", sender.getName(), formatname, message));
 		if (receiver == null) {

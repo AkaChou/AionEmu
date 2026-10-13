@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.DeniedStatus;
@@ -14,7 +13,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 /**
  * 向目标玩家发起交易请求的客户端包。
  * Client packet that requests an exchange with a target player.
@@ -44,7 +45,7 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();
-		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetObjectId);
+		final Player targetPlayer = World.getInstance().findPlayer(targetObjectId);
 		if (targetPlayer == null) {
 			log.warn(I18n.get("log.2ed9d56579b2", activePlayer.getObjectId(), targetObjectId));
 			return;
@@ -77,7 +78,7 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 	RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
 		@Override
 		public void acceptRequest(Creature requester, Player responder) {
-			GameRuntimeServices.exchangeService().registerExchange(activePlayer, targetPlayer);
+			ExchangeService.getInstance().registerExchange(activePlayer, targetPlayer);
 		}
 
 		@Override

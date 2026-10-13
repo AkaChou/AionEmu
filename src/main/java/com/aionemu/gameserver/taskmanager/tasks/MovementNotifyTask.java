@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.ai.RetailSensoryAreaEngine;
@@ -28,15 +27,8 @@ import com.aionemu.gameserver.world.knownlist.VisitorWithOwner;
  */
 public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature> {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
+	private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
+	private static volatile MovementNotifyTask resolvedInstance;
 
 	/**
 	 * 各地图移动广播峰值统计（[最大次数, Npc 模板 Id]）。
@@ -61,14 +53,30 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	 *         when no provider or bean is available
 	 */
 	public static MovementNotifyTask getInstance() {
+		MovementNotifyTask resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MovementNotifyTask> provider = instanceProvider;
-		MovementNotifyTask provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("MovementNotifyTask 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<MovementNotifyTask> instanceProvider) {
+		MovementNotifyTask.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

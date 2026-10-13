@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerChatService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家命令：阵营（种族）聊天频道发言。
@@ -75,7 +76,7 @@ public class cmd_faction extends PlayerCommand {
 		if (CustomConfig.FACTION_CHAT_CHANNEL) {
 			ChatType channel = ChatType.CH1;
 
-			for (Player listener : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player listener : World.getInstance().getAllPlayers()) {
 				if (listener.getAccessLevel() > 1) {
 					PacketSendUtility.sendPacket(listener, new SM_MESSAGE(player.getObjectId(), (player.getRace() == Race.ASMODIANS ? "(A) " : "(E) ") + player.getName(), message, channel));
 				}
@@ -86,7 +87,7 @@ public class cmd_faction extends PlayerCommand {
 		}
 		else {
 			message = player.getName() + ": " + message;
-			for (Player a : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player a : World.getInstance().getAllPlayers()) {
 				if (a.getAccessLevel() > 1) {
 					PacketSendUtility.sendMessage(a, (player.getRace() == Race.ASMODIANS ? "[A] " : "[E] ") + message);
 				}

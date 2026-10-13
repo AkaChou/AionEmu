@@ -27,7 +27,6 @@ import com.aionemu.gameserver.world.zone.handler.MaterialZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -44,13 +43,8 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 public final class ZoneService implements GameEngine {
 
-	/** 可选 Spring 单例提供者 / optional Spring singleton provider
-     * -- SETTER --
-     *  设置 Spring 单例提供者。
-     *  Set the Spring singleton provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<ZoneService> instanceProvider;
+	private static volatile ObjectProvider<ZoneService> instanceProvider;
+	private static volatile ZoneService resolvedInstance;
 	/** 按地图 ID 索引的区域信息 / zone info indexed by map id */
 	private final IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	/** 区域名称 → 脚本处理器类 / zone name → script handler class */
@@ -79,14 +73,30 @@ public final class ZoneService implements GameEngine {
 	 *         when no provider or bean is available
 	 */
 	public static ZoneService getInstance() {
+		ZoneService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<ZoneService> provider = instanceProvider;
-		ZoneService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("ZoneService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<ZoneService> instanceProvider) {
+		ZoneService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

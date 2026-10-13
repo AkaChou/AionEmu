@@ -3,10 +3,10 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
-import com.aionemu.gameserver.lifecycle.GameMaintenanceServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
+import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 
 /**
  * 客户端赛季排行榜查询请求包。
@@ -35,7 +35,7 @@ public class CM_SEASON_RANKING extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		List<SM_SEASON_RANKING> results = GameMaintenanceServices.seasonRankingUpdateService().getPlayers(tableId);
+		List<SM_SEASON_RANKING> results = SeasonRankingUpdateService.getInstance().getPlayers(tableId);
 		for (SM_SEASON_RANKING packet : results) {
 			sendPacket(packet);
 		}

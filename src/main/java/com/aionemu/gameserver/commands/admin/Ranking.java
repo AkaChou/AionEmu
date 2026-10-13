@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -29,7 +29,7 @@ public class Ranking extends AdminCommand {
 			onFail(admin, null);
 		}
 		else if ("update".equalsIgnoreCase(params[0])) {
-			GameEventServices.abyssRankUpdateService().performUpdate();
+			AbyssRankUpdateService.getInstance().performUpdate();
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.crucibleSpire;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Crucible Spire 副本 NPC AI：Chronomancer（@AIName "IDInfinity_Teleport_Odd_Number"），继承 NpcAI2。
@@ -33,7 +33,7 @@ public class ChronomancerAI2 extends NpcAI2 {
 		    switch (getNpcId()) {
 				case 247376:
 			    case 247386:
-				    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				    ThreadPoolManager.getInstance().schedule(() -> {
 						despawnNpc(701772); // 楼梯 / Stair.
 					}, 5000);
 					spawnFloor(pfloor + 1);

@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.BrokerService;
 
 /**
  * 购买交易行物品的客户端包。
@@ -33,6 +33,6 @@ public class CM_BUY_BROKER_ITEM extends AionClientPacket {
 		if (itemCount < 1) {
 			return;
 		}
-		GameRuntimeServices.brokerService().buyBrokerItem(player, itemUniqueId, itemCount);
+		BrokerService.getInstance().buyBrokerItem(player, itemUniqueId, itemCount);
 	}
 }

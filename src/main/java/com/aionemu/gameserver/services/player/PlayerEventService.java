@@ -1,13 +1,13 @@
 package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.Future;
@@ -18,13 +18,8 @@ import java.util.concurrent.TimeUnit;
  * Player event service pushing/settling player-side events on schedule.
  */
 public class PlayerEventService {
-    /**
-     * -- SETTER --
-     * 设置实例提供者（Spring 注入）。
-     *  Sets the instance provider (Spring injection).
-     */
-    @Setter
-    private static volatile ObjectProvider<PlayerEventService> instanceProvider;
+	private static volatile ObjectProvider<PlayerEventService> instanceProvider;
+	private static volatile PlayerEventService resolvedInstance;
 	private Future<?> awakeTask;
 	private Future<?> vipTask;
 
@@ -51,15 +46,15 @@ public class PlayerEventService {
 		if (EventsConfig.ENABLE_AWAKE_EVENT && EventsConfig.SEED_TRANSFORMATION_PERIOD > 0) {
 			long period = TimeUnit.MINUTES.toMillis(EventsConfig.SEED_TRANSFORMATION_PERIOD);
 			EventAwake awake = new EventAwake();
-			awakeTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(awake),
+			awakeTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(
+					() -> World.getInstance().doOnAllPlayers(awake),
 					period, period);
 		}
 		if (EventsConfig.ENABLE_VIP_TICKETS && EventsConfig.VIP_TICKETS_PERIOD > 0) {
 			long period = TimeUnit.MINUTES.toMillis(EventsConfig.VIP_TICKETS_PERIOD);
 			AnnounceVIPTickets vipTickets = new AnnounceVIPTickets();
-			vipTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
-					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(vipTickets),
+			vipTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(
+					() -> World.getInstance().doOnAllPlayers(vipTickets),
 					period, period);
 		}
 	}
@@ -109,13 +104,29 @@ public class PlayerEventService {
 	 *         when no provider or bean is available
 	 */
 	public static PlayerEventService getInstance() {
+		PlayerEventService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PlayerEventService> provider = instanceProvider;
-		PlayerEventService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PlayerEventService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PlayerEventService> instanceProvider) {
+		PlayerEventService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

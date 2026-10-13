@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.templates.teleport.TeleporterTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 打开传送 NPC 传送地图/目的地列表的服务端包。
@@ -39,7 +40,7 @@ public class SM_TELEPORT_MAP extends AionServerPacket {
 	public SM_TELEPORT_MAP(Player player, int targetObjectId, TeleporterTemplate teleport) {
 		this.player = player;
 		this.targetObjectId = targetObjectId;
-		this.npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
+		this.npc = (Npc) World.getInstance().findVisibleObject(targetObjectId);
 		this.teleport = teleport;
 	}
 

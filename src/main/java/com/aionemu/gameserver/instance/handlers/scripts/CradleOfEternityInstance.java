@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -132,7 +132,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		    instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -236,7 +236,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 703024: //Heavy Door Lever.
 			case 703025: //Heavy Door Lever.
 			    despawnNpc(npc);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -253,7 +253,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 834007: //Altar Of Sun.
 			    if (player.getInventory().decreaseByItemId(185000267, 1)) { //Sun Quartz.
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -433,7 +433,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.services.abysslandingservice;
 
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AbyssLandingService;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -60,7 +60,7 @@ public class LandingUpdateService {
 	 */
 	public void initResetQuestPoints() {
 		if (AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_ENABLED) {
-			GameCronServices.cronService().schedule(this::resetQuestPoints, () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
+			CronService.requireCurrent().schedule(this::resetQuestPoints, () -> AbyssLandingConfig.ABYSS_LANDING_QUEST_RESET_TIME);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class LandingUpdateService {
 	 */
 	public void initResetAbyssLandingPoints() {
 		if (AbyssLandingConfig.ABYSS_LANDING_POINTS_RESET_ENABLED) {
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				resetMonumentPoints();
 				resetFacilityPoints();
 				resetCommanderPoints();

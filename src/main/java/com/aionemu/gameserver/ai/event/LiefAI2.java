@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.event;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -27,7 +27,7 @@ public class LiefAI2 extends GeneralNpcAI2
 		if (dialogId == 10000) {
  			if (getNpcId() == 835271) {
  				//利夫 / Lief.
- 				GameEngineServices.skillEngine().applyEffectDirectly(11253, player, player, 7200000);
+ 				SkillEngine.getInstance().applyEffectDirectly(11253, player, player, 7200000);
  			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

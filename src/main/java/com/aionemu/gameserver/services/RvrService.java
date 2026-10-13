@@ -2,8 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RvrSchedule;
 import com.aionemu.gameserver.configs.schedule.RvrSchedule.Rvr;
@@ -34,6 +33,8 @@ import com.aionemu.gameserver.services.rvrservice.RvrStartRunnable;
 import com.aionemu.gameserver.services.rvrservice.Rvrlf3df3;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 种族对战（RvR）服务，管理军团走廊、刷怪与倒计时广播。
@@ -90,7 +91,7 @@ public class RvrService {
 	 */
 	public synchronized void reloadSchedule() {
 		RvrSchedule newSchedule = CustomConfig.RVR_ENABLED ? RvrSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		rvrSchedule = newSchedule;
 		if (rvrSchedule != null) {
@@ -98,7 +99,7 @@ public class RvrService {
 				for (String rvrTime : rvr.getRvrTimes()) {
 					Runnable task = new RvrStartRunnable(rvr.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, rvrTime);
+					CronService.requireCurrent().schedule(task, rvrTime);
 				}
 			}
 		}
@@ -120,7 +121,7 @@ public class RvrService {
 			rvrCountdownMsg(id);
 			LF6RvrCountdownMsg(id);
 			DF6RvrCountdownMsg(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stopRvr(id), (long) CustomConfig.RVR_DURATION * 3600 * 1000);
+			ThreadPoolManager.getInstance().schedule(() -> stopRvr(id), (long) CustomConfig.RVR_DURATION * 3600 * 1000);
 		}
 	}
 
@@ -200,7 +201,7 @@ public class RvrService {
 	public boolean rvrCountdownMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 旅团将军的紧急命令。 / Brigade General's Urgent Order.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_RVR_DIRECT_PORTAL, 0);
 					// 军团走廊已开启。 / The Legion's Corridor has opened.
@@ -263,7 +264,7 @@ public class RvrService {
 	public boolean LF6G1Spawn01Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族战舰将在 10 分钟后入侵。 / An Asmodian warship will invade in 10 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Spawn_01);
 				});
@@ -283,7 +284,7 @@ public class RvrService {
 	public boolean LF6G1Spawn02Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族战舰将在 5 分钟后入侵。 / An Asmodian warship will invade in 5 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Spawn_02);
 				});
@@ -303,7 +304,7 @@ public class RvrService {
 	public boolean LF6G1Spawn03Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族战舰将在 3 分钟后入侵。 / An Asmodian warship will invade in 3 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Spawn_03);
 				});
@@ -323,7 +324,7 @@ public class RvrService {
 	public boolean LF6G1Spawn04Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族战舰将在 1 分钟后入侵。 / An Asmodian warship will invade in 1 minute.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Spawn_04, 0);
 				});
@@ -343,7 +344,7 @@ public class RvrService {
 	public boolean LF6G1Spawn05Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族战舰入侵。 / Asmodian warship Invasion.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Spawn_05, 0);
 					if (player.getRace() == Race.ELYOS) {
@@ -408,7 +409,7 @@ public class RvrService {
 	public boolean LF6EventG2Start02Msg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 军官落败后，魔族士兵正在撤退。 / The Asmodian Troopers are retreating after the defeat of their officers.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_LF6_Event_G2_Start_01,
 						1800000);
@@ -432,7 +433,7 @@ public class RvrService {
 	public boolean LF6RvrCountdownMsg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族护卫舰入侵将在 10 分钟后结束。 / The Elyos frigate invasion will end in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_Evett_G1_Time_End_01,
 						3000000);
@@ -465,7 +466,7 @@ public class RvrService {
 	public boolean DF6G1Spawn01Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族战舰将在 10 分钟后入侵。 / An Elyos warship will invade in 10 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Spawn_01);
 				});
@@ -485,7 +486,7 @@ public class RvrService {
 	public boolean DF6G1Spawn02Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族战舰将在 5 分钟后入侵。 / An Elyos warship will invade in 5 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Spawn_02);
 				});
@@ -505,7 +506,7 @@ public class RvrService {
 	public boolean DF6G1Spawn03Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族战舰将在 3 分钟后入侵。 / An Elyos warship will invade in 3 minutes.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Spawn_03);
 				});
@@ -525,7 +526,7 @@ public class RvrService {
 	public boolean DF6G1Spawn04Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族战舰将在 1 分钟后入侵。 / An Elyos warship will invade in 1 minute.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Spawn_04, 10000);
 				});
@@ -545,7 +546,7 @@ public class RvrService {
 	public boolean DF6G1Spawn05Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 天族战舰入侵。 / Elyos warship Invasion.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_DF6_G1_Spawn_05, 0);
 					if (player.getRace() == Race.ASMODIANS) {
@@ -610,7 +611,7 @@ public class RvrService {
 	public boolean DF6EventG2Start02Msg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 军官落败后，埃托斯正在撤退。 / The Aetos are retreating after the defeat of their officers.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_DF6_Event_G2_Start_01,
 						1900000);
@@ -634,7 +635,7 @@ public class RvrService {
 	public boolean DF6RvrCountdownMsg(int id) {
 		return switch (id) {
 			case 4 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 魔族护卫舰入侵将在 10 分钟后结束。 / The Asmodian frigate invasion will end in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_Evett_G1_Time_End_01,
 						3050000);
@@ -665,7 +666,7 @@ public class RvrService {
 	public boolean F6RaidStart(int id) {
 		return switch (id) {
 			case 5 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 执政官武器入侵。 / Archon's Weapon Invasion.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_Start_LF6);
 					// 古代武器入侵。 / Ancient's Weapon Invasion.
@@ -701,7 +702,7 @@ public class RvrService {
 	public boolean F6RaidStart5Minute(int id) {
 		return switch (id) {
 			case 5 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 空间扭曲了……你应该去看看。 / Space has been distorted... You should look into that.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Raid_Warning_MSG, 0);
 					// 敌对阵营的渗透行动入口即将开放。 / The infiltration operation entrance for the opposing faction will open soon.

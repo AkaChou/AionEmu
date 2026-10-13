@@ -2,10 +2,10 @@ package com.aionemu.gameserver.ai;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.RetailAiData.DynamicArea;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
@@ -43,7 +43,7 @@ public final class RetailDynamicAreaEngine {
 		}
 		instance.doOnAllPlayers(player -> send(player, area, enabled));
 		if (enabled && area.lifeTime() > 0) {
-			expiries.put(key, GameThreadPoolServices.threadPoolManager().schedule(
+			expiries.put(key, ThreadPoolManager.getInstance().schedule(
 				() -> setEnabled(instance, type, id, false), area.lifeTime() * 1000L));
 		}
 		return true;

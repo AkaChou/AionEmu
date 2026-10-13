@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.portals;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
@@ -27,6 +27,7 @@ import com.aionemu.gameserver.services.teleport.PortalService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 传送门/传送点 AI：Portal Dialog（@AIName "portal_dialog"），继承 PortalAI2。
@@ -83,7 +84,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (questId > 0 && GameEngineServices.questEngine().onDialog(env)) {
+		if (questId > 0 && QuestEngine.getInstance().onDialog(env)) {
 			return true;
 		}
 		// 克萝梅德试炼入口（兰尼尼亚/布里奇特）：questId=0 的「进入恶梦」(SETPRO1=10000) 在原版由任务脚本
@@ -95,7 +96,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 		// engine first (QuestEngine.onDialog's requestedOwner==0 replay); the portal stays for everything else.
 		if (questId == 0 && dialogId == QuestDialogAction.SETPRO1.id()
 				&& isKromedeTrialEntryNpc(getNpcId())) {
-			if (GameEngineServices.questEngine().onDialog(env)) {
+			if (QuestEngine.getInstance().onDialog(env)) {
 				return true;
 			}
 			// 已在噩梦副本内（含同一包内任务侧传送后的重复派发）不再走传送门，避免二次传送。
@@ -207,7 +208,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 			}
 		}
 		int teleportationDialogId = DataManager.PORTAL2_DATA.getTeleportDialogId(npcId);
-		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(npcId).getOnTalkEvent();
+		List<Integer> relatedQuests = QuestEngine.getInstance().getQuestNpc(npcId).getOnTalkEvent();
 		boolean playerHasQuest = false;
 		boolean playerCanStartQuest = false;
 		if (!relatedQuests.isEmpty()) {
@@ -382,7 +383,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	}
 
 	private void announceIlluminaryObeliskOpen() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 通往炼狱光明方尖碑的入口已开启。 / The entrance to the Infernal Illuminary Obelisk has opened.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDF5_U3_Hard_Door_Open);
 		});

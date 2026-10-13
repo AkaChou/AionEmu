@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessage;
 import com.aionemu.gameserver.questEngine.definition.QuestSystemMessagePacket;
@@ -20,7 +20,7 @@ public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePor
 	private final IntFunction<QuestMetadata> metadata;
 
 	public PlayerQuestSystemMessagePort(QuestPlayerPort players) {
-		this(players, questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+		this(players, questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	PlayerQuestSystemMessagePort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
@@ -46,7 +46,7 @@ public final class PlayerQuestSystemMessagePort implements QuestSystemMessagePor
 
 	PlayerQuestSystemMessagePort(QuestPlayerPort players, MessageOperations operations) {
 		this(players, operations,
-			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+			questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	PlayerQuestSystemMessagePort(QuestPlayerPort players, MessageOperations operations,

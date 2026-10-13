@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -13,6 +12,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Iluma 区域 NPC AI：LF6 Wind Stream（@AIName "LF6_WindStream"），继承 NpcAI2。
@@ -32,7 +33,7 @@ public class LF6_WindStreamAI2 extends NpcAI2
     }
 
 	private void startWindStream(final Npc npc) {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			Npc npc2 = (Npc) spawn(210100000, 857863, 1494.05f, 1411.85f, 335.94f, (byte) 0, 0, 1);
 			windStreamAnnounce(npc2, 1);
 			despawnNpc(857862);
@@ -47,7 +48,7 @@ public class LF6_WindStreamAI2 extends NpcAI2
     }
 
 	private void announceWindPathInvasion() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 风道将在 1 分钟后消失。你需要离开风道。 / The wind road will disappear in 1 minute. You need to exit the wind road.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Windpath_NOTICE_01, 3540000);
 			// 通往防御护卫舰的风道将在 30 秒后消失。 / The wind road to the defense frigate will vanish in 30 seconds.

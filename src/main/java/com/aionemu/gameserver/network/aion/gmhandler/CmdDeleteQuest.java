@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
@@ -12,6 +12,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：删除目标玩家的指定任务进度。
@@ -44,7 +45,7 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 		}
 
 		if (admin.getTarget() != null && admin.getTarget() instanceof Player)
-			t = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(admin.getTarget().getName()));
+			t = World.getInstance().findPlayer(Util.convertName(admin.getTarget().getName()));
 
 		Integer questID = Integer.parseInt(params);
 		if (questID <= 0) {
@@ -52,7 +53,7 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 		}
 
 		@SuppressWarnings("static-access")
-		QuestTemplate qt = GameStaticDataServices.dataManager().QUEST_DATA.getQuestById(questID);
+		QuestTemplate qt = DataManager.getInstance().QUEST_DATA.getQuestById(questID);
 		if (qt == null) {
 			PacketSendUtility.sendMessage(admin, "Quest with ID: " + questID + " was not found");
 			return;

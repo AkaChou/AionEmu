@@ -29,7 +29,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
@@ -46,6 +45,7 @@ import com.aionemu.gameserver.geoEngine.scene.VertexBuffer;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
+import com.aionemu.gameserver.world.zone.ZoneService;
 
 /**
  * 地理数据加载器：网格、世界物体、地形高度与材质。
@@ -496,10 +496,10 @@ public class GeoWorldLoader {
 				// 用于覆盖 / for override
 				zoneName += "_" + regionId;
 				node.setName(zoneName);
-				GameWorldBootstrapServices.zoneService().createMaterialZoneTemplate(node, worldId, node.getMaterialId(), true);
+				ZoneService.getInstance().createMaterialZoneTemplate(node, worldId, node.getMaterialId(), true);
 			} else {
 				node.setName(zoneName);
-				GameWorldBootstrapServices.zoneService().createMaterialZoneTemplate(node, regionId, worldId, node.getMaterialId());
+				ZoneService.getInstance().createMaterialZoneTemplate(node, regionId, worldId, node.getMaterialId());
 			}
 		}
 	}

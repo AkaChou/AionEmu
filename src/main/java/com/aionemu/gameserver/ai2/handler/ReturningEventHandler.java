@@ -5,13 +5,13 @@ import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.skillengine.model.HealType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 返回出生点事件处理器，负责 NPC 不在家 / 回到家时的移动、重生与空闲恢复。
@@ -101,6 +101,6 @@ public class ReturningEventHandler {
 		Point3D target = npc.getMoveController().getHomeReturnDestination();
 		byte heading = npc.getMoveController().isReturningToWaypoint() ? npc.getHeading() : npc.getSpawn().getHeading();
 		npc.getMoveController().abortMove();
-		GameWorldBootstrapServices.world().updatePosition(npc, target.getX(), target.getY(), target.getZ(), heading);
+		World.getInstance().updatePosition(npc, target.getX(), target.getY(), target.getZ(), heading);
 	}
 }

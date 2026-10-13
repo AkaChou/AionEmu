@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTROL;
 
 /**
@@ -16,15 +18,44 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTRO
  */
 @Slf4j
 public class BannedMacManager {
-	private static final BannedMacManager manager = new BannedMacManager();
+	private static volatile ObjectProvider<BannedMacManager> instanceProvider;
+	private static volatile BannedMacManager resolvedInstance;
 
 	/**
-	 * 获取管理器单例。
-	 * Returns the manager singleton.
-	 * @return 管理器实例 / manager instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static BannedMacManager getInstance() {
-		return manager;
+		BannedMacManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
+		ObjectProvider<BannedMacManager> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("BannedMacManager 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<BannedMacManager> instanceProvider) {
+		BannedMacManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/** 按 MAC 索引的封禁表 / Ban table keyed by MAC */
@@ -54,7 +85,7 @@ public class BannedMacManager {
 		bannedList.put(address, entry);
 
 		log.info(I18n.get("log.595215b863dc", address, entry.getTime().toString(), details));
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_MACBAN_CONTROL((byte) 1, address, newTime, details));
+		LoginServer.getInstance().sendPacket(new SM_MACBAN_CONTROL((byte) 1, address, newTime, details));
 	}
 
 	/**
@@ -68,7 +99,7 @@ public class BannedMacManager {
 		if (bannedList.containsKey(address)) {
 			bannedList.remove(address);
 			log.info(I18n.get("log.e5131f1cc020", address, details));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_MACBAN_CONTROL((byte) 0, address, 0, details));
+			LoginServer.getInstance().sendPacket(new SM_MACBAN_CONTROL((byte) 0, address, 0, details));
 			return true;
 		} else {
 			return false;

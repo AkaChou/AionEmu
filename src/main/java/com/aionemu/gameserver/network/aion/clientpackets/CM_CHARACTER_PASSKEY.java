@@ -10,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHARACTER_SELECT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_CHARACTER;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.player.PlayerService;
 
@@ -96,7 +97,7 @@ public class CM_CHARACTER_PASSKEY extends AionClientPacket {
 
 	private void checkBlock(int accountId, int wrongCount) {
 		if (wrongCount >= SecurityConfig.PASSKEY_WRONG_MAXCOUNT) {
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, "", 60 * 8, 0);
+			LoginServer.getInstance().sendBanPacket((byte) 2, accountId, "", 60 * 8, 0);
 		}
 	}
 }

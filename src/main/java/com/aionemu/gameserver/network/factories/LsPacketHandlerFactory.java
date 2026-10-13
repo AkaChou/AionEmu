@@ -14,7 +14,6 @@ import com.aionemu.gameserver.network.loginserver.clientpackets.CM_MACBAN_LIST;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PREMIUM_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PTRANSFER_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_REQUEST_KICK_ACCOUNT;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 /**
@@ -24,14 +23,8 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class LsPacketHandlerFactory {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-     *  Injects Spring ObjectProvider to override the static singleton.
-     * Spring Provider / Spring provider
-     */
-    @Setter
-    private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
+	private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
+	private static volatile LsPacketHandlerFactory resolvedInstance;
 	private final LsPacketHandler handler = new LsPacketHandler();
 
 	/**
@@ -44,14 +37,30 @@ public class LsPacketHandlerFactory {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static LsPacketHandlerFactory getInstance() {
+		LsPacketHandlerFactory resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<LsPacketHandlerFactory> provider = instanceProvider;
-		LsPacketHandlerFactory provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("LsPacketHandlerFactory 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<LsPacketHandlerFactory> instanceProvider) {
+		LsPacketHandlerFactory.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 欧比斯通用工具：PvP 地图判定与军阶击杀/技能全服广播。
@@ -71,7 +72,7 @@ public class AbyssService {
 	 * @param victim 被击杀玩家 / Victim player
 	 */
 	public static void rankedKillAnnounce(final Player victim) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(p -> {
+		World.getInstance().doOnAllPlayers(p -> {
 			if (p != victim && victim.getWorldId() == p.getWorldId()) {
 				PacketSendUtility.sendPacket(p, SM_SYSTEM_MESSAGE.STR_ABYSS_ORDER_RANKER_DIE(victim,
 					AbyssRankEnum.getRankDescriptionId(victim)));
@@ -87,7 +88,7 @@ public class AbyssService {
 	 * @param nameId 技能名称描述 ID / Skill name description id
 	 */
 	public static void rankerSkillAnnounce(final Player player, final int nameId) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(p -> {
+		World.getInstance().doOnAllPlayers(p -> {
 			if (p != player && player.getWorldType() == p.getWorldType() && !p.isInInstance()) {
 				PacketSendUtility.sendPacket(p,
 					SM_SYSTEM_MESSAGE.STR_SKILL_ABYSS_SKILL_IS_FIRED(player, new DescriptionId(nameId)));

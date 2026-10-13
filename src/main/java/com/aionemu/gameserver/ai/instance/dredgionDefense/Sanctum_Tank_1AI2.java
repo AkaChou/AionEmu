@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dredgion Defense 副本 NPC AI：Sanctum Tank 1（@AIName "Sanctum_Tank_1"），继承 GeneralNpcAI2。
@@ -44,7 +44,7 @@ public class Sanctum_Tank_1AI2 extends GeneralNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							despawn();
 							giveItem();

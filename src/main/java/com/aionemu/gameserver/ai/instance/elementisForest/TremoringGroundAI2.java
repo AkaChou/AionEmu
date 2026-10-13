@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -12,8 +10,10 @@ import com.aionemu.gameserver.ai2.poll.AIAnswers;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Elementis Forest 副本 NPC AI：Tremoring Ground（@AIName "tremorground"），继承 GeneralNpcAI2。
@@ -30,8 +30,8 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 16) {
 				if (isUsed.compareAndSet(false, true)) {
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
+					ThreadPoolManager.getInstance().schedule(() -> {
+						SkillEngine.getInstance().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
 						AI2Actions.deleteOwner(TremoringGroundAI2.this);
 					}, 2000);
 				}

@@ -39,7 +39,7 @@ import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.FeatureServiceBindings;
 import com.aionemu.gameserver.lifecycle.WorldServiceBindings;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
@@ -193,7 +193,7 @@ class AionBootApplicationTest {
 			assertEquals(CoreGameplayServiceBindings.class, context.getType("coreGameplayServiceBindings"));
 			assertEquals(FeatureServiceBindings.class, context.getType("featureServiceBindings"));
 			assertEquals(WorldServiceBindings.class, context.getType("worldServiceBindings"));
-			assertEquals(GameEngineServices.class, context.getType("gameEngineServices"));
+			assertEquals(EngineServiceBindings.class, context.getType("engineServiceBindings"));
 			assertEquals(GameBattlefieldLifecycle.class, context.getType("gameBattlefieldLifecycle"));
 			assertEquals(GameUtilityServicesLifecycle.class, context.getType("gameUtilityServicesLifecycle"));
 			assertLazy(context.getBeanFactory(), "adminService");

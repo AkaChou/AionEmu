@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Setter;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
 /**
  * 宠物列表。
@@ -40,7 +40,7 @@ public class PetList {
 		PetCommonData lastUsedPet = null;
 		for (PetCommonData pet : playerPets) {
 			if (pet.getExpireTime() > 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(pet, player);
+				ExpireTimerTask.getInstance().addTask(pet, player);
 			}
 			pets.put(pet.getPetId(), pet);
 			if (lastUsedPet == null || pet.getDespawnTime().after(lastUsedPet.getDespawnTime())) {

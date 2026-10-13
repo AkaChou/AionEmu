@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
@@ -9,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.ForkJoinTask;
@@ -21,6 +18,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import com.google.common.base.Predicate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
 /**
  * 生物移动推进任务：周期性并行更新移动中生物的目标点与到达事件。
@@ -28,15 +27,8 @@ import com.google.common.base.Predicate;
  */
 public class MoveTaskManager extends AbstractPeriodicTaskManager {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
+	private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
+	private static volatile MoveTaskManager resolvedInstance;
 
 	/**
 	 * 正在移动的生物（objectId → 生物）。
@@ -77,7 +69,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 			if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
 				if (movingCreatures.remove(key, registration)) {
 					creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-					GameMovementLoopServices.zoneUpdateService().add(creature);
+					ZoneUpdateService.getInstance().add(creature);
 				}
 			} else {
 				creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
@@ -168,7 +160,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		}
 		ForkJoinTask<MoveRegistration> task = forEach(copy, CREATURE_MOVE_PREDICATE);
 		if (task != null) {
-			GameThreadPoolServices.threadPoolManager().getForkingPool().invoke(task);
+			ThreadPoolManager.getInstance().getForkingPool().invoke(task);
 		}
 	}
 
@@ -201,14 +193,30 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	 *         when no provider or bean is available
 	 */
 	public static MoveTaskManager getInstance() {
+		MoveTaskManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MoveTaskManager> provider = instanceProvider;
-		MoveTaskManager provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("MoveTaskManager 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<MoveTaskManager> instanceProvider) {
+		MoveTaskManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

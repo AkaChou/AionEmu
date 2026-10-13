@@ -22,6 +22,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
 import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 欧比斯排行榜缓存：按种族缓存玩家/军团排行数据包并支持全量刷新。
@@ -66,7 +67,7 @@ public class AbyssRankingCache {
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(Player::resetAbyssRankListUpdated);
+		World.getInstance().doOnAllPlayers(Player::resetAbyssRankListUpdated);
 	}
 
 	/**

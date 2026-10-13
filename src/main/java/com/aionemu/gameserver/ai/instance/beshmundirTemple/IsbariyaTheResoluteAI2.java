@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -15,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Isbariya The Resolute（@AIName "isbariya"），继承 AggressiveNpcAI2。
@@ -88,11 +88,11 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBasicSkillTask() {
-		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		basicSkillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead())
 				cancelSkillTask();
 			else
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
 		},0 , 24000);
 	}
 
@@ -108,7 +108,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		int delay = 10000;
 		switch (stage) {
 			case 1:
-				GameEngineServices.skillEngine().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
 				spawnSouls();
 				delay = 25000;
 			break;
@@ -153,7 +153,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 
 	private void scheduleSpecial(int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(this::launchSpecial, delay);
+		ThreadPoolManager.getInstance().schedule(this::launchSpecial, delay);
 	}
 
 	private SpawnTemplate rndSpawnInRange(int npcId) {

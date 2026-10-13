@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -17,6 +16,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 魔法反制效果：目标施法时对攻击者造成反击伤害（有上限）。
@@ -53,7 +53,7 @@ public class MagicCounterAtkEffect extends EffectTemplate {
 		ActionObserver observer = new ActionObserver(ObserverType.SKILLUSE) {
 
 			public void skilluse(final Skill skill) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 
 					if (skill.getSkillTemplate().getType() == SkillType.MAGICAL
 							&& skill.getSkillTemplate().getSubType() == SkillSubType.ATTACK) {

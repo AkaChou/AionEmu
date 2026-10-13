@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.enshar;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Enshar 区域 NPC AI：Petrified Jotun Worker（@AIName "nepilim_1"），继承 AggressiveNpcAI2。
@@ -40,7 +40,7 @@ public class Petrified_Jotun_WorkerAI2 extends AggressiveNpcAI2
 					spawn(219776, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
 					AI2Actions.deleteOwner(Petrified_Jotun_WorkerAI2.this);
 					AI2Actions.scheduleRespawn(this);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(219776), 300000); //5 分钟。 / 5 Minutes.
+					ThreadPoolManager.getInstance().schedule(() -> despawnNpc(219776), 300000); //5 分钟。 / 5 Minutes.
 				}
 			}
 		}

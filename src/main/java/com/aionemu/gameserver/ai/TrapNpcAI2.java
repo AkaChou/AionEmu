@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 陷阱 AI：生成后按规则对进入范围的目标生效。
@@ -68,7 +68,7 @@ public class TrapNpcAI2 extends NpcAI2
 			if (npcSkill != null) {
 				AI2Actions.useSkill(this, npcSkill.getSkillId());
 			}
-			despawnTask = GameThreadPoolServices.threadPoolManager().schedule(new TrapDelete(this), 5000);
+			despawnTask = ThreadPoolManager.getInstance().schedule(new TrapDelete(this), 5000);
 		}
 	}
 	

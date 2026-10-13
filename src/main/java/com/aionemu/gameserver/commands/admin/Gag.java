@@ -1,14 +1,15 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员禁言命令：对玩家施加聊天禁言，可指定分钟数并在到期后自动解除。
@@ -35,7 +36,7 @@ public class Gag extends AdminCommand {
 		}
 
 		String name = Util.convertName(params[0]);
-		final Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
+		final Player player = World.getInstance().findPlayer(name);
 		if (player == null) {
 			PacketSendUtility.sendMessage(admin, "Player " + name + " was not found!");
 			PacketSendUtility.sendMessage(admin, "Syntax: //gag <player> [time in minutes]");
@@ -58,7 +59,7 @@ public class Gag extends AdminCommand {
 			Future<?> task = player.getController().getTask(TaskId.GAG);
 			if (task != null)
 				player.getController().cancelTask(TaskId.GAG);
-			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getController().addTask(TaskId.GAG, ThreadPoolManager.getInstance().schedule(() -> {
 				player.setGagged(false);
 				PacketSendUtility.sendMessage(player, "You have been ungagged");
 			}, time * 60000L));

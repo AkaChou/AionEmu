@@ -1,13 +1,14 @@
 package com.aionemu.gameserver.controllers.movement;
 
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.path.PathService;
 
 /**
@@ -65,7 +66,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 			if (isControlled() && started.compareAndSet(false, true)) {
 				this.movementMask = MovementMask.NPC_STARTMOVE;
 				sendForcedMovePacket();
-				GameMovementLoopServices.playerMoveTaskManager().addPlayer(owner);
+				PlayerMoveTaskManager.getInstance().addPlayer(owner);
 			}
 		}
 	}
@@ -142,7 +143,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		 * targetDestY = newY + vectorY; targetDestZ = newZ + vectorZ; }
 		 */
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, newX, newY, newZ, heading, false);
+		World.getInstance().updatePosition(owner, newX, newY, newZ, heading, false);
 		updateLastMove();
 	}
 
@@ -153,7 +154,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	@Override
 	public void abortMove() {
 		started.set(false);
-		GameMovementLoopServices.playerMoveTaskManager().removePlayer(owner);
+		PlayerMoveTaskManager.getInstance().removePlayer(owner);
 		targetDestX = 0;
 		targetDestY = 0;
 		targetDestZ = 0;

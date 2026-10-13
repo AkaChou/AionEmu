@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
@@ -160,7 +160,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
             udasTempleChest.add((Npc) spawn(216150, 455.50082f, 1176.3575f, 192.6768f, (byte) 34));
 			udasTempleChest.add((Npc) spawn(216150, 436.63177f, 1192.1348f, 190.88254f, (byte) 119));
             udasTempleChest.add((Npc) spawn(216150, 438.38586f, 1202.9849f, 192.8323f, (byte) 105));
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -192,7 +192,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -224,7 +224,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -256,7 +256,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -288,7 +288,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -320,7 +320,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -352,7 +352,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -384,7 +384,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -416,7 +416,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -448,7 +448,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -480,7 +480,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -512,7 +512,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
                     }
                 }
             });
-			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.

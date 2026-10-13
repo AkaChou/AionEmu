@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Takun Gojira（@AIName "takun_gojira"），继承 AggressiveNpcAI2。
@@ -19,7 +19,7 @@ public class TakunGojiraAI2 extends AggressiveNpcAI2
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			counterpart = getPosition().getWorldMapInstance().getNpc(getNpcId() == 217596 ? 217597 : 217596);
 			if (counterpart != null) {
 				getAggroList().addHate(counterpart, 1000000);

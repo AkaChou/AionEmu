@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.concurrent.Future;
@@ -49,7 +49,7 @@ public class Drana_LumpAI2 extends AggressiveNpcAI2
 	}
 
 	private void dranaBreak() {
-		dranaBreakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		dranaBreakTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(214880)); //Spaller Echtra.
 			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215388)); //Spaller Rakanatra.
 			AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(215389)); //Spaller Dhatra.

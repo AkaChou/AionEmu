@@ -271,7 +271,7 @@ public abstract class HouseObject<T extends PlaceableHouseObject> extends Visibl
 		if (!isSpawnedByPlayer()) {
 			return;
 		}
-		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World w = World.getInstance();
 		if (position == null || !isSpawned()) {
 			position = w.createPosition(ownerHouse.getWorldId(), x, y, z, heading, ownerHouse.getInstanceId());
 			SpawnEngine.bringIntoWorld(this);

@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.worlds.levinshor;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -12,6 +10,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Levinshor 区域 NPC AI：Cruel Lamia（@AIName "cruel_lamia"），继承 AggressiveNpcAI2。
@@ -59,13 +59,13 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		lamiaTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		lamiaTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
 				getOwner().getController().cancelCurrentSkill();
 				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
 			}
 		}, 3000, 15000);
 	}

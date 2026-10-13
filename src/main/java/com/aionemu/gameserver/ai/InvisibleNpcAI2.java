@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureVisualState;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -253,21 +253,21 @@ public class InvisibleNpcAI2 extends AggressiveNpcAI2
 	}
 
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+	    SkillEngine.getInstance().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void conquerorPassion() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
+		SkillEngine.getInstance().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
 	private void midnightRobe() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
+		SkillEngine.getInstance().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
 	}
 	private void firmBelief() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20962, 1, getOwner()).useNoAnimationSkill(); //Firm Belief.
+		SkillEngine.getInstance().getSkill(getOwner(), 20962, 1, getOwner()).useNoAnimationSkill(); //Firm Belief.
 	}
 	private void ereshkigalRage() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
 	private void brokenMorale() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
+		SkillEngine.getInstance().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
 }

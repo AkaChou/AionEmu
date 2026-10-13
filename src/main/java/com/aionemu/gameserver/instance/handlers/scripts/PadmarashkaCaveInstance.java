@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -13,8 +11,10 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -80,7 +80,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(218756); //Padmarashka.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			GameEngineServices.skillEngine().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
+			SkillEngine.getInstance().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
 		}
 	}
 
@@ -233,7 +233,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		this.sendMessage(1400514, 118 * 60 * 1000);
 		// 你将在 1 分钟后被移出帕德玛拉什卡洞穴。 / You will be removed from Padmarashka's Cave in 1 minute.
 		this.sendMessage(1400515, 119 * 60 * 1000);
-        dramataTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        dramataTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -271,7 +271,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.
@@ -291,7 +291,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

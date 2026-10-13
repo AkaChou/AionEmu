@@ -4,7 +4,6 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -13,6 +12,7 @@ import java.util.Deque;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 游戏服与聊天服之间的网络连接。
@@ -88,7 +88,7 @@ public class ChatServerConnection extends AConnection {
 	 * @param csPacketHandler 入站包处理器 / inbound packet handler
 	 */
 	private void init(CsPacketHandler csPacketHandler) {
-		this.chatServer = com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer();
+		this.chatServer = ChatServer.getInstance();
 		this.csPacketHandler = csPacketHandler;
 		state = State.CONNECTED;
 		log.info(I18n.get("log.6edc59d72a57"));
@@ -113,7 +113,7 @@ public class ChatServerConnection extends AConnection {
 	public boolean processData(ByteBuffer data) {
 		CsClientPacket pck = csPacketHandler.handle(data, this);
 		if (pck != null && pck.read()) {
-			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
+			ThreadPoolManager.getInstance().executeLsPacket(pck);
 		}
 		return true;
 	}

@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 欧比斯排行清理服务：按配置周期剔除长期未登录上榜玩家。
@@ -82,7 +83,7 @@ public class AbyssRankCleaningService {
 		List<Player> ToArray = new ArrayList<>();
 		long offlineThresholdMs = (long) periodInDays * 24L * 60L * 60L * 1000L;
 		for (AbyssRankingResult result : rankingsElyos) {
-			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
+			Player p = World.getInstance().findPlayer(result.getPlayerName());
 			if (p == null) {
 				continue;
 			}
@@ -94,7 +95,7 @@ public class AbyssRankCleaningService {
 		}
 
 		for (AbyssRankingResult result : rankingsAsmos) {
-			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
+			Player p = World.getInstance().findPlayer(result.getPlayerName());
 			if (p == null) {
 				continue;
 			}

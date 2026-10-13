@@ -2,9 +2,7 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -18,9 +16,11 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -197,7 +197,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float y1 = npc.getY();
 			    final float z1 = npc.getZ();
 			    final byte h1 = npc.getHeading();
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -211,7 +211,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 					    }
 				    }
 			    }, 2000);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -227,7 +227,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float y2 = npc.getY();
 			    final float z2 = npc.getZ();
 			    final byte h2 = npc.getHeading();
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -241,7 +241,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 					    }
 				    }
 			    }, 2000);
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -305,7 +305,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 702681: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			case 702682: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21806, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
+				SkillEngine.getInstance().getSkill(npc, 21806, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
 			case 702683: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			case 702684: //伦图斯攻城武器。 / Rentus Siege Weapon.
@@ -314,7 +314,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 702687: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			case 702688: //伦图斯攻城武器。 / Rentus Siege Weapon.
 			    despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21805, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
+				SkillEngine.getInstance().getSkill(npc, 21805, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
 			case 701151: //Reian Combat Ration.
 			case 701152: //Reian Emergency Rations.
@@ -391,7 +391,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.steelRake;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -15,10 +13,12 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Steel Rake 副本 NPC AI：Golden Eye Mantutu（@AIName "goldeneyemantutu"），继承 AggressiveNpcAI2。
@@ -74,7 +74,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	 * @param npc 饲料或供水装置 NPC / feed or water supply NPC
 	 */
 	private void startFeedTime(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead() && npc != null) {
 				switch (npc.getNpcId()) {
 					case 281128: // 饲料供给装置 / Feed Supply Device.
@@ -144,14 +144,14 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	 * On first hit, start a periodic task that randomly applies the hunger or thirst effect.
 	 */
 	private void doSchedule() {
-		hungerTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		hungerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			int rnd = Rnd.get(1, 2);
 			int skill = switch (rnd) {
 				case 1 -> 20489; // 饥饿 / Hunger.
 				case 2 -> 20490;
 				default -> 0; // 口渴 / Thirst.
 			};
-			GameEngineServices.skillEngine().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
 		}, 10000, 30000);
 	}
 

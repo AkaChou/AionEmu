@@ -4,13 +4,9 @@ package com.aionemu.gameserver.services.mail;
 import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -42,11 +38,16 @@ import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.persistence.dao.MailDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
+import com.aionemu.gameserver.services.AdminService;
+import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家邮件服务：发送、阅读、领取附件、删除邮件，以及登录时加载邮箱。
@@ -158,7 +159,7 @@ public class MailService {
 			return;
 		}
 
-		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
 		Mailbox recipientMailbox = recipient == null ? null : recipient.getMailbox();
 		if ((recipientMailbox != null && !recipientMailbox.haveFreeSlots())
 				|| (recipientMailbox == null && recipientCommonData.getMailboxLetters() > 99)) {
@@ -185,7 +186,7 @@ public class MailService {
 				return;
 			}
 
-			if (!GameRuntimeServices.adminService().canOperate(sender, null, senderItem, "mail")) {
+			if (!AdminService.getInstance().canOperate(sender, null, senderItem, "mail")) {
 				return;
 			}
 			float qualityPriceRate = switch (senderItem.getItemTemplate().getItemQuality()) {
@@ -262,13 +263,13 @@ public class MailService {
 
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
-		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finaAttachedApCount, title, message, sender.getName(), time,
 				true, letterType);
 
 		if (!storeSentMail(sender, recipientCommonData, recipientMailbox, attachedItem, newLetter, time)) {
 			inventorySnapshot.restore();
-			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			IDFactory.getInstance().releaseId(newLetter.getObjectId());
 			if (attachedItem != null) {
 				ItemService.releaseItemId(attachedItem);
 			}
@@ -559,7 +560,7 @@ public class MailService {
 	 * @param player 玩家 / player
 	 */
 	public void onPlayerLogin(Player player) {
-		GameThreadPoolServices.threadPoolManager().schedule(new MailLoadTask(player), 5000);
+		ThreadPoolManager.getInstance().schedule(new MailLoadTask(player), 5000);
 	}
 
 	/**
@@ -599,7 +600,7 @@ public class MailService {
 		public void run() {
 			player.setMailbox(mailDAO.loadPlayerMailbox(player));
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE());
-			GameHousingServices.housingBidService().onPlayerLogin(player);
+			HousingBidService.getInstance().onPlayerLogin(player);
 		}
 	}
 }

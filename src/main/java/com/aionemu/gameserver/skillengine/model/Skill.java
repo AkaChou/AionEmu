@@ -4,14 +4,12 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.MotionLoggingService;
 
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +50,8 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.abyss.AbyssService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.action.Action;
 import com.aionemu.gameserver.skillengine.action.Actions;
 import com.aionemu.gameserver.skillengine.condition.Conditions;
@@ -61,6 +61,7 @@ import com.aionemu.gameserver.skillengine.properties.Properties;
 import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.geo.GeoService;
 
@@ -611,7 +612,7 @@ public class Skill {
 		if (penaltySkill == 0) {
 			return;
 		}
-		GameEngineServices.skillEngine().applyEffectDirectly(penaltySkill, firstTarget, effector, 0);
+		SkillEngine.getInstance().applyEffectDirectly(penaltySkill, firstTarget, effector, 0);
 		if (skillTemplate.isPenaltySkillMessage() && effector instanceof Player player) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_PENALTY_TITLE);
 		}
@@ -760,7 +761,7 @@ public class Skill {
 			}
 		}
 		if (skillMethod == SkillMethod.CAST && effector instanceof Player
-			&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
+			&& !MinionService.getInstance().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
 			effector.clearCasting(this);
 			return;
 		}
@@ -885,7 +886,7 @@ public class Skill {
 
 		if (effector instanceof Player) {
 			QuestEnv env = new QuestEnv(effector.getTarget(), (Player) effector, 0, 0);
-			GameEngineServices.questEngine().onUseSkill(env, skillTemplate.getSkillId());
+			QuestEngine.getInstance().onUseSkill(env, skillTemplate.getSkillId());
 		}
 
 		if ((skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) && getSkillTemplate().getSubType() != SkillSubType.HEAL && hitTime <= 0) {
@@ -896,7 +897,7 @@ public class Skill {
 		if (hitTime == 0) {
 			applyEffect(effects);
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> applyEffect(effects), hitTime);
+			ThreadPoolManager.getInstance().schedule(() -> applyEffect(effects), hitTime);
 		}
 		if (skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) {
 			sendCastspellEnd(spellStatus, dashStatus, effects);
@@ -1009,7 +1010,7 @@ public class Skill {
 	 * @param delay 延迟毫秒 / delay millis
 	 */
 	private void schedule(int delay) {
-		castingTask = GameThreadPoolServices.threadPoolManager().schedule(this::endCast, delay);
+		castingTask = ThreadPoolManager.getInstance().schedule(this::endCast, delay);
 
 		castStart = System.currentTimeMillis();
 	}

@@ -3,9 +3,9 @@ package com.aionemu.gameserver.services.beritraservice;
 import java.util.Map;
 
 import com.aionemu.gameserver.services.BeritraService;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 贝尔特拉/埃雷什基伽尔入侵启动定时任务。
@@ -35,7 +35,7 @@ public class BeritraStartRunnable implements Runnable {
 		BeritraService.getInstance().invasionCorridorMsg(id);
 		// 埃雷什基伽尔军团入侵走廊已创建。 / The Ereshkigal Legion's Invasion Corridor has been created.
 		BeritraService.getInstance().ereshkigalCorridorMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			// 贝里特拉入侵激光。 / Beritra Invasion Lazer.
 			BeritraService.getInstance().adventDirectingSP(id);
 			// 埃雷什基伽尔入侵激光。 / Ereshkigal Invasion Lazer.
@@ -45,13 +45,13 @@ public class BeritraStartRunnable implements Runnable {
 			// 埃雷什基伽尔军团的魔法武器已通过入侵走廊。 / The Ereshkigal Legion's magic weapon has infiltrated through the invasion corridor.
 			BeritraService.getInstance().ereshkigalLegionThroughMsg(id);
 		}, 180000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			// 贝里特拉入侵黑空。 / Beritra Invasion Black Sky.
 			BeritraService.getInstance().adventControlSP(id);
 			// 埃雷什基伽尔入侵黑空。 / Ereshkigal Invasion Black Sky.
 			BeritraService.getInstance().adventControlEreshSP(id);
 		}, 300000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			Map<Integer, BeritraLocation> locations = BeritraService.getInstance().getBeritraLocations();
 			for (final BeritraLocation loc : locations.values()) {
 				if (loc.getId() == id) {

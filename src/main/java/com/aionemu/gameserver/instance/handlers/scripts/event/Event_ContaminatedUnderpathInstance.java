@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -23,7 +21,9 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -296,7 +296,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				break;
 			case 248525:
 				points = 500000;
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -332,7 +332,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private void startContaminedUnderPath1() {
-		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -347,7 +347,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248500, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -362,7 +362,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248496, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -377,7 +377,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248496, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -392,7 +392,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248502, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -410,7 +410,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private void startContaminedUnderPath2() {
-		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -425,7 +425,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248510, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -440,7 +440,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248506, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -455,7 +455,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248506, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -470,7 +470,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248512, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -488,7 +488,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private void startContaminedUnderPath3() {
-		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -503,7 +503,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248520, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -518,7 +518,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248516, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -533,7 +533,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248516, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -548,7 +548,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 				sp(248522, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -566,7 +566,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	}
 
 	private void startContaminedUnderPath4() {
-		underpathTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		underpathTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -640,7 +640,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	 */
 
 	protected void startInstanceTask() {
-		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -709,12 +709,12 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 		ItemService.addItem(player, 186000495, 1); // 监狱钥匙（开门用） / Prison Key (Open Door Prison)
 		// 1. 变身：进入污染地下通道时自动变为传送形态。 / 1. Transformation: entering the passage auto-transforms you.
 		final int IDEventDef = skillRace == Race.ASMODIANS ? 4940 : 4935;
-		GameEngineServices.skillEngine().applyEffectDirectly(IDEventDef, player, player, 1200000);
+		SkillEngine.getInstance().applyEffectDirectly(IDEventDef, player, player, 1200000);
 	}
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -885,7 +885,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -916,7 +916,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1041,7 +1041,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler 
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

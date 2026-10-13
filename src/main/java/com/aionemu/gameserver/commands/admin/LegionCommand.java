@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
@@ -12,12 +11,14 @@ import com.aionemu.gameserver.model.team.legion.LegionTerritory;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_UPDATE_MEMBER;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员军团命令：解散、改级/积分/名称、邀请/踢出、任命团长与领地管理。
@@ -135,7 +136,7 @@ public class LegionCommand extends AdminCommand {
 
 			PlayerDao dao = null;
 			for(int memberId : members) {
-				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
+				Player pl = World.getInstance().findPlayer(memberId);
 				if(pl != null)
 					online.add(pl.getName()+" (lv"+pl.getLevel()+") classId "+pl.getPlayerClass().getClassId());
 				else {
@@ -159,7 +160,7 @@ public class LegionCommand extends AdminCommand {
 			if(!verifyLenght(player, 2, params)) //legion kick PLAYER
 				return;
 
-			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
+			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
@@ -181,7 +182,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 
-			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
+			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -206,7 +207,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 
-			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
+			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -220,7 +221,7 @@ public class LegionCommand extends AdminCommand {
 			List<Integer> members = legion.getLegionMembers();
 			Player bgplayer = null;
 			for(int memberId : members) {
-				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
+				Player pl = World.getInstance().findPlayer(memberId);
 				if(pl != null) {
 					if(pl.getLegionMember().getRank() == LegionRank.BRIGADE_GENERAL) {
 						bgplayer = pl;
@@ -247,7 +248,7 @@ public class LegionCommand extends AdminCommand {
 			if(!verifyLenght(player, 3, params)) //legion setrank PLAYER RANK
 				return;
 
-			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
+			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
@@ -282,19 +283,19 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "You are not in a Legion !");
 				return;
 			} if (params[1].equalsIgnoreCase("list")) {
-				for (LegionTerritory territory : GameRuntimeServices.territoryService().getTerritories()) {
+				for (LegionTerritory territory : TerritoryService.getInstance().getTerritories()) {
 					PacketSendUtility.sendMessage(player, "Id: "+territory.getId()+" owned by Legion: "+territory.getLegionName());
 				}
 			} else if (params[1].equalsIgnoreCase("cancel")) {
 				if (player.getLegion().getTerritory().getId() > 0)
-					GameRuntimeServices.territoryService().onLooseTerritory(player.getLegion());
+					TerritoryService.getInstance().onLooseTerritory(player.getLegion());
 				else PacketSendUtility.sendMessage(player, "Your Legion didn't owns an territory..");
 			} else if (params[1].equalsIgnoreCase("capture")) {
 				if (params[2] == null || params[2].isEmpty()) {
 					onFail(player,"Missing territoryId parameter !");
 					return;
 				}
-				GameRuntimeServices.territoryService().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
+				TerritoryService.getInstance().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
 			}
 		}
 	}

@@ -25,6 +25,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_STATE
 import lombok.Getter;
 import lombok.Setter;
 import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.world.World;
 /**
  * 攻城实例基类，管理攻城生命周期、BOSS 与广播。
  * Siege instance base managing siege lifecycle, boss and broadcasts.
@@ -199,7 +200,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	 */
 	protected void initSiegeBoss() {
 		SiegeNpc boss = null;
-		Collection<SiegeNpc> npcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(getSiegeLocationId());
+		Collection<SiegeNpc> npcs = World.getInstance().getLocalSiegeNpcs(getSiegeLocationId());
 		for (SiegeNpc npc : npcs) {
 			if (npc.getObjectTemplate().getAbyssNpcType().equals(AbyssNpcType.BOSS)) {
 				if (boss != null) {

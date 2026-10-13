@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import lombok.Getter;
 import lombok.Setter;
@@ -164,7 +164,7 @@ public class QuestState {
 		// Catalog-first metadata with a retail quest.xml fallback for rows on the native lane (the
 		// retail equivalent is the full QuestDB table); only a row absent from both stays
 		// non-repeatable (fail-closed).
-		var engine = GameEngineServices.questEngine();
+		var engine = QuestEngine.getInstance();
 		QuestMetadata metadata = engine.questCatalog().findMetadata(questId).orElse(null);
 		if (metadata == null) {
 			metadata = engine.nativeMetadata(questId).orElse(null);

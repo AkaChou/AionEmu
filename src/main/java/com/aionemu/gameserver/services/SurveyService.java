@@ -2,9 +2,7 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +11,9 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 
 import lombok.NonNull;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -28,6 +26,8 @@ import com.aionemu.gameserver.persistence.dao.SurveyDao;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 问卷/调查奖励服务，轮询待领调查并向玩家发放奖励。
@@ -38,13 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SurveyService {
 
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 的实例提供者。
-	 * Sets the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
+	private static volatile SurveyService resolvedInstance;
 	private final SurveyDao surveyControllerDAO;
 	private final ConcurrentMap<Integer, SurveyItem> activeItems;
 	private volatile String htmlTemplate;
@@ -83,7 +78,7 @@ public class SurveyService {
 	 */
 	public synchronized void reload() {
 		try {
-			htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
+			htmlTemplate = HTMLCache.getInstance().getHTML("surveyTemplate.xhtml");
 		} catch (Exception e) {
 			log.warn(I18n.get("log.9eb483d1f40b", e.getMessage()), e);
 		}
@@ -91,7 +86,7 @@ public class SurveyService {
 			updateTask.cancel(false);
 		}
 		try {
-			updateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
+			updateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000L);
 		} catch (Exception e) {
 			log.warn(I18n.get("log.a6e3f040453a", e.getMessage()), e);
@@ -164,7 +159,7 @@ public class SurveyService {
 		}
 		log.info(I18n.get("log.febfef8995af", cnt, players.size()));
 		for (int ownerId : players) {
-			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(ownerId);
+			Player player = World.getInstance().findPlayer(ownerId);
 			if (player != null) {
 				showAvailable(player);
 			}
@@ -213,14 +208,30 @@ public class SurveyService {
 	 *                               when no provider or bean is available
 	 */
 	public static SurveyService getInstance() {
+		SurveyService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<SurveyService> provider = instanceProvider;
-		SurveyService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("SurveyService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<SurveyService> instanceProvider) {
+		SurveyService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

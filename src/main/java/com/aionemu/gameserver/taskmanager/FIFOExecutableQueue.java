@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.taskmanager;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.locks.ReentrantLock;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * FIFO 可执行队列基类：保证同一时刻至多一个执行线程按顺序处理队列。
@@ -56,7 +56,7 @@ public abstract class FIFOExecutableQueue implements Runnable {
 		} finally {
 			unlock();
 		}
-		GameThreadPoolServices.threadPoolManager().execute(this);
+		ThreadPoolManager.getInstance().execute(this);
 	}
 
 	/**

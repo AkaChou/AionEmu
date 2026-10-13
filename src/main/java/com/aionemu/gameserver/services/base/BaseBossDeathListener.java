@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.base;
 import com.aionemu.gameserver.services.AbyssLandingService;
 
 import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -16,7 +15,9 @@ import com.aionemu.gameserver.model.landing.LandingPointsEnum;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 基地 BOSS 死亡监听器，处理占领广播、种族切换、欧比斯登陆点与奖励。
@@ -99,7 +100,7 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	 */
 	public void announceCapture(final TemporaryPlayerTeam team, final Creature kill) {
 		final String baseName = base.getBaseLocation().getName();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (team != null && kill == null) {
 				// %0 成功征服了 %1。 / %0 succeeded in conquering %1.
 				PacketSendUtility.sendPacket(player,
@@ -131,9 +132,9 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 	 * Applies race bane buffs and related messages to all players.
 	 */
 	public void applyBaseBuff() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (player.getCommonData().getRace() == Race.ELYOS) {
-				GameEngineServices.skillEngine().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
+				SkillEngine.getInstance().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
 				// 凯希内尔保护的力量环绕着你。 / The power of Kaisinel's Protection surrounds you.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_GAIN,
 						5000);
@@ -141,7 +142,7 @@ public class BaseBossDeathListener implements AbstractAI.AiDeathListener {
 				PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_WARNING, 10000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				GameEngineServices.skillEngine().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
+				SkillEngine.getInstance().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
 				// 玛尔库坦保护的力量环绕着你。 / The power of Marchutan's Protection surrounds you.
 				PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_GAIN,
 						5000);

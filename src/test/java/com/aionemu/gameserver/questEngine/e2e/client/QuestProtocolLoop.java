@@ -1,6 +1,6 @@
 package com.aionemu.gameserver.questEngine.e2e.client;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
@@ -58,7 +58,7 @@ public final class QuestProtocolLoop implements AutoCloseable {
 			engineProviderField.setAccessible(true);
 			previousEngineProvider = (ObjectProvider<QuestEngine>) engineProviderField.get(null);
 
-			serviceProviderField = GameEngineServices.class.getDeclaredField("questEngineProvider");
+			serviceProviderField = QuestEngine.class.getDeclaredField("instanceProvider");
 			serviceProviderField.setAccessible(true);
 			previousServiceProvider = (ObjectProvider<QuestEngine>) serviceProviderField.get(null);
 

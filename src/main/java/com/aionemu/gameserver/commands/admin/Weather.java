@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.world.WeatherEntry;
 import com.aionemu.gameserver.model.templates.world.WeatherTable;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
+import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapType;
@@ -44,7 +44,7 @@ public class Weather extends AdminCommand
 			for (ZoneInstance regionZone : zones) {
 				if (regionZone.getZoneTemplate().getZoneType() == ZoneClassName.WEATHER) {
 					weatherZoneId = DataManager.ZONE_DATA.getWeatherZoneId(regionZone.getZoneTemplate());
-					weatherCode = GameRuntimeServices.weatherService().getWeatherCode(admin.getWorldId(), weatherZoneId);
+					weatherCode = WeatherService.getInstance().getWeatherCode(admin.getWorldId(), weatherZoneId);
 					regionName = regionZone.getZoneTemplate().getXmlName();
 					break;
 				}
@@ -75,7 +75,7 @@ public class Weather extends AdminCommand
 				return;
 			}
 		} if (regionName.equals("reset")) {
-			GameRuntimeServices.weatherService().resetWeather();
+			WeatherService.getInstance().resetWeather();
 			return;
 		}
 		WorldMapType region = null;
@@ -91,7 +91,7 @@ public class Weather extends AdminCommand
 					PacketSendUtility.sendMessage(admin, "Region has no weather defined");
 					return;
 				}
-				GameRuntimeServices.weatherService().changeRegionWeather(region.getId(), weatherType);
+				WeatherService.getInstance().changeRegionWeather(region.getId(), weatherType);
 			} else {
 				PacketSendUtility.sendMessage(admin, "Weather type must be between 0 and 12");
 			}
@@ -107,7 +107,7 @@ public class Weather extends AdminCommand
 	 * @return 快照文本；无天气表时为 {@code no weather table} / snapshot text, or {@code no weather table}
 	 */
 	private String describeWeather(int mapId) {
-		WeatherEntry[] entries = GameRuntimeServices.weatherService().getWeatherSnapshot(mapId);
+		WeatherEntry[] entries = WeatherService.getInstance().getWeatherSnapshot(mapId);
 		if (entries.length == 0) {
 			return "no weather table";
 		}

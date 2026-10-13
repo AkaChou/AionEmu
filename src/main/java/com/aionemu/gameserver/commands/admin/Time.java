@@ -6,6 +6,7 @@ import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 设置游戏内时间（时段或小时）的管理员命令。
@@ -67,7 +68,7 @@ public class Time extends AdminCommand
 		GameTimeManager.reloadTime(time);
 		GameTimeManager.getGameTime().calculateDayTime();
 		TemporarySpawnEngine.onHourChange();
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_GAME_TIME()));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_GAME_TIME()));
 		PacketSendUtility.sendMessage(admin, "You changed the time to " + params[0] + ".");
 	}
 

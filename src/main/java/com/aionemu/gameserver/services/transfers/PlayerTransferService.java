@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.transfers;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.PlayerTransferConfig;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,6 +23,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_PTRANSFER_CONTROL;
 import com.aionemu.gameserver.services.AccountService;
+import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -40,6 +41,7 @@ import java.util.Map;
 @Slf4j
 public class PlayerTransferService {
 	private static volatile ObjectProvider<PlayerTransferService> instanceProvider;
+	private static volatile PlayerTransferService resolvedInstance;
 
 	/**
 	 * 专用转移日志主题，用于记录跨服迁移过程明细。
@@ -61,14 +63,19 @@ public class PlayerTransferService {
 	 *                               when no provider or bean is available
 	 */
 	public static PlayerTransferService getInstance() {
+		PlayerTransferService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PlayerTransferService> provider = instanceProvider;
-		PlayerTransferService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PlayerTransferService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -79,6 +86,7 @@ public class PlayerTransferService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<PlayerTransferService> instanceProvider) {
 		PlayerTransferService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -163,14 +171,14 @@ public class PlayerTransferService {
 
 		if (!exist) {
 			log.warn(I18n.get("log.526992334997", taskId, playerId, accountId));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"player " + playerId + " is not present on account " + accountId));
 			return;
 		}
 
 		if (legionMemberDAO.isIdUsed(playerId)) {
 			log.warn(I18n.get("log.1cf8692ae407", taskId, playerId));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"cannot transfer player with existing legion " + playerId));
 			return;
 		}
@@ -178,7 +186,7 @@ public class PlayerTransferService {
 		PlayerCommonData common = dao.loadPlayerCommonData(playerId);
 		if (common.isOnline()) {
 			log.warn(I18n.get("log.9e938080f552", taskId, playerId));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"cannot transfer online players " + playerId));
 			return;
 		}
@@ -186,7 +194,7 @@ public class PlayerTransferService {
 		if (PlayerTransferConfig.REUSE_HOURS > 0 && common.getLastTransferTime()
 			+ PlayerTransferConfig.REUSE_HOURS * 3600000L > System.currentTimeMillis()) {
 			log.warn(I18n.get("log.9a7c79463061", taskId, playerId));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"cannot transfer that player so often " + playerId));
 			return;
 		}
@@ -195,14 +203,14 @@ public class PlayerTransferService {
 		long kinah = player.getInventory().getKinah() + player.getWarehouse().getKinah();
 		if (PlayerTransferConfig.MAX_KINAH > 0 && kinah >= PlayerTransferConfig.MAX_KINAH) {
 			log.warn(I18n.get("log.e461e83eac61", taskId, kinah));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"cannot transfer players with " + kinah + " kinah in inventory/wh."));
 			return;
 		}
 
-		if (GameRuntimeServices.brokerService().hasRegisteredItems(player)) {
+		if (BrokerService.getInstance().hasRegisteredItems(player)) {
 			log.warn(I18n.get("log.be9da2c1bc33", taskId));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 				"cannot transfer player while he own some items in broker."));
 			return;
 		}
@@ -216,7 +224,7 @@ public class PlayerTransferService {
 		transfers.put(taskId, tp);
 
 		TransferLog.log.info(I18n.get("log.0e5cc7ea4a0c", taskId));
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.CHARACTER_INFORMATION, tp));
+		LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.CHARACTER_INFORMATION, tp));
 	}
 
 	/**
@@ -232,7 +240,7 @@ public class PlayerTransferService {
 	public void cloneCharacter(int taskId, int targetAccountId, String name, String account, byte[] db) {
 		if (!PlayerService.isFreeName(name)) {
 			if (PlayerTransferConfig.BLOCK_SAMENAME) {
-				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(
+				LoginServer.getInstance().sendPacket(
 					new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "Name is already in use"));
 				return;
 			}
@@ -248,7 +256,7 @@ public class PlayerTransferService {
 			name = newName;
 		}
 		if (AccountService.loadAccount(targetAccountId).size() >= GSConfig.CHARACTER_LIMIT_COUNT) {
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(
+			LoginServer.getInstance().sendPacket(
 				new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId, "No free character slots"));
 			return;
 		}
@@ -259,11 +267,11 @@ public class PlayerTransferService {
 
 		if (cha == null) { // something went wrong!
 			log.error(I18n.get("log.1be80ec82e92", taskId, name));
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
 				"unexpected sql error while creating a clone"));
 		} else {
 			dao.setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
-			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
+			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
 			log.info(I18n.get("log.0ced97702710", taskId, name));
 			TransferLog.log.info(I18n.get("log.aa63f248efe4", taskId));
 		}

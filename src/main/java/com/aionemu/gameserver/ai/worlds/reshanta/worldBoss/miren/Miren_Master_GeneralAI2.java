@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -10,6 +9,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 /**
@@ -39,7 +40,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2 {
 			case 279541:
 			case 269911:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawnTreasureChest(701481), 10000);
+				ThreadPoolManager.getInstance().schedule(() -> spawnTreasureChest(701481), 10000);
 				break;
 		}
 		super.handleDied();
@@ -53,7 +54,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void announceUnsealedMiren() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 解封的米伦。 / Unsealed Miren.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Ab1_Lamiren_Named_Spawn);
 			// 米伦龙族王子已出现！ / The Miren Balaur Prince has appeared!

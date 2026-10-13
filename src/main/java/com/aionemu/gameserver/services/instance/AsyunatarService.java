@@ -2,13 +2,12 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.Objects;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -57,20 +58,20 @@ public class AsyunatarService {
 		if (AutoGroupConfig.ASHUNATAL_ENABLED) {
 			log.info(I18n.get("log.a77e6c7b475a"));
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-2PM"
-            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
+            CronService.requireCurrent().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
 			// 阿舒纳塔尔战舰 周一至周日 12:00–14:00 / Ashunatal Dredgion MON-TUE-WED-THU-FRI "8PM-10PM"
-            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
+            CronService.requireCurrent().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
 			// 阿舒纳塔尔战舰 周六/日 23:00–00:00 / Ashunatal Dredgion SAT-SUN "11PM-00PM"
-            GameCronServices.cronService().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
+            CronService.requireCurrent().schedule(this::startAsyunatarRegistration, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterAsyunatarTask() {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 autoGroupService.unRegisterInstance(maskId);
-			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();
 				 if (player.getLevel() > minLevel) {
@@ -87,7 +88,7 @@ public class AsyunatarService {
 	private void startAsyunatarRegistration() {
 		this.registerAvailable = true;
 		startUregisterAsyunatarTask();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

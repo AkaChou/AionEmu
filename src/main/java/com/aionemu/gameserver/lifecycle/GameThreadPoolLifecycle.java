@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.utils.ThreadPoolManager;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,26 +12,10 @@ import org.springframework.stereotype.Component;
 public class GameThreadPoolLifecycle {
 
     /**
-     * ThreadPoolManager 的可选 Spring 提供者。
-     * Optional Spring provider for {@link ThreadPoolManager}.
-     */
-    private ObjectProvider<ThreadPoolManager> threadPoolManagerProvider;
-
-    /**
      * 是否已启动。
      * Whether the thread pool has been started.
      */
     private boolean started;
-
-    /**
-     * 注入 ThreadPoolManager 提供者。
-     * Inject the ThreadPoolManager provider.
-     * @param threadPoolManagerProvider ThreadPoolManager 提供者 / ThreadPoolManager provider
-     */
-    @Autowired(required = false)
-    void setThreadPoolManagerProvider(ObjectProvider<ThreadPoolManager> threadPoolManagerProvider) {
-        this.threadPoolManagerProvider = threadPoolManagerProvider;
-    }
 
     /**
      * 启动线程池（幂等）。
@@ -88,11 +70,11 @@ public class GameThreadPoolLifecycle {
     }
 
     /**
-     * 解析 ThreadPoolManager 并缓存解析结果。
-     * Resolve ThreadPoolManager and remember the resolved instance.
+     * 解析 ThreadPoolManager（走其自持的 fail-fast 单例通道）。
+     * Resolve ThreadPoolManager through its own fail-fast singleton accessor.
      * @return ThreadPoolManager 实例 / ThreadPoolManager instance
      */
     private ThreadPoolManager threadPoolManager() {
-        return GameThreadPoolServices.rememberThreadPoolManager(threadPoolManagerProvider.getObject());
+        return ThreadPoolManager.getInstance();
     }
 }

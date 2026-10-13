@@ -2,8 +2,6 @@ package com.aionemu.gameserver.world;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +23,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -35,6 +34,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.world.zone.ZoneService;
 
 /**
  * 世界地图实例：区域划分与对象管理。
@@ -126,7 +126,7 @@ public abstract class WorldMapInstance {
 	public WorldMapInstance(WorldMap parent, int instanceId) {
 		this.parent = parent;
 		this.instanceId = instanceId;
-		this.zones = GameWorldBootstrapServices.zoneService().getZoneInstancesByWorldId(parent.getMapId());
+		this.zones = ZoneService.getInstance().getZoneInstancesByWorldId(parent.getMapId());
 		initMapRegions();
 	}
 
@@ -276,7 +276,7 @@ public abstract class WorldMapInstance {
 		if (!(object instanceof Npc)) {
 			return Collections.emptyList();
 		}
-		QuestNpc data = GameEngineServices.questEngine().getQuestNpc(((Npc) object).getNpcId());
+		QuestNpc data = QuestEngine.getInstance().getQuestNpc(((Npc) object).getNpcId());
 		if (data == null) {
 			return Collections.emptyList();
 		}

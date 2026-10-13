@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Reshanta 区域 NPC AI：Siege Commander（@AIName "siege_commander"），继承 AggressiveNpcAI2。
@@ -46,7 +47,7 @@ public class Siege_CommanderAI2 extends AggressiveNpcAI2
 	}
 
 	private void updateCommanderLanding1(final int id) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onDieCommander(Race.ASMODIANS, id, 15000);
@@ -57,7 +58,7 @@ AbyssLandingService.getInstance().onDieCommander(Race.ELYOS, id, 15000);
 		});
 	}
 	private void updateCommanderLanding2(final int id) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
 AbyssLandingService.getInstance().onDieCommander(Race.ASMODIANS, id, 20000);

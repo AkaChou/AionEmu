@@ -2,10 +2,10 @@ package com.aionemu.gameserver.ai.instance.tallocsHollow;
 
 import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 原版烟雾 AI 的生命周期适配器，实际技能逻辑由 Elim_SmogEffect pattern 执行。
@@ -44,7 +44,7 @@ public class KinquidDebuffAI2 extends RetailPatternAI2
 
 	private void startLifeTask() {
 		cancelLifeTask();
-		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(this::despawnForRetailLife,
+		lifeTask = ThreadPoolManager.getInstance().schedule(this::despawnForRetailLife,
 			RETAIL_LIFE_TIME_MS);
 	}
 

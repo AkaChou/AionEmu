@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.BrokerService;
 
 /**
  * 请求交易行已结算/已售列表的客户端包。
@@ -27,6 +27,6 @@ public class CM_BROKER_SOLD_LIST extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		GameRuntimeServices.brokerService().showSettledItems(player);
+		BrokerService.getInstance().showSettledItems(player);
 	}
 }

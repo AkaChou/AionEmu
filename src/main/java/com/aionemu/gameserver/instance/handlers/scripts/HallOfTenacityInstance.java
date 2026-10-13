@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -143,7 +143,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 
     protected void startInstanceTask() {
 	instanceTime = System.currentTimeMillis();
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -170,7 +170,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 				}
             }
         }, 60000));//after enter 1 min will show versus board
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -263,7 +263,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
      */
 
     protected void sendMsg(final int msg, final Race race, int time) {
-	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.

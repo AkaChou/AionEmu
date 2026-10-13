@@ -1,9 +1,11 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 权限撤销指令；通过登录服将在线玩家的 accesslevel 或 membership 置零。
@@ -40,12 +42,12 @@ public class Revoke extends AdminCommand {
 			return;
 		}
 
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player player = World.getInstance().findPlayer(Util.convertName(params[0]));
 		if (player == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;
 		}
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), 0, type);
+		LoginServer.getInstance().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), 0, type);
 	}
 
 	/**

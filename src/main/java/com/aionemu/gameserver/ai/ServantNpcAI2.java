@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.NpcObjectType;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 随从/召唤物 AI：跟随主人并协助战斗。
@@ -38,7 +38,7 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getCreator() != null) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (getOwner().getNpcObjectType() != NpcObjectType.TOTEM) {
 					AI2Actions.targetCreature(ServantNpcAI2.this, (Creature) getCreator().getTarget());
 				} else {
@@ -57,7 +57,7 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 			skillId = npcSkill.getSkillId();
 		}
 		int duration = getOwner().getNpcObjectType() == NpcObjectType.TOTEM ? 3000 : 5000;
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> getOwner().getController().useSkill(skillId, 1), 1000, duration);
+		Future<?> task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> getOwner().getController().useSkill(skillId, 1), 1000, duration);
 		getOwner().getController().addTask(TaskId.SKILL_USE, task);
 	}
 

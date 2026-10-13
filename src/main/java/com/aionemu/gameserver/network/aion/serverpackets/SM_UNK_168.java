@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.services.EventService;
 
 /**
  * 未知 opcode 0x168 的服务端包，携带角色重入、装饰与活动类型等杂项客户端标志。
@@ -32,7 +32,7 @@ public class SM_UNK_168 extends AionServerPacket {
 		writeC(0);
 		writeC(GSConfig.CHARACTER_REENTRY_TIME);
 		writeC(EventsConfig.ENABLE_DECOR);
-		writeC(GameEventServices.eventService().getEventType().getId()); // 18 Summer Splash V1 / 20 Summer Splash V2
+		writeC(EventService.getInstance().getEventType().getId()); // 18 Summer Splash V1 / 20 Summer Splash V2
 		writeB(new byte[3]);
 		writeC(4);
 		writeC(1);

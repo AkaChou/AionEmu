@@ -2,9 +2,9 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
 import com.aionemu.gameserver.persistence.dao.LimitedQuestCounterDao;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,7 +83,7 @@ public final class LimitedQuestService {
 	boolean chargeConfigured(int questId, boolean chargeMaxCount) {
 		Limit limit = limits.get(questId);
 		if (limit == null) {
-			QuestMetadata metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+			QuestMetadata metadata = QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null);
 			if (metadata != null && metadata.maxCountLimitedQuest() > 1) {
 				limit = new Limit(metadata.maxCountLimitedQuest(), metadata.countRecoverLimitedQuest());
 			}

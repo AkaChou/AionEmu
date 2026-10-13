@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.brusthonin;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Brusthonin 区域 NPC AI：Steel Rods（@AIName "steel_rods"），继承 NpcAI2。
@@ -19,7 +19,7 @@ public class Steel_RodsAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDied() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			despawnNpc(209479); // 俘虏的格里芬之爪军团兵 / Captured Griffon's Claw Legionnary.
 		}, 3000);
 		super.handleDied();

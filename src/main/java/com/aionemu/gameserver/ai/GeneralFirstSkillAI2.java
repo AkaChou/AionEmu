@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * 通用且优先技能的 NPC AI：选择攻击意图时优先技能。
@@ -22,7 +22,7 @@ public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class GeneralFirstSkillAI2 extends GeneralNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 }

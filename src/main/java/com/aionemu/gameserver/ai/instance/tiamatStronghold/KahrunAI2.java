@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -12,7 +10,9 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Kahrun（@AIName "kahrun"），继承 NpcAI2。
@@ -38,14 +38,14 @@ public class KahrunAI2 extends NpcAI2
     }
 
 	private void startProtectorateEvent() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			Npc fileLadderCGF = getPosition().getWorldMapInstance().getNpc(730612);
 			Npc aionFXPostGlow = getPosition().getWorldMapInstance().getNpc(730694);
 			Npc kharunReianLeader = (Npc)spawn(800335, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 60);
 			kharunReianLeader.setTarget(aionFXPostGlow);
 			// 退后。我来处理这屏障。 / Stand back. I will take care of this barrier.
 			NpcShoutsService.getInstance().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
-			GameEngineServices.skillEngine().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();
 			fileLadderCGF.getController().onDelete();
 			aionFXPostGlow.getController().onDelete();
 		}, 3000);

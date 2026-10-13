@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.HousingBidService;
 
 /**
  * 客户端房屋拍卖出价请求包。
@@ -34,7 +34,7 @@ public class CM_PLACE_BID extends AionClientPacket {
 	protected void runImpl() {
 		if (HousingConfig.ENABLE_HOUSE_AUCTIONS) {
 			Player player = getConnection().getActivePlayer();
-			GameHousingServices.housingBidService().placeBid(player, listIndex, bidOffer);
+			HousingBidService.getInstance().placeBid(player, listIndex, bidOffer);
 		}
 	}
 }

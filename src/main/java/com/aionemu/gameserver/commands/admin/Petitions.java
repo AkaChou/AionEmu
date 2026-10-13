@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 
 
@@ -9,12 +8,14 @@ import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionType;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.Collection;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家工单（Petition）查询、删除与邮件回复的管理员命令。
@@ -41,7 +42,7 @@ public class Petitions extends AdminCommand {
 	public void execute(Player admin, String... params) {
 		// 发送门票一般信息 / Send ticket general info
 		if (params == null || params.length == 0) {
-			Collection<Petition> petitions = GameRuntimeServices.petitionService().getRegisteredPetitions();
+			Collection<Petition> petitions = PetitionService.getInstance().getRegisteredPetitions();
 			Petition[] petitionsArray = petitions.toArray(new Petition[0]);
 			PacketSendUtility.sendMessage(admin, petitionsArray.length + " unprocessed petitions.");
 			if (petitionsArray.length < 5) {
@@ -71,7 +72,7 @@ public class Petitions extends AdminCommand {
 			return;
 		}
 
-		Petition petition = GameRuntimeServices.petitionService().petitionDAO().getPetitionById(petitionId);
+		Petition petition = PetitionService.getInstance().petitionDAO().getPetitionById(petitionId);
 
 		if (petition == null) {
 			PacketSendUtility.sendMessage(admin, "There is no petition with id #" + petitionId);
@@ -81,8 +82,8 @@ public class Petitions extends AdminCommand {
 		String petitionPlayer = "";
 		boolean isOnline;
 
-		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.playerObjId()) != null) {
-			petitionPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.playerObjId()).getName();
+		if (World.getInstance().findPlayer(petition.playerObjId()) != null) {
+			petitionPlayer = World.getInstance().findPlayer(petition.playerObjId()).getName();
 			isOnline = true;
 		}
 		else {
@@ -119,7 +120,7 @@ public class Petitions extends AdminCommand {
 		}
 		// 删除 / Delete
 		else if (params.length == 2 && params[1].equals("delete")) {
-			GameRuntimeServices.petitionService().deletePetition(petition.playerObjId());
+			PetitionService.getInstance().deletePetition(petition.playerObjId());
 			PacketSendUtility.sendMessage(admin, "Petition #" + petitionId + " deleted.");
 		}
 		// 回复 / Reply
@@ -135,7 +136,7 @@ public class Petitions extends AdminCommand {
 
 			MailService.getInstance().sendMail(admin, petitionPlayer, "GM-Re:" + petition.title(), replyMessage, 0, 0, 0, 0,
 				LetterType.NORMAL);
-			GameRuntimeServices.petitionService().setPetitionReplied(petitionId);
+			PetitionService.getInstance().setPetitionReplied(petitionId);
 
 			PacketSendUtility.sendMessage(admin, "Your reply has been sent to " + petitionPlayer
 				+ ". Petition is now closed.");

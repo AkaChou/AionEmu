@@ -2,7 +2,6 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
@@ -23,6 +22,8 @@ import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -43,7 +44,7 @@ public class NpcShoutsService {
 	 * Initializes fixed-rate poll tasks for NPCs that have IDLE shouts.
 	 */
 	public NpcShoutsService() {
-		for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+		for (Npc npc : World.getInstance().getNpcs()) {
 			final int npcId = npc.getNpcId();
 			final int worldId = npc.getSpawn().getWorldId();
 			final int objectId = npc.getObjectId();
@@ -62,8 +63,8 @@ public class NpcShoutsService {
 				}
 			}
 
-			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
-				AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
+			ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
+				AionObject npcObj = World.getInstance().findVisibleObject(objectId);
 				if (npcObj != null && npcObj instanceof Npc npc2) {
 					// 检查 AI 是否覆盖 / check if AI overrides
 					if (!npc2.getAi2().poll(AIQuestion.CAN_SHOUT)) {
@@ -247,7 +248,7 @@ public class NpcShoutsService {
 	 */
 	public void sendMsg(final Npc npc, final WorldMapInstance instance, final int msg, final int Obj,
 			final boolean isShout, final int color, int delay) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (npc != null && npc.isSpawned()) {
 				npc.getKnownList().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(isShout, msg, Obj, color)));
 			} else if (instance != null) {

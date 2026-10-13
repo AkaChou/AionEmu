@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.skillengine.task;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 交互任务基类：以固定间隔驱动玩家与目标的交互流程。
@@ -77,7 +77,7 @@ public abstract class AbstractInteractionTask {
 	 */
 	public void start() {
 		onInteractionStart();
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (participantsMissing()) {
 				stop(true);
 			}

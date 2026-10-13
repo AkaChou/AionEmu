@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 将一名在线玩家传送到另一名在线玩家位置的管理员命令。
@@ -35,13 +36,13 @@ public class MovePlayerToPlayer extends AdminCommand {
 			return;
 		}
 
-		Player playerToMove = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player playerToMove = World.getInstance().findPlayer(Util.convertName(params[0]));
 		if (playerToMove == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;
 		}
 
-		Player playerDestination = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
+		Player playerDestination = World.getInstance().findPlayer(Util.convertName(params[1]));
 		if (playerDestination == null) {
 			PacketSendUtility.sendMessage(admin, "The destination player is not online.");
 			return;

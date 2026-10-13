@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
 import java.time.ZonedDateTime;
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Useable 物品对象。
@@ -169,7 +169,7 @@ public class UseableItemObject extends HouseObject<HousingUseableItem> {
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_OBJECT_USE(getObjectTemplate().getNameId()));
 		PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), delay, 8));
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/** 运行 / Run. */
 					@Override
 					public void run() {

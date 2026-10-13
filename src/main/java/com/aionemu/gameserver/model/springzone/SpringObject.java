@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.model.springzone;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.springzones.SpringTemplate;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import lombok.Getter;
@@ -23,8 +23,8 @@ public class SpringObject extends VisibleObject {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SpringObject(SpringTemplate template, int instanceId) {
-		super(GameWorldBootstrapServices.idFactory().nextId(), new VisibleObjectController() {
-		}, null, null, com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(template.getMapId(), template.getX(), template.getY(),
+		super(IDFactory.getInstance().nextId(), new VisibleObjectController() {
+		}, null, null, World.getInstance().createPosition(template.getMapId(), template.getX(), template.getY(),
 				template.getZ(), (byte) 0, instanceId));
 		this.template = template;
 		range = template.getRange();
@@ -38,7 +38,7 @@ public class SpringObject extends VisibleObject {
 
 	/** 生成。 / Spawn. */
 	public void spawn() {
-		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World w = World.getInstance();
 		w.storeObject(this);
 		w.spawn(this);
 	}

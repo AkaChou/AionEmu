@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -12,7 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -66,7 +66,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
@@ -74,7 +74,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_01, 0);
 				// 尤顿战斗人员的支援再次开始。 / The support of the Jotun combatants has started again.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_Nepilim_Summon_MSG_03, 10000);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); // 蒸腾的间歇泉 / Steaming Geyser.
+				SkillEngine.getInstance().getSkill(getOwner(), 23008, 60, getOwner()).useNoAnimationSkill(); // 蒸腾的间歇泉 / Steaming Geyser.
 				List<Player> players = getLifedPlayers();
 				if (!players.isEmpty()) {
 					int size = players.size();
@@ -102,7 +102,7 @@ public class Fallen_Sea_JotunAI2 extends AggressiveNpcAI2
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
 			spawn(220537, x, y, z, (byte) 0); //IDEternity_02_Nepilim_Boss_Area.
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(220535, x, y, z, (byte) 0); //IDEternity_02_Nepilim_Boss_Summon.
 				}

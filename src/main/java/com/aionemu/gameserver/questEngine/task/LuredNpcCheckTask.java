@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.questEngine.task;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -77,12 +77,12 @@ final class LuredNpcCheckTask implements Runnable {
 		cancel(player);
 		synchronized (npc) {
 			if (!npc.isSpawned() || npc.getLifeStats() == null || npc.getLifeStats().isAlreadyDead()) {
-				GameEngineServices.questEngine().onNpcLostTarget(env);
+				QuestEngine.getInstance().onNpcLostTarget(env);
 				return;
 			}
 			completeNpc(npc, player, completion);
 		}
-		GameEngineServices.questEngine().onNpcReachTarget(env);
+		QuestEngine.getInstance().onNpcReachTarget(env);
 	}
 
 	/**
@@ -112,7 +112,7 @@ final class LuredNpcCheckTask implements Runnable {
 			return;
 		}
 		cancel(player);
-		GameEngineServices.questEngine().onNpcLostTarget(env);
+		QuestEngine.getInstance().onNpcLostTarget(env);
 	}
 
 	private void cancel(Player player) {

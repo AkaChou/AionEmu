@@ -1,9 +1,8 @@
 package com.aionemu.gameserver.model.gameobjects;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.NpcController;
@@ -34,6 +33,7 @@ import com.aionemu.gameserver.spawnengine.WalkerGroup;
 import com.aionemu.gameserver.spawnengine.WalkerGroupShift;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.WorldType;
 import com.google.common.base.Preconditions;
@@ -103,12 +103,12 @@ public class Npc extends Creature {
 		if (spawnTemplate.getModel() != null) {
 			if (spawnTemplate.getModel().getAi() != null) {
 				aiOverride = true;
-				GameEngineServices.ai2Engine().setupAI(spawnTemplate.getModel().getAi(), this);
+				AI2Engine.getInstance().setupAI(spawnTemplate.getModel().getAi(), this);
 			}
 		}
 
 		if (!aiOverride) {
-			GameEngineServices.ai2Engine().setupAI(objectTemplate.getAi(), this);
+			AI2Engine.getInstance().setupAI(objectTemplate.getAi(), this);
 		}
 		lastShoutedSeconds = System.currentTimeMillis() / 1000;
 	}
@@ -476,7 +476,7 @@ public class Npc extends Creature {
 		final SM_SYSTEM_MESSAGE message = new SM_SYSTEM_MESSAGE(true, shout.getStringId(), getObjectId(), 1, param);
 		lastShoutedSeconds = System.currentTimeMillis() / 1000;
 
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 
 			/** 运行 / Run. */
 			@Override

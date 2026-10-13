@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dredgion Defense 副本 NPC AI：Wind Stream 03 Da（@AIName "WindStream_03_Da"），继承 NpcAI2。
@@ -30,7 +30,7 @@ public class WindStream_03_DaAI2 extends NpcAI2
     }
 
 	private void startWindStream(final Npc npc) {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			Npc npc2 = (Npc) spawn(302300000, 220970, 1306.0000f, 1319.3477f, 204.75140f, (byte) 0, 0, 1);
 			windStreamAnnounce(npc2, 1);
 			despawnNpc(220976);

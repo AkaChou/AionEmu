@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.world.zone;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -26,7 +26,7 @@ public class ZoneLevelService {
 	 * @param player 玩家 / player
 	 */
 	public static void checkZoneLevels(Player player) {
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		float z = player.getZ();
 
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -84,7 +84,7 @@ public class ZoneLevelService {
 	 */
 	private static void scheduleDrowningTask(final Player player) {
 		player.getController().addTask(TaskId.DROWN,
-				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+				ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 					int value = Math.max(1, Math.round(player.getLifeStats().getMaxHp() / 10f));
 					if (!player.getLifeStats().isAlreadyDead()) {
 						if (!player.isInvul()) {

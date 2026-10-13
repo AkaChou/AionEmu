@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 攻城战相关 NPC AI：Gate Guardian Stone（@AIName "Gate_Guardian_Stone"），继承 NpcAI2。
@@ -48,7 +49,7 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 
 	@Override
 	protected void handleDied() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			AionObject winner = getAggroList().getMostDamage();
 			if (winner instanceof Creature kill) {
 				AI2Actions.deleteOwner(Gate_Guardian_StoneAI2.this);

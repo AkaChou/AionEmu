@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -24,9 +22,11 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -82,7 +82,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		restoreRelicKey(player);
 		applyKromedeTransformation(player);
 		sendMovie(player, 453);
-		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
+		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/kromedeTrial.xhtml"));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			return;
 		}
 		final int transformation = player.getRace() == Race.ASMODIANS ? 19270 : 19220;
-		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000);
+		SkillEngine.getInstance().applyEffectDirectly(transformation, player, player, 3600000);
 	}
 
 	/**
@@ -473,10 +473,10 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 282093: //Mana Relic.
-				GameEngineServices.skillEngine().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
+				SkillEngine.getInstance().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
 			break;
 			case 282095: //Strength Relic.
-			    GameEngineServices.skillEngine().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
+			    SkillEngine.getInstance().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
 			break;
 		}
 	}
@@ -719,7 +719,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

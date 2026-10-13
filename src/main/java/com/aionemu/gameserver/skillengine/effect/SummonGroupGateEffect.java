@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.effect;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -15,6 +14,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤团队之门效果：在施法者位置生成团队传送门。
@@ -38,7 +38,7 @@ public class SummonGroupGateEffect extends SummonEffect {
 		int instanceId = effector.getInstanceId();
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final GroupGate groupgate = VisibleObjectSpawner.spawnGroupGate(spawn, instanceId, effector);
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> groupgate.getController().onDelete(), time * 1000L);
+		Future<?> task = ThreadPoolManager.getInstance().schedule(() -> groupgate.getController().onDelete(), time * 1000L);
 		groupgate.getController().addTask(TaskId.DESPAWN, task);
 	}
 }

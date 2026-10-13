@@ -16,6 +16,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import java.util.Objects;
 import lombok.NonNull;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 重命名服务，处理角色与军团的改名（含优惠券消耗与广播）。
@@ -94,7 +95,7 @@ public class RenameService {
 			getInstance().oldNamesDAO.insertNames(player.getObjectId(), player.getName(), newName);
 			player.getCommonData().setName(newName);
 		}
-		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			Player p = onlinePlayers.next();
 			if (p != null && p.getClientConnection() != null) {

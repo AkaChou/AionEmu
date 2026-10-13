@@ -2,13 +2,13 @@ package com.aionemu.gameserver.ai.instance.esoterrace;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -78,7 +78,7 @@ public class Warden_SuramaAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void spawnAirWave() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 19332, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 19332, 60, getOwner()).useNoAnimationSkill();
 		spawn(282171, 1316.7438f, 1145.0411f, 51.536953f, (byte) 0, 595);
 		spawn(282172, 1342.0642f, 1170.9083f, 51.539276f, (byte) 0, 596);
 		spawn(282173, 1316.7826f, 1196.8873f, 51.544514f, (byte) 0, 598);

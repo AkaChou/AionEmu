@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 
 /**
  * 请求赛季排行/个人历史记录的客户端包。
@@ -32,6 +32,6 @@ public class CM_MY_HISTORY extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = this.getConnection().getActivePlayer();
-		GameGameplayServices.seasonRankingService().loadPacketPlayer(player, tableId);
+		SeasonRankingService.getInstance().loadPacketPlayer(player, tableId);
 	}
 }

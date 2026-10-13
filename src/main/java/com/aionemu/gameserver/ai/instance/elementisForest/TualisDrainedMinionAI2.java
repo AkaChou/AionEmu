@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Elementis Forest 副本 NPC AI：Tualis Drained Minion（@AIName "tualis_drained_minion"），继承 AggressiveNpcAI2。
@@ -24,7 +24,7 @@ public class TualisDrainedMinionAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startLifeTask() {
-		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		lifeTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				AI2Actions.deleteOwner(TualisDrainedMinionAI2.this);
 			}

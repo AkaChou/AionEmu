@@ -5,11 +5,7 @@ import com.aionemu.boot.i18n.I18n;
 import java.util.Objects;
 
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -43,6 +39,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerMinionDao;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
@@ -51,6 +48,8 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.model.gameobjects.player.MinionList;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 守护灵（Minion）服务，管理召唤、成长、进化、组合与功能增益。
@@ -65,14 +64,8 @@ public class MinionService {
 	private static final int MAX_MINIONS = 200;
 	private static final long MINION_FUNCTION_PRICE = 25_000_000;
 	private static final long MINION_FUNCTION_DURATION = TimeUnit.DAYS.toMillis(30);
-	/**
-	 * -- SETTER --
-	 * 注入 Spring 实例提供者。
-	 * Inject Spring instance provider.
-	 * Provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<MinionService> instanceProvider;
+	private static volatile MinionService resolvedInstance;
 	private final PlayerMinionDao playerMinionsDAO;
 	private final PlayerDao playerDAO;
 	private MinionBuff minionbuff;
@@ -132,7 +125,7 @@ public class MinionService {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
 
 		if (lastUsedMinionId != 0 && player.getMinion() == null) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (player.isOnline() && player.getMinion() == null) {
 					MinionCommonData minionData = player.getMinionList().getMinion(lastUsedMinionId);
 					if (minionData != null) {
@@ -214,7 +207,7 @@ public class MinionService {
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
 			broadcastContractUseEnd(player, itemObjId, item.getItemId());
-			GameEngineServices.questEngine().onItemPlayCompletedEvent(player, item.getItemId());
+			QuestEngine.getInstance().onItemPlayCompletedEvent(player, item.getItemId());
 			checkQuest(player, item);
 		}, 1500);
 	}
@@ -437,7 +430,7 @@ public class MinionService {
 		}
 		synchronized (minion) {
 			if (minion.isSpawned()) {
-				GameWorldBootstrapServices.world().despawn(minion);
+				World.getInstance().despawn(minion);
 			}
 		}
 	}
@@ -456,9 +449,9 @@ public class MinionService {
 		}
 		synchronized (minion) {
 			if (!minion.isSpawned()) {
-				GameWorldBootstrapServices.world().setPosition(minion, player.getWorldId(), player.getInstanceId(),
+				World.getInstance().setPosition(minion, player.getWorldId(), player.getInstanceId(),
 					player.getX(), player.getY(), player.getZ(), player.getHeading());
-				GameWorldBootstrapServices.world().spawn(minion);
+				World.getInstance().spawn(minion);
 			}
 		}
 	}
@@ -933,7 +926,7 @@ public class MinionService {
 		limit.setDelayTime(useDelay);
 		if (player.isItemUseDisabled(limit)) {
 			final int useItemId = itemId;
-			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 3, minionObjectId, useItemId, slot, 0), true), useDelay);
+			ThreadPoolManager.getInstance().schedule(() -> PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 3, minionObjectId, useItemId, slot, 0), true), useDelay);
 			return;
 		}
 		if (!RestrictionsManager.canUseItem(player, useItem) || player.isProtectionActive()) {
@@ -1197,14 +1190,30 @@ public class MinionService {
 	 *                               when no provider or bean is available
 	 */
 	public static MinionService getInstance() {
+		MinionService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<MinionService> provider = instanceProvider;
-		MinionService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("MinionService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<MinionService> instanceProvider) {
+		MinionService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.services;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -23,6 +21,8 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.Map;
@@ -34,14 +34,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class DuelService {
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider 以覆盖默认单例。
-     *  Injects a Spring ObjectProvider to override the default singleton.
-     *  provider
-     */
-    @Setter
-    private static volatile ObjectProvider<DuelService> instanceProvider;
+	private static volatile ObjectProvider<DuelService> instanceProvider;
+	private static volatile DuelService resolvedInstance;
 
 	/** 玩家对象 ID 决斗配对映射 / Duel pair map of player object ids */
 	private final Map<Integer, Integer> duels;
@@ -59,14 +53,30 @@ public class DuelService {
 	 *         when no provider or bean is available
 	 */
 	public static DuelService getInstance() {
+		DuelService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<DuelService> provider = instanceProvider;
-		DuelService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("DuelService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<DuelService> instanceProvider) {
+		DuelService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**
@@ -186,7 +196,7 @@ public class DuelService {
 	 * @param player2 决斗玩家 2 / player 2
 	 */
 	private void startDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+		World.getInstance().doOnAllPlayers(object -> {
 			if (MathUtil.isInRange(player1, object, 100)) {
 				// %0 与 %1 的决斗已开始。 / A duel between %0 and %1 has started.
 				PacketSendUtility.sendPacket(object,
@@ -202,7 +212,7 @@ public class DuelService {
 	 * winner
 	 */
 	private void loseDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+		World.getInstance().doOnAllPlayers(object -> {
 			if (MathUtil.isInRange(player1, object, 100)) {
 				// %0 在决斗中击败了 %1。 / %0 defeated %1 in a duel.
 				PacketSendUtility.sendPacket(object,
@@ -218,7 +228,7 @@ public class DuelService {
 	 * player 2
 	 */
 	private void drawDuelMsg(final Player player1, final Player player2) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+		World.getInstance().doOnAllPlayers(object -> {
 			if (MathUtil.isInRange(player1, object, 100)) {
 				// %0 与 %1 的决斗平局。 / The duel between %0 and %1 was a draw.
 				PacketSendUtility.sendPacket(object,
@@ -237,7 +247,7 @@ public class DuelService {
 			return;
 		}
 		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
+		Player opponent = World.getInstance().findPlayer(opponnentId);
 		if (opponent != null) {
 			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			opponent.getController().cancelCurrentSkill();
@@ -270,7 +280,7 @@ public class DuelService {
 	 * responder
 	 */
 	private void createTask(final Player requester, final Player responder) {
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		Future<?> task = ThreadPoolManager.getInstance().schedule(() -> {
 			if (isDueling(requester.getObjectId(), responder.getObjectId())) {
 				drawDuelMsg(requester, responder);
 				PacketSendUtility.sendPacket(requester,

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -34,7 +34,7 @@ public class Sleeping_Sylfae_QueenAI2 extends GeneralNpcAI2 {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
 		PlayerEffectController effectController = player.getEffectController();
-		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1352) {
+		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1352) {
 			return true;
 		} if (dialogId == 10000) {
 			switch (getNpcId()) {

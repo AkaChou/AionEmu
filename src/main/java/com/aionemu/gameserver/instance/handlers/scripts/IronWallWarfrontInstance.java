@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -33,6 +32,7 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -296,7 +296,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		ironWallWarfrontReward.setInstanceStartTime();
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -312,7 +312,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 90000));
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -328,7 +328,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				sp(702589, 426.4476f, 617.95264f, 214.52452f, (byte) 32, 0);
 			}
 		}, 600000));
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -352,7 +352,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				sp(831978, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
 			}
 		}, 900000));
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -366,7 +366,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 				spawn(801956, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
 			}
 		}, 1800000));
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -550,7 +550,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -941,7 +941,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -972,7 +972,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -998,7 +998,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

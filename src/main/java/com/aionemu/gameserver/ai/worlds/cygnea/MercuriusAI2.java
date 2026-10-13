@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -11,6 +10,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Cygnea 区域 NPC AI：Mercurius（@AIName "mercurius"），继承 NpcAI2。
@@ -38,7 +39,7 @@ public class MercuriusAI2 extends NpcAI2
 		        case 804842: //Mercurius
 				    announceLightLegionPortal();
 					spawn(702721, 1390.3015f, 658.4547f, 582.9584f, (byte) 92);
-					GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(702721), 300000); //5 分钟。 / 5 Minutes.
+					ThreadPoolManager.getInstance().schedule(() -> despawnNpc(702721), 300000); //5 分钟。 / 5 Minutes.
 				break;
 			}
 		}
@@ -47,7 +48,7 @@ public class MercuriusAI2 extends NpcAI2
 	}
 
 	private void announceLightLegionPortal() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_LEGION_DIRECT_PORTAL_OPEN));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LIGHT_SIDE_LEGION_DIRECT_PORTAL_OPEN));
 	}
 
 	private void despawnNpc(int npcId) {

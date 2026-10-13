@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -14,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Tiamat Stronghold 副本 NPC AI：Adjutant Anuhart（@AIName "adjutantanuhart"），继承 AggressiveNpcAI2。
@@ -38,7 +38,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBladeStormTask() {
-		bladeStormTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		bladeStormTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			} else {
@@ -49,7 +49,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 
 	private void startBladeStormEvent() {
 		shield();
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20747, 1, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 20747, 1, getOwner()).useNoAnimationSkill();
 		spawn(283099, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Blade Storm.
 	}
 

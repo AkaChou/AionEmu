@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.services.SiegeService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -16,6 +15,8 @@ import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * 攻城自动种族切换，按计划自动变更要塞归属。
@@ -34,7 +35,7 @@ public class SiegeAutoRace {
 	public static void AutoSiegeRace(final int locid) {
 		final SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(locid);
 		if (!loc.getRace().equals(SiegeRace.ASMODIANS) || !loc.getRace().equals(SiegeRace.ELYOS)) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 执行任务。
 				 * Runs the task.
@@ -56,7 +57,7 @@ public class SiegeAutoRace {
 				loc.setRace(SiegeRace.ASMODIANS);
 			}
 			loc.setLegionId(0);
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+			World.getInstance().doOnAllPlayers(new Visitor<>() {
                 /**
                  * visit 方法。
                  * visit method.

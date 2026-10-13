@@ -2,14 +2,12 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.Objects;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -43,13 +43,8 @@ public class SuspiciousOphidanBridgeService {
 	public SuspiciousOphidanBridgeService(@NonNull AutoGroupService autoGroupService) {
 		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
 	}
-    /**
-     * -- SETTER --
-     *  设置服务提供者。
-     *  Sets the service provider.
-     */
-    @Setter
-    private static volatile ObjectProvider<SuspiciousOphidanBridgeService> instanceProvider;
+	private static volatile ObjectProvider<SuspiciousOphidanBridgeService> instanceProvider;
+	private static volatile SuspiciousOphidanBridgeService resolvedInstance;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
@@ -63,16 +58,16 @@ public class SuspiciousOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_WARPATH_ENABLED) {
 			log.info(I18n.get("log.926526f1607c"));
 			// 奥菲丹战道 二/四 23:00–00:00 / Ophidan Warpath TUE-THU "11PM-00AM"
-            GameCronServices.cronService().schedule(this::startSuspiciousOphidanRegistration, AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
+            CronService.requireCurrent().schedule(this::startSuspiciousOphidanRegistration, AutoGroupConfig.OPHIDAN_WARPATH_SCHEDULE_MIDNIGHT);
 		}
 	}
 
 	private void startUregisterSuspiciousTask() {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 autoGroupService.unRegisterInstance(maskId);
-			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();
 				 if (player.getLevel() > minLevel) {
@@ -89,7 +84,7 @@ public class SuspiciousOphidanBridgeService {
 	private void startSuspiciousOphidanRegistration() {
 		this.registerAvailable = true;
 		startUregisterSuspiciousTask();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {
@@ -172,14 +167,30 @@ public class SuspiciousOphidanBridgeService {
 	 *         when no provider or bean is available
 	 */
 	public static SuspiciousOphidanBridgeService getInstance() {
+		SuspiciousOphidanBridgeService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<SuspiciousOphidanBridgeService> provider = instanceProvider;
-		SuspiciousOphidanBridgeService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("SuspiciousOphidanBridgeService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<SuspiciousOphidanBridgeService> instanceProvider) {
+		SuspiciousOphidanBridgeService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

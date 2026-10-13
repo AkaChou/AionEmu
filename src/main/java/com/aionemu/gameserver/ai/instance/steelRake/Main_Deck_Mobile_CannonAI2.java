@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.steelRake;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -10,7 +8,9 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 300100000) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); // 破坏封印 / Destroy Seal.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); // 破坏封印 / Destroy Seal.
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(214968);
 					despawnNpc(215402);
 					despawnNpc(215403);

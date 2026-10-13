@@ -5,12 +5,12 @@ import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Collection;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -25,6 +25,7 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.Util;
 
 import java.util.HashSet;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 老兵奖励服务，按定时任务从数据库加载奖励并通过邮件发放。
@@ -87,7 +88,7 @@ public class VeteranRewardsService {
 	private void Init_VeteranRewardStatusLoop() {
 		log.info(I18n.get("log.9d55ff406e5f"));
 
-		GameCronServices.cronService().schedule(this::Init_VeteranRewards, VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
+		CronService.requireCurrent().schedule(this::Init_VeteranRewards, VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE);
 		log.info(I18n.get("log.364637c5d487", VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE));
 	}
 
@@ -210,7 +211,7 @@ public class VeteranRewardsService {
 		if (recipientType == RecipientType.PLAYER) {
 			SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype, 0);
 		} else {
-			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
+			for (Player player : World.getInstance().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getCommonData().getRace())) {
 					SendVeteranRewardMail(Sender, player.getName(), Title, Message, item, count, kinah, mailtype, 0);
 				}

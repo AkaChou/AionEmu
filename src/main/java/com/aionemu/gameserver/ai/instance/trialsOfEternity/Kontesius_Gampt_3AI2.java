@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Trials Of Eternity 副本 NPC AI：Kontesius Gampt 3（@AIName "IDEternity_03_Event_Guard_03"），继承 AggressiveNpcAI2。
@@ -45,7 +45,7 @@ public class Kontesius_Gampt_3AI2 extends AggressiveNpcAI2
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						if (!isAlreadyDead()) {
 							despawn();
 						}

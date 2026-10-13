@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Reshanta 区域 NPC AI：Empyrean Blessing（@AIName "empyrean_blessing"），继承 ActionItemNpcAI2。
@@ -33,7 +33,7 @@ public class Empyrean_BlessingAI2 extends ActionItemNpcAI2
 				effectController.removeEffect(otherSkillId);
 			}
 		}
-		GameEngineServices.skillEngine().applyEffectDirectly(skillId, getOwner(), player, 0);
+		SkillEngine.getInstance().applyEffectDirectly(skillId, getOwner(), player, 0);
 	}
 
 	static int getBlessingSkillId(int npcId) {

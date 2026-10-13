@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.item;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.time.ZonedDateTime;
 
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.model.templates.housing.HousingUseableItem;
 import com.aionemu.gameserver.model.templates.housing.PlaceableHouseObject;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.actions.SummonHouseObjectAction;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 房屋物件工厂，按模板创建房屋可放置对象。
@@ -87,7 +87,7 @@ public final class HouseObjectFactory {
 			throw new IllegalArgumentException("template actions miss SummonHouseObjectAction");
 		}
 		int objectTemplateId = action.getTemplateId();
-		HouseObject<?> obj = createNew(house, GameWorldBootstrapServices.idFactory().nextId(), objectTemplateId);
+		HouseObject<?> obj = createNew(house, IDFactory.getInstance().nextId(), objectTemplateId);
 		if (obj.getObjectTemplate().getUseDays() > 0) {
 			ZonedDateTime now = ZonedDateTime.now();
 			ZonedDateTime expireDate = now.plusDays(obj.getObjectTemplate().getUseDays());

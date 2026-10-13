@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -15,6 +13,7 @@ import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.ai.RetailPatternAI2;
 import com.aionemu.gameserver.ai.RetailConditionSpawnEngine;
 import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -32,6 +31,7 @@ import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -102,7 +102,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		sendMsgByRace(1400752, Race.PC_ALL, 10000);
 		// 背包中有强大物品。使用塔洛克之泪可发动强力空中攻击。 / An object of great power waits in your cube. Launch a powerful aerial attack with Taloc's Tears.
 		sendMsgByRace(1400753, Race.PC_ALL, 15000);
-		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/talocHollow.xhtml"));
+		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/talocHollow.xhtml"));
     }
 	/**
 	 * NPC 掉落表注册时处理。
@@ -269,7 +269,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 * @param ownerNpcId 死亡的 Celestius 模板 ID / template id of the dead Celestius
 	 */
 	private void spawnMirageIfPatternMissed(final int ownerNpcId) {
-		talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		talocTask.add(ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isInstanceDestroyed) {
 				RetailPatternAI2.spawnRetailActionNpc(instance, ownerNpcId, "on_killed_by_user", "CaspaGhost_01");
 			}
@@ -423,7 +423,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        talocTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -452,7 +452,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
      */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        talocTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -490,7 +490,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

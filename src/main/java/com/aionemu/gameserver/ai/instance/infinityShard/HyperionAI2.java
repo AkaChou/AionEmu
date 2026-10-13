@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.infinityShard;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -58,28 +58,28 @@ public class HyperionAI2 extends AggressiveNpcAI2
 		PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDRuneWP_Charger4_Completed, 21000);
 		switch (Rnd.get(1, 4)) {
 		    case 1:
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 21000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 3000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 9000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 15000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 21000);
 			break;
 			case 2:
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 21000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(276519, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 3000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231093, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 9000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231094, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 15000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231095, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 21000);
 			break;
 			case 3:
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 21000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(276519, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 3000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231093, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 9000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231094, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 15000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231095, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 21000);
 			break;
 			case 4:
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 9000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 15000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 21000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(276519, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 3000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231093, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 9000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231094, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 15000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231095, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 21000);
 			break;
 		}
 	}
@@ -181,7 +181,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		Cast = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (castc >= 3)
 			Cast.cancel(false);
 			Cast1();
@@ -194,7 +194,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast2() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		Cast = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (castc >= 3)
 			Cast.cancel(false);
 			Cast2();
@@ -211,7 +211,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast3() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		Cast = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (castc >= 4)
 			Cast.cancel(false);
 			Cast3();
@@ -237,7 +237,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast4() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		Cast = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (castc >= 3)
 			Cast.cancel(false);
 			Cast4();
@@ -260,7 +260,7 @@ public class HyperionAI2 extends AggressiveNpcAI2
 	}
 
 	private void startCast5() {
-		Cast = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		Cast = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (castc >= 3)
 			Cast.cancel(false);
 			Cast5();

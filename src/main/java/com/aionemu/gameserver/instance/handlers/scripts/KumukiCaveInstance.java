@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -18,7 +16,9 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -132,7 +132,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask() {
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -166,7 +166,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				});
 			}
 		}, 10000));
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -180,7 +180,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				Poppy.getFirst().getController().onDelete();
 			}
 		}, 225000));
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -197,7 +197,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				sp(835130, 142.37743f, 19.93851f, 144.2455f, (byte) 5, 0, 0, null);
 			}
 		}, 450000));
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -211,7 +211,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				Poppy.get(2).getController().onDelete();
 			}
 		}, 675000));
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -337,7 +337,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				break;
 			case 703425: //Door Activator.
 				doors.get(19).setOpen(true);
-				GameEngineServices.skillEngine().applyEffectDirectly(17619, player, player, 900000); //Shabby Kumuki Transformation.
+				SkillEngine.getInstance().applyEffectDirectly(17619, player, player, 900000); //Shabby Kumuki Transformation.
 				break;
 			case 703426: //Door Activator.
 				doors.get(3).setOpen(true);
@@ -349,13 +349,13 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 				doors.get(2).setOpen(true);
 				break;
 			case 835026: //Suspicious Wagon.
-				//GameEngineServices.skillEngine().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
+				//SkillEngine.getInstance().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
 				break;
 			case 835028: //Suspicious Basket.
-				//GameEngineServices.skillEngine().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
+				//SkillEngine.getInstance().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
 				break;
 			case 835071: //Suspicious Ginseng Snack.
-				GameEngineServices.skillEngine().applyEffectDirectly(17623, player, player, 4000); //Ginseng Transformation.
+				SkillEngine.getInstance().applyEffectDirectly(17623, player, player, 4000); //Ginseng Transformation.
 				break;
 		}
 	}
@@ -449,7 +449,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -480,7 +480,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -514,7 +514,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 		if (delay == 0) {
 			this.sendMsg(msgId);
 		} else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -536,7 +536,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

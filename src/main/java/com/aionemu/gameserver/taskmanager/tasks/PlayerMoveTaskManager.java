@@ -3,7 +3,6 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -17,15 +16,8 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
  */
 public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-	 * -- SETTER --
-	 * 注入 Spring 实例提供者。
-	 * Inject the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
+	private static volatile PlayerMoveTaskManager resolvedInstance;
 
 	/**
 	 * 正在移动的玩家/生物（objectId → 对象）。
@@ -84,14 +76,30 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	 *                               when no provider or bean is available
 	 */
 	public static PlayerMoveTaskManager getInstance() {
+		PlayerMoveTaskManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PlayerMoveTaskManager> provider = instanceProvider;
-		PlayerMoveTaskManager provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PlayerMoveTaskManager 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PlayerMoveTaskManager> instanceProvider) {
+		PlayerMoveTaskManager.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

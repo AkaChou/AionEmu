@@ -6,13 +6,13 @@ import java.util.concurrent.Future;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestTimerPolicy;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 任务计时器注册表：可见/不可见计时器的启动、取消，以及按玩家、任务、副本维度的清理。
@@ -59,7 +59,7 @@ final class QuestTimers {
 	static boolean questTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
 		Player player = requireTimerArguments(env, timeInSeconds, policy);
 		TimerStartOutcome outcome = startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, true,
-			expiredQuestId -> GameEngineServices.questEngine().onQuestTimerEnd(
+			expiredQuestId -> QuestEngine.getInstance().onQuestTimerEnd(
 				new QuestEnv(null, player, expiredQuestId, 0)));
 		if (outcome == TimerStartOutcome.STARTED) {
 			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(env.getQuestId(), timeInSeconds));
@@ -78,7 +78,7 @@ final class QuestTimers {
 	static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds, QuestTimerPolicy policy) {
 		Player player = requireTimerArguments(env, timeInSeconds, policy);
 		startManagedTimer(player, env.getQuestId(), timeInSeconds, policy, false,
-			expiredQuestId -> GameEngineServices.questEngine().onInvisibleTimerEnd(
+			expiredQuestId -> QuestEngine.getInstance().onInvisibleTimerEnd(
 				new QuestEnv(null, player, expiredQuestId, 0)));
 		return true;
 	}
@@ -199,7 +199,7 @@ final class QuestTimers {
 	private static TimerStartOutcome startManagedTimer(Player player, int questId, int seconds, QuestTimerPolicy policy,
 			boolean visible, IntConsumer callback) {
 		return startManagedTimer(player, questId, seconds, policy, visible, callback,
-			(task, delayMillis) -> GameThreadPoolServices.threadPoolManager().schedule(task, delayMillis));
+			(task, delayMillis) -> ThreadPoolManager.getInstance().schedule(task, delayMillis));
 	}
 
 	/**

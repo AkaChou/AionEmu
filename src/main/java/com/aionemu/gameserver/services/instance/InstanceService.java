@@ -6,14 +6,12 @@ import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
 import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +35,12 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeResources;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.StaticDoorSpawnManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMap2DInstance;
@@ -86,7 +86,7 @@ public class InstanceService {
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextAvailableInstance(int worldId, int ownerId) {
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap map = World.getInstance().getWorldMap(worldId);
 		if (!map.isInstanceType()) {
 			throw new UnsupportedOperationException("Invalid call for next available instance  of " + worldId);
 		}
@@ -96,7 +96,7 @@ public class InstanceService {
 			ownerId);
 		map.addInstance(nextInstanceId, worldMapInstance);
 		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), 0, 0, ownerId);
-		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
+		InstanceEngine.getInstance().onInstanceCreate(worldMapInstance);
 		if (map.isInstanceType()) {
 			startInstanceChecker(worldMapInstance);
 		}
@@ -139,7 +139,7 @@ public class InstanceService {
 		}
 
 		List<WorldMapInstance> instancesToReset = new ArrayList<>();
-		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World world = World.getInstance();
 		for (WorldMapTemplate worldTemplate : DataManager.WORLD_MAPS_DATA) {
 			if (!worldTemplate.isInstance()) {
 				continue;
@@ -244,7 +244,7 @@ public class InstanceService {
 			instance.getEmptyInstanceTask().cancel(false);
 		}
 		int worldId = instance.getMapId();
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap map = World.getInstance().getWorldMap(worldId);
 		if (!map.isInstanceType()) {
 			return;
 		}
@@ -270,7 +270,7 @@ public class InstanceService {
 			instance.getInstanceHandler().onInstanceDestroy();
 			if (instance instanceof WorldMap2DInstance w2d) {
 				if (w2d.isPersonal()) {
-					GameHousingServices.housingService().onInstanceDestroy(w2d.getOwnerId());
+					HousingService.getInstance().onInstanceDestroy(w2d.getOwnerId());
 				}
 			}
 		} finally {
@@ -334,7 +334,7 @@ public class InstanceService {
 	 * @return 已注册副本，未找到则为 null / registered instance, or null
 	 */
 	public static WorldMapInstance getRegisteredInstance(int worldId, int objectId) {
-		Iterator<WorldMapInstance> instanceIter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
+		Iterator<WorldMapInstance> instanceIter = World.getInstance().getWorldMap(worldId).iterator();
 		while (instanceIter.hasNext()) {
 			WorldMapInstance instance = instanceIter.next();
 			if (instance.isRegistered(objectId)) {
@@ -376,7 +376,7 @@ public class InstanceService {
 		if (ownerId == 0) {
 			return null;
 		}
-		Iterator<WorldMapInstance> instanceIter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).iterator();
+		Iterator<WorldMapInstance> instanceIter = World.getInstance().getWorldMap(worldId).iterator();
 		while (instanceIter.hasNext()) {
 			WorldMapInstance instance = instanceIter.next();
 			if (instance.isPersonal() && instance.getOwnerId() == ownerId) {
@@ -450,7 +450,7 @@ public class InstanceService {
 		int lookupId = getLastRegisteredId(player);
 		WorldMapInstance beginnerInstance = getBeginnerInstance(worldId, lookupId);
 		if (beginnerInstance != null) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, beginnerInstance.getInstanceId(), player.getX(),
+			World.getInstance().setPosition(player, worldId, beginnerInstance.getInstanceId(), player.getX(),
 				player.getY(), player.getZ(), player.getHeading());
 		}
 		WorldMapTemplate worldTemplate = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
@@ -467,7 +467,7 @@ public class InstanceService {
 				}
 			}
 			if (registeredInstance != null) {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, registeredInstance.getInstanceId(), player.getX(),
+				World.getInstance().setPosition(player, worldId, registeredInstance.getInstanceId(), player.getX(),
 					player.getY(), player.getZ(), player.getHeading());
 				player.getPosition().getWorldMapInstance().getInstanceHandler().onPlayerLogin(player);
 				return;
@@ -495,7 +495,7 @@ public class InstanceService {
 	 * @return 是否存在 / whether it exists
 	 */
 	public static boolean isInstanceExist(int worldId, int instanceId) {
-		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId) != null;
+		return World.getInstance().getWorldMap(worldId).getWorldMapInstanceById(instanceId) != null;
 	}
 
 	/**
@@ -520,7 +520,7 @@ public class InstanceService {
 			instance.getEmptyInstanceTask().cancel(false);
 		}
 		pendingResets.add(instance);
-		instance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		instance.setEmptyInstanceTask(ThreadPoolManager.getInstance().schedule(() -> {
 			pendingResets.remove(instance);
 			if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
 				destroyInstance(instance);
@@ -764,7 +764,7 @@ public class InstanceService {
 	 * @return 新建的世界地图实例 / newly created world map instance
 	 */
 	public synchronized static WorldMapInstance getNextBgInstance(int worldId) {
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap map = World.getInstance().getWorldMap(worldId);
 		int nextInstanceId = map.getNextInstanceId();
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId);
 		map.addInstance(nextInstanceId, worldMapInstance);

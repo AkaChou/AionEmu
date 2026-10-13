@@ -2,13 +2,13 @@ package com.aionemu.gameserver.ai.worlds.iluma;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -34,15 +34,15 @@ public class Tunes_Of_Splendor_ScoutAI2 extends NpcAI2 {
 	}
 
 	private void startRiftEscapeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> spawnRiftEscape(701132), 2500);
+		ThreadPoolManager.getInstance().schedule(() -> spawnRiftEscape(701132), 2500);
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Tunes_Of_Splendor_ScoutAI2.this), 10000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Tunes_Of_Splendor_ScoutAI2.this), 10000);
 	}
 
 	private void startRiftEscapeClosed() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> despawnNpc(701132), 12500);
+		ThreadPoolManager.getInstance().schedule(() -> despawnNpc(701132), 12500);
 	}
 
 	private void spawnRiftEscape(int npcId) {

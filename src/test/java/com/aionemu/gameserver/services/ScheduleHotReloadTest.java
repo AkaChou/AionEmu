@@ -3,9 +3,10 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import com.aionemu.testutil.ConfigSnapshot;
 import org.junit.jupiter.api.Test;
 
@@ -18,24 +19,24 @@ class ScheduleHotReloadTest {
 		try (ServiceContext.Scope ignored = ServiceContext.use("schedule-reload-test-" + System.nanoTime())) {
 			System.setProperty("aion.config.dir", "aion/config");
 			CustomConfig.RIFT_ENABLED = true;
-			GameCronServices.initialize();
+			CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
 			RiftService service = new RiftService();
 
 			service.reloadSchedule();
-			int taskCount = GameCronServices.cronService().getRunnables().size();
+			int taskCount = CronService.requireCurrent().getRunnables().size();
 			assertTrue(taskCount > 0);
 			service.reloadSchedule();
-			assertEquals(taskCount, GameCronServices.cronService().getRunnables().size());
+			assertEquals(taskCount, CronService.requireCurrent().getRunnables().size());
 
 			CustomConfig.RIFT_ENABLED = false;
 			service.reloadSchedule();
-			assertEquals(0, GameCronServices.cronService().getRunnables().size());
+			assertEquals(0, CronService.requireCurrent().getRunnables().size());
 
 			CustomConfig.RIFT_ENABLED = true;
 			service.reloadSchedule();
-			assertEquals(taskCount, GameCronServices.cronService().getRunnables().size());
+			assertEquals(taskCount, CronService.requireCurrent().getRunnables().size());
 		} finally {
-			GameCronServices.shutdownIfInitialized();
+			CronService.shutdownCurrentIfInitialized();
 			snapshot.restore();
 			if (oldConfigDir == null) {
 				System.clearProperty("aion.config.dir");

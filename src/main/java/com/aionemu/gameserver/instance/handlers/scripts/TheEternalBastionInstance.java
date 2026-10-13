@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -27,7 +25,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -311,7 +311,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				despawnNpc(npc);
 				break;
 			case 231130: //Grand Commander Pashid.
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -385,7 +385,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 			case 209517: //Commander Granir.
 				despawnNpc(npc);
 				instanceReward.addPoints(-90000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -430,11 +430,11 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 		switch (npc.getNpcId()) {
 			case 701625: //Lysander's Siege Cannon.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
 				break;
 			case 701922: //Granir's Siege Cannon.
 				despawnNpc(npc);
-				GameEngineServices.skillEngine().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
 				break;
 		}
 	}
@@ -445,7 +445,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void startInstanceTask() {
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -464,7 +464,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 60000)); //1 Minute.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -475,7 +475,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion1();
 			}
 		}, 120000)); //2 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -489,7 +489,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion2();
 			}
 		}, 300000)); //5 分钟。 / 5 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -504,7 +504,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion3();
 			}
 		}, 480000)); //8 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -517,7 +517,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion4();
 			}
 		}, 660000)); //11 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -531,7 +531,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion6();
 			}
 		}, 840000)); //14 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -541,7 +541,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 				startRaidBastion7();
 			}
 		}, 1020000)); //17 Minutes.
-		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -945,7 +945,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -1025,7 +1025,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

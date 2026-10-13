@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.task;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnSearchResult;
 import com.aionemu.gameserver.questEngine.definition.QuestLureCompletion;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -29,7 +29,7 @@ public class QuestTasks {
 	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, Npc target) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(
 			new FollowingNpcCheckTask(env, new TargetDestinationChecker(npc, target)), 1000, 1000);
 	}
 
@@ -52,7 +52,7 @@ public class QuestTasks {
 		if (searchResult == null) {
 			throw new IllegalArgumentException("Supplied npc doesn't exist: " + npcTargetId);
 		}
-		return GameThreadPoolServices.threadPoolManager()
+		return ThreadPoolManager.getInstance()
 			.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc,
 				searchResult.spot().getX(), searchResult.spot().getY(), searchResult.spot().getZ())), 1000, 1000);
 	}
@@ -83,7 +83,7 @@ public class QuestTasks {
 	 */
 	public static Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, float x, float y,
 														  float z) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(
 			new FollowingNpcCheckTask(env, new CoordinateDestinationChecker(npc, x, y, z)), 1000, 1000);
 	}
 
@@ -112,7 +112,7 @@ public class QuestTasks {
 	public static Future<?> newLuredNpcToCoordinateCheckTask(QuestEnv env, Npc npc,
 															 float x, float y, float z, float radius, QuestLureCompletion completion) {
 		LuredNpcCheckTask checker = new LuredNpcCheckTask(env, npc, x, y, z, radius, completion);
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(checker, 500, 500);
+		Future<?> task = ThreadPoolManager.getInstance().scheduleAtFixedRate(checker, 500, 500);
 		checker.bind(task);
 		return task;
 	}
@@ -127,7 +127,7 @@ public class QuestTasks {
 	 * @return 定时任务句柄 / scheduled future
 	 */
 	public static Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName) {
-		return GameThreadPoolServices.threadPoolManager()
+		return ThreadPoolManager.getInstance()
 			.scheduleAtFixedRate(new FollowingNpcCheckTask(env, new ZoneChecker(npc, zoneName)), 1000, 1000);
 	}
 
@@ -143,7 +143,7 @@ public class QuestTasks {
 	 */
 	public static Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, ZoneName zoneName1,
 														  ZoneName zoneName2) {
-		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+		return ThreadPoolManager.getInstance().scheduleAtFixedRate(
 			new FollowingNpcCheckTask(env, new ZoneChecker2(npc, zoneName1, zoneName2)), 1000, 1000);
 	}
 }

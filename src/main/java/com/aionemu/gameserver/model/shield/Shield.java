@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.model.shield;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.ShieldController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
@@ -25,7 +25,7 @@ public class Shield extends VisibleObject {
 	private int id = 0;
 
 	public Shield(ShieldTemplate template) {
-		super(GameWorldBootstrapServices.idFactory().nextId(), new ShieldController(), null, null, null);
+		super(IDFactory.getInstance().nextId(), new ShieldController(), null, null, null);
 
 		((ShieldController) getController()).setOwner(this);
 		this.template = template;
@@ -42,7 +42,7 @@ public class Shield extends VisibleObject {
 
 	/** 生成。 / Spawn. */
 	public void spawn() {
-		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World w = World.getInstance();
 		WorldPosition position = w.createPosition(template.getMap(), template.getCenter().getX(),
 				template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, 0);
 		this.setPosition(position);

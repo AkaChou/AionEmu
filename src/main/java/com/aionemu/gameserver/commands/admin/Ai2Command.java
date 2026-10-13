@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.ai2.event.AIEventLog;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员 AI2 调试命令：开关日志、查看/设置目标 NPC 的 AI 状态与事件。
@@ -93,7 +93,7 @@ public class Ai2Command extends AdminCommand {
 		String param1 = params[1];
 		switch (param0) {
 			case "set": {
-				GameEngineServices.ai2Engine().setupAI(param1, npc);
+				AI2Engine.getInstance().setupAI(param1, npc);
 				// 新装配的 AI 实例停留在 CREATED，只有 SPAWNED 事件会把它推进 IDLE；缺少这一步会让该 NPC
 				// 收不到 ATTACK / CREATURE_SEE 等事件，变成完全木桩（与 RetailDirectPortalEngine 的做法保持一致）。
 				// A freshly attached AI stays in CREATED until the SPAWNED event moves it to IDLE; without it the NPC
@@ -108,7 +108,7 @@ public class Ai2Command extends AdminCommand {
 			}
 			case "event2": {
 				AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-				Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.parseInt(params[2]));
+				Creature creature = (Creature) World.getInstance().findVisibleObject(Integer.parseInt(params[2]));
 				npc.getAi2().onCreatureEvent(eventType, creature);
 				break;
 			}

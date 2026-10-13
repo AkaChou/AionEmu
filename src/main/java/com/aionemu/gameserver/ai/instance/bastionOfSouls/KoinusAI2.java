@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Bastion Of Souls 副本 NPC AI：Koinus（@AIName "IDAb1_Ere_Sub_4F_Hole"），继承 NpcAI2。
@@ -41,6 +41,6 @@ public class KoinusAI2 extends NpcAI2
     }
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(KoinusAI2.this), 900000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(KoinusAI2.this), 900000);
 	}
 }

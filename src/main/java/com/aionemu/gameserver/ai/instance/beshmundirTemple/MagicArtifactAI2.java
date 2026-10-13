@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Magic Artifact（@AIName "magicartifact"），继承 AggressiveNpcAI2。
@@ -28,6 +28,6 @@ public class MagicArtifactAI2 extends AggressiveNpcAI2
 
 	private void setCD() {
 		cooldown = true;
-		GameThreadPoolServices.threadPoolManager().schedule(() -> cooldown = false, 1000);
+		ThreadPoolManager.getInstance().schedule(() -> cooldown = false, 1000);
 	}
 }

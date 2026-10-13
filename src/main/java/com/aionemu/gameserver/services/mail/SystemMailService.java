@@ -5,7 +5,6 @@ import com.aionemu.gameserver.persistence.DatabaseAccess;
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 系统邮件服务，向在线/离线玩家投递系统信件与模板奖励。
@@ -164,7 +165,7 @@ public class SystemMailService {
 			// log.info(I18n.get("log.2ca8b1e5c461", recipientName));
 			return false;
 		}
-		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
 		Mailbox recipientMailbox = getLoadedMailbox(recipient);
 		if (isMailboxFull(recipientMailbox, recipientCommonData, 200)) {
 			return false;
@@ -191,7 +192,7 @@ public class SystemMailService {
 		}
 		String finalSender = sender;
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
 			attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 			letterType);
 		boolean stored = transactionAction == null
@@ -199,7 +200,7 @@ public class SystemMailService {
 			: storeMail(recipientCommonData, recipient, recipientMailbox, attachedItem, newLetter, time,
 			transactionAction);
 		if (!stored) {
-			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			IDFactory.getInstance().releaseId(newLetter.getObjectId());
 			if (attachedItem != null) {
 				ItemService.releaseItemId(attachedItem);
 			}
@@ -259,7 +260,7 @@ public class SystemMailService {
 		if (recipientCommonData == null) {
 			return false;
 		}
-		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
 		Mailbox recipientMailbox = getLoadedMailbox(recipient);
 		if (isMailboxFull(recipientMailbox, recipientCommonData, 200)) {
 			return false;
@@ -269,7 +270,7 @@ public class SystemMailService {
 			return false;
 		}
 		if (recipientCommonData.isOnline()) {
-			onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
+			onlineRecipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
 		}
 		boolean originalEquipped = attachedItem != null && attachedItem.isEquipped();
 		long originalEquipmentSlot = attachedItem == null ? 0 : attachedItem.getEquipmentSlot();
@@ -281,14 +282,14 @@ public class SystemMailService {
 			attachedItem.setItemLocation(StorageType.MAILBOX.getId());
 		}
 		Timestamp time = new Timestamp(System.currentTimeMillis());
-		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
 			attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
 		boolean stored = transactionAction == null
 			? storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time)
 			: storeMail(recipientCommonData, onlineRecipient, recipientMailbox, attachedItem, newLetter, time,
 			transactionAction);
 		if (!stored) {
-			GameWorldBootstrapServices.idFactory().releaseId(newLetter.getObjectId());
+			IDFactory.getInstance().releaseId(newLetter.getObjectId());
 			if (attachedItem != null) {
 				attachedItem.setEquipped(originalEquipped);
 				attachedItem.setEquipmentSlot(originalEquipmentSlot);

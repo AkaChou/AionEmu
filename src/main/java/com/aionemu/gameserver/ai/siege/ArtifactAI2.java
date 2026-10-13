@@ -4,7 +4,6 @@ package com.aionemu.gameserver.ai.siege;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.services.SiegeService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
@@ -36,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 攻城战相关 NPC AI：Artifact（@AIName "artifact"），继承 NpcAI2。
@@ -122,7 +122,7 @@ public class ArtifactAI2 extends NpcAI2
 		};
 		observers.put(player.getObjectId(), observer);
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(() -> {
 			ItemUseObserver observer1 = observers.remove(player.getObjectId());
 			if (observer1 != null)
 				player.getObserveController().removeObserver(observer1);
@@ -139,10 +139,10 @@ public class ArtifactAI2 extends NpcAI2
 			});
 			loc.setLastActivation(System.currentTimeMillis());
 			if (loc.getTemplate().getRepeatCount() == 1)
-				GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
+				ThreadPoolManager.getInstance().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
 			else {
-				final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000L);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				final ScheduledFuture<?> s = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000L);
+				ThreadPoolManager.getInstance().schedule(() -> {
 					s.cancel(true);
 					loc.setStatus(ArtifactStatus.IDLE);
 				}, 13000 + ((long) loc.getTemplate().getRepeatInterval() * loc.getTemplate().getRepeatCount() * 1000));

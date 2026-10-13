@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.taskmanager;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -10,9 +8,11 @@ import java.util.Objects;
 
 import org.quartz.CronExpression;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
 
 import lombok.Getter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 基于 Cron 表达式的服务器周期任务抽象基类。
@@ -136,7 +136,7 @@ public abstract class AbstractCronTask implements Runnable {
 		if (getRunDelay() == 0) {
 			if (canRunOnInit()) {
 				try {
-					GameThreadPoolServices.threadPoolManager().schedule(this, 0);
+					ThreadPoolManager.getInstance().schedule(this, 0);
 				} catch (Exception ignored) {
 				}
 			} else {
@@ -152,7 +152,7 @@ public abstract class AbstractCronTask implements Runnable {
 	 */
 	private void scheduleNextRun() {
 		try {
-			GameCronServices.cronService().schedule(this, cronExpressionString, true);
+			CronService.requireCurrent().schedule(this, cronExpressionString, true);
 		} catch (Exception ignored) {
 		}
 	}
@@ -179,7 +179,7 @@ public abstract class AbstractCronTask implements Runnable {
 	@Override
 	public final void run() {
 		if (getRunDelay() > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(this, getRunDelay());
+			ThreadPoolManager.getInstance().schedule(this, getRunDelay());
 		} else {
 			preRun();
 			executeTask();

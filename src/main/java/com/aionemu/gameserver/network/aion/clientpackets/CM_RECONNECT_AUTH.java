@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 
 /**
  * 客户端向登录服快速重连鉴权请求包。
@@ -35,6 +35,6 @@ public class CM_RECONNECT_AUTH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		AionConnection client = getConnection();
-		GameServerNetworkServices.loginServer().requestAuthReconnection(client);
+		LoginServer.getInstance().requestAuthReconnection(client);
 	}
 }

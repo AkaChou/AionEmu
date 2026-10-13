@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.QuestService;
 
 /**
@@ -35,7 +35,7 @@ public class CM_DELETE_QUEST extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+		var metadata = QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null);
 		if (metadata != null && metadata.timer()) {
 			player.getController().cancelTask(TaskId.QUEST_TIMER);
 			sendPacket(new SM_QUEST_ACTION(questId, 0));

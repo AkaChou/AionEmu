@@ -3,9 +3,7 @@ package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,10 +34,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.RndArray;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Collections2;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 核心物品服务：发放/加载魔石、任务物品、升级拷贝与 ID 回收。
@@ -356,7 +357,7 @@ public class ItemService {
 		while (!inventory.isFull(itemTemplate.getExtraInventoryId()) && count > 0) {
 			Item newItem = ItemFactory.newItem(itemTemplate.getTemplateId());
 			if (newItem.getExpireTime() != 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(newItem, player);
+				ExpireTimerTask.getInstance().addTask(newItem, player);
 			}
 			if (sourceItem != null) {
 				copyItemInfo(sourceItem, newItem);
@@ -567,7 +568,7 @@ public class ItemService {
 	 * @param item item
 	 */
 	public static void releaseItemId(Item item) {
-		GameWorldBootstrapServices.idFactory().releaseId(item.getObjectId());
+		IDFactory.getInstance().releaseId(item.getObjectId());
 	}
 
 	/**
@@ -578,7 +579,7 @@ public class ItemService {
 	 */
 	public static void releaseItemIds(Collection<Item> items) {
 		Collection<Integer> idIterator = Collections2.transform(items, AionObject.OBJECT_TO_ID_TRANSFORMER);
-		GameWorldBootstrapServices.idFactory().releaseIds(idIterator);
+		IDFactory.getInstance().releaseIds(idIterator);
 	}
 
 	/**
@@ -590,7 +591,7 @@ public class ItemService {
 	 * @return 是否投放成功 / true if granted successfully
 	 */
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
-		return dropItemToInventory(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjectId), itemId);
+		return dropItemToInventory(World.getInstance().findPlayer(playerObjectId), itemId);
 	}
 
 	/**

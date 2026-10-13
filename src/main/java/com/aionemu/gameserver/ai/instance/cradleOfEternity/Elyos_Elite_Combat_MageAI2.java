@@ -7,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -50,7 +51,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 	}
 
 	private void announce1StDefense() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 护盾倒下，第 1 防线被突破。 / As the shields fell, the 1st Defense Line was breached and overrun.
 			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_01, 0);
 			// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
@@ -58,7 +59,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce2NdDefense() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 护盾倒下，第 2 防线被突破。 / As the shields fell, the 2nd Defense Line was breached and overrun.
 			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_02, 0);
 			// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
@@ -66,7 +67,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce3RdDefense() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 护盾倒下，第 3 防线被突破。 / As the shields fell, the 3rd Defense Line was breached and overrun.
 			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_03, 0);
 			// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.
@@ -74,7 +75,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce4ThDefense() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 护盾倒下，第 4 防线被突破。 / As the shields fell, the 4th Defense Line was breached and overrun.
 			PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_04, 0);
 			// 敌人来了。全部消灭。 / The enemies are coming. Kill them all.

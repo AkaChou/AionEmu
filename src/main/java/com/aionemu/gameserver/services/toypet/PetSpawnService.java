@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.toypet;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_INFO;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 宠物生成服务，管理宠物召唤与周期存盘。
@@ -81,7 +81,7 @@ public class PetSpawnService {
 	 */
 	public static void reschedulePeriodicSaveTask(Player player) {
 		player.getController().addTask(TaskId.PET_UPDATE,
-			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
+			ThreadPoolManager.getInstance().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
 				PeriodicSaveConfig.PLAYER_PETS * 1000L, PeriodicSaveConfig.PLAYER_PETS * 1000L));
 	}
 

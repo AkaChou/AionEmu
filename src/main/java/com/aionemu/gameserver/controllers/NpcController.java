@@ -2,19 +2,18 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,7 +62,9 @@ import com.aionemu.gameserver.services.instance.InstanceScaler;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
@@ -118,7 +119,7 @@ public class NpcController extends CreatureController<Npc> {
 					owner.setState(CreatureState.DEAD);
 				}
 
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
 						PacketSendUtility.sendPacket(player, new SM_EMOTION(owner, EmotionType.DIE, 0, 0));
 						DropService.getInstance().see(player, owner);
@@ -191,7 +192,7 @@ public class NpcController extends CreatureController<Npc> {
 		final int npcNameId = owner.getObjectTemplate().getNameId();
 		NpcRank npcRank = owner.getObjectTemplate().getRank();
 		if (npcRank == NpcRank.EXPERT && !player.isInInstance()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+			World.getInstance().doOnAllPlayers(players -> {
 				// “玩家名”击杀了“命名怪” / "Player Name" has killed "Named Monster"
 				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1400021, player.getName(), new DescriptionId(npcNameId * 2 + 1)));
 			});
@@ -288,7 +289,7 @@ public class NpcController extends CreatureController<Npc> {
 					if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
 						for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 							if (player.getWorldId() == Integer.parseInt(worldIds)) {
-								GameRuntimeServices.inGameShopEn().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
+								InGameShopEn.getInstance().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
 								PacketSendUtility.sendMessage(player, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 							}
 						}
@@ -317,7 +318,7 @@ public class NpcController extends CreatureController<Npc> {
 					rewardXp = (long) (rewardXp * percentage);
 					rewardDp = (int) (rewardDp * percentage);
 					rewardAp *= percentage;
-					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));
+					QuestEngine.getInstance().onKill(new QuestEnv(getOwner(), player, 0, 0));
 					// 玩家击败“Boss”时全服可见！！！ / When a player defeat a "Boss" all ppls on server see!!!
 					defeatNamedMsg(player);
 					// 单人经验奖励（新系统，正式服北美经验） / Reward XP Solo (New system, Exp Retail NA)
@@ -407,7 +408,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
-		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !GameEngineServices.questEngine().onDialog(env)) {
+		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !QuestEngine.getInstance().onDialog(env)) {
 			return;
 		}
 		if (!getOwner().getAi2().onDialogSelect(player, dialogId, questId, extendedRewardIndex)) {
@@ -465,7 +466,7 @@ public class NpcController extends CreatureController<Npc> {
 		Npc npc = getOwner();
 
 		if (actingCreature instanceof Player) {
-			GameEngineServices.questEngine().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
+			QuestEngine.getInstance().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
 		}
 
 		PacketSendUtility.broadcastPacket(npc, new SM_ATTACK_STATUS(npc, actingCreature, type, skillId, damage, log));

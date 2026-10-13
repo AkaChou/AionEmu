@@ -4,6 +4,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapType;
 
@@ -425,7 +426,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	 * @param z Z 坐标 / Z coordinate
 	 */
 	private static void goTo(final Player admin, int worldId, float x, float y, float z) {
-		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
 			TeleportService2.teleportTo(admin, worldId, InstanceService.resolveInstanceId(worldId, admin), x, y, z);
 		} else {

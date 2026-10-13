@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 
@@ -20,6 +18,8 @@ import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 宠物公共数据。
@@ -62,7 +62,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	private boolean isSelling = false;
 
 	public PetCommonData(int petId, int masterObjectId, int expireTime) {
-		this.petObjectId = GameWorldBootstrapServices.idFactory().nextId();
+		this.petObjectId = IDFactory.getInstance().nextId();
 		this.petId = petId;
 		this.masterObjectId = masterObjectId;
 		this.expireTime = expireTime;
@@ -129,7 +129,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	/** 设置 re food time / Sets the re food time */
 	public void setReFoodTime(final long reFoodTime) {
 		setFeedingTime(false);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {

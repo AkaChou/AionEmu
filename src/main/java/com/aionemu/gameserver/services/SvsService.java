@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule.Svs;
@@ -32,6 +31,8 @@ import com.aionemu.gameserver.services.svsservice.Gate;
 import com.aionemu.gameserver.services.svsservice.Panesterra;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 战场对决（SvS）服务，管理潘斯特拉等战场开关与刷怪。
@@ -85,7 +86,7 @@ public class SvsService {
 	 */
 	public synchronized void reloadSchedule() {
 		SvsSchedule newSchedule = CustomConfig.SVS_ENABLED ? SvsSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		svsSchedule = newSchedule;
 		if (svsSchedule != null) {
@@ -93,7 +94,7 @@ public class SvsService {
 				for (String svsTime : svs.getSvsTimes()) {
 					Runnable task = new SvsStartRunnable(svs.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, svsTime);
+					CronService.requireCurrent().schedule(task, svsTime);
 				}
 			}
 		}
@@ -112,7 +113,7 @@ public class SvsService {
 		}
 		gate.start();
 		advanceCorridorCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopSvs(id), (long) CustomConfig.SVS_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopSvs(id), (long) CustomConfig.SVS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -189,7 +190,7 @@ public class SvsService {
 	public boolean advanceCorridorCountdownMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 通往裂隙传送门战的进阶走廊已出现。 / An Advance Corridor to a Rift Portal battle has appeared.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_SVS_INVADE_DIRECT_PORTAL_OPEN, 0);
@@ -221,7 +222,7 @@ public class SvsService {
 	public boolean distinguishedServiceMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 通往帕内斯特拉的功勋攻城传送门已开启。 / The Distinguished Service Siege Portal leading to Panesterra opened.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Gab1_End11, 0);
 					// 通往帕内斯特拉攻城的功勋攻城传送门将关闭于 / The Distinguished Service Siege Portal to the Panesterra Siege will close in
@@ -252,7 +253,7 @@ public class SvsService {
 	public boolean transidiumAnnexMsg(int id) {
 		return switch (id) {
 			case 5 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 正在加载进阶走廊护盾……请稍候。 / Loading the Advance Corridor Shield... Please wait.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GAB1_SUB_ALARM_01, 0);
 					// 特兰西迪姆附楼入口将在 8 分钟后开启。 / The entrance to the Transidium Annex will open in 8 minutes.
@@ -418,7 +419,7 @@ public class SvsService {
 			SvsService.getInstance().clearAdventObjects(id);
 			// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
 			SvsService.getInstance().transidiumAnnexMsg(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				// 进阶走廊【特兰西迪姆附楼】。 / Advance Corridor [Transidium Annex].
 				SvsService.getInstance().advanceCorridorSP(id);
 			}, 480000);

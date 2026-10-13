@@ -1,13 +1,14 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 数据库调度的自动关机任务处理器。
@@ -67,9 +68,9 @@ public class ShutdownTask extends TaskFromDBHandler {
 		announceInterval = Integer.parseInt(params[1]);
 		warnCountDown = Integer.parseInt(params[2]);
 
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will shutdown in "
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendBrightYellowMessageOnCenter(player, "Automatic Task: The server will shutdown in "
 				+ warnCountDown + " seconds ! Please find a peace place and disconnect your character."));
 
-		GameThreadPoolServices.threadPoolManager().schedule(() -> GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.SHUTDOWN), warnCountDown * 1000L);
+		ThreadPoolManager.getInstance().schedule(() -> GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.SHUTDOWN), warnCountDown * 1000L);
 	}
 }

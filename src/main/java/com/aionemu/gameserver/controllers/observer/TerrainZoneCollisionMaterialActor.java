@@ -7,13 +7,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Skill;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -92,12 +92,12 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 			return;
 		}
 		final int[] secondsElapsed = new int[1];
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			for (MaterialSkill materialSkill : materialSkills) {
 				if (secondsElapsed[0] % materialSkill.getFrequency() != 0 || creature.getEffectController().hasAbnormalEffect(materialSkill.getId())) {
 					continue;
 				}
-				Skill skill = GameEngineServices.skillEngine().getSkill(creature, materialSkill.getId(), materialSkill.getSkillLevel(), creature);
+				Skill skill = SkillEngine.getInstance().getSkill(creature, materialSkill.getId(), materialSkill.getSkillLevel(), creature);
 				skill.getEffectedList().add(creature);
 				skill.useWithoutPropSkill();
 			}

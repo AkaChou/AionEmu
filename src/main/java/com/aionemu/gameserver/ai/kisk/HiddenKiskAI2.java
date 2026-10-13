@@ -2,7 +2,6 @@ package com.aionemu.gameserver.ai.kisk;
 
 import com.aionemu.gameserver.services.KiskService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
@@ -19,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * KISK 复活点 AI：Hidden Kisk（@AIName "hidden_kisk"），继承 NpcAI2。
@@ -37,7 +37,7 @@ public class HiddenKiskAI2 extends NpcAI2 {
 	@Override
 	public void handleSpawned() {
 		if (!isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				getOwner().getEffectController().setAbnormal(AbnormalState.HIDE.getId());
 				getOwner().setVisualState(CreatureVisualState.HIDE1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()));

@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.templates.stats.KiskStatsTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_KISK_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.HashSet;
@@ -92,7 +93,7 @@ public class Kisk extends SummonedObject<Player> {
 	public List<Player> getCurrentMemberList() {
 		List<Player> currentMemberList = new ArrayList<>();
 		for (int memberId : this.kiskMemberIds) {
-			Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
+			Player member = World.getInstance().findPlayer(memberId);
 			if (member != null) {
 				currentMemberList.add(member);
 			}

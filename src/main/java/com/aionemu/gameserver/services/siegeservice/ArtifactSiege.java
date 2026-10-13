@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services.siegeservice;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.LegionService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.RvrService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,6 +26,7 @@ import com.aionemu.gameserver.persistence.dao.SiegeLocationDao;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 神器据点攻城：首领击杀后结算归属、落地/前哨/RVR 连锁。
@@ -78,7 +79,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
 			if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-				GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
+				QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
 			}
 		});
 		startSiege(getSiegeLocationId());
@@ -96,7 +97,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), getSiegeLocation().getRace().getDescriptionId());
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> PacketSendUtility.sendPacket(object, lRacePacket));
+			World.getInstance().doOnAllPlayers(object -> PacketSendUtility.sendPacket(object, lRacePacket));
 		} else {
 			String wPlayerName = "";
 			final Race wRace = wRaceCounter.getSiegeRace() == SiegeRace.ELYOS ? Race.ELYOS : Race.ASMODIANS;
@@ -110,7 +111,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 					winnerName, getSiegeLocation().getNameAsDescriptionId());
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), wRace.getRaceDescriptionId());
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, player.getRace().equals(wRace) ? wRacePacket : lRacePacket));
+			World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, player.getRace().equals(wRace) ? wRacePacket : lRacePacket));
 		}
 		// 欧比斯登陆 4.9 / Abyss Landing 4.9
 		if (getSiegeLocation().getLocationId() == 1224 || getSiegeLocation().getLocationId() == 1401
@@ -160,7 +161,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				case 8021:
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						RvrService.getInstance().startRvr(7);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+						World.getInstance().doOnAllPlayers(player -> {
 						// 魔族占领了阿斯特拉的所有基地，因此追加派遣了阿斯特拉守备队支援兵力。
 						// After the Asmodians captured all bases in Asteria, additional Asteria garrison reinforcements were dispatched.
 							PacketSendUtility.playerSendPacketTime(player,
@@ -168,7 +169,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						RvrService.getInstance().stopRvr(7);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+						World.getInstance().doOnAllPlayers(player -> {
 						// 夺回被魔族占领的阿斯特拉基地后，阿斯特拉守备队支援兵力返回了。
 						// After recapturing Asteria bases held by the Asmodians, the Asteria garrison reinforcements returned.
 							PacketSendUtility.playerSendPacketTime(player,
@@ -179,7 +180,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				case 9021:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						RvrService.getInstance().startRvr(8);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+						World.getInstance().doOnAllPlayers(player -> {
 						// 天族占领了诺斯珀德的全部基地，因此追加派遣了诺斯珀德守备队支援兵力。
 						// After the Elyos captured all bases in Norsvold, additional Norsvold garrison reinforcements were dispatched.
 							PacketSendUtility.playerSendPacketTime(player,
@@ -187,7 +188,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						RvrService.getInstance().stopRvr(8);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+						World.getInstance().doOnAllPlayers(player -> {
 						// 夺回被天族占领的诺斯珀德基地后，诺斯珀德守备队支援兵力返回了。
 						// After recapturing Norsvold bases held by the Elyos, the Norsvold garrison reinforcements returned.
 							PacketSendUtility.playerSendPacketTime(player,

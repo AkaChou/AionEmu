@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.stats.container;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
+import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -96,7 +96,7 @@ public class SummonLifeStats extends CreatureLifeStats<Summon> {
 		restoreLock.lock();
 		try {
 			if (lifeRestoreTask == null && !alreadyDead) {
-				this.lifeRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleHpRestoreTask(this);
+				this.lifeRestoreTask = LifeStatsRestoreService.getInstance().scheduleHpRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();

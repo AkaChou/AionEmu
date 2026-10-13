@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -179,7 +179,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         isSpawning = true;
         int pfloor = player.getFloor();
         spawnNextFloor(pfloor + 1);
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -696,7 +696,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
      */
 
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.

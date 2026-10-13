@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -82,7 +82,7 @@ public interface NativeTeleportPort {
 
 			@Override
 			public void register(Player player, int worldId, int instanceId) {
-				WorldMapInstance instance = GameWorldBootstrapServices.world().getWorldMap(worldId)
+				WorldMapInstance instance = World.getInstance().getWorldMap(worldId)
 					.getWorldMapInstanceById(instanceId);
 				InstanceService.registerPlayerWithInstance(instance, player);
 			}

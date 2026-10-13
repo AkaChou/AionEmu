@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.vortex;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.vortexservice.DimensionalVortex;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.InvasionZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -195,7 +195,7 @@ public class VortexLocation implements ZoneHandler {
 					if (player.getRace().equals(getInvadersRace())) {
 						if (getVortexController().getPassedPlayers().containsKey(player.getObjectId())) {
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(904305));
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/** 运行 / run. */
 								@Override
 								public void run() {
@@ -206,7 +206,7 @@ public class VortexLocation implements ZoneHandler {
 							}, 10 * 1000);
 						}
 					} else {
-						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						ThreadPoolManager.getInstance().schedule(new Runnable() {
 							/** 运行 / run. */
 							@Override
 							public void run() {

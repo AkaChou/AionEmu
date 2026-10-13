@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Infernal Danuar Reliquary 副本 NPC AI：Venge Full Orb（@AIName "venge_full_orb"），继承 NpcAI2。
@@ -28,8 +28,8 @@ public class Venge_Full_OrbAI2 extends NpcAI2
 		};
 		if (skill == 0)
 			return;
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill),0, 2000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Venge_Full_OrbAI2.this), 1000);
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill),0, 2000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Venge_Full_OrbAI2.this), 1000);
 	}
 
 	@Override

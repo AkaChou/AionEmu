@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.infinityShard;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 import java.util.List;
@@ -38,7 +38,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 
 	private void startIdeInvulnerable() {
 		final Npc IdeResonator = getPosition().getWorldMapInstance().getNpc(276519); // 伊德谐振器 / Ide Resonator
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			IdeResonator.setTarget(getOwner());
 			IdeResonator.setNpcType(NpcType.INVULNERABLE);
 			WorldMapInstance instance = getPosition().getWorldMapInstance();
@@ -63,7 +63,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	}
 
 	private void attackBoost() {
-		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		attackBoostTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			AI2Actions.targetCreature(IdeResonatorAI2.this, getPosition().getWorldMapInstance().getNpc(231073)); // 希佩里安 / Hyperion
 			AI2Actions.useSkill(IdeResonatorAI2.this, 21257);
 		}, 3000, 8000);
@@ -73,16 +73,16 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		switch (getNpcId()) {
 			case 276519: // 伊德谐振器 / Ide Resonator
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 300000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0), 300000);
 			break;
 			case 231093: // 伊德谐振器 / Ide Resonator
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 300000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0), 300000);
 			break;
 			case 231094: // 伊德谐振器 / Ide Resonator
-			    GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 300000);
+			    ThreadPoolManager.getInstance().schedule(() -> spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0), 300000);
 			break;
 			case 231095: // 伊德谐振器 / Ide Resonator
-				GameThreadPoolServices.threadPoolManager().schedule(() -> spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 300000);
+				ThreadPoolManager.getInstance().schedule(() -> spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0), 300000);
 			break;
 		}
 		super.handleDied();

@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 
 import java.util.concurrent.Future;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Dragon Lord Refuge 副本 NPC AI：Calindi Summons（@AIName "calindisummon"），继承 AggressiveNpcAI2。
@@ -23,12 +23,12 @@ public class CalindiSummonsAI2 extends AggressiveNpcAI2
 		super.handleSpawned();
 		final int skill = getOwner().getNpcId() == 283132 ? 20914 : 20916;
 		int delay = getNpcId() == 283132 ? 500 : 2000;
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> AI2Actions.useSkill(CalindiSummonsAI2.this, skill), delay, delay);
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> AI2Actions.useSkill(CalindiSummonsAI2.this, skill), delay, delay);
 		despawn();
 	}
 
 	private void despawn() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().onDelete(), 15000);
+		ThreadPoolManager.getInstance().schedule(() -> getOwner().getController().onDelete(), 15000);
 	}
 
 	@Override

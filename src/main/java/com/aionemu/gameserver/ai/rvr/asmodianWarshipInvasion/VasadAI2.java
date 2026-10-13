@@ -6,6 +6,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * RvR 相关 NPC AI：Vasad（@AIName "vasad"），继承 AggressiveNpcAI2。
@@ -30,7 +31,7 @@ public class VasadAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceLF6G1BossSpawn01() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 魔族护卫舰指挥官已抵达。 / The Asmodian Frigate Commander has arrived.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LF6_G1_Boss_Spawn_01);
 		});

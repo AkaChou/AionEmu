@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -9,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Kaldor 区域 NPC AI：Anoha Sword（@AIName "anoha_sword"），继承 NpcAI2。
@@ -35,7 +36,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 			    case 804577: // 阿诺哈之剑 [魔族] / Anoha Sword [Asmodians]
 					announceBerserkAnoha30Min();
 					spawn(702644, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading());
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					ThreadPoolManager.getInstance().schedule(() -> {
 						announceReleaseAnoha();
 						spawn(855263, getOwner().getX(), getOwner().getY(), getOwner().getZ(), getOwner().getHeading()); // 狂暴的阿诺哈 / Berserk Anoha.
 					}, 1800000); // 30 分钟 / 30 Minutes.
@@ -51,14 +52,14 @@ public class Anoha_SwordAI2 extends NpcAI2
 	}
 
 	private void announceBerserkAnoha30Min() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 狂暴阿诺哈将在 30 分钟后返回卡尔多。 / Berserk Anoha will return to Kaldor in 30 minutes.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System);
 		});
 	}
 
 	private void announceReleaseAnoha() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 释放阿诺哈。 / Release Anoha.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn);
 		});

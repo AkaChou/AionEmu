@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
 
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -152,7 +152,7 @@ public class CM_PET extends AionClientPacket {
 			break;
 		case SPAWN:
 			if (player.getMinion() != null) {
-				GameEventBootstrapServices.minionService().despawnMinion(player, 0);
+				MinionService.getInstance().despawnMinion(player, 0);
 			}
 			PetService.getInstance().switchOffBuff(player);
 			PetSpawnService.summonPet(player, petId, true);

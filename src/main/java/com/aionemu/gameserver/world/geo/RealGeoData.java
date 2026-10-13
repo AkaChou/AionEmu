@@ -19,10 +19,10 @@ import com.aionemu.gameserver.geoEngine.scene.Geometry;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 真实地理数据实现：并行加载地形与世界物体，并异步预构建碰撞树。
@@ -96,7 +96,7 @@ public class RealGeoData implements GeoData {
 		}
 
 		try {
-			List<Future<Void>> futures = GameThreadPoolServices.threadPoolManager().getForkingPool().invokeAll(tasks);
+			List<Future<Void>> futures = ThreadPoolManager.getInstance().getForkingPool().invokeAll(tasks);
 			for (Future<Void> future : futures) {
 				future.get();
 			}
@@ -154,7 +154,7 @@ public class RealGeoData implements GeoData {
 		int partitionCount = Math.clamp(Runtime.getRuntime().availableProcessors(), 2, meshSnapshot.size());
 		List<List<Mesh>> partitions = partitionRoundRobin(meshSnapshot, partitionCount);
 		for (List<Mesh> partition : partitions) {
-			GameThreadPoolServices.threadPoolManager().submitLongRunning(() -> {
+			ThreadPoolManager.getInstance().submitLongRunning(() -> {
 				for (Mesh mesh : partition) {
 					mesh.createCollisionData();
 				}

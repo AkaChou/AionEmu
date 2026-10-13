@@ -6,9 +6,9 @@ import com.aionemu.gameserver.dataholders.RetailAiData.LocationAliasPoint;
 import com.aionemu.gameserver.dataholders.RetailAiData.LimitArea;
 import com.aionemu.gameserver.dataholders.RetailAiData.QuestArea;
 import com.aionemu.gameserver.dataholders.RetailAiData.ResurrectArea;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DYNAMIC_LIMIT_AREA_INFO;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.retail.RetailGrantKind;
 import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
@@ -142,7 +142,7 @@ public final class RetailAreaEngine {
 				if (lane != null && lane.routes(questId)
 					&& lane.grantKind(questId) == RetailGrantKind.AREA) {
 					NativeQuestStartPort.instance().start(player, questId);
-				} else if (GameEngineServices.questEngine().questCatalog().findMetadata(questId).isPresent()) {
+				} else if (QuestEngine.getInstance().questCatalog().findMetadata(questId).isPresent()) {
 					QuestService.startQuest(new QuestEnv(null, player, questId, 0));
 				}
 			}
@@ -264,7 +264,7 @@ public final class RetailAreaEngine {
 	}
 
 	private static boolean hasQuestTemplates(QuestArea area) {
-		var catalog = GameEngineServices.questEngine().questCatalog();
+		var catalog = QuestEngine.getInstance().questCatalog();
 		return area.questIds().stream().allMatch(id -> catalog.findMetadata(id).isPresent());
 	}
 

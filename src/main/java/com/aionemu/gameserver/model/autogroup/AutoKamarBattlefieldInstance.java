@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import java.util.List;
 
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.instance.instancereward.KamarBattlefieldRewa
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
+import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 
 /**
  * 自动 KamarBattlefield 副本，用于 autogroup 相关逻辑。
@@ -74,7 +74,7 @@ public class AutoKamarBattlefieldInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
-		GameBattlefieldServices.kamarBattlefieldService().addCoolDown(player);
+		KamarBattlefieldService.getInstance().addCoolDown(player);
 		((KamarBattlefieldReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
 	}
 

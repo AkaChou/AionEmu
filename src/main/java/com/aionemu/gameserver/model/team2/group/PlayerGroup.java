@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.team2.group;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
 
@@ -12,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 玩家队伍，用于团队2相关逻辑。
@@ -32,7 +32,7 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private final Map<Integer, Player> groupMembers = new LinkedHashMap<>();
 
 	public PlayerGroup(PlayerGroupMember leader, TeamType type) {
-		super(GameWorldBootstrapServices.idFactory().nextId());
+		super(IDFactory.getInstance().nextId());
 		this.playerGroupStats = new PlayerGroupStats(this);
 		this.type = type;
 		initializeTeam(leader);

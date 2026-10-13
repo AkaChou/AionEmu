@@ -6,6 +6,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * RvR 相关 NPC AI：Exploration Area Flag（@AIName "battlefield_trigger_asmodians"），继承 ActionItemNpcAI2。
@@ -79,7 +80,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 
 	private void announceF6Invasion() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 先锋指挥官正在准备探索区防御。 / Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.
 			PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_F6_Invasion_3rd_Bonus_01, 0);
 			// 突击指挥官正在准备探索区防御。 / Strike Commanders are preparing exploration area defenses. It will be established in 5 minutes.

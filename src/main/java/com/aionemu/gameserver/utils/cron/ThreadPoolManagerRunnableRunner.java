@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.utils.cron;
 
 import com.aionemu.commons.services.cron.RunnableRunner;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 将 cron 任务委托到游戏线程池执行的 RunnableRunner。
@@ -16,7 +16,7 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
 	 */
 	@Override
 	public void executeRunnable(Runnable r) {
-		GameThreadPoolServices.threadPoolManager().execute(r);
+		ThreadPoolManager.getInstance().execute(r);
 	}
 
 	/**
@@ -26,6 +26,6 @@ public class ThreadPoolManagerRunnableRunner extends RunnableRunner {
 	 */
 	@Override
 	public void executeLongRunningRunnable(Runnable r) {
-		GameThreadPoolServices.threadPoolManager().executeLongRunning(r);
+		ThreadPoolManager.getInstance().executeLongRunning(r);
 	}
 }

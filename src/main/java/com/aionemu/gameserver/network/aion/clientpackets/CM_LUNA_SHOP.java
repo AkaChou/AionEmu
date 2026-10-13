@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LUNA_SHOP_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -107,48 +107,48 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 						true);
 				return;
 			} else {
-				GameEventBootstrapServices.lunaShopService().takiAdventureTeleport(player, indun_id);
+				LunaShopService.getInstance().takiAdventureTeleport(player, indun_id);
 			}
 			break;
 		case 2: // Karunerk 的工坊 / Karunerk's Workshop
-			GameEventBootstrapServices.lunaShopService().specialDesign(player, recipe_id);
+			LunaShopService.getInstance().specialDesign(player, recipe_id);
 			break;
 		case 3:
-			GameEventBootstrapServices.lunaShopService().craftBox(player);
+			LunaShopService.getInstance().craftBox(player);
 			break;
 		case 4: // 购买必需材料 / Buy Necessary Materials
-			GameEventBootstrapServices.lunaShopService().buyMaterials(player, material_item_id, material_item_count);
+			LunaShopService.getInstance().buyMaterials(player, material_item_id, material_item_count);
 			break;
 		case 5:
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(actionId));
 			break;
 		case 6:
 		case 7:
-			GameEventBootstrapServices.lunaShopService().teleport(player, actionId, teleportId);
+			LunaShopService.getInstance().teleport(player, actionId, teleportId);
 			break;
 		case 8:
-			GameEventBootstrapServices.lunaShopService().dorinerkWardrobeLoad(player);
+			LunaShopService.getInstance().dorinerkWardrobeLoad(player);
 			break;
 		case 9:
-			GameEventBootstrapServices.lunaShopService().dorinerkWardrobeExtendSlots(player);
+			LunaShopService.getInstance().dorinerkWardrobeExtendSlots(player);
 			break;
 		case 10:
-			GameEventBootstrapServices.lunaShopService().dorinerkWardrobeAct(player, slot, ItemObjId);
+			LunaShopService.getInstance().dorinerkWardrobeAct(player, slot, ItemObjId);
 			break;
 		case 11:
-			GameEventBootstrapServices.lunaShopService().dorinerkWardrobeModifyAppearance(player, slot, ItemObjId);
+			LunaShopService.getInstance().dorinerkWardrobeModifyAppearance(player, slot, ItemObjId);
 			break;
 		case 12:
-			GameEventBootstrapServices.lunaShopService().munirunerksTreasureChamber(player);
+			LunaShopService.getInstance().munirunerksTreasureChamber(player);
 			break;
 		case 14:
-			GameEventBootstrapServices.lunaShopService().takiAdventure(player, indun_id);
+			LunaShopService.getInstance().takiAdventure(player, indun_id);
 			break;
 		case 15:
-			GameEventBootstrapServices.lunaShopService().diceGame(player);
+			LunaShopService.getInstance().diceGame(player);
 			break;
 		case 16:
-			GameEventBootstrapServices.lunaShopService().diceGameReward(player);
+			LunaShopService.getInstance().diceGameReward(player);
 			break;
 		default:
 			log.warn(I18n.get("log.c40e1a78aad4", player.getObjectId(), actionId));

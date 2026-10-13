@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -52,7 +51,7 @@ public class CM_DUEL_REQUEST extends AionClientPacket {
 			return;
 		}
 		if (target instanceof Player targetPlayer && !target.equals(activePlayer)) {
-			DuelService duelService = GameGameplayServices.duelService();
+			DuelService duelService = DuelService.getInstance();
 
 			if (duelService.isDueling(activePlayer.getObjectId())) {
 				sendPacket(SM_SYSTEM_MESSAGE.STR_DUEL_YOU_ARE_IN_DUEL_ALREADY);

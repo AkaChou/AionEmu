@@ -6,7 +6,6 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.controllers.PlayerController;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.Gender;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -37,6 +36,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.e2e.client.ServerPacketObservation;
 import com.aionemu.gameserver.questEngine.e2e.client.VirtualClientState;
 import com.aionemu.gameserver.questEngine.e2e.client.QuestTrace;
@@ -597,20 +597,20 @@ public final class QuestE2eWorldFixture implements AutoCloseable {
 		public void onDialogRequest(Player player) {
 			if (actionItemUseExpected) {
 				actionItemUseExpected = false;
-				actionItemAllowed = GameEngineServices.questEngine().onCanAct(new QuestEnv(
+				actionItemAllowed = QuestEngine.getInstance().onCanAct(new QuestEnv(
 					getOwner(), player, 0, 0), getOwner().getNpcId(), QuestActionType.ACTION_ITEM_USE);
 			}
-			handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
+			handled = QuestEngine.getInstance().onDialog(new QuestEnv(
 					getOwner(), player, 0, QuestDialogAction.USE_OBJECT.id()));
 			if (!handled) {
-				handled = GameEngineServices.questEngine().onDialog(new QuestEnv(
+				handled = QuestEngine.getInstance().onDialog(new QuestEnv(
 					getOwner(), player, 0, QuestDialogAction.QUEST_SELECT.id()));
 			}
 		}
 
 		@Override
 		public void onDialogSelect(int dialogId, Player player, int questId, int extendedRewardIndex) {
-			handled = GameEngineServices.questEngine().onDialog(
+			handled = QuestEngine.getInstance().onDialog(
 				new QuestEnv(getOwner(), player, questId, dialogId));
 		}
 

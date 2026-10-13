@@ -21,6 +21,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import lombok.Getter;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 指令：从 skills.xml 解析并为玩家添加组合技能。
@@ -74,7 +75,7 @@ public final class CmdCombineSkill extends AbstractGMHandler {
 		if (commandArgs.length >= 3) {
 			String playerName = commandArgs[2];
 			player = null;
-			Collection<Player> allPlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
+			Collection<Player> allPlayers = World.getInstance().getAllPlayers();
 			for (Player p : allPlayers) {
 				if (p.getName().equalsIgnoreCase(playerName)) {
 					player = p;

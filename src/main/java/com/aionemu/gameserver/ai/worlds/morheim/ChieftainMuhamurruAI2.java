@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.worlds.morheim;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -13,6 +11,8 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Morheim 区域 NPC AI：Chieftain Muhamurru（@AIName "chieftain_muhamurru"），继承 AggressiveNpcAI2。
@@ -45,11 +45,11 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	 * Periodic hide task: casts the hide skill every 14 seconds and triggers three attack events in sequence.
 	 */
 	private void startHideTask() {
-		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		hideTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelPhaseTask();
 			} else {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
 				sendMsg(1500398);
 				startEvent(2000, 1500399, 19661);
 				startEvent(6000, 1500399, 19661);
@@ -59,7 +59,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 
 	private void startEvent(int time, final int msg, final int skill) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead() && !isHome.get()) {
 				Creature target = getOwner();
 				if (skill == 19661) {
@@ -68,7 +68,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 						target = (Creature) npcTarget;
 					}
 				} if (target != null && isInRange(target, 5)) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
 				}
 				getEffectController().removeEffect(19660);
 				sendMsg(msg);

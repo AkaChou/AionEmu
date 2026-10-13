@@ -2,7 +2,6 @@ package com.aionemu.gameserver.skillengine.effect;
 
 import com.aionemu.gameserver.services.KiskService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 召唤 Kisk（复活之石）效果：生成可绑定的 Kisk 供队伍/个人使用。
@@ -43,7 +43,7 @@ public class SummonKiskEffect extends SummonEffect {
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 		Integer objOwnerId = player.getObjectId();
-		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(() -> kisk.getController().onDelete(), time * 1000L);
+		Future<?> task = ThreadPoolManager.getInstance().schedule(() -> kisk.getController().onDelete(), time * 1000L);
 		kisk.getController().addTask(TaskId.DESPAWN, task);
 		player.getController().cancelTask(TaskId.ITEM_USE);
 		KiskService.getInstance().regKisk(kisk, objOwnerId);

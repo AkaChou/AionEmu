@@ -25,6 +25,7 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.lang.reflect.Field;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 装备强化管理命令（{@code //equip}）：镶嵌、附魔、回火、神石。
@@ -64,7 +65,7 @@ public class Equip extends AdminCommand {
 				return;
 			}
 			Player player;
-			player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[i]));
+			player = World.getInstance().findPlayer(Util.convertName(params[i]));
 			if (player == null) {
 				VisibleObject target = admin.getTarget();
 				if (target instanceof Player) {

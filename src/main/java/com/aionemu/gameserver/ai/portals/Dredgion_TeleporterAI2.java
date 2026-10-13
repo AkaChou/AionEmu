@@ -8,6 +8,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.services.instance.InstanceService;
 
@@ -85,7 +86,7 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
 
-		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
 
 		if (destinationMap.isInstanceType()) {
 

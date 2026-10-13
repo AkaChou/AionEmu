@@ -1,15 +1,16 @@
 package com.aionemu.gameserver.ai.event.conquestOffering;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.services.HTMLService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -44,10 +45,10 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 	}
 
     private void spawnSecretPortal() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spawn(833021, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Secret Portal.
 		}, 15000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			despawnNpc(833021); //Secret Portal.
 		}, 300000); //5 分钟。 / 5 Minutes.
     }
@@ -55,11 +56,11 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 
 
 	private void boostDefense() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
+		SkillEngine.getInstance().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
 	}
 
 	private void sendGuide() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				HTMLService.sendGuideHtml(player, "Conquest_Offering");
 			}

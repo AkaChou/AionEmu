@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.LinkedHashMap;
 
@@ -36,6 +35,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -241,7 +241,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		sendPacket(player, "UI_Gauge_01", 1);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		    instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -259,7 +259,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			spawnRace = player.getRace();
 			SpawnTrialsOfEternityRace();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -303,7 +303,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private void startTrialsOfEternityTimer() {
 		// 书本被摧毁。 / The book was destroyed.
 		this.sendMessage(1404208, 10 * 60 * 1000);
-		fakeBook2Task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		fakeBook2Task = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -438,7 +438,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	//============================//
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -452,7 +452,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sp(246724, 238.52361f, 1004.6866f, 707.12933f, (byte) 0, 1016, 6000, 0, null);
             }
         }, 60000)); //…1 分钟 / ...1Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -480,7 +480,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				});
             }
         }, 90000)); //...1-30Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -496,7 +496,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 180000)); //...3Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -512,7 +512,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 300000)); //...5Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -528,7 +528,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 420000)); //...7Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -544,7 +544,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 540000)); //...9Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -560,7 +560,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 660000)); //...11Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -576,7 +576,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 780000)); //...13Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -592,7 +592,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 900000)); //...15Min
-		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -727,7 +727,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 
 	private void rushTrialsOfEternity(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -748,7 +748,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 
 	private void startTrialsOfEternityA1() {
-		trialsOfEternityTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -767,7 +767,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA2() {
-		trialsOfEternityTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -786,7 +786,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA3() {
-		trialsOfEternityTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -809,7 +809,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA4() {
-		trialsOfEternityTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -828,7 +828,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA5() {
-		trialsOfEternityTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -849,7 +849,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA6() {
-		trialsOfEternityTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -870,7 +870,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA7() {
-		trialsOfEternityTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -893,7 +893,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA8() {
-		trialsOfEternityTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		trialsOfEternityTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -964,7 +964,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -982,7 +982,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -1016,7 +1016,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.
@@ -1029,7 +1029,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

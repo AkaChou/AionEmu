@@ -7,6 +7,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_BATTLEFIELD_UNION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BATTLEFIELD_UNION_REGISTER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
@@ -79,7 +80,7 @@ public class BattlefieldUnionService {
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeStart(final int fortressId) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+		World.getInstance().doOnAllPlayers(new Visitor<>() {
 			/**
 			 * visit 方法。
 			 * visit method.
@@ -98,7 +99,7 @@ public class BattlefieldUnionService {
 	 * @param fortressId 要塞 ID / fortress id
 	 */
 	public void onSiegeFinish(final int fortressId) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<>() {
+		World.getInstance().doOnAllPlayers(new Visitor<>() {
 			/**
 			 * visit 方法。
 			 * visit method.

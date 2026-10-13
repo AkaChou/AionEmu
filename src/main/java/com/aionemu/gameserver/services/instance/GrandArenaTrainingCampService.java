@@ -2,14 +2,12 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.Objects;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +20,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -43,13 +43,8 @@ public class GrandArenaTrainingCampService {
 	public GrandArenaTrainingCampService(@NonNull AutoGroupService autoGroupService) {
 		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
 	}
-	/**
-	 * -- SETTER --
-	 *  设置服务提供者。
-	 *  Sets the service provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<GrandArenaTrainingCampService> instanceProvider;
+	private static volatile GrandArenaTrainingCampService resolvedInstance;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
 	public static final byte minLevel = 66, capLevel = 76;
@@ -63,16 +58,16 @@ public class GrandArenaTrainingCampService {
 		if (AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_ENABLED) {
 			log.info(I18n.get("log.5e476c3f89e2"));
 			// IDTM_LobbyP01 SAT-SUN "6PM-0AM"
-            GameCronServices.cronService().schedule(this::startGrandArenaTrainingCampRegistration, AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING);
+            CronService.requireCurrent().schedule(this::startGrandArenaTrainingCampRegistration, AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_SCHEDULE_EVENING);
 		}
 	}
 
 	private void startUregisterGrandArenaTrainingCampTask() {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
 			 autoGroupService.unRegisterInstance(maskId);
-			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			 Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();
 				 if (player.getLevel() > minLevel) {
@@ -89,7 +84,7 @@ public class GrandArenaTrainingCampService {
 	private void startGrandArenaTrainingCampRegistration() {
 		this.registerAvailable = true;
 		startUregisterGrandArenaTrainingCampTask();
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {
@@ -172,14 +167,30 @@ public class GrandArenaTrainingCampService {
 	 *         when no provider or bean is available
 	 */
 	public static GrandArenaTrainingCampService getInstance() {
+		GrandArenaTrainingCampService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<GrandArenaTrainingCampService> provider = instanceProvider;
-		GrandArenaTrainingCampService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("GrandArenaTrainingCampService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<GrandArenaTrainingCampService> instanceProvider) {
+		GrandArenaTrainingCampService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

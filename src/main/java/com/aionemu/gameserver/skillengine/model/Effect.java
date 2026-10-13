@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.skillengine.model;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -41,6 +40,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 运行时效果实例：绑定施法者/目标，驱动效果初始化、应用、周期与结束。
@@ -936,7 +936,7 @@ public class Effect implements StatOwner {
 				duration = skillTemplate.getDuration();
 			}
 			endTime = System.currentTimeMillis() + duration;
-			task = GameThreadPoolServices.threadPoolManager().schedule(this::endEffect, duration);
+			task = ThreadPoolManager.getInstance().schedule(this::endEffect, duration);
 		} catch (RuntimeException | Error failure) {
 			try {
 				endEffect();
@@ -1148,7 +1148,7 @@ public class Effect implements StatOwner {
 			return;
 		}
 		int checktime = periodicActions.getChecktime();
-		periodicActionsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		periodicActionsTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			for (PeriodicAction action : periodicActions.getPeriodicActions()) {
 				action.act(Effect.this);
 			}

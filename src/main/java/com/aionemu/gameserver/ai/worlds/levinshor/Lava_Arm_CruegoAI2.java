@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.worlds.levinshor;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -17,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Levinshor 区域 NPC AI：Lava Arm Cruego（@AIName "lava_arm_cruego"），继承 AggressiveNpcAI2。
@@ -71,11 +71,11 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 						cancelspecialSkillTask();
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						GameEngineServices.skillEngine().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
+						SkillEngine.getInstance().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
 						sendMsg(1500501);
-						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						ThreadPoolManager.getInstance().schedule(() -> {
 							if (!isAlreadyDead()) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
 								startThinkTask();
 							}
 						}, 3500);
@@ -108,7 +108,7 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 
 	private void startThinkTask() {
-		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		thinkTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				think = true;
 				Creature creature = getAggroList().getMostHated();
@@ -132,9 +132,9 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 
 	private void startPhaseTask() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500500);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				cancelspecialSkillTask();
 				startSpecialSkillTask();
@@ -143,19 +143,19 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 
 	private void startSpecialSkillTask() {
-		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
-				specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
+				specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
-						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+						specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 							if (!isAlreadyDead()) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
 								if (curentPercent <= 63) {
-									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+									specialSkillTask = ThreadPoolManager.getInstance().schedule(() -> {
 										if (!isAlreadyDead()) {
-											GameEngineServices.skillEngine().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
+											SkillEngine.getInstance().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
 											sendMsg(1500502);
 										}
 									}, 21000);

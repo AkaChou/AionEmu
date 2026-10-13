@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -15,8 +13,10 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -54,7 +54,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
     }
 
     private void startSkillTask() {
-	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+	    trapTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead())
 			   cancelTask();
 			else {
@@ -72,8 +72,8 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
     private void startHallucinatoryVictoryEvent() {
 	    if (getPosition().getWorldMapInstance().getNpc(730695) == null) {
 		    AI2Actions.useSkill(this, 20911);
-		    GameEngineServices.skillEngine().applyEffectDirectly(20590, getOwner(), getOwner(), 0);
-		    GameEngineServices.skillEngine().applyEffectDirectly(20591, getOwner(), getOwner(), 0);
+		    SkillEngine.getInstance().applyEffectDirectly(20590, getOwner(), getOwner(), 0);
+		    SkillEngine.getInstance().applyEffectDirectly(20591, getOwner(), getOwner(), 0);
 		    spawn(730695, 482.21f, 458.06f, 427.42f, (byte) 98);
 		    spawn(730695, 482.21f, 571.16f, 427.42f, (byte) 22);
 		    rndSpawn(283132, 5);
@@ -83,7 +83,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
     private void blazeEngraving() {
 	    if (Rnd.get(0, 100) < 2 && getPosition().getWorldMapInstance().getNpc(283130) == null) {
 		    NpcShoutsService.getInstance().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20913, 60, getOwner().getTarget()).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(getOwner(), 20913, 60, getOwner().getTarget()).useNoAnimationSkill();
 		    Player target = getRandomTarget();
 		    if (target == null)
 		    return;

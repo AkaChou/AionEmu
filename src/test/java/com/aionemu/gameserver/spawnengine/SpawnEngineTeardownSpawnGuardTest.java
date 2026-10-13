@@ -15,7 +15,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.controllers.VisibleObjectController;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -44,7 +44,7 @@ class SpawnEngineTeardownSpawnGuardTest {
 	private static final int INSTANCE_ID = 2;
 	private static final ObjenesisStd OBJENESIS = new ObjenesisStd();
 
-	private GameWorldBootstrapServices worldServices;
+	private WorldBootstrapServiceBindings worldServices;
 
 	@AfterEach
 	void releaseWorldServices() {
@@ -79,7 +79,7 @@ class SpawnEngineTeardownSpawnGuardTest {
 	private TestWorld installWorld(WorldMap map) {
 		TestWorld world = OBJENESIS.newInstance(TestWorld.class);
 		world.map = map;
-		worldServices = new GameWorldBootstrapServices(
+		worldServices = new WorldBootstrapServiceBindings(
 			provider(IDFactory.class, OBJENESIS.newInstance(TestIdFactory.class)), null, null, null,
 			provider(World.class, world));
 		return world;

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.LegionService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,6 @@ import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.BaseService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,9 @@ import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.services.mail.SiegeResult;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.google.common.collect.Lists;
 /**
@@ -82,7 +84,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			case 1131: // Siel's Western Fortress.
 				BaseService.getInstance().capture(108, Race.NPC);
 				BaseService.getInstance().capture(109, Race.NPC);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 金沙谈判队正遭受龙族攻击。 / The Gold Sand Negotiation Team is under attack by the Balaur.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_War_Soon, 0);
 					// 龙族已控制希尔左翼的博米雄。 / The Balaur have taken control of the Bomishung at Siel's Left Wing.
@@ -104,7 +106,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1132: // Siel's Eastern Fortress.
 				BaseService.getInstance().capture(110, Race.NPC);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 龙族已控制希尔右翼的萨斯明。 / The Balaur have taken control of the Sasming at Siel's Right Wing.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuDr_06,
 							30000);
@@ -120,7 +122,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				BaseService.getInstance().capture(105, Race.NPC);
 				BaseService.getInstance().capture(106, Race.NPC);
 				BaseService.getInstance().capture(107, Race.NPC);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 龙族已控制硫磺树群岛的奥哈隆。 / The Balaur have taken control of the Oharung at the Sulfur Tree Archipelago.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_ShugoShip_OccuDr_01,
 							42000);
@@ -144,7 +146,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			}
 		} else if (getSiegeLocation().getLocationId() == 10111) {
  			if (getSiegeLocation().getLocationId() == 10111) {
- 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+ 				World.getInstance().doOnAllPlayers(player -> {
  									// 神殿大门将在 5 分钟后打开。 / The Temple Gate will open in 5 minutes.
  									PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_Gab1_START01, 0);
  									// 神殿大门将在 1 分钟后打开。 / The Temple Gate will open in 1 minute.
@@ -190,7 +192,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
 			if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-				GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
+				QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
 			}
 			// 暴怒守护者 5.3 / Enraged Guardian 5.3
 			switch (getSiegeLocationId()) {
@@ -252,7 +254,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						BaseService.getInstance().capture(108, Race.ASMODIANS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
 						BaseService.getInstance().capture(109, Race.ASMODIANS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player6 -> {
+						World.getInstance().doOnAllPlayers(player6 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 							// 西部要塞。 / Western Fortress.
 							PacketSendUtility.playerSendPacketTime(player6,
@@ -264,7 +266,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						BaseService.getInstance().capture(108, Race.ELYOS);
 						// 在希尔左翼的博米雄。 / Bomishung At Siel's Left Wing.
 						BaseService.getInstance().capture(109, Race.ELYOS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player5 -> {
+						World.getInstance().doOnAllPlayers(player5 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
 							// 西部要塞。 / Western Fortress.
 							PacketSendUtility.playerSendPacketTime(player5,
@@ -277,7 +279,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
 						BaseService.getInstance().capture(110, Race.ASMODIANS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player4 -> {
+						World.getInstance().doOnAllPlayers(player4 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
 							// 东部要塞。 / Eastern Fortress.
 							PacketSendUtility.playerSendPacketTime(player4,
@@ -287,7 +289,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// 在希尔右翼的萨斯明。 / Sasming At Siel's Right Wing.
 						BaseService.getInstance().capture(110, Race.ELYOS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player3 -> {
+						World.getInstance().doOnAllPlayers(player3 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
 							// 东部要塞。 / Eastern Fortress.
 							PacketSendUtility.playerSendPacketTime(player3,
@@ -304,7 +306,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						BaseService.getInstance().capture(106, Race.ASMODIANS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
 						BaseService.getInstance().capture(107, Race.ASMODIANS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player2 -> {
+						World.getInstance().doOnAllPlayers(player2 -> {
 							// 魔族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
 							// 要塞。 / Fortress.
 							PacketSendUtility.playerSendPacketTime(player2,
@@ -318,7 +320,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						BaseService.getInstance().capture(106, Race.ELYOS);
 						// 在雷博岛的特米伦。 / Temirun At Leibo Island.
 						BaseService.getInstance().capture(107, Race.ELYOS);
-						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+						World.getInstance().doOnAllPlayers(player1 -> {
 							// 天族雇佣的钢玫瑰佣兵已抵达希尔的 / The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
 							// 要塞。 / Fortress.
 							PacketSendUtility.playerSendPacketTime(player1,
@@ -467,12 +469,12 @@ public class FortressSiege extends Siege<FortressLocation> {
 			getSiegeLocation().setLegionId(topLegionId != null ? topLegionId : 0);
 			getArtifact().setLegionId(topLegionId != null ? topLegionId : 0);
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 双种族增益。 / Buff for Both Race.
 			if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffId())) {
 				player.getEffectController().removeEffect(getSiegeLocation().getBuffId());
 			} else {
-				GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
 			}
 			// 魔族或天族增益。 / Buff for Asmodians or Elyos.
 			if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffIdA())) {
@@ -482,10 +484,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 				player.getEffectController().removeEffect(getSiegeLocation().getBuffIdE());
 			}
 			if (player.getCommonData().getRace() == Race.ASMODIANS) {
-				GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
 			}
 			if (player.getCommonData().getRace() == Race.ELYOS) {
-				GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
 			}
 		});
 	}

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -26,6 +25,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
@@ -109,7 +109,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		if (sealSceneRaceQ == null) {
             sealSceneRaceQ = player.getRace();
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/**
 				 * 处理 run。
 				 * Handle run.
@@ -214,7 +214,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -230,7 +230,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 0);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -252,7 +252,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -268,7 +268,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 0);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -328,7 +328,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
-							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    ThreadPoolManager.getInstance().schedule(new Runnable() {
 									/**
 									 * 处理 run。
 									 * Handle run.
@@ -375,7 +375,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									// 让我炸开一条路…… / Just let me blast us a path...
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
-								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+								ThreadPoolManager.getInstance().schedule(new Runnable() {
 									/**
 									 * 处理 run。
 									 * Handle run.
@@ -405,7 +405,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 					if (sealSceneRaceQ != null || player != null) {
 				        switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					        case ELYOS:
-							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    ThreadPoolManager.getInstance().schedule(new Runnable() {
 							        /**
 							         * 处理 run。
 							         * Handle run.
@@ -424,7 +424,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    }, 0);
 						    break;
 						    case ASMODIANS:
-							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							    ThreadPoolManager.getInstance().schedule(new Runnable() {
 							        /**
 							         * 处理 run。
 							         * Handle run.
@@ -460,7 +460,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
 						    sendMovie(player, 920);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -471,7 +471,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209707, 818.40704f, 552.7704f, 1701.044f, (byte) 36);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -492,7 +492,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -508,7 +508,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -531,7 +531,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 						    sendMovie(player, 917);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -542,7 +542,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209772, 818.40704f, 552.7704f, 1701.044f, (byte) 36);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -563,7 +563,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(bomber, 1501310, bomber.getObjectId(), 0, 12000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -579,7 +579,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -607,7 +607,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -618,7 +618,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209722, 639.45526f, 847.40265f, 1599.9614f, (byte) 90);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -631,7 +631,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209731, 629.2198f, 891.1963f, 1600.5817f, (byte) 92);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -641,7 +641,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    spawnIDSeal4ThStageElyos();
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -657,7 +657,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402706, Race.ELYOS, 10000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -671,7 +671,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1403006, Race.ELYOS, 5000);
 								}
 							}, 25000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -684,7 +684,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402710, Race.ELYOS, 0);
 								}
 							}, 30000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -696,7 +696,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402707, Race.ELYOS, 0);
 								}
 							}, 65000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -706,7 +706,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -721,7 +721,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 87000);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -732,7 +732,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209787, 639.45526f, 847.40265f, 1599.9614f, (byte) 90);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -745,7 +745,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209796, 629.2198f, 891.1963f, 1600.5817f, (byte) 92);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -755,7 +755,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    spawnIDSeal4ThStageAsmodians();
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -771,7 +771,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402706, Race.ASMODIANS, 10000);
 								}
 							}, 0);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -785,7 +785,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1403006, Race.ASMODIANS, 5000);
 								}
 							}, 25000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -798,7 +798,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402710, Race.ASMODIANS, 0);
 								}
 							}, 30000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -810,7 +810,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402707, Race.ASMODIANS, 0);
 								}
 							}, 65000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -820,7 +820,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -842,7 +842,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -859,7 +859,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -883,7 +883,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -901,7 +901,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -926,7 +926,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (sealSceneRaceQ != null || player != null) {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 					    case ELYOS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -941,7 +941,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 							    /**
 							     * 处理 run。
 							     * Handle run.
@@ -969,7 +969,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
 							// 你成功保护了分遣队。他们将在对抗贝里特拉时协助你。 / You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -985,7 +985,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 15000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -1017,7 +1017,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
 							// 你成功保护了分遣队。他们将在对抗贝里特拉时协助你。 / You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -1033,7 +1033,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 15000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -1095,7 +1095,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				    switch (sealSceneRaceQ != null ? sealSceneRaceQ : player.getRace()) {
 				        case ELYOS:
 						    sendMovie(player, 919);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -1133,7 +1133,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 						    sendMovie(player, 922);
-						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						    ThreadPoolManager.getInstance().schedule(new Runnable() {
 								/**
 								 * 处理 run。
 								 * Handle run.
@@ -1197,7 +1197,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-					drakenspireQTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					drakenspireQTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -1301,7 +1301,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		final float y = immortal.getY();
 		final float z = immortal.getZ();
 		final byte heading = immortal.getHeading();
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1386,7 +1386,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		if (npc == null) {
 			return;
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1498,7 +1498,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1526,7 +1526,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+            ThreadPoolManager.getInstance().schedule(new Runnable() {
                 /**
                  * 处理 run。
                  * Handle run.

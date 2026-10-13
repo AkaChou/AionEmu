@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.commands.player;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
 
@@ -29,7 +29,7 @@ public class cmd_mcheck extends PlayerCommand {
 	 */
 	@Override
 	public void execute(Player player, String... params) {
-		GameEngineServices.questEngine().recheckLockedQuestStates(player);
+		QuestEngine.getInstance().recheckLockedQuestStates(player);
 		PacketSendUtility.sendMessage(player, "Missions checked successfully");
 	}
 

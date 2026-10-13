@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 临时交易窗口倒计时任务：管理可临时交易物品的剩余时间与提示。
@@ -21,15 +21,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-     * -- SETTER --
-     *  注入 Spring 实例提供者。
-     *  Inject the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
+	private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
+	private static volatile TemporaryTradeTimeTask resolvedInstance;
 
 	/**
 	 * 物品到可交易玩家 Id 集合的映射。
@@ -62,14 +55,30 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	 *         when no provider or bean is available
 	 */
 	public static TemporaryTradeTimeTask getInstance() {
+		TemporaryTradeTimeTask resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<TemporaryTradeTimeTask> provider = instanceProvider;
-		TemporaryTradeTimeTask provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("TemporaryTradeTimeTask 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<TemporaryTradeTimeTask> instanceProvider) {
+		TemporaryTradeTimeTask.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**
@@ -145,7 +154,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 				int time = (item.getTemporaryExchangeTime() - (int) (System.currentTimeMillis() / 1000));
 				if (time == 60) {
 					for (int playerId : entry.getValue()) {
-						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+						Player player = World.getInstance().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_END_OF_EXCHANGE_TIME(item.getNameId(), time));
@@ -153,7 +162,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 					}
 				} else if (time <= 0) {
 					for (int playerId : entry.getValue()) {
-						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+						Player player = World.getInstance().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_EXCHANGE_TIME_OVER(item.getNameId()));

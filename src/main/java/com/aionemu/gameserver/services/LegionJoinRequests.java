@@ -18,6 +18,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_REQUEST_PLAYE
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_SEARCH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 军团入团申请流域：搜索、招募设置、申请提交/取消/批复与仓库历史记录。
@@ -253,7 +254,7 @@ final class LegionJoinRequests {
 		if (legion == null) {
 			return;
 		}
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+		Player player = World.getInstance().findPlayer(playerId);
 		if (player == null) {
 			playerOnline = false;
 			service.playerDAO().updateLegionJoinRequestState(playerId, state);

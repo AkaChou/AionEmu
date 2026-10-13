@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -30,6 +29,8 @@ import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
 import com.aionemu.gameserver.services.dynamicriftservice.Portal;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 动态裂隙服务：按 cron 开启龙/因德拉图/术古商队等动态裂隙，管理刷怪与生命周期。
@@ -55,23 +56,23 @@ public class DynamicRiftService {
 				spawn(loc, DynamicRiftStateType.CLOSED);
 			}
 			log.info(I18n.get("log.69fd598b3b65", dynamicRift.size()));
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				startDynamicRift(1);
 				startDynamicRift(3);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDDF3_Dragon));
 			}, () -> CustomConfig.DYNAMIC_RIFT_DRAGON_SCHEDULE);
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				startDynamicRift(2);
 				startDynamicRift(4);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_PORTAL_OPEN_IDLF3_Castle_Indratoo));
 			}, () -> CustomConfig.DYNAMIC_RIFT_INDRATOO_SCHEDULE);
 			// 术古商人联盟 / Shugo Merchant League
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				startDynamicRift(5);
 				startDynamicRift(6);
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 术古商人联盟已到达。 / The Shugo Merchant League has arrived.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_ShugoCaravanAppear);
 				});
@@ -104,7 +105,7 @@ public class DynamicRiftService {
 			return;
 		}
 		portal.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopDynamicRift(id), (long) CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopDynamicRift(id), (long) CustomConfig.DYNAMIC_RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

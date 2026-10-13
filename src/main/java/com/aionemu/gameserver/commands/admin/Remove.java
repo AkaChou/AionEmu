@@ -6,6 +6,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 物品移除指令；从在线玩家背包中按物品 ID 删除指定数量。
@@ -32,7 +33,7 @@ public class Remove extends AdminCommand {
 
 		int itemId = 0;
 		long itemCount = 1;
-		Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player target = World.getInstance().findPlayer(Util.convertName(params[0]));
 		if (target == null) {
 			PacketSendUtility.sendMessage(admin, "Player isn't online.");
 			return;

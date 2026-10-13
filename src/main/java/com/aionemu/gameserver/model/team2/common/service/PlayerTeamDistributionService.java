@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +163,7 @@ public class PlayerTeamDistributionService {
 				if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
 					for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 						if (member.getWorldId() == Integer.parseInt(worldIds)) {
-							GameRuntimeServices.inGameShopEn().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
+							InGameShopEn.getInstance().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
 							PacketSendUtility.sendMessage(member, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 						}
 					}
@@ -197,7 +197,7 @@ public class PlayerTeamDistributionService {
 		public boolean apply(Player member) {
 			if (member.isOnline()) {
 				if (MathUtil.isIn3dRange(member, owner, GroupConfig.GROUP_MAX_DISTANCE)) {
-					GameEngineServices.questEngine().onKill(new QuestEnv(owner, member, 0, 0));
+					QuestEngine.getInstance().onKill(new QuestEnv(owner, member, 0, 0));
 					if (member.isMentor()) {
 						mentorCount++;
 						return true;

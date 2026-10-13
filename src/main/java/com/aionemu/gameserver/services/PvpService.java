@@ -4,9 +4,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,9 +24,11 @@ import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.RewardType;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
@@ -135,7 +135,7 @@ public class PvpService {
 			// PvP 通行奖励 / PvP Toll Reward
 			if (PvPConfig.ENABLE_TOLL_REWARD) {
 				if (Rnd.get(0, 100) > PvPConfig.TOLL_CHANCE) {
-					GameRuntimeServices.inGameShopEn().addToll(winner, PvPConfig.TOLL_QUANTITY);
+					InGameShopEn.getInstance().addToll(winner, PvPConfig.TOLL_QUANTITY);
 					PacketSendUtility.sendMessage(winner,
 							"You've received " + PvPConfig.TOLL_QUANTITY + " tolls from PvP!");
 				}
@@ -211,7 +211,7 @@ public class PvpService {
 				if ((PvPConfig.ENABLE_TOLL_REWARD)
 						&& (Rnd.get() * 100.0F < PvPRewardService.getTollRewardChance(winner, victim))) {
 					int qt = PvPRewardService.getTollQuantity(winner, victim);
-					GameRuntimeServices.inGameShopEn().addToll(winner, qt);
+					InGameShopEn.getInstance().addToll(winner, qt);
 					if (qt == 1)
 						PacketSendUtility.sendBrightYellowMessage(winner, "You obtained " + qt + " point toll.");
 					else {
@@ -509,9 +509,9 @@ public class PvpService {
 				continue;
 			}
 			// 通知击杀任务 / notify Kill-Quests
-			GameEngineServices.questEngine().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId,
+			QuestEngine.getInstance().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId,
 				winner, creditSource);
-			GameEngineServices.questEngine().onKillRanked(new QuestEnv(victim, p, 0, 0),
+			QuestEngine.getInstance().onKillRanked(new QuestEnv(victim, p, 0, 0),
 				victim.getAbyssRank().getRank(), winner, creditSource);
 		}
 		rewarded.clear();

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AttackIntention;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 
 /**
@@ -7349,76 +7349,76 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 	}
 
 	private void typeA() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22987, 1, getOwner()).useNoAnimationSkill(); //Warrior Type.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22987, 1, getOwner()).useNoAnimationSkill(); //Warrior Type.
 	}
 	private void typeB() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22988, 1, getOwner()).useNoAnimationSkill(); //Assassin Type.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22988, 1, getOwner()).useNoAnimationSkill(); //Assassin Type.
 	}
 	private void typeC() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22989, 1, getOwner()).useNoAnimationSkill(); //Mage Type.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22989, 1, getOwner()).useNoAnimationSkill(); //Mage Type.
 	}
 	private void typeD() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22990, 1, getOwner()).useNoAnimationSkill(); //Special Type.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22990, 1, getOwner()).useNoAnimationSkill(); //Special Type.
 	}
 	private void iceClawBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
+	    SkillEngine.getInstance().getSkill(getOwner(), 16979, 1, getOwner()).useNoAnimationSkill(); //Ice Claw Blessing.
 	}
 	private void mistShadeBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
+	    SkillEngine.getInstance().getSkill(getOwner(), 16980, 1, getOwner()).useNoAnimationSkill(); //Mist Shade Blessing.
 	}
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+	    SkillEngine.getInstance().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void survivalInstinct() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
+	    SkillEngine.getInstance().getSkill(getOwner(), 20656, 1, getOwner()).useNoAnimationSkill(); // 生存本能 I / Survival Instinct.
 	}
 	private void conquerorPassion() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
+		SkillEngine.getInstance().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
 	private void midnightRobe() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
+		SkillEngine.getInstance().getSkill(getOwner(), 20700, 1, getOwner()).useNoAnimationSkill(); //Midnight Robe.
 	}
 	private void firmBelief() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20962, 1, getOwner()).useNoAnimationSkill(); //Firm Belief.
+		SkillEngine.getInstance().getSkill(getOwner(), 20962, 1, getOwner()).useNoAnimationSkill(); //Firm Belief.
 	}
 	private void beritraFavor() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 	}
 	private void malevolence() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21181, 1, getOwner()).useNoAnimationSkill(); //Malevolence.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21181, 1, getOwner()).useNoAnimationSkill(); //Malevolence.
 	}
 	private void exultation() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21236, 1, getOwner()).useNoAnimationSkill(); // 治愈演奏 I / Exultation.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21236, 1, getOwner()).useNoAnimationSkill(); // 治愈演奏 I / Exultation.
 	}
 	private void orderPerfectObeisance() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 21844, 1, getOwner()).useNoAnimationSkill(); //Order Perfect Obeisance.
+	    SkillEngine.getInstance().getSkill(getOwner(), 21844, 1, getOwner()).useNoAnimationSkill(); //Order Perfect Obeisance.
 	}
 	private void darkLordBlessing() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); //Dark Lord's Blessing.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); //Dark Lord's Blessing.
 	}
 	private void ereshkigalRage() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22682, 1, getOwner()).useNoAnimationSkill(); //Ereshkigal Rage.
 	}
 	private void elementalLordship() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 	private void brokenMorale() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
+		SkillEngine.getInstance().getSkill(getOwner(), 22791, 1, getOwner()).useNoAnimationSkill(); //Broken Morale.
 	}
 	private void knowledgeOfFlame() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22943, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Flame.
+		SkillEngine.getInstance().getSkill(getOwner(), 22943, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Flame.
 	}
 	private void knowledgeOfEarth() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22944, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Earth.
+		SkillEngine.getInstance().getSkill(getOwner(), 22944, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Earth.
 	}
 	private void knowledgeOfWater() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22945, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Water.
+		SkillEngine.getInstance().getSkill(getOwner(), 22945, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Water.
 	}
 	private void knowledgeOfAir() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 22969, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Air.
+		SkillEngine.getInstance().getSkill(getOwner(), 22969, 1, getOwner()).useNoAnimationSkill(); //Knowledge Of Air.
 	}
 	private void IDEternity03Guard() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 17753, 1, getOwner()).useNoAnimationSkill(); //IDEternity_03_Guard_Buff.
+		SkillEngine.getInstance().getSkill(getOwner(), 17753, 1, getOwner()).useNoAnimationSkill(); //IDEternity_03_Guard_Buff.
 	}
 
 	@Override

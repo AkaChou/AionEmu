@@ -2,28 +2,35 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.BrokerService;
+import com.aionemu.gameserver.services.EventService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.LegionService;
+import com.aionemu.gameserver.services.PetitionService;
+import com.aionemu.gameserver.services.SurveyService;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.BoostEventService;
+import com.aionemu.gameserver.services.events.EventWindowService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.services.VortexService;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 
 import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.territory.TerritoryService;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.events.FFAService;
@@ -34,9 +41,7 @@ import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.F2pService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -134,11 +139,17 @@ import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.gmservice.GmSpecialSkills;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 玩家进入世界服务：登录校验、进图初始化与周期任务调度。
@@ -261,13 +272,13 @@ public final class PlayerEnterWorldService {
 			return;
 		}
 		int delay = 0;
-		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId) != null) {
+		if (World.getInstance().findPlayer(objectId) != null) {
 			delay = 15000;
 			log.warn(I18n.get("log.7b9179898aab", objectId));
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			try {
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
+				Player player = World.getInstance().findPlayer(objectId);
 				if (player != null) {
 					AuditLogger.info(player, "Duplicate player in world");
 					client.close(new SM_QUIT_RESPONSE(), false);
@@ -298,7 +309,7 @@ public final class PlayerEnterWorldService {
 		if (player != null && client.setActivePlayer(player)) {
 			player.setClientConnection(client);
 			log.info(I18n.get("log.4110bd1bb049", player.getName(), account.getName(), client.getMacAddress()));
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().storeObject(player);
+			World.getInstance().storeObject(player);
 			player.getController().validateLoginZone();
 			StigmaService.onPlayerLogin(player);
 			if (playerAccData.getPlayerCommonData().getLastOnline() != null) {
@@ -402,7 +413,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_QUEST_LIST(questList));
 			// 重新评估旧版 LOCKED 占位任务；成功后通过 SM_QUEST_ACTION 正式加入客户端列表。
 			// Re-evaluate legacy LOCKED placeholders; successful starts are added to the client list by SM_QUEST_ACTION.
-			GameEngineServices.questEngine().recheckLockedQuestStates(player);
+			QuestEngine.getInstance().recheckLockedQuestStates(player);
 
 			// SM_SKILL_ANIMATION
 			client.sendPacket(new SM_SKILL_ANIMATION(player));
@@ -424,7 +435,7 @@ public final class PlayerEnterWorldService {
 			if (houseBuddies != null) {
 				client.sendPacket(new SM_UI_SETTINGS(houseBuddies, 2));
 			}
-			GameCreativityServices.creativityEssenceService().onLogin(player);
+			CreativityEssenceService.getInstance().onLogin(player);
 			VipService.applyBenefits(player);
 			sendItemInfos(client, player);
 			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
@@ -442,7 +453,7 @@ public final class PlayerEnterWorldService {
 			KiskService.getInstance().onLogin(player);
 
 			// SM_TERRITORY_LIST
-			GameRuntimeServices.territoryService().onEnterWorld(player);
+			TerritoryService.getInstance().onEnterWorld(player);
 
 			// SM_YOUTUBE_VIDEO
 			client.sendPacket(new SM_YOUTUBE_VIDEO());
@@ -452,7 +463,7 @@ public final class PlayerEnterWorldService {
 			}
 			TeleportService2.onLogOutOppositeMap(player);
 			TeleportService2.sendSetBindPoint(player);
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
+			World.getInstance().preSpawn(player);
 			VortexService.getInstance().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
@@ -472,7 +483,7 @@ public final class PlayerEnterWorldService {
 			SiegeService.getInstance().onPlayerLogin(player);
 
 			// SM_ATREIAN_PASSPORT
-			GameEventBootstrapServices.atreianPassportService().onLogin(player);
+			AtreianPassportService.getInstance().onLogin(player);
 
 			AbyssPointsService.AbyssRankCheck(player);
 			client.sendPacket(new SM_PRICES());
@@ -481,7 +492,7 @@ public final class PlayerEnterWorldService {
 			DisputeLandService.getInstance().onLogin(player);
 
 			// 活动窗口 / Event Window
-			GameEventBootstrapServices.eventWindowService().onLogin(player);
+			EventWindowService.getInstance().onLogin(player);
 
 			// 欧比斯军阶 / Abyss Rank
 			client.sendPacket(new SM_ABYSS_RANK(player.getAbyssRank()));
@@ -551,33 +562,33 @@ public final class PlayerEnterWorldService {
 				serviceBuff = new ServiceBuff(2);
 				serviceBuff.applyEffect(player, 2);
 				// 全垒打能量。 / Homerun Energy.
-				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
 				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
-				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
-				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
 			}
 			// 服务安全增益。 / Service Security Buff.
 			if (player.getMembership() >= 1) {
 				serviceBuff = new ServiceBuff(220599);
 				serviceBuff.applyEffect(player, 220599);
 				// 全垒打能量。 / Homerun Energy.
-				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
 				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
-				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
-				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
 			}
 			// 服务安全增益。 / Service Security Buff.
 			if (player.getMembership() >= 2) {
 				serviceBuff = new ServiceBuff(230599);
 				serviceBuff.applyEffect(player, 230599);
 				// 全垒打能量。 / Homerun Energy.
-				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
 				// [活动] 烙印之石保存。 / [Event] Stigma Preservation.
-				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
 				// [活动] 饰品升阶 / [Event] Accessory Ascension
-				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
+				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
 			}
 			// 网吧登录福利。 / PC Cafe Login Benefits.
 			if (player.getClientConnection().getAccount().getMembership() == 2 && player.getLevel() >= 66 && player.getLevel() <= 83) {
@@ -612,7 +623,7 @@ public final class PlayerEnterWorldService {
 			} else if (player.getRace() == Race.ASMODIANS) {
 				abyssDarkLogon(player);
 			}
-			GameRuntimeServices.boostEventService().sendPacket(player);
+			BoostEventService.getInstance().sendPacket(player);
 
 			if (CustomConfig.LOGIN_SERVER_INFO) {
 				LoginServerInfo(player); // Show LoginServerinfo + Chat
@@ -642,24 +653,24 @@ public final class PlayerEnterWorldService {
 			// SM_PET
 			PetService.getInstance().onPlayerLogin(player);
 			// SM_Minions
-			GameEventBootstrapServices.minionService().onPlayerLogin(player);
+			MinionService.getInstance().onPlayerLogin(player);
 			WindyGorgeService.getInstance().onLogin(player);
 			MailService.getInstance().onPlayerLogin(player);
-			GameHousingServices.housingService().onPlayerLogin(player);
-			GameRuntimeServices.brokerService().onPlayerLogin(player);
+			HousingService.getInstance().onPlayerLogin(player);
+			BrokerService.getInstance().onPlayerLogin(player);
 			sendMacroList(client, player);
 			client.sendPacket(new SM_FRIEND_STATUS((byte) 1));
 			client.sendPacket(new SM_RECIPE_LIST(player.getRecipeList().getRecipeList()));
-			GameRuntimeServices.petitionService().onPlayerLogin(player);
+			PetitionService.getInstance().onPlayerLogin(player);
 			if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 				AutoGroupService.getInstance().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
-			GameRuntimeServices.gmService().onPlayerLogin(player);
+			GMService.getInstance().onPlayerLogin(player);
 			player.getLifeStats().updateCurrentStats();
 			player.getEquipment().checkRankLimitItems();
 			if (HTMLConfig.ENABLE_HTML_WELCOME) {
-				HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("welcome.xhtml"));
+				HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("welcome.xhtml"));
 			}
 			player.getNpcFactions().sendDailyQuest();
 			if (HTMLConfig.ENABLE_GUIDES) {
@@ -673,55 +684,55 @@ public final class PlayerEnterWorldService {
 				if (storage != null) {
 					for (Item item : storage.getItemsWithKinah()) {
 						if (item.getExpireTime() > 0) {
-							GameTaskManagerServices.expireTimerTask().addTask(item, player);
+							ExpireTimerTask.getInstance().addTask(item, player);
 						}
 					}
 				}
 			}
 			for (Item item : player.getEquipment().getEquippedItems()) {
 				if (item.getExpireTime() > 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(item, player);
+					ExpireTimerTask.getInstance().addTask(item, player);
 				}
 			}
 			for (Motion motion : player.getMotions().getMotions().values()) {
 				if (motion.getExpireTime() != 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(motion, player);
+					ExpireTimerTask.getInstance().addTask(motion, player);
 				}
 			}
 			for (Emotion emotion : player.getEmotions().getEmotions()) {
 				if (emotion.getExpireTime() != 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(emotion, player);
+					ExpireTimerTask.getInstance().addTask(emotion, player);
 				}
 			}
 			for (Title title : player.getTitleList().getTitles()) {
 				if (title.getExpireTime() != 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(title, player);
+					ExpireTimerTask.getInstance().addTask(title, player);
 				}
 			}
 			for (SkillSkin skillSkin : player.getSkillSkinList().getSkillSkins()) {
 				if (skillSkin.getExpireTime() != 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, player);
+					ExpireTimerTask.getInstance().addTask(skillSkin, player);
 				}
 			}
 			if (player.getHouseRegistry() != null) {
 				for (HouseObject<?> obj : player.getHouseRegistry().getObjects()) {
 					if (obj.getPersistentState() != PersistentState.DELETED) {
 						if (obj.getObjectTemplate().getUseDays() > 0) {
-							GameTaskManagerServices.expireTimerTask().addTask(obj, player);
+							ExpireTimerTask.getInstance().addTask(obj, player);
 						}
 					}
 				}
 			}
 			reschedulePeriodicSaveTasks(player);
-			GameRuntimeServices.surveyService().showAvailable(player);
+			SurveyService.getInstance().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
-				GameEventServices.eventService().onPlayerLogin(player);
+				EventService.getInstance().onPlayerLogin(player);
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
-			GameRuntimeServices.playerTransferService().onEnterWorld(player);
+			PlayerTransferService.getInstance().onEnterWorld(player);
 			EnchantService.GloryShieldSkill(player);
-			GameEventBootstrapServices.shugoSweepService().onLogin(player);
-			GameEventBootstrapServices.lunaShopService().onLogin(player);
+			ShugoSweepService.getInstance().onLogin(player);
+			LunaShopService.getInstance().onLogin(player);
 			if (FFAService.getInstance().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
@@ -753,7 +764,7 @@ public final class PlayerEnterWorldService {
 	 */
 	public static void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+			World.getInstance().doOnAllPlayers(players -> {
 				// 天族总督“玩家名”恩泽阿特雷亚。 / Elyos Governor "Player Name" has graced Atreia.
 				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403134, player.getName()));
 			});
@@ -768,7 +779,7 @@ public final class PlayerEnterWorldService {
 	 */
 	public static void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(players -> {
+			World.getInstance().doOnAllPlayers(players -> {
 				// 魔族总督“玩家名”恩泽阿特雷亚。 / Asmodian Governor "Player Name" has graced Atreia.
 				PacketSendUtility.sendPacket(players, new SM_SYSTEM_MESSAGE(1403135, player.getName()));
 			});

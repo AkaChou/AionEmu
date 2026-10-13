@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -16,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FORCED_MOVE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -24,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * Infernal Danuar Reliquary 副本 NPC AI：Vengeful Modor（@AIName "vengeful_modor"），继承 AggressiveNpcAI2。
@@ -49,7 +50,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 		if (creature instanceof Player player) {
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
-					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
 					// 很久没有人试图窃取我的研究成果了…… / It's been quite a while since someone tried to steal the fruits of my research...
 					// 或许有趣。我给你 15 分钟。去吧！ / Could be interesting. I'll give you 15 minutes. Go!
 					sendMsg(1500737, getObjectId(), false, 3000);
@@ -116,7 +117,7 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
     }
 
 	private void startSkillTask() {
-		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			} else {
@@ -135,11 +136,11 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
         switch (Rnd.get(1, 2)) {
             case 1:
                 AI2Actions.targetSelf(Vengeful_ModorAI2.this);
-                GameEngineServices.skillEngine().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
+                SkillEngine.getInstance().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
             break;
             case 2:
                 AI2Actions.targetSelf(Vengeful_ModorAI2.this);
-                GameEngineServices.skillEngine().getSkill(getOwner(), 21229, 60, getOwner()).useNoAnimationSkill();
+                SkillEngine.getInstance().getSkill(getOwner(), 21229, 60, getOwner()).useNoAnimationSkill();
             break;
         }
     }
@@ -148,13 +149,13 @@ public class Vengeful_ModorAI2 extends AggressiveNpcAI2
 		if (!isAlreadyDead()) {
 			// 起来，我的孩子们，起来！ / Rise, my children, rise!
 			sendMsg(1500749, getObjectId(), false, 2000);
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		    GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		    ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); // 莫多尔的保镖 / Modor's Bodyguard.
 spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Vengeful Reaper.
 					spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); // 霜白阿克伦龙兽 / Hoarfrost Acheron Drake.
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
+					World.getInstance().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
 					PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 				}
 			}, 2000);
@@ -163,8 +164,8 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Ven
 
     private void Teleport2() {
         AI2Actions.targetSelf(Vengeful_ModorAI2.this);
-        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        ThreadPoolManager.getInstance().schedule(() -> {
 			float[][] pos1 = {
 				{
 					232.426f, 263.818f, 248.6419f, 115
@@ -175,14 +176,14 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Ven
 				}
 			};
 			float[] pos = pos1[Rnd.get(0, 2)];
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
     }
 
 	private void Teleport3() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        ThreadPoolManager.getInstance().schedule(() -> {
 			float[][] pos1 = {
 				{
 					245.426f, 261.818f, 242.1f, 114
@@ -197,16 +198,16 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Ven
 				}
 			};
 			float[] pos = pos1[Rnd.get(0, 4)];
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+			World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
 
 	private void Teleport4() {
 		AI2Actions.targetSelf(Vengeful_ModorAI2.this);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
+			World.getInstance().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
 			PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		}, 2000);
 	}
@@ -217,9 +218,9 @@ spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); // 复仇死神 / Ven
 		sendMsg(1500743, getObjectId(), false, 0);
 		// 看看你如何应对这个！ / Let's see how you handle this!
 		sendMsg(1500744, getObjectId(), false, 2000);
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         EmoteManager.emoteStopAttacking(getOwner());
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			despawnNpcs(234690); // 复仇的莫多尔 / Vengeful Modor.
 			spawn(855244, 255.12497f, 293.17401f, 257.625f, (byte) 22);
 			spawn(855244, 284.12497f, 262.17401f, 249.625f, (byte) 0);

@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -68,7 +68,7 @@ public class BanMac extends AdminCommand {
                     return;
                 }
             }
-		GameServerNetworkServices.bannedMacManager().banAddress(address, System.currentTimeMillis() + (long) time * 60 * 1000, "author=" + player.getName() + ", " + player.getObjectId() + "; target=" + targetName);
+		BannedMacManager.getInstance().banAddress(address, System.currentTimeMillis() + (long) time * 60 * 1000, "author=" + player.getName() + ", " + player.getObjectId() + "; target=" + targetName);
 	}
 
 	/**

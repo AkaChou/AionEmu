@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -36,7 +37,7 @@ public class RPrison extends AdminCommand {
 		}
 
 		try {
-			Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+			Player playerFromPrison = World.getInstance().findPlayer(Util.convertName(params[0]));
 
 			if (playerFromPrison != null) {
 				PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");

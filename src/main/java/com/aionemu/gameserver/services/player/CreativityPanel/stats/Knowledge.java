@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -18,14 +17,8 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
  */
 public class Knowledge implements StatOwner {
 
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     * 提供器 / provider
-     */
-    @Setter
-    private static volatile ObjectProvider<Knowledge> instanceProvider;
+	private static volatile ObjectProvider<Knowledge> instanceProvider;
+	private static volatile Knowledge resolvedInstance;
 
 	private final List<IStatFunction> knowledge = new ArrayList<>();
 
@@ -59,14 +52,30 @@ public class Knowledge implements StatOwner {
 	 *         when no provider or bean is available
 	 */
 	public static Knowledge getInstance() {
+		Knowledge resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<Knowledge> provider = instanceProvider;
-		Knowledge provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("Knowledge 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<Knowledge> instanceProvider) {
+		Knowledge.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

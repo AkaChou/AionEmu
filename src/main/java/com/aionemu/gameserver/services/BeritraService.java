@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule.Beritra;
@@ -34,6 +33,8 @@ import com.aionemu.gameserver.services.beritraservice.BeritraStartRunnable;
 import com.aionemu.gameserver.services.beritraservice.Invade;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 贝里特拉/艾雷什基伽尔入侵（Beritra / Ereshkigal Invasion）世界活动服务。
@@ -94,14 +95,14 @@ public class BeritraService {
 	 */
 	public synchronized void reloadSchedule() {
 		BeritraSchedule newSchedule = CustomConfig.BERITRA_ENABLED ? BeritraSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		if (newSchedule != null) {
 			for (Beritra beritra : newSchedule.getBeritrasList()) {
 				for (String invasionTime : beritra.getInvasionTimes()) {
 					Runnable task = new BeritraStartRunnable(beritra.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, invasionTime);
+					CronService.requireCurrent().schedule(task, invasionTime);
 				}
 			}
 		}
@@ -119,7 +120,7 @@ public class BeritraService {
 			return;
 		}
 		invade.start();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopBeritraInvasion(id), (long) CustomConfig.BERITRA_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopBeritraInvasion(id), (long) CustomConfig.BERITRA_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -197,7 +198,7 @@ public class BeritraService {
 
 	private static boolean broadcastMessage(int actualId, int targetId, AionServerPacket packet) {
 		if (actualId == targetId) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, packet));
+			World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, packet));
 			return true;
 		}
 		return false;

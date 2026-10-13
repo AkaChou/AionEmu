@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 按世界对象 ID 传送到该可见对象刷怪点的管理员命令。
@@ -41,7 +42,7 @@ public class MoveToObject extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Only numbers please!!!");
 		}
 
-		VisibleObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
+		VisibleObject object = World.getInstance().findVisibleObject(objectId);
 		if (object == null) {
 			PacketSendUtility.sendMessage(admin, "Cannot find object for spawn #" + objectId);
 			return;

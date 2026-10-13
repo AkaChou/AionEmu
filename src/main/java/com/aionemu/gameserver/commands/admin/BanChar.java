@@ -7,6 +7,7 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员角色封禁命令：按角色名封禁指定天数并记录原因。
@@ -39,7 +40,7 @@ public class BanChar extends AdminCommand {
 		String playerName = Util.convertName(params[0]);
 
 		// 首先尝试在世界中查找玩家 / First, try to find player in the World
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
+		Player player = World.getInstance().findPlayer(playerName);
 		if (player != null)
 			playerId = player.getObjectId();
 

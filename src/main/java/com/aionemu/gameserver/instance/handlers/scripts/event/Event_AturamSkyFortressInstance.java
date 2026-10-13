@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -26,8 +24,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -78,7 +78,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(217371); //Weapon Hugen.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
 		}
 	}
 
@@ -384,7 +384,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 
 	private void rushWalk(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -490,18 +490,18 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 			case 731533: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731533, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				GameEngineServices.skillEngine().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				SkillEngine.getInstance().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 731534: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731534, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				GameEngineServices.skillEngine().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				SkillEngine.getInstance().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 730397: //Recharger.
 			    despawnNpc(npc);
 				// 能量覆盖你，你感到体格更强健。 / You feel more physically fit as the energy covers you.
 				sendMsgByRace(1400926, Race.PC_ALL, 0);
-				GameEngineServices.skillEngine().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
+				SkillEngine.getInstance().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
 			break;
 			case 730398: //Flagon.
 				despawnNpc(npc);
@@ -576,7 +576,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        aturamSkyFortressTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -605,7 +605,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 */
 
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+        aturamSkyFortressTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -630,7 +630,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

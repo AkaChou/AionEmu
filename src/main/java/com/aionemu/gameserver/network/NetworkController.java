@@ -9,20 +9,33 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 public class NetworkController {
 
-	private static final NetworkController instance = new NetworkController();
 	private static volatile ObjectProvider<NetworkController> instanceProvider;
+	private static volatile NetworkController resolvedInstance;
 
 	/**
-	 * 获取控制器单例（优先 Spring Provider）。
-	 * Returns the controller singleton (prefers Spring provider).
-	 * @return 控制器实例 / controller instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static NetworkController getInstance() {
-		ObjectProvider<NetworkController> provider = instanceProvider;
-		if (provider == null) {
-			return instance;
+		NetworkController resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return provider.getIfAvailable(() -> instance);
+		ObjectProvider<NetworkController> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("NetworkController 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -32,6 +45,7 @@ public class NetworkController {
 	 */
 	public static void setInstanceProvider(ObjectProvider<NetworkController> instanceProvider) {
 		NetworkController.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/** 可见游戏服数量 / visible game-server count */

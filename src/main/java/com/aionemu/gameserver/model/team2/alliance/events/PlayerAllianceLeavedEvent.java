@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.team2.alliance.events;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
@@ -14,6 +13,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEAVE_GROUP_MEMBER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -71,7 +71,7 @@ public class PlayerAllianceLeavedEvent extends PlayerLeavedEvent<PlayerAllianceM
 		}
 
 		if (leavedPlayer.isInInstance()) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/** 运行 / Run. */
 				@Override
 				public void run() {

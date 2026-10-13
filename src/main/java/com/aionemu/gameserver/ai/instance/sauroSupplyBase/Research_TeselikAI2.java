@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -10,6 +8,8 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Sauro Supply Base 副本 NPC AI：Research Teselik（@AIName "research_teselik"），继承 AggressiveNpcAI2。
@@ -35,7 +35,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void beritraFavor() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
+		SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); // 布里特拉之加护 / Beritra's Favor.
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2 {
 	private void stage1() {
 		int delay = 50000;
 		if (!isAlreadyDead() && isStart) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式 / Summoning Ritual.
+			SkillEngine.getInstance().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); // 召唤仪式 / Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
 		}
@@ -67,7 +67,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2 {
 
 	private void ShebanMysticalTyrhund() {
 		if (!isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				if (!isAlreadyDead()) {
 					spawn(284455, 482.25043f, 337.24167f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
 					spawn(284455, 476.00104f, 337.45627f, 181.71579f, (byte) 30); // 生成 Sheban Mystical Tyrhund / spawn Sheban Mystical Tyrhund.
@@ -78,7 +78,7 @@ public class Research_TeselikAI2 extends AggressiveNpcAI2 {
 
 	private void scheduleDelayStage1(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage1, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage1, delay);
 		}
 	}
 

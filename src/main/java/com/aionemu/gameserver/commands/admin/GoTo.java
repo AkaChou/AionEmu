@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -340,7 +341,7 @@ public class GoTo extends AdminCommand
 	};
 
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
-		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
+		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
 			TeleportService2.teleportTo(player, worldId, InstanceService.resolveInstanceId(worldId, player), x, y, z, player.getHeading(), TeleportAnimation.NO_ANIMATION);
 		}

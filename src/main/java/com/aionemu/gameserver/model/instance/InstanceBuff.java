@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.instance;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.instance_bonusatrr.InstanceBonusAttr;
 import com.aionemu.gameserver.model.templates.instance_bonusatrr.InstancePenaltyAttr;
 import com.aionemu.gameserver.skillengine.change.Func;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 副本 Buff 模型。
@@ -40,7 +40,7 @@ public class InstanceBuff implements StatOwner {
 			return;
 		}
 		if (time != 0) {
-			task = GameThreadPoolServices.threadPoolManager().schedule(new InstanceBuffTask(player), time);
+			task = ThreadPoolManager.getInstance().schedule(new InstanceBuffTask(player), time);
 		}
 		startTime = System.currentTimeMillis();
 		for (InstancePenaltyAttr instancePenaltyAttr : instanceBonusAttr.getPenaltyAttr()) {
@@ -93,7 +93,7 @@ public class InstanceBuff implements StatOwner {
 			return;
 		}
 		if (time != 0) {
-			task = GameThreadPoolServices.threadPoolManager().schedule(new InstanceBuffTask(player), time);
+			task = ThreadPoolManager.getInstance().schedule(new InstanceBuffTask(player), time);
 		}
 		startTime = System.currentTimeMillis();
 		for (InstancePenaltyAttr instancePenaltyAttr : instanceBonusAttr.getPenaltyAttr()) {

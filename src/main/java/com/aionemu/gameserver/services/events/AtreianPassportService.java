@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.events;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
@@ -35,14 +34,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class AtreianPassportService {
 
-	/**
-	 * -- SETTER --
-	 * setInstanceProvider 方法。
-	 * setInstanceProvider method.
-	 * provider
-	 */
-	@Setter
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
+	private static volatile AtreianPassportService resolvedInstance;
 	private final PlayerPassportDao playerPassportsDAO;
 	private final Map<Integer, AtreianPassport> basic = new HashMap<>(1);
 	private final Map<Integer, AtreianPassport> anny = new HashMap<>(1);
@@ -243,14 +236,30 @@ public class AtreianPassportService {
 	 *                               when no provider or bean is available
 	 */
 	public static AtreianPassportService getInstance() {
+		AtreianPassportService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AtreianPassportService> provider = instanceProvider;
-		AtreianPassportService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AtreianPassportService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<AtreianPassportService> instanceProvider) {
+		AtreianPassportService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

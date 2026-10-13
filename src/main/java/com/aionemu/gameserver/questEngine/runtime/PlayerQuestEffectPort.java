@@ -1,7 +1,5 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -11,9 +9,12 @@ import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ASCENSION_MORPH;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestPlayerEmotion;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.services.ClassChangeService;
+import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.Objects;
@@ -31,14 +32,14 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 	private final IntFunction<QuestMetadata> metadata;
 
 	public PlayerQuestEffectPort(QuestPlayerPort players) {
-		this(players, questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+		this(players, questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	PlayerQuestEffectPort(QuestPlayerPort players, IntFunction<QuestMetadata> metadata) {
 		this(players, new EffectOperations() {
 			@Override
 			public void apply(Player player, int skillId, int durationMillis) {
-				GameEngineServices.skillEngine().applyEffectDirectly(skillId, player, player, durationMillis);
+				SkillEngine.getInstance().applyEffectDirectly(skillId, player, player, durationMillis);
 			}
 
 			@Override
@@ -50,7 +51,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 
 	PlayerQuestEffectPort(QuestPlayerPort players, EffectOperations effectOperations) {
 		this(players, effectOperations,
-			questId -> GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null));
+			questId -> QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null));
 	}
 
 	PlayerQuestEffectPort(QuestPlayerPort players, EffectOperations effectOperations,
@@ -222,7 +223,7 @@ public final class PlayerQuestEffectPort implements QuestEffectPort {
 		player.unsetState(CreatureState.ACTIVE);
 		player.setFlightTeleportId(flightTeleportId);
 		// 飞行传送期间收起守护灵，落地后恢复。 / Hide the minion for the fly teleport; it is restored on landing.
-		GameEventBootstrapServices.minionService().suspendForFlyTeleport(player);
+		MinionService.getInstance().suspendForFlyTeleport(player);
 		PacketSendUtility.sendPacket(player,
 			new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, flightTeleportId, 0));
 		return true;

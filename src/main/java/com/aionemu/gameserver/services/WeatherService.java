@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.services;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,9 +21,11 @@ import com.aionemu.gameserver.model.templates.world.WeatherTable;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WEATHER;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DayTime;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 天气服务，按地图区域维护天气条目，并在变更时同步客户端与攻城系统。
@@ -32,6 +33,7 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
  */
 public class WeatherService {
 	private static volatile ObjectProvider<WeatherService> instanceProvider;
+	private static volatile WeatherService resolvedInstance;
 	/**
 	 * 各地图天气键到区域天气数组的映射。 / Map of weather keys to per-zone weather entry arrays.
 	 */
@@ -49,14 +51,19 @@ public class WeatherService {
 	 *                               when no provider or bean is available
 	 */
 	public static WeatherService getInstance() {
+		WeatherService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<WeatherService> provider = instanceProvider;
-		WeatherService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("WeatherService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -66,6 +73,7 @@ public class WeatherService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<WeatherService> instanceProvider) {
 		WeatherService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -123,7 +131,7 @@ public class WeatherService {
 	 * Advances weather for all maps to the next stage and broadcasts the change.
 	 */
 	public void checkWeathersTime() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			for (WeatherKey key : worldZoneWeathers.keySet()) {
 				setNextWeather(key);
 				onWeatherChange(key.getMapId(), null);
@@ -347,7 +355,7 @@ public class WeatherService {
 			return;
 		}
 		if (player == null) {
-			for (Iterator<Player> playerIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator(); playerIterator
+			for (Iterator<Player> playerIterator = World.getInstance().getPlayersIterator(); playerIterator
 				.hasNext(); ) {
 				Player currentPlayer = playerIterator.next();
 				if (!currentPlayer.isSpawned()) {

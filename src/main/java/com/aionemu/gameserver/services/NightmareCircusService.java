@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.CircusSchedule;
 import com.aionemu.gameserver.configs.schedule.CircusSchedule.Circus;
@@ -31,6 +30,8 @@ import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
 import com.aionemu.gameserver.services.nightmarecircusservice.Nightmare;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 梦魇马戏团活动服务，管理地点初始化、定时开关与刷怪。
@@ -82,7 +83,7 @@ public class NightmareCircusService {
 	 */
 	public synchronized void reloadSchedule() {
 		CircusSchedule newSchedule = CustomConfig.NIGHTMARE_CIRCUS_ENABLE ? CircusSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		circusSchedule = newSchedule;
 		if (circusSchedule != null) {
@@ -90,7 +91,7 @@ public class NightmareCircusService {
 				for (String circusTime : circus.getCircusTimes()) {
 					Runnable task = new CircusStartRunnable(circus.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, circusTime);
+					CronService.requireCurrent().schedule(task, circusTime);
 				}
 			}
 		}
@@ -109,7 +110,7 @@ public class NightmareCircusService {
 		}
 		nightmare.start();
 		dreamFaerieMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopNightmareCircus(id), (long) CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopNightmareCircus(id), (long) CustomConfig.NIGHTMARE_CIRCUS_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -155,7 +156,7 @@ public class NightmareCircusService {
 	public void dreamFaerieMsg(int id) {
 		switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
+				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!"));
 			}
 			default -> {
 			}

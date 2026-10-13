@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.services;
 
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.services.RiftService;
 
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +24,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
+import com.aionemu.gameserver.services.rift.RiftManager;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。
@@ -67,7 +67,7 @@ public class RiftService {
 	 */
 	public synchronized void reloadSchedule() {
 		RiftSchedule newSchedule = CustomConfig.RIFT_ENABLED ? RiftSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		riftSchedule = newSchedule;
 		if (riftSchedule != null) {
@@ -75,7 +75,7 @@ public class RiftService {
 				for (String openTimes : rift.getOpenTime()) {
 					Runnable task = new RiftOpenRunnable(this, rift.getWorldId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, openTimes);
+					CronService.requireCurrent().schedule(task, openTimes);
 				}
 			}
 		}
@@ -169,14 +169,14 @@ public class RiftService {
 	 */
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
-		GameGameplayServices.riftManager().spawnRift(location);
+		RiftManager.getInstance().spawnRift(location);
 		closing.lock();
 		try {
 			activeRifts.put(location.getId(), location);
 		} finally {
 			closing.unlock();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(this::closeRifts, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(this::closeRifts, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
 	}
 
 	/**

@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.team2.common.legacy;
 
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
 
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Loot 队伍 Rules，用于团队2相关逻辑。
@@ -134,7 +134,7 @@ public class LootGroupRules {
 
 	/** 设置 players in roll / Sets the players in roll */
 	public void setPlayersInRoll(final Collection<Player> players, int time, final int index, final int npcId) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/** 运行 / run. */
 			@Override
 			public void run() {

@@ -2,9 +2,7 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -21,9 +19,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -56,7 +56,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		spawn(833483, 496.42648f, 516.493f, 240.26653f, (byte) 0); //Kahrun (Reian Leader).
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -155,7 +155,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401538, Race.ELYOS, 15000);
 							// 消灭龙族通灵师，为主神施加增益。 / Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ELYOS, 25000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 						        /**
 						         * 处理 run。
 						         * Handle run.
@@ -166,7 +166,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									spawn(283175, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Kaisinel Teleport.
 								}
 						    }, 15000);
-						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+						    ThreadPoolManager.getInstance().schedule(new Runnable() {
 					            /**
 					             * 处理 run。
 					             * Handle run.
@@ -190,7 +190,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401539, Race.ASMODIANS, 15000);
 							// 消灭龙族通灵师，为主神施加增益。 / Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ASMODIANS, 25000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 						        /**
 						         * 处理 run。
 						         * Handle run.
@@ -201,7 +201,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									spawn(283176, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Marchutan Teleport.
 								}
 						    }, 15000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 					            /**
 					             * 处理 run。
 					             * Handle run.
@@ -226,10 +226,10 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					public void visit(Player player) {
 						// 龙主提亚马特以死亡咆哮击败了主神。 / Dragon Lord Tiamat used its Death Roar to defeat the Empyrean Lord.
 						sendMsgByRace(1401542, Race.PC_ALL, 0);
-						GameEngineServices.skillEngine().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
+						SkillEngine.getInstance().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
 					}
 				});
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -263,7 +263,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    // 裂隙化身已崩塌。 / Fissure Incarnate has collapsed.
 				sendMsgByRace(1401533, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730673)); //Internal Passage In 1.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -289,7 +289,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    // 重力化身已崩塌。 / Gravity Incarnate has collapsed.
 				sendMsgByRace(1401535, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730674)); //Internal Passage In 2.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -315,7 +315,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				// 愤怒化身已崩塌。 / Wrath Incarnate has collapsed.
 				sendMsgByRace(1401534, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730675)); //Internal Passage In 3.
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -352,7 +352,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        kaisinelLight();
 							// 提亚马特的所有化身均已崩塌。 / All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ELYOS, 2000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 						        /**
 						         * 处理 run。
 						         * Handle run.
@@ -374,7 +374,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        marchutanGrace();
 							// 提亚马特的所有化身均已崩塌。 / All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ASMODIANS, 2000);
-							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+							ThreadPoolManager.getInstance().schedule(new Runnable() {
 						        /**
 						         * 处理 run。
 						         * Handle run.
@@ -485,7 +485,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 					}
 				});
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -529,7 +529,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 					}
 				});
-			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			    ThreadPoolManager.getInstance().schedule(new Runnable() {
 				    /**
 				     * 处理 run。
 				     * Handle run.
@@ -623,7 +623,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 
 	// 阶段：主神凯希内尔。 / PHASE GOD KASINEL.
 	private void startGodKaisinelEvent() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -640,7 +640,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 
 	// 阶段：主神玛尔库坦。 / PHASE GOD MARCHUTAN.
 	private void startGodMarchutanEvent() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -685,7 +685,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 
 	// 阶段：突击。 / PHASE RUSH.
 	private void rushWalk(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -823,7 +823,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

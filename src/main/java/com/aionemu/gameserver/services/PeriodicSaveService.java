@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
@@ -28,6 +26,8 @@ import java.util.concurrent.Future;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 定期持久化服务，集中调度军团仓库、在线玩家常规数据与背包数据的周期保存。
@@ -40,6 +40,7 @@ public class PeriodicSaveService {
 	private final LegionService legionService;
 
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
+	private static volatile PeriodicSaveService resolvedInstance;
 
 	private final AbyssRankDao abyssRankDAO;
 	private final PlayerSkillDao playerSkillListDAO;
@@ -64,14 +65,19 @@ public class PeriodicSaveService {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static PeriodicSaveService getInstance() {
+		PeriodicSaveService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PeriodicSaveService> provider = instanceProvider;
-		PeriodicSaveService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PeriodicSaveService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -82,6 +88,7 @@ public class PeriodicSaveService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<PeriodicSaveService> instanceProvider) {
 		PeriodicSaveService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -111,7 +118,7 @@ public class PeriodicSaveService {
 	public synchronized void reload() {
 		cancelAllTasks();
 		rescheduleAllTasks();
-		for (Player player : GameWorldBootstrapServices.world().getAllPlayers()) {
+		for (Player player : World.getInstance().getAllPlayers()) {
 			PlayerEnterWorldService.reschedulePeriodicSaveTasks(player);
 			if (player.getPet() != null) {
 				PetSpawnService.reschedulePeriodicSaveTask(player);
@@ -151,21 +158,21 @@ public class PeriodicSaveService {
 	private void rescheduleLegionTask() {
 		int delay = PeriodicSaveConfig.LEGION_ITEMS * 1000;
 		if (delay > 0) {
-			legionWhUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new LegionWhUpdateTask(), delay, delay);
+			legionWhUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new LegionWhUpdateTask(), delay, delay);
 		}
 	}
 
 	private void reschedulePlayerGeneralTask() {
 		int delay = PeriodicSaveConfig.PLAYER_GENERAL * 1000;
 		if (delay > 0) {
-			playerGeneralUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PlayerGeneralUpdateTask(), delay, delay);
+			playerGeneralUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new PlayerGeneralUpdateTask(), delay, delay);
 		}
 	}
 
 	private void reschedulePlayerItemsTask() {
 		int delay = PeriodicSaveConfig.PLAYER_ITEMS * 1000;
 		if (delay > 0) {
-			playerItemsUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PlayerItemsUpdateTask(), delay, delay);
+			playerItemsUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new PlayerItemsUpdateTask(), delay, delay);
 		}
 	}
 
@@ -245,7 +252,7 @@ public class PeriodicSaveService {
 		public void run() {
 			long startTime = System.currentTimeMillis();
 			int playersUpdated = 0;
-			Iterator<Player> playersIterator = GameWorldBootstrapServices.world().getPlayersIterator();
+			Iterator<Player> playersIterator = World.getInstance().getPlayersIterator();
 			while (playersIterator.hasNext()) {
 				Player player = playersIterator.next();
 				if (player != null && player.isOnline()) {
@@ -264,7 +271,7 @@ public class PeriodicSaveService {
 		public void run() {
 			long startTime = System.currentTimeMillis();
 			int playersUpdated = 0;
-			Iterator<Player> playersIterator = GameWorldBootstrapServices.world().getPlayersIterator();
+			Iterator<Player> playersIterator = World.getInstance().getPlayersIterator();
 			while (playersIterator.hasNext()) {
 				Player player = playersIterator.next();
 				if (player != null && player.isOnline()) {

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.SummonerAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import java.util.concurrent.Future;
@@ -109,7 +109,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 
 	private void startTask() {
 
-		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelTask();
 			}
@@ -121,7 +121,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 
 	private void spawnShadows() {
 		spawnFlowers();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (isAlreadyDead() || !isStart) {
 				return;
 			}

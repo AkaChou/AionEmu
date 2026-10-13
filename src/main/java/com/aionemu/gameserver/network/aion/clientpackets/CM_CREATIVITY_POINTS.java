@@ -3,7 +3,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -15,6 +14,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.model.QuestState;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -57,18 +59,18 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 
 				if (pcp.getPanelCpType() == PanelCpType.STAT_UP) {
 					if (point <= 255) {
-						GameCreativityServices.creativityStatsService().onEssenceApply(activePlayer, type, plusSize, id, point);
+						CreativityStatsService.getInstance().onEssenceApply(activePlayer, type, plusSize, id, point);
 					} else {
 						PacketSendUtility.sendBrightYellowMessageOnCenter(activePlayer, "Essence bug detected... Please reset points or relog for solv this issue!");
 					}
 				} else if (pcp.getPanelCpType() == PanelCpType.LEARN_SKILL) {
-					GameCreativityServices.creativitySkillService().learnSkill(activePlayer, id, point);
+					CreativitySkillService.getInstance().learnSkill(activePlayer, id, point);
 				} else if (pcp.getPanelCpType() == PanelCpType.ENCHANT_SKILL) {
 					if (point > pcp.getCountMax()) {
 						log.warn(I18n.get("log.4b4619583261", pcp.getCountMax(), point, id, activePlayer.getName()));
 						return;
 					}
-					GameCreativityServices.creativitySkillService().enchantSkill(activePlayer, id, point);
+					CreativitySkillService.getInstance().enchantSkill(activePlayer, id, point);
 				}
 			}
 			PacketSendUtility.sendPacket(activePlayer, new SM_STATS_INFO(activePlayer));
@@ -90,7 +92,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 			return;
 		}
 		if (type == 1) {
-			GameCreativityServices.creativityEssenceService().onResetEssence(activePlayer, plusSize);
+			CreativityEssenceService.getInstance().onResetEssence(activePlayer, plusSize);
 		}
 		
 		// 应用创造力点数后检查任务 / Check quests after applying creativity points

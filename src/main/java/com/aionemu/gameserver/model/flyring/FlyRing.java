@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.model.flyring;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.FlyRingController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Plane3D;
 import com.aionemu.gameserver.model.utils3d.Point3D;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
 import lombok.Getter;
 
@@ -27,8 +28,8 @@ public class FlyRing extends VisibleObject {
 	private Point3D right = null;
 
 	public FlyRing(FlyRingTemplate template, int instanceId) {
-		super(GameWorldBootstrapServices.idFactory().nextId(), new FlyRingController(), null, null,
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(template.getMap(), template.getCenter().getX(),
+		super(IDFactory.getInstance().nextId(), new FlyRingController(), null, null,
+				World.getInstance().createPosition(template.getMap(), template.getCenter().getX(),
 						template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, instanceId));
 		((FlyRingController) getController()).setOwner(this);
 		this.template = template;
@@ -49,6 +50,6 @@ public class FlyRing extends VisibleObject {
 
 	/** 生成。 / Spawn. */
 	public void spawn() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(this);
+		World.getInstance().spawn(this);
 	}
 }

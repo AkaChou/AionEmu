@@ -18,8 +18,7 @@ class RealGeoDataConcurrencyTest {
 	void collisionPrebuildUsesLifecycleBridgeWithoutNestedPools() throws IOException {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
 
-		assertTrue(source.contains("GameThreadPoolServices.threadPoolManager().submitLongRunning"));
-		assertFalse(source.contains("ThreadPoolManager.getInstance().submitLongRunning"));
+		assertTrue(source.contains("ThreadPoolManager.getInstance().submitLongRunning"));
 		assertFalse(source.contains("parallelStream()"));
 	}
 
@@ -27,7 +26,7 @@ class RealGeoDataConcurrencyTest {
 	void worldMapLoadingUsesLifecyclePoolInsteadOfDedicatedExecutor() throws IOException {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
 
-		assertTrue(source.contains("GameThreadPoolServices.threadPoolManager().getForkingPool().invokeAll"));
+		assertTrue(source.contains("ThreadPoolManager.getInstance().getForkingPool().invokeAll"));
 		assertFalse(source.contains("Executors.newFixedThreadPool"));
 		assertFalse(source.contains("ExecutorService executorService"));
 	}

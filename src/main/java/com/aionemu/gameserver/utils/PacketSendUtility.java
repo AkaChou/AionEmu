@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.utils;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.model.ChatType;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.SiegeZoneInstance;
 
 /**
@@ -188,7 +188,7 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void playerSendPacketTime(final Player player, final AionServerPacket packet, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (player.getClientConnection() != null) {
 				player.getClientConnection().sendPacket(packet);
 			}
@@ -203,7 +203,7 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void npcSendPacketTime(final Npc npc, final AionServerPacket packet, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> npc.getKnownList().doOnAllPlayers(player -> {
+		ThreadPoolManager.getInstance().schedule(() -> npc.getKnownList().doOnAllPlayers(player -> {
 			if (player.isOnline()) {
 				sendPacket(player, packet);
 			}
@@ -218,7 +218,7 @@ public class PacketSendUtility {
 	 * @param time 延迟毫秒 / Delay in milliseconds
 	 */
 	public static void sendMessageTime(final Player player, final String message, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player1 -> {
+		ThreadPoolManager.getInstance().schedule(() -> World.getInstance().doOnAllPlayers(player1 -> {
 			if (player1.isOnline()) {
 				sendMessage(player1, message);
 			}
@@ -324,7 +324,7 @@ public class PacketSendUtility {
 	 * @param filter 玩家过滤器 / Player filter
 	 */
 	public static void broadcastFilteredPacket(final AionServerPacket packet, final ObjectFilter<Player> filter) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(object -> {
+		World.getInstance().doOnAllPlayers(object -> {
 			if (filter.acceptObject(object)) {
 				sendPacket(object, packet);
 			}

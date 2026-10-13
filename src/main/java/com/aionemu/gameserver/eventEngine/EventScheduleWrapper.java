@@ -1,10 +1,9 @@
 package com.aionemu.gameserver.eventEngine;
 
-import com.aionemu.gameserver.lifecycle.GameEventServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 import lombok.RequiredArgsConstructor;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 周期调度包装：在固定周期内重新投递事件，并在上一次未完成时尝试取消。
@@ -51,7 +50,7 @@ class EventScheduleWrapper implements Runnable {
 		}
 		if (!check()) {
 			Runnable runnable = this::check;
-			last_future = GameThreadPoolServices.threadPoolManager().schedule(runnable, RECHECK_DELAY * 60 * 1000);
+			last_future = ThreadPoolManager.getInstance().schedule(runnable, RECHECK_DELAY * 60 * 1000);
 		}
 	}
 
@@ -63,7 +62,7 @@ class EventScheduleWrapper implements Runnable {
 	private boolean check() {
 		if (event.isFinished() || first) {
 			first = false;
-			GameEventServices.eventScheduler().schedule(event, 10);
+			EventScheduler.getInstance().schedule(event, 10);
 			return true;
 		} else {
 			event.cancel(true);

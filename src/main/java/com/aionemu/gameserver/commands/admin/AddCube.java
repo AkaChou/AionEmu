@@ -5,6 +5,7 @@ import com.aionemu.gameserver.services.CubeExpandService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员扩展魔立方命令：为指定在线玩家增加一档背包格子。
@@ -34,7 +35,7 @@ public class AddCube extends AdminCommand {
 			return;
 		}
 
-		Player receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player receiver = World.getInstance().findPlayer(Util.convertName(params[0]));
 
 		if (receiver == null) {
 			PacketSendUtility.sendMessage(admin, "The player "+ Util.convertName(params[0]) +" is not online.");

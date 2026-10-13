@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.services.trade;
 
-import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.configs.main.PricesConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.siege.Influence;
 
 /**
  * 价格服务，按势力影响度与配置计算全局物价、税率及 NPC 买卖修正。
@@ -32,8 +32,8 @@ public class PricesService {
 			return defaultPrices;
 		}
 		float influenceValue = switch (playerRace) {
-			case ASMODIANS -> GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
-			case ELYOS -> GameRuntimeServices.influence().getGlobalElyosInfluence();
+			case ASMODIANS -> Influence.getInstance().getGlobalAsmodiansInfluence();
+			case ELYOS -> Influence.getInstance().getGlobalElyosInfluence();
 			default -> 0.5f;
 		};
 		if (influenceValue == 0.5f) {
@@ -71,8 +71,8 @@ public class PricesService {
 			return defaultTax;
 		}
 		float influenceValue = switch (playerRace) {
-			case ASMODIANS -> GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
-			case ELYOS -> GameRuntimeServices.influence().getGlobalElyosInfluence();
+			case ASMODIANS -> Influence.getInstance().getGlobalAsmodiansInfluence();
+			case ELYOS -> Influence.getInstance().getGlobalElyosInfluence();
 			default -> 0.5f;
 		};
 		if (influenceValue >= 0.5f) {

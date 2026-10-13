@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.ophidanWarpath;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Ophidan Warpath 副本 NPC AI：Mechanical Weapon Test Part Box（@AIName "Mechanical_Weapon_Test_Part_Box"），继承 ActionItemNpcAI2。
@@ -43,6 +43,6 @@ public class Mechanical_Weapon_Test_Part_BoxAI2 extends ActionItemNpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(Mechanical_Weapon_Test_Part_BoxAI2.this), 59000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(Mechanical_Weapon_Test_Part_BoxAI2.this), 59000);
 	}
 }

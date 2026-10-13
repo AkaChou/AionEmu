@@ -34,6 +34,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMap;
 import com.aionemu.gameserver.utils.collections.cachemap.CacheMapFactory;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 账号服务：作为 DAO 前端，负责加载与组装 Account 对象。
@@ -187,7 +188,7 @@ public class AccountService {
 			PlayerCommonData playerCommonData = playerDAO.loadPlayerCommonData(playerId);
 			CharacterBanInfo cbi = getInstance().playerPunishmentsDAO.getCharBanInfo(playerId);
 			if (playerCommonData.isOnline()) {
-				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId) == null) {
+				if (World.getInstance().findPlayer(playerId) == null) {
 					playerCommonData.setOnline(false);
 					log.warn(I18n.get("log.530f2a71906a", playerCommonData.getName()));
 				}

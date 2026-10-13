@@ -8,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 回归电机：将 NPC 在一段时间内移回指定地点，并触发到家相关 AI 事件。
@@ -48,7 +49,7 @@ public class ReturnMotor extends AMovementMotor {
 						this._targetPosition.x, this._targetPosition.y, this._targetPosition.z, this._targetHeading,
 						this._targetMask));
 		this._task = this._processor.schedule(() -> {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
+			World.getInstance().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
 					ReturnMotor.this._targetPosition.y, ReturnMotor.this._targetPosition.z,
 					ReturnMotor.this._targetHeading, false);
 			ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);

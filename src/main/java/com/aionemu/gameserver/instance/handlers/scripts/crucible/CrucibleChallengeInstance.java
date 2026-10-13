@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -28,6 +27,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -239,7 +239,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217847, 1307.2786f, 1734.3274f, 316f, (byte) 0, 2000);
 				// 阻止戈姆朱进行无意义的屠杀！ / Stop Gomju from perpetrating a senseless massacre!
 				sendMsgByRace(1401086, Race.PC_ALL, 3000);
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -345,7 +345,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(205678, 346.64798f, 349.25586f, 96.090965f, (byte) 0, 0);
 			break;
 			case 217819:
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -447,7 +447,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				final int fnpcId = npc.getNpcId();
 				despawnNpc(npc);
 				if (getNpcs(fnpcId).size() == 2) {
-					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+					ThreadPoolManager.getInstance().schedule(new Runnable() {
 						/**
 						 * 处理 run。
 						 * Handle run.
@@ -513,7 +513,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 
 	private void startBonusStage2() {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -525,7 +525,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				setEvent(StageType.START_BONUS_STAGE_2, 2000);
 			}
 		}, 2000);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -537,7 +537,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun"); //Poppy.
 			}
 		}, 1000);
-		bonusTimer = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+		bonusTimer = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -554,7 +554,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 
 	private void startWalk(final Npc npc, final String walkId) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -659,7 +659,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			place = 7;
 		}
 		getPlayerReward(player.getObjectId()).setSpawnPosition(place);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
             /**
              * 处理 run。
              * Handle run.
@@ -885,7 +885,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, int time) {
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -901,7 +901,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -57,7 +57,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
  		if (npc.getNpcId() == 700437) {
  			//Nochsana Artifact.
- 			GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+ 			SkillEngine.getInstance().getSkill(npc, 276, 10, player).useNoAnimationSkill();
  		}
 	}
 

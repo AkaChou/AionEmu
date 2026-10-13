@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Beshmundir Temple 副本 NPC AI：Lakhara（@AIName "lakhara"），继承 AggressiveNpcAI2。
@@ -29,7 +29,7 @@ public class LakharaAI2 extends AggressiveNpcAI2
 		int hp = getOwner().getLifeStats().getHpPercentage();
 		if (hp <= 25) {
 			sendMessage();
-			GameThreadPoolServices.threadPoolManager().schedule(() -> getOwner().getController().useSkill(18891), 5000);
+			ThreadPoolManager.getInstance().schedule(() -> getOwner().getController().useSkill(18891), 5000);
 		}
 	}
 

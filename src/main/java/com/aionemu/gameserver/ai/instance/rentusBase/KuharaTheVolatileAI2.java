@@ -2,9 +2,7 @@ package com.aionemu.gameserver.ai.instance.rentusBase;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -16,7 +14,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.List;
@@ -80,7 +80,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 
 	private void startBarrelEvent() {
-		barrelEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		barrelEventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelBarrelEventTask();
 			} else {
@@ -131,7 +131,7 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 	}
 
 	private void startBombEvent() {
-		bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		bombEventTask = ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 				phase = Phase.BOMBS;
 				cancelActiveEventTask();
@@ -139,9 +139,9 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 				canThink = false;
 				EmoteManager.emoteStopAttacking(getOwner());
 				setStateIfNot(AIState.WALKING);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
 				spawnBombEvent();
-				bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				bombEventTask = ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.BOMBS)) {
 						phase = Phase.ACTIVE;
 						canThink = true;
@@ -158,7 +158,7 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 							getOwner().getGameStats().renewLastSkillTime();
 							setStateIfNot(AIState.FIGHT);
 							handleMoveValidate();
-							GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
+							SkillEngine.getInstance().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
 						}
 						deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); // 库哈拉炸弹 / Kuhara Bomb.
 					}
@@ -201,17 +201,17 @@ spawn(282394, 121.0155f, 246.60715f, 210.06781f, (byte) 11);
 	}
 
 	private void startActivEvent() {
-		activeEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		activeEventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			if (isAlreadyDead()) {
 				cancelActiveEventTask();
 			} else {
 				NpcShoutsService.getInstance().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-						GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
-						GameThreadPoolServices.threadPoolManager().schedule(() -> {
+						SkillEngine.getInstance().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
+						ThreadPoolManager.getInstance().schedule(() -> {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-								GameEngineServices.skillEngine().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
+								SkillEngine.getInstance().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
 							}
 						}, 3500);
 					}

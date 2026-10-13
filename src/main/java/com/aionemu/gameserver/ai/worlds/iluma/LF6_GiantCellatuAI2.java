@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.ai.worlds.iluma;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Iluma 区域 NPC AI：LF6 Giant Cellatu（@AIName "LF6_GiantCellatu"），继承 NpcAI2。
@@ -21,6 +21,6 @@ public class LF6_GiantCellatuAI2 extends NpcAI2
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(LF6_GiantCellatuAI2.this), 10000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(LF6_GiantCellatuAI2.this), 10000);
 	}
 }

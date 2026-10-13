@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.enshar;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 
 /**
  * Enshar 区域 NPC AI：Shademender（@AIName "shademender"），继承 AggressiveNpcAI2。
@@ -28,7 +28,7 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 	if (creature instanceof Player player) {
 		if (!creature.getEffectController().hasAbnormalEffect(20664)) { // 征服者之热情 / Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, creature).useWithoutPropSkill(); // 征服者之热情 / Conqueror's Passion.
+		        SkillEngine.getInstance().getSkill(getOwner(), 20664, 1, creature).useWithoutPropSkill(); // 征服者之热情 / Conqueror's Passion.
 				}
 			}
 	}
@@ -52,6 +52,6 @@ public class ShademenderAI2 extends AggressiveNpcAI2
 	}
 
 	private void conquerorPassion() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); // 征服者之热情 / Conqueror's Passion.
+		SkillEngine.getInstance().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); // 征服者之热情 / Conqueror's Passion.
 	}
 }

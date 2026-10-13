@@ -6,9 +6,9 @@ import java.util.Map;
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -42,7 +42,7 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
+		List<Integer> relatedQuests = QuestEngine.getInstance().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
 		for (int dialogId : dialogIdsFor(!relatedQuests.isEmpty())) {
 			if (AI2Actions.selectDialog(this, player, 0, dialogId).isSuccess()) {
 				return;

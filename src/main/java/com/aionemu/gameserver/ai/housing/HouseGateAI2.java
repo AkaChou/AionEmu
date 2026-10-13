@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.housing;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
@@ -12,8 +11,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.templates.housing.BuildingType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -31,10 +32,10 @@ public class HouseGateAI2 extends NpcAI2
 			if (player.getCurrentGroup() == null || !player.getCurrentGroup().hasMember(creatorId))
 				return;
 		}
-		House house = GameHousingServices.housingService().getPlayerStudio(creatorId);
+		House house = HousingService.getInstance().getPlayerStudio(creatorId);
 		if (house == null) {
-			int address = GameHousingServices.housingService().getPlayerAddress(creatorId);
-			house = GameHousingServices.housingService().getHouseByAddress(address);
+			int address = HousingService.getInstance().getPlayerAddress(creatorId);
+			house = HousingService.getInstance().getHouseByAddress(address);
 		}
 		if (house == null)
 			return;
@@ -45,10 +46,10 @@ public class HouseGateAI2 extends NpcAI2
 			public void acceptRequest(Creature requester, Player responder) {
 				if (decided)
 					return;
-				House house = GameHousingServices.housingService().getPlayerStudio(creatorId);
+				House house = HousingService.getInstance().getPlayerStudio(creatorId);
 				if (house == null) {
-					int address = GameHousingServices.housingService().getPlayerAddress(creatorId);
-					house = GameHousingServices.housingService().getHouseByAddress(address);
+					int address = HousingService.getInstance().getPlayerAddress(creatorId);
+					house = HousingService.getInstance().getHouseByAddress(address);
 				}
 				int instanceOwnerId = responder.getPosition().getWorldMapInstance().getOwnerId();
 				int exitMapId = 0;
@@ -56,9 +57,9 @@ public class HouseGateAI2 extends NpcAI2
 				byte heading = 0;
 				int instanceId = 0;
 				if (instanceOwnerId > 0) {
-					house = GameHousingServices.housingService().getPlayerStudio(instanceOwnerId);
+					house = HousingService.getInstance().getPlayerStudio(instanceOwnerId);
 					exitMapId = house.getAddress().getExitMapId();
-					instanceId = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
+					instanceId = World.getInstance().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
 					x = house.getAddress().getExitX();
 					y = house.getAddress().getExitY();
 					z = house.getAddress().getExitZ();

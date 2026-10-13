@@ -26,6 +26,7 @@ import com.aionemu.gameserver.persistence.dao.CompetitionRankingDao;
 @Slf4j(topic = "com.aionemu.gameserver.services.ranking.SeasonRankingService")
 public class SeasonRankingUpdateService {
 	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
+	private static volatile SeasonRankingUpdateService resolvedInstance;
 	private int lastUpdate;
 	private final Map<Integer, List<SM_SEASON_RANKING>> players = new HashMap<>();
 	private final CompetitionRankingDao seasonRankingDAO;
@@ -112,14 +113,19 @@ public class SeasonRankingUpdateService {
 	 *                               when no provider or bean is available
 	 */
 	public static SeasonRankingUpdateService getInstance() {
+		SeasonRankingUpdateService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<SeasonRankingUpdateService> provider = instanceProvider;
-		SeasonRankingUpdateService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("SeasonRankingUpdateService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -130,5 +136,6 @@ public class SeasonRankingUpdateService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<SeasonRankingUpdateService> instanceProvider) {
 		SeasonRankingUpdateService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 }

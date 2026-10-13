@@ -8,6 +8,7 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 面板书签/快捷操作的客户端包。
@@ -39,7 +40,7 @@ public class CM_GM_BOOKMARK extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player admin = getConnection().getActivePlayer();
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(playerName));
+		Player player = World.getInstance().findPlayer(Util.convertName(playerName));
 		if (admin == null) {
 			return;
 		}

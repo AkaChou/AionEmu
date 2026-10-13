@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,9 +42,9 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	 */
 	public void delete() {
 		if (getOwner().isSpawned()) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(getOwner());
+			World.getInstance().despawn(getOwner());
 		}
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(getOwner());
+		World.getInstance().removeObject(getOwner());
 	}
 
 	/**

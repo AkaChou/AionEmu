@@ -3,8 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -34,6 +33,8 @@ import com.aionemu.gameserver.services.towerofeternityservice.Tower;
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 永恒之塔服务，管理塔地点开关、刷怪与旗帜同步。
@@ -82,7 +83,7 @@ public class TowerOfEternityService {
 			openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
 			openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				openRandomTowerOfWorld(ELYOS_TOWER_WORLD);
 				openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 			}, () -> CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
@@ -205,7 +206,7 @@ public class TowerOfEternityService {
 				return;
 			}
 			tower.start();
-			GameThreadPoolServices.threadPoolManager().schedule(() -> stopTowerOfEternity(id, tower), (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
+			ThreadPoolManager.getInstance().schedule(() -> stopTowerOfEternity(id, tower), (long) CustomConfig.TOWER_OF_ETERNITY_DURATION * 3600 * 1000);
 		}
 	}
 
@@ -264,9 +265,9 @@ public class TowerOfEternityService {
 			|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
 			|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
 			|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
-			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
+			World.getInstance().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(player1 -> {
-					for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+					for (VisibleObject npc : World.getInstance().getNpcs()) {
 						if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 							if ((player1.getWorldId() == 210100000) && (player1.getRace() == Race.ELYOS)) {
 								PacketSendUtility.sendPacket(player1, new SM_FLAG_INFO(1, (Npc) npc));
@@ -293,9 +294,9 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastUpdate(final TowerOfEternityLocation tower) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 			.doOnAllPlayers(player -> {
-				for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+				for (VisibleObject npc : World.getInstance().getNpcs()) {
 					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
@@ -321,9 +322,9 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastDespawn(final TowerOfEternityLocation tower) {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 			.doOnAllPlayers(player -> {
-				for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+				for (VisibleObject npc : World.getInstance().getNpcs()) {
 					if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 						if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 							PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));

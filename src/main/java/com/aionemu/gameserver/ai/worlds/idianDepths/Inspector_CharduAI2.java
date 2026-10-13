@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.worlds.idianDepths;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -10,10 +8,12 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Idian Depths 区域 NPC AI：Inspector Chardu（@AIName "inspector_chardu"），继承 AggressiveNpcAI2。
@@ -58,7 +58,7 @@ public class Inspector_CharduAI2 extends AggressiveNpcAI2
 
 	private void stage1() {
 		if (!isAlreadyDead() && isStart) {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 布里特拉的眷顾 / Beritra's Favor
+			SkillEngine.getInstance().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); // 布里特拉的眷顾 / Beritra's Favor
 		}
 	}
 
@@ -71,15 +71,15 @@ public class Inspector_CharduAI2 extends AggressiveNpcAI2
 	}
 
 	private void skill() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 愤怒毒爆 / Wrathful Venom Burst
-		   GameThreadPoolServices.threadPoolManager().schedule(() -> {
-GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence
+		SkillEngine.getInstance().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); // 愤怒毒爆 / Wrathful Venom Burst
+		   ThreadPoolManager.getInstance().schedule(() -> {
+SkillEngine.getInstance().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); // 毒性 / Virulence
 		   }, 4000);
 	}
 
 	private void scheduleDelayStage2(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(this::stage2, delay);
+			ThreadPoolManager.getInstance().schedule(this::stage2, delay);
 		}
 	}
 
@@ -92,7 +92,7 @@ GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).us
 
 	private void scheduleDelayStage3(int delay) {
 		if (isStart || isAlreadyDead()) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				getRandomTarget();
 				stage3();
 			}, delay);

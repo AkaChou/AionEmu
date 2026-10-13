@@ -2,9 +2,11 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHAT_INIT;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 聊天服务器桥接服务，管理玩家聊天鉴权与连接信息。
@@ -45,7 +47,7 @@ public class ChatService {
 	 * @param player 玩家 / player
 	 */
 	public static void onPlayerLogout(Player player) {
-		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLogout(player);
+		ChatServer.getInstance().sendPlayerLogout(player);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class ChatService {
 	 * @param token 鉴权令牌 / auth token
 	 */
 	public static void playerAuthed(int playerId, byte[] token) {
-		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+		Player player = World.getInstance().findPlayer(playerId);
 		if (player != null) {
 			PacketSendUtility.sendPacket(player, new SM_CHAT_INIT(token));
 		}

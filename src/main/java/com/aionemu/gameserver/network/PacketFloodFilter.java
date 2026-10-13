@@ -2,7 +2,6 @@ package com.aionemu.gameserver.network;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 
@@ -20,14 +19,8 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
 @Slf4j
 public class PacketFloodFilter {
 
-    /**
-     * -- SETTER --
-     *  注入 Spring ObjectProvider，供 DI 覆盖静态单例。
-     *  Injects Spring ObjectProvider to override the static singleton.
-     *  Spring provider
-     */
-    @Setter
-    private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
+	private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
+	private static volatile PacketFloodFilter resolvedInstance;
 
 
 	/**
@@ -40,14 +33,30 @@ public class PacketFloodFilter {
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
 	public static PacketFloodFilter getInstance() {
+		PacketFloodFilter resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<PacketFloodFilter> provider = instanceProvider;
-		PacketFloodFilter provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("PacketFloodFilter 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<PacketFloodFilter> instanceProvider) {
+		PacketFloodFilter.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

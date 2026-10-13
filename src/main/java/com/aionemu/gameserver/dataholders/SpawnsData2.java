@@ -63,6 +63,7 @@ import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.Zorsh
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
@@ -1076,7 +1077,7 @@ public class SpawnsData2 {
 	 */
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
+		WorldMap map = World.getInstance().getWorldMap(visibleObject.getWorldId());
 		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.RIFT) {
 			path = "Rifts";
 		} else if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.VOLATILE_RIFT) {

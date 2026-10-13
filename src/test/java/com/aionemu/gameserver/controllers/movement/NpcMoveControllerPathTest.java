@@ -20,9 +20,9 @@ import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.MovementLoopServiceBindings;
+import com.aionemu.gameserver.lifecycle.ThreadPoolServiceBindings;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -51,14 +51,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class NpcMoveControllerPathTest {
 
 	/**
-	 * GameMovementLoopServices 已解析移动任务管理器缓存字段。
-	 * Resolved move-task-manager cache field of GameMovementLoopServices.
+	 * MovementLoopServiceBindings 已解析移动任务管理器缓存字段。
+	 * Resolved move-task-manager cache field of MovementLoopServiceBindings.
 	 */
 	private Field resolvedMoveTaskManagerField;
 
 	/**
-	 * GameThreadPoolServices 已解析线程池缓存字段。
-	 * Resolved thread-pool cache field of GameThreadPoolServices.
+	 * ThreadPoolServiceBindings 已解析线程池缓存字段。
+	 * Resolved thread-pool cache field of ThreadPoolServiceBindings.
 	 */
 	private Field resolvedThreadPoolManagerField;
 
@@ -75,11 +75,11 @@ class NpcMoveControllerPathTest {
 		// D1a 后 holder 定位器不再回退到单例：预置已解析缓存，离线路径不再 fail-fast。
 		// After D1a the holder locator no longer falls back to the singleton: preset the
 		// resolved cache so offline paths do not fail fast.
-		resolvedMoveTaskManagerField = GameMovementLoopServices.class.getDeclaredField("resolvedMoveTaskManager");
+		resolvedMoveTaskManagerField = MoveTaskManager.class.getDeclaredField("resolvedInstance");
 		resolvedMoveTaskManagerField.setAccessible(true);
 		resolvedMoveTaskManagerField.set(null, moveTaskManager);
 		threadPoolManager = new ThreadPoolManager();
-		resolvedThreadPoolManagerField = GameThreadPoolServices.class.getDeclaredField("resolvedThreadPoolManager");
+		resolvedThreadPoolManagerField = ThreadPoolManager.class.getDeclaredField("resolvedInstance");
 		resolvedThreadPoolManagerField.setAccessible(true);
 		resolvedThreadPoolManagerField.set(null, threadPoolManager);
 	}
@@ -242,7 +242,7 @@ class NpcMoveControllerPathTest {
 		pointY.setAccessible(true);
 		pointZ.setAccessible(true);
 		controller.started.set(true);
-		MoveTaskManager moveTaskManager = GameMovementLoopServices.moveTaskManager();
+		MoveTaskManager moveTaskManager = MoveTaskManager.getInstance();
 		moveTaskManager.removeCreature(owner);
 
 		try {
@@ -271,7 +271,7 @@ class NpcMoveControllerPathTest {
 		destination.setAccessible(true);
 		destination.set(controller, Enum.valueOf(destination.getType().asSubclass(Enum.class), "POINT"));
 		controller.started.set(true);
-		MoveTaskManager moveTaskManager = GameMovementLoopServices.moveTaskManager();
+		MoveTaskManager moveTaskManager = MoveTaskManager.getInstance();
 		moveTaskManager.removeCreature(owner);
 
 		controller.moveToTargetObject();
@@ -943,7 +943,7 @@ class NpcMoveControllerPathTest {
 	}
 
 	private static World setWorld(World world) throws ReflectiveOperationException {
-		Field field = GameWorldBootstrapServices.class.getDeclaredField("resolvedWorld");
+		Field field = World.class.getDeclaredField("resolvedInstance");
 		field.setAccessible(true);
 		World oldWorld = (World) field.get(null);
 		field.set(null, world);

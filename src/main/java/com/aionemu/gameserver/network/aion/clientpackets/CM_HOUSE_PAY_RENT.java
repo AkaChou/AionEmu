@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -9,6 +8,7 @@ import java.time.ZonedDateTime;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_PAY_RENT;
@@ -54,14 +54,14 @@ public class CM_HOUSE_PAY_RENT extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_NOT_ENOUGH_MONEY);
 			return;
 		}
-		long payTime = house.getNextPay() != null ? house.getNextPay().getTime() : (long) GameHousingServices.maintenanceTask().getRunTime() * 1000;
+		long payTime = house.getNextPay() != null ? house.getNextPay().getTime() : (long) MaintenanceTask.getInstance().getRunTime() * 1000;
 		int counter = weekCount;
 		while ((--counter) >= 0) {
-			payTime += GameHousingServices.maintenanceTask().getPeriod() * 1000L; // 将秒转换为毫秒 / Convert seconds to milliseconds
+			payTime += MaintenanceTask.getInstance().getPeriod() * 1000L; // 将秒转换为毫秒 / Convert seconds to milliseconds
 		}
 
 		// 检查是否试图预付超过 4 周 / Check if trying to pay more than 4 weeks in advance
-		long runTimeMillis = (long) GameHousingServices.maintenanceTask().getRunTime() * 1000;
+		long runTimeMillis = (long) MaintenanceTask.getInstance().getRunTime() * 1000;
 		ZonedDateTime nextRun = ZonedDateTime.ofInstant(Instant.ofEpochMilli(runTimeMillis), java.time.ZoneId.systemDefault());
 		ZonedDateTime payLimit = nextRun.plusWeeks(4);
 		ZonedDateTime payDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(payTime), java.time.ZoneId.systemDefault());

@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -32,15 +31,8 @@ import java.util.Map;
 @Slf4j
 public final class HTMLCache {
 
-	/**
-	 * Spring 可选实例提供者。
-	 * Optional Spring instance provider.
-	 * -- SETTER --
-	 * 设置 Spring 实例提供者。
-	 * Sets the Spring instance provider.
-	 */
-	@Setter
 	private static volatile ObjectProvider<HTMLCache> instanceProvider;
+	private static volatile HTMLCache resolvedInstance;
 
 	/**
 	 * 仅接受目录或 {@code .xhtml} 文件。
@@ -70,14 +62,30 @@ public final class HTMLCache {
 	 *                               when no provider or bean is available
 	 */
 	public static HTMLCache getInstance() {
+		HTMLCache resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<HTMLCache> provider = instanceProvider;
-		HTMLCache provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("HTMLCache 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<HTMLCache> instanceProvider) {
+		HTMLCache.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

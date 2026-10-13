@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.model.road;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.RoadController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.road.RoadTemplate;
 import com.aionemu.gameserver.model.utils3d.Plane3D;
 import com.aionemu.gameserver.model.utils3d.Point3D;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.SphereKnownList;
 import lombok.Getter;
@@ -29,8 +29,8 @@ public class Road extends VisibleObject {
 	private Point3D p2 = null;
 
 	public Road(RoadTemplate template) {
-		super(GameWorldBootstrapServices.idFactory().nextId(), new RoadController(), null, null,
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(template.getMap(), template.getCenter().getX(),
+		super(IDFactory.getInstance().nextId(), new RoadController(), null, null,
+				World.getInstance().createPosition(template.getMap(), template.getCenter().getX(),
 						template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, 0));
 
 		((RoadController) getController()).setOwner(this);
@@ -52,7 +52,7 @@ public class Road extends VisibleObject {
 
 	/** 生成。 / Spawn. */
 	public void spawn() {
-		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
+		World w = World.getInstance();
 		w.storeObject(this);
 		w.spawn(this);
 	}

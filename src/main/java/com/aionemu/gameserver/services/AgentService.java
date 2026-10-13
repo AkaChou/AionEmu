@@ -1,12 +1,9 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +14,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.AgentSchedule;
 import com.aionemu.gameserver.configs.schedule.AgentSchedule.Agent;
@@ -34,6 +32,8 @@ import com.aionemu.gameserver.services.agentservice.AgentFight;
 import com.aionemu.gameserver.services.agentservice.Fight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 天族/魔族神代代理人（Agent / Empyrean Lord Agent）战斗活动服务。
@@ -85,7 +85,7 @@ public class AgentService {
 	 */
 	public synchronized void reloadSchedule() {
 		AgentSchedule newSchedule = CustomConfig.AGENT_ENABLED ? AgentSchedule.load() : null;
-		scheduledTasks.forEach(GameCronServices.cronService()::cancel);
+		scheduledTasks.forEach(CronService.requireCurrent()::cancel);
 		scheduledTasks.clear();
 		agentSchedule = newSchedule;
 		if (agentSchedule != null) {
@@ -93,7 +93,7 @@ public class AgentService {
 				for (String fightTime : agent.getFightTimes()) {
 					Runnable task = new AgentStartRunnable(agent.getId());
 					scheduledTasks.add(task);
-					GameCronServices.cronService().schedule(task, fightTime);
+					CronService.requireCurrent().schedule(task, fightTime);
 				}
 			}
 		}
@@ -112,7 +112,7 @@ public class AgentService {
 		}
 		fight.start();
 		empyreanLordCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> stopAgentFight(id), (long) CustomConfig.AGENT_DURATION * 3600 * 1000);
+		ThreadPoolManager.getInstance().schedule(() -> stopAgentFight(id), (long) CustomConfig.AGENT_DURATION * 3600 * 1000);
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class AgentService {
 	public boolean empyreanLordCountdownMsg(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 主神代理人将在 30 分钟后结束战斗。 / The Empyrean Lord's Agent will end the battle in 30 minutes.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_GODELITE_TimeAttack_Start,
 						5400000);
@@ -182,7 +182,7 @@ public class AgentService {
 	public boolean agentBattleMsg1(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite_time_01, 0);
@@ -203,7 +203,7 @@ public class AgentService {
 	public boolean agentBattleMsg2(int id) {
 		return switch (id) {
 			case 1 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
 					PacketSendUtility.playerSendPacketTime(player,
 						SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite_time_02, 0);
@@ -224,7 +224,7 @@ public class AgentService {
 	public boolean governorSunayakaMsg(int id) {
 		return switch (id) {
 			case 2 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 提亚马特的化身已出现。 / Tiamat's Incarnation has appeared.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_TIAMATAVATAR_WAKEUP, 0);
 					// 提亚马特越来越强。 / Tiamat is getting stronger and stronger.
@@ -247,7 +247,7 @@ public class AgentService {
 	public boolean berserkerSunayakaMsg(int id) {
 		return switch (id) {
 			case 3 -> {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 提亚马特的化身已出现。 / Tiamat's Incarnation has appeared.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_TIAMATAVATAR_WAKEUP, 0);
 					// 提亚马特越来越强。 / Tiamat is getting stronger and stronger.
@@ -374,11 +374,11 @@ public class AgentService {
 		public void run() {
 			// 代理人之战将在 10 分钟后开始。 / The Agent battle will start in 10 minutes.
 			AgentService.getInstance().agentBattleMsg1(id);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				// 代理人之战将在 5 分钟后开始。 / The Agent battle will start in 5 minutes.
 				AgentService.getInstance().agentBattleMsg2(id);
 			}, 300000);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
 				for (final AgentLocation loc : locations.values()) {
 					if (loc.getId() == id) {
@@ -390,7 +390,7 @@ public class AgentService {
 						AgentService.getInstance().startAgentFight(loc.getId());
 					}
 				}
-				GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+				World.getInstance().doOnAllPlayers(player -> {
 					// 一名代理人已生成。 / An Agent has spawned.
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
 				});

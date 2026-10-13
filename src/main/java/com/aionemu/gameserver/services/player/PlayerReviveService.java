@@ -27,6 +27,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_SELECTED;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -235,7 +236,7 @@ public class PlayerReviveService {
 		if (player.getPosition().getWorldMapInstance().getInstanceHandler().onReviveEvent(player)) {
 			return;
 		}
-		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId());
+		WorldMap map = World.getInstance().getWorldMap(player.getWorldId());
 		if (map == null) {
 			bindRevive(player);
 			return;

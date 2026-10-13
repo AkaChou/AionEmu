@@ -27,6 +27,7 @@ public class IDFactory {
 	 * Spring ObjectProvider preferred over the static singleton.
 	 */
 	private static volatile ObjectProvider<IDFactory> instanceProvider;
+	private static volatile IDFactory resolvedInstance;
 	/**
 	 * 已占用 ID 的 BitSet（可增长至 {@link Integer#MAX_VALUE}）。
 	 * BitSet of taken IDs (may grow up to {@link Integer#MAX_VALUE}).
@@ -72,15 +73,20 @@ public class IDFactory {
 	 * @return 由 Spring 提供的实例 / the Spring-provided instance
 	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean / when no provider or bean is available
 	 */
-	public static final IDFactory getInstance() {
+	public static IDFactory getInstance() {
+		IDFactory resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<IDFactory> provider = instanceProvider;
-		IDFactory provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("IDFactory 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -91,6 +97,7 @@ public class IDFactory {
 	 */
 	public static void setInstanceProvider(ObjectProvider<IDFactory> instanceProvider) {
 		IDFactory.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

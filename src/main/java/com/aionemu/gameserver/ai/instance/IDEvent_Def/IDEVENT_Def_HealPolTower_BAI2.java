@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.IDEvent_Def;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -33,13 +33,13 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 			    effectController.removeEffect(4937);
 			    effectController.removeEffect(4938);
 			    effectController.removeEffect(4939);
-				GameEngineServices.skillEngine().applyEffectDirectly(4935, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4935, player, player, 1200000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				effectController.removeEffect(4941);
 			    effectController.removeEffect(4942);
 			    effectController.removeEffect(4943);
 			    effectController.removeEffect(4944);
-				GameEngineServices.skillEngine().applyEffectDirectly(4940, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4940, player, player, 1200000);
 			}
 		}
 		// ？？？ III / ?? ? III
@@ -49,13 +49,13 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 			    effectController.removeEffect(4937);
 			    effectController.removeEffect(4938);
 			    effectController.removeEffect(4939);
-				GameEngineServices.skillEngine().applyEffectDirectly(4936, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4936, player, player, 1200000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				effectController.removeEffect(4940);
 			    effectController.removeEffect(4942);
 			    effectController.removeEffect(4943);
 			    effectController.removeEffect(4944);
-				GameEngineServices.skillEngine().applyEffectDirectly(4941, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4941, player, player, 1200000);
 			}
 		}
 		// ？？？ III / ?? ? III
@@ -65,13 +65,13 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 			    effectController.removeEffect(4936);
 			    effectController.removeEffect(4938);
 			    effectController.removeEffect(4939);
-				GameEngineServices.skillEngine().applyEffectDirectly(4937, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4937, player, player, 1200000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				effectController.removeEffect(4940);
 			    effectController.removeEffect(4941);
 			    effectController.removeEffect(4943);
 			    effectController.removeEffect(4944);
-				GameEngineServices.skillEngine().applyEffectDirectly(4942, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4942, player, player, 1200000);
 			}
 		}
 		// ？？？ III / ?? ? III
@@ -81,13 +81,13 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 			    effectController.removeEffect(4936);
 			    effectController.removeEffect(4937);
 			    effectController.removeEffect(4939);
-				GameEngineServices.skillEngine().applyEffectDirectly(4938, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4938, player, player, 1200000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				effectController.removeEffect(4940);
 			    effectController.removeEffect(4941);
 			    effectController.removeEffect(4942);
 			    effectController.removeEffect(4944);
-				GameEngineServices.skillEngine().applyEffectDirectly(4943, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4943, player, player, 1200000);
 			}
 		}
 		// ？？？ III / ?? ? III
@@ -97,13 +97,13 @@ public class IDEVENT_Def_HealPolTower_BAI2 extends NpcAI2
 			    effectController.removeEffect(4936);
 			    effectController.removeEffect(4937);
 			    effectController.removeEffect(4938);
-				GameEngineServices.skillEngine().applyEffectDirectly(4939, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4939, player, player, 1200000);
 			} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				effectController.removeEffect(4940);
 			    effectController.removeEffect(4941);
 			    effectController.removeEffect(4942);
 			    effectController.removeEffect(4943);
-				GameEngineServices.skillEngine().applyEffectDirectly(4944, player, player, 1200000);
+				SkillEngine.getInstance().applyEffectDirectly(4944, player, player, 1200000);
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

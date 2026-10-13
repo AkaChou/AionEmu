@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,6 +11,8 @@ import com.aionemu.gameserver.persistence.dao.WebRewardDao;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 
 /**
@@ -68,7 +69,7 @@ public class WebshopService {
 	 * Starts the periodic task that delivers pending shop rewards to online players.
 	 */
 	private void load() {
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(pl -> {
+		ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> World.getInstance().doOnAllPlayers(pl -> {
 			List<RewardEntryItem> liste = this.rewardServiceDAO.getAvailable(pl.getObjectId());
 			if (!liste.isEmpty()) {
 				for (RewardEntryItem item : liste) {

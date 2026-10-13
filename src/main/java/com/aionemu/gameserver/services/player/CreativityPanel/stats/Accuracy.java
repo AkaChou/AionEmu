@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -20,14 +19,8 @@ import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 
 public class Accuracy implements StatOwner {
-    /**
-     * -- SETTER --
-     *  setInstanceProvider 方法。
-     *  setInstanceProvider method.
-     * 提供器 / provider
-     */
-    @Setter
-    private static volatile ObjectProvider<Accuracy> instanceProvider;
+	private static volatile ObjectProvider<Accuracy> instanceProvider;
+	private static volatile Accuracy resolvedInstance;
 
 	private final List<IStatFunction> accuracy = new ArrayList<>();
 
@@ -61,14 +54,30 @@ public class Accuracy implements StatOwner {
 	 *         when no provider or bean is available
 	 */
 	public static Accuracy getInstance() {
+		Accuracy resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<Accuracy> provider = instanceProvider;
-		Accuracy provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("Accuracy 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<Accuracy> instanceProvider) {
+		Accuracy.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 }

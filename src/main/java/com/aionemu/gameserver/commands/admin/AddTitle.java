@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员添加称号命令：为目标玩家解锁称号。
@@ -38,7 +39,7 @@ public class AddTitle extends AdminCommand
 		}
 		Player target = null;
 		if (params.length == 2) {
-			target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
+			target = World.getInstance().findPlayer(Util.convertName(params[1]));
 			if (target == null) {
 				PacketSendUtility.sendMessage(player, "player " + params[1] + " was not found");
 				return;

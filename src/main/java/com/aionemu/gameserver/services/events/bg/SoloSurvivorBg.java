@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.events.bg;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 1v1/小规模生存战：多回合击杀制，击杀最多者获胜。
@@ -818,8 +818,8 @@ public class SoloSurvivorBg extends Battleground {
 				}
 			}
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(this::openStaticDoors, 25 * 1000);
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
+		ThreadPoolManager.getInstance().schedule(this::openStaticDoors, 25 * 1000);
+		super.setExpireTask(ThreadPoolManager.getInstance().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
 	}
 
@@ -886,7 +886,7 @@ public class SoloSurvivorBg extends Battleground {
 		super.setStartStamp(System.currentTimeMillis());
 		synchronized (super.getPlayers()) {
 			for (final Player pl : super.getPlayers()) {
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					preparePlayer(pl, 8000, false);
 					SpawnPosition pos = getSpawnPositions().get(pl.getBgIndex());
 					if (pos != null) {
@@ -898,9 +898,9 @@ public class SoloSurvivorBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
+		super.setExpireTask(ThreadPoolManager.getInstance().schedule(() -> endSoloSurvivorMatch(true), getMatchLength() * 1000L));
 		super.startBackgroundTask();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			endCalled = false;
 			if (getPlayers().size() <= 1) {
 				endSoloSurvivorMatch(false);

@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.world.World;
 
 /**
  * GM 在线管理：维护在线 GM 列表，处理登录/下线公告与审计消息广播。
@@ -24,6 +25,7 @@ public class GMService {
 	 * Optional Spring instance provider.
 	 */
 	private static volatile ObjectProvider<GMService> instanceProvider;
+	private static volatile GMService resolvedInstance;
 
 	/**
 	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
@@ -37,14 +39,19 @@ public class GMService {
 	 *                               when no provider or bean is available
 	 */
 	public static GMService getInstance() {
+		GMService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<GMService> provider = instanceProvider;
-		GMService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("GMService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -55,6 +62,7 @@ public class GMService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<GMService> instanceProvider) {
 		GMService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**
@@ -135,7 +143,7 @@ public class GMService {
 				};
 			}
 
-			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+			Iterator<Player> iter = World.getInstance().getPlayersIterator();
 			while (iter.hasNext()) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now available for support!");
 			}
@@ -166,7 +174,7 @@ public class GMService {
 			};
 		}
 
-		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
+		Iterator<Player> iter = World.getInstance().getPlayersIterator();
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now unavailable for support!");
 		}

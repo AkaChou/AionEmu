@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 军团，用于团队相关逻辑。
@@ -98,7 +99,7 @@ public class Legion {
 	public ArrayList<Player> getOnlineLegionMembers() {
 		ArrayList<Player> onlineLegionMembers = new ArrayList<>();
 		for (int legionMemberObjId : legionMembers) {
-			Player onlineLegionMember = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(legionMemberObjId);
+			Player onlineLegionMember = World.getInstance().findPlayer(legionMemberObjId);
 			if (onlineLegionMember != null) {
 				onlineLegionMembers.add(onlineLegionMember);
 			}

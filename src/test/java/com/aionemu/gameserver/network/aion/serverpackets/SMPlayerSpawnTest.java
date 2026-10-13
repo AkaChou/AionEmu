@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
@@ -80,7 +80,7 @@ class SMPlayerSpawnTest {
 	}
 
 	private static World setWorld(World world) throws ReflectiveOperationException {
-		Field field = GameWorldBootstrapServices.class.getDeclaredField("resolvedWorld");
+		Field field = World.class.getDeclaredField("resolvedInstance");
 		field.setAccessible(true);
 		World oldWorld = (World) field.get(null);
 		field.set(null, world);

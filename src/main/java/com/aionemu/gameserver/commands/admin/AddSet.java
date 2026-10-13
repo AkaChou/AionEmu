@@ -8,6 +8,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 管理员添加套装命令：按套装模板 ID 发放整套装备。
@@ -44,7 +45,7 @@ public class AddSet extends AdminCommand {
 			receiver = player;
 		}
 		catch (NumberFormatException e) {
-			receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+			receiver = World.getInstance().findPlayer(Util.convertName(params[0]));
 
 			if (receiver == null) {
 				PacketSendUtility.sendMessage(player, "Could not find a player by that name.");

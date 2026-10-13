@@ -5,8 +5,8 @@ import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -804,7 +804,7 @@ public final class PathService implements DisposableBean {
 		WaterArea water = request.water();
 		boolean swimming = water != null;
 		float clearance = request.clearance();
-		int worldSize = GameWorldBootstrapServices.world().getWorldMap(request.worldId()).getWorldSize();
+		int worldSize = World.getInstance().getWorldMap(request.worldId()).getWorldSize();
 		PathData.HeightProvider terrain = terrain(request.worldId());
 		float targetGround = terrain.get(targetX, targetY);
 		if (Float.isFinite(targetGround)) {
@@ -857,7 +857,7 @@ public final class PathService implements DisposableBean {
 				return new WaterArea(volume, surface);
 			}
 		}
-		float waterLevel = GameWorldBootstrapServices.world().getWorldMap(owner.getWorldId()).getWaterLevel();
+		float waterLevel = World.getInstance().getWorldMap(owner.getWorldId()).getWaterLevel();
 		boolean openToSurface = isSubmerged(z, ground, waterLevel, immersionMargin)
 				&& canPass(owner, x, y, z, x, y, waterLevel - 0.5f, true);
 		return acceptsGlobalWater(z, ground, waterLevel, openToSurface, immersionMargin) ? new WaterArea(null, waterLevel)

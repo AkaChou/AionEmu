@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.skillengine.effect;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -29,6 +28,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -87,7 +87,7 @@ public class FearEffect extends EffectTemplate {
 			((NpcAI2) effected.getAi2()).setStateIfNot(AIState.FEAR);
 		}
 		if (GeoDataConfig.FEAR_ENABLE) {
-			ScheduledFuture<?> fearTask = GameThreadPoolServices.threadPoolManager()
+			ScheduledFuture<?> fearTask = ThreadPoolManager.getInstance()
 					.scheduleAtFixedRate(new FearTask(effector, effected), 0, 1000);
 			effect.setPeriodicTask(fearTask, position);
 		}

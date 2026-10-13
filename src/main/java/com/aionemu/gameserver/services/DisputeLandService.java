@@ -4,18 +4,19 @@ package com.aionemu.gameserver.services;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCronServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DISPUTE_LAND;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
 /**
@@ -88,9 +89,9 @@ public class DisputeLandService {
 	public void initDisputeLand() {
 		if (CustomConfig.DISPUTE_LAND_ENABLED) {
 			log.info(I18n.get("log.87d65384cfca"));
-			GameCronServices.cronService().schedule(() -> {
+			CronService.requireCurrent().schedule(() -> {
 				if (isActive()) {
-					GameThreadPoolServices.threadPoolManager().schedule(() -> setActive(false), (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
+					ThreadPoolManager.getInstance().schedule(() -> setActive(false), (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);
 				}
 			}, () -> CustomConfig.DISPUTE_LAND_SCHEDULE);
 		}
@@ -145,9 +146,9 @@ public class DisputeLandService {
 				continue;
 			}
 			if (active) {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
+				World.getInstance().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
 			} else {
-				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
+				World.getInstance().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
 			}
 		}
 	}
@@ -157,7 +158,7 @@ public class DisputeLandService {
 	}
 
 	private void broadcast() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(this::broadcast);
+		World.getInstance().doOnAllPlayers(this::broadcast);
 	}
 
 	/**

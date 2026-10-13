@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -11,7 +9,9 @@ import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> GameEngineServices.skillEngine().getSkill(getOwner(), 19612, 46, getOwner()).useNoAnimationSkill(), 1000);
+		ThreadPoolManager.getInstance().schedule(() -> SkillEngine.getInstance().getSkill(getOwner(), 19612, 46, getOwner()).useNoAnimationSkill(), 1000);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	private void checkPercentage(int percentage) {
 		if (percentage <= 75) {
 			if (is75EventStarted.compareAndSet(false, true)) {
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19611, 46, getTargetPlayer()).useNoAnimationSkill();
+				SkillEngine.getInstance().getSkill(getOwner(), 19611, 46, getTargetPlayer()).useNoAnimationSkill();
 			}
 		} if (percentage <= 25) {
 			if (is25EventStarted.compareAndSet(false, true)) {
@@ -54,10 +54,10 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startEvent() {
-		GameEngineServices.skillEngine().getSkill(getOwner(), 19610, 46, getOwner()).useNoAnimationSkill();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 19614, 46, getOwner()).useNoAnimationSkill();
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		SkillEngine.getInstance().getSkill(getOwner(), 19610, 46, getOwner()).useNoAnimationSkill();
+		ThreadPoolManager.getInstance().schedule(() -> {
+			SkillEngine.getInstance().getSkill(getOwner(), 19614, 46, getOwner()).useNoAnimationSkill();
+			ThreadPoolManager.getInstance().schedule(() -> {
 				WorldPosition p = getPosition();
 				switch (Rnd.get(1, 3)) {
 					case 1:
@@ -85,9 +85,9 @@ public class PriestElyosPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void applySoulSickness(final Npc npc) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			npc.getLifeStats().setCurrentHpPercent(50);
-			GameEngineServices.skillEngine().getSkill(npc, 19594, 4, npc).useNoAnimationSkill();
+			SkillEngine.getInstance().getSkill(npc, 19594, 4, npc).useNoAnimationSkill();
 		}, 1000);
 	}
 

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
@@ -9,11 +8,13 @@ import java.time.ZonedDateTime;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerHouseOwnerFlags;
 import com.aionemu.gameserver.model.house.House;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import lombok.AllArgsConstructor;
+import com.aionemu.gameserver.services.TownService;
 
 /**
  * 向客户端同步玩家房屋所有权与维护状态信息的服务端包。
@@ -37,7 +38,7 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 		writeC(player.getBuildingOwnerStates());
 		int townLevel = 1;
 		if (activeHouse != null && activeHouse.getAddress().getTownId() != 0) {
-			Town town = GameHousingServices.townService().getTownById(activeHouse.getAddress().getTownId());
+			Town town = TownService.getInstance().getTownById(activeHouse.getAddress().getTownId());
 			townLevel = town.getLevel();
 		}
 		writeC(townLevel);
@@ -47,15 +48,15 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 			Timestamp nextPay = activeHouse.getNextPay();
 			float diff;
 			if (nextPay == null) {
-				diff = GameHousingServices.maintenanceTask().getPeriod();
+				diff = MaintenanceTask.getInstance().getPeriod();
 			} else {
 				long paytime = activeHouse.getNextPay().getTime();
-				diff = paytime - ((long) GameHousingServices.maintenanceTask().getRunTime() * 1000);
+				diff = paytime - ((long) MaintenanceTask.getInstance().getRunTime() * 1000);
 			}
 			if (diff < 0) {
 				writeC(0);
 			} else {
-				int weeks = Math.round(diff / GameHousingServices.maintenanceTask().getPeriod());
+				int weeks = Math.round(diff / MaintenanceTask.getInstance().getPeriod());
 
 				// 检查今天是否为周日（第 7 天） / Check if today is Sunday (day 7)
 				ZonedDateTime now = ZonedDateTime.now();

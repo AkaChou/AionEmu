@@ -19,7 +19,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * the quest state. Preflight fails closed on uncaptured or insufficient facts.
  */
 class PlayerQuestInventoryPortTest {
-	private GameWorldBootstrapServices worldBootstrapServices;
+	private WorldBootstrapServiceBindings worldBootstrapServices;
 
 	@BeforeEach
 	void installIdFactory() {
@@ -63,7 +63,7 @@ class PlayerQuestInventoryPortTest {
 		// so a wired IDFactory must be present.
 		IDFactory idFactory = new IDFactory(List.of());
 		idFactory.lockIds(List.of(ITEM_A));
-		worldBootstrapServices = new GameWorldBootstrapServices(provider(IDFactory.class, idFactory),
+		worldBootstrapServices = new WorldBootstrapServiceBindings(provider(IDFactory.class, idFactory),
 			null, null, null, null);
 	}
 

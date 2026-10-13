@@ -24,6 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
+	private static volatile AdminService resolvedInstance;
 	/** 受限物品 ID 列表 / Restricted item ID list */
 	private final List<Integer> list;
 
@@ -42,14 +43,19 @@ public class AdminService {
 	 *         when no provider or bean is available
 	 */
 	public static AdminService getInstance() {
+		AdminService resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
 		ObjectProvider<AdminService> provider = instanceProvider;
-		AdminService provided = provider == null ? null : provider.getIfAvailable();
-		if (provided == null) {
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
 			throw new IllegalStateException("AdminService 未由 Spring 提供："
 				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
 				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
 		}
-		return provided;
+		resolvedInstance = resolved;
+		return resolved;
 	}
 
 	/**
@@ -59,6 +65,7 @@ public class AdminService {
 	 */
 	public static void setInstanceProvider(ObjectProvider<AdminService> instanceProvider) {
 		AdminService.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
 	/**

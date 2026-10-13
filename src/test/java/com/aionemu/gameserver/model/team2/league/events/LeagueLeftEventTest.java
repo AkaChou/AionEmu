@@ -2,7 +2,7 @@ package com.aionemu.gameserver.model.team2.league.events;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceMember;
@@ -19,7 +19,7 @@ class LeagueLeftEventTest {
 	@Test
 	void keepsLastInAreaAllianceAndPromotesItToLeader() {
 		FakeIDFactory idFactory = new ObjenesisStd().newInstance(FakeIDFactory.class);
-		GameWorldBootstrapServices services = new GameWorldBootstrapServices(provider(IDFactory.class, idFactory),
+		WorldBootstrapServiceBindings services = new WorldBootstrapServiceBindings(provider(IDFactory.class, idFactory),
 				null, null, null, null);
 		try {
 			PlayerAlliance leaving = alliance(TeamType.IN_AREA_DEFAULT);

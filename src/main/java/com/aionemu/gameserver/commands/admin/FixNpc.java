@@ -3,7 +3,6 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -18,6 +17,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class FixNpc extends AdminCommand
 					comment.append(" ").append(target.getObjectTemplate().getRank().name()).append(" ");
 					comment.append("lvl:").append(target.getLevel()).append(")");
 					int time = 9000;
-					task = GameThreadPoolServices.threadPoolManager().schedule(() -> respawnAndSave(admin, admin.getWorldId(), spawn.getNpcId(), temp.getX(), temp.getY(), adminZ, temp.getHeading(), temp.getRespawnTime(), target), time);
+					task = ThreadPoolManager.getInstance().schedule(() -> respawnAndSave(admin, admin.getWorldId(), spawn.getNpcId(), temp.getX(), temp.getY(), adminZ, temp.getHeading(), temp.getRespawnTime(), target), time);
 					PacketSendUtility.sendMessage(admin, comment + " [Spawned] ");
 				}
 			}
@@ -108,7 +108,7 @@ public class FixNpc extends AdminCommand
 				}
 				++counter;
 				time += 3000;
-				task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				task = ThreadPoolManager.getInstance().schedule(() -> {
 					TeleportService2.teleportTo(admin, template.getWorldId(), template.getX(), template.getY(), template.getZ(), (byte) 0);
 					admin.getKnownList().doOnAllNpcs(n -> {
 						if (MathUtil.getDistance((int) n.getX(), (int) n.getY(), (int) admin.getX(), (int) admin.getY()) < 3) {
@@ -117,13 +117,13 @@ public class FixNpc extends AdminCommand
 					});
 				}, time);
 				time += 3000;
-				task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				task = ThreadPoolManager.getInstance().schedule(() -> {
 					if (npc != null) {
 						PacketSendUtility.broadcastPacketAndReceive(admin, new SM_FORCED_MOVE(npc, admin));
 					}
 				}, time);
 				time += 3000;
-				task = GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				task = ThreadPoolManager.getInstance().schedule(() -> {
 					if (npc != null) {
 						StringBuilder comment = new StringBuilder();
 						comment.append(npc.getObjectTemplate().getName()).append(" (");

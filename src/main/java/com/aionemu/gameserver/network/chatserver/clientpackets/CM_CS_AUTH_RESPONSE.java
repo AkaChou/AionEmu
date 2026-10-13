@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.network.chatserver.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
 import com.aionemu.gameserver.network.chatserver.CsClientPacket;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
 import com.aionemu.gameserver.services.ChatService;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 聊天服对游戏服认证请求的应答包。
@@ -75,7 +75,7 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 			break;
 		case 2: // Already Registered
 			log.info(I18n.get("log.2812bb8416bb"));
-			GameThreadPoolServices.threadPoolManager().schedule(() -> CM_CS_AUTH_RESPONSE.this.getConnection().sendPacket(new SM_CS_AUTH()), 10000);
+			ThreadPoolManager.getInstance().schedule(() -> CM_CS_AUTH_RESPONSE.this.getConnection().sendPacket(new SM_CS_AUTH()), 10000);
 			break;
 		}
 	}

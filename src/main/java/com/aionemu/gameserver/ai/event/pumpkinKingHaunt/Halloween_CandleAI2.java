@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.event.pumpkinKingHaunt;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -16,6 +15,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Pumpkin King Haunt 活动 NPC AI：Halloween Candle（@AIName "Halloween_Candle"），继承 NpcAI2。
@@ -48,7 +48,7 @@ public class Halloween_CandleAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(() -> {
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
 				PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), cancelBarAnimation));
 				player.getObserveController().removeObserver(observer);
@@ -63,70 +63,70 @@ public class Halloween_CandleAI2 extends NpcAI2
 		switch (getNpcId()) {
 		    case 835619: // 第一个蜡烛 / World_event_halloween_candle_01.
 				spawn(835624, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 蜡烛火焰 / Candle Flame.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.INVULNERABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 				}, 1000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(835624); // 蜡烛火焰 / Candle Flame.
 				}, 300000); // 5 分钟后 / ...5Min
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.NON_ATTACKABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
 				}, 300000); // 1 小时后 / ...1Hr 3600000
 			break;
 			case 835620: // 第二个蜡烛 / World_event_halloween_candle_02.
 				spawn(835625, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 蜡烛火焰 / Candle Flame.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.INVULNERABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 				}, 1000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(835625); // 蜡烛火焰 / Candle Flame.
 				}, 300000); // 5 分钟后 / ...5Min
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.NON_ATTACKABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
 				}, 300000); // 1 小时后 / ...1Hr
 			break;
 			case 835621: // 第三个蜡烛 / World_event_halloween_candle_03.
 				spawn(835626, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 蜡烛火焰 / Candle Flame.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.INVULNERABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 				}, 1000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(835626); // 蜡烛火焰 / Candle Flame.
 				}, 300000); // 5 分钟后 / ...5Min
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.NON_ATTACKABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
 				}, 300000); // 1 小时后 / ...1Hr
 			break;
 			case 835622: // 第四个蜡烛 / World_event_halloween_candle_04.
 				spawn(835627, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 蜡烛火焰 / Candle Flame.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.INVULNERABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 				}, 1000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(835627); // 蜡烛火焰 / Candle Flame.
 				}, 300000); // 5 分钟后 / ...5Min
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.NON_ATTACKABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
 				}, 300000); // 1 小时后 / ...1Hr
 			break;
 			case 835623: // 第五个蜡烛 / World_event_halloween_candle_05.
 				spawn(835628, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); // 蜡烛火焰 / Candle Flame.
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.INVULNERABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 				}, 1000);
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					despawnNpc(835628); // 蜡烛火焰 / Candle Flame.
 				}, 300000); // 5 分钟后 / ...5Min
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					getOwner().setNpcType(NpcType.NON_ATTACKABLE);
 					PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.NON_ATTACKABLE.getId(), 0));
 				}, 300000); // 1 小时后 / ...1Hr

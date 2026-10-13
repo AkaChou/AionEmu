@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.worlds.norsvold;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -12,6 +11,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Norsvold 区域 NPC AI：DF6 Wind Stream（@AIName "DF6_WindStream"），继承 NpcAI2。
@@ -30,7 +30,7 @@ public class DF6_WindStreamAI2 extends NpcAI2
     }
 
 	private void startWindStream(final Npc npc) {
-        GameThreadPoolServices.threadPoolManager().schedule(() -> {
+        ThreadPoolManager.getInstance().schedule(() -> {
 			Npc npc2 = (Npc) spawn(220110000, 857865, 1661.18f, 1956.75f, 197.8f, (byte) 0, 0, 1);
 			windStreamAnnounce(npc2, 1);
 			despawnNpc(857864);

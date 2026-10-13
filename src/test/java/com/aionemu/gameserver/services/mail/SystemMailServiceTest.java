@@ -12,7 +12,7 @@ import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.persistence.dao.MailDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -56,7 +56,7 @@ class SystemMailServiceTest {
 			FakeWorld world = OBJENESIS.newInstance(FakeWorld.class);
 			world.player = onlineRecipient;
 			FakeIDFactory idFactory = OBJENESIS.newInstance(FakeIDFactory.class);
-			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
+			WorldBootstrapServiceBindings bootstrapServices = new WorldBootstrapServiceBindings(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
 				SystemMailService service = service(playerDao, inventoryDao, mailDao);
@@ -89,7 +89,7 @@ class SystemMailServiceTest {
 			FakeWorld world = OBJENESIS.newInstance(FakeWorld.class);
 			world.findResults = new Player[] { null, onlineRecipient };
 			FakeIDFactory idFactory = OBJENESIS.newInstance(FakeIDFactory.class);
-			GameWorldBootstrapServices bootstrapServices = new GameWorldBootstrapServices(
+			WorldBootstrapServiceBindings bootstrapServices = new WorldBootstrapServiceBindings(
 					provider(IDFactory.class, idFactory), null, null, null, provider(World.class, world));
 			try {
 				SystemMailService service = service(playerDao, inventoryDao, mailDao);

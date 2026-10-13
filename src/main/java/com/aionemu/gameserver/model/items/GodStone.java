@@ -6,8 +6,6 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -20,11 +18,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITE
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.extern.slf4j.Slf4j;
 import lombok.Getter;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 神石：镶嵌在武器上的触发式魔法宝石，攻击时按概率激活附带技能，激活次数达到上限后可能碎裂。
@@ -88,7 +88,7 @@ public class GodStone extends ItemStone {
 			if (!tryActivate(target, probability)) {
 				return;
 			}
-			Skill skill = GameEngineServices.skillEngine().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), target,
+			Skill skill = SkillEngine.getInstance().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), target,
 				godstoneItem);
 			if (skill == null) {
 				return;
@@ -154,7 +154,7 @@ public class GodStone extends ItemStone {
 		PacketSendUtility.playerSendPacketTime(player, new SM_SYSTEM_MESSAGE(1402537, weaponName, godstoneName, 5), 300_000);
 		PacketSendUtility.playerSendPacketTime(player, new SM_SYSTEM_MESSAGE(1402538, weaponName, godstoneName, 60), 540_000);
 		PacketSendUtility.playerSendPacketTime(player, new SM_SYSTEM_MESSAGE(1402237, weaponName, godstoneName), BREAK_DELAY);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> removeGodstone(player, weapon), BREAK_DELAY);
+		ThreadPoolManager.getInstance().schedule(() -> removeGodstone(player, weapon), BREAK_DELAY);
 	}
 
 	private void removeGodstone(Player player, Item weapon) {

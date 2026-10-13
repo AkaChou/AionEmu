@@ -2,15 +2,15 @@ package com.aionemu.gameserver.ai.instance.darkPoeta;
 
 import com.aionemu.gameserver.services.NpcShoutsService;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.manager.EmoteManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 import java.util.ArrayList;
@@ -49,12 +49,12 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			if (hpPercentage <= percent) {
 				if (percent == 60) {
 					EmoteManager.emoteStopAttacking(getOwner());
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(() -> sp(281267), 3000);
+					SkillEngine.getInstance().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
+					ThreadPoolManager.getInstance().schedule(() -> sp(281267), 3000);
 				} else {
 					EmoteManager.emoteStopAttacking(getOwner());
-					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
-					GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					SkillEngine.getInstance().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
+					ThreadPoolManager.getInstance().schedule(() -> {
 						sp(281268);
 						sp(281268);
 					}, 3000);
@@ -82,12 +82,12 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	}
 
 	private void checkTimer() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (!isAlreadyDead()) {
 				EmoteManager.emoteStopAttacking(getOwner());
 				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400259);
-				GameEngineServices.skillEngine().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				SkillEngine.getInstance().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
+				ThreadPoolManager.getInstance().schedule(() -> {
 					if (!isAlreadyDead()) {
 						getOwner().getController().onDelete();
 						NpcShoutsService.getInstance().sendMsg(getOwner(), 1400260);

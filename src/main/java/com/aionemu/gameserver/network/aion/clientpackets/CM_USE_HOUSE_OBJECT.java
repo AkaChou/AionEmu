@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 客户端使用房屋物件请求包，触发对应 {@link HouseObject} 对话逻辑。
@@ -32,7 +33,7 @@ public class CM_USE_HOUSE_OBJECT extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		VisibleObject visObject = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemObjectId);
+		VisibleObject visObject = World.getInstance().findVisibleObject(itemObjectId);
 		if (visObject == null) {
 			return;
 		}

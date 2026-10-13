@@ -9,11 +9,11 @@ import jakarta.xml.bind.annotation.XmlList;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -61,9 +61,9 @@ public class XMLStartCondition {
 				// the native lane fall back to the retail quest.xml metadata — the retail equivalent is the
 				// full QuestDB table, where a prerequisite row is always queryable (the leadingquest axis of
 				// Quest::CanAcquireQuest). Only a row absent from both sources fails closed.
-				var metadata = GameEngineServices.questEngine().questCatalog().findMetadata(questId).orElse(null);
+				var metadata = QuestEngine.getInstance().questCatalog().findMetadata(questId).orElse(null);
 				if (metadata == null) {
-					metadata = GameEngineServices.questEngine().nativeMetadata(questId).orElse(null);
+					metadata = QuestEngine.getInstance().nativeMetadata(questId).orElse(null);
 				}
 				if (metadata == null) {
 					return false;

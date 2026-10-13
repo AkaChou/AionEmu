@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.event;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -9,6 +8,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -49,7 +49,7 @@ public class Otherworldly_PucasAI2 extends GeneralNpcAI2
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
+		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 105) {
 			switch (getNpcId()) {

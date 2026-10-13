@@ -13,9 +13,9 @@ import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.handler.TargetEventHandler;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 /**
  * NPC 攻击管理器：负责攻击调度、意图选择与追击/放弃目标判定。
  * NPC attack manager: schedules attacks, chooses attack intention, and handles chase/give-up logic.
@@ -230,7 +230,7 @@ public class AttackManager {
 				}
 				return pending;
 			}
-			return GameThreadPoolServices.threadPoolManager().schedule(() -> runAttackRetry(npcAI, objectId), delay);
+			return ThreadPoolManager.getInstance().schedule(() -> runAttackRetry(npcAI, objectId), delay);
 		});
 	}
 

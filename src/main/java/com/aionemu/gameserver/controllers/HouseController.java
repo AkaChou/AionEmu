@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.controllers;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 
@@ -23,6 +22,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 import java.util.Map;
@@ -105,9 +106,9 @@ public class HouseController extends VisibleObjectController<House> {
 	 * Asynchronously pushes a house appearance update to all observers.
 	 */
 	public void updateAppearance() {
-		GameThreadPoolServices.threadPoolManager().execute(() -> {
+		ThreadPoolManager.getInstance().execute(() -> {
 			for (int playerId : observed.keySet()) {
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+				Player player = World.getInstance().findPlayer(playerId);
 				if (player == null) {
 					continue;
 				}
@@ -121,9 +122,9 @@ public class HouseController extends VisibleObjectController<House> {
 	 * Asynchronously broadcasts the full house render packet to all observers.
 	 */
 	public void broadcastAppearance() {
-		GameThreadPoolServices.threadPoolManager().execute(() -> {
+		ThreadPoolManager.getInstance().execute(() -> {
 			for (int playerId : observed.keySet()) {
-				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
+				Player player = World.getInstance().findPlayer(playerId);
 				if (player == null) {
 					continue;
 				}
@@ -150,7 +151,7 @@ public class HouseController extends VisibleObjectController<House> {
 					if (!kickFriends && kicker != null && kicker.getFriendList().getFriend(objId) != null) {
 						continue;
 					}
-					Player visitor = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+					Player visitor = World.getInstance().findPlayer(objId);
 					if (visitor != null) {
 						if (visitor.isInsideZone(info.zoneTemplate().getName())) {
 							moveOutside(visitor, onSettingsChange);

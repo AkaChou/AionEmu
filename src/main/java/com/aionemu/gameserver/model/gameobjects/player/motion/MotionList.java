@@ -2,7 +2,6 @@ package com.aionemu.gameserver.model.gameobjects.player.motion;
 
 
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.Map;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.RequiredArgsConstructor;
 
@@ -69,7 +69,7 @@ public class MotionList {
 		}
 		if (persist) {
 			if (motion.getExpireTime() != 0) {
-				GameTaskManagerServices.expireTimerTask().addTask(motion, owner);
+				ExpireTimerTask.getInstance().addTask(motion, owner);
 			}
 			PlayerService.daos().motionDAO().storeMotion(owner.getObjectId(), motion);
 		}

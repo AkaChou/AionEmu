@@ -1,9 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -34,8 +32,10 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -138,7 +138,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		engulfedOphidanBridgeReward.setInstanceStartTime();
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -155,7 +155,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 90000));
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -172,7 +172,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				sp(802023, 337.73990f, 491.16772f, 597.2395f, (byte) 0, 156);
 			}
 		}, 220000));
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -191,7 +191,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				sp(801958, 759.2739f, 569.3167f, 577.37885f, (byte) 87, 0); //Asmodians Reinforcements Flag.
 			}
 		}, 400000));
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -211,7 +211,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				sp(701976, 582.56866f, 396.15695f, 603.4048f, (byte) 2, 10000); //Hidden Supply Box.
 			}
 		}, 600000));
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -264,7 +264,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 900000));
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -433,7 +433,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -962,7 +962,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 					// 你已使用一个破力装置。 / You've used one Power Breaker.
 					sendMsgByRace(1402010, Race.PC_ALL, 1000);
-					GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 				} else {
 					// 你需要破力装置。 / You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
@@ -973,7 +973,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 				if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 					// 你已使用一个破力装置。 / You've used one Power Breaker.
 					sendMsgByRace(1402010, Race.PC_ALL, 1000);
-					GameEngineServices.skillEngine().getSkill(player, 21066, 1, player).useNoAnimationSkill();
+					SkillEngine.getInstance().getSkill(player, 21066, 1, player).useNoAnimationSkill();
 				} else {
 					// 你需要破力装置。 / You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
@@ -1103,7 +1103,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1121,7 +1121,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -1138,7 +1138,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler {
 	}
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

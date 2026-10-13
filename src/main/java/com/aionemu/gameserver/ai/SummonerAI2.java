@@ -4,8 +4,6 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.ai.Percentage;
 import com.aionemu.gameserver.model.ai.SummonGroup;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -13,6 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -20,6 +19,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 召唤师型 NPC AI：在战斗中按阶段召唤随从。
@@ -102,13 +103,13 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	}
 
 	private void anuhartBravery() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+	    SkillEngine.getInstance().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void bellowingRoar() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22659, 1, getOwner()).useNoAnimationSkill(); //Bellowing Roar.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22659, 1, getOwner()).useNoAnimationSkill(); //Bellowing Roar.
 	}
 	private void elementalLordship() {
-	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
+	    SkillEngine.getInstance().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 
 	/**
@@ -138,14 +139,14 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	}
 
 	private void addGpPlayer() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
 				AbyssPointsService.addGp(player, 500);
 			}
 		});
 	}
 	private void announceTarmatDie() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> {
+		World.getInstance().doOnAllPlayers(player -> {
 			// 恶魔部队的塔马特贝塔已被摧毁。 / The Devil Unit's Tarmat Beta has been destroyed.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_MESSAGE_DIE_02);
 		});
@@ -153,7 +154,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 
 	private void removeHelpersSpawn() {
 		for (Integer object : spawnedNpc) {
-			VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(object);
+			VisibleObject npc = World.getInstance().findVisibleObject(object);
 			if (npc != null && npc.isSpawned()) {
 				npc.getController().onDelete();
 			}
@@ -180,7 +181,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 				} else if (percent.getSummons() != null) {
 					for (SummonGroup summonGroup : percent.getSummons()) {
 						final SummonGroup sg = summonGroup;
-						GameThreadPoolServices.threadPoolManager().schedule(() -> spawnHelpers(sg), summonGroup.getSchedule());
+						ThreadPoolManager.getInstance().schedule(() -> spawnHelpers(sg), summonGroup.getSchedule());
 					}
 				}
 				spawnedPercent = percent.getPercent();

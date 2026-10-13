@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
@@ -11,6 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.instance.StageType;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Empyrean Crucible 副本 NPC AI：Spectral Warrior（@AIName "spectral_warrior"），继承 AggressiveNpcAI2。
@@ -31,7 +31,7 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50 && isDone.compareAndSet(false, true)) {
 			getPosition().getWorldMapInstance().getInstanceHandler().onChangeStage(StageType.START_STAGE_6_ROUND_5);
-			GameThreadPoolServices.threadPoolManager().schedule(this::resurrectAllies, 2000);
+			ThreadPoolManager.getInstance().schedule(this::resurrectAllies, 2000);
 		}
 	}
 

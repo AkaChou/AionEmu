@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai.rvr;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 
 import java.util.List;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * RvR 相关 NPC AI：Dynamic Iluma Monster（@AIName "dynamic_iluma_monster"），继承 AggressiveNpcAI2。
@@ -74,7 +74,7 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 			break;
 		}
 		//传送门。 / Portal.
-		GameThreadPoolServices.threadPoolManager().schedule(this::despawnNpc, 60000);
+		ThreadPoolManager.getInstance().schedule(this::despawnNpc, 60000);
 	}
 
 	private void despawnNpc() {

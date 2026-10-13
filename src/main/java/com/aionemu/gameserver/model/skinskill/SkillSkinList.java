@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.skinskill;
 
-import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import lombok.Getter;
 import lombok.Setter;
@@ -71,7 +71,7 @@ public class SkillSkinList {
 			if (!skillskins.containsKey(skinId)) {
 				skillskins.put(skinId, skillSkin);
 				if (time != 0) {
-					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, owner);
+					ExpireTimerTask.getInstance().addTask(skillSkin, owner);
 				}
 				PlayerService.daos().playerSkillSkinListDAO().storeSkillSkins(owner, skillSkin);
 			} else {

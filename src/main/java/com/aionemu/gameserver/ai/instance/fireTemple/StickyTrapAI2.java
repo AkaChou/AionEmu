@@ -1,12 +1,12 @@
 package com.aionemu.gameserver.ai.instance.fireTemple;
 
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
+import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Fire Temple 副本 NPC AI：Sticky Trap（@AIName "stickytrap"），继承 AggressiveNpcAI2。
@@ -23,14 +23,14 @@ public class StickyTrapAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
-			GameEngineServices.skillEngine().getSkill(getOwner(), 16675, 10, getOwner()).useNoAnimationSkill(); // 强烈逆风。 / Strong Contrary Wind.
+		ThreadPoolManager.getInstance().schedule(() -> {
+			SkillEngine.getInstance().getSkill(getOwner(), 16675, 10, getOwner()).useNoAnimationSkill(); // 强烈逆风。 / Strong Contrary Wind.
 			startLifeTask();
 		}, 1000);
 	}
 
 	private void startLifeTask() {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> AI2Actions.deleteOwner(StickyTrapAI2.this), 9000);
+		ThreadPoolManager.getInstance().schedule(() -> AI2Actions.deleteOwner(StickyTrapAI2.this), 9000);
 	}
 
 	@Override

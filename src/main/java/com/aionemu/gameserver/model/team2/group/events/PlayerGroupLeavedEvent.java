@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.model.team2.group.events;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.common.events.PlayerLeavedEvent;
@@ -13,6 +12,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_LEAVE_GROUP_MEMBER;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 玩家离队事件（团队2）。
@@ -65,7 +65,7 @@ public class PlayerGroupLeavedEvent extends PlayerLeavedEvent<PlayerGroupMember,
 		}
 
 		if (leavedPlayer.isInInstance()) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			ThreadPoolManager.getInstance().schedule(new Runnable() {
 				/** 运行 / run. */
 				@Override
 				public void run() {

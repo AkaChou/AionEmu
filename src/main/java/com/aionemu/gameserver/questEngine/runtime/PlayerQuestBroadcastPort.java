@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.questEngine.runtime;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 import java.util.Arrays;
@@ -8,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * 真实 {@link QuestBroadcastPort}：提交后通过生产分发器向每个任务广播区域任务结束。
@@ -34,12 +34,12 @@ public final class PlayerQuestBroadcastPort implements QuestBroadcastPort {
 
 	public PlayerQuestBroadcastPort(QuestPlayerPort players, BroadcastCall broadcast) {
 		this(players, broadcast, null,
-			(task, delayMillis) -> GameThreadPoolServices.threadPoolManager().schedule(task, delayMillis));
+			(task, delayMillis) -> ThreadPoolManager.getInstance().schedule(task, delayMillis));
 	}
 
 	public PlayerQuestBroadcastPort(QuestPlayerPort players, BroadcastCall broadcast, BroadcastCall refresh) {
 		this(players, broadcast, refresh,
-			(task, delayMillis) -> GameThreadPoolServices.threadPoolManager().schedule(task, delayMillis));
+			(task, delayMillis) -> ThreadPoolManager.getInstance().schedule(task, delayMillis));
 	}
 
 	PlayerQuestBroadcastPort(QuestPlayerPort players, BroadcastCall broadcast, BroadcastCall refresh,

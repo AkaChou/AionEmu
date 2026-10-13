@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.instance.handlers.scripts.idgelDome;
 
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -32,6 +31,7 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -150,7 +150,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
 		idgelDomeReward.setInstanceStartTime();
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -167,7 +167,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 				}
 			}
 		}, 90000));
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -184,7 +184,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 				sp(702583, 276.4865f, 271.9778f, 92.94253f, (byte) 75, 0); //Intelligence Supply Box.
 			}
 		}, 300000));
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -384,7 +384,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -572,7 +572,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 			case 234190: //Destroyer Kunax.
 				point = 6000;
 				RaceKilledKunax = mostPlayerDamage.getRace();
-				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				ThreadPoolManager.getInstance().schedule(new Runnable() {
 					/**
 					 * 处理 run。
 					 * Handle run.
@@ -713,7 +713,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -744,7 +744,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.
@@ -770,7 +770,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler {
 	 */
 
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			/**
 			 * 处理 run。
 			 * Handle run.

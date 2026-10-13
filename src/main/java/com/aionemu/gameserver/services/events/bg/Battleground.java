@@ -1,14 +1,13 @@
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.StaticDoorService;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +45,8 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
@@ -330,7 +331,7 @@ public abstract class Battleground {
 		int playerIndex = 0;
 		while (!players.isEmpty()) {
 			int objId = players.removeFirst();
-			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+			Player pl = World.getInstance().findPlayer(objId);
 			if (pl == null) {
 				continue;
 			}
@@ -363,7 +364,7 @@ public abstract class Battleground {
 			List<Player> groupPlayers = new ArrayList<>();
 			while (groupPlayers.size() < groupSize && !players.isEmpty()) {
 				int objId = players.removeFirst();
-				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
+				Player pl = World.getInstance().findPlayer(objId);
 				if (pl != null) {
 					removePlayerFromTeam(pl);
 					groupPlayers.add(pl);
@@ -492,7 +493,7 @@ public abstract class Battleground {
 		player.getEffectController().setAbnormal(AbnormalState.PARALYZE.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
 			player.getEffectController().updatePlayerEffectIcons();
 			player.getEffectController().broadCastEffects();
@@ -594,7 +595,7 @@ public abstract class Battleground {
 	 */
 	protected void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(() -> PacketSendUtility.sendSys3Message(player, sender, msg), delay);
+			ThreadPoolManager.getInstance().schedule(() -> PacketSendUtility.sendSys3Message(player, sender, msg), delay);
 		} else {
 			PacketSendUtility.sendSys3Message(player, sender, msg);
 		}
@@ -650,7 +651,7 @@ public abstract class Battleground {
 	 * @param group 小队 / group
 	 */
 	protected void scheduleGroupDisband(final PlayerGroup group) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			while (!group.isEmpty()) {
 				PlayerGroupService.removePlayer((Player) group.getMembers().toArray()[0]);
 			}
@@ -664,7 +665,7 @@ public abstract class Battleground {
 	 * @param alliance 联盟 / alliance
 	 */
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance) {
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			while (!alliance.isEmpty()) {
 				PlayerAllianceService.removePlayer(((Player) alliance.getMembers().toArray()[0]));
 			}
@@ -691,7 +692,7 @@ public abstract class Battleground {
 	 * @param announce 是否公告 / whether to announce
 	 */
 	protected void preparePlayer(final Player pl, int time, boolean announce) {
-		GameGameplayServices.duelService().loseDuel(pl);
+		DuelService.getInstance().loseDuel(pl);
 		pl.setKillStreak(0);
 		pl.setLastAction();
 		pl.getFlyController().endFly(true);
@@ -713,8 +714,8 @@ public abstract class Battleground {
 				scheduleAnnouncement(pl, "The match begin's!!!", time);
 				// sendEventPacket(StageType.PVP_STAGE_1, 0);
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(() -> pl.getEffectController().removeAllEffects(), 2500);
-			GameThreadPoolServices.threadPoolManager().schedule(() -> createTimer(pl, getSecondsLeft()), time - 5000);
+			ThreadPoolManager.getInstance().schedule(() -> pl.getEffectController().removeAllEffects(), 2500);
+			ThreadPoolManager.getInstance().schedule(() -> createTimer(pl, getSecondsLeft()), time - 5000);
 		} else {
 			pl.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			pl.getEffectController().removeEffectByDispelCat(DispelCategoryType.ALL, SkillTargetSlot.DEBUFF, 100, 2,
@@ -835,14 +836,14 @@ public abstract class Battleground {
 	 * Starts the background periodic task (e.g. fall checks).
 	 */
 	protected void startBackgroundTask() {
-		setBackgroundTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(() -> {
+		setBackgroundTask(ThreadPoolManager.getInstance().scheduleAtFixedRate(() -> {
 			backgroundCounter++;
 			zCheck();
 			if ((backgroundCounter % 5) == 0) {
 				backgroundCounter = 0;
 			}
 		}, 30 * 1000, 1000));
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			if (getBackgroundTask() != null) {
 				getBackgroundTask().cancel(true);
 			}
@@ -1008,7 +1009,7 @@ public abstract class Battleground {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				for (Player pl : getPlayers()) {
 					returnToPreviousLocation(pl);
 				}
@@ -1020,7 +1021,7 @@ public abstract class Battleground {
 					freezePlayer(pl, 7500);
 				}
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				for (PlayerGroup group : getGroups()) {
 					for (Player pl : group.getMembers()) {
 						returnToPreviousLocation(pl);
@@ -1039,7 +1040,7 @@ public abstract class Battleground {
 					}
 				}
 			}
-			GameThreadPoolServices.threadPoolManager().schedule(() -> {
+			ThreadPoolManager.getInstance().schedule(() -> {
 				for (PlayerAlliance alliance : getAlliances()) {
 					for (Player pl : alliance.getMembers()) {
 						if (pl != null) {
@@ -1052,14 +1053,14 @@ public abstract class Battleground {
 				}
 			}, 5000);
 		}
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			List<Player> spectators = new ArrayList<>(getSpectators());
 			for (Player pl : spectators) {
 				onSpectatorLeave(pl, true);
 			}
 			getSpectators().removeAll(spectators);
 		}, 5000);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			for (Player pl : getInstance().getPlayersInside()) {
 				returnToPreviousLocation(pl);
 			}
@@ -1078,7 +1079,7 @@ public abstract class Battleground {
 	public void onSpectatorLeave(final Player spectator, boolean isIterating) {
 		endTimer(spectator);
 		returnToPreviousLocation(spectator);
-		GameThreadPoolServices.threadPoolManager().schedule(() -> {
+		ThreadPoolManager.getInstance().schedule(() -> {
 			spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
 			spectator.unsetVisualState(CreatureVisualState.HIDE3);
 			spectator.setInvul(false);

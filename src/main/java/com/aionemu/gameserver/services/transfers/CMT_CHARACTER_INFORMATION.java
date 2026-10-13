@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.transfers;
 
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import com.aionemu.gameserver.services.AccountService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 /**
  * 角色信息解析包，从跨服转移二进制流中反序列化并在目标服重建完整角色。
@@ -83,7 +83,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	public Player readInfo(String name, int targetAccount, String accountName, List<Integer> rsList, Logger textLog) {
 
 		long st = System.currentTimeMillis();
-		PlayerCommonData playerCommonData = new PlayerCommonData(GameWorldBootstrapServices.idFactory().nextId());
+		PlayerCommonData playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
 		playerCommonData.setName(name);
 		playerCommonData.setExp(readQ(), false);
 		playerCommonData.setPlayerClass(PlayerClass.getPlayerClassById((byte) readD()));
@@ -157,7 +157,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
 		if (!PlayerService.storeNewPlayer(player, accountName, targetAccount)) {
 			textLog.info("failed to store new player to " + accountName);
-			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
+			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
 			return null;
 		}
 
@@ -217,7 +217,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = GameWorldBootstrapServices.idFactory().nextId();
+				int newId = IDFactory.getInstance().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, colorExpires, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
@@ -304,7 +304,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = GameWorldBootstrapServices.idFactory().nextId();
+				int newId = IDFactory.getInstance().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, 0, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,

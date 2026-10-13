@@ -9,34 +9,19 @@ import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
-import lombok.Setter;
 import org.springframework.beans.factory.ObjectProvider;
 import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 
 /**
  * 技能引擎门面：按模板/玩家技能列表创建并应用技能与效果。
  * Skill engine facade: create and apply skills/effects from templates and player skill lists.
  * @author ATracer
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class SkillEngine {
 
-	/**
-	 * 静态单例引用。
-	 * Static singleton reference.
-	 */
-	public static final SkillEngine skillEngine = new SkillEngine();
-
-	/**
-	 * Spring 实例提供者（可选覆盖静态单例）。
-	 * Optional Spring provider that may override the static singleton.
-     * -- SETTER --
-     *  设置 Spring 实例提供者。
-     *  Sets the Spring instance provider.
-     */
-	@Setter
-    private static volatile ObjectProvider<SkillEngine> instanceProvider;
+	private static volatile ObjectProvider<SkillEngine> instanceProvider;
+	private static volatile SkillEngine resolvedInstance;
 
 	/**
 	 * 为玩家已学习技能创建 Skill 实例。
@@ -132,16 +117,40 @@ public class SkillEngine {
 	}
 
 	/**
-	 * 获取技能引擎实例（优先 Spring 提供者，否则静态单例）。
-	 * Returns the skill engine instance (Spring provider if set, else static singleton).
-	 * @return 技能引擎实例 / skill engine instance
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *         when no provider or bean is available
 	 */
 	public static SkillEngine getInstance() {
-		ObjectProvider<SkillEngine> provider = instanceProvider;
-		if (provider != null) {
-			return provider.getIfAvailable(() -> skillEngine);
+		SkillEngine resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
 		}
-		return skillEngine;
+		ObjectProvider<SkillEngine> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("SkillEngine 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	/**
+	 * 注入 Spring 的实例提供者。
+	 * Sets the Spring instance provider.
+	 *
+	 * @param instanceProvider 实例提供者 / instance provider
+	 */
+	public static void setInstanceProvider(ObjectProvider<SkillEngine> instanceProvider) {
+		SkillEngine.instanceProvider = instanceProvider;
+		resolvedInstance = null;
 	}
 
     /**

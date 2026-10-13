@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
-import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -164,7 +163,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 		if (player != null && breakDialogSelectLoop(player, targetObjectId, dialogId, lastPage, questId)) {
 			return;
 		}
-		QuestEngine questEngine = GameEngineServices.questEngine();
+		QuestEngine questEngine = QuestEngine.getInstance();
 		var metadata = questEngine.questCatalog().findMetadata(questId).orElse(null);
 		QuestEnv env = new QuestEnv(null, player, questId, 0);
 

@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.world.World;
 
 /**
  * 维尔索要塞相关 NPC AI：Wealhtheow Keep Rune Elite（@AIName "rune_elite"），继承 AggressiveNpcAI2。
@@ -35,7 +36,7 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 			case 251825:
 			case 251830:
 				treasureChest();
-				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+				ThreadPoolManager.getInstance().schedule(() -> {
 					spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
 					spawn(701481, 787.1314f, 288.72644f, 143.20233f, (byte) 30);
 					spawn(701481, 793.9525f, 289.05054f, 143.18248f, (byte) 15);
@@ -53,6 +54,6 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceRuneElite() {
-		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
+		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite));
 	}
 }
