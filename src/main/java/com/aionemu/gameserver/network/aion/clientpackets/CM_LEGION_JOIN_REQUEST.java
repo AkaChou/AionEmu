@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 提交军团加入申请的客户端包。
@@ -39,6 +39,6 @@ public class CM_LEGION_JOIN_REQUEST extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		GameCoreGameplayServices.legionService().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
+		LegionService.getInstance().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
 	}
 }

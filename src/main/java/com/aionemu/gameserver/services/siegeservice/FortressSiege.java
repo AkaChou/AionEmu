@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.services.LegionService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
@@ -71,7 +71,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		AbyssPointsService.addListener(addAPListener);
 		deSpawnNpcs(getSiegeLocationId());
 		clearPlayers();
-		// GameCoreGameplayServices.battlefieldUnionService().onSiegeStart(getSiegeLocation().getLocationId());
+		// BattlefieldUnionService.getInstance().onSiegeStart(getSiegeLocation().getLocationId());
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.SIEGE);
 		initSiegeBoss();
 		if (getSiegeLocation().getLocationId() == 1131) {
@@ -518,7 +518,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		}
 		List<SiegeLegionReward> legionRewards = getSiegeLocation().getLegionReward();
 		SiegeResult resultLegion = isBossKilled() ? SiegeResult.OCCUPY : SiegeResult.DEFENDER;
-		int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(getSiegeLocation().getLegionId());
+		int legionBGeneral = LegionService.getInstance().getLegionBGeneral(getSiegeLocation().getLegionId());
 		if (legionBGeneral != 0) {
 			PlayerCommonData BGeneral = PlayerService.daos().playerDAO().loadPlayerCommonData(legionBGeneral);
 			if (legionRewards != null) {

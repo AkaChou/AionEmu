@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.services.drop;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
+import com.aionemu.gameserver.services.drop.DropService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -56,6 +57,7 @@ import com.aionemu.gameserver.world.zone.ZoneName;
  */
 @Slf4j
 public class DropRegistrationService {
+	private final DropService dropService;
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
 	private final ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<>();
@@ -77,7 +79,9 @@ public class DropRegistrationService {
 	 * 构造并初始化掉落注册服务。
 	 * Constructs and initializes the drop registration service.
 	 */
-	public DropRegistrationService() {
+	public DropRegistrationService(@NonNull DropService dropService) {
+		this.dropService = Objects.requireNonNull(dropService, "dropService must not be null");
+
 		reload();
 	}
 
@@ -176,7 +180,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
 				for (DropItem dropItem : dropItems) {
-					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItem.getIndex(), true);
+					dropService.requestDropItem(player, npcObjId, dropItem.getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_PET(false, npcObjId));
@@ -193,7 +197,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
 				for (DropItem dropItem : dropItems) {
-					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItem.getIndex(), true);
+					dropService.requestDropItem(player, npcObjId, dropItem.getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, false));
@@ -201,7 +205,7 @@ public class DropRegistrationService {
 				return;
 			}
 		}
-		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
+		dropService.scheduleFreeForAll(npcObjId);
 	}
 
 	/**

@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -46,7 +46,7 @@ public class SiegeAutoRace {
 			GameFeatureServices.siegeService().deSpawnNpcs(locid);
 			final int oldOwnerRaceId = loc.getRace().getRaceId();
 			final int legionId = loc.getLegionId();
-			final String legionName = legionId != 0 ? GameCoreGameplayServices.legionService().getLegion(legionId).getLegionName()
+			final String legionName = legionId != 0 ? LegionService.getInstance().getLegion(legionId).getLegionName()
 					: "";
 			final DescriptionId NameId = new DescriptionId(loc.getTemplate().getNameId());
 			if (ElyosAutoSiege(locid)) {

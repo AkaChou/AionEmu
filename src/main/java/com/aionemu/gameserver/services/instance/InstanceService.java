@@ -6,10 +6,10 @@ import com.aionemu.gameserver.ai.RetailDynamicAreaEngine;
 import com.aionemu.gameserver.ai.RetailWindstreamEngine;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
@@ -608,7 +608,7 @@ public class InstanceService {
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onEnterInstance(player);
-		GameCoreGameplayServices.autoGroupService().onEnterInstance(player);
+		AutoGroupService.getInstance().onEnterInstance(player);
 		for (Item item : player.getInventory().getItems()) {
 			if (item.getItemTemplate().getOwnershipWorld() == 0) {
 				continue;
@@ -634,7 +634,7 @@ public class InstanceService {
 			}
 		}
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			GameCoreGameplayServices.autoGroupService().onLeaveInstance(player);
+			AutoGroupService.getInstance().onLeaveInstance(player);
 		}
 	}
 

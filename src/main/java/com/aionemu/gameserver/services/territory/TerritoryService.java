@@ -1,9 +1,9 @@
 package com.aionemu.gameserver.services.territory;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.TreeMap;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -24,6 +24,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Territory service managing legion territory conquest, buffs and teleports.
  */
 public class TerritoryService {
+	private final LegionService legionService;
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private final TreeMap<Integer, LegionTerritory> territories = new TreeMap<>();
 	private final LegionDao legionDAO;
@@ -34,7 +35,9 @@ public class TerritoryService {
 	 *
 	 * @param legionDAO 军团数据访问对象 / Legion DAO
 	 */
-	public TerritoryService(@NonNull LegionDao legionDAO) {
+	public TerritoryService(@NonNull LegionDao legionDAO, @NonNull LegionService legionService) {
+		this.legionService = Objects.requireNonNull(legionService, "legionService must not be null");
+
 		this.legionDAO = legionDAO;
 	}
 
@@ -43,7 +46,7 @@ public class TerritoryService {
 	 * Initializes all territory slots and loads legion ownership from DB.
 	 */
 	public void initTerritory() {
-		LegionService ls = GameCoreGameplayServices.legionService();
+		LegionService ls = legionService;
 		Collection<Legion> legions = new ArrayList<>();
 		for (int i = 1; i <= 6; i++) {
 			territories.put(i, new LegionTerritory(i));

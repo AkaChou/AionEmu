@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.List;
 
@@ -55,9 +55,9 @@ public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 		if (queriedRace != null) {
 			Player player = this.getConnection().getActivePlayer();
 			if (player.isAbyssRankListUpdated(updateType)) {
-				sendPacket(new SM_ABYSS_RANKING_PLAYERS(GameCoreGameplayServices.abyssRankingCache().getLastUpdate(), queriedRace));
+				sendPacket(new SM_ABYSS_RANKING_PLAYERS(AbyssRankingCache.getInstance().getLastUpdate(), queriedRace));
 			} else {
-				List<SM_ABYSS_RANKING_PLAYERS> results = GameCoreGameplayServices.abyssRankingCache().getPlayers(queriedRace);
+				List<SM_ABYSS_RANKING_PLAYERS> results = AbyssRankingCache.getInstance().getPlayers(queriedRace);
 				for (SM_ABYSS_RANKING_PLAYERS packet : results) {
 					sendPacket(packet);
 				}

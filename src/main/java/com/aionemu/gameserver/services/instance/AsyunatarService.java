@@ -2,8 +2,10 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
+import java.util.Objects;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -29,6 +31,17 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 
 public class AsyunatarService {
+	private final AutoGroupService autoGroupService;
+
+	/**
+	 * 使用 Spring 提供的 AutoGroupService 构造服务。
+	 * Constructs the service with the Spring-provided AutoGroupService.
+	 *
+	 * @param autoGroupService AutoGroupService 实例 / AutoGroupService instance
+	 */
+	public AsyunatarService(@NonNull AutoGroupService autoGroupService) {
+		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
+	}
 	private static volatile ObjectProvider<AsyunatarService> instanceProvider;
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<>();
@@ -55,7 +68,7 @@ public class AsyunatarService {
         GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
-			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+			 autoGroupService.unRegisterInstance(maskId);
 			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();

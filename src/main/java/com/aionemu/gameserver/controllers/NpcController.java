@@ -2,8 +2,8 @@ package com.aionemu.gameserver.controllers;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
@@ -118,7 +118,7 @@ public class NpcController extends CreatureController<Npc> {
 				GameThreadPoolServices.threadPoolManager().schedule(() -> {
 					if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
 						PacketSendUtility.sendPacket(player, new SM_EMOTION(owner, EmotionType.DIE, 0, 0));
-						GameCoreGameplayServices.dropService().see(player, owner);
+						DropService.getInstance().see(player, owner);
 					}
 				}, 100);
 			}
@@ -173,7 +173,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDespawn() {
 		Npc owner = getOwner();
-		GameCoreGameplayServices.dropService().unregisterDrop(getOwner());
+		DropService.getInstance().unregisterDrop(getOwner());
 		owner.getAi2().onGeneralEvent(AIEventType.DESPAWNED);
 		super.onDespawn();
 	}

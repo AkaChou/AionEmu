@@ -17,6 +17,8 @@ import com.aionemu.gameserver.persistence.dao.HouseScriptDao;
 import com.aionemu.gameserver.persistence.dao.InventoryDao;
 import com.aionemu.gameserver.persistence.dao.ItemCooldownDao;
 import com.aionemu.gameserver.persistence.dao.ItemStoneDao;
+import com.aionemu.gameserver.persistence.dao.LegionDao;
+import com.aionemu.gameserver.persistence.dao.LegionMemberDao;
 import com.aionemu.gameserver.persistence.dao.MailDao;
 import com.aionemu.gameserver.persistence.dao.OldNameDao;
 import com.aionemu.gameserver.persistence.dao.PlayerAppearanceDao;
@@ -294,6 +296,16 @@ public class StubPersistenceDaos {
 	@Bean
 	PlayerTransformDao playerTransformDao() {
 		return stub(PlayerTransformDao.class);
+	}
+
+	@Bean
+	LegionDao legionDao() {
+		return stub(LegionDao.class);
+	}
+
+	@Bean
+	LegionMemberDao legionMemberDao() {
+		return stub(LegionMemberDao.class);
 	}
 
 	/** 生成返回默认值的动态代理桩。 / Builds a dynamic-proxy stub returning default values. */

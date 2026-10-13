@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.ai;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -23,6 +22,7 @@ import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.SimpleCollectItemHandler;
 import com.aionemu.gameserver.model.templates.quest.QuestNpc;
 import com.aionemu.gameserver.services.QuestService;
+import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,9 +111,9 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 				registeredPlayers.add(player);
 			}
 			AI2Actions.registerDrop(this, player, registeredPlayers);
-			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
+			DropService.getInstance().requestDropList(player, getObjectId());
 		} else if (registeredPlayers.contains(player)) {
-			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
+			DropService.getInstance().requestDropList(player, getObjectId());
 		}
 	}
 

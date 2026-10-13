@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.mail.MailService;
 
 /**
  * 客户端发送邮件请求包。
@@ -47,7 +47,7 @@ public class CM_SEND_MAIL extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		if (!player.isTrading() && kinahCount < 1000000000 && kinahCount > -1 && itemCount > -2) {
-			GameCoreGameplayServices.mailService().sendMail(player, recipientName, title, message, itemObjId, itemCount, kinahCount,
+			MailService.getInstance().sendMail(player, recipientName, title, message, itemObjId, itemCount, kinahCount,
 					0, LetterType.getLetterTypeById(idLetterType));
 		}
 	}

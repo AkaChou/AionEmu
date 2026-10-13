@@ -2,10 +2,11 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
+import java.util.Objects;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
  */
 @Slf4j
 public class AbyssRankCleaningService {
+	private final AbyssRankingCache abyssRankingCache;
 
 	/**
 	 * -- SETTER --
@@ -44,7 +46,9 @@ public class AbyssRankCleaningService {
 	 *
 	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 */
-	public AbyssRankCleaningService(@NonNull AbyssRankDao abyssRankDAO) {
+	public AbyssRankCleaningService(@NonNull AbyssRankDao abyssRankDAO, @NonNull AbyssRankingCache abyssRankingCache) {
+		this.abyssRankingCache = Objects.requireNonNull(abyssRankingCache, "abyssRankingCache must not be null");
+
 		this.abyssRankDAO = abyssRankDAO;
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
@@ -104,7 +108,7 @@ public class AbyssRankCleaningService {
 
 		if (!ToArray.isEmpty()) {
 			abyssRankDAO.removePlayer(ToArray);
-			GameCoreGameplayServices.abyssRankingCache().reloadRankings();
+			abyssRankingCache.reloadRankings();
 			log.info(I18n.get("log.3ff8b7b008ed", ToArray.size(), (System.currentTimeMillis() - startTime) / 1000L));
 		} else {
 			log.info(I18n.get("log.5be7179a3b2d"));

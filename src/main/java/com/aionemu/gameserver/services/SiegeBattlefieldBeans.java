@@ -68,56 +68,56 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public KamarBattlefieldService kamarBattlefieldService() {
-        return new KamarBattlefieldService();
+    public KamarBattlefieldService kamarBattlefieldService(AutoGroupService autoGroupService) {
+        return new KamarBattlefieldService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
-        return new EngulfedOphidanBridgeService();
+    public EngulfedOphidanBridgeService engulfedOphidanBridgeService(AutoGroupService autoGroupService) {
+        return new EngulfedOphidanBridgeService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
-        return new SuspiciousOphidanBridgeService();
+    public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService(AutoGroupService autoGroupService) {
+        return new SuspiciousOphidanBridgeService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public IronWallWarfrontService ironWallWarfrontService() {
-        return new IronWallWarfrontService();
+    public IronWallWarfrontService ironWallWarfrontService(AutoGroupService autoGroupService) {
+        return new IronWallWarfrontService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public IdgelDomeService idgelDomeService() {
-        return new IdgelDomeService();
+    public IdgelDomeService idgelDomeService(AutoGroupService autoGroupService) {
+        return new IdgelDomeService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public IdgelDomeLandmarkService idgelDomeLandmarkService() {
-        return new IdgelDomeLandmarkService();
+    public IdgelDomeLandmarkService idgelDomeLandmarkService(AutoGroupService autoGroupService) {
+        return new IdgelDomeLandmarkService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public HallOfTenacityService hallOfTenacityService() {
-        return new HallOfTenacityService();
+    public HallOfTenacityService hallOfTenacityService(AutoGroupService autoGroupService) {
+        return new HallOfTenacityService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public GrandArenaTrainingCampService grandArenaTrainingCampService() {
-        return new GrandArenaTrainingCampService();
+    public GrandArenaTrainingCampService grandArenaTrainingCampService(AutoGroupService autoGroupService) {
+        return new GrandArenaTrainingCampService(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public IDRunService idRunService() {
-        return new IDRunService();
+    public IDRunService idRunService(AutoGroupService autoGroupService) {
+        return new IDRunService(autoGroupService);
     }
 
     @Bean
@@ -134,14 +134,14 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public DredgionService2 dredgionService() {
-        return new DredgionService2();
+    public DredgionService2 dredgionService(AutoGroupService autoGroupService) {
+        return new DredgionService2(autoGroupService);
     }
 
     @Bean
     @Lazy
-    public AsyunatarService asyunatarService() {
-        return new AsyunatarService();
+    public AsyunatarService asyunatarService(AutoGroupService autoGroupService) {
+        return new AsyunatarService(autoGroupService);
     }
 
     @Bean
@@ -164,8 +164,8 @@ public class SiegeBattlefieldBeans {
 
     @Bean
     @Lazy
-    public SiegeService siegeService(SiegeLocationDao dao) {
-        return new SiegeService(dao);
+    public SiegeService siegeService(SiegeLocationDao dao, LegionService legionService) {
+        return new SiegeService(dao, legionService);
     }
 
     @Bean

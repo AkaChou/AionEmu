@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 请求发送自定义军团徽章信息的客户端包。
@@ -33,13 +33,13 @@ public class CM_LEGION_SEND_EMBLEM_INFO extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		Legion legion = GameCoreGameplayServices.legionService().getLegion(legionId);
+		Legion legion = LegionService.getInstance().getLegion(legionId);
 		if (legion != null) {
 			LegionEmblem legionEmblem = legion.getLegionEmblem();
 			if (legionEmblem.getCustomEmblemData() == null) {
 				return;
 			}
-			GameCoreGameplayServices.legionService().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
+			LegionService.getInstance().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
 					legion.getLegionName());
 		}
 	}

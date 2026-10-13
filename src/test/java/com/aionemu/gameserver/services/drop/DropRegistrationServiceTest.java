@@ -40,7 +40,7 @@ class DropRegistrationServiceTest {
 		try {
 			DropConfig.DISABLE_DROP_REDUCTION = false;
 			DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES = "0, 42,,";
-			DropRegistrationService service = new DropRegistrationService();
+			DropRegistrationService service = new DropRegistrationService(new DropService());
 
 			assertNull(service.getReductionDropRate(1, 20, 42, false));
 			assertNull(service.getReductionDropRate(1, 20, 100, true));
@@ -88,14 +88,14 @@ class DropRegistrationServiceTest {
 		modifiers.setBoostDropRate(0.25f);
 		modifiers.setReductionDropRate(0f);
 
-		DropRegistrationService service = new DropRegistrationService();
+		DropRegistrationService service = new DropRegistrationService(new DropService());
 		assertEquals(100f, service.calculateGlobalDropChance(rule, ItemId.KINAH.value(), modifiers));
 		assertEquals(0f, service.calculateGlobalDropChance(rule, 1, modifiers));
 	}
 
 	@Test
 	void normalizesDuplicateDropIndicesToUniqueSequentialValues() {
-		DropRegistrationService service = new DropRegistrationService();
+		DropRegistrationService service = new DropRegistrationService(new DropService());
 		Set<DropItem> dropItems = new HashSet<>();
 		dropItems.add(dropItem(1));
 		dropItems.add(dropItem(1));

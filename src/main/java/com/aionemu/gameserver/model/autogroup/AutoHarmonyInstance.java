@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.services.AutoGroupService;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class AutoHarmonyInstance extends AutoInstance {
 			players.remove(player.getObjectId());
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 5));
 			if (players.isEmpty()) {
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance.getInstanceId());
+				AutoGroupService.getInstance().unRegisterInstance(instance.getInstanceId());
 			}
 			return;
 		}

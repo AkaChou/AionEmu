@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_SEND_EMBLEM;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 请求发送军团徽章数据的客户端包。
@@ -41,7 +41,7 @@ public class CM_LEGION_SEND_EMBLEM extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		Legion legion = GameCoreGameplayServices.legionService().getLegion(legionId);
+		Legion legion = LegionService.getInstance().getLegion(legionId);
 
 		if (legion != null) {
 			LegionEmblem legionEmblem = legion.getLegionEmblem();
@@ -50,7 +50,7 @@ public class CM_LEGION_SEND_EMBLEM extends AionClientPacket {
 						legionEmblem.getColor_g(), legionEmblem.getColor_b(), legion.getLegionName(),
 						legionEmblem.getEmblemType(), 0));
 			} else {
-				GameCoreGameplayServices.legionService().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
+				LegionService.getInstance().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
 						legion.getLegionName());
 			}
 		}

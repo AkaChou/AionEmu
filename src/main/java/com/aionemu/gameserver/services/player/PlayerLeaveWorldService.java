@@ -2,6 +2,9 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.LegionService;
+import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -13,7 +16,6 @@ import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -77,7 +79,7 @@ public class PlayerLeaveWorldService {
 		GameRuntimeServices.exchangeService().cancelExchange(player);
 		GameFeatureServices.repurchaseService().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			GameCoreGameplayServices.autoGroupService().onPlayerLogOut(player);
+			AutoGroupService.getInstance().onPlayerLogOut(player);
 		}
 		GameFeatureServices.protectorConquerorService().onLogout(player);
 		InstanceService.onLogOut(player);
@@ -85,7 +87,7 @@ public class PlayerLeaveWorldService {
 		GameFeatureServices.kiskService().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
-			GameCoreGameplayServices.dropService().closeDropList(player, player.getLootingNpcOid());
+			DropService.getInstance().closeDropList(player, player.getLootingNpcOid());
 		}
 		if (player.isInPrison()) {
 			long prisonTimer = System.currentTimeMillis() - player.getStartPrison();
@@ -103,7 +105,7 @@ public class PlayerLeaveWorldService {
 		GameEventBootstrapServices.shugoSweepService().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
-		GameCoreGameplayServices.legionService().LegionWhUpdate(player);
+		LegionService.getInstance().LegionWhUpdate(player);
 		player.getEffectController().removeAllEffects(true);
 		player.getLifeStats().cancelAllTasks();
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -135,7 +137,7 @@ public class PlayerLeaveWorldService {
 		PunishmentService.stopPrisonTask(player, true);
 		PunishmentService.stopGatherableTask(player, true);
 		if (player.isLegionMember()) {
-			GameCoreGameplayServices.legionService().onLogout(player);
+			LegionService.getInstance().onLogout(player);
 		}
 		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();

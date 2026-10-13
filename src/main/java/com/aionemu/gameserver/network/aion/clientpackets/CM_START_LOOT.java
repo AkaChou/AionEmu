@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.drop.DropService;
 
 /**
  * 客户端打开/关闭掉落列表请求包。
@@ -46,10 +46,10 @@ public class CM_START_LOOT extends AionClientPacket {
 
 		if (action == 0) // 打开 / open
 		{
-			GameCoreGameplayServices.dropService().requestDropList(player, targetObjectId);
+			DropService.getInstance().requestDropList(player, targetObjectId);
 		} else if (action == 1) // 关闭 / close
 		{
-			GameCoreGameplayServices.dropService().closeDropList(player, targetObjectId);
+			DropService.getInstance().closeDropList(player, targetObjectId);
 		}
 	}
 }

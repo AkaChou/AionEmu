@@ -31,6 +31,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.rift.RiftInformer;
+import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
@@ -128,7 +129,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		TeleportService2.playerTransformation(activePlayer);
 		TeleportService2.instanceTransformation(activePlayer);
 		// 战场联合 5.3 / BattleField Union 5.3
-		// GameCoreGameplayServices.battlefieldUnionService().onEnterWorld(activePlayer);
+		// BattlefieldUnionService.getInstance().onEnterWorld(activePlayer);
 		// 宠物 / Pet
 		Pet pet = activePlayer.getPet();
 		if (pet != null && !pet.isSpawned()) {

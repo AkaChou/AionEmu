@@ -2,6 +2,9 @@ package com.aionemu.gameserver.services.player;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.LegionService;
+import com.aionemu.gameserver.services.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
@@ -19,7 +22,6 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -448,13 +450,13 @@ public final class PlayerEnterWorldService {
 			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);
 			// 军团请求 4.9.1 / Legion Request 4.9.1
 			if (player.isLegionMember()) {
-				GameCoreGameplayServices.legionService().onLogin(player);
+				LegionService.getInstance().onLogin(player);
 				if (player.getLegionMember().isBrigadeGeneral() && !player.getLegion().getJoinRequestMap().isEmpty()) {
 					client.sendPacket(new SM_LEGION_REQUEST_LIST(player.getLegion().getJoinRequestMap().values()));
 				}
 			} else {
 				PlayerService.daos().playerDAO().getJoinRequestState(player);
-				GameCoreGameplayServices.legionService().handleJoinRequestGetAnswer(player);
+				LegionService.getInstance().handleJoinRequestGetAnswer(player);
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
 			client.sendPacket(new SM_EMOTION_LIST((byte) 0, player.getEmotions().getEmotions()));
@@ -633,7 +635,7 @@ public final class PlayerEnterWorldService {
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
 			GameFeatureServices.windyGorgeService().onLogin(player);
-			GameCoreGameplayServices.mailService().onPlayerLogin(player);
+			MailService.getInstance().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
 			GameRuntimeServices.brokerService().onPlayerLogin(player);
 			sendMacroList(client, player);
@@ -641,7 +643,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_RECIPE_LIST(player.getRecipeList().getRecipeList()));
 			GameRuntimeServices.petitionService().onPlayerLogin(player);
 			if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
+				AutoGroupService.getInstance().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
 			GameRuntimeServices.gmService().onPlayerLogin(player);

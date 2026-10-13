@@ -13,6 +13,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
 import com.aionemu.gameserver.persistence.dao.PlayerWardrobeDao;
 import com.aionemu.gameserver.persistence.dao.SkillMotionDao;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
@@ -58,8 +59,8 @@ public class EventBeans {
     @Bean
     @Lazy
     public AbyssRankUpdateService abyssRankUpdateService(AbyssRankDao abyssRankDao,
-            ServerVariableDao serverVariablesDao) {
-        return new AbyssRankUpdateService(abyssRankDao, serverVariablesDao);
+            ServerVariableDao serverVariablesDao, AbyssRankingCache abyssRankingCache) {
+        return new AbyssRankUpdateService(abyssRankDao, serverVariablesDao, abyssRankingCache);
     }
 
     @Bean

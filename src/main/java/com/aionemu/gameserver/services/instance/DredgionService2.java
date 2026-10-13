@@ -2,8 +2,10 @@ package com.aionemu.gameserver.services.instance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
+import java.util.Objects;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -23,6 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 
 public class DredgionService2 {
+	private final AutoGroupService autoGroupService;
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;
@@ -32,7 +35,9 @@ public class DredgionService2 {
 	private final byte maskLvlGradeC = 1, maskLvlGradeB = 2, maskLvlGradeA = 3;
 	public static final byte minLevel = 46, capLevel = 61;
 
-	public DredgionService2() {
+	public DredgionService2(@NonNull AutoGroupService autoGroupService) {
+		this.autoGroupService = Objects.requireNonNull(autoGroupService, "autoGroupService must not be null");
+
 		this.autoGroupUnreg = new SM_AUTO_GROUP[this.maskLvlGradeA + 1];
 		this.autoGroupReg = new SM_AUTO_GROUP[this.autoGroupUnreg.length];
 		for (byte i = this.maskLvlGradeC; i <= this.maskLvlGradeA; i++) {
@@ -61,9 +66,9 @@ public class DredgionService2 {
 		GameThreadPoolServices.threadPoolManager().schedule(() -> {
 			 registerAvailable = false;
 			 playersWithCooldown.clear();
-			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
-			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
-			 GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
+			 autoGroupService.unRegisterInstance(maskLvlGradeA);
+			 autoGroupService.unRegisterInstance(maskLvlGradeB);
+			 autoGroupService.unRegisterInstance(maskLvlGradeC);
 			 Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			 while (iter.hasNext()) {
 				 Player player = iter.next();

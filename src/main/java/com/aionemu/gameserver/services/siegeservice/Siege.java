@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services.siegeservice;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -103,7 +102,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 		}
 		onSiegeStart();
 		if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-			GameCoreGameplayServices.balaurAssaultService().onSiegeStart(this);
+			BalaurAssaultService.getInstance().onSiegeStart(this);
 		}
 	}
 
@@ -124,7 +123,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 		if (finished.compareAndSet(false, true)) {
 			onSiegeFinish();
 			if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-				GameCoreGameplayServices.balaurAssaultService().onSiegeFinish(this);
+				BalaurAssaultService.getInstance().onSiegeFinish(this);
 			}
 		} else {
 			log.error(I18n.get("log.441230160aab", siegeLocation.getLocationId()));

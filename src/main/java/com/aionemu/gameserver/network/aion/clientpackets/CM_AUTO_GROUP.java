@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
@@ -50,16 +50,16 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			if (ert == null) {
 				return;
 			}
-			GameCoreGameplayServices.autoGroupService().startLooking(player, instanceMaskId, ert);
+			AutoGroupService.getInstance().startLooking(player, instanceMaskId, ert);
 			break;
 		case 101:
-			GameCoreGameplayServices.autoGroupService().unregisterLooking(player, instanceMaskId);
+			AutoGroupService.getInstance().unregisterLooking(player, instanceMaskId);
 			break;
 		case 102:
-			GameCoreGameplayServices.autoGroupService().pressEnter(player, instanceMaskId);
+			AutoGroupService.getInstance().pressEnter(player, instanceMaskId);
 			break;
 		case 103:
-			GameCoreGameplayServices.autoGroupService().cancelEnter(player, instanceMaskId);
+			AutoGroupService.getInstance().cancelEnter(player, instanceMaskId);
 			break;
 		case 104:
 			GameFeatureServices.dredgionService().showWindow(player, instanceMaskId);

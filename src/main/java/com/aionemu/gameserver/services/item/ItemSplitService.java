@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.services.item;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
 
@@ -79,7 +79,7 @@ public class ItemSplitService {
 				return;
 			}
 			if (sourceStorageType != destinationStorageType) {
-				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 					destStorage);
 			}
 			Item newItem = ItemFactory.newItem(sourceItem.getItemTemplate().getTemplateId(), splitAmount);
@@ -95,7 +95,7 @@ public class ItemSplitService {
 			}
 		} else if (targetItem.getItemId() == sourceItem.getItemId()) {
 			if (sourceStorageType != destinationStorageType) {
-				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 					destStorage);
 			}
 			mergeStacks(sourceStorage, destStorage, sourceItem, targetItem, splitAmount);

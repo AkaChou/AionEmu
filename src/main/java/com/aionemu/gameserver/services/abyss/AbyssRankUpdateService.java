@@ -2,10 +2,11 @@ package com.aionemu.gameserver.services.abyss;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
+import java.util.Objects;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -40,6 +41,7 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
  */
 @Slf4j
 public class AbyssRankUpdateService {
+	private final AbyssRankingCache abyssRankingCache;
 	/**
 	 * -- SETTER --
 	 * 注入 Spring 实例提供者。
@@ -60,7 +62,9 @@ public class AbyssRankUpdateService {
 	 * @param abyssRankDAO       欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 * @param serverVariablesDAO 服务器变量数据访问对象 / Server-variables DAO
 	 */
-	public AbyssRankUpdateService(@NonNull AbyssRankDao abyssRankDAO, @NonNull ServerVariableDao serverVariablesDAO) {
+	public AbyssRankUpdateService(@NonNull AbyssRankDao abyssRankDAO, @NonNull ServerVariableDao serverVariablesDAO, @NonNull AbyssRankingCache abyssRankingCache) {
+		this.abyssRankingCache = Objects.requireNonNull(abyssRankingCache, "abyssRankingCache must not be null");
+
 		this.abyssRankDAO = abyssRankDAO;
 		this.serverVariablesDAO = serverVariablesDAO;
 	}
@@ -228,7 +232,7 @@ public class AbyssRankUpdateService {
 		GameThreadPoolServices.threadPoolManager().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				GameCoreGameplayServices.abyssRankingCache().reloadRankings();
+				abyssRankingCache.reloadRankings();
 			}
 		}, 3 * 1000);
 	}

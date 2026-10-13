@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -30,6 +29,7 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -544,7 +544,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler {
 					}
 					onExitInstance(player);
 				}
-				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+				AutoGroupService.getInstance().unRegisterInstance(instanceId);
 			}
 		}, 120000);
 	}

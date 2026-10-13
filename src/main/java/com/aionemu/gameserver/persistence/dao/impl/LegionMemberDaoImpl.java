@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
+import com.aionemu.gameserver.services.LegionService;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.aionemu.boot.i18n.I18n;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
@@ -96,7 +96,7 @@ public class LegionMemberDaoImpl extends ServiceImpl<LegionMemberMapper, LegionM
 			legionMember.setNickname(po.getNickname());
 			legionMember.setSelfIntro(po.getSelfintro());
 			legionMember.setChallengeScore(po.getChallengeScore());
-			legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(po.getLegionId()));
+			legionMember.setLegion(LegionService.getInstance().getLegion(po.getLegionId()));
 			return legionMember;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.b98d06a4d45a", playerObjId), e);
@@ -131,7 +131,7 @@ public class LegionMemberDaoImpl extends ServiceImpl<LegionMemberMapper, LegionM
 			}
 			legionMemberEx.setNickname((String) row.get("nickname"));
 			legionMemberEx.setSelfIntro((String) row.get("selfintro"));
-			legionMemberEx.setLegion(GameCoreGameplayServices.legionService().getLegion(toInt(row.get("legion_id"))));
+			legionMemberEx.setLegion(LegionService.getInstance().getLegion(toInt(row.get("legion_id"))));
 			return legionMemberEx;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.dfcfd04a2c84", playerObjId), e);
@@ -166,7 +166,7 @@ public class LegionMemberDaoImpl extends ServiceImpl<LegionMemberMapper, LegionM
 			}
 			legionMember.setNickname((String) row.get("nickname"));
 			legionMember.setSelfIntro((String) row.get("selfintro"));
-			legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(toInt(row.get("legion_id"))));
+			legionMember.setLegion(LegionService.getInstance().getLegion(toInt(row.get("legion_id"))));
 			return legionMember;
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.29172f0eb8e2", playerName), e);

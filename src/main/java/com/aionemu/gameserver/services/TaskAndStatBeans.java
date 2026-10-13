@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
@@ -215,7 +216,7 @@ public class TaskAndStatBeans {
 
     @Bean
     @Lazy
-    public AbyssRankCleaningService abyssRankCleaningService(AbyssRankDao dao) {
-        return new AbyssRankCleaningService(dao);
+    public AbyssRankCleaningService abyssRankCleaningService(AbyssRankDao dao, AbyssRankingCache abyssRankingCache) {
+        return new AbyssRankCleaningService(dao, abyssRankingCache);
     }
 }

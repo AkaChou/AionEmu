@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -10,6 +9,7 @@ import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -144,7 +144,7 @@ public class PlayerInfo extends AdminCommand {
 				if (legion == null) {
 					PacketSendUtility.sendMessage(admin, "-legion info: no legion");
 				} else {
-					ArrayList<LegionMemberEx> legionmemblist = GameCoreGameplayServices.legionService().loadLegionMemberExList(legion, null);
+					ArrayList<LegionMemberEx> legionmemblist = LegionService.getInstance().loadLegionMemberExList(legion, null);
 					Iterator<LegionMemberEx> it = legionmemblist.iterator();
 					strbld.append("-legion info:\n  name: ")
 						.append(legion.getLegionName())

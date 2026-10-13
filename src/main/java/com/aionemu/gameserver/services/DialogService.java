@@ -5,7 +5,6 @@ import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameCraftServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -250,8 +249,8 @@ public class DialogService {
 			}
 			case 4 -> handleStigmaDialog(player, targetObjectId, titleId, false);
 			case 5 -> PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 2));
-			case 6 -> GameCoreGameplayServices.legionService().requestDisbandLegion(npc, player);
-			case 7 -> GameCoreGameplayServices.legionService().recreateLegion(npc, player);
+			case 6 -> LegionService.getInstance().requestDisbandLegion(npc, player);
+			case 7 -> LegionService.getInstance().recreateLegion(npc, player);
 			case 26 -> {
 				// 仓库。 / Warehouse.
 				if (player.getLevel() < 10) {
@@ -416,7 +415,7 @@ public class DialogService {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
 					return;
 				}
-				GameCoreGameplayServices.legionService().openLegionWarehouse(player, npc);
+				LegionService.getInstance().openLegionWarehouse(player, npc);
 			}
 			case 56, 107, 127 -> {
 				// 关闭军团仓库(56) / 折价升级(107) / 任务黄金奖励(127)：保持空操作。

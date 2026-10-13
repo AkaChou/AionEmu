@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.services.player;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.services.LegionService;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
@@ -180,7 +180,7 @@ public class PlayerService {
 		PlayerCommonData pcd = playerAccountData.getPlayerCommonData();
 		PlayerAppearance appearance = playerAccountData.getAppereance();
 		player = new Player(new PlayerController(), pcd, appearance, account);
-		LegionMember legionMember = GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId());
+		LegionMember legionMember = LegionService.getInstance().getLegionMember(player.getObjectId());
 		if (legionMember != null) {
 			player.setLegionMember(legionMember);
 		}

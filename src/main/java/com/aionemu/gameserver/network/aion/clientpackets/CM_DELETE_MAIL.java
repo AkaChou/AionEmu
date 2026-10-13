@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.mail.MailService;
 
 /**
  * 请求删除邮件的客户端包。
@@ -39,6 +39,6 @@ public class CM_DELETE_MAIL extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		GameCoreGameplayServices.mailService().deleteMail(player, mailObjId);
+		MailService.getInstance().deleteMail(player, mailObjId);
 	}
 }

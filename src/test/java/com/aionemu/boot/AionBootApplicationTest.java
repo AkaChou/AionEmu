@@ -1,5 +1,6 @@
 package com.aionemu.boot;
 
+import com.aionemu.gameserver.lifecycle.CoreGameplayServiceBindings;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,7 +37,6 @@ import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -190,7 +190,7 @@ class AionBootApplicationTest {
 		try (AnnotationConfigApplicationContext context = bootContextWithoutDataSource()) {
 			assertEquals(AdminService.class, context.getType("adminService"));
 			assertEquals(GameRuntimeServicesLifecycle.class, context.getType("gameRuntimeServicesLifecycle"));
-			assertEquals(GameCoreGameplayServices.class, context.getType("gameCoreGameplayServices"));
+			assertEquals(CoreGameplayServiceBindings.class, context.getType("coreGameplayServiceBindings"));
 			assertEquals(GameFeatureServices.class, context.getType("gameFeatureServices"));
 			assertEquals(GameWorldServices.class, context.getType("gameWorldServices"));
 			assertEquals(GameEngineServices.class, context.getType("gameEngineServices"));

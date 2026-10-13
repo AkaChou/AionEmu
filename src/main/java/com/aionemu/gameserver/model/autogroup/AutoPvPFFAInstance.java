@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.model.autogroup;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.PvPArenaReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
+import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -38,7 +38,7 @@ public class AutoPvPFFAInstance extends AutoInstance {
 				players.remove(player.getObjectId());
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 5));
 				if (players.isEmpty()) {
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance.getInstanceId());
+					AutoGroupService.getInstance().unRegisterInstance(instance.getInstanceId());
 				}
 				return;
 			}

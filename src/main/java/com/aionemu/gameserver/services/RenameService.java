@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.services;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.services.LegionService;
 import java.util.Iterator;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -14,6 +14,7 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+import java.util.Objects;
 import lombok.NonNull;
 
 /**
@@ -21,7 +22,6 @@ import lombok.NonNull;
  * Rename service that handles character and legion renames (coupon consume and broadcast).
  */
 public class RenameService {
-
 	private static volatile RenameService instance;
 	@NonNull
 	private final OldNameDao oldNamesDAO;
@@ -117,7 +117,7 @@ public class RenameService {
 		if (!player.isLegionMember()) {
 			return false;
 		}
-		if (!GameCoreGameplayServices.legionService().isValidName(name)) {
+		if (!LegionService.getInstance().isValidName(name)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400152));
 			return false;
 		}
@@ -139,7 +139,7 @@ public class RenameService {
 			AuditLogger.info(player, "Try rename legion without coupon.");
 			return false;
 		}
-		GameCoreGameplayServices.legionService().setLegionName(player.getLegion(), name, true);
+		LegionService.getInstance().setLegionName(player.getLegion(), name, true);
 		return true;
 	}
 }

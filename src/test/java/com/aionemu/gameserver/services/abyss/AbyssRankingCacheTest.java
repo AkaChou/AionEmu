@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.services.LegionService;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.lang.reflect.Field;
@@ -17,7 +18,8 @@ class AbyssRankingCacheTest {
 
 	@Test
 	void storesRankingsInJdkMaps() throws Exception {
-		AbyssRankingCache cache = new AbyssRankingCache(new AbyssRankDaoImpl());
+		AbyssRankingCache cache = new AbyssRankingCache(new AbyssRankDaoImpl(),
+			new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
 
 		Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = players(cache);
 		Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = legions(cache);

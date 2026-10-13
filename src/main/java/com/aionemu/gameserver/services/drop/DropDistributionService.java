@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.services.drop.DropService;
+import java.util.Objects;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Set;
 
@@ -26,6 +28,17 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 @Slf4j
 public class DropDistributionService {
+	private final DropService dropService;
+
+	/**
+	 * 使用 Spring 提供的 DropService 构造服务。
+	 * Constructs the service with the Spring-provided DropService.
+	 *
+	 * @param dropService DropService 实例 / DropService instance
+	 */
+	public DropDistributionService(@NonNull DropService dropService) {
+		this.dropService = Objects.requireNonNull(dropService, "dropService must not be null");
+	}
 
     /**
      * -- SETTER --
@@ -201,14 +214,14 @@ public class DropDistributionService {
 		if (requestedItem.getWinningPlayer() == null) {
 			requestedItem.isFreeForAll(true);
 			if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-				GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+				dropService.canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 			}
 			return;
 		}
 		requestedItem.isDistributeItem(true);
-		GameCoreGameplayServices.dropService().requestDropItem(player, dropNpc.getObjectId(), dropNpc.getCurrentIndex());
+		dropService.requestDropItem(player, dropNpc.getObjectId(), dropNpc.getCurrentIndex());
 		if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-			GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+			dropService.canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 		}
 	}
 }

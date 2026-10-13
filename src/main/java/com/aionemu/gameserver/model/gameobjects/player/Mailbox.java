@@ -1,7 +1,7 @@
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.services.mail.MailService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -167,7 +167,7 @@ public class Mailbox {
 					break;
 			}
 			if (promoted && getOwner() != null) {
-				GameCoreGameplayServices.mailService().refreshMail(getOwner());
+				MailService.getInstance().refreshMail(getOwner());
 			}
 		}
 	}

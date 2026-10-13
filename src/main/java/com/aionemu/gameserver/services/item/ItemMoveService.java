@@ -2,8 +2,8 @@ package com.aionemu.gameserver.services.item;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.services.LegionService;
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendItemDeletePacket;
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
 
@@ -61,7 +61,7 @@ public class ItemMoveService {
 			return;
 		}
 		IStorage targetStorage = player.getStorage(destinationStorageType);
-		GameCoreGameplayServices.legionService().addWHItemHistory(player, item.getItemId(), item.getItemCount(), sourceStorage,
+		LegionService.getInstance().addWHItemHistory(player, item.getItemId(), item.getItemCount(), sourceStorage,
 				targetStorage);
 		if (slot == -1) {
 			if (item.getItemTemplate().isStackable()) {

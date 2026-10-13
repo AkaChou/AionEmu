@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -10,7 +9,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.siege.*;
 import com.aionemu.gameserver.model.team.legion.Legion;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.player.PlayerService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.Siege;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -150,15 +151,15 @@ public class SiegeCommand extends AdminCommand {
 		if (sr == null) {
 			try {
 				int legionId = Integer.parseInt(params[2]);
-				legion = GameCoreGameplayServices.legionService().getLegion(legionId);
+				legion = LegionService.getInstance().getLegion(legionId);
 			} catch (NumberFormatException e) {
 				String legionName = "";
 				for (int i = 2; i < params.length; i++)
 					legionName += " " + params[i];
-				legion = GameCoreGameplayServices.legionService().getLegion(legionName.trim());
+				legion = LegionService.getInstance().getLegion(legionName.trim());
 			}
 			if (legion != null) {
-				int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(legion.getLegionId());
+				int legionBGeneral = LegionService.getInstance().getLegionBGeneral(legion.getLegionId());
 				if (legionBGeneral != 0) {
 					PlayerCommonData BGeneral = PlayerService.daos().playerDAO().loadPlayerCommonData(legionBGeneral);
 					sr = SiegeRace.getByRace(BGeneral.getRace());
@@ -258,7 +259,7 @@ public class SiegeCommand extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
-		GameCoreGameplayServices.balaurAssaultService().startAssault(player, siegeLocationId, delay);
+		BalaurAssaultService.getInstance().startAssault(player, siegeLocationId, delay);
 	}
 
 	protected void showHelp(Player player) {

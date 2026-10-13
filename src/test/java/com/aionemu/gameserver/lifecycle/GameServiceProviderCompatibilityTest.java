@@ -1310,7 +1310,7 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
-    void gameCoreGameplayServicesRegistersAndClearsCoreOnlineProviders() throws Exception {
+    void coreGameplayServiceBindingsRegistersAndClearsCoreOnlineProviders() throws Exception {
         DropService dropService = instance(DropService.class);
         MailService mailService = instance(MailService.class);
         PvpService pvpService = instance(PvpService.class);
@@ -1319,7 +1319,7 @@ class GameServiceProviderCompatibilityTest {
         LegionService legionService = instance(LegionService.class);
         BalaurAssaultService balaurAssaultService = instance(BalaurAssaultService.class);
         BattlefieldUnionService battlefieldUnionService = instance(BattlefieldUnionService.class);
-        GameCoreGameplayServices coreGameplayServices = new GameCoreGameplayServices(
+        CoreGameplayServiceBindings coreGameplayServices = new CoreGameplayServiceBindings(
                 provider(DropService.class, dropService),
                 provider(MailService.class, mailService),
                 provider(PvpService.class, pvpService),
@@ -1331,21 +1331,13 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(dropService, DropService.getInstance());
-            assertSame(dropService, GameCoreGameplayServices.dropService());
             assertSame(mailService, MailService.getInstance());
-            assertSame(mailService, GameCoreGameplayServices.mailService());
             assertSame(pvpService, PvpService.getInstance());
-            assertSame(pvpService, GameCoreGameplayServices.pvpService());
             assertSame(autoGroupService, AutoGroupService.getInstance());
-            assertSame(autoGroupService, GameCoreGameplayServices.autoGroupService());
             assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
-            assertSame(abyssRankingCache, GameCoreGameplayServices.abyssRankingCache());
             assertSame(legionService, LegionService.getInstance());
-            assertSame(legionService, GameCoreGameplayServices.legionService());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
-            assertSame(balaurAssaultService, GameCoreGameplayServices.balaurAssaultService());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
-            assertSame(battlefieldUnionService, GameCoreGameplayServices.battlefieldUnionService());
 
             coreGameplayServices.destroy();
             coreGameplayServices = null;

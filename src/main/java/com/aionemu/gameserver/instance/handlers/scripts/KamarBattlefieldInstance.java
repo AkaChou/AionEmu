@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.model.instance.instancereward.KamarBattlefieldRewa
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
+import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -558,7 +558,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+					AutoGroupService.getInstance().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);

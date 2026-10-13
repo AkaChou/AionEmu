@@ -2,8 +2,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
@@ -63,10 +63,10 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 			int legionId = loc.getLegionId();
 			writeD(legionId);
 			if (legionId != 0) {
-				if (GameCoreGameplayServices.legionService().getLegion(legionId) == null) {
+				if (LegionService.getInstance().getLegion(legionId) == null) {
 					log.error(I18n.get("log.6ea33edea84b", legionId));
 				} else {
-					emblem = GameCoreGameplayServices.legionService().getLegion(legionId).getLegionEmblem();
+					emblem = LegionService.getInstance().getLegion(legionId).getLegionEmblem();
 				}
 			}
 			if (emblem.getEmblemType() == LegionEmblemType.DEFAULT) {

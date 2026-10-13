@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.LegionService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -151,47 +151,47 @@ public class CM_LEGION extends AionClientPacket {
 			final Legion legion = activePlayer.getLegion();
 
 			if (charName != null) {
-				GameCoreGameplayServices.legionService().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
+				LegionService.getInstance().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
 			} else {
 				switch (exOpcode) {
 					case 0x08:
 						sendPacket(new SM_LEGION_INFO(legion));
 						break;
 					case 0x09:
-						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
+						LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer, announcement);
 						break;
 					case 0x10:
 						break;
 					case 0x0A:
-						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
+						LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
 						break;
 					case 0x0D:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
+							LegionService.getInstance().changePermissions(legion, deputyPermission, centurionPermission,
 								legionarPermission, volunteerPermission);
 						break;
 					case 0x11:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().setJoinDescription(activePlayer, joinDescription);
+							LegionService.getInstance().setJoinDescription(activePlayer, joinDescription);
 						break;
 					case 0x12:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().setJoinType(activePlayer, joinType);
+							LegionService.getInstance().setJoinType(activePlayer, joinType);
 						break;
 					case 0x13:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().setJoinMinLevel(activePlayer, minLevel);
+							LegionService.getInstance().setJoinMinLevel(activePlayer, minLevel);
 						break;
 					case 0x14:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
+							LegionService.getInstance().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
 						break;
 					case 0x15:
 						if (activePlayer.getLegionMember().isBrigadeGeneral())
-							GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
+							LegionService.getInstance().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
 						break;
 					default:
-						GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
+						LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer);
 						break;
 				}
 			}
@@ -203,7 +203,7 @@ public class CM_LEGION extends AionClientPacket {
 							"You are trying to use a forbidden name. Choose another one!");
 					} else {
 						VisibleObject creator = activePlayer.getKnownList().getObject(creatorNpcObjectId);
-						GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName,
+						LegionService.getInstance().createLegion(activePlayer, legionName,
 							creator instanceof Npc ? (Npc) creator : null);
 					}
 					break;

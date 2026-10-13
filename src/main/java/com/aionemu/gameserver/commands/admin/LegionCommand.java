@@ -2,7 +2,6 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,7 +28,7 @@ public class LegionCommand extends AdminCommand {
 	private final LegionService service;
 	public LegionCommand() {
 		super("legion");
-		service = GameCoreGameplayServices.legionService();
+		service = LegionService.getInstance();
 	}
 
 	/**

@@ -3,11 +3,12 @@ package com.aionemu.gameserver.services.abyss;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.services.LegionService;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
  */
 @Slf4j
 public class AbyssRankingCache {
+	private final LegionService legionService;
 	/**
 	 * -- SETTER --
 	 * 注入 Spring 实例提供者。
@@ -47,7 +49,9 @@ public class AbyssRankingCache {
 	 *
 	 * @param abyssRankDAO 欧比斯军阶数据访问对象 / Abyss-rank DAO
 	 */
-	public AbyssRankingCache(@NonNull AbyssRankDao abyssRankDAO) {
+	public AbyssRankingCache(@NonNull AbyssRankDao abyssRankDAO, @NonNull LegionService legionService) {
+		this.legionService = Objects.requireNonNull(legionService, "legionService must not be null");
+
 		this.abyssRankDAO = abyssRankDAO;
 	}
 
@@ -82,7 +86,7 @@ public class AbyssRankingCache {
 		for (AbyssRankingResult result : asmoRanking) {
 			newLegionRankingCache.put(result.getLegionId(), result.getRankPos());
 		}
-		GameCoreGameplayServices.legionService().performRankingUpdate(newLegionRankingCache);
+		legionService.performRankingUpdate(newLegionRankingCache);
 	}
 
 	/**

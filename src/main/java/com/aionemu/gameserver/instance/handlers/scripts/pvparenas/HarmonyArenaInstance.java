@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -24,6 +23,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
+import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -439,7 +439,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 						}
 						onExitInstance(player);
 					}
-					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
+					AutoGroupService.getInstance().unRegisterInstance(instanceId);
 				}
 			}
 		}, 10000);

@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.services.item;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.configs.main.LegionConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -8,6 +7,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.LegionPermissionsMask;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -29,7 +29,7 @@ public class ItemRestrictionService {
 		StorageType type = StorageType.getStorageTypeById(storage);
 		switch (type) {
 		case LEGION_WAREHOUSE:
-			if (!GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId())
+			if (!LegionService.getInstance().getLegionMember(player.getObjectId())
 					.hasRights(LegionPermissionsMask.WH_WITHDRAWAL) || !LegionConfig.LEGION_WAREHOUSE
 					|| !player.isLegionMember()) {
 				// 无权使用军团仓库。 / No authority to use legion warehouse.
@@ -71,7 +71,7 @@ public class ItemRestrictionService {
 				// 无法存入军团仓库。 / Cannot store this in legion warehouse.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400355));
 				return true;
-			} else if (!player.isLegionMember() || !GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId())
+			} else if (!player.isLegionMember() || !LegionService.getInstance().getLegionMember(player.getObjectId())
 					.hasRights(LegionPermissionsMask.WH_DEPOSIT)) {
 				// 无权使用军团仓库。 / No authority to use legion warehouse.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300322));

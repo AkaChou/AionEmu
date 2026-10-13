@@ -1,11 +1,11 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 上传自定义军团徽章元信息的客户端包。
@@ -43,7 +43,7 @@ public class CM_LEGION_UPLOAD_INFO extends AionClientPacket {
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();
 
-		GameCoreGameplayServices.legionService().uploadEmblemInfo(activePlayer, totalSize, red, green, blue,
+		LegionService.getInstance().uploadEmblemInfo(activePlayer, totalSize, red, green, blue,
 				LegionEmblemType.CUSTOM);
 	}
 }

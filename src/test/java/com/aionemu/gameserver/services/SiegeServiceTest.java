@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.services.LegionService;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,7 +51,8 @@ class SiegeServiceTest {
 		world.npcs = liveNpcs;
 		worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
 
-		assertDoesNotThrow(() -> new SiegeService(new SiegeLocationDaoImpl()).deSpawnNpcs(1011));
+		assertDoesNotThrow(() -> new SiegeService(new SiegeLocationDaoImpl(),
+			objenesis.newInstance(LegionService.class)).deSpawnNpcs(1011));
 		assertTrue(liveNpcs.isEmpty());
 	}
 

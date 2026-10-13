@@ -109,15 +109,16 @@ public class CoreRuntimeServiceBeans {
     public PeriodicSaveService periodicSaveService(AbyssRankDao abyssRankDAO, PlayerSkillDao playerSkillListDAO,
                                                    PlayerQuestDao playerQuestListDAO, PlayerDao playerDAO,
                                                    PlayerStigmasEquippedDao playerStigmasEquippedDAO,
-                                                   InventoryDao inventoryDAO, ItemStoneDao itemStoneListDAO) {
+                                                   InventoryDao inventoryDAO, ItemStoneDao itemStoneListDAO,
+                                                   LegionService legionService) {
         return new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
-                playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO);
+                playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO, legionService);
     }
 
     @Bean
     @Lazy
-    public TerritoryService territoryService(LegionDao dao) {
-        return new TerritoryService(dao);
+    public TerritoryService territoryService(LegionDao dao, LegionService legionService) {
+        return new TerritoryService(dao, legionService);
     }
 
     @Bean
@@ -365,8 +366,8 @@ public class CoreRuntimeServiceBeans {
     }
 
     @Bean
-    public AbyssRankingCache abyssRankingCache(AbyssRankDao dao) {
-        return new AbyssRankingCache(dao);
+    public AbyssRankingCache abyssRankingCache(AbyssRankDao dao, LegionService legionService) {
+        return new AbyssRankingCache(dao, legionService);
     }
 
     @Bean

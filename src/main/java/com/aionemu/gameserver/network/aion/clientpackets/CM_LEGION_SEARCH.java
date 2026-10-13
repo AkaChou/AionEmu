@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 搜索军团的客户端包。
@@ -36,6 +36,6 @@ public class CM_LEGION_SEARCH extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		GameCoreGameplayServices.legionService().handleLegionSearch(player, type, legionName);
+		LegionService.getInstance().handleLegionSearch(player, type, legionName);
 	}
 }

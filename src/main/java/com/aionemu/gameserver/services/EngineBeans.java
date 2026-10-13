@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.services.drop.DropService;
 import java.util.List;
 
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -155,8 +156,8 @@ public class EngineBeans {
 
     @Bean
     @Lazy
-    public DropRegistrationService dropRegistrationService() {
-        return new DropRegistrationService();
+    public DropRegistrationService dropRegistrationService(DropService dropService) {
+        return new DropRegistrationService(dropService);
     }
 
     @Bean
@@ -191,8 +192,8 @@ public class EngineBeans {
 
     @Bean
     @Lazy
-    public DropDistributionService dropDistributionService() {
-        return new DropDistributionService();
+    public DropDistributionService dropDistributionService(DropService dropService) {
+        return new DropDistributionService(dropService);
     }
 
     @Bean

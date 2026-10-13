@@ -2,10 +2,11 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.LegionService;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -72,6 +73,7 @@ import lombok.Setter;
 
 @Getter
 public class SiegeService {
+	private final LegionService legionService;
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	@Setter
@@ -100,7 +102,9 @@ public class SiegeService {
 	 *
 	 * @param siegeDAO 攻城战数据访问对象 / Siege DAO
 	 */
-	public SiegeService(@NonNull SiegeLocationDao siegeDAO) {
+	public SiegeService(@NonNull SiegeLocationDao siegeDAO, @NonNull LegionService legionService) {
+		this.legionService = Objects.requireNonNull(legionService, "legionService must not be null");
+
 		this.siegeDAO = siegeDAO;
 	}
 
@@ -527,7 +531,7 @@ public class SiegeService {
 		SM_SYSTEM_MESSAGE info = loc.getLegionId() == 0
 				? new SM_SYSTEM_MESSAGE(1404542, loc.getRace().getDescriptionId(), nameId)
 				: new SM_SYSTEM_MESSAGE(1301038,
-						GameCoreGameplayServices.legionService().getLegion(loc.getLegionId()).getLegionName(), nameId);
+						legionService.getLegion(loc.getLegionId()).getLegionName(), nameId);
 		broadcast(pkt, info, loc.getRace());
 	}
 

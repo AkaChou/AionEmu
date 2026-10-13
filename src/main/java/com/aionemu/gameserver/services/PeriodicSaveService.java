@@ -3,7 +3,6 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -17,11 +16,13 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
 import com.aionemu.gameserver.persistence.dao.PlayerSkillDao;
 import com.aionemu.gameserver.persistence.dao.PlayerStigmasEquippedDao;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.player.PlayerEnterWorldService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import lombok.NonNull;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.ObjectProvider;
  */
 @Slf4j
 public class PeriodicSaveService {
+	private final LegionService legionService;
 
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
 
@@ -89,7 +91,9 @@ public class PeriodicSaveService {
 	public PeriodicSaveService(@NonNull AbyssRankDao abyssRankDAO, @NonNull PlayerSkillDao playerSkillListDAO,
 							   @NonNull PlayerQuestDao playerQuestListDAO, @NonNull PlayerDao playerDAO,
 							   @NonNull PlayerStigmasEquippedDao playerStigmasEquippedDAO,
-							   @NonNull InventoryDao inventoryDAO, @NonNull ItemStoneDao itemStoneListDAO) {
+							   @NonNull InventoryDao inventoryDAO, @NonNull ItemStoneDao itemStoneListDAO, @NonNull LegionService legionService) {
+		this.legionService = Objects.requireNonNull(legionService, "legionService must not be null");
+
 		this.abyssRankDAO = abyssRankDAO;
 		this.playerSkillListDAO = playerSkillListDAO;
 		this.playerQuestListDAO = playerQuestListDAO;
@@ -216,7 +220,7 @@ public class PeriodicSaveService {
 		public void run() {
 			log.info(I18n.get("log.cda6066cb95d"));
 			long startTime = System.currentTimeMillis();
-			Iterator<Legion> legionsIterator = GameCoreGameplayServices.legionService().getCachedLegionIterator();
+			Iterator<Legion> legionsIterator = legionService.getCachedLegionIterator();
 			int legionWhUpdated = 0;
 			while (legionsIterator.hasNext()) {
 				Legion legion = legionsIterator.next();

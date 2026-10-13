@@ -2,6 +2,8 @@ package com.aionemu.gameserver.controllers;
 
 import com.aionemu.boot.i18n.I18n;
 
+import com.aionemu.gameserver.services.LegionService;
+import com.aionemu.gameserver.services.PvpService;
 import java.sql.Timestamp;
 
 import com.aionemu.gameserver.world.WorldPosition;
@@ -645,7 +647,7 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	@Override
 	public void doReward() {
-		GameCoreGameplayServices.pvpService().doReward(getOwner());
+		PvpService.getInstance().doReward(getOwner());
 	}
 
 	/**
@@ -1058,7 +1060,7 @@ public class PlayerController extends CreatureController<Player> {
 			GameTaskManagerServices.teamEffectUpdater().startTask(player);
 		}
 		if (player.isLegionMember()) {
-			GameCoreGameplayServices.legionService().updateMemberInfo(player);
+			LegionService.getInstance().updateMemberInfo(player);
 		}
 
 		if (level == 51) {

@@ -1,10 +1,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+import com.aionemu.gameserver.services.LegionService;
 
 /**
  * 取消军团加入申请的客户端包。
@@ -35,6 +35,6 @@ public class CM_LEGION_JOIN_CANCEL extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		GameCoreGameplayServices.legionService().handleJoinRequestCancel(player, legionId);
+		LegionService.getInstance().handleJoinRequestCancel(player, legionId);
 	}
 }

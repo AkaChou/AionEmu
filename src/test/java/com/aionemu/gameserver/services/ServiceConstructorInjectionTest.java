@@ -292,7 +292,8 @@ class ServiceConstructorInjectionTest {
 		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 		ServerVariableDao serverVariablesDAO = new ServerVariableDaoImpl();
 
-		AbyssRankUpdateService service = new AbyssRankUpdateService(abyssRankDAO, serverVariablesDAO);
+		AbyssRankUpdateService service = new AbyssRankUpdateService(abyssRankDAO, serverVariablesDAO,
+				new org.objenesis.ObjenesisStd().newInstance(AbyssRankingCache.class));
 		assertNotNull(service);
 	}
 
@@ -304,7 +305,8 @@ class ServiceConstructorInjectionTest {
 			JdbcClient client = createNoAccessJdbcClient();
 			AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 
-			AbyssRankCleaningService service = new AbyssRankCleaningService(abyssRankDAO);
+			AbyssRankCleaningService service = new AbyssRankCleaningService(abyssRankDAO,
+				new org.objenesis.ObjenesisStd().newInstance(AbyssRankingCache.class));
 			assertNotNull(service);
 		} finally {
 			CleaningConfig.ABYSS_CLEANING_ENABLE = previousEnable;
@@ -316,7 +318,8 @@ class ServiceConstructorInjectionTest {
 		JdbcClient client = createNoAccessJdbcClient();
 		AbyssRankDao abyssRankDAO = new AbyssRankDaoImpl();
 
-		AbyssRankingCache service = new AbyssRankingCache(abyssRankDAO);
+		AbyssRankingCache service = new AbyssRankingCache(abyssRankDAO,
+				new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
 		assertNotNull(service);
 	}
 
@@ -548,7 +551,8 @@ class ServiceConstructorInjectionTest {
 		ItemStoneDao itemStoneListDAO = new ItemStoneDaoImpl();
 
 		PeriodicSaveService service = new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
-				playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO);
+				playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO,
+				new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
 		assertNotNull(service);
 	}
 
@@ -583,7 +587,7 @@ class ServiceConstructorInjectionTest {
 	void siegeServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
 		SiegeLocationDao dao = new SiegeLocationDaoImpl();
-		SiegeService service = new SiegeService(dao);
+		SiegeService service = new SiegeService(dao, new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
 		assertNotNull(service);
 	}
 
@@ -851,7 +855,7 @@ class ServiceConstructorInjectionTest {
 	void territoryServiceConstructsWithInjectedDao() {
 		JdbcClient client = createNoAccessJdbcClient();
 		LegionDao legionDAO = new LegionDaoImpl(null, null, null, null, null, null, new org.springframework.transaction.support.TransactionTemplate());
-		TerritoryService service = new TerritoryService(legionDAO);
+		TerritoryService service = new TerritoryService(legionDAO, new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
 		assertNotNull(service);
 	}
 
@@ -935,9 +939,9 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new AnnouncementService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingService(null));
 		assertThrows(NullPointerException.class, () -> new AbyssLandingSpecialService(null));
-		assertThrows(NullPointerException.class, () -> new AbyssRankUpdateService(null, null));
-		assertThrows(NullPointerException.class, () -> new AbyssRankCleaningService(null));
-		assertThrows(NullPointerException.class, () -> new AbyssRankingCache(null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankUpdateService(null, null, null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankCleaningService(null, null));
+		assertThrows(NullPointerException.class, () -> new AbyssRankingCache(null, null));
 		assertThrows(NullPointerException.class, () -> new ExchangeService(null));
 		assertThrows(NullPointerException.class, () -> new PetitionService(null));
 		assertThrows(NullPointerException.class, () -> new BrokerService(null, null));
@@ -954,11 +958,11 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new AccountService(null, null, null, null, null));
 		assertThrows(NullPointerException.class, () -> new SocialService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new LimitedQuestService(null));
-		assertThrows(NullPointerException.class, () -> new PeriodicSaveService(null, null, null, null, null, null, null));
+		assertThrows(NullPointerException.class, () -> new PeriodicSaveService(null, null, null, null, null, null, null, null));
 		assertThrows(NullPointerException.class, () -> new WebshopService(null));
 		assertThrows(NullPointerException.class, () -> new ChallengeTaskService(null, null, null, null));
 		assertThrows(NullPointerException.class, () -> new BaseService(null));
-		assertThrows(NullPointerException.class, () -> new SiegeService(null));
+		assertThrows(NullPointerException.class, () -> new SiegeService(null, null));
 		assertThrows(NullPointerException.class, () -> new HousingBidService(null, null, null));
 		assertThrows(NullPointerException.class, () -> new HousingService(null));
 		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
@@ -973,7 +977,7 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new PlayerTransferService(null, null));
 		assertThrows(NullPointerException.class, () -> new VeteranRewardsService(null, null));
 		assertThrows(NullPointerException.class, () -> new SeasonRankingService(null));
-		assertThrows(NullPointerException.class, () -> new TerritoryService(null));
+		assertThrows(NullPointerException.class, () -> new TerritoryService(null, null));
 		assertThrows(NullPointerException.class, () -> new RewardService(null));
 		assertThrows(NullPointerException.class, () -> new LadderService(null));
 		assertThrows(NullPointerException.class, () -> new SeasonRankingUpdateService(null));

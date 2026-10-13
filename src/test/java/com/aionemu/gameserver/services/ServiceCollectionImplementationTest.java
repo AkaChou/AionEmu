@@ -74,16 +74,16 @@ class ServiceCollectionImplementationTest {
 
 	@Test
 	void instanceCooldownServicesUseArrayLists() throws Exception {
-		assertArrayList(new AsyunatarService(), "playersWithCooldown");
-		assertArrayList(new EngulfedOphidanBridgeService(), "playersWithCooldown");
-		assertArrayList(new GrandArenaTrainingCampService(), "playersWithCooldown");
-		assertArrayList(new HallOfTenacityService(), "playersWithCooldown");
-		assertArrayList(new IDRunService(), "playersWithCooldown");
-		assertArrayList(new IdgelDomeLandmarkService(), "playersWithCooldown");
-		assertArrayList(new IdgelDomeService(), "playersWithCooldown");
-		assertArrayList(new IronWallWarfrontService(), "playersWithCooldown");
-		assertArrayList(new KamarBattlefieldService(), "playersWithCooldown");
-		assertArrayList(new SuspiciousOphidanBridgeService(), "playersWithCooldown");
+		assertArrayList(new AsyunatarService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new EngulfedOphidanBridgeService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new GrandArenaTrainingCampService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new HallOfTenacityService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new IDRunService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new IdgelDomeLandmarkService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new IdgelDomeService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new IronWallWarfrontService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new KamarBattlefieldService(new AutoGroupService()), "playersWithCooldown");
+		assertArrayList(new SuspiciousOphidanBridgeService(new AutoGroupService()), "playersWithCooldown");
 	}
 
 	private void assertFieldType(Class<?> type, String fieldName, Class<?> expectedType) throws Exception {

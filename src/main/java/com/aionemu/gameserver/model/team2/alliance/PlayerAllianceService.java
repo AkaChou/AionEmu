@@ -2,10 +2,10 @@ package com.aionemu.gameserver.model.team2.alliance;
 
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.services.AutoGroupService;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
-import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -139,7 +139,7 @@ public class PlayerAllianceService {
 	 */
 	public static boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
-			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
+			if (AutoGroupService.getInstance().isAutoInstance(inviter.getInstanceId())) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
 				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -147,7 +147,7 @@ public class PlayerAllianceService {
 			}
 		}
 		if (invited.isInInstance()) {
-			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
+			if (AutoGroupService.getInstance().isAutoInstance(invited.getInstanceId())) {
 				// 在此区域无法使用与小队或 / You cannot use invite, leave or kick commands related to your group or
 				// 联盟相关的邀请、离开或踢出命令。 / alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
