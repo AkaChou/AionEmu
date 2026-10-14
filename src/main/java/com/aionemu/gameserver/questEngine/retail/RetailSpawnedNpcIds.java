@@ -1,6 +1,9 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,12 +63,12 @@ public final class RetailSpawnedNpcIds {
 	}
 
 	private static void scanDir(String dir, Set<Integer> ids) throws IOException {
-		var url = RetailSpawnedNpcIds.class.getResource(dir);
+		var url = QuestDataResources.url(dir);
 		if (url == null) {
 			return;
 		}
 		if ("file".equals(url.getProtocol())) {
-			try (var paths = Files.walk(Path.of(url.getPath()))) {
+			try (var paths = Files.walk(Path.of(URI.create(url.toExternalForm().replace(" ", "%20"))))) {
 				for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)
 						.filter(path -> path.getFileName().toString().endsWith(".xml"))::iterator) {
 					collect(Files.readString(path, StandardCharsets.UTF_8), ids);

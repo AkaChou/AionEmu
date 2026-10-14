@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -67,12 +69,13 @@ public final class QuestDefinitionCatalogManifest {
 	}
 
 	/**
-	 * 从 classpath 资源加载显式生产环境所有者清单。
-	 * Load the explicit production owner manifest from classpath resources.
+	 * 从任务数据资源加载显式生产环境所有者清单（外部运行目录优先，classpath 回退）。
+	 * Load the explicit production owner manifest from quest data resources (external runtime directory
+	 * first, classpath fallback).
 	 */
 	public static QuestCatalog compile(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
-		try (InputStream input = loader.getResourceAsStream(RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(loader, RESOURCE)) {
 			if (input == null) {
 				fail("PRODUCTION_CATALOG_MISSING", RESOURCE);
 			}
@@ -113,7 +116,7 @@ public final class QuestDefinitionCatalogManifest {
 	 */
 	public static QuestDefinitionCatalogManifest load(InputStream input) {
 		Objects.requireNonNull(input, "input");
-		try (InputStream schema = QuestDefinitionCatalogManifest.class.getResourceAsStream(SCHEMA)) {
+		try (InputStream schema = QuestDataResources.open(SCHEMA)) {
 			if (schema == null) {
 				fail("CATALOG_SCHEMA_MISSING", SCHEMA);
 			}
@@ -188,7 +191,7 @@ public final class QuestDefinitionCatalogManifest {
 	public static QuestCatalog compile(InputStream manifest, ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
 		QuestDefinitionCatalogManifest parsed = load(manifest);
-		return compile(parsed, loader::getResourceAsStream, null);
+		return compile(parsed, resource -> QuestDataResources.open(loader, resource), null);
 	}
 
 	private static QuestCatalog compile(QuestDefinitionCatalogManifest parsed, ResourceOpener resourceOpener,
@@ -329,7 +332,7 @@ public final class QuestDefinitionCatalogManifest {
 			List<Future<QuestCatalogEntry>> futures = new ArrayList<>(resources.size());
 			for (String resource : resources) {
 				futures.add(pool.submit(() -> {
-					try (InputStream input = loader.getResourceAsStream(resource)) {
+					try (InputStream input = QuestDataResources.open(loader, resource)) {
 						if (input == null) {
 							throw new QuestCompilationException(missingCode, resource);
 						}

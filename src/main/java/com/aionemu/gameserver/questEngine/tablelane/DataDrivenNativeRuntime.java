@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -617,7 +618,7 @@ public final class DataDrivenNativeRuntime {
 	private static DataDrivenNativeRuntime loadProduction() {
 		Set<Integer> switchSet = retentionSwitchSet();
 		DataDrivenQuestTable table;
-		try (InputStream input = DataDrivenNativeRuntime.class.getResourceAsStream(TABLE_RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(TABLE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("DATA_DRIVEN_TABLE_MISSING: " + TABLE_RESOURCE);
 			}
@@ -643,7 +644,7 @@ public final class DataDrivenNativeRuntime {
 	 * driver parsed; per-row routability is adjudicated row by row in create).
 	 */
 	private static Set<Integer> retentionSwitchSet() {
-		try (InputStream input = DataDrivenNativeRuntime.class.getResourceAsStream(RETENTION_RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(RETENTION_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("DATA_DRIVEN_RETENTION_MISSING: " + RETENTION_RESOURCE);
 			}

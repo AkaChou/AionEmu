@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +105,7 @@ public final class RetailItemNameIndex {
 		List<String> names = listXmlNames(ITEM_TEMPLATE_DIR);
 		List<InputStream> inputs = new ArrayList<>(names.size());
 		for (String name : names) {
-			InputStream input = RetailItemNameIndex.class.getResourceAsStream(ITEM_TEMPLATE_DIR + name);
+			InputStream input = QuestDataResources.open(ITEM_TEMPLATE_DIR + name);
 			if (input == null) {
 				throw new IOException("missing resource " + ITEM_TEMPLATE_DIR + name);
 			}
@@ -113,7 +115,7 @@ public final class RetailItemNameIndex {
 	}
 
 	private static List<String> listXmlNames(String dir) throws IOException {
-		var url = RetailItemNameIndex.class.getResource(dir);
+		var url = QuestDataResources.url(dir);
 		if (url == null) {
 			return List.of();
 		}

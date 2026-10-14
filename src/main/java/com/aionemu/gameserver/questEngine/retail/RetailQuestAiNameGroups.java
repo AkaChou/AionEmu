@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -27,8 +29,8 @@ public final class RetailQuestAiNameGroups {
 		// 2026-10-03 台账 XML 化：同名 .tsv → .xml。
 		// Relocated 2026-10-02: single canonical home under quest/retail/; the old dual chain
 		// under src/main/resources/quest/ is retired. Converted to XML in the 2026-10-03 batch.
-		InputStream in = RetailQuestAiNameGroups.class
-			.getResourceAsStream("/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml");
+		InputStream in = QuestDataResources.open(
+			"/aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml");
 		if (in == null) {
 			return new ByteArrayInputStream(new byte[0]);
 		}

@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 /**
  * 原版 NPC 名解析器（计划 §6.2：任务表里的 {@code *_npc_name} 引用的是
@@ -134,9 +135,9 @@ public final class NativeNpcNameResolver {
 		instance();
 	}
 
-	/** 从 classpath 分片目录装载。 / Loads from the classpath shard directory. */
+	/** 从任务数据资源分片目录装载。 / Loads from the quest data resource shard directory. */
 	static NativeNpcNameResolver load(ClassLoader loader) {
-		URL dirUrl = loader.getResource(RESOURCE_DIR);
+		URL dirUrl = QuestDataResources.url(loader, RESOURCE_DIR);
 		if (dirUrl == null || !"file".equals(dirUrl.getProtocol())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: npc template shard directory '"
 					+ RESOURCE_DIR + "' is not available as classpath files");
@@ -207,7 +208,7 @@ public final class NativeNpcNameResolver {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: no npc template names indexed");
 		}
 		Map<String, List<Integer>> aliases = new LinkedHashMap<>();
-		URL aliasesUrl = loader.getResource(ALIASES_RESOURCE);
+		URL aliasesUrl = QuestDataResources.url(loader, ALIASES_RESOURCE);
 		if (aliasesUrl != null) {
 			try (var stream = aliasesUrl.openStream()) {
 				for (Element row : RetailLedgerXml.rows(RetailLedgerXml.parse(stream), "npc_name_alias")) {
@@ -237,7 +238,7 @@ public final class NativeNpcNameResolver {
 		// declaration order (P0c-53: insertion order must survive; Set.copyOf would hash-shuffle it).
 		Map<String, List<Integer>> groups = new LinkedHashMap<>();
 		for (String groupsResource : GROUPS_RESOURCES) {
-			URL groupsUrl = loader.getResource(groupsResource);
+			URL groupsUrl = QuestDataResources.url(loader, groupsResource);
 			if (groupsUrl == null) {
 				continue;
 			}

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.InputStream;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public final class RetailNpcNameAliases {
 	}
 
 	private static InputStream openStream() {
-		InputStream input = RetailNpcNameAliases.class.getResourceAsStream(
+		InputStream input = QuestDataResources.open(
 			"/aion/data/static_data/quest/retail/retail-npc-name-aliases.xml");
 		if (input == null) {
 			throw new IllegalStateException("missing versioned retail npc name alias table");

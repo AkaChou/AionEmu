@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.definition;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Gender;
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,7 +35,7 @@ public final class QuestDefinitionXmlCompiler {
 	}
 
 	private static Schema buildClasspathSchema() {
-		try (InputStream schemaStream = QuestDefinitionXmlCompiler.class.getResourceAsStream(
+		try (InputStream schemaStream = QuestDataResources.open(
 				"/aion/data/static_data/quest/definitions/quest_definition.xsd")) {
 			if (schemaStream == null) {
 				throw new QuestCompilationException("SCHEMA_MISSING", "quest definition schema is not packaged");

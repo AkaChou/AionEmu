@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -251,16 +253,18 @@ public final class NativeQuestTableLoader {
 	}
 
 	/**
-	 * 从 classpath 装载并解析表。 / Loads and parses the table from the classpath.
+	 * 从任务数据资源装载并解析表（外部运行目录优先，classpath 回退）。
+	 * Loads and parses the table from quest data resources (external runtime directory first,
+	 * classpath fallback).
 	 */
 	static NativeQuestTableLoader load(ClassLoader loader) {
-		try (InputStream input = loader.getResourceAsStream(RESOURCE);
-			 InputStream serialInput = loader.getResourceAsStream(SERIAL_RESOURCE);
-			 InputStream talkInput = loader.getResourceAsStream(TALK_RESOURCE);
-			 InputStream collectInput = loader.getResourceAsStream(COLLECT_RESOURCE);
-			 InputStream useItemInput = loader.getResourceAsStream(USE_ITEM_RESOURCE);
-			 InputStream itemPlayInput = loader.getResourceAsStream(ITEM_PLAY_RESOURCE);
-			 InputStream combineInput = loader.getResourceAsStream(COMBINE_RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(loader, RESOURCE);
+			 InputStream serialInput = QuestDataResources.open(loader, SERIAL_RESOURCE);
+			 InputStream talkInput = QuestDataResources.open(loader, TALK_RESOURCE);
+			 InputStream collectInput = QuestDataResources.open(loader, COLLECT_RESOURCE);
+			 InputStream useItemInput = QuestDataResources.open(loader, USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = QuestDataResources.open(loader, ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = QuestDataResources.open(loader, COMBINE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}
@@ -292,36 +296,25 @@ public final class NativeQuestTableLoader {
 	 * 解析表字节流（包内可见供负例测试）。 / Parses the table stream (package-visible for negative tests).
 	 */
 	static NativeQuestTableLoader parse(InputStream input) throws IOException {
-		try (InputStream serialInput = NativeQuestTableLoader.class.getClassLoader()
-			.getResourceAsStream(SERIAL_RESOURCE);
-			 InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(TALK_RESOURCE);
-			 InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(COLLECT_RESOURCE);
-			 InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(USE_ITEM_RESOURCE);
-			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
-			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(COMBINE_RESOURCE)) {
+		try (InputStream serialInput = QuestDataResources.open(SERIAL_RESOURCE);
+			 InputStream talkInput = QuestDataResources.open(TALK_RESOURCE);
+			 InputStream collectInput = QuestDataResources.open(COLLECT_RESOURCE);
+			 InputStream useItemInput = QuestDataResources.open(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = QuestDataResources.open(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = QuestDataResources.open(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
 	/**
-	 * 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从 classpath 补足）。 / Parses the hunt and serial tables.
+	 * 解析狩猎 + 串行两表（包内可见供负例测试；Talk 表从任务数据资源补足）。 / Parses the hunt and serial tables.
 	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput) throws IOException {
-		try (InputStream talkInput = NativeQuestTableLoader.class.getClassLoader()
-			.getResourceAsStream(TALK_RESOURCE);
-			 InputStream collectInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(COLLECT_RESOURCE);
-			 InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(USE_ITEM_RESOURCE);
-			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
-			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(COMBINE_RESOURCE)) {
+		try (InputStream talkInput = QuestDataResources.open(TALK_RESOURCE);
+			 InputStream collectInput = QuestDataResources.open(COLLECT_RESOURCE);
+			 InputStream useItemInput = QuestDataResources.open(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = QuestDataResources.open(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = QuestDataResources.open(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
@@ -331,43 +324,36 @@ public final class NativeQuestTableLoader {
 	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput)
 		throws IOException {
-		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-			.getResourceAsStream(COMBINE_RESOURCE)) {
-			return parse(input, serialInput, talkInput, NativeQuestTableLoader.class.getClassLoader()
-					.getResourceAsStream(COLLECT_RESOURCE), NativeQuestTableLoader.class.getClassLoader()
-					.getResourceAsStream(USE_ITEM_RESOURCE),
-				NativeQuestTableLoader.class.getClassLoader().getResourceAsStream(ITEM_PLAY_RESOURCE),
+		try (InputStream combineInput = QuestDataResources.open(COMBINE_RESOURCE)) {
+			return parse(input, serialInput, talkInput, QuestDataResources.open(COLLECT_RESOURCE),
+				QuestDataResources.open(USE_ITEM_RESOURCE), QuestDataResources.open(ITEM_PLAY_RESOURCE),
 				combineInput);
 		}
 	}
 
 	/**
-	 * 解析四张表的字节流（包内可见供负例测试）；P5 两表从 classpath 补足。 /
+	 * 解析四张表的字节流（包内可见供负例测试）；P5 两表从任务数据资源补足。 /
 	 * Parses the four table streams (package-visible for negative tests); the two P5 tables come from the
-	 * classpath.
+	 * quest data resources.
 	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
 										InputStream collectInput) throws IOException {
-		try (InputStream useItemInput = NativeQuestTableLoader.class.getClassLoader()
-			.getResourceAsStream(USE_ITEM_RESOURCE);
-			 InputStream itemPlayInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(ITEM_PLAY_RESOURCE);
-			 InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-				 .getResourceAsStream(COMBINE_RESOURCE)) {
+		try (InputStream useItemInput = QuestDataResources.open(USE_ITEM_RESOURCE);
+			 InputStream itemPlayInput = QuestDataResources.open(ITEM_PLAY_RESOURCE);
+			 InputStream combineInput = QuestDataResources.open(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}
 
 	/**
-	 * 解析六张表的字节流（包内可见供负例测试）；CombineTask 表从 classpath 补足。 /
+	 * 解析六张表的字节流（包内可见供负例测试）；CombineTask 表从任务数据资源补足。 /
 	 * Parses the six table streams (package-visible for negative tests); the CombineTask table comes from
-	 * the classpath.
+	 * the quest data resources.
 	 */
 	static NativeQuestTableLoader parse(InputStream input, InputStream serialInput, InputStream talkInput,
 										InputStream collectInput, InputStream useItemInput, InputStream itemPlayInput)
 		throws IOException {
-		try (InputStream combineInput = NativeQuestTableLoader.class.getClassLoader()
-			.getResourceAsStream(COMBINE_RESOURCE)) {
+		try (InputStream combineInput = QuestDataResources.open(COMBINE_RESOURCE)) {
 			return parse(input, serialInput, talkInput, collectInput, useItemInput, itemPlayInput, combineInput);
 		}
 	}

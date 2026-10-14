@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
@@ -249,8 +250,8 @@ public final class SimpleCombineTaskHandler {
 	}
 
 	private static RetailRecipeIndex retailRecipeIndex() {
-		try (java.io.InputStream input = SimpleCombineTaskHandler.class.getClassLoader()
-				.getResourceAsStream("aion/data/static_data/recipe/recipe_templates.xml")) {
+		try (java.io.InputStream input = QuestDataResources.open(
+				"aion/data/static_data/recipe/recipe_templates.xml")) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_RECIPE_INDEX_FAILED: missing recipe_templates.xml");
 			}

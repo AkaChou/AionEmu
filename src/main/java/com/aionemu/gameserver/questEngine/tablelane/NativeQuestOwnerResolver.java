@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -100,7 +102,7 @@ public final class NativeQuestOwnerResolver {
 	}
 
 	private static Set<Integer> scanXmlDefinitionIds(ClassLoader loader) {
-		URL dirUrl = loader.getResource(XML_DEFINITIONS_DIR);
+		URL dirUrl = QuestDataResources.url(loader, XML_DEFINITIONS_DIR);
 		if (dirUrl == null || !"file".equals(dirUrl.getProtocol())) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: quest definitions directory '"
 					+ XML_DEFINITIONS_DIR + "' is not available as classpath files");

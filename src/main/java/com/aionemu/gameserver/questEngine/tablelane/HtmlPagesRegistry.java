@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -73,9 +75,13 @@ public final class HtmlPagesRegistry {
 		instance();
 	}
 
-	/** 从 classpath 装载并解析页表。 / Loads and parses the page table from the classpath. */
+	/**
+	 * 从任务数据资源装载并解析页表（外部运行目录优先，classpath 回退）。
+	 * Loads and parses the page table from quest data resources (external runtime directory first,
+	 * classpath fallback).
+	 */
 	static HtmlPagesRegistry load(ClassLoader loader) {
-		try (InputStream input = loader.getResourceAsStream(RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(loader, RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}

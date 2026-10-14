@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogEntry;
 
@@ -328,7 +329,7 @@ public final class RetailQuestDriver {
 	}
 
 	private static InputStream open(String resource) throws IOException {
-		InputStream input = RetailQuestDriver.class.getResourceAsStream(resource);
+		InputStream input = QuestDataResources.open(RetailQuestDriver.class.getClassLoader(), resource);
 		if (input == null) {
 			throw new IOException("missing resource " + resource);
 		}

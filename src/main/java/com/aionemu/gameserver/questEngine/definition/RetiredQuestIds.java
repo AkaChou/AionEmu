@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 
 /**
@@ -43,7 +44,7 @@ public final class RetiredQuestIds {
 
 	private static Set<Integer> load() {
 		Set<Integer> result = new TreeSet<>();
-		InputStream input = RetiredQuestIds.class.getResourceAsStream(RETENTION);
+		InputStream input = QuestDataResources.open(RETENTION);
 		if (input == null) {
 			throw new IllegalStateException("missing retention manifest " + RETENTION);
 		}

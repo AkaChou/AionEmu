@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.w3c.dom.Element;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 
 /**
@@ -92,7 +93,7 @@ public final class ChainAcquireEdges {
 	}
 
 	static ChainAcquireEdges load() {
-		try (InputStream input = ChainAcquireEdges.class.getResourceAsStream(TABLE_RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(TABLE_RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("QUEST_CHAIN_ACQUIRE_TABLE_MISSING: " + TABLE_RESOURCE);
 			}

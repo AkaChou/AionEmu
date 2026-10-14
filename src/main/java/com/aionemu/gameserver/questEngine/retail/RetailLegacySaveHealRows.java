@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public final class RetailLegacySaveHealRows {
 			synchronized (RetailLegacySaveHealRows.class) {
 				local = rows;
 				if (local == null) {
-					try (InputStream input = RetailLegacySaveHealRows.class.getResourceAsStream(REGISTRY)) {
+					try (InputStream input = QuestDataResources.open(REGISTRY)) {
 						if (input == null) {
 							throw new IOException("missing registry " + REGISTRY);
 						}

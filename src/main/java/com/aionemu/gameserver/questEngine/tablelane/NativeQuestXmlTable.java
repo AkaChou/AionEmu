@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -128,9 +130,9 @@ public final class NativeQuestXmlTable {
 		instance();
 	}
 
-	/** 从 classpath 装载并解析表。 / Loads and parses the table from the classpath. */
+	/** 从任务数据资源装载并解析表。 / Loads and parses the table from quest data resources. */
 	static NativeQuestXmlTable load(ClassLoader loader) {
-		try (InputStream input = loader.getResourceAsStream(RESOURCE)) {
+		try (InputStream input = QuestDataResources.open(loader, RESOURCE)) {
 			if (input == null) {
 				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: missing " + RESOURCE);
 			}

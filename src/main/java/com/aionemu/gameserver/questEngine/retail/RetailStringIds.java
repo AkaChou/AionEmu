@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public final class RetailStringIds {
 			synchronized (RetailStringIds.class) {
 				local = instance;
 				if (local == null) {
-					try (InputStream input = RetailStringIds.class.getResourceAsStream(RESOURCE)) {
+					try (InputStream input = QuestDataResources.open(RESOURCE)) {
 						if (input == null) {
 							throw new IllegalStateException("RETAIL_STRING_ID_TABLE_MISSING: " + RESOURCE);
 						}

@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.questEngine.QuestDataResources;
 
 /**
  * 生产用客户端页面契约与 movie-only 例外 ledger。
@@ -120,8 +121,8 @@ public final class QuestDialogContract {
 
 	public static QuestDialogContract load(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
-		try (InputStream contract = loader.getResourceAsStream(CONTRACT_RESOURCE);
-				InputStream exceptions = loader.getResourceAsStream(EXCEPTIONS_RESOURCE)) {
+		try (InputStream contract = QuestDataResources.open(loader, CONTRACT_RESOURCE);
+				InputStream exceptions = QuestDataResources.open(loader, EXCEPTIONS_RESOURCE)) {
 			if (contract == null) {
 				throw missing(CONTRACT_RESOURCE);
 			}

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.definition;
 
+import com.aionemu.gameserver.questEngine.QuestDataResources;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -32,7 +34,7 @@ public final class QuestDefinitionDirectoryLoader {
 	 */
 	public static QuestCatalog compile(ClassLoader loader) {
 		Objects.requireNonNull(loader, "loader");
-		URL directoryUrl = loader.getResource(QUEST_DIRECTORY);
+		URL directoryUrl = QuestDataResources.url(loader, QUEST_DIRECTORY);
 		if (directoryUrl == null) {
 			fail("QUEST_DIR_MISSING", QUEST_DIRECTORY);
 		}
