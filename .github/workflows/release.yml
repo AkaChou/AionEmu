@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build and package server
+        run: bash scripts/package.sh
+
+      - name: Compress aion folder to 7z
+        run: |
+          if ! command -v 7z &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y p7zip-full
+          fi
+          7z a -mx=9 aion.7z ./aion
+
+      - name: Generate Changelog and Create Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="$(date +'%Y%m%d')-${{ github.run_number }}"
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          {
+            echo "## 变更日志 / Changelog"
+            echo ""
+            if [ -n "$PREV_TAG" ]; then
+              echo "自 \`$PREV_TAG\` 以来的变更 / Changes since \`$PREV_TAG\`:"
+              echo ""
+              git log "${PREV_TAG}..HEAD" --pretty=format:"* %s (%h)"
+            else
+              echo "最近提交 / Recent commits:"
+              echo ""
+              git log -n 50 --pretty=format:"* %s (%h)"
+            fi
+            echo ""
+          } > CHANGELOG.md
+
+          gh release create "$TAG" aion.7z \
+            --title "Release $TAG" \
+            --notes-file CHANGELOG.md \
+            --generate-notes
