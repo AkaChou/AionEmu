@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   AionEmu Windows 部署与运行脚本 / Windows deployment and run script.
 
@@ -15,24 +15,26 @@
   NOTE: the server's stdout goes to its own (hidden) console window; logback writes log\aionemu.log.
 
 .EXAMPLE
-  deploy.bat        一键部署并启动 / deploy and start
-  start.bat         启动服务端 / start the server
-  stop.bat          优雅停止服务端 / stop the server gracefully
-  stop.bat -All     同时停止便携 MySQL / also stop the portable MySQL
+  deploy.bat        一键部署并前台启动（Ctrl+C 同时停止游戏与 MySQL）
+  start.bat         前台启动服务端，实时日志（Ctrl+C 停止游戏）
+  stop.bat          停止后台残留的服务端（一般用 Ctrl+C 即可）
+  start-mysql.bat   前台启动便携 MySQL（Ctrl+C 停止 MySQL）
+  stop-mysql.bat    停止便携 MySQL
 #>
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('deploy', 'start', 'stop', 'status')]
-    [string]$Action = 'deploy',
-
-    # 仅 stop 使用：同时停止便携 MySQL / stop action only: also stop the portable MySQL
-    [switch]$All
+    [ValidateSet('deploy', 'start', 'stop', 'start-mysql', 'stop-mysql', 'status')]
+    [string]$Action = 'deploy'
 )
 
 $ErrorActionPreference = 'Stop'
 try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# 脚本版本标记：便于确认 .bat 实际跑的是哪一版（排障用）。
+# Script version marker: identifies which revision the .bat actually ran (for troubleshooting).
+$ScriptVersion = '2026-10-14.9'
 
 # ---- 路径 / Paths -----------------------------------------------------------
 $ScriptDir = $PSScriptRoot
@@ -55,17 +57,27 @@ $MysqlExe     = Join-Path $MysqlHome 'bin\mysqld.exe'
 $MysqlCli     = Join-Path $MysqlHome 'bin\mysql.exe'
 $MysqlAdmin   = Join-Path $MysqlHome 'bin\mysqladmin.exe'
 $MysqlPidFile = Join-Path $RuntimeDir 'mysql.pid'
+$MysqlIni     = Join-Path $MysqlHome 'my.ini'
 $LogDir       = Join-Path $AionHome 'log'
 $PidFile      = Join-Path $LogDir 'aionemu.pid'
 $DbProps      = Join-Path $AionHome 'config\network\database.properties'
+$NetworkProps = Join-Path $AionHome 'config\network\network.properties'
+$GameProps    = Join-Path $AionHome 'config\main\gameserver.properties'
 
 # 与 aion\config\network\database.properties 默认值一致 / matches the default database.properties.
-$DbName        = 'aion_emu'
-$MysqlPort     = 3306
-$MysqlPassword = '123456'
+$script:DbName        = 'aion_emu'
+$script:MysqlPort     = 3306
+$script:MysqlPassword = '123456'
 
-$AdoptiumApi   = 'https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jre/hotspot/normal/eclipse'
+# JRE：清华 TUNA 镜像优先（国内快），官方 Adoptium API 兜底（会 302 到 GitHub）。
+# JRE: the TUNA mirror first (fast in China), the official Adoptium API as fallback (302s to GitHub).
 $TunaListing   = 'https://mirrors.tuna.tsinghua.edu.cn/Adoptium/25/jre/x64/windows/'
+$AdoptiumApi   = 'https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jre/hotspot/normal/eclipse'
+# MySQL：华为云镜像优先（8.0.29，约 11MB/s），官方 CDN 兜底（当前 8.4.x）。
+# MySQL: the Huawei Cloud mirror first (8.0.29, ~11MB/s), the official CDN as fallback (8.4.x).
+# 国内镜像不提供 8.4 的 Windows zip；迁移脚本只用 utf8mb4_general_ci + InnoDB，8.0.29 完全兼容。
+# China mirrors have no 8.4 Windows zip; the migration script only uses utf8mb4_general_ci + InnoDB, so 8.0.29 is fully compatible.
+$MysqlMirror   = 'https://mirrors.huaweicloud.com/mysql/Downloads/MySQL-8.0/mysql-8.0.29-winx64.zip'
 $MysqlPage     = 'https://dev.mysql.com/downloads/mysql/8.4.html'
 $MysqlCdn      = 'https://cdn.mysql.com/Downloads/MySQL-8.4/'
 $MysqlFallback = 'mysql-8.4.11-winx64.zip'
@@ -79,16 +91,42 @@ function Fail([string]$Message) {
     exit 1
 }
 
-# ---- 通用工具 / Shared helpers ---------------------------------------------
+# 运行原生命令并取回权威退出码与标准输出/错误。用 Start-Process 的进程 .ExitCode（可靠），
+# 不再依赖 PowerShell 里传播不稳定的 $LASTEXITCODE。退出码在 $global:LASTEXITCODE，
+# 标准输出在 $script:NativeOutput，错误输出在 $script:NativeError。
+# Runs a native command and returns its authoritative exit code, stdout and stderr. Uses Start-Process's
+# process .ExitCode (reliable) instead of the flaky $LASTEXITCODE.
+function Invoke-Native {
+    param([string]$FilePath, [string[]]$Arguments)
+    $outFile = Join-Path $env:TEMP ("aionemu-" + [guid]::NewGuid().ToString('N') + ".out")
+    $errFile = "$outFile.err"
+    $proc = Start-Process -FilePath $FilePath -NoNewWindow -Wait -PassThru `
+        -RedirectStandardOutput $outFile -RedirectStandardError $errFile -ArgumentList $Arguments
+    $script:NativeOutput = if (Test-Path $outFile) { Get-Content $outFile -Raw } else { '' }
+    $script:NativeError  = if (Test-Path $errFile) { Get-Content $errFile -Raw } else { '' }
+    Remove-Item $outFile, $errFile -Force -ErrorAction SilentlyContinue
+    $global:LASTEXITCODE = $proc.ExitCode
+}
+
 function Get-File([string]$Url, [string]$Destination) {
     Write-Step "下载 / downloading: $Url"
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Destination) | Out-Null
     Remove-Item $Destination -Force -ErrorAction SilentlyContinue
     if (Get-Command curl.exe -ErrorAction SilentlyContinue) {
-        & curl.exe -fL --retry 3 --retry-delay 2 --connect-timeout 20 -o $Destination $Url 2>$null
-        if ($LASTEXITCODE -ne 0) { return $false }
+        # 用 Start-Process 让 curl 直接写控制台（含进度表），避开 PS 5.1 把原生 stderr 当终止错误的坑。
+        # Start-Process lets curl write to the console directly (progress meter), avoiding
+        # PowerShell 5.1's terminating native-stderr error.
+        $proc = Start-Process -FilePath 'curl.exe' -NoNewWindow -Wait -PassThru -ArgumentList @(
+            '-fL', '--retry', '3', '--retry-delay', '2', '--connect-timeout', '20',
+            '-o', "`"$Destination`"", "`"$Url`"")
+        if ($proc.ExitCode -ne 0) { Write-Note "下载失败，curl 退出码 / download failed, exit code $($proc.ExitCode)"; return $false }
     } else {
-        try { Invoke-WebRequest -UseBasicParsing -Uri $Url -OutFile $Destination } catch { return $false }
+        try {
+            $client = New-Object System.Net.WebClient
+            $client.Headers.Add('User-Agent', 'AionEmu-Deploy')
+            $client.DownloadFile($Url, $Destination)
+            $client.Dispose()
+        } catch { Write-Note "下载失败 / download failed: $($_.Exception.Message)"; return $false }
     }
     return (Test-Path $Destination) -and ((Get-Item $Destination).Length -gt 0)
 }
@@ -96,8 +134,8 @@ function Get-File([string]$Url, [string]$Destination) {
 function Expand-Zip([string]$Zip, [string]$Destination) {
     New-Item -ItemType Directory -Force -Path $Destination | Out-Null
     if (Get-Command tar.exe -ErrorAction SilentlyContinue) {
-        & tar.exe -xf $Zip -C $Destination 2>$null
-        if ($LASTEXITCODE -eq 0) { return }
+        Invoke-Native -FilePath 'tar.exe' -Arguments @('-xf', $Zip, '-C', $Destination)
+        if ($global:LASTEXITCODE -eq 0) { return }
     }
     Expand-Archive -Path $Zip -DestinationPath $Destination -Force
 }
@@ -124,23 +162,31 @@ function Test-PortOpen([int]$Port) {
     } catch { return $false }
 }
 
-# mysql.exe 包装：强制 TCP 并统一 host/port，退出码留在 $LASTEXITCODE 供调用方判断。
-# mysql.exe wrapper: forces TCP and a fixed host/port; the exit code stays in $LASTEXITCODE.
+# mysql.exe 包装：强制 TCP 并统一 host/port；输出为 mysql 的文本，退出码见 $global:LASTEXITCODE。
+# mysql.exe wrapper: forces TCP and a fixed host/port; output is mysql's text, exit code in $global:LASTEXITCODE.
 function Invoke-MysqlCli {
-    param([string[]]$Arguments, [string]$Password = $null)
-    $pw = if ($null -ne $Password) { $Password } else { $MysqlPassword }
-    $argv = @('--no-defaults', '--protocol=TCP', '-u', 'root', '-h', '127.0.0.1', '-P', "$MysqlPort")
-    if ($pw) { $argv += "--password=$pw" }
-    $argv += $Arguments
-    & $MysqlCli @argv 2>$null
+    param([string[]]$Arguments)
+    $pw = $script:MysqlPassword
+    $oldPwd = $env:MYSQL_PWD
+    try {
+        $env:MYSQL_PWD = $pw
+        $argv = @('--no-defaults', '--protocol=TCP', '--get-server-public-key',
+            '-u', 'root', '-h', '127.0.0.1', '-P', "$script:MysqlPort", "--password=$pw")
+        $argv += $Arguments
+        Invoke-Native -FilePath $MysqlCli -Arguments $argv
+    } finally {
+        if ($null -ne $oldPwd) { $env:MYSQL_PWD = $oldPwd }
+        else { Remove-Item Env:\MYSQL_PWD -ErrorAction SilentlyContinue }
+    }
 }
 
-# database.properties 是凭据唯一维护点：存在时以它为准，避免脚本与应用各说各话。
-# database.properties is the single source of truth for credentials: honor it when present.
+# 从已存在的 database.properties 采纳端口/库名；密码固定用脚本默认（$MysqlPassword），
+# 避免文件里残留的旧密码被沿用，导致应用与服务端密码不一致。
+# Adopts the port/db name from an existing database.properties; the password stays the script
+# default ($MysqlPassword) so a stale password in the file cannot make the app and server disagree.
 function Read-DbSettings {
     if (-not (Test-Path $DbProps)) { return }
     foreach ($line in (Get-Content $DbProps)) {
-        if ($line -match '^\s*database\.password\s*=\s*(\S.*?)\s*$') { $script:MysqlPassword = $Matches[1] }
         if ($line -match '^\s*database\.url\s*=\s*jdbc:mysql://[^:/]+:(\d+)/([^?]+)') {
             $script:MysqlPort = [int]$Matches[1]
             $script:DbName = $Matches[2]
@@ -150,7 +196,7 @@ function Read-DbSettings {
 
 # ---- 下载源发现 / Download source discovery --------------------------------
 function Resolve-JreUrls {
-    $urls = @($AdoptiumApi)
+    $urls = @()
     try {
         $listing = Invoke-WebRequest -UseBasicParsing -Uri $TunaListing -TimeoutSec 30
         $names = [regex]::Matches($listing.Content, 'OpenJDK25U-jre_x64_windows_hotspot_[0-9._]+\.zip') |
@@ -162,10 +208,14 @@ function Resolve-JreUrls {
             $urls += "$TunaListing$latest"
         }
     } catch { Write-Note "TUNA 镜像列表不可达，仅用官方源 / TUNA listing unreachable, official source only" }
+    $urls += $AdoptiumApi
     return $urls
 }
 
-function Resolve-MysqlUrl {
+function Resolve-MysqlUrls {
+    # 华为云镜像优先，官方 CDN（当前 8.4.x）兜底。
+    # Huawei Cloud first, the official CDN (currently 8.4.x) as fallback.
+    $urls = @($MysqlMirror)
     try {
         $page = Invoke-WebRequest -UseBasicParsing -Uri $MysqlPage -TimeoutSec 30
         $names = [regex]::Matches($page.Content, 'mysql-8\.4\.[0-9]+-winx64\.zip') |
@@ -174,10 +224,11 @@ function Resolve-MysqlUrl {
             $latest = $names |
                 Sort-Object { [int]($_ -replace '^mysql-8\.4\.', '' -replace '-winx64\.zip$', '') } |
                 Select-Object -Last 1
-            return "$MysqlCdn$latest"
+            $urls += "$MysqlCdn$latest"
         }
     } catch { Write-Note "MySQL 版本页不可达，使用内置版本 / version page unreachable, using the built-in one" }
-    return "$MysqlCdn$MysqlFallback"
+    $urls += "$MysqlCdn$MysqlFallback"
+    return $urls
 }
 
 # ---- 安装 / Installation ----------------------------------------------------
@@ -205,9 +256,14 @@ function Install-Jre {
 
 function Install-Mysql {
     if (Test-Path $MysqlExe) { Write-Ok "MySQL 已安装 / MySQL present: $MysqlHome"; return }
-    Write-Step '安装便携 MySQL 8.4 / installing portable MySQL 8.4'
+    Write-Step '安装便携 MySQL / installing portable MySQL'
     $zip = Join-Path $env:TEMP 'aionemu-mysql.zip'
-    if (-not (Get-File (Resolve-MysqlUrl) $zip)) { Fail 'MySQL 下载失败 / MySQL download failed' }
+    $downloaded = $false
+    foreach ($url in (Resolve-MysqlUrls)) {
+        if (Get-File $url $zip) { $downloaded = $true; break }
+        Write-Note '该源下载失败，尝试下一个 / source failed, trying the next one'
+    }
+    if (-not $downloaded) { Fail 'MySQL 下载失败 / MySQL download failed' }
     Expand-Zip $zip $RuntimeDir
     Remove-Item $zip -Force -ErrorAction SilentlyContinue
     $extracted = Get-ChildItem $RuntimeDir -Directory |
@@ -220,90 +276,138 @@ function Install-Mysql {
 }
 
 # ---- MySQL 运行 / MySQL runtime --------------------------------------------
+# 生成 my.ini：便携 MySQL 监听 0.0.0.0 以便远程访问（用户可自行改端口/绑定）。
+# Writes my.ini: the portable MySQL binds 0.0.0.0 so remote clients can reach it.
+function Write-MysqlConfig {
+    New-Item -ItemType Directory -Force -Path $MysqlHome | Out-Null
+    $lines = @(
+        '# 由 scripts\windows\deploy.bat 生成 / generated by scripts\windows\deploy.bat'
+        '# bind-address=0.0.0.0 允许远程访问；需同时在防火墙放行 TCP 3306。'
+        '# bind-address=0.0.0.0 enables remote access; also open TCP 3306 in the firewall.'
+        '# 服务端自身仍走 127.0.0.1 连接（见 database.properties）。'
+        '# The server itself still connects over 127.0.0.1 (see database.properties).'
+        '[mysqld]'
+        'bind-address=0.0.0.0'
+        "port=$script:MysqlPort"
+        "basedir=$($MysqlHome.Replace('\', '/'))"
+        "datadir=$($MysqlData.Replace('\', '/'))"
+    )
+    # UTF-8 无 BOM：mysqld 会把 BOM 当成键名的一部分 / UTF-8 without a BOM.
+    [System.IO.File]::WriteAllLines($MysqlIni, $lines, (New-Object System.Text.UTF8Encoding($false)))
+    Write-Ok "MySQL 配置已写入 / MySQL config written: $MysqlIni (bind-address=0.0.0.0)"
+}
+
 function Initialize-MysqlData {
     if (Test-Path (Join-Path $MysqlData 'mysql')) { return }
     Write-Step "初始化 MySQL 数据目录 / initializing MySQL data dir: $MysqlData"
     if (Test-Path $MysqlData) { Remove-Item $MysqlData -Recurse -Force }
     New-Item -ItemType Directory -Force -Path $MysqlData | Out-Null
-    & $MysqlExe --no-defaults --initialize-insecure "--basedir=$MysqlHome" "--datadir=$MysqlData" 2>$null
-    if ($LASTEXITCODE -ne 0) {
+    Write-MysqlConfig
+    $defaultsParam = '--defaults-file=' + $MysqlIni.Replace('\', '/')
+    Invoke-Native -FilePath $MysqlExe -Arguments @($defaultsParam, '--initialize-insecure')
+    if ($global:LASTEXITCODE -ne 0) {
         Fail 'MySQL 初始化失败。常见原因：缺少 Microsoft Visual C++ 运行库 / MySQL init failed (often a missing VC++ runtime).'
     }
     Write-Ok 'MySQL 数据目录已初始化（root 初始为空密码）/ data dir initialized (root starts with an empty password)'
 }
 
 function Ensure-MysqlRunning {
-    if (Test-Process (Get-RecordedPid $MysqlPidFile)) {
-        Write-Ok '便携 MySQL 已在运行 / portable MySQL already running'
-        return
-    }
-    if (Test-PortOpen $MysqlPort) {
-        # 端口已监听：能用配置凭据连上就直接复用 / reuse a reachable server already listening on the port
-        Invoke-MysqlCli @('-e', 'SELECT 1')
-        if ($LASTEXITCODE -eq 0) {
-            Write-Ok "复用 $MysqlPort 端口上已运行的 MySQL / reusing the MySQL already on port $MysqlPort"
+    # 0. 刷新 my.ini（bind-address/port），保证与脚本配置一致
+    # 0. Refresh my.ini (bind-address/port) so it matches the script configuration.
+    Write-MysqlConfig
+
+    # 1. 检查便携 MySQL 是否已经在运行，并验证凭据是否有效
+    $runningPid = Get-RecordedPid $MysqlPidFile
+    $isPortableRunning = (Test-Process $runningPid) -or (Get-MysqlProcesses)
+
+    if ($isPortableRunning) {
+        Invoke-MysqlCli @('-eSELECT(1)')
+        if ($global:LASTEXITCODE -eq 0) {
+            Write-Ok "便携 MySQL 运行中且凭据有效 / portable MySQL already running with valid credentials"
             return
         }
-        Fail "端口 $MysqlPort 已被占用且无法用配置凭据连接 / port $MysqlPort is in use but rejects the configured credentials."
+        Write-Note "便携 MySQL 运行中但凭据无法连接（状态异常），正在重启修复... / portable MySQL running but unreachable, restarting to repair"
+        Stop-Mysql
+    } elseif (Test-PortOpen $script:MysqlPort) {
+        Invoke-MysqlCli @('-eSELECT(1)')
+        if ($global:LASTEXITCODE -eq 0) {
+            Write-Ok "复用 $script:MysqlPort 端口上已运行的 MySQL / reusing the MySQL already on port $script:MysqlPort"
+            return
+        }
+        Fail "端口 $script:MysqlPort 已被占用且无法用配置凭据连接 / port $script:MysqlPort is in use but rejects the configured credentials."
     }
-    Write-Step "启动 MySQL (port $MysqlPort) / starting MySQL"
+
+    # 2. 生成 init.sql，在 mysqld 启动阶段内部强制确保 root 账号密码与数据库就绪（彻底摆脱客户端网络认证问题）
+    # Write init.sql so mysqld configures the root accounts and database internally on startup.
+    $initSqlFile = Join-Path $RuntimeDir 'init.sql'
+    $sqlLines = @(
+        "ALTER USER 'root'@'localhost' IDENTIFIED BY '$script:MysqlPassword';"
+        "CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY '$script:MysqlPassword';"
+        "ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY '$script:MysqlPassword';"
+        "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$script:MysqlPassword';"
+        "ALTER USER 'root'@'%' IDENTIFIED BY '$script:MysqlPassword';"
+        "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+        "GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION;"
+        "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
+        "CREATE DATABASE IF NOT EXISTS $script:DbName CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        "FLUSH PRIVILEGES;"
+    )
+    [System.IO.File]::WriteAllLines($initSqlFile, $sqlLines, (New-Object System.Text.UTF8Encoding($false)))
+
+    Write-Step "启动 MySQL (port $script:MysqlPort, bind 0.0.0.0) / starting MySQL"
+    $initParam = "--init-file=" + $initSqlFile.Replace('\', '/')
+    # --defaults-file 必须是第一个参数；my.ini 提供 basedir/datadir/port/bind-address。
+    # --defaults-file must come first; my.ini supplies basedir/datadir/port/bind-address.
+    $defaultsParam = '--defaults-file=' + $MysqlIni.Replace('\', '/')
     $process = Start-Process -FilePath $MysqlExe -PassThru -WindowStyle Hidden -ArgumentList @(
-        '--no-defaults', "--basedir=$MysqlHome", "--datadir=$MysqlData",
-        "--port=$MysqlPort", '--bind-address=127.0.0.1'
+        $defaultsParam, $initParam
     )
     Set-Content -Path $MysqlPidFile -Value $process.Id -Encoding ASCII
+
+    $started = $false
     for ($i = 0; $i -lt 30; $i++) {
         Start-Sleep -Seconds 2
-        if (Test-PortOpen $MysqlPort) { Write-Ok 'MySQL 已启动 / MySQL started'; return }
+        if (Test-PortOpen $script:MysqlPort) { $started = $true; break }
     }
-    Fail 'MySQL 启动超时（缺少 VC++ 运行库时请先安装）/ MySQL not ready within 60s (install the VC++ runtime if missing).'
-}
-
-function Initialize-MysqlAccount {
-    # 已能用目标密码登录 → 无需处理 / already usable with the target password
-    Invoke-MysqlCli @('-e', 'SELECT 1')
-    if ($LASTEXITCODE -eq 0) { return }
-    # 空密码可用 → 设置密码并补齐 127.0.0.1 账号 / empty password works → set it and add the 127.0.0.1 account
-    Invoke-MysqlCli @('-e', 'SELECT 1') -Password ''
-    if ($LASTEXITCODE -ne 0) { Fail '无法以 root 连接 MySQL / cannot authenticate to MySQL as root' }
-    Write-Step '配置 root 密码 / configuring the root password'
-    $sql = "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MysqlPassword'; " +
-           "CREATE USER IF NOT EXISTS 'root'@'127.0.0.1' IDENTIFIED BY '$MysqlPassword'; " +
-           "GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-    Invoke-MysqlCli @('-e', $sql) -Password ''
-    if ($LASTEXITCODE -ne 0) { Fail 'root 密码配置失败 / failed to configure the root password' }
-    Write-Ok 'root 密码已配置 / root password configured'
-}
-
-function Initialize-Database {
-    $existing = Invoke-MysqlCli @('-N', '-B', '-e', "SELECT SCHEMA_NAME FROM information_schema.SCHEMATA WHERE SCHEMA_NAME='$DbName'")
-    if ($LASTEXITCODE -eq 0 -and "$existing".Trim() -eq $DbName) {
-        Write-Ok "数据库 $DbName 已存在 / database present"
-        return
+    Remove-Item $initSqlFile -Force -ErrorAction SilentlyContinue
+    if (-not $started) {
+        Fail 'MySQL 启动超时（缺少 VC++ 运行库时请先安装）/ MySQL not ready within 60s (install the VC++ runtime if missing).'
     }
-    Write-Step "创建数据库 $DbName (utf8mb4) / creating database"
-    Invoke-MysqlCli @('-e', "CREATE DATABASE IF NOT EXISTS $DbName CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
-    if ($LASTEXITCODE -ne 0) { Fail '数据库创建失败 / failed to create the database' }
-    Write-Ok "数据库 $DbName 已创建（Flyway 首次启动自动建表）/ created (Flyway builds the tables on first start)"
+
+    # 3. 校验连接（使用零空格语句 -eSELECT(1)，避免 Start-Process 参数解析将空格后的数字误判为数据库名）
+    Invoke-MysqlCli @('-eSELECT(1)')
+    if ($global:LASTEXITCODE -ne 0) {
+        Fail "MySQL 已启动但凭据验证失败 / MySQL started but credential verification failed: $($script:NativeError)"
+    }
+    Write-Ok "MySQL 已启动，root 密码已配置，数据库 $script:DbName 已就绪 / MySQL ready, root password and database configured"
 }
 
 function Write-DbProperties {
-    if (Test-Path $DbProps) {
-        Write-Ok "保留现有 database.properties / keeping the existing database.properties"
-        return
-    }
-    Write-Step "写入 database.properties（root/$MysqlPassword）/ writing $DbProps"
-    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $DbProps) | Out-Null
-    $url = "jdbc:mysql://127.0.0.1:$MysqlPort/$DbName" +
+    $url = "jdbc:mysql://127.0.0.1:$script:MysqlPort/$script:DbName" +
            '?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true' +
            '&useLegacyDatetimeCode=false&serverTimezone=UTC'
+    # 已有文件：仅在凭据与脚本不一致时才改写，避免把配置里过期的旧密码留给应用。
+    # Existing file: rewrite only when the credentials differ, so a stale password cannot survive.
+    if (Test-Path $DbProps) {
+        $current = Get-Content $DbProps -Raw
+        $consistent = $current -match "(?m)^\s*database\.password\s*=\s*$([regex]::Escape($script:MysqlPassword))\s*$" -and
+                      $current -match '(?m)^\s*database\.user\s*=\s*root\s*$'
+        if ($consistent) {
+            Write-Ok "database.properties 凭据一致，保留 / credentials consistent, keeping the file"
+            return
+        }
+        Write-Note "database.properties 凭据与脚本不一致，改写为 root/$script:MysqlPassword / credentials differ, rewriting"
+    } else {
+        Write-Step "写入 database.properties（root/$script:MysqlPassword）/ writing $DbProps"
+    }
+    New-Item -ItemType Directory -Force -Path (Split-Path -Parent $DbProps) | Out-Null
     $lines = @(
         '# 由 scripts\windows\deploy.bat 生成的部署配置 / generated by scripts\windows\deploy.bat'
         '# 凭据唯一维护在此文件 / credentials are maintained only in this file'
         'database.driver = com.mysql.cj.jdbc.Driver'
         "database.url = $url"
         'database.user = root'
-        "database.password = $MysqlPassword"
+        "database.password = $script:MysqlPassword"
         'database.maxconnections = 20'
         'database.hikari.maxLifetime = 600000'
         'database.hikari.connectionTestQuery = SELECT 1'
@@ -313,10 +417,145 @@ function Write-DbProperties {
     Write-Ok 'database.properties 已写入 / written'
 }
 
+# 判断字符串是否为合法 IPv4 地址（四段 0-255）。
+# Returns whether the string is a valid IPv4 address (four octets, 0-255).
+function Test-IPv4([string]$Value) {
+    if ($Value -notmatch '^\d{1,3}(\.\d{1,3}){3}$') { return $false }
+    foreach ($part in $Value.Split('.')) {
+        if ([int]$part -gt 255) { return $false }
+    }
+    return $true
+}
+
+# 判断是否为回环/未指定地址（本机不可作为对外公布地址）。
+# Returns whether the address is loopback/unspecified (unusable as the advertised address).
+function Test-LocalOnlyAddress([string]$Value) {
+    return $Value -eq '0.0.0.0' -or $Value -eq '127.0.0.1' -or $Value.StartsWith('127.') -or $Value -eq 'localhost'
+}
+
+# 交互输入服务器对外 IP（必须为局域网或公网 IPv4，不接受本机地址），并同步更新 network.properties。
+# Prompts for the server's advertised IP (a LAN or public IPv4; localhost is rejected) and updates network.properties.
+function Configure-NetworkAddress {
+    if (-not (Test-Path $NetworkProps)) { return }
+
+    # 读取当前配置中的 IP 作为参考展示
+    $currentIp = ''
+    foreach ($line in (Get-Content $NetworkProps)) {
+        if ($line -match '^\s*gameserver\.network\.address\s*=\s*(\S.*?)\s*$') {
+            $currentIp = $Matches[1]
+            break
+        }
+    }
+    # 仅当现有配置已是可用的对外 IP 时才允许回车沿用 / only a usable existing IP may be kept by pressing ENTER.
+    $defaultIp = if ((Test-IPv4 $currentIp) -and -not (Test-LocalOnlyAddress $currentIp)) { $currentIp } else { '' }
+
+    Write-Host ''
+    Write-Host '================ 服务器连接 IP 设置 / Server Connection IP ================' -ForegroundColor Cyan
+    Write-Host "当前配置 IP / Current IP: $(if ($currentIp) { $currentIp } else { '(未设置 / unset)' })"
+    Write-Host '必须填写本机可被客户端访问的局域网或公网 IP；不支持 localhost / 127.0.0.1。'
+    Write-Host 'Enter the LAN or public IP clients reach this server at; localhost / 127.0.0.1 is not supported.'
+    Write-Host '-------------------------------------------------------------------------'
+
+    $targetIp = ''
+    while (-not $targetIp) {
+        $prompt = '请输入服务器对外 IP (例如 192.168.1.18)'
+        if ($defaultIp) { $prompt += " [回车沿用 $defaultIp]" }
+        $prompt += ' / Enter the advertised server IP'
+        $entered = "$(Read-Host $prompt)".Trim()
+        if ($entered -eq '' -and $defaultIp) { $entered = $defaultIp }
+        if (-not (Test-IPv4 $entered)) {
+            Write-Note '不是合法的 IPv4 地址，请重新输入 / not a valid IPv4 address, please retry'
+            continue
+        }
+        if (Test-LocalOnlyAddress $entered) {
+            Write-Note '本机地址不可用，请输入局域网或公网 IP / localhost is not allowed, enter a LAN or public IP'
+            continue
+        }
+        $targetIp = $entered
+    }
+
+    $lines = Get-Content $NetworkProps
+    $newLines = @()
+    foreach ($line in $lines) {
+        if ($line -match '^\s*gameserver\.network\.address\s*=') {
+            $newLines += "gameserver.network.address = $targetIp"
+        } elseif ($line -match '^\s*chatserver\.network\.public\.address\s*=') {
+            $newLines += "chatserver.network.public.address = $targetIp`:10241"
+        } else {
+            $newLines += $line
+        }
+    }
+    [System.IO.File]::WriteAllLines($NetworkProps, $newLines, (New-Object System.Text.UTF8Encoding($false)))
+    Write-Ok "服务器连接 IP 已设置为 / Server IP set: $targetIp (Chat: $targetIp`:10241)"
+}
+
+# 交互选择服务器国家代码（默认国服 CN: 5），并同步更新 gameserver.properties。
+# Interactively selects the server country code (default CN: 5) and updates gameserver.properties.
+function Configure-CountryCode {
+    if (-not (Test-Path $GameProps)) { return }
+
+    # 读取当前配置中的国家代码作为参考展示
+    $currentCode = '5'
+    foreach ($line in (Get-Content $GameProps)) {
+        if ($line -match '^\s*gameserver\.country\.code\s*=\s*(\d+)\s*$') {
+            $currentCode = $Matches[1]
+            break
+        }
+    }
+
+    Write-Host ''
+    Write-Host '================ 服务器国家代码设置 / Server Country Code ================' -ForegroundColor Cyan
+    Write-Host "当前配置代码 / Current Country Code: $currentCode"
+    Write-Host '  [5] 盛大 / 国服 CN（默认，直接回车）/ SDO / China (default, press ENTER)'
+    Write-Host '  [1] 北美 NA / North America'
+    Write-Host '  [2] 欧洲 EU / Europe'
+    Write-Host '  [4] 日本 JP / Japan'
+    Write-Host '  [7] 俄罗斯 RU / Russia'
+    Write-Host '  [0] 韩国 KR / Korea'
+    Write-Host '  [99] 自动识别 AUTO / Auto-detect'
+    Write-Host '-------------------------------------------------------------------------'
+    $choice = Read-Host '请输入国家代码 (直接回车默认 [5] 国服 CN) / Enter country code [default: 5]'
+    $choice = "$choice".Trim().ToLower()
+
+    $targetCode = '5'
+    if ($choice -eq '' -or $choice -eq '5' -or $choice -eq 'cn' -or $choice -eq 'sdo') {
+        $targetCode = '5'
+    } elseif ($choice -eq '1' -or $choice -eq 'na') {
+        $targetCode = '1'
+    } elseif ($choice -eq '2' -or $choice -eq 'eu') {
+        $targetCode = '2'
+    } elseif ($choice -eq '4' -or $choice -eq 'jp') {
+        $targetCode = '4'
+    } elseif ($choice -eq '7' -or $choice -eq 'ru') {
+        $targetCode = '7'
+    } elseif ($choice -eq '0' -or $choice -eq 'kr') {
+        $targetCode = '0'
+    } elseif ($choice -eq '99' -or $choice -eq 'auto') {
+        $targetCode = '99'
+    } elseif ($choice -match '^\d+$') {
+        $targetCode = $choice
+    }
+
+    $lines = Get-Content $GameProps
+    $newLines = @()
+    foreach ($line in $lines) {
+        if ($line -match '^\s*gameserver\.country\.code\s*=') {
+            $newLines += "gameserver.country.code = $targetCode"
+        } else {
+            $newLines += $line
+        }
+    }
+    [System.IO.File]::WriteAllLines($GameProps, $newLines, (New-Object System.Text.UTF8Encoding($false)))
+    Write-Ok "服务器国家代码已配置为 / Server country code set: $targetCode"
+}
+
 # ---- 服务端 / Server --------------------------------------------------------
 function Start-Server {
     $existingPid = Get-RecordedPid $PidFile
-    if (Test-Process $existingPid) { Write-Ok "AionEmu 已在运行 / already running (pid $existingPid)"; return }
+    if (Test-Process $existingPid) {
+        Write-Note "AionEmu 游戏服务端已在运行 (pid $existingPid)，无需重复启动 / already running (pid $existingPid), not starting again"
+        return
+    }
     Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
     New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 
@@ -326,24 +565,31 @@ function Start-Server {
         '-XX:+ParallelRefProcEnabled', '-XX:+UseStringDeduplication',
         '-XX:+HeapDumpOnOutOfMemoryError', "-XX:HeapDumpPath=`"$LogDir`"", '-XX:+ExitOnOutOfMemoryError',
         '-Dfile.encoding=UTF-8', '-Djava.net.preferIPv4Stack=true', '-Duser.timezone=Asia/Shanghai',
+        '-Duser.language=zh', '-Duser.country=CN',
         "-Daion.home=`"$AionHome`"", "-Daion.log.dir=`"$LogDir`"",
         '-jar', "`"$JarPath`""
     )
-    Write-Step '启动 AionEmu / starting AionEmu'
+    Write-Step '启动 AionEmu（前台，实时日志）/ starting AionEmu in the foreground'
+    # 前台运行：日志实时打印到当前窗口（root logger 的 out_console 走 stdout）。
+    # 记录 pid 以便 Ctrl+C 后兜底强杀；等待 java 结束，Ctrl+C 或关窗即停止。
+    # Foreground: logs stream to this window (the root logger's out_console writes to stdout).
+    # The pid is recorded for a post-Ctrl+C fallback kill; waits for java, stopped by Ctrl+C or window close.
     $process = Start-Process -FilePath $JavaExe -ArgumentList $javaArgs -WorkingDirectory $AionHome `
-        -WindowStyle Hidden -PassThru
+        -NoNewWindow -PassThru
     Set-Content -Path $PidFile -Value $process.Id -Encoding ASCII
-    Start-Sleep -Seconds 3
-    if (-not (Get-Process -Id $process.Id -ErrorAction SilentlyContinue)) {
-        Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
-        Fail "AionEmu 启动后立即退出 / exited right after launch. 查看日志 / see $LogDir"
-    }
-    Write-Ok "AionEmu 已启动 / started (pid $($process.Id))"
     Write-Host '        游戏端口 / game  : 7777'
     Write-Host '        登录端口 / login : 2106'
     Write-Host '        聊天端口 / chat  : 10241'
     Write-Host "        日志 / log       : $LogDir\aionemu.log"
-    Write-Host '        停止 / stop      : stop.bat'
+    $process.WaitForExit()
+    # Ctrl+C 可能只到了 powershell 而未传给子进程，这里兜底强杀残留的 java。
+    # Ctrl+C may reach PowerShell but not the child; force-kill any leftover java here.
+    if (-not $process.HasExited) { Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue }
+    Remove-Item $PidFile -Force -ErrorAction SilentlyContinue
+    if ($process.ExitCode -ne 0) {
+        Fail "AionEmu 异常退出（退出码 $($process.ExitCode)），请检查日志 / AionEmu exited with error code $($process.ExitCode)"
+    }
+    Write-Note "AionEmu 已退出 / AionEmu exited"
 }
 
 function Send-CtrlC([int]$TargetPid) {
@@ -365,8 +611,9 @@ Start-Sleep -Milliseconds 400
 exit 0
 "@
     $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($code))
-    & powershell.exe -NoProfile -ExecutionPolicy Bypass -EncodedCommand $encoded 2>$null | Out-Null
-    return ($LASTEXITCODE -eq 0)
+    Invoke-Native -FilePath 'powershell.exe' -Arguments @(
+        '-NoProfile', '-ExecutionPolicy', 'Bypass', '-EncodedCommand', $encoded)
+    return ($global:LASTEXITCODE -eq 0)
 }
 
 function Stop-Server {
@@ -392,20 +639,53 @@ function Stop-Server {
     Write-Ok 'AionEmu 已强制停止 / force-stopped'
 }
 
+function Get-MysqlProcesses {
+    Get-Process -Name 'mysqld' -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path -and $_.Path.StartsWith($MysqlHome, [StringComparison]::OrdinalIgnoreCase) }
+}
+
 function Stop-Mysql {
     $id = Get-RecordedPid $MysqlPidFile
-    if (-not (Test-Process $id)) {
+    $targets = @()
+    if (Test-Process $id) { $targets += $id }
+    # 记录 pid 失效时按 mysqld 路径兜底，避免漏停导致残留 / fall back to the mysqld path when the recorded pid is stale.
+    foreach ($proc in (Get-MysqlProcesses)) { if ($targets -notcontains $proc.Id) { $targets += $proc.Id } }
+    if ($targets.Count -eq 0) {
         Write-Ok '便携 MySQL 未在运行 / portable MySQL not running'
         Remove-Item $MysqlPidFile -Force -ErrorAction SilentlyContinue
         return
     }
-    Write-Step "停止便携 MySQL (pid $id) / stopping portable MySQL"
-    & $MysqlAdmin --no-defaults --protocol=TCP -u root -h 127.0.0.1 -P $MysqlPort "--password=$MysqlPassword" shutdown 2>$null
-    for ($i = 0; $i -lt 30; $i++) {
-        Start-Sleep -Seconds 1
-        if (-not (Test-Process $id)) { break }
+    Write-Step "停止便携 MySQL (pid $($targets -join ', ')) / stopping portable MySQL"
+    $oldPwd = $env:MYSQL_PWD
+    try {
+        $env:MYSQL_PWD = $script:MysqlPassword
+        Invoke-Native -FilePath $MysqlAdmin -Arguments @(
+            '--no-defaults', '--protocol=TCP', '--get-server-public-key',
+            '-u', 'root', '-h', '127.0.0.1', '-P', "$script:MysqlPort", "--password=$script:MysqlPassword", 'shutdown')
+    } finally {
+        if ($null -ne $oldPwd) { $env:MYSQL_PWD = $oldPwd }
+        else { Remove-Item Env:\MYSQL_PWD -ErrorAction SilentlyContinue }
     }
-    if (Test-Process $id) { Stop-Process -Id $id -Force -ErrorAction SilentlyContinue }
+    if ($global:LASTEXITCODE -ne 0) {
+        Write-Note 'mysqladmin shutdown 失败（凭据不符？），改按 pid 终止 / mysqladmin shutdown failed, killing by pid'
+    } else {
+        for ($i = 0; $i -lt 30; $i++) {
+            Start-Sleep -Seconds 1
+            if (-not (Get-MysqlProcesses)) { break }
+        }
+    }
+    # 温和 → 强杀，逐个处理 / graceful then force, one by one.
+    foreach ($procId in $targets) {
+        if (Test-Process $procId) { Stop-Process -Id $procId -ErrorAction SilentlyContinue }
+    }
+    Start-Sleep -Seconds 1
+    foreach ($procId in $targets) {
+        if (Test-Process $procId) { Stop-Process -Id $procId -Force -ErrorAction SilentlyContinue }
+    }
+    Start-Sleep -Seconds 1
+    if (Get-MysqlProcesses) {
+        Fail '无法停止便携 MySQL / failed to stop the portable MySQL'
+    }
     Remove-Item $MysqlPidFile -Force -ErrorAction SilentlyContinue
     Write-Ok '便携 MySQL 已停止 / portable MySQL stopped'
 }
@@ -415,10 +695,11 @@ function Initialize-Runtime {
     # 先读配置（若有），使端口/库名/密码与运行时保持一致，再决定是否需要初始化数据目录。
     # Read the config first so port/db/password match the runtime before deciding on initialization.
     Read-DbSettings
-    if (-not (Test-PortOpen $MysqlPort)) { Initialize-MysqlData }
+    # 打印脚本实际使用的凭据，便于与应用侧日志对照（排障用）。
+    # Print the credentials the script actually uses, to compare against the app-side log.
+    Write-Host "[AionEmu] DB 凭据 / DB credentials: user=root password=$script:MysqlPassword db=$script:DbName port=$script:MysqlPort"
+    Initialize-MysqlData
     Ensure-MysqlRunning
-    Initialize-MysqlAccount
-    Initialize-Database
     Write-DbProperties
 }
 
@@ -426,20 +707,62 @@ switch ($Action) {
     'deploy' {
         Write-Host '=== AionEmu Windows 一键部署 / one-click deployment ===' -ForegroundColor Cyan
         Write-Host "部署目录 / deploy dir: $AionHome"
+        Write-Host "脚本版本 / script version: $ScriptVersion"
+        if ((Test-Process (Get-RecordedPid $PidFile)) -and (Test-PortOpen $script:MysqlPort)) {
+            Write-Note '游戏服务端与便携 MySQL 都已在运行，无需重复部署 / both the game server and MySQL are already running; nothing to do'
+            exit 0
+        }
+        Configure-NetworkAddress
+        Configure-CountryCode
         Install-Jre
         Install-Mysql
         Initialize-Runtime
-        Start-Server
+        # 前台运行游戏服务端；游戏退出（或失败）后，finally 块必定自动停止便携 MySQL，绝不残留。
+        # Run the server in the foreground; when the server exits (or fails), finally stops MySQL cleanly.
+        try {
+            Start-Server
+        } finally {
+            Read-DbSettings
+            Stop-Mysql
+        }
     }
     'start' {
+        # 仅启动 jar；MySQL 由 start-mysql.bat 负责，与 start-silent.sh 的职责一致。
+        # Jar only; MySQL is start-mysql.bat's job, matching start-silent.sh's responsibility.
         if (-not (Test-Path $JavaExe)) { Fail '未安装 JRE，请先运行 deploy.bat / run deploy.bat first.' }
-        if (-not (Test-Path $MysqlExe)) { Fail '未安装 MySQL，请先运行 deploy.bat / run deploy.bat first.' }
-        Initialize-Runtime
+        if (Test-Process (Get-RecordedPid $PidFile)) {
+            Write-Note 'AionEmu 游戏服务端已在运行，无需重复启动 / the game server is already running; nothing to do'
+            exit 0
+        }
+        if (-not (Test-PortOpen $script:MysqlPort)) {
+            Write-Note "便携 MySQL 未在运行；请先运行 start-mysql.bat（或 deploy.bat）/ portable MySQL is not running; run start-mysql.bat (or deploy.bat) first"
+            exit 0
+        }
         Start-Server
     }
     'stop' {
         Stop-Server
-        if ($All) { Read-DbSettings; Stop-Mysql }
+    }
+    'start-mysql' {
+        if (-not (Test-Path $MysqlExe)) { Fail '未安装 MySQL，请先运行 deploy.bat / run deploy.bat first.' }
+        if (Test-PortOpen $script:MysqlPort) {
+            Write-Note '便携 MySQL 已在运行，无需重复启动 / the portable MySQL is already running; nothing to do'
+            exit 0
+        }
+        Initialize-Runtime
+        Write-Host ''
+        Write-Host "便携 MySQL 运行中 (port $script:MysqlPort)" -ForegroundColor Green
+        Write-Host "按回车键 (ENTER) 停止便携 MySQL / press ENTER to stop portable MySQL" -ForegroundColor Cyan
+        try {
+            [void][Console]::ReadLine()
+        } finally {
+            Read-DbSettings
+            Stop-Mysql
+        }
+    }
+    'stop-mysql' {
+        Read-DbSettings
+        Stop-Mysql
     }
     'status' {
         $serverPid = Get-RecordedPid $PidFile

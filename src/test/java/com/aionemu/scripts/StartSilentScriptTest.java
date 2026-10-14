@@ -93,11 +93,15 @@ class StartSilentScriptTest {
         Path runtimeConfig = root.resolve("aion/config/main/gameserver.properties");
         Files.createDirectories(runtimeConfig.getParent());
         Files.writeString(runtimeConfig, "custom-config");
+        Path sourcePatch = root.resolve("patch/bin64/Game.dll");
+        Files.createDirectories(sourcePatch.getParent());
+        Files.writeString(sourcePatch, "patch-binary");
 
         ProcessResult result = runScript(root, "scripts/package.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
+        assertEquals("patch-binary", Files.readString(root.resolve("aion/patch/bin64/Game.dll")));
         assertEquals("geo", Files.readString(root.resolve("aion/geo/100.geo.gz")));
         assertEquals("path", Files.readString(root.resolve("aion/geo/path/100.path.gz")));
         assertEquals("index", Files.readString(root.resolve("aion/geo/path/100.idx")));
@@ -179,9 +183,10 @@ class StartSilentScriptTest {
 
     @Test
     void windowsScriptsUseCrlfAndDriveThePortableRuntime() throws Exception {
-        for (String name : List.of("deploy.bat", "start.bat", "stop.bat")) {
+        for (String name : List.of("deploy.bat", "start.bat", "stop.bat", "start-mysql.bat", "stop-mysql.bat")) {
             String content = Files.readString(Path.of("scripts/windows", name));
             assertTrue(content.contains("\r\n"), name + " must use CRLF line endings");
+            assertTrue(content.contains("pause"), name + " must pause so the window stays open");
         }
 
         String ps1 = Files.readString(Path.of("scripts/windows/server.ps1"));
@@ -190,7 +195,29 @@ class StartSilentScriptTest {
         assertTrue(ps1.contains("--initialize-insecure"));
         assertTrue(ps1.contains("aion_emu"));
         assertTrue(ps1.contains("database.properties"));
+        assertTrue(ps1.contains("network.properties"));
+        assertTrue(ps1.contains("Configure-NetworkAddress"));
+        assertTrue(ps1.contains("Configure-CountryCode"));
+        // 对外 IP 必须为局域网/公网 IPv4，本机地址被拒 / the advertised IP must be a LAN/public IPv4.
+        assertTrue(ps1.contains("Test-IPv4"));
+        assertTrue(ps1.contains("Test-LocalOnlyAddress"));
         assertTrue(ps1.contains("Send-CtrlC"));
+        assertTrue(ps1.contains("--init-file="));
+        // 便携 MySQL 监听 0.0.0.0（my.ini），远程客户端可直连 / portable MySQL binds 0.0.0.0 via my.ini.
+        assertTrue(ps1.contains("my.ini"));
+        assertTrue(ps1.contains("bind-address=0.0.0.0"));
+        // 前台运行 + 已在运行时说明原因 / foreground run + explain-and-exit when already running.
+        assertTrue(ps1.contains("-NoNewWindow"));
+        assertTrue(ps1.contains("已在运行"));
+        // 国内优先：JRE 走 TUNA，MySQL 走华为云 / China-first mirrors for JRE and MySQL.
+        assertTrue(ps1.contains("mirrors.tuna.tsinghua.edu.cn"));
+        assertTrue(ps1.contains("mirrors.huaweicloud.com"));
+
+        // Windows PowerShell 5.1 对无 BOM 的 .ps1 按系统 ANSI 解码，中文会乱码，故必须带 BOM。
+        // Windows PowerShell 5.1 decodes a BOM-less .ps1 as ANSI, garbling Chinese; a BOM is required.
+        byte[] head = Files.readAllBytes(Path.of("scripts/windows/server.ps1"));
+        assertTrue(head.length > 3 && head[0] == (byte) 0xEF && head[1] == (byte) 0xBB && head[2] == (byte) 0xBF,
+            "server.ps1 must start with a UTF-8 BOM");
     }
 
     private Path prepareRuntimeRoot() throws IOException {
@@ -213,6 +240,7 @@ class StartSilentScriptTest {
                 Files.copy(file, targetWindows.resolve(file.getFileName()));
             }
         }
+        Files.createDirectories(root.resolve("patch"));
         Path fakeJava = root.resolve("bin/java");
         Files.createDirectories(fakeJava.getParent());
         Files.writeString(fakeJava, """

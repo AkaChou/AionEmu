@@ -97,6 +97,16 @@ if [ -d "$ROOT_DIR/scripts/windows" ]; then
   cp -f "$ROOT_DIR/scripts/windows/"* "$AION_HOME/windows/"
 fi
 
+if [ -d "$ROOT_DIR/patch" ]; then
+  echo "Syncing client patch..."
+  mkdir -p "$AION_HOME/patch"
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a "$ROOT_DIR/patch/" "$AION_HOME/patch/"
+  else
+    cp -R "$ROOT_DIR/patch/." "$AION_HOME/patch/"
+  fi
+fi
+
 echo "Packaged: $AION_HOME/AionEmu.jar"
 if [ "$AION_HOME" = "$ROOT_DIR/aion" ]; then
   AION_HOME="./aion"

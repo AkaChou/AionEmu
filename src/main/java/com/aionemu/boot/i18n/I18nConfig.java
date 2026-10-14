@@ -25,7 +25,7 @@ public class I18nConfig {
     @PostConstruct
     void wireI18n() {
         I18n.setMessageSource(messageSource);
-        int countryCode = environment.getProperty("gameserver.country.code", Integer.class, 99);
+        int countryCode = environment.getProperty("gameserver.country.code", Integer.class, 5);
         I18n.applyCountryCode(GSConfig.resolveCountryCode(countryCode));
     }
 }

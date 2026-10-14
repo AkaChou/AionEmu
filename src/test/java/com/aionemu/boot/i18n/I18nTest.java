@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,6 +84,23 @@ class I18nTest {
             assertEquals(Locale.SIMPLIFIED_CHINESE, I18n.currentLocale());
         } finally {
             Locale.setDefault(previous);
+        }
+    }
+
+    @Test
+    void autoCountryCode99DetectsChinaByTimezoneUnderEnglishLocale() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of("gameserver.country.code", "99")));
+        Locale previousLocale = Locale.getDefault();
+        TimeZone previousTz = TimeZone.getDefault();
+        try {
+            Locale.setDefault(Locale.US);
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
+            new I18nConfig(messageSource, environment).wireI18n();
+            assertEquals(Locale.SIMPLIFIED_CHINESE, I18n.currentLocale());
+        } finally {
+            Locale.setDefault(previousLocale);
+            TimeZone.setDefault(previousTz);
         }
     }
 

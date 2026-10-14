@@ -2,6 +2,7 @@ package com.aionemu.gameserver.configs.main;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -18,33 +19,109 @@ import lombok.Getter;
 @ConfigurationProperties(prefix = "gameserver")
 public class GSConfig {
 	/**
-	 * 服务器国家代码。99 = 按系统 Locale 自动适配。
-	 * Server country code. 99 = auto-detect from system Locale.
+	 * 服务器国家代码。5 = 盛大/国服（默认），99 = 自动适配。
+	 * Server country code. 5 = SDO/China (default), 99 = auto-detect.
 	 */
-	@Property(key = "gameserver.country.code", defaultValue = "99")
+	@Property(key = "gameserver.country.code", defaultValue = "5")
 	public static int SERVER_COUNTRY_CODE;
 
 	/**
-	 * 解析国家码：99 按系统 Locale 映射，其余原样返回。
-	 * Resolve country code: 99 maps from system Locale, otherwise unchanged.
+	 * 解析国家码：99 按系统 Locale、时区与环境综合映射，其余原样返回。
+	 * Resolve country code: 99 maps from system Locale, timezone and environment, otherwise unchanged.
 	 */
 	public static int resolveCountryCode(int countryCode) {
 		if (countryCode != 99) {
 			return countryCode;
 		}
-		// ponytail: JVM default locale only; override via gameserver.country.code if wrong
 		Locale locale = Locale.getDefault();
-        return switch (locale.getLanguage()) {
-            case "zh" -> 5;
-            case "ja" -> 4;
-            case "ko" -> 0;
-            case "ru" -> 7;
-            default -> switch (locale.getCountry()) {
-                case "GB", "DE", "FR", "ES", "IT", "PL", "NL", "SE", "NO", "DK", "FI", "AT", "CH", "BE", "PT", "IE",
-                     "CZ", "HU", "RO", "GR" -> 2;
-                default -> 1;
-            };
-        };
+		if (isChineseEnvironment(locale)) {
+			return 5;
+		}
+		String tzId = TimeZone.getDefault().getID();
+		if (tzId != null) {
+			String lowerTz = tzId.toLowerCase(Locale.ROOT);
+			if (lowerTz.contains("seoul") || lowerTz.contains("korea")) {
+				return 0;
+			}
+			if (lowerTz.contains("tokyo") || lowerTz.contains("japan")) {
+				return 4;
+			}
+			if (lowerTz.contains("moscow")) {
+				return 7;
+			}
+		}
+		return switch (locale.getLanguage()) {
+			case "zh" -> 5;
+			case "ja" -> 4;
+			case "ko" -> 0;
+			case "ru" -> 7;
+			default -> switch (locale.getCountry()) {
+				case "GB", "DE", "FR", "ES", "IT", "PL", "NL", "SE", "NO", "DK", "FI", "AT", "CH", "BE", "PT", "IE",
+					 "CZ", "HU", "RO", "GR" -> 2;
+				default -> 1;
+			};
+		};
+	}
+
+	/**
+	 * 检查当前宿主环境是否为中文环境（综合判断 Locale、时区、系统编码与环境变量）。
+	 * Checks if the current host environment is Chinese (evaluates Locale, timezone, encoding and env vars).
+	 */
+	private static boolean isChineseEnvironment(Locale locale) {
+		if (locale != null) {
+			String lang = locale.getLanguage();
+			String country = locale.getCountry();
+			if ("zh".equalsIgnoreCase(lang) || "CN".equalsIgnoreCase(country)
+				|| "TW".equalsIgnoreCase(country) || "HK".equalsIgnoreCase(country) || "MO".equalsIgnoreCase(country)) {
+				return true;
+			}
+		}
+		for (Locale.Category category : Locale.Category.values()) {
+			Locale catLocale = Locale.getDefault(category);
+			if (catLocale != null) {
+				if ("zh".equalsIgnoreCase(catLocale.getLanguage()) || "CN".equalsIgnoreCase(catLocale.getCountry())) {
+					return true;
+				}
+			}
+		}
+		String userLang = System.getProperty("user.language");
+		String userCountry = System.getProperty("user.country");
+		String userRegion = System.getProperty("user.region");
+		if ("zh".equalsIgnoreCase(userLang) || "CN".equalsIgnoreCase(userCountry) || "CN".equalsIgnoreCase(userRegion)) {
+			return true;
+		}
+		for (String encodingKey : new String[] {"sun.jnu.encoding", "file.encoding", "native.encoding"}) {
+			String enc = System.getProperty(encodingKey);
+			if (enc != null && (enc.equalsIgnoreCase("GBK") || enc.equalsIgnoreCase("GB2312")
+				|| enc.equalsIgnoreCase("GB18030") || enc.equalsIgnoreCase("MS936") || enc.equalsIgnoreCase("x-windows-936"))) {
+				return true;
+			}
+		}
+		for (String envKey : new String[] {"LANG", "LC_ALL", "LC_CTYPE", "LANGUAGE"}) {
+			String val = System.getenv(envKey);
+			if (val != null && (val.contains("zh") || val.contains("CN") || val.contains("GBK") || val.contains("gbk") || val.contains("18030"))) {
+				return true;
+			}
+		}
+		String tzId = TimeZone.getDefault().getID();
+		if (tzId != null) {
+			String lower = tzId.toLowerCase(Locale.ROOT);
+			if (lower.contains("shanghai") || lower.contains("chongqing") || lower.contains("harbin")
+				|| lower.contains("urumqi") || lower.contains("beijing") || lower.contains("china")
+				|| "prc".equalsIgnoreCase(tzId) || "ctt".equalsIgnoreCase(tzId)) {
+				return true;
+			}
+		}
+		String userTz = System.getProperty("user.timezone");
+		if (userTz != null) {
+			String lower = userTz.toLowerCase(Locale.ROOT);
+			if (lower.contains("shanghai") || lower.contains("chongqing") || lower.contains("harbin")
+				|| lower.contains("urumqi") || lower.contains("beijing") || lower.contains("china")
+				|| "prc".equalsIgnoreCase(userTz) || "ctt".equalsIgnoreCase(userTz)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** 将 99 解析为具体地区码并写回字段。 / Resolve 99 into a concrete code in-place. */
