@@ -1028,3 +1028,18 @@
 - 验证命令和结果：IDEA MCP（2026-10-14，用户授权）——`DataDrivenNativeRuntimeGateTest` 与 6 个 tablelane 聚焦类共 134 例全部通过、0 失败。客户端实机：用户确认「实机验证成功」——80790 `start/0 → reward/1` 走轴、80789/80790 一致、完成无「失败」弹窗；1102/1103 标记切换即现不重登（2026-10-13 用户确认）；2026-10-14 09:18-09:21 重启后复核 1107/1110/1113/1114 完成链路（1113 报告轴 `状态=4 步数=8` → `状态=5`，`log/quests.log`）。
 - 复用边界：① 三件套适用于「客户端列表可见性」语义的完成路径，不改变 REWARD 态内部动作（奖励窗/结算）合同；`ClassChangeService`/`startEventQuest` 相关路径位于默认 false 配置门后，未实机采样；② 收口步轴只覆盖 DD 零步 Talk 行，非零步行走既有 DD 步进；③ 可见性刷新为 best-effort（静默捕获 RuntimeException）——「标记不亮」首查 `refreshVisibility` 调用点与异常；`RiftOrbAI2` 等非 tablelane 点为结构性同型收口、未逐点实机；④ `quests.log` 不记录 action 3，回放核对须按代码路径而非日志。
 - commit：`3325bf15e`、`05dbecbe8`、`9c921397d`、`994d864cc`、`d4fe78001`。
+
+## 8.66 REWARD 进入边的刷新同步合同：编译器守卫 + typed lane 全库扫除（防复发）
+
+- Pattern ID：`REWARD_EDGE_REQUIRES_REFRESH_SYNC`（防复发守卫面；承接 `REWARD_FLIP_VISIBILITY_REFRESH_ORDER` 的落点合同，完成三件套面见 `COMPLETION_PACKET_TRIO_PAIRING`）
+- 代表任务：9548（typed 对话边进 REWARD，实机 ✓）；1107（SimpleUseItem native lane 夹具盲区实证，实机 ✓）；1006/2008（`ClassChangeService.completeQuest` 三件套收口，配置门后，未实机）
+- 搜索症状：定义编译报 `REWARD_QUEST_REFRESH_REQUIRED`；typed XML「进入 REWARD 的边」after-commit 写成 `PACKET_ONLY`；新写/迁移任务的领奖翻转边缺 `sync-quest-state`；夹具（`src/test/resources/quest-definition-fixtures/`）同报
+- 玩家可见症状：交付 NPC 头顶无任务标记、重登才现（守卫上线前为运行期症状，上线后为编译期预防）；完成时弹「任务失败」（ClassChange 路径）
+- 根因：typed lane 手写定义未约束「进入 REWARD 的边」的 after-commit 同步模式——`PACKET_ONLY`（只发包不刷可见性）与 expander/表驱动自动口径（`LEVEL_AND_VISIBILITY_REFRESH`）不一致；前批单点修复（`9c921397d`/`d4fe78001`）只落了当时翻转点，新定义仍可复写旧模式 ⇒ 合同缺编译期兜底；`ClassChangeService.completeQuest` 更是只发 action2、缺三件套配对
+- 第一检查点：① 该边编译结果 `effectiveStatus==REWARD` 且 source 节点投影非 REWARD 时，after-commit 是否恰有一个 `VISIBILITY_REFRESH`/`LEVEL_AND_VISIBILITY_REFRESH` 的 `sync-quest-state`（`PACKET_ONLY`/数量≠1 即命中守卫）；② 扫描范围含测试夹具目录（夹具与生产 XML 同受守卫）；③ 完成路径（尤其转职/服务层触发面）是否三件套成对
+- 修复层：① `QuestDefinitionCompiler` fail-closed 守卫：进入 REWARD 的边必须有唯一刷新同步（两模式之一），否则编译失败报 `REWARD_QUEST_REFRESH_REQUIRED`；② 全库扫除：20 个生产 typed XML（1109/1127/2219/2263/2367/2372/2393/2448/3502/3722/4722/4914/50010/50023/50048/51023/9548/9549/9551/9552）共 48 处 `PACKET_ONLY` → `LEVEL_AND_VISIBILITY_REFRESH`；3 个定义夹具（simpleuseitem-1107 / simpletalk-1115 / simpleitemplay-9623）补齐同轴同步，受扫除影响的测试内联 XML 同步对齐；③ `ClassChangeService.completeQuest` 补 action3 + `SM_QUEST_COMPLETED_LIST`（与 GiveStigma 家族口径一致）
+- 修改文件：`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDefinitionCompiler.java`、`src/main/java/com/aionemu/gameserver/services/ClassChangeService.java`；`src/main/resources/aion/data/static_data/quest/definitions/quests/` 20 个 XML；测试 22 类（新建 `src/test/java/com/aionemu/gameserver/services/ClassChangeServiceCompletionPacketTest.java`；`QuestDefinitionCompilerTest` 守卫正反例；`QuestExecutionCoordinatorTest` 等受扫除影响的定义/运行时测试对齐）
+- 代表测试：`QuestDefinitionCompilerTest`（进入 REWARD 缺刷新/多同步/带刷新三态）、`ClassChangeServiceCompletionPacketTest`（insert-then-flip 与 existing-row 两条三件套序列）、`QuestProductionStartupGateTest`（全量生产目录过守卫）
+- 验证命令和结果：IDEA MCP（2026-10-14，用户授权）聚焦 23 类——22 类全绿；2 存量红灯确认非本批引入（`RemainingCapabilityDefinitionTest` 1561、`ArchivesRewardStepLadderContractTest` 16800：已由 `4ede058c0` 退役、native 接管，`overlayProduction` 不再补条目 ⇒ `missing production quest definition`，与守卫报错形态不同）。实机三场景（2026-10-14）：① 9548 typed 边 ✓（用户「场景 1 没问题」）；③ 1107 native lane ✓（用户「1107 正常完成」）；② ClassChange 跳过（用户「2不做了」，配置门后仅测试锁定）
+- 复用边界：① 守卫只约束「target 节点投影翻转进 REWARD」的边；`PACKET_ONLY` 在非 REWARD 边仍合法；② retail overlay 后置目录（RetailQuestDriver）不经编译器、不在守卫面；native lane 同理，靠夹具/测试维持同轴；③ 根因教训：**修复单点后用编译器守卫把合同固化**，否则迁移/新写会复写旧模式（本批即从「修当前」升级为「防复发」）；④ `ClassChangeService` 位于默认 false 配置门后，未实机采样
+- commit：`0eb4ee9f4`。
