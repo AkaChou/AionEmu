@@ -349,6 +349,7 @@ class QuestProductionDispatcherTest {
 			.then(QuestDsl.setVariable("var0", 0)).goTo("started")
 			.on(new QuestEvent.TalkToNpc(702745, 10255, 0)).from("started")
 			.then(QuestDsl.setVariable("var0", 4)).goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.on(new QuestEvent.TalkToNpc(798928, 23, 0)).from("reward")
 			.then(QuestDsl.completeQuest(0)).goTo("complete")
 			.afterCommit(QuestDsl.refreshPlayerStats())
@@ -378,6 +379,7 @@ class QuestProductionDispatcherTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(new QuestEvent.UseItem(182200501)).from("started").goTo("started")
 			.on(new QuestEvent.LevelUp()).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.on(new QuestEvent.UseItem(182200501)).from("reward").goTo("reward")
 			.compile();
 		QuestProductionDispatcher dispatcher = dispatcher(List.of(definition), new ArrayList<>(),
@@ -463,6 +465,7 @@ class QuestProductionDispatcherTest {
 			.node("started", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(new QuestEvent.TalkToNpc(798125, 31)).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.on(new QuestEvent.TalkToNpc(798125, -1)).from("reward").goTo("reward")
 			.afterCommit(QuestDsl.showQuestDialog(QuestDialogPage.SELECT2))
 			.compile();
@@ -502,6 +505,7 @@ class QuestProductionDispatcherTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.TalkToNpc(203057, 1009)).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 	}
 
@@ -520,6 +524,7 @@ class QuestProductionDispatcherTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.ZoneMissionEnd()).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 	}
 

@@ -8,6 +8,7 @@ import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
 import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.runtime.QuestRuntimeComposition;
 import com.aionemu.gameserver.questEngine.runtime.QuestSnapshot;
 import com.aionemu.gameserver.questEngine.runtime.QuestSpawnRegistry;
@@ -149,6 +150,7 @@ class QuestEngineRuntimeCompositionTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.GetItem(182216178)).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
@@ -203,6 +205,7 @@ class QuestEngineRuntimeCompositionTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.AttackNpc(210319)).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(definition)));
@@ -219,12 +222,14 @@ class QuestEngineRuntimeCompositionTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.PassFlyingRing("TEST_RING")).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var wind = QuestDsl.quest(990012)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.EnterWindStream(405001)).from("started").goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(java.util.List.of(ring, wind)));

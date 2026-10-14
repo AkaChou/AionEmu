@@ -497,7 +497,7 @@ class QuestMovieAndDialogLoopRegressionTest {
 			    </transition>
 			    <transition source="started" target="reward">
 			      <event><kill-npc npc-id="210001"/></event>
-			      <after-commit><sync-quest-state mode="PACKET_ONLY"/></after-commit>
+			      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 			    </transition>
 			    <npc-complete npc-id="700001" source="reward" target="complete" complete-reward-index="%d"
 			        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" finish="SELECTION_DIALOG">

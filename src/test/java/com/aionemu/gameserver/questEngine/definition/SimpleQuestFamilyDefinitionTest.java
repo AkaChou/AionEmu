@@ -17,6 +17,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setStatus;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.useItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.variableIs;
@@ -112,7 +113,8 @@ class SimpleQuestFamilyDefinitionTest {
 			.node("reward-npc", project(QuestStatus.REWARD, vars("var0", 1)));
 		builder.on(useItem(182200501)).from("unaccepted").then(setVariable("var0", 1)).goTo("item-used");
 		builder.on(talkToNpc(203075)).from("item-used").when(statusIs(QuestStatus.START))
-			.when(variableIs("var0", 1)).then(setStatus(QuestStatus.REWARD)).goTo("reward-npc");
+			.when(variableIs("var0", 1)).then(setStatus(QuestStatus.REWARD)).goTo("reward-npc")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		return builder;
 	}
 
@@ -127,7 +129,8 @@ class SimpleQuestFamilyDefinitionTest {
 		builder.on(talkToNpc(203220)).from("first-dialog").when(statusIs(QuestStatus.START))
 			.when(variableIs("var0", 1)).then(setVariable("var0", 2)).goTo("second-dialog");
 		builder.on(itemPlay(182214024, 0)).from("second-dialog").when(statusIs(QuestStatus.START))
-			.when(variableIs("var0", 2)).then(setStatus(QuestStatus.REWARD)).goTo("item-played");
+			.when(variableIs("var0", 2)).then(setStatus(QuestStatus.REWARD)).goTo("item-played")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		return builder;
 	}
 

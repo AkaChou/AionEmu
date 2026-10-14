@@ -24,7 +24,8 @@ class IncrementVariableDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 2)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 4)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
-			.then(incrementVariable("var0", 2)).goTo("done").compile();
+			.then(incrementVariable("var0", 2)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 
 		var plan = QuestMutationPlanner.plan(dsl,
 			new QuestSnapshot(7, 990031, QuestStatus.START, 2, Map.of()),
@@ -45,7 +46,8 @@ class IncrementVariableDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 2)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 3)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
-			.when(variableAtLeast("var0", 3)).goTo("done").compile();
+			.when(variableAtLeast("var0", 3)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		var belowPlan = QuestMutationPlanner.plan(below,
 			new QuestSnapshot(7, 990032, QuestStatus.START, 2, Map.of()),
 			new QuestEvent.TalkToNpc(203057, 31, 0),
@@ -59,7 +61,8 @@ class IncrementVariableDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 3)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 3)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
-			.when(variableAtLeast("var0", 3)).goTo("done").compile();
+			.when(variableAtLeast("var0", 3)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		var atPlan = QuestMutationPlanner.plan(at,
 			new QuestSnapshot(7, 990033, QuestStatus.START, 3, Map.of()),
 			new QuestEvent.TalkToNpc(203057, 31, 0),
@@ -75,7 +78,8 @@ class IncrementVariableDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 2)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 3)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
-			.when(variableBelow("var0", 3)).goTo("done").compile();
+			.when(variableBelow("var0", 3)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		assertTrue(QuestMutationPlanner.plan(below,
 			new QuestSnapshot(7, 990034, QuestStatus.START, 2, Map.of()),
 			new QuestEvent.TalkToNpc(203057, 31, 0),
@@ -97,6 +101,7 @@ class IncrementVariableDefinitionTest {
 			.node("done", project(QuestStatus.REWARD, vars("var1", 3, "var2", 2)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
 			.when(variableSumIs(List.of("var1", "var2"), 5)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var event = new QuestEvent.TalkToNpc(203057, 31, 0);
 		int exactPacked = definition.definition().progressLayout().pack(Map.of("var1", 3, "var2", 2));
@@ -118,6 +123,7 @@ class IncrementVariableDefinitionTest {
 			.node("done", project(QuestStatus.REWARD, vars("var1", 1, "var2", 1)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
 			.when(variableSumBelow(List.of("var1", "var2"), 5)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		assertTrue(QuestMutationPlanner.plan(belowDefinition,
 			new com.aionemu.gameserver.questEngine.runtime.QuestSnapshot(7, 990038, QuestStatus.START,
@@ -133,7 +139,7 @@ class IncrementVariableDefinitionTest {
 						  <metadata name="below-xml" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 						  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 						  <nodes><node label="start" status="START"><var name="var0" value="0"/></node><node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
-						  <transitions><transition source="start" target="done"><event><dialog type="TALK_TO_NPC" npc-id="203057" action="QUEST_SELECT"/></event><conditions><variable-below field="var0" value="1"/></conditions></transition></transitions>
+						  <transitions><transition source="start" target="done"><event><dialog type="TALK_TO_NPC" npc-id="203057" action="QUEST_SELECT"/></event><conditions><variable-below field="var0" value="1"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition></transitions>
 						</quest-definition>
 
 				""";
@@ -166,8 +172,10 @@ class IncrementVariableDefinitionTest {
 			.node("atLeast", project(QuestStatus.REWARD, vars("var0", 2)))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
 			.when(variableBelow("var0", 3)).goTo("below")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.on(new QuestEvent.TalkToNpc(203057, 31)).from("start")
 			.when(variableAtLeast("var0", 3)).goTo("atLeast")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		assertEquals(2, definition.definition().transitions().size());
 	}
@@ -203,6 +211,7 @@ class IncrementVariableDefinitionTest {
 						      <event><kill-npc npc-id="235829"/></event>
 						      <conditions><variable-at-least field="var1" value="29"/></conditions>
 						      <actions><set-variable field="var0" value="2"/></actions>
+						      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 						    </transition>
 						  </transitions>
 						</quest-definition>

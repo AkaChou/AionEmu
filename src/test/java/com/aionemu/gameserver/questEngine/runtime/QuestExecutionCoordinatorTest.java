@@ -103,9 +103,10 @@ class QuestExecutionCoordinatorTest {
 			});
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
+		// definition() 的 after-commit 为 sync + closeDialog 两个动作，桩对两者都抛错，故上报两次失败。
 		assertEquals(List.of("begin", "preflight:1", "apply:1", "state", "commit",
-			"required-commit", "publish", "after"), calls);
-		assertEquals(1, result.afterCommitFailures().size());
+			"required-commit", "publish", "after", "after"), calls);
+		assertEquals(2, result.afterCommitFailures().size());
 	}
 
 	@Test
@@ -134,7 +135,8 @@ class QuestExecutionCoordinatorTest {
 
 		assertEquals(QuestExecutionStatus.COMMITTED, result.status());
 		assertEquals(List.of("begin", "preflight:1", "apply:1", "state", "commit",
-			"required-commit", "publish", "resync", "after"), calls);
+			// 桩对 sync 与 closeDialog 两个 after-commit 动作各记一次。
+			"required-commit", "publish", "resync", "after", "after"), calls);
 		QuestPostCommitFailure failure = assertInstanceOf(QuestPostCommitFailure.class,
 			result.afterCommitFailures().getFirst());
 		assertEquals(QuestFailureStage.STATE_PUBLISH, failure.stage());
@@ -304,6 +306,7 @@ class QuestExecutionCoordinatorTest {
 	void typedPortFalseIsReportedAsAfterCommitFailure() throws Exception {
 		List<String> calls = new ArrayList<>();
 		CompiledQuestDefinition definition = definition();
+		// after-commit 现在 sync 前置；补一个成功的 sync 端口，保持本测试只暴露 closeDialog=false 这一例失败。
 		TypedQuestAfterCommitPort typedPort = new TypedQuestAfterCommitPort(new QuestDialogPort() {
 			@Override
 			public boolean closeDialog(QuestSnapshot snapshot, QuestMutationPlan plan) {
@@ -319,7 +322,7 @@ class QuestExecutionCoordinatorTest {
 			public boolean showSelectionDialog(QuestSnapshot snapshot, QuestMutationPlan plan, int dialogId) {
 				return true;
 			}
-		});
+		}, null, null, null, null, null, (snapshot, plan, mode) -> true);
 
 		QuestExecutionResult result = recordingCoordinator(calls).execute(
 			7, definition, talkToNpc(700001),
@@ -349,13 +352,13 @@ class QuestExecutionCoordinatorTest {
 			result.afterCommitFailures().getFirst());
 		QuestAfterCommitException actionFailure = assertInstanceOf(QuestAfterCommitException.class,
 			failure.getCause());
-		assertEquals("CloseDialog", actionFailure.actionType());
+		assertEquals("SyncQuestState", actionFailure.actionType());
 		assertEquals("dialog service unavailable", actionFailure.getCause().getMessage());
 
 		QuestAuditEvent audit = new QuestAuditEvent(1001, "TALK_TO_NPC", QuestDispatchContract.EXCLUSIVE,
 			QuestRouteResult.HANDLED, "start", "reward", 700001, -1,
 			QuestFailureStage.AFTER_COMMIT, true, failure);
-		assertEquals("CloseDialog", audit.actionType());
+		assertEquals("SyncQuestState", audit.actionType());
 		assertEquals(IllegalStateException.class.getName(), audit.rootFailureType());
 		assertEquals("dialog service unavailable", audit.rootFailureMessage());
 	}
@@ -653,6 +656,7 @@ class QuestExecutionCoordinatorTest {
 			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
 			.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.afterCommit(closeDialog()).compile();
 	}
 
@@ -663,7 +667,8 @@ class QuestExecutionCoordinatorTest {
 			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 1))
 			.then(removeItem(182400001, 1)).then(QuestDsl.grantReward("AP", 0, 5))
-			.then(setVariable("var1", 1)).goTo("reward").compile();
+			.then(setVariable("var1", 1)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 	}
 
 	private static CompiledQuestDefinition terminalDefinition() {

@@ -19,6 +19,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.zoneMissionEnd;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,7 +48,8 @@ class CoreCapabilityRepresentativeDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(event).from("start").when(statusIs(QuestStatus.START))
-			.then(setVariable("var0", 1)).goTo("done").compile();
+			.then(setVariable("var0", 1)).goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		String xml = """
 
 					<quest-definition id="%d" version="1">
@@ -55,7 +57,7 @@ class CoreCapabilityRepresentativeDefinitionTest {
 					  <progress><bit-field name="var0" offset="0" width="6" min="0" max="63" persistence="PERSISTENT" scope="LOCAL"/></progress>
 					  <nodes><node label="start" status="START"><var name="var0" value="0"/></node>
 					    <node label="done" status="REWARD"><var name="var0" value="1"/></node></nodes>
-					  <transitions><transition source="start" target="done"><event>%s</event><conditions><status-is status="START"/></conditions><actions><set-variable field="var0" value="1"/></actions></transition></transitions>
+					  <transitions><transition source="start" target="done"><event>%s</event><conditions><status-is status="START"/></conditions><actions><set-variable field="var0" value="1"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition></transitions>
 					</quest-definition>
 
 			""".formatted(id, xmlEvent);

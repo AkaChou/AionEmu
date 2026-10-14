@@ -17,6 +17,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setStatus;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.variableIs;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
@@ -85,7 +86,8 @@ class SimpleTalk1115DefinitionTest {
 		builder.on(talkToNpc(203072)).from("started").when(statusIs(QuestStatus.START))
 			.when(variableIs("var0", 0)).then(setVariable("var0", 1)).goTo("feira-spoken");
 		builder.on(talkToNpc(203058)).from("feira-spoken").when(statusIs(QuestStatus.START))
-			.when(variableIs("var0", 1)).then(setStatus(QuestStatus.REWARD)).goTo("reward");
+			.when(variableIs("var0", 1)).then(setStatus(QuestStatus.REWARD)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		return builder;
 	}
 }

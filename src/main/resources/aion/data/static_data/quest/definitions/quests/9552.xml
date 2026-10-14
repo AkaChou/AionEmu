@@ -133,7 +133,7 @@
         <dialog type="TALK_TO_NPC" npc-id="798302" action="SET_SUCCEED"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

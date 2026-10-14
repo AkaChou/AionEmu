@@ -77,7 +77,7 @@
         <set-variable field="var0" value="2"/>
       </actions>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
     <dialog type="NPC_REPORT" npc-id="833051" source="s1" target="reward" page="SELECT5"/>

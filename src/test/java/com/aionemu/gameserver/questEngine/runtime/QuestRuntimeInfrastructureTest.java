@@ -59,7 +59,8 @@ class QuestRuntimeInfrastructureTest {
 			.progress(bitField("step", 0, 6, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
-			.on(talkToNpc(700001)).from("start").goTo("reward").compile();
+			.on(talkToNpc(700001)).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		var transition = definition.definition().transitions().getFirst();
 
 		assertTrue(QuestMutationPlanner.plan(definition,
@@ -105,6 +106,7 @@ class QuestRuntimeInfrastructureTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.GetItem(182216178)).from("started").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
@@ -136,6 +138,7 @@ class QuestRuntimeInfrastructureTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.AttackNpc(210319)).from("started").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)));
@@ -151,12 +154,14 @@ class QuestRuntimeInfrastructureTest {
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.PassFlyingRing("TEST_RING")).from("started").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		CompiledQuestDefinition wind = quest(1566)
 			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 			.node("started", project(QuestStatus.START, vars("var0", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.EnterWindStream(405001)).from("started").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		QuestEventIndex index = new QuestEventIndex(new ImmutableQuestCatalog(List.of(ring, wind)));
 
@@ -174,6 +179,7 @@ class QuestRuntimeInfrastructureTest {
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(new QuestEvent.AttackNpc(211043)).from("started")
 			.when(QuestDsl.npcHpBelowPercent(211043, 50)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, 1567, QuestStatus.START, 0, Map.of());
@@ -201,7 +207,8 @@ class QuestRuntimeInfrastructureTest {
 				QuestRewardKind.GOLD, 60))
 			.then(new com.aionemu.gameserver.questEngine.definition.QuestAction.DecreaseCurrency(
 				QuestRewardKind.KINAH, 60))
-			.goTo("reward").compile();
+			.goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		var transition = definition.definition().transitions().getFirst();
 
 		QuestSnapshot enough = new QuestSnapshot(7, 1568, QuestStatus.START, 0, Map.of(),
@@ -373,7 +380,8 @@ class QuestRuntimeInfrastructureTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.node("complete", project(QuestStatus.COMPLETE, vars("step", 2)));
 		builder.on(talkToNpc(700001)).from("start").when(statusIs(QuestStatus.START))
-			.then(setVariable("step", 1)).goTo("reward");
+			.then(setVariable("step", 1)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		builder.on(talkToNpc(700001)).from("reward").when(statusIs(QuestStatus.REWARD))
 			.then(setVariable("step", 2)).then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
@@ -492,6 +500,7 @@ class QuestRuntimeInfrastructureTest {
 			.node("start", project(QuestStatus.START, vars("var1", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(182400001, 5))
-			.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward").compile();
+			.then(removeItem(182400001, 5)).then(setVariable("var1", 1)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 	}
 }

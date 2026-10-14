@@ -36,6 +36,7 @@
         <variable-is field="var0" value="1"/>
       </conditions>
       <actions><set-status status="REWARD"/></actions>
+      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
     </transition>
   </transitions>
 </quest-definition>

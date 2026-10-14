@@ -18,6 +18,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.questEngine.definition.QuestAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -43,6 +44,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.removeItem;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.setVariable;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.talkToNpc;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.*;
@@ -212,7 +214,8 @@ class PlayerQuestInventoryPortTest {
 			.node("start", project(QuestStatus.START, vars("step", 0)))
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(talkToNpc(700001)).when(statusIs(QuestStatus.START)).when(hasItem(ITEM_A, 5))
-			.then(removeItem(ITEM_A, 2)).then(setVariable("step", 1)).goTo("reward").compile();
+			.then(removeItem(ITEM_A, 2)).then(setVariable("step", 1)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		List<String> calls = new ArrayList<>();
 		RecordingTransactionManager transactionManager = new RecordingTransactionManager(calls);
 		transactionManager.failNextCommit();

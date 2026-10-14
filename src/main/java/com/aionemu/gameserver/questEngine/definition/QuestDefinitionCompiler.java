@@ -205,6 +205,21 @@ public final class QuestDefinitionCompiler {
 				fail("COMPLETE_QUEST_SYNC_STATUS_MISMATCH",
 					"COMPLETION quest-state sync requires a COMPLETE projection");
 			}
+			// REWARD 翻转边必须在状态包之后刷新可见性（客户端仅在区域任务清单 0x7f 刷新时重算头顶标记）；
+			// source 已投影 REWARD 的边除外——客户端可见状态未变化。
+			// A flip into REWARD must refresh visibility after the state packet (the client recomputes
+			// overhead markers only on a 0x7f refresh); edges whose source already projects REWARD are
+			// exempt because nothing changes for the client.
+			if (effectiveStatus == QuestStatus.REWARD
+				&& (transition.sourceNode() == null
+					|| nodes.get(transition.sourceNode()).projection().status() != QuestStatus.REWARD)
+				&& !(stateSyncs.size() == 1
+					&& (stateSyncs.getFirst().mode() == QuestStateSyncMode.VISIBILITY_REFRESH
+						|| stateSyncs.getFirst().mode() == QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))) {
+				fail("REWARD_QUEST_REFRESH_REQUIRED",
+					"a REWARD projection entered from a non-REWARD source requires one visibility refresh "
+						+ "(VISIBILITY_REFRESH or LEVEL_AND_VISIBILITY_REFRESH) quest-state sync");
+			}
 			for (String source : sourceLabels(definition, transition)) {
 				outgoing.computeIfAbsent(source, ignored -> new HashSet<>()).add(transition.targetNode());
 			}

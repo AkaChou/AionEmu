@@ -73,6 +73,7 @@ class NpcFactionQuestMutationPlannerTest {
 					    </transition>
 					    <transition source="started" target="reward">
 					      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="FINISH_DIALOG"/></event>
+					      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 					    </transition>
 					    <transition source="reward" target="complete">
 					      <event><dialog type="TALK_TO_NPC" npc-id="700001" action="SELECTED_QUEST_REWARD1"/></event>

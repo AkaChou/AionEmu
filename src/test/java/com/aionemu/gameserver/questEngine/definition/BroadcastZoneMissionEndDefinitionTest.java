@@ -23,6 +23,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(talkToNpc(203057, QuestDialogAction.QUEST_SELECT)).from("start").goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.afterCommit(broadcastZoneMissionEnd(10521, 10522, 10523)).compile();
 
 		AfterCommitAction action = dsl.definition().transitions().getFirst().afterCommit().stream()
@@ -46,7 +47,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 + "  <transitions>\n"
 + "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
 + "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event>\n"
-+ "      <after-commit><broadcast-zone-mission-end quest-ids=\"10521 10522 10523\"/></after-commit></transition>\n"
++ "      <after-commit><sync-quest-state mode=\"LEVEL_AND_VISIBILITY_REFRESH\"/><broadcast-zone-mission-end quest-ids=\"10521 10522 10523\"/></after-commit></transition>\n"
 + "  </transitions>\n"
 + "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
@@ -64,6 +65,7 @@ class BroadcastZoneMissionEndDefinitionTest {
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
 			.on(killNpc(210133)).from("start").goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.afterCommit(broadcastZoneMissionEnd(10521)).compile();
 
 		var plan = QuestMutationPlanner.plan(dsl,

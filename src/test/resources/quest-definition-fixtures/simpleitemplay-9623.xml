@@ -11,6 +11,6 @@
   <transitions>
     <transition source="unaccepted" target="first-dialog"><event><dialog type="TALK_TO_NPC" npc-id="203223"/></event><actions><set-variable field="var0" value="1"/></actions></transition>
     <transition source="first-dialog" target="second-dialog"><event><dialog type="TALK_TO_NPC" npc-id="203220"/></event><conditions><status-is status="START"/><variable-is field="var0" value="1"/></conditions><actions><set-variable field="var0" value="2"/></actions></transition>
-    <transition source="second-dialog" target="item-played"><event><item-play item-id="182214024" animation-millis="0"/></event><conditions><status-is status="START"/><variable-is field="var0" value="2"/></conditions><actions><set-status status="REWARD"/></actions></transition>
+    <transition source="second-dialog" target="item-played"><event><item-play item-id="182214024" animation-millis="0"/></event><conditions><status-is status="START"/><variable-is field="var0" value="2"/></conditions><actions><set-status status="REWARD"/></actions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
   </transitions>
 </quest-definition>

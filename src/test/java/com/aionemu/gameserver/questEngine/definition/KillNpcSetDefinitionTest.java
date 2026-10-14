@@ -23,7 +23,8 @@ class KillNpcSetDefinitionTest {
 			.progress(bitField("var0", 0, 3, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
-			.on(killNpcIds(1001, 1002, 1003)).from("start").goTo("done").compile();
+			.on(killNpcIds(1001, 1002, 1003)).from("start").goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 
 		var plan = QuestMutationPlanner.plan(dsl,
 			new QuestSnapshot(7, 990041, QuestStatus.START, 0, Map.of()),
@@ -40,7 +41,8 @@ class KillNpcSetDefinitionTest {
 			.progress(bitField("var0", 0, 3, PersistenceMode.PERSISTENT))
 			.node("start", project(QuestStatus.START, vars("var0", 0)))
 			.node("done", project(QuestStatus.REWARD, vars("var0", 1)))
-			.on(killNpcIds(1001, 1002)).from("start").goTo("done").compile();
+			.on(killNpcIds(1001, 1002)).from("start").goTo("done")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 
 		var plan = QuestMutationPlanner.plan(dsl,
 			new QuestSnapshot(7, 990042, QuestStatus.START, 0, Map.of()),
@@ -63,7 +65,7 @@ class KillNpcSetDefinitionTest {
 + "  </nodes>\n"
 + "  <transitions>\n"
 + "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
-+ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-ids=\"2001 2002 2003\"/></event></transition>\n"
++ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-ids=\"2001 2002 2003\"/></event><after-commit><sync-quest-state mode=\"LEVEL_AND_VISIBILITY_REFRESH\"/></after-commit></transition>\n"
 + "  </transitions>\n"
 + "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 
@@ -93,7 +95,7 @@ class KillNpcSetDefinitionTest {
 + "  </nodes>\n"
 + "  <transitions>\n"
 + "    <transition source=\"unaccepted\" target=\"started\"><event><enter-world/></event></transition>\n"
-+ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event></transition>\n"
++ "    <transition source=\"started\" target=\"done\"><event><kill-npc npc-id=\"210133\"/></event><after-commit><sync-quest-state mode=\"LEVEL_AND_VISIBILITY_REFRESH\"/></after-commit></transition>\n"
 + "  </transitions>\n"
 + "</quest-definition>\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)));
 

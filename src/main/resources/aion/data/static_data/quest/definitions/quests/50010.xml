@@ -161,7 +161,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
@@ -170,7 +170,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -179,7 +179,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="SET_SUCCEED"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -198,7 +198,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="CHECK_USER_HAS_QUEST_ITEM"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/>
       </after-commit>
     </transition>
@@ -207,7 +207,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="CHECK_USER_HAS_QUEST_ITEM_SIMPLE"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>
@@ -216,7 +216,7 @@
         <dialog type="TALK_TO_NPC" npc-id="202549" action="SET_SUCCEED"/>
       </event>
       <after-commit>
-        <sync-quest-state mode="PACKET_ONLY"/>
+        <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
         <close-dialog/>
       </after-commit>
     </transition>

@@ -19,6 +19,7 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.pvpRecipien
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.pvpVictimLevelDelta;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.statusIs;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,6 +35,7 @@ class PvpRepresentativeQuestDefinitionTest {
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killRanked(3)).from("start").when(statusIs(QuestStatus.START)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		QuestPvpKillFacts facts = facts(8, 9, 20, 4, 3, 4, 210010000, Set.of());
 		QuestSnapshot snapshot = snapshot(3741, QuestStatus.START, facts);
@@ -54,11 +56,13 @@ class PvpRepresentativeQuestDefinitionTest {
 			.node("reward", project(QuestStatus.REWARD, vars("var0", 5)))
 			.on(killInWorld(210070000)).from("start").when(statusIs(QuestStatus.START))
 			.when(com.aionemu.gameserver.questEngine.definition.QuestDsl.variableIs("var0", 4)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		CompiledQuestDefinition xml = QuestDefinitionXmlCompiler.compile(xml(15204,
 			"<progress><bit-field name=\"var0\" offset=\"0\" width=\"6\" min=\"0\" max=\"63\" persistence=\"PERSISTENT\" scope=\"LOCAL\"/></progress>",
 			"<node label=\"start\" status=\"START\"><var name=\"var0\" value=\"4\"/></node><node label=\"reward\" status=\"REWARD\"><var name=\"var0\" value=\"5\"/></node>",
-			"<event><kill-in-world world-id=\"210070000\"/></event><conditions><status-is status=\"START\"/><variable-is field=\"var0\" value=\"4\"/></conditions>"));
+			"<event><kill-in-world world-id=\"210070000\"/></event><conditions><status-is status=\"START\"/><variable-is field=\"var0\" value=\"4\"/></conditions>"
+				+ "<after-commit><sync-quest-state mode=\"LEVEL_AND_VISIBILITY_REFRESH\"/></after-commit>"));
 		assertEquals(dsl.definition(), xml.definition());
 	}
 
@@ -68,7 +72,8 @@ class PvpRepresentativeQuestDefinitionTest {
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killInWorld(210050000)).from("start")
-			.when(pvpVictimLevelDelta(-5, 9)).goTo("reward").compile();
+			.when(pvpVictimLevelDelta(-5, 9)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 210050000, Set.of());
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(11362, QuestStatus.START, facts),
 			new QuestEvent.KillInWorld(210050000, facts), definition.definition().transitions().getFirst()).isPresent());
@@ -82,6 +87,7 @@ class PvpRepresentativeQuestDefinitionTest {
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killInWorld(0)).from("start").when(pvpVictimLevelDelta(-5, 9)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		QuestPvpKillFacts facts = facts(8, 9, 20, 50, 55, 3, 310010000, Set.of());
 
@@ -98,7 +104,8 @@ class PvpRepresentativeQuestDefinitionTest {
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(killInWorld(400010000)).from("start")
 			.when(pvpVictimLevelDelta(-5, 9)).when(pvpRecipientInZone("sulfur_fortress_400010000"))
-			.goTo("reward").compile();
+			.goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		QuestPvpKillFacts eligible = facts(8, 9, 20, 50, 55, 3, 400010000,
 			Set.of("SULFUR_FORTRESS_400010000"));
 		assertTrue(QuestMutationPlanner.plan(definition, snapshot(23851, QuestStatus.START, eligible),
@@ -118,6 +125,7 @@ class PvpRepresentativeQuestDefinitionTest {
 					  <transitions><transition source="start" target="reward">
 					    <event><kill-in-world world-id="400010000"/></event>
 					    <conditions><pvp-victim-level-delta minimum="-5" maximum="9"/><pvp-recipient-in-zone zone="SULFUR_FORTRESS_400010000"/></conditions>
+					    <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 					  </transition></transitions>
 					</quest-definition>
 

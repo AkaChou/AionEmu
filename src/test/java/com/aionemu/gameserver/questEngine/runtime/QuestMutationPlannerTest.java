@@ -142,6 +142,7 @@ class QuestMutationPlannerTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(new QuestEvent.TalkToNpc(700243)).from("started")
 			.when(worldNpcIs(212814, false)).goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		QuestSnapshot absent = new QuestSnapshot(7, QUEST_ID + 1, QuestStatus.START, 0, Map.of())
 			.withWorldFacts(new QuestWorldFacts(java.util.Set.of()));
@@ -167,6 +168,7 @@ class QuestMutationPlannerTest {
 			.on(new QuestEvent.UseItem(182400002)).from("started")
 			.when(QuestDsl.zoneIs("BERITRAS_WEAPON_220040000"))
 			.goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot inside = new QuestSnapshot(7, QUEST_ID + 2, QuestStatus.START, 0, Map.of())
@@ -408,6 +410,7 @@ class QuestMutationPlannerTest {
 			.then(new QuestAction.UnequipItem(ITEM_ID, 1))
 			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
 			.goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var snapshot = new QuestSnapshot(7, 1304, QuestStatus.START, 0, Map.of())
 			.withEquipmentFacts(new QuestEquipmentFacts(Map.of(), Map.of(ITEM_ID, 1)));
@@ -425,6 +428,7 @@ class QuestMutationPlannerTest {
 			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
 			.then(new QuestAction.RemoveItem(ITEM_ID, 1))
 			.goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		assertTrue(QuestMutationPlanner.plan(definition,
@@ -446,6 +450,7 @@ class QuestMutationPlannerTest {
 			.node("reward", project(QuestStatus.REWARD, vars("step", 1)))
 			.on(new QuestEvent.TalkToNpc(700001)).from("started")
 			.then(removeAllItem(ITEM_ID)).goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 	}
 
@@ -462,6 +467,7 @@ class QuestMutationPlannerTest {
 			.on(new QuestEvent.KillNpc(235824)).from("started")
 			.when(new QuestCondition.VariableBelow("var0", 6))
 			.then(QuestDsl.incrementVariable("var0", 1)).goTo("reward")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 		var transition = definition.definition().transitions().getFirst();
 		QuestSnapshot snapshot = new QuestSnapshot(7, QUEST_ID + 20, QuestStatus.START, 0, Map.of());

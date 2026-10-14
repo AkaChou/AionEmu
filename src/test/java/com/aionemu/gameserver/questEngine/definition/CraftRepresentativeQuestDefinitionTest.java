@@ -104,6 +104,7 @@ class CraftRepresentativeQuestDefinitionTest {
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
 			.on(talkToNpc(203700, QuestDialogAction.SELECT_QUEST_REWARD)).from("start")
 			.when(canGrantCraftSkill(40002, 400)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.afterCommit(playMovie(93))
 			.on(movieEnd(93)).from("reward").when(canGrantCraftSkill(40002, 400))
 			.then(grantCraftSkill(40002, 400, true)).goTo("reward")
@@ -112,8 +113,8 @@ class CraftRepresentativeQuestDefinitionTest {
 			craftReward1941Xml().getBytes(StandardCharsets.UTF_8)));
 
 		assertEquals(definition.definition(), fromXml.definition());
-		assertEquals(List.of(new AfterCommitAction.PlayMovie(93)),
-			definition.definition().transitions().get(0).afterCommit());
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.PlayMovie(93)), definition.definition().transitions().get(0).afterCommit());
 		assertEquals(List.of(new QuestAction.GrantCraftSkill(40002, 400, true)),
 			definition.definition().transitions().get(1).actions());
 		QuestSnapshot eligible = new QuestSnapshot(7, 1941, QuestStatus.REWARD, 0, Map.of())
@@ -205,7 +206,7 @@ class CraftRepresentativeQuestDefinitionTest {
 					  <transitions>
 					    <transition source="start" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203700" action="SELECT_QUEST_REWARD"/></event>
 					      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>
-					      <after-commit><play-movie movie-id="93"/></after-commit>
+					      <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><play-movie movie-id="93"/></after-commit>
 					    </transition>
 					    <transition source="reward" target="reward"><event><movie-end movie-id="93"/></event>
 					      <conditions><can-grant-craft-skill skill-id="40002" target-level="400"/></conditions>

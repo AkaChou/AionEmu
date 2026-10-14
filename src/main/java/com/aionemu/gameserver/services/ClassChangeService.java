@@ -9,6 +9,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_COMPLETED_LIST;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -163,13 +164,23 @@ return;
 		Calendar calendar = Calendar.getInstance();
 		Timestamp timeStamp = new Timestamp(calendar.getTime().getTime());
 		if (qs == null) {
-			player.getQuestStateList().addQuest(questId, new QuestState(questId, QuestStatus.COMPLETE, 0, 1, null, 0, timeStamp));
-			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.COMPLETE.value(), 0));
+			// 先插入 START 行再翻转：完成会把该行移出客户端活动列表，action1 与后续 action2 必须成对出现。
+			// Insert the START row before flipping: completion moves the row out of the client's active
+			// list, so action1 and the follow-up action2 must arrive as a pair.
+			player.getQuestStateList().addQuest(questId, new QuestState(questId, QuestStatus.START, 0, 0, null, 0, timeStamp));
+			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, 3, 0));
+			player.getController().updateNearbyQuests();
+			completeQuest(player, questId);
 		} else {
 			qs.setStatus(QuestStatus.COMPLETE);
 			qs.setCompleteCount(qs.getCompleteCount() + 1);
 			PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		}
+		// 完成会把该行移出客户端活动列表，action3 必须与已完成列表成对，否则该行滞留活动列表直到重登。
+		// Completion moves the row out of the client's active list; action3 must be paired with the
+		// completed list, otherwise the row lingers in the active list until the next login.
+		PacketSendUtility.sendPacket(player, SM_QUEST_ACTION.removeQuestFromClientList(questId));
+		PacketSendUtility.sendPacket(player, new SM_QUEST_COMPLETED_LIST(player.getQuestStateList().getAllFinishedQuests()));
 		// 状态翻转后补可见性刷新：客户端仅在区域任务清单 0x7f 刷新时重算头顶标记。
 		// Refresh visibility after the flip: the client recomputes overhead markers only on a 0x7f refresh.
 		player.getController().updateNearbyQuests();

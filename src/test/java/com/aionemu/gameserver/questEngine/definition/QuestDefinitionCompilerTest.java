@@ -59,6 +59,7 @@ class QuestDefinitionCompilerTest {
 			.then(setVariable("var1", 1))
 			.goTo("reward")
 			.afterCommit(closeDialog())
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
 
 		String xml = """
@@ -75,7 +76,7 @@ class QuestDefinitionCompilerTest {
 					      <event><dialog type="TALK_TO_NPC" npc-id="700001"/></event>
 					      <conditions><status-is status="START"/><has-item item-id="182400001" count="5"/></conditions>
 					      <actions><remove-item item-id="182400001" count="5"/><set-variable field="var1" value="1"/></actions>
-					      <after-commit><close-dialog/></after-commit>
+					      <after-commit><close-dialog/><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit>
 					    </transition>
 					  </transitions>
 					</quest-definition>
@@ -109,13 +110,14 @@ class QuestDefinitionCompilerTest {
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
-			.on(new QuestEvent.MovieEnd(9)).when(statusIs(QuestStatus.START)).goTo("reward").compile();
+			.on(new QuestEvent.MovieEnd(9)).when(statusIs(QuestStatus.START)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		String xml = """
 
 					<quest-definition id="1004" version="1">
 					  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
-					  <transitions><transition target="reward"><event><movie-end movie-id="9"/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+					  <transitions><transition target="reward"><event><movie-end movie-id="9"/></event><conditions><status-is status="START"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition></transitions>
 					</quest-definition>
 
 			""";
@@ -131,13 +133,14 @@ class QuestDefinitionCompilerTest {
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
-			.on(new QuestEvent.NpcReachTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
+			.on(new QuestEvent.NpcReachTarget()).when(statusIs(QuestStatus.START)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		String reachXml = """
 
 					<quest-definition id="1005" version="1">
 					  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
-					  <transitions><transition target="reward"><event><npc-reach-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+					  <transitions><transition target="reward"><event><npc-reach-target/></event><conditions><status-is status="START"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition></transitions>
 					</quest-definition>
 
 			""";
@@ -150,13 +153,14 @@ class QuestDefinitionCompilerTest {
 			.metadata(QuestMetadata.minimal("a", 1, "QUEST"))
 			.node("start", project(QuestStatus.START, Map.of()))
 			.node("reward", project(QuestStatus.REWARD, Map.of()))
-			.on(new QuestEvent.NpcLostTarget()).when(statusIs(QuestStatus.START)).goTo("reward").compile();
+			.on(new QuestEvent.NpcLostTarget()).when(statusIs(QuestStatus.START)).goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)).compile();
 		String lostXml = """
 
 					<quest-definition id="1006" version="1">
 					  <metadata name="a" display-name-id="1" min-level="0" max-level="2147483647" category="QUEST"/>
 					  <nodes><node label="start" status="START"/><node label="reward" status="REWARD"/></nodes>
-					  <transitions><transition target="reward"><event><npc-lost-target/></event><conditions><status-is status="START"/></conditions></transition></transitions>
+					  <transitions><transition target="reward"><event><npc-lost-target/></event><conditions><status-is status="START"/></conditions><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition></transitions>
 					</quest-definition>
 
 			""";
@@ -216,7 +220,8 @@ class QuestDefinitionCompilerTest {
 			.node("reward", project(QuestStatus.REWARD, vars("var1", 1)))
 			.node("complete", project(QuestStatus.COMPLETE, vars("var1", 2)))
 			.progress(bitField("var1", 0, 6, PersistenceMode.PERSISTENT));
-		builder.on(talkToNpc(700001)).from("start").goTo("reward");
+		builder.on(talkToNpc(700001)).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		builder.on(talkToNpc(700001)).from("start").then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
 		assertEquals("AMBIGUOUS_TRANSITION", assertThrows(QuestCompilationException.class, builder::compile).code());
@@ -262,13 +267,16 @@ class QuestDefinitionCompilerTest {
 	@Test
 	void conflictIndexUsesPrecomputedCompatibleSourceNodes() {
 		var mutuallyExclusiveSources = conflictTestQuest();
-		mutuallyExclusiveSources.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward");
+		mutuallyExclusiveSources.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		mutuallyExclusiveSources.on(new QuestEvent.AttackNpc(210001)).from("reward").goTo("alternate");
 		mutuallyExclusiveSources.compile();
 
 		var wildcardSource = conflictTestQuest();
-		wildcardSource.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward");
-		wildcardSource.on(new QuestEvent.AttackNpc(210001)).when(statusIs(QuestStatus.START)).goTo("alternate");
+		wildcardSource.on(new QuestEvent.AttackNpc(210001)).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
+		wildcardSource.on(new QuestEvent.AttackNpc(210001)).when(statusIs(QuestStatus.START)).goTo("alternate")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		assertEquals("AMBIGUOUS_TRANSITION",
 			assertThrows(QuestCompilationException.class, wildcardSource::compile).code());
 	}
@@ -280,8 +288,10 @@ class QuestDefinitionCompilerTest {
 
 	private static QuestDsl.QuestBuilder twoRouteQuest(QuestEvent first, QuestEvent second) {
 		QuestDsl.QuestBuilder builder = conflictTestQuest();
-		builder.on(first).from("start").goTo("reward");
-		builder.on(second).from("start").goTo("alternate");
+		builder.on(first).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
+		builder.on(second).from("start").goTo("alternate")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		return builder;
 	}
 
@@ -420,7 +430,8 @@ class QuestDefinitionCompilerTest {
 			.node("complete", project(QuestStatus.COMPLETE, Map.of()));
 		builder.on(new QuestEvent.TalkToNpc(700001, 1009))
 			.when(statusIs(QuestStatus.REWARD)).goTo("reward")
-			.afterCommit(showQuestDialog(42));
+			.afterCommit(showQuestDialog(42))
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH));
 		builder.on(new QuestEvent.TalkToNpc(700001, 8)).from("reward")
 			.then(completeQuest(0)).goTo("complete")
 			.afterCommit(syncQuestState(QuestStateSyncMode.COMPLETION));
@@ -431,7 +442,8 @@ class QuestDefinitionCompilerTest {
 			.toList();
 		assertEquals(1, selectRewardRoutes.size());
 		assertNull(selectRewardRoutes.getFirst().sourceNode());
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(42)),
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(42),
+			new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
 			selectRewardRoutes.getFirst().afterCommit());
 	}
 
@@ -446,6 +458,34 @@ class QuestDefinitionCompilerTest {
 			.compile());
 
 		assertEquals("COMPLETE_QUEST_SYNC_REQUIRED", failure.code());
+	}
+
+	@Test
+	void rewardProjectionRequiresAVisibilityRefreshStateSync() {
+		QuestCompilationException packetOnly = assertThrows(QuestCompilationException.class, () -> quest(1001)
+			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+			.node("start", project(QuestStatus.START, Map.of()))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(talkToNpc(700001)).from("start").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.PACKET_ONLY))
+			.compile());
+		assertEquals("REWARD_QUEST_REFRESH_REQUIRED", packetOnly.code());
+
+		QuestCompilationException missing = assertThrows(QuestCompilationException.class, () -> quest(1001)
+			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+			.node("start", project(QuestStatus.START, Map.of()))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(talkToNpc(700001)).from("start").goTo("reward").compile());
+		assertEquals("REWARD_QUEST_REFRESH_REQUIRED", missing.code());
+
+		// source 已投影 REWARD 的自环对客户端不可见变化,豁免刷新要求。
+		// A self-loop whose source already projects REWARD changes nothing for the client and is exempt.
+		quest(1001)
+			.metadata(QuestMetadata.minimal("A test quest", 1101001, "QUEST"))
+			.node("reward", project(QuestStatus.REWARD, Map.of()))
+			.on(talkToNpc(700001)).from("reward").goTo("reward")
+			.afterCommit(showQuestDialog(42))
+			.compile();
 	}
 
 	@Test
@@ -756,7 +796,7 @@ class QuestDefinitionCompilerTest {
 					  </nodes>
 					  <transitions>
 					    <transition source="unaccepted" target="start"><event><level-up/></event></transition>
-					    <transition source="start" target="reward"><event><kill-npc npc-id="210001"/></event></transition>
+					    <transition source="start" target="reward"><event><kill-npc npc-id="210001"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
 					  </transitions>
 					</quest-definition>
 
@@ -1019,6 +1059,7 @@ class QuestDefinitionCompilerTest {
 				.node("complete", project(QuestStatus.COMPLETE, vars("var0", 0)))
 				.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
 				.on(new QuestEvent.UseItem(182200501)).from("started").goTo("reward")
+				.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 				.on(new QuestEvent.UseItem(182200501)).from("reward")
 				.then(new QuestAction.BlockDefaultItemUse()).goTo("complete")
 				.on(new QuestEvent.UseItem(182200501)).from("complete")

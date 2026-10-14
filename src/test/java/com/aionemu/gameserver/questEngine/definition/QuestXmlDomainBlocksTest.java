@@ -487,7 +487,7 @@ class QuestXmlDomainBlocksTest {
 					  </nodes>
 					  <transitions>
 					    <npc-start npc-id="203110" source="unaccepted" target="started" selection-sources="unaccepted started"/>
-					    <transition source="started" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203120" action="SELECT_QUEST_REWARD"/></event></transition>
+					    <transition source="started" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203120" action="SELECT_QUEST_REWARD"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
 					    <npc-complete npc-id="203123" source="reward" target="complete" fixed-reward-indices="0"
 					        actions="SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD" complete-reward-index="0"
 					        finish="NONE"><preview actions="USE_OBJECT SELECT_QUEST_REWARD"/></npc-complete>
@@ -583,7 +583,7 @@ class QuestXmlDomainBlocksTest {
 
 	@Test
 	void npcReportSupportsRewardStatePreparedBeforeTheDialog() {
-		String preparation = "<transition source=\"started\" target=\"reward\"><event><kill-npc npc-id=\"210001\"/></event></transition>";
+		String preparation = "<transition source=\"started\" target=\"reward\"><event><kill-npc npc-id=\"210001\"/></event><after-commit><sync-quest-state mode=\"LEVEL_AND_VISIBILITY_REFRESH\"/></after-commit></transition>";
 		String block = preparation
 			+ "<npc-report npc-id=\"203941\" source=\"reward\" target=\"reward\" page=\"DEFAULT_SUCCESS\"/>";
 		String expanded = """
@@ -601,7 +601,7 @@ class QuestXmlDomainBlocksTest {
 			<npc-report npc-id="203941" source="started" target="reward" page="SELECT2"/>
 			<transition source="started" target="reward">
 			  <event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event>
-			  <after-commit><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit>
+			  <after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/><dialog type="SHOW_QUEST_PAGE" page="SHOW_SELECT_QUEST_REWARD_WINDOW1"/></after-commit>
 			</transition>
 			""";
 		CompiledQuestDefinition compiled = compile(reportDefinition(transitions));
@@ -609,7 +609,11 @@ class QuestXmlDomainBlocksTest {
 			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward"))
 			.toList();
 		assertEquals(1, routes.size(), "explicit 1009 route must suppress the npc-report generated 1009 route");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(5)), routes.getFirst().afterCommit());
+		// 显式 1009 边进入 REWARD：状态包后必须刷新可见性（与 npc-report 生成边同序，sync 在前）。
+		// The explicit 1009 edge enters REWARD: visibility refreshes after the state packet
+		// (same order as the npc-report generated edge, the sync comes first).
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
+			new AfterCommitAction.ShowQuestDialog(5)), routes.getFirst().afterCommit());
 	}
 
 	@Test
@@ -753,7 +757,7 @@ class QuestXmlDomainBlocksTest {
 					  </nodes>
 					  <transitions>
 					    <kill-routes source="started" target="k1" npc-ids="215468 215469"/>
-					    <transition source="k1" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event></transition>
+					    <transition source="k1" target="reward"><event><dialog type="TALK_TO_NPC" npc-id="203941" action="SELECT_QUEST_REWARD"/></event><after-commit><sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/></after-commit></transition>
 					    <npc-report npc-id="203941" source="started" target="reward" page="SELECT2"/>
 					  </transitions>
 					</quest-definition>

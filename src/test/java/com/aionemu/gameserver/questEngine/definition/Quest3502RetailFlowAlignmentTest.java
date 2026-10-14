@@ -110,7 +110,12 @@ class Quest3502RetailFlowAlignmentTest {
 			new QuestCondition.QuestVariableIs("var2", 1),
 			new QuestCondition.QuestVariableIs("var3", 1)), finish.conditions());
 		assertEquals(List.of(), finish.actions());
-		assertPacketOnly(finish);
+		// 击杀链终点进入 REWARD:状态包之后必须刷新可见性(头顶任务标记只在 0x7f 刷新时重算)。
+		// The kill chain terminates in REWARD: visibility must refresh after the state packet
+		// (the client recomputes overhead markers only on a 0x7f refresh).
+		assertEquals(List.of(new AfterCommitAction.SyncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)),
+			finish.afterCommit());
+		assertNull(finish.priority());
 	}
 
 	private static void assertCompletionContract(QuestDefinition definition) {
