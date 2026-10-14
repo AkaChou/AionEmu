@@ -24,11 +24,13 @@ import com.aionemu.gameserver.questEngine.QuestDataResources;
  */
 public final class QuestDialogContract {
 	public static final String CONTRACT_RESOURCE =
-		"aion/definitions/quest_dialog/client_dialog_contract.tsv";
+		"aion/data/static_data/quest/definitions/quest_dialog/client_dialog_contract.tsv";
 	public static final String EXCEPTIONS_RESOURCE =
-		"aion/definitions/quest_dialog/movie_continuation_exceptions.tsv";
-	private static final String CONTRACT_RELATIVE_PATH = "quest_dialog/client_dialog_contract.tsv";
-	private static final String EXCEPTIONS_RELATIVE_PATH = "quest_dialog/movie_continuation_exceptions.tsv";
+		"aion/data/static_data/quest/definitions/quest_dialog/movie_continuation_exceptions.tsv";
+	private static final String CONTRACT_RELATIVE_PATH =
+		"./data/static_data/quest/definitions/quest_dialog/client_dialog_contract.tsv";
+	private static final String EXCEPTIONS_RELATIVE_PATH =
+		"./data/static_data/quest/definitions/quest_dialog/movie_continuation_exceptions.tsv";
 
 	/**
 	 * 原版接取入口页偏好序：极简信页 → 对话入口页 → 接取窗页（兜底）。
@@ -85,13 +87,13 @@ public final class QuestDialogContract {
 	}
 
 	/**
-	 * 优先读取外部 definitions 目录（生产布局，随任务数据一起热重载），缺失时回退 classpath（开发与测试）。
-	 * Prefers the external definitions directory (production layout, reloaded with the quest data) and
-	 * falls back to the classpath (development and tests).
+	 * 优先读取外部 data 静态数据目录（生产布局，随任务数据一起热重载），缺失时回退 classpath（开发与测试）。
+	 * Prefers the external data static-data directory (production layout, reloaded with the quest data)
+	 * and falls back to the classpath (development and tests).
 	 */
 	static QuestDialogContract load() {
-		Path contractPath = Config.definitionFile(CONTRACT_RELATIVE_PATH).toPath();
-		Path exceptionsPath = Config.definitionFile(EXCEPTIONS_RELATIVE_PATH).toPath();
+		Path contractPath = Config.dataFile(CONTRACT_RELATIVE_PATH).toPath();
+		Path exceptionsPath = Config.dataFile(EXCEPTIONS_RELATIVE_PATH).toPath();
 		boolean contractPresent = Files.isRegularFile(contractPath);
 		boolean exceptionsPresent = Files.isRegularFile(exceptionsPath);
 		if (contractPresent != exceptionsPresent) {
@@ -110,8 +112,8 @@ public final class QuestDialogContract {
 	}
 
 	/**
-	 * 丢弃缓存的默认契约，让任务热重载重新读取外部 definitions 目录。
-	 * Drops the cached default contract so a quest hot reload re-reads the external definitions directory.
+	 * 丢弃缓存的默认契约，让任务热重载重新读取外部 data 静态数据目录。
+	 * Drops the cached default contract so a quest hot reload re-reads the external data static-data directory.
 	 */
 	public static void invalidateDefault() {
 		synchronized (QuestDialogContract.class) {

@@ -37,8 +37,15 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  */
 class DataDrivenHuntVariantFamilyGateTest {
 
-	/** 客户端怪物进度合同（QE-048/QE-125：客户端计数权威）。 / The client monster-progress contract. */
-	private static final String CONTRACT_RESOURCE = "/aion/definitions/quest_monster/quest_monster.csv";
+	/**
+	 * 客户端怪物进度合同（QE-048/QE-125：客户端计数权威）。
+	 * <p>
+	 * 主表 {@code definitions/quest_monster/quest_monster.csv}（8,499 行）已退役：生产零消费者，
+	 * 本门禁是唯一活消费者，仅涉及下面 5 个任务 → 冻结的 9 行快照保留在测试资源内。
+	 * The client monster-progress contract. The full 8,499-row table is retired; this gate is its only
+	 * live consumer and needs just the 5 quests below, frozen as a 9-row test-resource snapshot.
+	 */
+	private static final String CONTRACT_RESOURCE = "/quest/quest-monster-dd-family-contract.csv";
 
 	/** 待验任务的 DD hunt 代表名（原版表原样，组内逗号分隔）。 / The DD payload names under test. */
 	private static final Map<Integer, List<String>> PAYLOAD_NAMES = Map.of(

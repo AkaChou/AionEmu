@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class QuestDataResourcesTest {
 	private static final String DATA_RESOURCE = "aion/data/static_data/quest/definitions/quest_definition.xsd";
-	private static final String DEFINITIONS_RESOURCE = "aion/definitions/quest_dialog/client_dialog_contract.tsv";
+	private static final String DEFINITIONS_RESOURCE = "aion/definitions/compact/quests/limited-quests.xml";
 
 	@TempDir
 	private Path dataDir;
@@ -46,7 +46,7 @@ class QuestDataResourcesTest {
 
 	@Test
 	void definitionsPrefixUsesDefinitionsDirectoryNotDataDirectory() throws IOException {
-		write(definitionsDir, "quest_dialog/client_dialog_contract.tsv", "definitions-marker");
+		write(definitionsDir, "compact/quests/limited-quests.xml", "definitions-marker");
 		withProperties(dataDir, definitionsDir, () -> assertEquals("definitions-marker", read(DEFINITIONS_RESOURCE)));
 	}
 

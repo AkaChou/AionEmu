@@ -32,7 +32,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
  */
 class NativeAcceptEntryAskFlowGateTest {
 
-	private static final String CONTRACT_RESOURCE = "aion/definitions/quest_dialog/client_dialog_contract.tsv";
+	private static final String CONTRACT_RESOURCE =
+		"aion/data/static_data/quest/definitions/quest_dialog/client_dialog_contract.tsv";
 	private static final String HUNT_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleHunt.xml";
 	private static final String TALK_RESOURCE = "aion/data/static_data/quest/retail/Quest_SimpleTalk.xml";
 
