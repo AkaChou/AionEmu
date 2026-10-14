@@ -364,11 +364,14 @@ public final class NativeQuestStartPort {
 					}
 					QuestState prerequisite = player.getQuestStateList().getQuestState(questId);
 					// 带 {@code :n} 后缀（原版奖励分支）的行还要比对该前置的奖励档；
-					// 档位解析与生产元数据同源。 / A {@code :n} suffix also pins the prerequisite's
-					// reward slot, parsed through the shared production rule.
+					// 档位解析与生产元数据同源。未完成的存档尚无奖励档（读取会打误导性警告），
+					// 先判状态再取档位。 / A {@code :n} suffix also pins the prerequisite's reward
+					// slot, parsed through the shared production rule. An unfinished save has no
+					// reward slot yet (reading it logs a misleading warning), so status gates the read.
 					boolean rewardMatches = token.indexOf(':') < 0
-							|| (prerequisite != null && prerequisite.getReward()
-								== RetailQuestMetadataCompiler.prerequisiteRewardMode(questId, token));
+							|| (prerequisite != null && prerequisite.getStatus() == QuestStatus.COMPLETE
+								&& prerequisite.getReward()
+									== RetailQuestMetadataCompiler.prerequisiteRewardMode(questId, token));
 					if (prerequisite == null || prerequisite.getStatus() != QuestStatus.COMPLETE || !rewardMatches) {
 						missing.add(questId);
 					}
