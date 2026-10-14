@@ -92,6 +92,11 @@ cp -f "$ROOT_DIR/scripts/stop-silent.sh" "$AION_HOME/stop-silent.sh"
 cp -f "$ROOT_DIR/scripts/shutdown.sh" "$AION_HOME/shutdown.sh"
 chmod +x "$AION_HOME/start-silent.sh" "$AION_HOME/stop-silent.sh" "$AION_HOME/shutdown.sh"
 
+if [ -d "$ROOT_DIR/scripts/windows" ]; then
+  mkdir -p "$AION_HOME/windows"
+  cp -f "$ROOT_DIR/scripts/windows/"* "$AION_HOME/windows/"
+fi
+
 echo "Packaged: $AION_HOME/AionEmu.jar"
 if [ "$AION_HOME" = "$ROOT_DIR/aion" ]; then
   AION_HOME="./aion"

@@ -1,1 +1,5 @@
 * text=auto eol=lf
+
+# cmd.exe 需要 CRLF 换行，否则批处理标签/续行可能解析异常。
+# cmd.exe needs CRLF line endings; LF can break batch labels and continuations.
+*.bat text eol=crlf

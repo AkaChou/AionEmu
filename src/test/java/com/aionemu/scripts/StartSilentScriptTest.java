@@ -105,6 +105,8 @@ class StartSilentScriptTest {
         assertTrue(Files.isExecutable(root.resolve("aion/start-silent.sh")));
         assertTrue(Files.isExecutable(root.resolve("aion/stop-silent.sh")));
         assertTrue(Files.isExecutable(root.resolve("aion/shutdown.sh")));
+        assertTrue(Files.exists(root.resolve("aion/windows/deploy.bat")));
+        assertTrue(Files.exists(root.resolve("aion/windows/server.ps1")));
         assertTrue(result.output().contains("Start: ./aion/start-silent.sh"));
         assertTrue(result.output().contains("Shutdown: ./aion/shutdown.sh"));
         assertTrue(result.output().contains("Stop:  ./aion/stop-silent.sh"));
@@ -175,6 +177,22 @@ class StartSilentScriptTest {
         assertFalse(script.contains("kill -9"));
     }
 
+    @Test
+    void windowsScriptsUseCrlfAndDriveThePortableRuntime() throws Exception {
+        for (String name : List.of("deploy.bat", "start.bat", "stop.bat")) {
+            String content = Files.readString(Path.of("scripts/windows", name));
+            assertTrue(content.contains("\r\n"), name + " must use CRLF line endings");
+        }
+
+        String ps1 = Files.readString(Path.of("scripts/windows/server.ps1"));
+        assertTrue(ps1.contains("-Daion.home="));
+        assertTrue(ps1.contains("-Daion.log.dir="));
+        assertTrue(ps1.contains("--initialize-insecure"));
+        assertTrue(ps1.contains("aion_emu"));
+        assertTrue(ps1.contains("database.properties"));
+        assertTrue(ps1.contains("Send-CtrlC"));
+    }
+
     private Path prepareRuntimeRoot() throws IOException {
         Path root = tempDir.resolve("runtime");
         Files.createDirectories(root.resolve("target"));
@@ -187,6 +205,14 @@ class StartSilentScriptTest {
         Files.copy(Path.of("scripts/start-silent.sh"), root.resolve("scripts/start-silent.sh"));
         Files.copy(Path.of("scripts/stop-silent.sh"), root.resolve("scripts/stop-silent.sh"));
         Files.copy(Path.of("scripts/shutdown.sh"), root.resolve("scripts/shutdown.sh"));
+        Path sourceWindows = Path.of("scripts/windows");
+        Path targetWindows = root.resolve("scripts/windows");
+        Files.createDirectories(targetWindows);
+        try (var windowsFiles = Files.list(sourceWindows)) {
+            for (Path file : windowsFiles.toList()) {
+                Files.copy(file, targetWindows.resolve(file.getFileName()));
+            }
+        }
         Path fakeJava = root.resolve("bin/java");
         Files.createDirectories(fakeJava.getParent());
         Files.writeString(fakeJava, """
