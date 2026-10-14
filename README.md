@@ -1,94 +1,127 @@
 <div align="center">
 
+<img src="docs/logo.webp" alt="AionEmu Logo" width="640" style="max-width: 100%; height: auto;" />
+
 # AionEmu
 
-### Authentic Aion 5.8 Community Server
-#### Single Maven project • Java 25 • Spring Boot 4.1
+### Authentic Aion 5.8 Community Server Emulator
+#### Unified Maven Architecture • Java 25 • Spring Boot 4.1 • Netty
 
 [![Java 25](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Maven](https://img.shields.io/badge/Maven-Single--Module-C71A36?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
-[![Protocol](https://img.shields.io/badge/Aion-5.8%20Emu-darkgreen)](https://github.com)
+[![Protocol](https://img.shields.io/badge/Aion-5.8%20Protocol-darkgreen)](https://github.com)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
-[English](README.md) | [中文](docs/README.zh-CN.md)
+[English](README.md) • [简体中文](docs/README.zh-CN.md)
+
+<br/>
+
+[Quick Start](#quick-start) • [Features](#features) • [Client Patch](#client-companion-patch) • [Contributing](#contributing)
 
 </div>
 
 ---
 
-## Introduction
+## Overview
 
-**AionEmu** is a modern, modular, and high-performance server emulator for **Aion 5.8**. By unifying Login, Game, and Chat services into a single Spring Boot application, AionEmu combines cutting-edge Java 25 capabilities with deep original server/client behavioral parity, designed for production stability and clean architecture.
-
----
-
-## Core Features
-
-| Feature | Description | Status |
-| --- | --- | :---: |
-| **Data-Driven Quest Engine** | Native table-driven execution runtime (`tablelane`) replacing 1,500+ legacy Java files; full coverage of multi-stage dialogue, hunt, collect, and cutscene sequences. | ✅ Authentic Parity |
-| **AI & Pathfinding Engine** | Original `.path/.idx` multi-layer A* 3D navigation; optimized aggro, patrol, escort, and obstacle handling. | ✅ Enhanced |
-| **Client-Simulated Minions** | Fully authentic minion follow model simulated on the client side, eliminating server pathfinding overhead and spammy teleport broadcasts. | ✅ Client Simulation |
-| **PvP CC Decay Chains** | Port of original abnormal status diminishing returns with dynamic resistance increase and tiered time windows. | ✅ Authentic Parity |
-| **Scalable Drops & Economy** | Dynamic drop calculations, level-based reduction, group roll/bid, auto-loot, and corpse lifecycle management. | ✅ Complete |
-| **Operations & GM Tooling** | Batch spawning (`//spawn <id>*<count>`), persistent/non-persistent spawn separation (`//spawn` vs `//spawns`), and automated packaging scripts. | ✅ Ready |
+**AionEmu** is a modern, high-performance community server emulator for **Aion 5.8**.
 
 ---
 
-## Roadmap
+## Features
 
-| Milestone & Direction | Scope & Objectives | Status |
-| --- | --- | :---: |
-| **Data-Driven Quest Migration** | Full migration of 1,500+ hardcoded Java quest handlers to a unified native table-driven runtime aligned with authentic 5.8. | ✅ Done |
-| **Instance Engine & Original Mechanics** | Deep alignment of 5.8 original instance workflows, boss phase AI decoupling, and data-driven instance script orchestration. | 🚧 In Progress |
-| **Go Transformation & Microservices** | Incremental re-architecture with Go: high-concurrency connection gateway, decoupled login/chat standalone services, and low-latency packet routing. | 📝 Todo |
-| **Static Data Modernization** | Migrating voluminous XML static datasets into streaming, memory-mapped compact JSONL / binary formats to minimize startup footprint. | 📝 Todo |
+| Feature | Description |
+| :--- | :--- |
+| **Unified Runtime** | Single Spring Boot 4.1 process managing Login, Game, and Chat services; zero inter-process network overhead with flexible per-service toggles. |
+| **Data-Driven Quests (`tablelane`)** | Native table-driven execution engine replacing 1,500+ legacy hardcoded quest classes; 100% authentic dialogue ladders, movies, hunt/collect counters, and rewards. |
+| **True 3D Navigation & Geo Engine** | Original `.path/.idx` multi-layer A* 3D pathfinding with line-of-sight (LOS) raycasting, true height physics, and obstacle avoidance. |
+| **Combat & Attack Engine** | Faithful physical and magical damage formulas, dual-wield calculations, critical/hit/evasion/parry/block resolutions, and shield absorbs. |
+| **Skill Engine & CC Decay** | Complete 5.8 original skill mechanics, combo/stigma chains, strict buff/debuff priority conflict trees, and PvP CC diminishing returns. |
+| **Hierarchical AI System** | Modular AI2 state machines for monster and NPC behaviors, aggro coordination, patrol routines, and multi-phase Boss AI (continuously being refined). |
+| **Interactive World & Dialogs** | Authentic multi-page NPC dialog trees, gatherable/mechanism object interactions, portal networks, and flight/gliding state synchronization. |
+| **Drops & Economy Engine** | Dynamic drop calculations, level-based decay curves, party roll/bid distribution, auto-loot, and corpse lifecycle management. |
+| **Luna System & Features** | Full support for 5.8 Luna Shop, Luna Crafting, Luna Dice, daily/weekly event instances, and consumption reward tiers. |
+| **Client-Simulated Minions** | Fully authentic 5.8 minion follow model simulated on the client side, eliminating server tick overhead and broadcast spam. |
 
 ---
 
 ## Quick Start
 
 ### Prerequisites
-- **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 Client**
+- **JDK 25+**
+- **MySQL 8.0+**
+- **Aion 5.8 Client** (64-bit recommended)
 
-### 1. Database Initialization
-The schema is created automatically — on the first start, Flyway builds all `aion_emu` tables; nothing to import by hand.
+### 1. Database Configuration
+Database connection settings are configured in `/config/network/network.properties`:
 
-**Migrating from the old two-database setup (`al_server_gs` / `al_server_ls`)?** Start the game server once (so Flyway builds the schema), stop it, then run `scripts/sql/migrate-to-aion-emu.sql`. Details: [`scripts/sql/README.md`](scripts/sql/README.md).
-
-### 2. Build & Run
-```bash
-./scripts/package.sh         # Build and deploy to aion/ (or ./scripts/re-package.sh to preserve config)
-./aion/start-silent.sh       # Start in background (logs: tail -f aion/log/aionemu.log)
-./aion/shutdown.sh           # Graceful shutdown (or ./aion/stop-silent.sh)
+```properties
+# Database connection settings in /config/network/network.properties
+database.url = jdbc:mysql://127.0.0.1:3306/aion_emu?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+database.user = root
+database.password = your_password
 ```
 
----
+Create an empty database named `aion_emu`. The server automatically initializes all required tables on first launch.
 
-## Client Patch
+> **Upgrading from legacy dual DBs (`al_server_gs` / `al_server_ls`)**: Start the server once to initialize tables, stop it, and execute `scripts/sql/migrate-to-aion-emu.sql`. See [Database Migration Guide](scripts/sql/README.md).
 
-The `patch/` directory contains companion enhancements for the Aion 5.8 client (`bin64/` runtime, `L10N/` quest texts, `Levels/` terrain, and `Textures/` UI).
-- **Usage**: Please **back up your client's original files first**, then copy and overwrite corresponding folders from `patch/` into your client root installation directory.
+### 2. Start & Manage Server
+Use the provided scripts to run and manage the server:
+
+- **Linux / macOS** (via `scripts/`):
+  ```bash
+  ./scripts/start-silent.sh     # Start server in background
+  tail -f aion/log/aionemu.log  # Monitor live startup logs
+  ./scripts/shutdown.sh         # Graceful shutdown (or ./scripts/stop-silent.sh)
+  ```
+
+- **Windows** (via `scripts/windows/`):
+  ```cmd
+  scripts\windows\deploy.bat    # Deploy and start server on Windows
+  ```
 
 ---
 
 ## Contributing
 
-Contributions are warmly welcomed!
-1. **Guidelines**: Maintain bilingual (EN/ZH) comments for key interfaces, adhere to data-driven design, and avoid hardcoded exceptions.
-2. **Testing**: Ensure all tests pass before submitting (`mvn test`).
-3. **Pull Request**: Clearly describe your changes, alignment rationale, and test results.
+Developers and contributors building from source can follow these steps:
+
+### 1. Clone & Configure
+```bash
+git clone https://github.com/AionEmu/AionEmu.git
+cd AionEmu
+```
+Configure your database credentials in `src/main/resources/aion/config/network/network.properties`.
+
+### 2. Build & Package
+```bash
+./scripts/package.sh          # Full build and deploy to aion/
+# or ./scripts/re-package.sh to preserve existing runtime configuration in aion/config/
+```
+
+### 3. Test & Guidelines
+- Run automated tests before submitting: `mvn test`
+- Public APIs and core domain logic should include bilingual (EN/ZH) comments.
+- Adhere to data-driven design; avoid hardcoding specific IDs or exceptions in Java code.
+
+---
+
+## Client Companion Patch
+
+The `patch/` directory contains companion enhancements for the Aion 5.8 64-bit client:
+
+- **`bin64/`** — Core runtime library (`Game.dll`) for protocol compatibility.
+- **`L10N/CHS/`** — Simplified Chinese quest dialogue and UI localization (`data.pak`).
+- **`Levels/`** — Map terrain and coordinate corrections (`Level.pak`).
+- **`Textures/ui/`** — UI icons and interface assets (`ui.pak`).
+
+> ⚠️ **Notice**: Always back up original client files before overwriting. See [`patch/README.md`](patch/README.md) for details.
 
 ---
 
 ## Acknowledgments & License
 
-- Based on **Aion 5.8 Community Emulator** and earlier community work; architecture and protocol insights inspired by [Beyond Aion](https://github.com/beyond-aion/aion-server) (GPL-3.0).
-- This project is licensed under the [GNU General Public License v3.0](LICENSE).
-
-<div align="center">
-
-**AionEmu** • Crafting the ultimate Aion 5.8 server experience.
-
-</div>
+- Special thanks to the **Aion 5.8 Community**, early open-source contributors, the **Encom team**, and the [Beyond Aion](https://github.com/beyond-aion/aion-server) project.
+- This project is licensed under the **[GNU General Public License v3.0](LICENSE)**.

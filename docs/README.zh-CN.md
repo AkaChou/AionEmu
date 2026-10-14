@@ -1,17 +1,23 @@
 <div align="center">
 
+<img src="logo.webp" alt="AionEmu Logo" width="640" style="max-width: 100%; height: auto;" />
+
 # AionEmu
 
-### 高还原的 Aion 5.8 社区服务端
-#### 单 Maven 工程 • Java 25 • Spring Boot 4.1
+### 高度还原的 Aion 5.8 社区服务端模拟器
+#### 单体 Maven 工程 • Java 25 • Spring Boot 4.1 • Netty
 
 [![Java 25](https://img.shields.io/badge/Java-25-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Maven](https://img.shields.io/badge/Maven-Single--Module-C71A36?logo=apachemaven&logoColor=white)](https://maven.apache.org/)
-[![Protocol](https://img.shields.io/badge/Aion-5.8%20Emu-darkgreen)](https://github.com)
+[![Protocol](https://img.shields.io/badge/Aion-5.8%20Protocol-darkgreen)](https://github.com)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](../LICENSE)
 
-[English](../README.md) | [中文](README.zh-CN.md)
+[English](../README.md) • [简体中文](README.zh-CN.md)
+
+<br/>
+
+[快速开始](#快速开始) • [核心特性](#核心特性) • [客户端补丁](#客户端补丁) • [参与贡献](#参与贡献)
 
 </div>
 
@@ -19,76 +25,103 @@
 
 ## 项目介绍
 
-**AionEmu** 是专为 **Aion 5.8** 设计的现代化、单体架构高性能社区服务端。通过单个 Spring Boot 容器统一整合登录（Login）、游戏（Game）与聊天（Chat）核心服务，拥抱 Java 25 语言特性与原始游戏机制深度对齐，具备生产级高并发稳定性与整洁的工程架构。
+**AionEmu** 是专为 **Aion 5.8** 设计的现代化、单体架构高性能社区服务端模拟器。
 
 ---
 
 ## 核心特性
 
-| 特性 | 说明 | 状态 |
-| --- | --- | :---: |
-| **数据驱动任务引擎** | 原生表格驱动执行引擎（`tablelane`），替代 1,500+ 个分散 Java 类，全量支持多阶段对话阶梯、收集、击杀与过场动画。 | ✅ 原始深度对齐 |
-| **AI 与三维寻路引擎** | 原始 `.path/.idx` 多层 A* 三维寻路；深度优化感知、仇恨管理、巡逻护送与复杂地形移动。 | ✅ 深度优化 |
-| **客户端拟真随从跟随** | 严格对齐原始客户端随从跟随模型，彻底根除服务端多余寻路开销与频繁收放/瞬移刷屏。 | ✅ 客户端仿真 |
-| **PvP 控制效果递减链** | 完整移植原始麻痹、睡眠、恐惧等异常状态衰减链，具备动态抗性增益与分级衰减窗口。 | ✅ 机制对齐 |
-| **可缩放掉落与经济系统** | 动态掉落计算、等级衰减、队伍掷骰竞价、自动拾取与尸体生命周期管理。 | ✅ 功能完整 |
-| **运维与 GM 管理套件** | 支持批量刷怪（`//spawn <id>*<count>`）、持久化与非持久化刷怪分离（`//spawn` vs `//spawns`）及自动化脚本。 | ✅ 开箱即用 |
-
----
-
-## 后续路线与规划
-
-| 演进方向 | 目标与说明 | 状态 |
-| --- | --- | :---: |
-| **任务系统数据驱动重构** | 全面废除 1,500+ 硬编码 Java 任务脚本，实现统一原生数据驱动引擎，完整对齐 5.8 原始任务全链路。 | ✅ 已完成 |
-| **副本系统与机制深度对齐** | 深度对齐 5.8 原始副本机制、解耦 Boss 阶段行为脚本，构建通用数据驱动的副本流转引擎。 | 🚧 进行中 |
-| **Go 语言重构与微服务化** | 核心组件逐步采用 Go 进行重构：实现高并发连接网关、登录与聊天独立服务化及超低延迟封包路由。 | 📝 Todo |
-| **静态数据流式与 JSONL 迁移** | 沉淀静态数据存储格式，推进大体积 XML 数据集向流式轻量 JSONL / 二进制格式迁移，降低内存常驻开销。 | 📝 Todo |
+| 特性 | 说明 |
+| :--- | :--- |
+| **单体统一架构** | 单个 Spring Boot 4.1 进程管理登录、游戏与聊天服务，服务间零网络延迟与开销，支持按需独立开关。 |
+| **数据驱动任务引擎 (`tablelane`)** | 原生表格驱动执行架构，替代 1,500+ 个硬编码任务类；100% 还原原版对话阶梯、收集、计数、过场动画与奖励。 |
+| **真实 3D 网格寻路与 Geo 引擎** | 原始 `.path/.idx` 多层 3D A* 网格寻路，支持视线遮挡（LOS）、复杂地形高程物理与障碍物规避。 |
+| **战斗与攻击计算系统** | 精确还原物理/魔法攻击力算法、双持独立结算、命中/暴击/闪避/格挡/盾牌吸收及伤害浮动判定。 |
+| **技能与异常状态递减链** | 完整覆盖 5.8 原版技能体系、连续技/烙印链条、Buff/Debuff 优先级冲突互斥，以及 PvP 控制状态分级衰减窗口。 |
+| **层级化 AI 状态机** | 基于 AI2 体系的怪物与 NPC 行为树、群体仇恨协作、巡逻脱战重置，以及阶段性 Boss 行为逻辑（持续深化完善中）。 |
+| **世界对象与场景交互** | 深度支持多页面 NPC 对话树、采集物/机关物件触发交互、传送门网络，以及高精度飞行/滑翔状态同步。 |
+| **动态掉落与经济体系** | 动态掉落几率计算、等级衰减曲线、组队掷骰竞价、自动拾取与尸体生命周期管理。 |
+| **露娜系统 (Luna System)** | 完整支持 5.8 露娜商店、露娜制作（工坊）、露娜骰子乐、每日/每周露娜副本活动，以及消费里程碑奖励。 |
+| **客户端拟真随从跟随** | 严格还原 5.8 原版随从跟随模型，由客户端平滑演算位移，彻底消除服务端寻路负载与广播刷屏。 |
 
 ---
 
 ## 快速开始
 
 ### 环境依赖
-- **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 客户端**
+- **JDK 25+**
+- **MySQL 8.0+**
+- **Aion 5.8 客户端**（推荐 64 位）
 
-### 1. 数据库初始化
-建表全自动——首次启动时由 Flyway 建好 `aion_emu` 的全部表，无需手动导入。
+### 1. 配置数据库
+数据库连接在 `/config/network/network.properties` 中进行配置：
 
-**从旧双库（`al_server_gs` / `al_server_ls`）迁移？** 先启动一次游戏服务端（让 Flyway 建好表），停服后运行 `scripts/sql/migrate-to-aion-emu.sql`，详见 [`scripts/sql/README.md`](../scripts/sql/README.md)。
-
-### 2. 构建与运行
-```bash
-./scripts/package.sh         # 打包并部署到 aion/（后续更新配置可用 ./scripts/re-package.sh）
-./aion/start-silent.sh       # 后台静默启动（日志：tail -f aion/log/aionemu.log）
-./aion/shutdown.sh           # 优雅关闭（或 ./aion/stop-silent.sh 快速停止）
+```properties
+# 数据库连接配置位于 /config/network/network.properties
+database.url = jdbc:mysql://127.0.0.1:3306/aion_emu?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+database.user = root
+database.password = 你的密码
 ```
+
+只需在 MySQL 中创建空白数据库 `aion_emu`，服务端首次启动时将自动完成表结构初始化。
+
+> **从旧双库（`al_server_gs` / `al_server_ls`）升级**：先启动一次服务端完成建表，停服后运行 `scripts/sql/migrate-to-aion-emu.sql`。详见 [数据库迁移指引](../scripts/sql/README.md)。
+
+### 2. 启动与管理服务端
+直接使用脚本管理服务端运行：
+
+- **Linux / macOS**（使用 `scripts/`）：
+  ```bash
+  ./scripts/start-silent.sh     # 后台静默启动服务端
+  tail -f aion/log/aionemu.log  # 查看实时运行日志
+  ./scripts/shutdown.sh         # 优雅关服保存数据（或 ./scripts/stop-silent.sh 快速停止）
+  ```
+
+- **Windows**（使用 `scripts/windows/`）：
+  ```cmd
+  scripts\windows\deploy.bat    # Windows 部署并启动服务端
+  ```
+
+---
+
+## 参与贡献
+
+开发者或需要从源码二次开发与构建的用户请按以下步骤操作：
+
+### 1. 克隆代码与配置
+```bash
+git clone https://github.com/AionEmu/AionEmu.git
+cd AionEmu
+```
+在 `src/main/resources/aion/config/network/network.properties` 中配置开发数据库信息。
+
+### 2. 编译与打包
+```bash
+./scripts/package.sh          # 全量构建并输出部署产物至 aion/
+# 日常调试若需保留 aion/config/ 中已修改配置，可使用 ./scripts/re-package.sh
+```
+
+### 3. 测试与开发准则
+- 提交 PR 前请确保全量测试通过：`mvn test`
+- 核心领域逻辑与对外接口请保留中英双语注释。
+- 坚持数据驱动设计，不引入硬编码特例。
 
 ---
 
 ## 客户端补丁
 
-`patch/` 目录提供配套 Aion 5.8 客户端的兼容与体验补丁（含 `bin64/` 运行库、`L10N/` 任务汉化、`Levels/` 地形与 `Textures/` UI 图标）。
-- **使用方法**：请先**备份原客户端同名文件**，然后将 `patch/` 下的子目录对应覆盖至客户端根目录即可。
+`patch/` 目录提供配套 Aion 5.8 客户端的兼容与体验补丁：
+
+- **`bin64/`** — 核心运行库（`Game.dll`），提供协议支持与兼容运行。
+- **`L10N/CHS/`** — 简体中文任务文本与界面汉化包（`data.pak`）。
+- **`Levels/`** — 地图与地形数据修正（`Level.pak`）。
+- **`Textures/ui/`** — 界面 UI 图标与纹理更新（`ui.pak`）。
+
+> ⚠️ **提示**：覆盖补丁前请先备份客户端原始同名文件。详细说明见 [`patch/README.md`](../patch/README.md)。
 
 ---
 
-## 如何贡献
+## 致谢与开源许可
 
-欢迎提交 PR 与 Issue！
-1. **代码规范**：核心接口附中英双语注释，坚持数据驱动设计，不引入硬编码特例。
-2. **测试验证**：提交前确保本地测试通过（`mvn test`）。
-3. **提交 PR**：简要说明修改内容、原版对齐依据及测试证据。
-
----
-
-## 致谢与许可
-
-- 基于 **Aion 5.8 Community Emulator** 与早期开源社区贡献；架构与协议参考 [Beyond Aion](https://github.com/beyond-aion/aion-server)（GPL-3.0）。
-- 本项目遵循 [GNU General Public License v3.0](../LICENSE) 开源协议。
-
-<div align="center">
-
-**AionEmu** • 打造极致纯净、真实的 Aion 5.8 模拟器体验。
-
-</div>
+- 特别感谢 **Aion 5.8 社区**、早期开源贡献者、**Encom 团队**（Encom team），以及 [Beyond Aion](https://github.com/beyond-aion/aion-server) 项目。
+- 本项目遵循 **[GNU General Public License v3.0](../LICENSE)** 开源协议。
