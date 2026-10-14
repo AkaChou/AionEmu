@@ -16,6 +16,7 @@ import java.util.Set;
 import org.springframework.beans.factory.ObjectProvider;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -57,7 +58,7 @@ public class HousingService {
 	/**
 	 * 地图 ID 到该图房屋 / Map id to houses on that map
 	 */
-	private static final Map<Integer, List<House>> housesByMapId = new HashMap<>();
+	private final Map<Integer, List<House>> housesByMapId = new ConcurrentHashMap<>();
 	/**
 	 * 自定义（地产）房屋缓存。 / Custom (estate) house cache.
 	 */
@@ -175,6 +176,7 @@ public class HousingService {
 		}
 
 		int spawnedCounter = 0;
+		List<House> spawnedHouses = new ArrayList<>();
 		for (HousingLand land : lands) {
 			Building defaultBuilding = land.getDefaultBuilding();
 			if (defaultBuilding.getType() == BuildingType.PERSONAL_INS) {
@@ -191,8 +193,11 @@ public class HousingService {
 				}
 				customHouse.spawn(instanceId);
 				spawnedCounter++;
-				housesByMapId.computeIfAbsent(worldId, _ -> new ArrayList<>()).add(customHouse);
+				spawnedHouses.add(customHouse);
 			}
+		}
+		if (!spawnedHouses.isEmpty()) {
+			housesByMapId.computeIfAbsent(worldId, _ -> new CopyOnWriteArrayList<>()).addAll(spawnedHouses);
 		}
 		if (spawnedCounter > 0) {
 			log.info(I18n.get("log.76ad8f8cf6ea", worldId, instanceId, spawnedCounter));
