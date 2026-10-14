@@ -682,7 +682,21 @@ public final class DataDrivenNativeRuntime {
 			}
 		} else {
 			java.util.regex.Pattern zoneName = java.util.regex.Pattern.compile("<zone\\b[^>]*\\bname=\"([^\"]+)\"");
-			java.nio.file.Path dir = java.nio.file.Path.of("src/main/resources/aion/data/static_data/zones");
+			java.net.URL zonesUrl = QuestDataResources.url("aion/data/static_data/zones");
+			java.nio.file.Path dir = null;
+			if (zonesUrl != null && "file".equals(zonesUrl.getProtocol())) {
+				try {
+					dir = java.nio.file.Path.of(zonesUrl.toURI());
+				} catch (Exception e) {
+					try {
+						dir = java.nio.file.Path.of(java.net.URI.create(zonesUrl.toExternalForm().replace(" ", "%20")));
+					} catch (Exception ignored) {
+					}
+				}
+			}
+			if (dir == null || !java.nio.file.Files.isDirectory(dir)) {
+				dir = java.nio.file.Path.of("src/main/resources/aion/data/static_data/zones");
+			}
 			try (java.util.stream.Stream<java.nio.file.Path> files = java.nio.file.Files.list(dir)) {
 				for (java.nio.file.Path path : files.sorted().toList()) {
 					String file = path.getFileName().toString();
