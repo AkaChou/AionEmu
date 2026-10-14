@@ -53,9 +53,9 @@
 - **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 客户端**
 
 ### 1. 数据库初始化
-数据库脚本位于：
-- **登录服 (Login)**：`src/main/resources/db/mysql/al_server_ls.sql`
-- **游戏服 (Game)**：`src/main/resources/db/mysql/al_server_gs.sql`
+建表全自动——首次启动时由 Flyway 建好 `aion_emu` 的全部表，无需手动导入。
+
+**从旧双库（`al_server_gs` / `al_server_ls`）迁移？** 先启动一次游戏服务端（让 Flyway 建好表），停服后运行 `scripts/sql/migrate-to-aion-emu.sql`，详见 [`scripts/sql/README.md`](../scripts/sql/README.md)。
 
 ### 2. 构建与运行
 ```bash

@@ -26,9 +26,11 @@ import com.mysql.cj.jdbc.MysqlDataSource;
  * MyBatis-Flex code generator producing XxxPo / XxxMapper / XxxDao / XxxDaoImpl from the aion_emu schema.
  *
  * <p>一次性工具，生成物入库后作为普通源码维护；已存在的文件不覆盖（overwrite=false）。
- * 前置条件：先运行 scripts/migrate-to-aion-emu.sh 建好 aion_emu；在 IDE 中直接运行本类 main。
+ * 前置条件：先建好 aion_emu（全新库启动一次服务端由 Flyway 建表；旧库数据用 scripts/sql 下的迁移脚本搬），
+ * 再在 IDE 中直接运行本类 main。
  * One-shot tool: generated files are maintained as regular sources afterwards and existing files are
- * never overwritten. Run scripts/migrate-to-aion-emu.sh first, then run this main from the IDE.</p>
+ * never overwritten. Prepare aion_emu first (start the server once so Flyway builds the schema; move
+ * legacy data with the script under scripts/sql), then run this main from the IDE.</p>
  *
  * <p>环境变量 / Environment: AION_DB_URL, AION_DB_USER, AION_DB_PASSWORD.</p>
  */

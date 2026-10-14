@@ -53,9 +53,9 @@
 - **JDK 25+** • **Maven 3.7+** • **MySQL 8.0+** • **Aion 5.8 Client**
 
 ### 1. Database Initialization
-Database schemas and initial data scripts are located at:
-- **Login Server**: `src/main/resources/db/mysql/al_server_ls.sql`
-- **Game Server**: `src/main/resources/db/mysql/al_server_gs.sql`
+The schema is created automatically — on the first start, Flyway builds all `aion_emu` tables; nothing to import by hand.
+
+**Migrating from the old two-database setup (`al_server_gs` / `al_server_ls`)?** Start the game server once (so Flyway builds the schema), stop it, then run `scripts/sql/migrate-to-aion-emu.sql`. Details: [`scripts/sql/README.md`](scripts/sql/README.md).
 
 ### 2. Build & Run
 ```bash
