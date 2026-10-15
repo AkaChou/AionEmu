@@ -34,7 +34,7 @@ try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
 
 # 脚本版本标记：便于确认 .bat 实际跑的是哪一版（排障用）。
 # Script version marker: identifies which revision the .bat actually ran (for troubleshooting).
-$ScriptVersion = '2026-10-14.9'
+$ScriptVersion = '2026-10-15.1'
 
 # ---- 路径 / Paths -----------------------------------------------------------
 $ScriptDir = $PSScriptRoot
@@ -417,6 +417,10 @@ function Write-DbProperties {
     Write-Ok 'database.properties 已写入 / written'
 }
 
+# 随包发布的 network.properties 中的示例地址，仅作占位；部署时必须让用户输入真实 IP。
+# The sample address shipped in network.properties is a placeholder only; deploy must ask for the real IP.
+$PlaceholderIp = '192.168.1.18'
+
 # 判断字符串是否为合法 IPv4 地址（四段 0-255）。
 # Returns whether the string is a valid IPv4 address (four octets, 0-255).
 function Test-IPv4([string]$Value) {
@@ -433,12 +437,14 @@ function Test-LocalOnlyAddress([string]$Value) {
     return $Value -eq '0.0.0.0' -or $Value -eq '127.0.0.1' -or $Value.StartsWith('127.') -or $Value -eq 'localhost'
 }
 
-# 交互输入服务器对外 IP（必须为局域网或公网 IPv4，不接受本机地址），并同步更新 network.properties。
-# Prompts for the server's advertised IP (a LAN or public IPv4; localhost is rejected) and updates network.properties.
+# 交互确认服务器对外 IP（局域网/公网 IPv4，不接受本机地址），并同步更新 network.properties。
+# Prompts for the server's advertised IP (a LAN/public IPv4; localhost is rejected) and updates network.properties.
+# 已配置过时展示当前 IP 并询问是否修改，不再使用任何内置默认 IP。
+# When already configured, shows the current IP and asks whether to change it; no built-in default IP is used.
 function Configure-NetworkAddress {
     if (-not (Test-Path $NetworkProps)) { return }
 
-    # 读取当前配置中的 IP 作为参考展示
+    # 读取当前配置中的 IP 作为待确认值 / reads the IP currently in the config as the value to confirm.
     $currentIp = ''
     foreach ($line in (Get-Content $NetworkProps)) {
         if ($line -match '^\s*gameserver\.network\.address\s*=\s*(\S.*?)\s*$') {
@@ -446,23 +452,34 @@ function Configure-NetworkAddress {
             break
         }
     }
-    # 仅当现有配置已是可用的对外 IP 时才允许回车沿用 / only a usable existing IP may be kept by pressing ENTER.
-    $defaultIp = if ((Test-IPv4 $currentIp) -and -not (Test-LocalOnlyAddress $currentIp)) { $currentIp } else { '' }
+    # 随包发布的示例占位值不算"已配置"，否则首次部署不会询问用户。
+    # The sample placeholder shipped in the package does not count as configured, so the first deployment always asks.
+    $configured = (Test-IPv4 $currentIp) -and -not (Test-LocalOnlyAddress $currentIp) -and $currentIp -ne $PlaceholderIp
 
     Write-Host ''
     Write-Host '================ 服务器连接 IP 设置 / Server Connection IP ================' -ForegroundColor Cyan
-    Write-Host "当前配置 IP / Current IP: $(if ($currentIp) { $currentIp } else { '(未设置 / unset)' })"
-    Write-Host '必须填写本机可被客户端访问的局域网或公网 IP；不支持 localhost / 127.0.0.1。'
-    Write-Host 'Enter the LAN or public IP clients reach this server at; localhost / 127.0.0.1 is not supported.'
-    Write-Host '-------------------------------------------------------------------------'
 
     $targetIp = ''
+    if ($configured) {
+        # 已配置过：展示当前 IP，用户确认无需修改则原样保留 / already configured: show it and keep it unless the user asks to change.
+        Write-Host "当前服务器 IP / Current server IP: $currentIp"
+        $choice = "$(Read-Host '是否需要修改? 输入 y 修改，直接回车沿用 / Change it? Enter y to change, ENTER to keep')".Trim().ToLower()
+        if ($choice -ne 'y' -and $choice -ne 'yes') {
+            Write-Ok "沿用当前服务器 IP / keeping the current server IP: $currentIp"
+            return
+        }
+    } else {
+        Write-Host "请设置服务器局域网 IP（当前未设置或为示例值 / unset or sample: $(if ($currentIp) { $currentIp } else { 'unset' })）"
+    }
+
+    Write-Host '请输入本机可被客户端访问的局域网 IP，例如 192.168.1.x（不支持 localhost / 127.0.0.1）。'
+    Write-Host 'Enter the LAN IP clients reach this server at, e.g. 192.168.1.x (localhost / 127.0.0.1 is rejected).'
+    Write-Host '提示 / hint: 在 Windows 上运行 ipconfig 可查看本机局域网 IP'
+    Write-Host '-------------------------------------------------------------------------'
+
     while (-not $targetIp) {
-        $prompt = '请输入服务器对外 IP (例如 192.168.1.18)'
-        if ($defaultIp) { $prompt += " [回车沿用 $defaultIp]" }
-        $prompt += ' / Enter the advertised server IP'
-        $entered = "$(Read-Host $prompt)".Trim()
-        if ($entered -eq '' -and $defaultIp) { $entered = $defaultIp }
+        $entered = "$(Read-Host '请输入服务器局域网 IP / Enter the LAN IP')".Trim()
+        if (-not $entered) { continue }
         if (-not (Test-IPv4 $entered)) {
             Write-Note '不是合法的 IPv4 地址，请重新输入 / not a valid IPv4 address, please retry'
             continue

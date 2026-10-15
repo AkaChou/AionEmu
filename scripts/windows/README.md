@@ -14,8 +14,9 @@
 在仓库根目录执行 `bash scripts/package.sh` 打包（产物落在 `aion/`，本目录脚本会一并复制到 `aion\windows\`），
 然后在 Windows 上双击 `aion\windows\deploy.bat`。脚本会自动完成：
 
-1. 提示交互输入**服务器对外 IP**（必须为局域网或公网 IPv4，本机 `localhost` / `127.0.0.1` 会被拒绝，
-   自动写回 `aion\config\network\network.properties`）；
+1. 提示设置**服务器局域网 IP**（必须为局域网或公网 IPv4，本机 `localhost` / `127.0.0.1` 会被拒绝，
+   自动写回 `aion\config\network\network.properties`）；首次部署要求输入，已配置过则展示当前 IP
+   并询问是否修改（直接回车沿用）；
 2. 下载并解压 **JRE 25**（清华 TUNA 镜像优先，失败回退 Adoptium 官方源）到 `aion\runtime\jre`；
 3. 下载并解压**便携 MySQL**（华为云镜像 8.0.29 优先，失败回退官方 CDN 8.4.x）到 `aion\runtime\mysql`；
 4. 初始化数据目录 `aion\runtime\mysql-data`、以 `--initialize-insecure` 起步，启动 MySQL（127.0.0.1:3306）；
@@ -80,8 +81,9 @@ Windows deployment and run scripts that depend **only on bundled components**: W
 Run `bash scripts/package.sh` at the repo root (the output lands in `aion/`, and this directory's scripts are
 copied to `aion\windows\`), then double-click `aion\windows\deploy.bat` on Windows. It will:
 
-1. interactively prompt for the **advertised server IP** (must be a LAN or public IPv4; `localhost` /
-   `127.0.0.1` is rejected, automatically written to `aion\config\network\network.properties`);
+1. prompt for the **LAN server IP** (must be a LAN or public IPv4; `localhost` / `127.0.0.1` is rejected,
+   automatically written to `aion\config\network\network.properties`); the first deployment asks for it,
+   later runs show the current IP and ask whether to change it (ENTER keeps it);
 2. download and extract **JRE 25** (TUNA mirror first, falling back to the official Adoptium source) into `aion\runtime\jre`;
 3. download and extract a **portable MySQL** (Huawei Cloud mirror 8.0.29 first, falling back to the official CDN 8.4.x) into `aion\runtime\mysql`;
 4. initialize the data dir `aion\runtime\mysql-data` with `--initialize-insecure` and start MySQL on 127.0.0.1:3306;

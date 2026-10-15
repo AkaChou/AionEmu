@@ -198,6 +198,10 @@ class StartSilentScriptTest {
         assertTrue(ps1.contains("network.properties"));
         assertTrue(ps1.contains("Configure-NetworkAddress"));
         assertTrue(ps1.contains("Configure-CountryCode"));
+        // 已配置过时展示当前 IP 并询问是否修改；随包示例地址视为未配置。
+        // Shows the current IP and asks whether to change it; the shipped sample address counts as unset.
+        assertTrue(ps1.contains("是否需要修改"));
+        assertTrue(ps1.contains("PlaceholderIp"));
         // 对外 IP 必须为局域网/公网 IPv4，本机地址被拒 / the advertised IP must be a LAN/public IPv4.
         assertTrue(ps1.contains("Test-IPv4"));
         assertTrue(ps1.contains("Test-LocalOnlyAddress"));
