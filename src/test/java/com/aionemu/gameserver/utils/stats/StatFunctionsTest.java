@@ -127,11 +127,22 @@ class StatFunctionsTest {
 	void appliesRetailMovementCombatStatTable() {
 		assertEquals(800, StatFunctions.applyMovementStatModifier(0, StatEnum.PHYSICAL_DEFENSE, 1000));
 		assertEquals(800, StatFunctions.applyMovementStatModifier(0, StatEnum.MAGICAL_DEFEND, 1000));
-		assertEquals(500, StatFunctions.applyMovementStatModifier(0, StatEnum.FIRE_RESISTANCE, 1000));
+		assertEquals(1000, StatFunctions.applyMovementStatModifier(0, StatEnum.FIRE_RESISTANCE, 1000));
 		assertEquals(1000, StatFunctions.applyMovementStatModifier(1, StatEnum.PHYSICAL_DEFENSE, 1000));
 		assertEquals(1300, StatFunctions.applyMovementStatModifier(1, StatEnum.EVASION, 1000));
 		assertEquals(1500, StatFunctions.applyMovementStatModifier(4, StatEnum.BLOCK, 1000));
 		assertEquals(1000, StatFunctions.applyMovementStatModifier(4, StatEnum.EVASION, 1000));
+	}
+
+	@Test
+	void appliesRetailMoveBonusDamageAndResistanceColumns() {
+		assertEquals(1000, StatFunctions.applyMovementDamageBonus(-1, 1000), 0.001f);
+		assertEquals(1100, StatFunctions.applyMovementDamageBonus(0, 1000), 0.001f);
+		assertEquals(800, StatFunctions.applyMovementDamageBonus(1, 1000), 0.001f);
+		assertEquals(800, StatFunctions.applyMovementDamageBonus(4, 1000), 0.001f);
+		assertEquals(-50, StatFunctions.getMovementResistanceOffset(0));
+		assertEquals(0, StatFunctions.getMovementResistanceOffset(1));
+		assertEquals(0, StatFunctions.getMovementResistanceOffset(-1));
 	}
 
 	@Test

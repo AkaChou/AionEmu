@@ -60,6 +60,23 @@ class AttackUtilTest {
 	}
 
 	@Test
+	void parsesRetailRandomDamageApplyTypesCaseInsensitively() {
+		assertEquals(1, AttackUtil.parseRandomDamageApplyType("BasicDMG"));
+		assertEquals(2, AttackUtil.parseRandomDamageApplyType("AddDmg"));
+		assertEquals(3, AttackUtil.parseRandomDamageApplyType("ALL"));
+		assertEquals(0, AttackUtil.parseRandomDamageApplyType("0"));
+		assertEquals(0, AttackUtil.parseRandomDamageApplyType(null));
+	}
+
+	@Test
+	void acceptsOnlyRetailRandomDamageTypes() {
+		assertEquals(3, AttackUtil.parseRandomDamageType("3"));
+		assertEquals(0, AttackUtil.parseRandomDamageType("0"));
+		assertEquals(0, AttackUtil.parseRandomDamageType("Type3"));
+		assertEquals(0, AttackUtil.parseRandomDamageType(null));
+	}
+
+	@Test
 	void usesRetailNpcPercentageSpellBaseAndOneTimeBoostOrder() {
 		assertEquals(1500, AttackUtil.calculateNpcPercentageSpellBase(1000, 50));
 	}
