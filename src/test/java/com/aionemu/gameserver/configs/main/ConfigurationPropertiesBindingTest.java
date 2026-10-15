@@ -286,7 +286,8 @@ class ConfigurationPropertiesBindingTest {
 	void bindsEnchantsConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
-			"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
+			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_AUTHORIZE_ACCESSORY_LEVEL",
+			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
 			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED",
 			"ENABLE_ARCHDAEVA_ITEM_BROKE");
 		try {
@@ -297,6 +298,9 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.enchant.item.kinah", "50000"),
 				Map.entry("gameserver.enchant.item.broke", "false"),
 				Map.entry("gameserver.enchant.equipment.max.level", "50"),
+				Map.entry("gameserver.enchant.authorize.accessory.max.level", "42"),
+				Map.entry("gameserver.enchant.authorize.plume.max.level", "48"),
+				Map.entry("gameserver.enchant.authorize.bracelet.max.level", "52"),
 				Map.entry("gameserver.enchant.plume", "80.0"),
 				Map.entry("gameserver.enchant.bracelet", "70.0"),
 				Map.entry("gameserver.enchant.accessory", "60.0"),
@@ -313,6 +317,9 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(50000, EnchantsConfig.ENCHANT_ITEM_KINAH);
 			assertFalse(EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE);
 			assertEquals(50, EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL);
+			assertEquals(42, EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL);
+			assertEquals(48, EnchantsConfig.MAX_AUTHORIZE_PLUME_LEVEL);
+			assertEquals(52, EnchantsConfig.MAX_AUTHORIZE_BRACELET_LEVEL);
 			assertEquals(80.0f, EnchantsConfig.ENCHANT_PLUME);
 			assertEquals(70.0f, EnchantsConfig.ENCHANT_BRACELET);
 			assertEquals(60.0f, EnchantsConfig.ENCHANT_ACCESSORY);

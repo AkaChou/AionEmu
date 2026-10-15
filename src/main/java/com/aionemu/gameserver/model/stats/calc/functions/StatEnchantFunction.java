@@ -109,8 +109,10 @@ public class StatEnchantFunction extends StatAddFunction {
 	}
 
 	private int getAccessoryModifiers(int autorizeLvl) {
+		// 未挂觉醒表的饰品兜底序列，7 级封顶 / fallback series for accessories without a tempering table, capped at level 7
+		int lvl = Math.min(autorizeLvl, 7);
 		return switch (this.stat) {
-			case PVP_ATTACK_RATIO -> switch (autorizeLvl) {
+			case PVP_ATTACK_RATIO -> switch (lvl) {
 				case 1 -> 2;
 				case 2 -> 7;
 				case 3 -> 12;
@@ -120,7 +122,7 @@ public class StatEnchantFunction extends StatAddFunction {
 				case 7 -> 75;
 				default -> 0;
 			};
-			case PVP_DEFEND_RATIO -> switch (autorizeLvl) {
+			case PVP_DEFEND_RATIO -> switch (lvl) {
 				case 1 -> 3;
 				case 2 -> 9;
 				case 3 -> 15;
@@ -135,8 +137,10 @@ public class StatEnchantFunction extends StatAddFunction {
 	}
 
 	private int getBraceleteModifiers(int autorizeLvl) {
+		// 真端手镯表（10112）无 limitless 递增，10 级封顶 / retail bracelet tables carry no limitless increments and end at level 10
+		int lvl = Math.min(autorizeLvl, 10);
 		return switch (this.stat) {
-			case PVP_ATTACK_RATIO -> switch (autorizeLvl) {
+			case PVP_ATTACK_RATIO -> switch (lvl) {
 				case 1, 2, 3, 4, 5 -> 0;
 				case 6, 7 -> 5;
 				case 8 -> 10;
@@ -144,7 +148,7 @@ public class StatEnchantFunction extends StatAddFunction {
 				case 10 -> 20;
 				default -> 0;
 			};
-			case PVP_DEFEND_RATIO -> switch (autorizeLvl) {
+			case PVP_DEFEND_RATIO -> switch (lvl) {
 				case 1 -> 3;
 				case 2 -> 7;
 				case 3 -> 11;

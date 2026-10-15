@@ -791,7 +791,7 @@ public class ItemService {
 			enchant = 0;
 		}
 		if (item.getItemTemplate().getMaxAuthorize() != 0)
-			item.setAuthorize(enchant);
+			item.setAuthorize(EnchantService.capAuthorizeLevel(item, enchant));
 		else if (item.getItemTemplate().getMaxEnchantLevel() != 0)
 			item.setEnchantLevel(EnchantService.capEquipmentEnchantLevel(enchant));
 		if (item.isEquipped()) {
