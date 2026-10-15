@@ -4,6 +4,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import java.util.Map.Entry;
 
 
+import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -111,7 +112,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 		writeC(0x00);
 		writeD(0x00);
 		writeD(creatorId);
-		if (con.getActivePlayer().isGM()) {
+		if (AdminConfig.SHOW_NPC_ID && con.getActivePlayer().isGM()) {
 			Player gm = con.getActivePlayer();
 			if ((gm != null) && (masterName.isEmpty())) {
 				masterName = "ID: " + npcId;

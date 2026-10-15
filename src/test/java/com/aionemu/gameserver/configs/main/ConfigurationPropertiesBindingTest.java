@@ -246,20 +246,21 @@ class ConfigurationPropertiesBindingTest {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(AdminConfig.class,
 			"GM_SPECIAL_SKILLS", "GM_LEVEL", "GM_PANEL", "GM_FLIGHT_FREE",
 			"DOORS_OPEN", "ADMIN_AUTO_RES", "INVISIBLE_GM_CONNECTION",
-			"ADMIN_TAG_ENABLE", "ADMIN_TAG_1", "ANNOUNCE_LEVEL_LIST");
+			"ADMIN_TAG_ENABLE", "ADMIN_TAG_1", "ANNOUNCE_LEVEL_LIST", "SHOW_NPC_ID");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
-			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
-				"gameserver.administration.gmskills", "4",
-				"gameserver.administration.gmlevel", "2",
-				"gameserver.administration.gmpanel", "1",
-				"gameserver.administration.flight.freefly", "5",
-				"gameserver.administration.doors.opening", "2",
-				"gameserver.administration.auto.res", "1",
-				"gameserver.administration.invis.gm.connection", "true",
-				"gameserver.admin.tag.enable", "false",
-				"gameserver.admin.tag.1", "<Helper> %s",
-				"gameserver.admin.announce.levels", "3,4,5"
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.administration.gmskills", "4"),
+				Map.entry("gameserver.administration.gmlevel", "2"),
+				Map.entry("gameserver.administration.gmpanel", "1"),
+				Map.entry("gameserver.administration.flight.freefly", "5"),
+				Map.entry("gameserver.administration.doors.opening", "2"),
+				Map.entry("gameserver.administration.auto.res", "1"),
+				Map.entry("gameserver.administration.invis.gm.connection", "true"),
+				Map.entry("gameserver.admin.tag.enable", "false"),
+				Map.entry("gameserver.admin.tag.1", "<Helper> %s"),
+				Map.entry("gameserver.admin.announce.levels", "3,4,5"),
+				Map.entry("gameserver.administration.view.npcid", "false")
 			)));
 
 			AdminConfig config = new AdminConfig();
@@ -275,6 +276,7 @@ class ConfigurationPropertiesBindingTest {
 			assertFalse(AdminConfig.ADMIN_TAG_ENABLE);
 			assertEquals("<Helper> %s", AdminConfig.ADMIN_TAG_1);
 			assertEquals("3,4,5", AdminConfig.ANNOUNCE_LEVEL_LIST);
+			assertFalse(AdminConfig.SHOW_NPC_ID);
 		} finally {
 			snapshot.restore();
 		}
