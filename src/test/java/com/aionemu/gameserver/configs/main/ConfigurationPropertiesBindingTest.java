@@ -288,7 +288,7 @@ class ConfigurationPropertiesBindingTest {
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
 			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_AUTHORIZE_ACCESSORY_LEVEL",
 			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
-			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED",
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
 			"ENABLE_ARCHDAEVA_ITEM_BROKE");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
@@ -306,7 +306,8 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.enchant.accessory", "60.0"),
 				Map.entry("gameserver.enchant.stigma", "55.0"),
 				Map.entry("gameserver.manastone.clean", "true"),
-				Map.entry("gameserver.enchant.cast.speed", "2500")
+				Map.entry("gameserver.enchant.cast.speed", "2500"),
+				Map.entry("gameserver.enchant.authorize.speed", "1200")
 			)));
 
 			EnchantsConfig config = new EnchantsConfig();
@@ -326,6 +327,7 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(55.0f, EnchantsConfig.ENCHANT_STIGMA);
 			assertTrue(EnchantsConfig.CLEAN_STONE);
 			assertEquals(2500, EnchantsConfig.ENCHANT_SPEED);
+			assertEquals(1200, EnchantsConfig.AUTHORIZE_SPEED);
 		} finally {
 			snapshot.restore();
 		}

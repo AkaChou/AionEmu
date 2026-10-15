@@ -93,6 +93,12 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.cast.speed", defaultValue = "4000")
 	public static int ENCHANT_SPEED;
 	/**
+	 * 觉醒（淬炼）施法速度（毫秒），觉醒加速生效时取一半。
+	 * Authorize (tempering) cast speed in milliseconds, halved while authorize boost is active.
+	 */
+	@Property(key = "gameserver.enchant.authorize.speed", defaultValue = "3000")
+	public static int AUTHORIZE_SPEED;
+	/**
 	 * 是否启用大天使物品强化失败损毁。
 	 * Whether Arch Daeva item break on enchant failure is enabled.
 	 */
@@ -228,6 +234,14 @@ public class EnchantsConfig {
 			private final AccessoryProperties accessory = new AccessoryProperties();
 			private final PlumeProperties plume = new PlumeProperties();
 			private final BraceletProperties bracelet = new BraceletProperties();
+
+			public int getSpeed() {
+				return AUTHORIZE_SPEED;
+			}
+
+			public void setSpeed(int speed) {
+				AUTHORIZE_SPEED = speed;
+			}
 
 			@Getter
 			public static class AccessoryProperties {

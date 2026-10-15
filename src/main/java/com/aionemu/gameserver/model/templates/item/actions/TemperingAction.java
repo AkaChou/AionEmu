@@ -60,11 +60,10 @@ public class TemperingAction extends AbstractItemAction {
 	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
-		if (player.isAuthorizeBoost()) {
-			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1500, 0, 0));
-		} else {
-			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
-		}
+		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
+		// 觉醒加速生效时施法延迟减半。 / Cast delay is halved while authorize boost is active.
+		final int castSpeed = player.isAuthorizeBoost() ? EnchantsConfig.AUTHORIZE_SPEED / 2 : EnchantsConfig.AUTHORIZE_SPEED;
+		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), castSpeed, 0, 0));
 
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
@@ -83,7 +82,6 @@ public class TemperingAction extends AbstractItemAction {
 		};
 
 		player.getObserveController().attach(observer);
-		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
 
 		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
@@ -157,7 +155,7 @@ public class TemperingAction extends AbstractItemAction {
 					}
 				}
 			}
-		}, player.isAuthorizeBoost() ? 1500 : 3000);
+		}, castSpeed);
 	}
 
 	/**
