@@ -281,6 +281,11 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
 		}
+		// 已删除或已死亡的 NPC 不构成权威攻击事实：诱导到点删除后在途攻击会空寻址 after-commit 监视动作。
+		// A deleted or dead NPC carries no authoritative attack fact: in-flight attacks after lure deletion would address no target in the after-commit watch action.
+		if (!npc.isSpawned() || npc.getLifeStats() == null || npc.getLifeStats().isAlreadyDead()) {
+			return true;
+		}
 		try {
 			QuestRuntimeDispatcher typed = productionDispatcher;
 			Player player = env.getPlayer();
