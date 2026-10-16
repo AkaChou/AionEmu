@@ -33,6 +33,7 @@ import com.aionemu.gameserver.model.templates.item.actions.ItemActions;
 import com.aionemu.gameserver.model.templates.minion.MinionEvolved;
 import com.aionemu.gameserver.model.templates.minion.MinionSkill;
 import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_FAMILIAR;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
@@ -163,7 +164,8 @@ public class MinionService {
 				}
 				player.removeItemCoolDown(item.getItemTemplate().getUseLimits().getDelayId());
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(item.getItemTemplate().getNameId())));
-				broadcastContractUseEnd(player, itemObjId, item.getItemId());
+				// 真端玩家中断使用不发任何收尾帧——客户端移动即自行打断动作。
+				// Retail sends no finish frame on player abort — motion breaks on movement client-side.
 				player.getObserveController().removeObserver(this);
 			}
 		};
@@ -173,7 +175,8 @@ public class MinionService {
 			player.getObserveController().removeObserver(itemUseObserver);
 			player.getController().cancelTask(TaskId.ITEM_USE);
 			if (rejectIfMinionLimitReached(player)) {
-				broadcastContractUseEnd(player, itemObjId, item.getItemId());
+				// 真端列表满：系统消息（rejectIfMinionLimitReached 内）→ type=4 补偿 → end=2。
+				broadcastContractFailure(player, itemObjId, item.getItemId());
 				return;
 			}
 			int minionId = switch (item.getItemTemplate().getTemplateId()) {
@@ -185,12 +188,15 @@ public class MinionService {
 				default -> 0;
 			};
 			if (minionId == 0) {
+				// 真端 GetFamiliarFromScroll 失败只有 end=2，无 type=4。
+				PacketSendUtility.broadcastPacket(player,
+					new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
 				return;
 			}
 
 			MinionTemplate minionTemplate = DataManager.MINION_DATA.getMinionTemplate(minionId);
 			if (minionTemplate == null || !player.getInventory().decreaseByObjectId(itemObjId, 1)) {
-				broadcastContractUseEnd(player, itemObjId, item.getItemId());
+				broadcastContractFailure(player, itemObjId, item.getItemId());
 				return;
 			}
 			String grade = minionTemplate.getGrade();
@@ -202,13 +208,21 @@ public class MinionService {
 
 			if (addNewMinion == null) {
 				ItemService.addItem(player, item.getItemId(), 1);
-				broadcastContractUseEnd(player, itemObjId, item.getItemId());
+				broadcastContractFailure(player, itemObjId, item.getItemId());
 				return;
 			}
+			// 实测定案（第五轮回归对照）：0x16A 列表新增 + 0x2EA type=0 记录 + 携带真实 itemId
+			// 的 end=1 三者齐备，契约窗口形象才显示——end 帧的 itemId 是客户端完成尾部
+			// （FUN_1063bbc0 查物品模板串）的键，置 0 则查询失败、UI 事件不入队。
+			// Verified-by-play: the 0x16A list add, the 0x2EA type=0 record, and end=1 carrying
+			// the real itemId are all required — end's itemId keys the client completion tail's
+			// template lookup (FUN_1063bbc0); 0 breaks the UI event that refreshes the window.
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(1, addNewMinion, 0));
-			broadcastContractUseEnd(player, itemObjId, item.getItemId());
+			PacketSendUtility.sendPacket(player, new SM_FAMILIAR(0, addNewMinion));
 			QuestEngine.getInstance().onItemPlayCompletedEvent(player, item.getItemId());
 			checkQuest(player, item);
+			PacketSendUtility.broadcastPacket(player,
+				new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 1), true);
 		}, 1500);
 	}
 
@@ -225,21 +239,24 @@ public class MinionService {
 	}
 
 	/**
-	 * 广播契约使用的收尾帧（end=3）。客户端「使用物品」动作族在通用分支里只认 0=开始、3=停止：
-	 * end=1/2 会被它当成「重播 0x416 使用动作」且不再重新计时（[player+0xC38] 不更新），
-	 * 动作永不到期，玩家不移动/不关窗就无法与 NPC 交互——所以成功与失败一律用停止码收尾。
-	 * Broadcasts the contract use end frame (end=3). On its generic branch the client's "using item"
-	 * motion family only understands 0=start and 3=stop: end=1/2 are read as "replay motion 0x416"
-	 * without re-arming the action timer ([player+0xC38]), so the motion never expires and NPC
-	 * interaction stays blocked until the player moves. Success and failure both end with the stop code.
+	 * 广播契约失败的真端收尾：0x2EA type=4 无数据补偿通知（列表满 200 或入库失败，
+	 * FamiliarMapMgr::ContractFamiliar 失败分支）在前，S_USE_ITEM end=2（result=2）在后；
+	 * end 帧携带真实 itemId（真端 World::BroadcastUseItem 组包取 item+0x100 模板 ID）。
+	 * 成功路径只发 end=1，不走本方法。
+	 * Broadcasts the retail failure finish: the bare 0x2EA type=4 compensation notice (list
+	 * full / DB add failed, FamiliarMapMgr::ContractFamiliar's failure branch) followed by
+	 * S_USE_ITEM end=2 (result=2); the end frame carries the real itemId (retail
+	 * World::BroadcastUseItem reads item+0x100, the template id). The success path sends only
+	 * end=1 and never reaches this method.
 	 *
 	 * @param player    玩家 / player
 	 * @param itemObjId 契约书物品对象 ID / contract scroll item object id
 	 * @param itemId    契约书模板 ID / contract scroll template id
 	 */
-	private static void broadcastContractUseEnd(Player player, int itemObjId, int itemId) {
+	private static void broadcastContractFailure(Player player, int itemObjId, int itemId) {
+		PacketSendUtility.sendPacket(player, new SM_FAMILIAR(4));
 		PacketSendUtility.broadcastPacket(player,
-			new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, itemId, 0, 3), true);
+			new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, itemId, 0, 2), true);
 	}
 
 	static boolean isSupportedMinionContract(int itemId) {

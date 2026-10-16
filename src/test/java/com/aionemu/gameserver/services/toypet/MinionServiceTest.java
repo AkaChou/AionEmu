@@ -171,17 +171,63 @@ class MinionServiceTest {
 	}
 
 	@Test
-	void endsTheContractUseWithTheClientStopFrameOnly() throws Exception {
+	void contractChainMatchesTheRetailPacketSequence() throws Exception {
 		String service = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
-		int failedCreation = service.indexOf("if (addNewMinion == null)");
-		int notification = service.indexOf("new SM_MINIONS(1, addNewMinion, 0)", failedCreation);
-		int endFrame = service.indexOf("broadcastContractUseEnd(player, itemObjId, item.getItemId())", notification);
+		int addMinion = service.indexOf("public void addMinion(final Player player, final int itemObjId)");
+		int methodEnd = service.indexOf("private static int rollMinionExcludingGrades", addMinion);
+		int decrease = service.indexOf("decreaseByObjectId(itemObjId, 1)", addMinion);
+		// 实测定案：0x16A 列表新增 + 0x2EA type=0 记录 + 携带真实 itemId 的 end=1，三者齐备形象才显示
+		// ——end 帧的 itemId 是客户端完成尾部查模板串的键，置 0 则 UI 事件不入队、形象不渲染。
+		int listAdd = service.indexOf("new SM_MINIONS(1, addNewMinion, 0)", decrease);
+		int familiarRecord = service.indexOf("new SM_FAMILIAR(0, addNewMinion)", listAdd);
+		int successFrame = service.indexOf("item.getItemId(), 0, 1)", familiarRecord);
+		int lambdaEnd = service.indexOf("}, 1500);", successFrame);
 
-		assertTrue(failedCreation >= 0);
-		assertTrue(notification > failedCreation);
-		assertTrue(endFrame > notification);
-		assertFalse(service.contains("item.getItemId(), 0, 1)"));
-		assertFalse(service.contains("item.getItemId(), 0, 2)"));
+		assertTrue(addMinion >= 0);
+		assertTrue(methodEnd > addMinion);
+		assertTrue(decrease > addMinion);
+		assertTrue(listAdd > decrease);
+		assertTrue(familiarRecord > listAdd);
+		assertTrue(successFrame > familiarRecord);
+		assertTrue(lambdaEnd > successFrame);
+		assertFalse(service.substring(successFrame, lambdaEnd).contains("SM_ITEM_USAGE_ANIMATION"));
+
+		// 全文件不存在任何 end=3 停止帧。
+		assertFalse(service.contains(", 0, 3)"));
+		assertFalse(service.contains("broadcastContractUseEnd"));
+
+		// 失败收尾对齐真端：0x2EA type=4 补偿通知在前、end=2（真实 itemId）在后。
+		int failure = service.indexOf("private static void broadcastContractFailure(");
+		assertTrue(failure > 0);
+		assertTrue(service.indexOf("new SM_FAMILIAR(4)", failure) > failure);
+		assertTrue(service.indexOf("itemObjId, itemId, 0, 2)", failure) > failure);
+	}
+
+	@Test
+	void familiarRecordMatchesTheRetailPacketWriterLayout() throws Exception {
+		// 真端 FUN_140a50d10 + 构造器 FUN_140a37530 交叉定案的 payload 序：type, 0, IdFactory id,
+		// DBId, masterId, minionId, name, birthday, 0(+0x74 无写点), 0(+0x78), 6×doping, lock。
+		// 等级与成长值不在包内（客户端按 minionId 查本地模板）。
+		String packet = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_FAMILIAR.java"));
+		List<String> order = List.of(
+				"writeH(type)",
+				"writeQ(0)",
+				"writeD(minionCommonData.getObjectId())",
+				"writeQ(minionCommonData.getObjectId()",
+				"writeD(minionCommonData.getMasterObjectId())",
+				"writeD(minionCommonData.getMinionId())",
+				"writeS(minionCommonData.getName())",
+				"writeQ(minionCommonData.getBirthday()",
+				"writeD(0)",
+				"writeC(0)",
+				"writeD(minionCommonData.getDopingBag() == null ? 0 : minionCommonData.getDopingBag().getItem(slot))",
+				"writeC(minionCommonData.isLock() ? 1 : 0)");
+		int prev = -1;
+		for (String fragment : order) {
+			int at = packet.indexOf(fragment, prev + 1);
+			assertTrue(at > prev, fragment);
+			prev = at;
+		}
 	}
 
 	private static final class QuestContractTemplate extends ItemTemplate {
