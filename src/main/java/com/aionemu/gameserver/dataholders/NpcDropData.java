@@ -71,7 +71,7 @@ public class NpcDropData {
 		data.npcDropContext = createNpcDropContext();
 		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
 		List<File> partFiles = listXmlFiles(npcDropsDirectory.toPath()).stream()
-			.filter(file -> file.getName().startsWith("npc_drops_part_") && !file.getName().equals("npc_drops_part_old.xml"))
+			.filter(file -> file.getName().startsWith("npc_drops_part_"))
 			.toList();
 		// 分片解析互不依赖，提交静态数据专用线程池并行执行；mergeDrops/rebuildDropIndex
 		// 依赖全部分片结果，保持 join 后在调用线程串行。
