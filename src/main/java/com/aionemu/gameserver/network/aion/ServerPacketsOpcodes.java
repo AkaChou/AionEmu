@@ -61,6 +61,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_AUTO_GROUP.class, 0x7a, idSet); // 5.8
 		addPacketOpcode(SM_INSTANCE_INFO.class, 0x8D, idSet); // 5.8
 		addPacketOpcode(SM_MINIONS.class, 0x16A, idSet); // 5.8
+		addPacketOpcode(SM_FAMILIAR.class, 0x2EA, idSet); // 5.8 真端 Familiar 通知（契约完成 type=4） / retail Familiar notification (contract done, type=4)
 		addPacketOpcode(SM_DYNAMIC_LIMIT_AREA_INFO.class, 0x16B, idSet); // 5.8
 		addPacketOpcode(SM_DYNAMIC_LIMIT_AREA_INFO_LIST.class, 0x16C, idSet); // 5.8
 		addPacketOpcode(SM_ABYSS_RANK.class, 0xef, idSet); // 5.8

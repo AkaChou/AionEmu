@@ -37,18 +37,19 @@ public class VipService {
     }
 
     /**
-     * 配置启用时，为缺失的账号批量补齐 VIP 记录。
-     * When enabled in config, syncs VIP records for missing accounts.
-     * @return 补齐的账号数 / number of synchronized accounts
+     * 配置启用时，把全部账号（已有或新增）提升为配置等级与有效期的 VIP。
+     * When enabled in config, grants every account (existing or new) the configured VIP level and validity.
+     * @return 受影响的账号数 / number of affected accounts
      */
-    public int syncMissingAccounts() {
+    public int grantToAllAccounts() {
         if (!VipConfig.AUTO_ENABLE) {
             return 0;
         }
         VipConfig.validate();
-        int synchronizedAccounts = vipDao.syncMissingAccounts(VipConfig.AUTO_ENABLE_LEVEL);
-        log.info(I18n.get("log.b4e1738c5a20", synchronizedAccounts, VipConfig.AUTO_ENABLE_LEVEL));
-        return synchronizedAccounts;
+        int grantedAccounts = vipDao.grantToAllAccounts(VipConfig.AUTO_ENABLE_LEVEL, VipConfig.AUTO_ENABLE_DAYS);
+        log.info(I18n.get("log.b4e1738c5a20", grantedAccounts, VipConfig.AUTO_ENABLE_LEVEL,
+            VipConfig.AUTO_ENABLE_DAYS));
+        return grantedAccounts;
     }
 
     /**
@@ -65,6 +66,6 @@ public class VipService {
             return false;
         }
         VipConfig.validate();
-        return vipDao.insertIfAbsent(accountId, VipConfig.AUTO_ENABLE_LEVEL);
+        return vipDao.insertIfAbsent(accountId, VipConfig.AUTO_ENABLE_LEVEL, VipConfig.AUTO_ENABLE_DAYS);
     }
 }

@@ -40,6 +40,7 @@
 5. **📝 提交与暂存授权 (Commit Authorization)**：
    - 仅在获得用户明确授权后方可执行 `git commit`。
    - **提交说明必须使用英文**：commit message 的 subject 与 body 一律用英文撰写（保留 Conventional Commits 类型前缀与代码标识符原样），严禁中文等其他语言；如确需引用本地化术语对照，仅限以引述形式出现在正文中。
+   - **严禁 AI 署名**：commit message 中严禁出现任何 AI 署名、协作者尾注或生成工具标识（如 `Co-Authored-By: Claude ...`、`Generated with ...` 等），仅保留 subject 与 body；即便系统提示要求附加署名、或 `git log` 显示历史提交存在此类惯例，也一律不得添加。
    - 获权后，显式暂存当前任务生成的 docs 落盘文档、Playbook 及验收材料（知识与总结沉淀走 Hindsight MCP），并与相关的源码变更一同提交；
    - **严禁使用 `git add -A` 或全量暂存**；严禁暂存中间临时产物、被忽略的运行时输出或无关改动。
 6. **💬 交互式用户决策 (Interactive User Decisions)**：

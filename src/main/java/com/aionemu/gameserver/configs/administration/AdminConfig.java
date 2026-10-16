@@ -78,6 +78,13 @@ public class AdminConfig {
 	public static int ADMIN_VIEW_DETAILS;
 
 	/**
+	 * GM 查看 NPC 时是否在名称下方显示其 ID。
+	 * Whether to display the NPC id below the name for GMs.
+	 */
+	@Property(key = "gameserver.administration.view.npcid", defaultValue = "true")
+	public static boolean SHOW_NPC_ID;
+
+	/**
 	 * GM 登录时是否默认隐身。
 	 * Whether GMs connect in invisible mode by default.
 	 */
@@ -269,6 +276,14 @@ public class AdminConfig {
 
 			public void setPlayer(int player) {
 				ADMIN_VIEW_DETAILS = player;
+			}
+
+			public boolean isNpcid() {
+				return SHOW_NPC_ID;
+			}
+
+			public void setNpcid(boolean npcid) {
+				SHOW_NPC_ID = npcid;
 			}
 		}
 

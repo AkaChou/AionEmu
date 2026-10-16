@@ -230,8 +230,9 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
     }
 
     /**
-     * 逆序停止已启动服务并销毁传输边界；幂等。
-     * Stops started services in reverse order and destroys the transport boundary; idempotent.
+     * 逆序停止已启动服务并销毁传输边界；幂等。进程级故障边界：单点失败（含 Error）不得中断整条收尾序列。
+     * Stops started services in reverse order and destroys the transport boundary; idempotent. Process-level failure
+     * boundary: one failing step (Errors included) must not abort the remaining teardown.
      */
     @Override
     public void destroy() {
@@ -259,19 +260,19 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
         log.info(I18n.get("boot.shutdown.stopping", name));
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.stop();
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             log.warn(I18n.get("boot.shutdown.stop_failed", name), e);
         }
     }
 
     /**
-     * 销毁传输边界并吞掉异常。
-     * Destroys the transport boundary and swallows exceptions.
+     * 销毁传输边界并记录任何失败。
+     * Destroys the transport boundary and logs any failure.
      */
     private void stopTransportBoundary() {
         try {
             transportBoundary.destroy();
-        } catch (Exception e) {
+        } catch (Exception | Error e) {
             log.warn(I18n.get("boot.shutdown.transport_stop_failed"), e);
         }
     }

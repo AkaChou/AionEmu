@@ -13,9 +13,12 @@ import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_SELECTED;
 import com.aionemu.gameserver.skillengine.change.Func;
+import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
+import com.aionemu.gameserver.skillengine.effect.SpellAttackInstantEffect;
 import com.aionemu.gameserver.skillengine.effect.modifier.ActionModifier;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.HitType;
+import com.aionemu.gameserver.skillengine.model.RetailSkillFields;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -26,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 攻击伤害与命中状态计算工具类。
@@ -291,8 +295,54 @@ public class AttackUtil {
 	 * @param damage           原始伤害 / raw damage
 	 * @return 波动后伤害 / randomized damage
 	 */
-	private static float randomizeDamage(int randomDamageType, float damage) {
+	public static float randomizeDamage(int randomDamageType, float damage) {
 		return damage * getRandomDamagePercent(randomDamageType, Rnd.get(20)) / 100f;
+	}
+
+	/**
+	 * 读取真端无损字段 effectN_&lt;field&gt;。
+	 * Reads the lossless retail field effectN_&lt;field&gt;.
+	 *
+	 * @param effect   运行时效果 / runtime effect
+	 * @param position 效果序号 / effect index
+	 * @param field    真端字段后缀 / retail field suffix
+	 * @return 原始值；缺失时为 null / raw value; null when absent
+	 */
+	private static String retailEffectField(Effect effect, int position, String field) {
+		RetailSkillFields fields = effect.getSkillTemplate().getRetailFields();
+		return fields == null ? null : fields.get("effect" + position + "_" + field);
+	}
+
+	/**
+	 * 解析真端 SkillRandomDamageApplyType（BasicDmg/AddDmg/All，大小写不敏感）。
+	 * Parses the retail SkillRandomDamageApplyType (BasicDmg/AddDmg/All, case-insensitive).
+	 *
+	 * @param value 真端原始值 / raw retail value
+	 * @return 位掩码，1 = 基础伤害、2 = 追加伤害；无法识别时为 0 / bit mask, 0 when unrecognized
+	 */
+	static int parseRandomDamageApplyType(String value) {
+		return switch (value == null ? "" : value.trim().toLowerCase(Locale.ROOT)) {
+			case "basicdmg" -> 1;
+			case "adddmg" -> 2;
+			case "all" -> 3;
+			default -> 0;
+		};
+	}
+
+	/**
+	 * 解析真端随机伤害类型；随机表只有 1-9 型，其余取值（0、空、TypeN 等）一律视为不施加。
+	 * Parses the retail random damage type; the table only has types 1-9, so every other value
+	 * (0, empty, TypeN, ...) counts as no randomization.
+	 *
+	 * @param value 真端原始值 / raw retail value
+	 * @return 1-9，或 0 表示不施加 / 1-9, or 0 for no randomization
+	 */
+	static int parseRandomDamageType(String value) {
+		if (value == null || value.length() != 1) {
+			return 0;
+		}
+		char type = value.charAt(0);
+		return type >= '1' && type <= '9' ? type - '0' : 0;
 	}
 
 	private static float applyDistanceAttenuation(Effect effect, float damage) {
@@ -821,7 +871,10 @@ public class AttackUtil {
 				? StatFunctions.rollNpcAttackDamage(npc.getObjectTemplate().getStatsTemplate().getMinDamage(),
 				npc.getObjectTemplate().getStatsTemplate().getMaxDamage())
 				: baseAttack;
-			damages = calculateNpcPercentageSpellBase(rolledAttack, skillDamage);
+			damages = calculateNpcPercentageSpellBase(rolledAttack, skillDamage,
+				// 真端 NPC 施法分支额外乘 (命中穿透乘子 + 1)。
+				// The retail NPC caster branch additionally multiplies by (penetration + 1).
+				StatFunctions.calculateMagicalAccuracyPenetration(effector, effected));
 		} else {
 			damages = skillDamage;
 		}
@@ -836,10 +889,23 @@ public class AttackUtil {
 				bonus = Math.round(baseAttack * bonus / 100f);
 			}
 		}
+		// 真端随机伤害表参数随效果类型而异：仅 SpellATK_Instant 使用 reserved3/reserved4，
+		// 其余法术效果字段布局不同，按 0 处理即不施加随机。
+		// The retail random-damage arguments differ per effect type: only SpellATK_Instant uses
+		// reserved3/reserved4; other spell effects resolve to 0 and take no randomization.
+		String retailRandomType = null;
+		String retailRandomApply = null;
+		EffectTemplate effectTemplate = effect.getCurrentEffectTemplate();
+		if (effectTemplate instanceof SpellAttackInstantEffect) {
+			retailRandomType = retailEffectField(effect, effectTemplate.getPosition(), "reserved3");
+			retailRandomApply = retailEffectField(effect, effectTemplate.getPosition(), "reserved4");
+		}
+		int randomDamageType = parseRandomDamageType(retailRandomType);
+		int randomDamageApplyType = parseRandomDamageApplyType(retailRandomApply);
 		int limitAttributeBaseDamage = StatFunctions.calculateMagicalSkillDamage(effect.getEffector(), effect.getEffected(), damages,
 			bonus, element, useMagicBoost, useKnowledge, noReduce, true,
 			effect.getSkillTemplate().getPvpDamage(), !(func.equals(Func.PERCENT) && effector instanceof Npc),
-			damageMultiplier, oneTimeDamageBonus);
+			damageMultiplier, oneTimeDamageBonus, randomDamageType, randomDamageApplyType);
 		int damage = limitAttributeBaseDamage;
 
 		AttackStatus status = calculateMagicalStatus(effector, effected, criticalProb, true, effect.getSkillTemplate().isMcritApplied());
@@ -863,6 +929,9 @@ public class AttackUtil {
 			effect.getSkillTemplate().getPvpDamage(), false, element, HitType.MAHIT);
 		damage = Math.round(StatFunctions.applyLimitAttributeBonus(effector, effected, damage,
 			limitAttributeBaseDamage));
+		// 真端最终伤害下限为 1（Creature_CalcMagicalSkillAttackDamage 尾段）。
+		// Retail clamps the final damage to at least 1 (tail of Creature_CalcMagicalSkillAttackDamage).
+		damage = Math.max(1, damage);
 		damage = StatFunctions.applyDamageMultiplier(damage);
 
 		if (effected instanceof Npc) {
@@ -873,7 +942,11 @@ public class AttackUtil {
 	}
 
 	static int calculateNpcPercentageSpellBase(int rolledAttack, int percent) {
-		return Math.round(rolledAttack * (1 + percent / 100f));
+		return calculateNpcPercentageSpellBase(rolledAttack, percent, 0f);
+	}
+
+	static int calculateNpcPercentageSpellBase(int rolledAttack, int percent, float accuracyPenetration) {
+		return Math.round(rolledAttack * (1 + percent / 100f) * (1 + accuracyPenetration));
 	}
 
 	/**

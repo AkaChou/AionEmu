@@ -34,7 +34,7 @@ try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
 
 # 脚本版本标记：便于确认 .bat 实际跑的是哪一版（排障用）。
 # Script version marker: identifies which revision the .bat actually ran (for troubleshooting).
-$ScriptVersion = '2026-10-14.9'
+$ScriptVersion = '2026-10-16.2'
 
 # ---- 路径 / Paths -----------------------------------------------------------
 $ScriptDir = $PSScriptRoot
@@ -417,6 +417,10 @@ function Write-DbProperties {
     Write-Ok 'database.properties 已写入 / written'
 }
 
+# 直接回车时的默认 IP：单机部署即用 127.0.0.1。
+# Default IP when ENTER is pressed: deploy for local play on 127.0.0.1.
+$DefaultIp = '127.0.0.1'
+
 # 判断字符串是否为合法 IPv4 地址（四段 0-255）。
 # Returns whether the string is a valid IPv4 address (four octets, 0-255).
 function Test-IPv4([string]$Value) {
@@ -427,48 +431,30 @@ function Test-IPv4([string]$Value) {
     return $true
 }
 
-# 判断是否为回环/未指定地址（本机不可作为对外公布地址）。
-# Returns whether the address is loopback/unspecified (unusable as the advertised address).
-function Test-LocalOnlyAddress([string]$Value) {
-    return $Value -eq '0.0.0.0' -or $Value -eq '127.0.0.1' -or $Value.StartsWith('127.') -or $Value -eq 'localhost'
-}
-
-# 交互输入服务器对外 IP（必须为局域网或公网 IPv4，不接受本机地址），并同步更新 network.properties。
-# Prompts for the server's advertised IP (a LAN or public IPv4; localhost is rejected) and updates network.properties.
+# 交互设置服务器连接 IP（IPv4；直接回车使用 127.0.0.1 本机部署），覆盖写入 network.properties。
+# Prompts for the server IP (IPv4; ENTER uses 127.0.0.1 for local play) and overwrites network.properties.
+# 每次部署只问一次：输入什么用什么，回车即用默认值。
+# Asked exactly once per deployment: the typed value is used as-is, ENTER keeps the default.
 function Configure-NetworkAddress {
     if (-not (Test-Path $NetworkProps)) { return }
 
-    # 读取当前配置中的 IP 作为参考展示
-    $currentIp = ''
-    foreach ($line in (Get-Content $NetworkProps)) {
-        if ($line -match '^\s*gameserver\.network\.address\s*=\s*(\S.*?)\s*$') {
-            $currentIp = $Matches[1]
-            break
-        }
-    }
-    # 仅当现有配置已是可用的对外 IP 时才允许回车沿用 / only a usable existing IP may be kept by pressing ENTER.
-    $defaultIp = if ((Test-IPv4 $currentIp) -and -not (Test-LocalOnlyAddress $currentIp)) { $currentIp } else { '' }
-
     Write-Host ''
     Write-Host '================ 服务器连接 IP 设置 / Server Connection IP ================' -ForegroundColor Cyan
-    Write-Host "当前配置 IP / Current IP: $(if ($currentIp) { $currentIp } else { '(未设置 / unset)' })"
-    Write-Host '必须填写本机可被客户端访问的局域网或公网 IP；不支持 localhost / 127.0.0.1。'
-    Write-Host 'Enter the LAN or public IP clients reach this server at; localhost / 127.0.0.1 is not supported.'
+    Write-Host "请输入服务器 IP，局域网部署例如 192.168.1.x；本机单机部署直接回车使用 $DefaultIp。"
+    Write-Host "Enter the server IP (LAN e.g. 192.168.1.x), or press ENTER for local play on $DefaultIp."
+    Write-Host '提示 / hint: 在 Windows 上运行 ipconfig 可查看本机局域网 IP'
     Write-Host '-------------------------------------------------------------------------'
 
     $targetIp = ''
     while (-not $targetIp) {
-        $prompt = '请输入服务器对外 IP (例如 192.168.1.18)'
-        if ($defaultIp) { $prompt += " [回车沿用 $defaultIp]" }
-        $prompt += ' / Enter the advertised server IP'
-        $entered = "$(Read-Host $prompt)".Trim()
-        if ($entered -eq '' -and $defaultIp) { $entered = $defaultIp }
+        $entered = "$(Read-Host "请输入服务器 IP（直接回车默认 $DefaultIp）/ Enter the server IP [default: $DefaultIp]")".Trim()
+        if (-not $entered) { $targetIp = $DefaultIp; break }
         if (-not (Test-IPv4 $entered)) {
             Write-Note '不是合法的 IPv4 地址，请重新输入 / not a valid IPv4 address, please retry'
             continue
         }
-        if (Test-LocalOnlyAddress $entered) {
-            Write-Note '本机地址不可用，请输入局域网或公网 IP / localhost is not allowed, enter a LAN or public IP'
+        if ($entered -eq '0.0.0.0') {
+            Write-Note '0.0.0.0 不可用，请输入具体 IP / 0.0.0.0 is not usable, enter a concrete IP'
             continue
         }
         $targetIp = $entered
@@ -752,12 +738,41 @@ switch ($Action) {
         Initialize-Runtime
         Write-Host ''
         Write-Host "便携 MySQL 运行中 (port $script:MysqlPort)" -ForegroundColor Green
-        Write-Host "按回车键 (ENTER) 停止便携 MySQL / press ENTER to stop portable MySQL" -ForegroundColor Cyan
+        Write-Host "按 Ctrl+C 或回车键 (ENTER) 停止便携 MySQL / press Ctrl+C or ENTER to stop portable MySQL" -ForegroundColor Cyan
+        $canReadKeys = $false
         try {
-            [void][Console]::ReadLine()
+            # 将 Ctrl+C 作为普通控制台输入读取，避免被操作系统信号直接强杀而跳过 finally / treat Ctrl+C as input so finally runs.
+            [Console]::TreatControlCAsInput = $true
+            while ([Console]::KeyAvailable) { [void][Console]::ReadKey($true) }
+            $canReadKeys = $true
+        } catch { }
+
+        try {
+            if ($canReadKeys) {
+                while ($true) {
+                    Start-Sleep -Milliseconds 200
+                    $mysqlPid = Get-RecordedPid $MysqlPidFile
+                    if ($mysqlPid -and -not (Test-Process $mysqlPid)) { break }
+                    $shouldStop = $false
+                    while ([Console]::KeyAvailable) {
+                        $key = [Console]::ReadKey($true)
+                        $isCtrlC = ($key.Key -eq [ConsoleKey]::C -and ($key.Modifiers -band [ConsoleModifiers]::Control)) -or ($key.KeyChar -eq [char]3)
+                        if ($isCtrlC -or $key.Key -eq [ConsoleKey]::Enter -or $key.Key -eq [ConsoleKey]::Escape -or $key.Key -eq [ConsoleKey]::Q) {
+                            $shouldStop = $true
+                            break
+                        }
+                    }
+                    if ($shouldStop) { break }
+                }
+            } else {
+                [void][Console]::ReadLine()
+            }
         } finally {
             Read-DbSettings
             Stop-Mysql
+            if ($canReadKeys) {
+                try { [Console]::TreatControlCAsInput = $false } catch { }
+            }
         }
     }
     'stop-mysql' {

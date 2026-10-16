@@ -576,7 +576,7 @@ public final class SimpleUseItemHandler {
 			QuestState state = player.getQuestStateList().getQuestState(questId);
 			QuestStatus status = state == null ? QuestStatus.NONE : state.getStatus();
 			boolean fresh = state == null || status == QuestStatus.NONE;
-			boolean repeatableComplete = status == QuestStatus.COMPLETE && repeatable(questId);
+			boolean repeatableComplete = status == QuestStatus.COMPLETE && repeatable(state, questId);
 			if (!fresh && !repeatableComplete) {
 				continue;
 			}
@@ -615,7 +615,7 @@ public final class SimpleUseItemHandler {
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
 		if (state == null || status == QuestStatus.NONE
-			|| (status == QuestStatus.COMPLETE && repeatable(questId))) {
+			|| (status == QuestStatus.COMPLETE && repeatable(state, questId))) {
 			return onAcceptDialog(player, questId, npcId, dialogId);
 		}
 
@@ -901,12 +901,11 @@ public final class SimpleUseItemHandler {
 	}
 
 	/**
-	 * 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count.
+	 * COMPLETE 态重复窗 = 次数未用尽且时间轴已到（与 {@code NativeQuestStartPort} 同一判定）。
+	 * The repeat window at COMPLETE, delegated to the shared NativeQuestStartPort adjudication.
 	 */
-	private boolean repeatable(int questId) {
-		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
-		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
-		return maxRepeat != null && maxRepeat > 1;
+	private boolean repeatable(QuestState state, int questId) {
+		return NativeQuestStartPort.repeatWindowOpen(state, questId);
 	}
 
 	/**

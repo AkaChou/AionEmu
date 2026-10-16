@@ -14,6 +14,7 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -47,17 +48,8 @@ public class TemperingAction extends AbstractItemAction {
 			return false;
 		}
 
-		if (targetItem.getItemTemplate().isAccessory() && targetItem.getAuthorize() >= 15) {
-			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
-			return false;
-		}
-		if (targetItem.getItemTemplate().isPlume() && targetItem.getAuthorize() >= 18) {
-			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
-			return false;
-		}
-		if (targetItem.getItemTemplate().isBracelet() && targetItem.getAuthorize() >= 10) {
+		int maxAuthorize = EnchantService.getMaxAuthorizeLevel(targetItem);
+		if (maxAuthorize > 0 && targetItem.getAuthorize() >= maxAuthorize) {
 			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
 			return false;
@@ -68,11 +60,10 @@ public class TemperingAction extends AbstractItemAction {
 	/** 执行 / act. */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
-		if (player.isAuthorizeBoost()) {
-			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 1500, 0, 0));
-		} else {
-			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 3000, 0, 0));
-		}
+		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
+		// 觉醒加速生效时施法延迟减半。 / Cast delay is halved while authorize boost is active.
+		final int castSpeed = player.isAuthorizeBoost() ? EnchantsConfig.AUTHORIZE_SPEED / 2 : EnchantsConfig.AUTHORIZE_SPEED;
+		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), castSpeed, 0, 0));
 
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
@@ -91,7 +82,6 @@ public class TemperingAction extends AbstractItemAction {
 		};
 
 		player.getObserveController().attach(observer);
-		final boolean isTemperingSuccess = isTemperingSuccess(player, targetItem);
 
 		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
 			/** 运行 / run. */
@@ -137,7 +127,7 @@ public class TemperingAction extends AbstractItemAction {
 						}
 
 					} else {
-						targetItem.setAuthorize(targetItem.getAuthorize() + 1);
+						targetItem.setAuthorize(EnchantService.capAuthorizeLevel(targetItem, targetItem.getAuthorize() + 1));
 
 						if (targetItem.getItemTemplate().isBracelet()) {
 							checkTempering(player, targetItem);
@@ -165,7 +155,7 @@ public class TemperingAction extends AbstractItemAction {
 					}
 				}
 			}
-		}, player.isAuthorizeBoost() ? 1500 : 3000);
+		}, castSpeed);
 	}
 
 	/**
@@ -195,12 +185,13 @@ public class TemperingAction extends AbstractItemAction {
 	 * @return 成功则为 true / true if successful
 	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
+		// 配置值即成功率百分比，100 为必定成功 / configured value is the percent itself, 100 always succeeds
 		if (item.getItemTemplate().isBracelet()) {
-			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_BRACELET;
+			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_BRACELET;
 		} else if (item.getItemTemplate().isPlume()) {
-			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_PLUME;
-		} else if (item.getItemTemplate().isAccessory() && !item.getItemTemplate().isPlume() || !item.getItemTemplate().isBracelet()) {
-			return Rnd.get(1, 100) < EnchantsConfig.ENCHANT_ACCESSORY;
+			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_PLUME;
+		} else if (item.getItemTemplate().isAccessory()) {
+			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_ACCESSORY;
 		} else {
 			return false;
 		}

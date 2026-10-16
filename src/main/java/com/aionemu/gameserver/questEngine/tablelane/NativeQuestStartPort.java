@@ -333,7 +333,7 @@ public final class NativeQuestStartPort {
 		return new StartResult(Outcome.STARTED, "eligibility");
 	}
 
-	/** 重复上限（原版 {@code finishedcount < max_repeat_count}）。 / Repeat budget. */
+	/** 重复上限（原版 {@code finishedcount < max_repeat_count}）与时间轴。 / Repeat budget and time axis. */
 	private StartResult repeatVerdict(QuestState state, NativeQuestXmlTable.QuestRow row) {
 		if (state == null || state.getStatus() != QuestStatus.COMPLETE) {
 			return new StartResult(Outcome.STARTED, "fresh state");
@@ -344,7 +344,55 @@ public final class NativeQuestStartPort {
 			return new StartResult(Outcome.REPEAT_LIMIT,
 					"completed " + completed + " / max_repeat_count " + maxRepeat);
 		}
+		if (!repeatTimeElapsed(state, row)) {
+			return new StartResult(Outcome.REPEAT_LIMIT, "next repeat time " + state.getNextRepeatTime());
+		}
 		return new StartResult(Outcome.STARTED, "repeatable " + completed + "/" + maxRepeat);
+	}
+
+	/**
+	 * COMPLETE 态重复窗：完成次数未达 {@code max_repeat_count}，且时间轴的 {@code nextRepeatTime} 已到。
+	 * 各族 handler 的接取窗与 {@link #repeatVerdict} 共用本判定（单一事实来源，避免第二套重复口径）。
+	 * <p>
+	 * The repeat window at COMPLETE: the completion count is under {@code max_repeat_count} and the
+	 * time axis has elapsed. Shared by the family accept windows and {@link #repeatVerdict}.
+	 * @param state 玩家该行的状态（可为 null）/ the player's row state, nullable
+	 * @param questId 任务 id / the quest id
+	 * @return 是否可再次接取 / whether the row re-opens
+	 */
+	public static boolean repeatWindowOpen(QuestState state, int questId) {
+		if (state == null) {
+			return false;
+		}
+		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
+		if (row == null) {
+			return false;
+		}
+		int maxRepeat = intOr(row, "max_repeat_count", 0);
+		return maxRepeat > 1 && state.getCompleteCount() < maxRepeat && repeatTimeElapsed(state, row);
+	}
+
+	/**
+	 * 时间轴判定：行声明了重复周期（{@code quest_repeat_cycle}）或冷却（{@code quest_cooltime}）时，
+	 * {@code nextRepeatTime} 未到即不开窗；未声明时间轴的行（含 2717 行仅靠次数的原版行）不受该项约束——
+	 * 否则位置/次数驱动的重复会被 {@code nextRepeatTime} 的陈旧值误锁。
+	 * <p>
+	 * The time axis: a row declaring a repeat cycle or a cooldown stays closed until
+	 * {@code nextRepeatTime}; rows without a time axis are never constrained by it, so count-driven
+	 * repeats are not locked out by a stale value.
+	 */
+	static boolean repeatTimeElapsed(QuestState state, NativeQuestXmlTable.QuestRow row) {
+		var nextRepeatTime = state.getNextRepeatTime();
+		if (nextRepeatTime == null || !repeatTimeGated(row)) {
+			return true;
+		}
+		return nextRepeatTime.getTime() <= System.currentTimeMillis();
+	}
+
+	/** 行声明时间轴（{@code quest_repeat_cycle} 或 {@code quest_cooltime}）。 / The row declares a time axis. */
+	private static boolean repeatTimeGated(NativeQuestXmlTable.QuestRow row) {
+		return intOr(row, "quest_cooltime", 0) > 0 || !row.numbered("quest_repeat_cycle").isEmpty()
+				|| !row.text("quest_repeat_cycle").isBlank();
 	}
 
 	/** {@code finished_quest_cond1..7}（值形如 {@code Q50010}）→ 必须已 COMPLETE。 */

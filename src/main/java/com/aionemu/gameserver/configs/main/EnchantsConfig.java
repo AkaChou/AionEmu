@@ -15,16 +15,16 @@ import org.springframework.stereotype.Component;
 public class EnchantsConfig {
 
 	/**
-	 * 魔石镶嵌成功率。
-	 * Manastone socket success rate.
+	 * 魔石镶嵌基础成功率（%），与其他加成累加后判定。
+	 * Manastone socketing base success rate (%), bonuses are added on top.
 	 */
-	@Property(key = "gameserver.socket.manastone", defaultValue = "50")
+	@Property(key = "gameserver.socket.manastone", defaultValue = "100")
 	public static float SOCKET_MANASTONE;
 	/**
-	 * 装备强化成功率。
-	 * Equipment enchant success rate.
+	 * 物品强化基础成功率（%）。
+	 * Item enchant base success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.item", defaultValue = "50")
+	@Property(key = "gameserver.enchant.item", defaultValue = "100")
 	public static float ENCHANT_ITEM;
 	/**
 	 * 装备强化消耗基纳（-1 为默认）。
@@ -33,34 +33,52 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.item.kinah", defaultValue = "-1")
 	public static int ENCHANT_ITEM_KINAH;
 	/**
-	 * 装备强化等级上限。
+	 * 装备最大强化等级。
 	 * Maximum equipment enchant level.
 	 */
-	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "30")
+	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "50")
 	public static int MAX_EQUIPMENT_ENCHANT_LEVEL;
 	/**
-	 * 羽饰强化成功率。
-	 * Plume enchant success rate.
+	 * 首饰（耳环/戒指/项链/头盔/腰带）最大觉醒等级。
+	 * Maximum accessory (earrings/rings/necklace/helmet/belt) authorize level.
 	 */
-	@Property(key = "gameserver.enchant.plume", defaultValue = "50")
+	@Property(key = "gameserver.enchant.authorize.accessory.max.level", defaultValue = "30")
+	public static int MAX_AUTHORIZE_ACCESSORY_LEVEL;
+	/**
+	 * 羽饰最大觉醒等级。
+	 * Maximum plume authorize level.
+	 */
+	@Property(key = "gameserver.enchant.authorize.plume.max.level", defaultValue = "30")
+	public static int MAX_AUTHORIZE_PLUME_LEVEL;
+	/**
+	 * 手镯最大觉醒等级。
+	 * Maximum bracelet authorize level.
+	 */
+	@Property(key = "gameserver.enchant.authorize.bracelet.max.level", defaultValue = "30")
+	public static int MAX_AUTHORIZE_BRACELET_LEVEL;
+	/**
+	 * 羽饰淬炼成功率（%）。
+	 * Plume tempering success rate (%).
+	 */
+	@Property(key = "gameserver.enchant.plume", defaultValue = "100")
 	public static float ENCHANT_PLUME;
 	/**
-	 * 手镯强化成功率。
-	 * Bracelet enchant success rate.
+	 * 手镯淬炼成功率（%）。
+	 * Bracelet tempering success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.bracelet", defaultValue = "50")
+	@Property(key = "gameserver.enchant.bracelet", defaultValue = "100")
 	public static float ENCHANT_BRACELET;
 	/**
-	 * 饰品强化成功率。
-	 * Accessory enchant success rate.
+	 * 饰品（耳环/戒指/项链/头盔/腰带）淬炼成功率（%）。
+	 * Accessory (earrings/rings/necklace/helmet/belt) tempering success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.accessory", defaultValue = "50")
+	@Property(key = "gameserver.enchant.accessory", defaultValue = "100")
 	public static float ENCHANT_ACCESSORY;
 	/**
-	 * 烙印强化成功率。
-	 * Stigma enchant success rate.
+	 * 烙印之石强化成功率（%）。
+	 * Stigma enchant success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.stigma", defaultValue = "50")
+	@Property(key = "gameserver.enchant.stigma", defaultValue = "100")
 	public static float ENCHANT_STIGMA;
 	/**
 	 * 是否在失败时清理魔石。
@@ -74,6 +92,12 @@ public class EnchantsConfig {
 	 */
 	@Property(key = "gameserver.enchant.cast.speed", defaultValue = "4000")
 	public static int ENCHANT_SPEED;
+	/**
+	 * 觉醒（淬炼）施法速度（毫秒），觉醒加速生效时取一半。
+	 * Authorize (tempering) cast speed in milliseconds, halved while authorize boost is active.
+	 */
+	@Property(key = "gameserver.enchant.authorize.speed", defaultValue = "3000")
+	public static int AUTHORIZE_SPEED;
 	/**
 	 * 是否启用大天使物品强化失败损毁。
 	 * Whether Arch Daeva item break on enchant failure is enabled.
@@ -109,6 +133,7 @@ public class EnchantsConfig {
 	public static class EnchantProperties {
 		private final ItemProperties item = new ItemProperties();
 		private final EquipmentProperties equipment = new EquipmentProperties();
+		private final AuthorizeProperties authorize = new AuthorizeProperties();
 		private final CastProperties cast = new CastProperties();
 
 		public void setItem(ItemProperties item) {
@@ -196,6 +221,70 @@ public class EnchantsConfig {
 
 				public void setLevel(int level) {
 					MAX_EQUIPMENT_ENCHANT_LEVEL = level;
+				}
+			}
+		}
+
+		/**
+		 * 觉醒等级上限（首饰 / 羽饰 / 手镯）。
+		 * Authorize level caps (accessory / plume / bracelet).
+		 */
+		@Getter
+		public static class AuthorizeProperties {
+			private final AccessoryProperties accessory = new AccessoryProperties();
+			private final PlumeProperties plume = new PlumeProperties();
+			private final BraceletProperties bracelet = new BraceletProperties();
+
+			public int getSpeed() {
+				return AUTHORIZE_SPEED;
+			}
+
+			public void setSpeed(int speed) {
+				AUTHORIZE_SPEED = speed;
+			}
+
+			@Getter
+			public static class AccessoryProperties {
+				private final MaxProperties max = new MaxProperties();
+
+				public static class MaxProperties {
+					public int getLevel() {
+						return MAX_AUTHORIZE_ACCESSORY_LEVEL;
+					}
+
+					public void setLevel(int level) {
+						MAX_AUTHORIZE_ACCESSORY_LEVEL = level;
+					}
+				}
+			}
+
+			@Getter
+			public static class PlumeProperties {
+				private final MaxProperties max = new MaxProperties();
+
+				public static class MaxProperties {
+					public int getLevel() {
+						return MAX_AUTHORIZE_PLUME_LEVEL;
+					}
+
+					public void setLevel(int level) {
+						MAX_AUTHORIZE_PLUME_LEVEL = level;
+					}
+				}
+			}
+
+			@Getter
+			public static class BraceletProperties {
+				private final MaxProperties max = new MaxProperties();
+
+				public static class MaxProperties {
+					public int getLevel() {
+						return MAX_AUTHORIZE_BRACELET_LEVEL;
+					}
+
+					public void setLevel(int level) {
+						MAX_AUTHORIZE_BRACELET_LEVEL = level;
+					}
 				}
 			}
 		}

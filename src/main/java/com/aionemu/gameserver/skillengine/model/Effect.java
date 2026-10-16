@@ -611,6 +611,14 @@ public class Effect implements StatOwner {
 	}
 
 	/**
+	 * 获取正在结算的效果模板；不在结算循环内时为 null。
+	 * Gets the effect template being resolved; null outside the resolution loop.
+	 */
+	public EffectTemplate getCurrentEffectTemplate() {
+		return currentEffectTemplate;
+	}
+
+	/**
 	 * 是否瞬时 MP 治疗。
 	 * Whether MP heal instant.
 	 */

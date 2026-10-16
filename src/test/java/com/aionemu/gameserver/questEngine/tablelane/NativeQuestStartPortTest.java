@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.sql.Timestamp;
+
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
@@ -27,8 +29,10 @@ class NativeQuestStartPortTest {
 
 	/** min 1 / pc_light / max_repeat 1 / 无 bm、无前置。 */
 	private static final int PLAIN = 1101;
-	/** min 10 / pc_light / max_repeat 100（可重复）。 */
+	/** min 10 / pc_light / max_repeat 100（可重复，无时间轴）。 */
 	private static final int REPEATABLE = 1963;
+	/** min 10 / pc_light / max_repeat 255 / {@code quest_repeat_cycle=all}（每日）。 */
+	private static final int DAILY = 9600;
 	/** min 11 / 前置 {@code finished_quest_cond1=Q1131}。 */
 	private static final int GATED = 1132;
 	private static final int GATE_QUEST = 1131;
@@ -118,6 +122,40 @@ class NativeQuestStartPortTest {
 
 		assertEquals(NativeQuestStartPort.Outcome.REPEAT_LIMIT, port().start(player, PLAIN).outcome(),
 				"max_repeat_count=1 的行完成后不得再开");
+	}
+
+	/**
+	 * 每日行（原版 {@code quest_repeat_cycle=all}，max_repeat 255）在冷却未到前不得再开窗；
+	 * 到点后恢复。次数/位置驱动的行（无 cycle/cooltime）不读 {@code nextRepeatTime}，
+	 * 免得陈旧值把重复锁死。
+	 * <p>
+	 * A daily row stays closed until its next repeat time; count-driven rows ignore the stale value.
+	 */
+	@Test
+	void dailyRowsStayClosedUntilTheNextRepeatTime() {
+		long hour = 3_600_000L;
+		Player player = player(20);
+		player.getQuestStateList().addQuest(DAILY,
+				new QuestState(DAILY, QuestStatus.COMPLETE, 0, 1,
+						new Timestamp(System.currentTimeMillis() + hour), 0, null));
+
+		QuestState daily = player.getQuestStateList().getQuestState(DAILY);
+		assertEquals(NativeQuestStartPort.Outcome.REPEAT_LIMIT, port().start(player, DAILY).outcome(),
+				"每日行冷却未到 ⇒ 拒绝重接");
+		assertFalse(NativeQuestStartPort.repeatWindowOpen(daily, DAILY),
+				"族接取窗与 start() 必须同判：冷却未到不应开窗");
+
+		daily.setNextRepeatTime(new Timestamp(System.currentTimeMillis() - hour));
+		assertTrue(NativeQuestStartPort.repeatWindowOpen(daily, DAILY), "到点后开窗");
+
+		// 无时间轴的行：即使带着陈旧 nextRepeatTime 也不受影响（2717 行仅靠次数重复）。
+		// A row without a time axis ignores a stale nextRepeatTime.
+		player.getQuestStateList().addQuest(REPEATABLE,
+				new QuestState(REPEATABLE, QuestStatus.COMPLETE, 0, 3,
+						new Timestamp(System.currentTimeMillis() + hour), 0, null));
+		assertTrue(NativeQuestStartPort.repeatWindowOpen(
+				player.getQuestStateList().getQuestState(REPEATABLE), REPEATABLE),
+				"无 cycle/cooltime 的行不受 nextRepeatTime 约束");
 	}
 
 	@Test

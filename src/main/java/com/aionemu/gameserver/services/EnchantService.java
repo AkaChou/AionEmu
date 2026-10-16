@@ -15,6 +15,7 @@ import com.aionemu.gameserver.model.items.ManaStone;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatEnchantFunction;
+import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.stats.listeners.ItemEquipmentListener;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
@@ -93,13 +94,17 @@ public class EnchantService {
 	};
 
 	/**
-	 * 获取装备最大强化等级（配置优先，默认 30）。
-	 * Returns max equipment enchant level (config first, default 30).
+	 * 获取装备最大强化等级（配置优先，默认 50，上限 200）。
+	 * Returns max equipment enchant level (config first, default 50, capped at 200).
 	 *
 	 * @return 最大强化等级 / max enchant level
 	 */
 	public static int getMaxEquipmentEnchantLevel() {
-		return EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL > 0 ? EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL : 30;
+		int configured = EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL;
+		if (configured <= 0) {
+			configured = 50;
+		}
+		return Math.min(configured, 200);
 	}
 
 	/**
@@ -111,6 +116,37 @@ public class EnchantService {
 	 */
 	public static int capEquipmentEnchantLevel(int enchantLevel) {
 		return Math.min(enchantLevel, getMaxEquipmentEnchantLevel());
+	}
+
+	/**
+	 * 获取物品的觉醒等级上限（羽饰、手镯各取专用配置，其余饰品取首饰配置）。
+	 * Returns the authorize cap for an item (plume and bracelet have their own keys, other accessories the accessory key).
+	 *
+	 * @param item 目标物品 / target item
+	 * @return 觉醒等级上限；该物品不适用觉醒时返回 0 / authorize cap, or 0 when the item is not authorizable
+	 */
+	public static int getMaxAuthorizeLevel(Item item) {
+		ItemTemplate template = item.getItemTemplate();
+		if (!template.isAccessory() || template.getMaxAuthorize() == 0) {
+			return 0;
+		}
+		int configured = template.isPlume() ? EnchantsConfig.MAX_AUTHORIZE_PLUME_LEVEL
+			: template.isBracelet() ? EnchantsConfig.MAX_AUTHORIZE_BRACELET_LEVEL
+			: EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL;
+		return Math.min(configured, 200);
+	}
+
+	/**
+	 * 将觉醒等级限制在配置上限内。
+	 * Caps an authorize level to the configured maximum.
+	 *
+	 * @param item           目标物品 / target item
+	 * @param authorizeLevel 原始觉醒等级 / raw authorize level
+	 * @return 限制后的等级 / capped level
+	 */
+	public static int capAuthorizeLevel(Item item, int authorizeLevel) {
+		int max = getMaxAuthorizeLevel(item);
+		return max > 0 ? Math.min(authorizeLevel, max) : authorizeLevel;
 	}
 
 	/**
@@ -302,12 +338,6 @@ public class EnchantService {
 		}
 		if (targetItem.isAmplified() && enchantStone.isAmplificationStone()) {
 			success += 180 - targetItem.getEnchantLevel() * 1.0f;
-		}
-		if (success >= 95) {
-			success = 95;
-		}
-		if (targetItem.isArchDaevaItem()) {
-			success = 85;
 		}
 		if (player.isGM()) {
 			success = 100;
@@ -782,10 +812,11 @@ public class EnchantService {
 				if (item.getItemTemplate().getTemperingTableId() > 0) {
 					ItemEnchantTemplate ie = DataManager.ITEM_ENCHANT_DATA.getEnchantTemplate(EnchantType.AUTHORIZE, item.getItemTemplate().getTemperingTableId());
 					if (item.getAuthorize() > 0) {
-						try {
-							modifiers.addAll(ie.getStats(item.getAuthorize()));
-						} catch (Exception localException2) {
-							log.error(I18n.get("log.ee17dabb4951", item.getItemId(), ie.getStats(item.getAuthorize())));
+						List<StatFunction> stats = ie == null ? null : ie.getStats(item.getAuthorize());
+						if (stats != null) {
+							modifiers.addAll(stats);
+						} else {
+							log.error(I18n.get("log.ee17dabb4951", item.getItemId(), item.getAuthorize()));
 						}
 					}
 				} else {

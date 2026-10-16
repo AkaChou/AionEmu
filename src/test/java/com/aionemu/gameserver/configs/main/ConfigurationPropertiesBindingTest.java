@@ -246,20 +246,21 @@ class ConfigurationPropertiesBindingTest {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(AdminConfig.class,
 			"GM_SPECIAL_SKILLS", "GM_LEVEL", "GM_PANEL", "GM_FLIGHT_FREE",
 			"DOORS_OPEN", "ADMIN_AUTO_RES", "INVISIBLE_GM_CONNECTION",
-			"ADMIN_TAG_ENABLE", "ADMIN_TAG_1", "ANNOUNCE_LEVEL_LIST");
+			"ADMIN_TAG_ENABLE", "ADMIN_TAG_1", "ANNOUNCE_LEVEL_LIST", "SHOW_NPC_ID");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
-			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
-				"gameserver.administration.gmskills", "4",
-				"gameserver.administration.gmlevel", "2",
-				"gameserver.administration.gmpanel", "1",
-				"gameserver.administration.flight.freefly", "5",
-				"gameserver.administration.doors.opening", "2",
-				"gameserver.administration.auto.res", "1",
-				"gameserver.administration.invis.gm.connection", "true",
-				"gameserver.admin.tag.enable", "false",
-				"gameserver.admin.tag.1", "<Helper> %s",
-				"gameserver.admin.announce.levels", "3,4,5"
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
+				Map.entry("gameserver.administration.gmskills", "4"),
+				Map.entry("gameserver.administration.gmlevel", "2"),
+				Map.entry("gameserver.administration.gmpanel", "1"),
+				Map.entry("gameserver.administration.flight.freefly", "5"),
+				Map.entry("gameserver.administration.doors.opening", "2"),
+				Map.entry("gameserver.administration.auto.res", "1"),
+				Map.entry("gameserver.administration.invis.gm.connection", "true"),
+				Map.entry("gameserver.admin.tag.enable", "false"),
+				Map.entry("gameserver.admin.tag.1", "<Helper> %s"),
+				Map.entry("gameserver.admin.announce.levels", "3,4,5"),
+				Map.entry("gameserver.administration.view.npcid", "false")
 			)));
 
 			AdminConfig config = new AdminConfig();
@@ -275,6 +276,7 @@ class ConfigurationPropertiesBindingTest {
 			assertFalse(AdminConfig.ADMIN_TAG_ENABLE);
 			assertEquals("<Helper> %s", AdminConfig.ADMIN_TAG_1);
 			assertEquals("3,4,5", AdminConfig.ANNOUNCE_LEVEL_LIST);
+			assertFalse(AdminConfig.SHOW_NPC_ID);
 		} finally {
 			snapshot.restore();
 		}
@@ -284,8 +286,9 @@ class ConfigurationPropertiesBindingTest {
 	void bindsEnchantsConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
-			"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
-			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED",
+			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_AUTHORIZE_ACCESSORY_LEVEL",
+			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
 			"ENABLE_ARCHDAEVA_ITEM_BROKE");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
@@ -295,12 +298,16 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.enchant.item.kinah", "50000"),
 				Map.entry("gameserver.enchant.item.broke", "false"),
 				Map.entry("gameserver.enchant.equipment.max.level", "50"),
+				Map.entry("gameserver.enchant.authorize.accessory.max.level", "42"),
+				Map.entry("gameserver.enchant.authorize.plume.max.level", "48"),
+				Map.entry("gameserver.enchant.authorize.bracelet.max.level", "52"),
 				Map.entry("gameserver.enchant.plume", "80.0"),
 				Map.entry("gameserver.enchant.bracelet", "70.0"),
 				Map.entry("gameserver.enchant.accessory", "60.0"),
 				Map.entry("gameserver.enchant.stigma", "55.0"),
 				Map.entry("gameserver.manastone.clean", "true"),
-				Map.entry("gameserver.enchant.cast.speed", "2500")
+				Map.entry("gameserver.enchant.cast.speed", "2500"),
+				Map.entry("gameserver.enchant.authorize.speed", "1200")
 			)));
 
 			EnchantsConfig config = new EnchantsConfig();
@@ -311,12 +318,16 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(50000, EnchantsConfig.ENCHANT_ITEM_KINAH);
 			assertFalse(EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE);
 			assertEquals(50, EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL);
+			assertEquals(42, EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL);
+			assertEquals(48, EnchantsConfig.MAX_AUTHORIZE_PLUME_LEVEL);
+			assertEquals(52, EnchantsConfig.MAX_AUTHORIZE_BRACELET_LEVEL);
 			assertEquals(80.0f, EnchantsConfig.ENCHANT_PLUME);
 			assertEquals(70.0f, EnchantsConfig.ENCHANT_BRACELET);
 			assertEquals(60.0f, EnchantsConfig.ENCHANT_ACCESSORY);
 			assertEquals(55.0f, EnchantsConfig.ENCHANT_STIGMA);
 			assertTrue(EnchantsConfig.CLEAN_STONE);
 			assertEquals(2500, EnchantsConfig.ENCHANT_SPEED);
+			assertEquals(1200, EnchantsConfig.AUTHORIZE_SPEED);
 		} finally {
 			snapshot.restore();
 		}

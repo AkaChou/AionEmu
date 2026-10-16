@@ -844,7 +844,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		// 1. 接取（原版 cab520）：接取 NPC 的问询 → 确认（20000 同时发放 give_item）/ 拒绝。
 		// 可重复行在 COMPLETE 态同样开放接取窗（原版 finishedcount < max_repeat_count 时再次可接）。
 		boolean fresh = qs == null || status == QuestStatus.NONE;
-		if (fresh || (status == QuestStatus.COMPLETE && repeatable(questId))) {
+		if (fresh || (status == QuestStatus.COMPLETE && repeatable(qs, questId))) {
 			List<Integer> acquireNpcs = acquireNpcIdsByQuestId.get(questId);
 			if (acquireNpcs == null || !acquireNpcs.contains(npcId)) {
 				return false;
@@ -1122,11 +1122,10 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		}
 	}
 
-	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
-	private boolean repeatable(int questId) {
-		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
-		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
-		return maxRepeat != null && maxRepeat > 1;
+	/** COMPLETE 态重复窗 = 次数未用尽且时间轴已到（与 {@code NativeQuestStartPort} 同一判定）。 /
+	 * The repeat window at COMPLETE, delegated to the shared NativeQuestStartPort adjudication. */
+	private boolean repeatable(QuestState state, int questId) {
+		return NativeQuestStartPort.repeatWindowOpen(state, questId);
 	}
 
 	private void give(Player player, ItemStack item) {

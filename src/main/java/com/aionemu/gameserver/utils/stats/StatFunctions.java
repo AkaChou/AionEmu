@@ -11,6 +11,7 @@ import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.configs.main.SkillConfig;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
+import com.aionemu.gameserver.controllers.attack.AttackUtil;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatus;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.SkillElement;
@@ -46,6 +47,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Core combat and stat math: XP/DP/AP/GP rewards, physical/magical damage, dodge/parry/block/crit and fall damage
  */
 public class StatFunctions {
+	/** 真端 SkillRandomDamageApplyType 位：1 = 作用于基础伤害，2 = 作用于追加伤害。 */
+	static final int RANDOM_DAMAGE_APPLY_BASIC = 1;
+	static final int RANDOM_DAMAGE_APPLY_ADD = 2;
+
 
 	/**
 	 * 计算单人击杀目标的经验奖励
@@ -310,13 +315,13 @@ public class StatFunctions {
 												  SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
 												  boolean useMagicalDefense, int pvpDamage) {
 		return calculateMagicalSkillDamage(speller, target, baseDamages, bonus, element, useMagicBoost, useKnowledge,
-			noReduce, useMagicalDefense, pvpDamage, true, 1f, 0);
+			noReduce, useMagicalDefense, pvpDamage, true, 1f, 0, 0, 0);
 	}
 
 	public static int calculateMagicalSkillDamage(Creature speller, Creature target, int baseDamages, int bonus,
 												  SkillElement element, boolean useMagicBoost, boolean useKnowledge, boolean noReduce,
 												  boolean useMagicalDefense, int pvpDamage, boolean randomizeNpcDamage, float skillDamageMultiplier,
-												  int flatSkillDamage) {
+												  int flatSkillDamage, int randomDamageType, int randomDamageApplyType) {
 		CreatureGameStats<?> sgs = speller.getGameStats();
 		CreatureGameStats<?> tgs = target.getGameStats();
 		float damages = baseDamages;
@@ -330,10 +335,27 @@ public class StatFunctions {
 			damages *= calculateMagicalSkillDamageFactor(magicBoost, knowledge);
 			damages = sgs.getStat(StatEnum.BOOST_SPELL_ATTACK, (int) damages).getCurrent();
 		}
-		damages += bonus;
+		// 真端逐段随机：基础伤害与追加伤害各取一次独立波动，由 SkillRandomDamageApplyType 位控制；
+		// 随机位属于调用掩码，noReduce（真端掩码清零）时两段随机都关闭。
+		// Retail randomizes per stage: base and added damage each take an independent roll, gated by
+		// the SkillRandomDamageApplyType bits; those bits belong to the call mask, which noReduce
+		// clears, so both rolls are disabled when reductions are skipped.
+		if (!noReduce && randomDamageType > 0 && (randomDamageApplyType & RANDOM_DAMAGE_APPLY_BASIC) != 0) {
+			damages = AttackUtil.randomizeDamage(randomDamageType, damages);
+		}
+		int addDamage = bonus;
+		if (!noReduce && addDamage != 0 && randomDamageType > 0
+			&& (randomDamageApplyType & RANDOM_DAMAGE_APPLY_ADD) != 0) {
+			addDamage = (int) AttackUtil.randomizeDamage(randomDamageType, addDamage);
+		}
+		damages += addDamage;
 		damages = applyOneTimeSkillAttack(damages, flatSkillDamage, skillDamageMultiplier);
 		if (!noReduce) {
 			damages = applyPveLevelPenalty(speller, target, damages);
+			// 真端 MoveBonus col0 在防御阶段之前施加（Creature_CalcMagicalSkillAttackDamage 的 param_5 & 8 段）。
+			// Retail applies the MoveBonus col0 before the defense stage (param_5 & 8 of
+			// Creature_CalcMagicalSkillAttackDamage).
+			damages = applyMovementDamageBonus(movementSector(speller), damages);
 			damages = applyMagicalDefenseModifiers(speller, target, damages, element, useMagicalDefense);
 		}
 		if (damages < 0) {
@@ -372,6 +394,30 @@ public class StatFunctions {
 		return (int) (capMagicBoostForDamage(magicBoostDifference) / Math.max(1f, targetStatRatio));
 	}
 
+	/** 真端命中穿透差值上限（0xd48；配置开关打开时为 0xb54=2900）。 / Retail penetration cap (0xd48; 0xb54 with the alternate config). */
+	static final int MAGICAL_ACCURACY_PENETRATION_CAP = 3400;
+
+	/**
+	 * 真端法术命中穿透乘子：clamp(魔法命中 - 魔法抵抗, 0, 3400) / 目标缩放比 / 1000，
+	 * 与魔法抵抗判定"每 100 点差 = 10%"同源；NPC 施法分支以 (乘子 + 1) 乘基础伤害。
+	 * Retail spell accuracy penetration: clamp(magic accuracy - magic resist, 0, 3400) divided by
+	 * the target stat ratio and 1000; the same +10% per 100 rule as magical resist checks. The
+	 * retail NPC caster branch multiplies its base damage by (multiplier + 1).
+	 * @param attacker 施法者 / Caster
+	 * @param target  目标 / Target
+	 * @return 穿透乘子 / Penetration multiplier
+	 */
+	public static float calculateMagicalAccuracyPenetration(Creature attacker, Creature target) {
+		int diff = attacker.getGameStats().getMAccuracy().getCurrent()
+			- target.getGameStats().getMResist().getCurrent();
+		if (diff <= 0) {
+			return 0f;
+		}
+		int capped = Math.min(diff, MAGICAL_ACCURACY_PENETRATION_CAP);
+		capped = (int) (capped / Math.max(1f, target.getStatRatio()));
+		return Math.min(capped, MAGICAL_ACCURACY_PENETRATION_CAP) / 1000f;
+	}
+
 	static int applyOneTimeSkillAttack(float damage, int flatDamage, float multiplier) {
 		return Math.round(damage * multiplier) + flatDamage;
 	}
@@ -396,8 +442,8 @@ public class StatFunctions {
 		}
 		float elementalDefense = 0;
 		if (element != SkillElement.NONE) {
-			elementalDefense = getMovementModifier(target, SkillElement.getResistanceForElement(element),
-				target.getGameStats().getMagicalDefenseFor(element));
+			elementalDefense = target.getGameStats().getMagicalDefenseFor(element)
+				+ getMovementResistanceOffset(movementSector(target));
 			elementalDefense /= attacker.getStatRatio();
 			elementalDefense = applyElementalDefenseLowerCap(elementalDefense, target instanceof Player, target.getLevel());
 		}
@@ -430,10 +476,17 @@ public class StatFunctions {
 	}
 
 	private static int getElementalDefenseDenominator(Creature attacker, Creature target) {
-		if (target instanceof Player) {
-			return 1300 + Math.max(0, Math.min(attacker.getLevel(), target.getLevel()) - 50) * 10;
-		}
-		return 1300;
+		return elementalDefenseDenominator(attacker.getLevel(), target.getLevel());
+	}
+
+	/**
+	 * 真端 FUN_14036bbb0：双方等级均大于 50 时分母为 1300 + (较小等级 - 50) * 10，否则固定 1300；
+	 * 与目标是否为玩家无关。
+	 * Retail FUN_14036bbb0: the denominator gains (min level - 50) * 10 only when both levels
+	 * exceed 50, and stays 1300 otherwise; the target being a player is irrelevant.
+	 */
+	static int elementalDefenseDenominator(int attackerLevel, int targetLevel) {
+		return 1300 + Math.max(0, Math.min(attackerLevel, targetLevel) - 50) * 10;
 	}
 
 	static float applyElementalDefenseLowerCap(float elementalDefense, boolean playerTarget, int level) {
@@ -588,7 +641,7 @@ public class StatFunctions {
 			damages = applyPveDamageModifiers(damages, pveAttackBonus, pveDefenceBonus);
 		}
 		if (useMovement) {
-			damages = movementDamageBonus(attacker, damages);
+			damages = applyMovementDamageBonus(movementSector(attacker), damages);
 		}
 		return damages;
 	}
@@ -989,63 +1042,88 @@ public class StatFunctions {
 	}
 
 	/**
-	 * 按移动朝向修正玩家属性（前进减防、侧移加闪避等）
-	 * Modify player stats by movement heading (forward defense cut, side evasion bonus, etc.)
-	 * Creature
+	 * 按移动朝向档位修正玩家属性（前进减防、后退加格挡/招架等）。
+	 * Modify player stats by movement sector (forward defense cut, backward parry/block bonus, ...).
 	 *
+	 * @param creature 生物 / Creature
 	 * @param stat  属性枚举 / Stat enum
 	 * @param value 原始属性值 / Original stat value
 	 * @return 修正后属性值 / Modified stat value
 	 */
 	public static float getMovementModifier(Creature creature, StatEnum stat, float value) {
-		if (!(creature instanceof Player player) || stat == null) {
+		if (stat == null) {
 			return value;
 		}
-		int h = player.getMoveController().getMovementHeading();
+		int h = movementSector(creature);
 		if (h < 0) {
 			return value;
 		}
 		return applyMovementStatModifier(h, stat, value);
 	}
 
-	static float applyMovementStatModifier(int heading, StatEnum stat, float value) {
+	/**
+	 * 返回生物的真端 MoveState（0=静止、1=前进、2=后退、4=侧移，滞后窗口内可位或组合）；
+	 * 非玩家恒 -1（真端仅 Player 覆写 MoveState，NPC 恒 0 不参与修正）。
+	 * Return the retail MoveState (0 standing, 1 forward, 2 backward, 4 sidestep, bitwise
+	 * combinable during the hysteresis window); non-players get -1 (only Player overrides the
+	 * retail MoveState, NPCs stay 0 and take no modifier).
+	 * @param creature 待查生物 / Creature to inspect
+	 * @return 真端 MoveState / Retail MoveState
+	 */
+	static int movementSector(Creature creature) {
+		return creature instanceof Player player ? player.getMoveController().getRetailMoveState() : -1;
+	}
+
+	/**
+	 * 真端 MoveBonus 表（DAT_141069ed0 列）的战斗属性修正，行号为 MoveState：
+	 * 前进行（1）防御 -20%；后退相关行（2/3/6）招架 +500、格挡 +500；
+	 * 含侧移分量的行（4/5/6）格挡 +300；闪避列全 0，不加成。
+	 * Combat stat modifiers from the retail MoveBonus table (DAT_141069ed0 columns), rows keyed by
+	 * MoveState: defense -20% on the forward row (1); parry +500 and block +500 on backward rows
+	 * (2/3/6); block +300 on rows with a sidestep component (4/5/6); the dodge column is all zero.
+	 * @param state 真端 MoveState / Retail MoveState
+	 * @param stat  属性 / Stat
+	 * @param value 原始值 / Original value
+	 * @return 修正后值 / Modified value
+	 */
+	static float applyMovementStatModifier(int state, StatEnum stat, float value) {
 		return switch (stat) {
-			case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> heading == 0 ? value * 0.8f : value;
-			case WATER_RESISTANCE, WIND_RESISTANCE, FIRE_RESISTANCE, EARTH_RESISTANCE, ELEMENTAL_RESISTANCE_DARK,
-				 ELEMENTAL_RESISTANCE_LIGHT -> heading == 0 ? value * 0.5f : value;
-			case EVASION -> heading != 0 && heading != 4 ? value + 300 : value;
-			case PARRY, BLOCK -> heading >= 3 && heading <= 5 ? value + 500 : value;
-			case SPEED -> heading == 2 || heading == 6 ? value * 0.8f
-				: heading >= 3 && heading <= 5 ? value * 0.6f : value;
+			case PHYSICAL_DEFENSE, MAGICAL_DEFEND -> state == 1 ? value * 0.8f : value;
+			case PARRY -> (state & 2) != 0 ? value + 500 : value;
+			case BLOCK -> value + ((state & 2) != 0 ? 500 : 0) + ((state & 4) != 0 ? 300 : 0);
+			// 表外移动手感：后退减速、侧移减速更多。 / Off-table movement feel: backward slows down, sidestep more.
+			case SPEED -> (state & 2) != 0 ? value * 0.8f : (state & 4) != 0 ? value * 0.6f : value;
 			default -> value;
 		};
 	}
 
-	private static float movementDamageBonus(Creature creature, float value) {
-		if (!(creature instanceof Player player)) {
-			return value;
-		}
-		int h = player.getMoveController().getMovementHeading();
-		if (h < 0) {
-			return value;
-		}
-		switch (h) {
-			case 7:
-			case 0:
-			case 1:
-				value = value * 1.1f;
-				break;
-			case 6:
-			case 2:
-				value -= value * 0.2f;
-				break;
-			case 5:
-			case 4:
-			case 3:
-				value -= value * 0.2f;
-				break;
-		}
-		return value;
+	/**
+	 * 真端 MoveBonus 表（DAT_141069ed8 列）的元素抗性固定偏移：仅"纯前进"行（1）为 -50。
+	 * Elemental resistance offset from the retail MoveBonus column DAT_141069ed8: a flat
+	 * -50 on the purely forward row (1), and 0 otherwise.
+	 * @param state 真端 MoveState / Retail MoveState
+	 * @return 抗性偏移 / Resistance offset
+	 */
+	static int getMovementResistanceOffset(int state) {
+		return state == 1 ? -50 : 0;
+	}
+
+	/**
+	 * 真端 MoveBonus 表（DAT_141069ed0 首列）的伤害修正：前进（1）与前|侧（5）+10%，
+	 * 其余移动行 -20%，静止（0）与不适用（-1）无修正。
+	 * Damage modifier from the retail MoveBonus leading column DAT_141069ed0: +10% on the forward
+	 * row (1) and forward|side row (5), -20% on every other moving row, and no modifier while
+	 * standing (0) or when not applicable (-1).
+	 * @param state 真端 MoveState / Retail MoveState
+	 * @param value 原始伤害 / Original damage
+	 * @return 修正后伤害 / Modified damage
+	 */
+	static float applyMovementDamageBonus(int state, float value) {
+		return switch (state) {
+			case 1, 5 -> value * 1.1f;
+			case 2, 3, 4, 6 -> value * 0.8f;
+			default -> value;
+		};
 	}
 
 }

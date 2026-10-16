@@ -11,13 +11,15 @@ import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.commons.configuration.Property;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
+import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 class EnchantServiceTest {
 
 	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
-		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL");
+		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL",
+		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL");
 
 	@AfterEach
 	void restoreConfig() {
@@ -55,16 +57,16 @@ class EnchantServiceTest {
 				.getAnnotation(Property.class);
 
 		assertEquals("gameserver.enchant.equipment.max.level", property.key());
-		assertEquals("30", property.defaultValue());
+		assertEquals("50", property.defaultValue());
 	}
 
 	@Test
 	void capsEquipmentEnchantLevelAtConfiguredMaximum() {
-		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 30;
+		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 50;
 
 		assertEquals(29, EnchantService.capEquipmentEnchantLevel(29));
-		assertEquals(30, EnchantService.capEquipmentEnchantLevel(30));
-		assertEquals(30, EnchantService.capEquipmentEnchantLevel(32));
+		assertEquals(50, EnchantService.capEquipmentEnchantLevel(50));
+		assertEquals(50, EnchantService.capEquipmentEnchantLevel(52));
 	}
 
 	@Test
@@ -72,6 +74,79 @@ class EnchantServiceTest {
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 25;
 
 		assertEquals(25, EnchantService.capEquipmentEnchantLevel(30));
+	}
+
+	@Test
+	void capsEquipmentEnchantLevelAtTwoHundredWhenConfiguredHigher() {
+		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 500;
+
+		assertEquals(200, EnchantService.getMaxEquipmentEnchantLevel());
+		assertEquals(200, EnchantService.capEquipmentEnchantLevel(250));
+	}
+
+	@Test
+	void declaresAuthorizeCapsWithThirtyAsDefault() throws Exception {
+		Property accessory = EnchantsConfig.class.getDeclaredField("MAX_AUTHORIZE_ACCESSORY_LEVEL")
+				.getAnnotation(Property.class);
+		Property plume = EnchantsConfig.class.getDeclaredField("MAX_AUTHORIZE_PLUME_LEVEL")
+				.getAnnotation(Property.class);
+		Property bracelet = EnchantsConfig.class.getDeclaredField("MAX_AUTHORIZE_BRACELET_LEVEL")
+				.getAnnotation(Property.class);
+
+		assertEquals("gameserver.enchant.authorize.accessory.max.level", accessory.key());
+		assertEquals("30", accessory.defaultValue());
+		assertEquals("gameserver.enchant.authorize.plume.max.level", plume.key());
+		assertEquals("30", plume.defaultValue());
+		assertEquals("gameserver.enchant.authorize.bracelet.max.level", bracelet.key());
+		assertEquals("30", bracelet.defaultValue());
+	}
+
+	@Test
+	void declaresFullSuccessRatesByDefault() throws Exception {
+		for (String field : new String[] { "SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_PLUME", "ENCHANT_BRACELET",
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA" }) {
+			Property property = EnchantsConfig.class.getDeclaredField(field).getAnnotation(Property.class);
+			assertEquals("100", property.defaultValue(), field);
+		}
+	}
+
+	@Test
+	void separatesPlumeAndBraceletCaps() throws Exception {
+		EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL = 20;
+		EnchantsConfig.MAX_AUTHORIZE_PLUME_LEVEL = 25;
+		EnchantsConfig.MAX_AUTHORIZE_BRACELET_LEVEL = 28;
+
+		assertEquals(20, EnchantService.getMaxAuthorizeLevel(authorizable(ItemCategory.EARRINGS)));
+		assertEquals(25, EnchantService.getMaxAuthorizeLevel(authorizable(ItemCategory.PLUME)));
+		assertEquals(28, EnchantService.getMaxAuthorizeLevel(authorizable(ItemCategory.BRACELET)));
+	}
+
+	@Test
+	void capsAuthorizeAtTwoHundredWhenConfiguredHigher() throws Exception {
+		EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL = 500;
+
+		Item earrings = authorizable(ItemCategory.EARRINGS);
+		assertEquals(200, EnchantService.getMaxAuthorizeLevel(earrings));
+		assertEquals(200, EnchantService.capAuthorizeLevel(earrings, 250));
+	}
+
+	@Test
+	void leavesNonAuthorizableItemsUncapped() throws Exception {
+		EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL = 30;
+
+		ItemTemplate weapon = new ItemTemplate();
+		setField(weapon, "category", ItemCategory.SWORD);
+		setField(weapon, "maxAuthorize", 0);
+
+		assertEquals(0, EnchantService.getMaxAuthorizeLevel(new Item(1, weapon)));
+		assertEquals(50, EnchantService.capAuthorizeLevel(new Item(1, weapon), 50));
+	}
+
+	private static Item authorizable(ItemCategory category) throws Exception {
+		ItemTemplate template = new ItemTemplate();
+		setField(template, "category", category);
+		setField(template, "maxAuthorize", 255);
+		return new Item(1, template);
 	}
 
 	private static Item item(ItemQuality quality, int enchantLevel) throws Exception {
