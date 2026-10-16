@@ -16,7 +16,6 @@
 
 .EXAMPLE
   deploy.bat        一键部署并前台启动（Ctrl+C 同时停止游戏与 MySQL）
-  start.bat         前台启动服务端，实时日志（Ctrl+C 停止游戏）
   stop.bat          停止后台残留的服务端（一般用 Ctrl+C 即可）
   start-mysql.bat   前台启动便携 MySQL（Ctrl+C 停止 MySQL）
   stop-mysql.bat    停止便携 MySQL

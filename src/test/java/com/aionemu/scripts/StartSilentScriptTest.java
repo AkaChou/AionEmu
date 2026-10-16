@@ -183,7 +183,7 @@ class StartSilentScriptTest {
 
     @Test
     void windowsScriptsUseCrlfAndDriveThePortableRuntime() throws Exception {
-        for (String name : List.of("deploy.bat", "start.bat", "stop.bat", "start-mysql.bat", "stop-mysql.bat")) {
+        for (String name : List.of("deploy.bat", "stop.bat", "start-mysql.bat", "stop-mysql.bat")) {
             String content = Files.readString(Path.of("scripts/windows", name));
             assertTrue(content.contains("\r\n"), name + " must use CRLF line endings");
             assertTrue(content.contains("pause"), name + " must pause so the window stays open");

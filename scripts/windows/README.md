@@ -30,13 +30,12 @@
 | 命令 | 作用 |
 |---|---|
 | `deploy.bat` | 一键部署并**前台**启动（实时日志；Ctrl+C 或关窗**同时停止游戏与 MySQL**） |
-| `start.bat` | **前台**启动服务端并**实时打印日志**（Ctrl+C 或关窗停止**游戏**） |
 | `stop.bat` | 停止后台残留的服务端（一般用 Ctrl+C 即可） |
 | `start-mysql.bat` | 仅**前台**启动便携 MySQL（Ctrl+C 或关窗停止 **MySQL**） |
 | `stop-mysql.bat` | 仅停止便携 MySQL |
 | `powershell -File server.ps1 status` | 查看服务端 / MySQL 运行状态 |
 
-> 三个启动脚本都在**前台**运行：Ctrl+C 停止脚本并停止其负责的服务；`.bat` 结束后 `pause`，窗口不自动关闭。
+> 两个启动脚本（`deploy.bat`、`start-mysql.bat`）都在**前台**运行：Ctrl+C 停止脚本并停止其负责的服务；`.bat` 结束后 `pause`，窗口不自动关闭。
 > 若游戏或 MySQL 已在运行，脚本会**说明原因并退出**（避免重复启动）。
 
 ### 目录与配置
@@ -97,15 +96,14 @@ Ports after startup: game `7777`, login `2106`, chat `10241`. Log: `aion\log\aio
 | Command | Purpose |
 |---|---|
 | `deploy.bat` | Deploy and start in the **foreground** (live logs; Ctrl+C or close **stops both game and MySQL**) |
-| `start.bat` | Start the server in the **foreground** with **live logs** (Ctrl+C or close stops the **game**) |
 | `stop.bat` | Stop a leftover background server (usually Ctrl+C is enough) |
 | `start-mysql.bat` | Start the portable MySQL in the **foreground** (Ctrl+C or close stops **MySQL**) |
 | `stop-mysql.bat` | Stop the portable MySQL only |
 | `powershell -File server.ps1 status` | Show server / MySQL status |
 
-> The three launchers run in the **foreground**: Ctrl+C stops the script and its service; every `.bat`
-> ends with `pause`, so the window never closes on its own. If the game or MySQL is already running, the
-> script explains why and exits instead of starting a duplicate.
+> Both launchers (`deploy.bat`, `start-mysql.bat`) run in the **foreground**: Ctrl+C stops the script and
+> its service; every `.bat` ends with `pause`, so the window never closes on its own. If the game or MySQL
+> is already running, the script explains why and exits instead of starting a duplicate.
 
 ### Remote database access
 
