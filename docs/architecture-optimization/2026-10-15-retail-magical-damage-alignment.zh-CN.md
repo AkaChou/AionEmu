@@ -50,32 +50,85 @@ col5（+300）语义沿用反汇编判读，对应 DEBUG 串族中的格挡变�
 本地映射：`PlayableMoveController.setNewDirection` 的 `movementHeading`（0..7，−1=未动），
 公式 `(int)(((heading*3) − h)/45)` 因向零截断使 **档 0 == |角度差| < 45°**，与真端前进带一致。
 
-### 2.3 对齐变更（`StatFunctions.java`）
+### 2.3 对齐变更（`StatFunctions.java` / `PlayableMoveController.java`）
 
-| 真端列 | 本地实现 | 状态 |
+真端 MoveState 枚举（0=静止、1=前进、2=后退、4=侧移，滞后位或组合 3/5/6）已完整落地，
+本地 8 向档位在 `setNewDirection` 内映射为真端枚举后写入滞后状态机。
+
+| 真端列/机制 | 本地实现 | 状态 |
 |---|---|---|
-| col0 伤害% | `applyMovementDamageBonus(sector, v)`：sector==0 → ×1.1，其余合法档 → ×0.8，<0（NPC/未动）不变；接在 `adjustDamages` 末尾 | 本会话修正（原前进窗 90° 过宽） |
-| col2 抗性固定 −50 | `getMovementResistanceOffset(0) == −50`，接在 `applyMagicalDefenseModifiers` 元素抗性上 | 本会话修正（原为 ×0.5） |
-| col1/col3~col5 | `applyMovementStatModifier` 保留：PHYSICAL_DEFENSE/MAGICAL_DEFEND h==0 ×0.8、PARRY/BLOCK h 3..5 +500；删除元素抗性 ×0.5 case | 修正 |
-| vtable 槽 189 仅 Player | `movementSector(Creature)` 非玩家返回 −1（不参与） | 对齐 |
+| col0 伤害% | `applyMovementDamageBonus(state)`：行 1/5 → ×1.1，行 2/3/4/6 → ×0.8；法系在 `calculateMagicalSkillDamage` 防御阶段前施加（param_5 & 8 顺序），物理在 `adjustDamages`（useMovement） | 已修正并接入法系 |
+| col1 防御% | `applyMovementStatModifier`：仅行 1 ×0.8（PHYSICAL_DEFENSE/MAGICAL_DEFEND） | 对齐 |
+| col2 抗性固定 −50 | `getMovementResistanceOffset(1) == −50`，接在元素抗性上 | 对齐 |
+| col3 招架 +500 | 行 2/3/6（`(state & 2) != 0`），经 `getMovementModifier` 接入 dodge/parry/block 判定 | 对齐 |
+| col4 格挡 +500 | 行 2/3/6；col5 格挡 +300 行 4/5/6，两列可叠加（行 6 = +800） | 本轮补齐 |
+| col6 闪避 | 表全 0，本地 EVASION +300 case 已删除 | 本轮删除表外项 |
+| 双状态滞后 | `recordRetailMoveState`/`getRetailMoveState`（FUN_140578e10/eb0 语义）：新方向 666ms 后生效、旧方向存活 1332ms，位或合并 | 本轮实现 |
+| MOUSE 恒前进 | `setNewDirection` 检查 `movementMask & MovementMask.MOUSE`，鼠标移动跳过角度计算直接判前进（User_CalcMoveState 语义） | 本轮实现 |
+| vtable 槽 189 仅 Player | `movementSector(Creature)` 非玩家返回 -1（不参与） | 对齐 |
 
-## 3. 遗留偏差与未实施项（③ 范围外/表外）
+### 2.4 其他对齐（本轮）
 
-1. **MoveState 滞后**：真端 666ms/1332ms 平滑；本地即时读取。
-2. **MOUSE 移动**：真端鼠标移动恒判前进；本地纯按角度算。
-3. **施加顺序**：真端在防御计算**之前**施加 MoveBonus；本地 `adjustDamages` 在其后（乘法可交换，但防御是除法时结果有别）。
-4. **表外保留**：本地 EVASION h≠0&&h≠4 +300、SPEED ×0.8/×0.6 不在真端 MoveBonus 表内（真端 col6 全 0），暂保留未删。
-5. **物理侧 col3/col4/col5**（招架/格挡）未接入物理伤害路径。
-6. **③ 结构项未实施**：魔法防御 `(1+t4/100)` 耦合列、自目标跳过增幅、NPC 施法者分支（`(int)boost/1000` 与 `roll(min,max)*(knowledge/100+1)`）、param_5 四阶段门控含 vtable[0xe10]、PvP 硬编码 0.42、武器来源增幅/抗性覆盖、最终伤害下限 1。
+- **法系最终伤害下限 1**：`AttackUtil` 法系路径在 PvP/limitAttr 之后钳制 `Math.max(1, damage)`
+  （真端 `Creature_CalcMagicalSkillAttackDamage` 尾段）。
+- 真端防御段确证：col1 乘在受击者魔法抵抗上再 /10 从抵抗差中扣除、col2 进 `(col2+param_12)/(attackerScale/1000)`
+  与等级宽限表比较下限——本地既有 `applyMagicalDefenseModifiers` + `applyElementalDefenseLowerCap` 数值等价，未改。
+
+## 3. 遗留偏差（真端有、本地未做或有意保留）
+
+1. **param_5 & 4 回调**（技能对象 vtable[0xe10]，槽 450）：技能级伤害修改虚函数，覆写者需逐技能考古；
+   默认类无操作，仅个别技能受影响，未实施。
+2. **目标侧最终回调**（vtable[0x5e0]，槽 188）：已核实 Creature 与 Player 的槽 188 均为 `return 0`
+   （FUN_1400b47b0），调用条件 `!= 0` 永假——真端默认关闭，本地无需实现。
+3. **DOT 不走此管线**：真端调用点仅 SpellAttack/Drain/DelayedSpellAttack/SignetBurst/Enslave/ProcAttack，
+   DoT 使用独立公式，本地 `calculateMagicalOverTimeSkillDamage` 独立成函数与此一致，无需接 col0。
+4. **NPC 施法分支**：`roll * (pct/100 + 1) * (命中穿透乘子 + 1)` 已实现（`calculateMagicalAccuracyPenetration`，
+   与"每 100 点 MR 差 = 10%"同源）；触发条件真端为 effect 字段（偏移 0x2ec）==1，本地为
+   `Func.PERCENT && effector instanceof Npc`，字段加载器未考古到，触发源保留本地判定。
+5. **PvP 疲劳系数**：真端 `0.42 * fatigue`，本地固定 0.42（无疲劳系统数据源）。
+6. **SPEED 移动减速**：×0.8/×0.6 为本地表外手感项，真端 MoveBonus 表无此列（保留）。
 7. **魔增上限**：维持 `32767` 默认（此前误改 100000 已回退），配置可调。
+8. **随机门控与掩码**：真端 noReduce（技能 0xd72 标志）清零调用掩码（ProcAttack 恒 0、SpellAttack=0x1f、
+   SignetBurst=0x1e）；本地已将两段随机纳入 noReduce 门控；非 SpellATK_Instant 效果的随机字段
+   布局不同，仍按 0 处理。
+9. **元素抗性分母已修正**（2026-10-16 第二轮核实）：真端 `FUN_14036bbb0` 条件为双方等级均 >50 时
+   `1300 + (min(攻,守等级) − 50) × 10`，与目标类型无关；本地原误用 `target instanceof Player` 门控，
+   已改为统一公式（`elementalDefenseDenominator`）。影响：PC 攻击 >50 级 NPC 时法术伤害提高约 4~8%。
 
-## 4. 验收（PENDING，未经授权未执行）
+## 3.1 公式形状存疑项（需运行时数值比对裁决，未改动）
 
-```bash
-mvn -q -Dtest=AttackUtilTest,StatFunctionsTest test
-```
+真端 PC 分支反编译：`base = skillDamage × (0x760值/100 + 命中穿透)`，BOOST_SPELL_ATTACK 段为
+`(0x11c4 + 100)/100 × dmg + 0x11C8`；本地为 `×(knowledge/100 + magicBoost/1000)` 加法 +
+BOOST_SPELL_ATTACK stat 直加。关键未知：
+
+- `0x760`（ItemClass/Npc.cpp 模板写入）与 `0x11c4`（`SkillEffectBoostSpellAttackEffect` 累加）的
+  存储单位——若存 10 倍百分数，真端 `(x+100)/100` 与本地公式在 K=100 时等价，K≠100 时发散；
+- 两公式形状（真端疑似乘法分配 vs 本地加法）无法静态裁决。
+
+`FUN_14036b890`（防御段 mresCalc）与 `FUN_14036beb0`（PvE 比例）的 Ghidra 反编译返回值丢失，
+无法逐位核实，本地公式数值自洽予以保留。`FUN_14036f220`（法术抵抗 gate）本地已有 MR 判定等价机制。
+
+## 4. 验收（已通过）
+
+第一轮（① 随机伤害 + ② MoveBonus + 枚举化/滞后/MOUSE/col0/col5/下限 1）：
+IDEA 原生 JUnit 运行（2026-10-16 授权执行）：
+
+- `StatFunctionsTest`：19/19 通过（真端 MoveState 枚举语义 ×2 重写通过）
+- `AttackUtilTest`：10/10 通过
 
 新增/修改测试：`AttackUtilTest.parsesRetailRandomDamageApplyTypesCaseInsensitively`、
 `AttackUtilTest.acceptsOnlyRetailRandomDamageTypes`、
-`StatFunctionsTest.appliesRetailMovementCombatStatTable`（FIRE_RESISTANCE 期望回 1000）、
-`StatFunctionsTest.appliesRetailMoveBonusDamageAndResistanceColumns`。
+`StatFunctionsTest.appliesRetailMovementCombatStatTable`（真端 MoveState 枚举语义）、
+`StatFunctionsTest.appliesRetailMoveBonusDamageAndResistanceColumns`（行号语义 + col5 叠加 + EVASION 无修正）。
+
+第二轮（遗留项：NPC 命中穿透、noReduce 随机门控、滞后单测）：
+IDEA 原生 JUnit 运行（2026-10-16 授权执行），全部通过：
+
+- `PlayableMoveControllerTest`：4/4 通过（666/1332ms 边界 ×4）
+- `AttackUtilTest`：10/10 通过（`usesRetailNpcPercentageSpellBaseAndOneTimeBoostOrder` 补穿透断言）
+- `StatFunctionsTest`：19/19 通过（随机门控回归）
+
+第三轮（外围函数核实：分母条件修复）：
+IDEA 原生 JUnit 运行（2026-10-16 授权执行），全部通过：
+
+- `StatFunctionsTest`：20/20 通过（新增 `scalesElementalDefenseDenominatorBySharedLevelsAboveFifty`）

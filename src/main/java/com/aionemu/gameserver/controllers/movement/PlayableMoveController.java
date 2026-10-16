@@ -21,8 +21,8 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 
 	/** 是否需要发送移动包 / Whether a move packet should be sent */
 	private boolean sendMovePacket = true;
-	/** 移动朝向档位 / Movement heading sector */
-	private int movementHeading = -1;
+	/** 真端 MoveState 滞后跟踪器 / Retail MoveState hysteresis tracker */
+	private final RetailMoveStateTracker moveStateTracker = new RetailMoveStateTracker();
 
 	/** Vehicle X / Vehicle X */
 	public float vehicleX;
@@ -177,27 +177,105 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		this.targetDestY = y;
 		this.targetDestZ = z;
 
+		// 真端鼠标移动不参与朝向差计算，恒判前进；键盘按朝向差分前进/侧移/后退。
+		// Retail mouse movement skips the heading comparison and is always forward; keyboard input
+		// is classified by heading difference into forward, sidestep, or backward.
+		if ((movementMask & MovementMask.MOUSE) != 0) {
+			recordRetailMoveState(1);
+			return;
+		}
 		float h = MathUtil.calculateAngleFrom(owner.getX(), owner.getY(), targetDestX, targetDestY);
 		if (h != 0) {
 			int value = (int) (((heading * 3) - h) / 45);
 			if (value < 0) {
 				value += 8;
 			}
-			if (movementHeading != value) {
-				movementHeading = value;
-			}
+			// 8 向档位映射真端枚举：0=正前(≤45°)→1；1/2/6/7=侧带→4；3/4/5=后带→2。
+			// Map the 8-way sector to the retail enum: 0 forward (≤45°) →1; 1/2/6/7 side →4; 3/4/5 back →2.
+			recordRetailMoveState(switch (value) {
+				case 0 -> 1;
+				case 3, 4, 5 -> 2;
+				default -> 4;
+			});
 		}
 	}
 
 	/**
-	 * 返回当前移动朝向档位；未移动时返回 -1。
-	 * Return the current movement heading sector; -1 when not moving.
-	 * @return 朝向档位 / Heading sector
+	 * 记录真端 MoveState（见 {@link RetailMoveStateTracker}）。
+	 * Record the retail MoveState (see {@link RetailMoveStateTracker}).
+	 * @param state 真端 MoveState 枚举值 / Retail MoveState enum value
 	 */
-	public int getMovementHeading() {
+	private void recordRetailMoveState(int state) {
+		moveStateTracker.record(state, System.currentTimeMillis());
+	}
+
+	/**
+	 * 返回当前真端 MoveState（0=静止、1=前进、2=后退、4=侧移，滞后期间可位或组合）。
+	 * Return the current retail MoveState (0 standing, 1 forward, 2 backward, 4 sidestep;
+	 * values may combine bitwise during the hysteresis window).
+	 * @return 真端 MoveState / Retail MoveState
+	 */
+	public int getRetailMoveState() {
 		if (!isInMove()) {
-			return -1;
+			recordRetailMoveState(0);
+			return 0;
 		}
-		return movementHeading;
+		return moveStateTracker.current(System.currentTimeMillis());
+	}
+
+	/**
+	 * 真端 MoveState 双状态滞后跟踪器（User_CalcMoveState / FUN_140578e10 / FUN_140578eb0 语义）：
+	 * 方向变化时旧值若已超过 666ms 则升级为保留态（存活 1332ms），新值延迟 666ms 生效，读取时位或合并。
+	 * Retail dual-state MoveState hysteresis tracker (User_CalcMoveState / FUN_140578e10 /
+	 * FUN_140578eb0 semantics): on change, a direction older than 666 ms is promoted to the
+	 * retained state (alive 1332 ms), the new value takes effect after 666 ms, and reads merge
+	 * both bitwise.
+	 */
+	static final class RetailMoveStateTracker {
+
+		/** 新方向生效延迟 / Delay before a new direction takes effect */
+		static final long EFFECT_DELAY_MS = 666;
+		/** 旧方向保留时长 / How long the previous direction stays alive */
+		static final long RETAIN_MS = 1332;
+
+		private int retainedState;
+		private long retainedTime;
+		private int pendingState;
+		private long pendingTime;
+
+		/**
+		 * 记录一次方向写入；与当前待生效值相同则不刷新时间戳。
+		 * Record one direction write; writing the same pending value keeps its timestamp.
+		 * @param state 真端 MoveState 枚举值 / Retail MoveState enum value
+		 * @param now   当前时间 / Current time
+		 */
+		void record(int state, long now) {
+			if (state != pendingState) {
+				if (pendingState != 0 && now - pendingTime > EFFECT_DELAY_MS) {
+					retainedState = pendingState;
+					retainedTime = now;
+				}
+				pendingState = state;
+				pendingTime = now;
+			}
+		}
+
+		/**
+		 * 读取当前生效 MoveState：保留态 1332ms 内并入，待生效态 666ms 后并入，位或后取低 3 位。
+		 * Read the effective MoveState: the retained state merges within 1332 ms, the pending one
+		 * after 666 ms, merged bitwise and masked to 3 bits.
+		 * @param now 当前时间 / Current time
+		 * @return 真端 MoveState / Retail MoveState
+		 */
+		int current(long now) {
+			int state = 0;
+			if (retainedState != 0 && now - retainedTime < RETAIN_MS) {
+				state = retainedState;
+			}
+			if (pendingState != 0 && now - pendingTime > EFFECT_DELAY_MS) {
+				state |= pendingState;
+			}
+			return state & 7;
+		}
 	}
 }

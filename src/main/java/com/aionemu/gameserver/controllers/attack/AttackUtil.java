@@ -871,7 +871,10 @@ public class AttackUtil {
 				? StatFunctions.rollNpcAttackDamage(npc.getObjectTemplate().getStatsTemplate().getMinDamage(),
 				npc.getObjectTemplate().getStatsTemplate().getMaxDamage())
 				: baseAttack;
-			damages = calculateNpcPercentageSpellBase(rolledAttack, skillDamage);
+			damages = calculateNpcPercentageSpellBase(rolledAttack, skillDamage,
+				// 真端 NPC 施法分支额外乘 (命中穿透乘子 + 1)。
+				// The retail NPC caster branch additionally multiplies by (penetration + 1).
+				StatFunctions.calculateMagicalAccuracyPenetration(effector, effected));
 		} else {
 			damages = skillDamage;
 		}
@@ -926,6 +929,9 @@ public class AttackUtil {
 			effect.getSkillTemplate().getPvpDamage(), false, element, HitType.MAHIT);
 		damage = Math.round(StatFunctions.applyLimitAttributeBonus(effector, effected, damage,
 			limitAttributeBaseDamage));
+		// 真端最终伤害下限为 1（Creature_CalcMagicalSkillAttackDamage 尾段）。
+		// Retail clamps the final damage to at least 1 (tail of Creature_CalcMagicalSkillAttackDamage).
+		damage = Math.max(1, damage);
 		damage = StatFunctions.applyDamageMultiplier(damage);
 
 		if (effected instanceof Npc) {
@@ -936,7 +942,11 @@ public class AttackUtil {
 	}
 
 	static int calculateNpcPercentageSpellBase(int rolledAttack, int percent) {
-		return Math.round(rolledAttack * (1 + percent / 100f));
+		return calculateNpcPercentageSpellBase(rolledAttack, percent, 0f);
+	}
+
+	static int calculateNpcPercentageSpellBase(int rolledAttack, int percent, float accuracyPenetration) {
+		return Math.round(rolledAttack * (1 + percent / 100f) * (1 + accuracyPenetration));
 	}
 
 	/**

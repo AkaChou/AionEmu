@@ -79,6 +79,8 @@ class AttackUtilTest {
 	@Test
 	void usesRetailNpcPercentageSpellBaseAndOneTimeBoostOrder() {
 		assertEquals(1500, AttackUtil.calculateNpcPercentageSpellBase(1000, 50));
+		// 真端 NPC 施法分支额外乘 (命中穿透乘子 + 1)。 / The retail NPC caster branch multiplies by (penetration + 1).
+		assertEquals(2250, AttackUtil.calculateNpcPercentageSpellBase(1000, 50, 0.5f));
 	}
 
 	@Test

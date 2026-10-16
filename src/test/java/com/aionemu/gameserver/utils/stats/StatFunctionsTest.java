@@ -53,6 +53,17 @@ class StatFunctionsTest {
 	}
 
 	@Test
+	void scalesElementalDefenseDenominatorBySharedLevelsAboveFifty() {
+		// 真端 FUN_14036bbb0：双方等级 > 50 才计入 (较小等级 - 50) * 10，与目标类型无关。
+		// Retail FUN_14036bbb0: (min level - 50) * 10 applies only when both levels exceed 50,
+		// regardless of the target type.
+		assertEquals(1350, StatFunctions.elementalDefenseDenominator(55, 60));
+		assertEquals(1300, StatFunctions.elementalDefenseDenominator(55, 45));
+		assertEquals(1300, StatFunctions.elementalDefenseDenominator(40, 60));
+		assertEquals(1300, StatFunctions.elementalDefenseDenominator(50, 50));
+	}
+
+	@Test
 	void appliesRetailElementalDefenseLowerCap() {
 		assertEquals(-1000, StatFunctions.applyElementalDefenseLowerCap(-2000, true, 50));
 		assertEquals(-1010, StatFunctions.applyElementalDefenseLowerCap(-2000, true, 51));
@@ -125,23 +136,35 @@ class StatFunctionsTest {
 
 	@Test
 	void appliesRetailMovementCombatStatTable() {
-		assertEquals(800, StatFunctions.applyMovementStatModifier(0, StatEnum.PHYSICAL_DEFENSE, 1000));
-		assertEquals(800, StatFunctions.applyMovementStatModifier(0, StatEnum.MAGICAL_DEFEND, 1000));
-		assertEquals(1000, StatFunctions.applyMovementStatModifier(0, StatEnum.FIRE_RESISTANCE, 1000));
-		assertEquals(1000, StatFunctions.applyMovementStatModifier(1, StatEnum.PHYSICAL_DEFENSE, 1000));
-		assertEquals(1300, StatFunctions.applyMovementStatModifier(1, StatEnum.EVASION, 1000));
-		assertEquals(1500, StatFunctions.applyMovementStatModifier(4, StatEnum.BLOCK, 1000));
-		assertEquals(1000, StatFunctions.applyMovementStatModifier(4, StatEnum.EVASION, 1000));
+		// col1 防御 -20% 仅前进行（1）。 / col1 defense -20% on the forward row (1) only.
+		assertEquals(800, StatFunctions.applyMovementStatModifier(1, StatEnum.PHYSICAL_DEFENSE, 1000));
+		assertEquals(800, StatFunctions.applyMovementStatModifier(1, StatEnum.MAGICAL_DEFEND, 1000));
+		assertEquals(1000, StatFunctions.applyMovementStatModifier(4, StatEnum.PHYSICAL_DEFENSE, 1000));
+		// col3/col4 招架与格挡 +500 在后退相关行（2/3/6）。 / col3/col4 parry and block +500 on backward rows (2/3/6).
+		assertEquals(1500, StatFunctions.applyMovementStatModifier(2, StatEnum.PARRY, 1000));
+		assertEquals(1000, StatFunctions.applyMovementStatModifier(4, StatEnum.PARRY, 1000));
+		// col4/col5 格挡 +500（后退）与 +300（侧移）可叠加（行 6 = 后|侧）。 / col4/col5 block +500 (back) and
+		// +300 (side) stack on row 6 (back|side).
+		assertEquals(1500, StatFunctions.applyMovementStatModifier(2, StatEnum.BLOCK, 1000));
+		assertEquals(1300, StatFunctions.applyMovementStatModifier(4, StatEnum.BLOCK, 1000));
+		assertEquals(1800, StatFunctions.applyMovementStatModifier(6, StatEnum.BLOCK, 1000));
+		// col6 闪避列全 0。 / col6 dodge column is all zero.
+		assertEquals(1000, StatFunctions.applyMovementStatModifier(2, StatEnum.EVASION, 1000));
+		// 表外移动手感：后退（含 2 位）×0.8、侧移（含 4 位）×0.6。 / Off-table feel: back ×0.8, side ×0.6.
+		assertEquals(800, StatFunctions.applyMovementStatModifier(2, StatEnum.SPEED, 1000));
+		assertEquals(600, StatFunctions.applyMovementStatModifier(4, StatEnum.SPEED, 1000));
 	}
 
 	@Test
 	void appliesRetailMoveBonusDamageAndResistanceColumns() {
 		assertEquals(1000, StatFunctions.applyMovementDamageBonus(-1, 1000), 0.001f);
-		assertEquals(1100, StatFunctions.applyMovementDamageBonus(0, 1000), 0.001f);
-		assertEquals(800, StatFunctions.applyMovementDamageBonus(1, 1000), 0.001f);
+		assertEquals(1000, StatFunctions.applyMovementDamageBonus(0, 1000), 0.001f);
+		assertEquals(1100, StatFunctions.applyMovementDamageBonus(1, 1000), 0.001f);
+		assertEquals(1100, StatFunctions.applyMovementDamageBonus(5, 1000), 0.001f);
+		assertEquals(800, StatFunctions.applyMovementDamageBonus(2, 1000), 0.001f);
 		assertEquals(800, StatFunctions.applyMovementDamageBonus(4, 1000), 0.001f);
-		assertEquals(-50, StatFunctions.getMovementResistanceOffset(0));
-		assertEquals(0, StatFunctions.getMovementResistanceOffset(1));
+		assertEquals(-50, StatFunctions.getMovementResistanceOffset(1));
+		assertEquals(0, StatFunctions.getMovementResistanceOffset(0));
 		assertEquals(0, StatFunctions.getMovementResistanceOffset(-1));
 	}
 
