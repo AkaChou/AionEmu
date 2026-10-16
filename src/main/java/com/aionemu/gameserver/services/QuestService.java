@@ -69,6 +69,7 @@ import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
+import com.aionemu.gameserver.questEngine.tablelane.NativeQuestStartPort;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
@@ -540,6 +541,15 @@ public final class QuestService {
 		QuestStateList qsl = player.getQuestStateList();
 		QuestState qs = qsl.getQuestState(id);
 		QuestTemplate template = questsData.getQuestById(env.getQuestId());
+		if (template == null) {
+			// native（表车道）行无 legacy 模板：起始面按原版接取判定分流并建档；未知 ID 一律拒绝。
+			// Native (table-lane) rows carry no legacy template: route the start face through the
+			// retail adjudication and commit; unknown ids are refused outright.
+			if (id > 0 && QuestEngine.getInstance().isNativeOwner(id)) {
+				return NativeQuestStartPort.instance().startTraced(player, id, env.getDialogId()).started();
+			}
+			return false;
+		}
 		if (template.getNpcFactionId() != 0) {
 			NpcFaction faction = player.getNpcFactions().getNpcFactionById(template.getNpcFactionId());
 			if (!faction.isActive() || faction.getQuestId() != env.getQuestId()) {
