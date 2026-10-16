@@ -1,13 +1,8 @@
 package com.aionemu.loginserver.controller;
 
-import com.aionemu.commons.utils.Base64;
-
 import com.aionemu.boot.i18n.I18n;
 
 import java.sql.Timestamp;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,6 +10,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.aionemu.commons.utils.NetworkUtils;
+import com.aionemu.commons.utils.PasswordHash;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.configs.Config;
@@ -414,17 +410,17 @@ public class AccountController {
     }
 
     /**
-     * 对密码进行编码：先 SHA-1 哈希，再以 Base64 包装为字符串（原 AccountUtils）。
-     * Encodes the password: SHA-1 hash wrapped in Base64 (merged from AccountUtils).
+     * 对密码进行编码：先 SHA-1 哈希，再以 Base64 包装为字符串。
+     * Encodes the password: SHA-1 hash wrapped in Base64.
+     * <p>实现委托给 {@link PasswordHash}，与网页商城共用同一份散列格式。
+     * Delegates to {@link PasswordHash} so the web shop shares the exact same hash format.</p>
      * @param password 待编码密码 / password to encode
      * @return 编码后的密码 / encoded password
      */
     private static String encodePassword(String password) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.update(password.getBytes(StandardCharsets.UTF_8));
-            return Base64.encodeToString(digest.digest(), false);
-        } catch (NoSuchAlgorithmException e) {
+            return PasswordHash.encode(password);
+        } catch (IllegalStateException e) {
             log.error(I18n.get("log.4f2731090659"));
             throw new Error(e);
         }

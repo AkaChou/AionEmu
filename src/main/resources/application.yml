@@ -1,3 +1,9 @@
+server:
+  # 自建商城与 GM 后台的 HTTP 端口（与 2106/7777/10241/9014 无冲突）。
+  # HTTP port of the self-hosted shop and GM console (no clash with 2106/7777/10241/9014).
+  port: 10086
+  address: 0.0.0.0
+
 spring:
   flyway:
     baseline-on-migrate: true
@@ -5,7 +11,7 @@ spring:
   main:
     banner-mode: "off"
     log-startup-info: false
-    web-application-type: none
+    web-application-type: servlet
   messages:
     basename: messages
     encoding: UTF-8
@@ -13,6 +19,14 @@ spring:
 mybatis-flex:
   global-config:
     print-banner: false
+
+webshop:
+  # 物品图标外置目录（aion-shop 的 icons_webp 产物，约 18MB，故不打进 jar）。
+  # External directory of item icons (the icons_webp output of aion-shop, ~18MB, kept out of the jar).
+  icon-dir: ${aion.home:-aion}/web/icons
+  # 商品图标在页面上的 URL 前缀，需与 WebShopWebMvcConfig 中的资源映射一致。
+  # URL prefix of item icons on pages; must match the resource mapping in WebShopWebMvcConfig.
+  icon-url-prefix: /icons
 
 aion:
   game:
