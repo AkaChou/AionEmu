@@ -385,7 +385,7 @@ public final class SimpleCombineTaskHandler {
 		QuestStatus status = state != null ? state.getStatus() : QuestStatus.NONE;
 
 		if (state == null || status == QuestStatus.NONE
-				|| (status == QuestStatus.COMPLETE && repeatable(questId))) {
+				|| (status == QuestStatus.COMPLETE && repeatable(state, questId))) {
 			return onAcceptDialog(player, questId, objectId, dialogId);
 		}
 		if (status == QuestStatus.START) {
@@ -575,11 +575,10 @@ public final class SimpleCombineTaskHandler {
 		}
 	}
 
-	/** 原版 {@code max_repeat_count} > 1 ⇒ 可重复（COMPLETE 态可再次开窗）。 / Repeatable per retail max_repeat_count. */
-	private boolean repeatable(int questId) {
-		NativeQuestXmlTable.QuestRow row = NativeQuestXmlTable.instance().find(questId).orElse(null);
-		Integer maxRepeat = row == null ? null : row.integer("max_repeat_count");
-		return maxRepeat != null && maxRepeat > 1;
+	/** COMPLETE 态重复窗 = 次数未用尽且时间轴已到（与 {@code NativeQuestStartPort} 同一判定）。 /
+	 * The repeat window at COMPLETE, delegated to the shared NativeQuestStartPort adjudication. */
+	private boolean repeatable(QuestState state, int questId) {
+		return NativeQuestStartPort.repeatWindowOpen(state, questId);
 	}
 
 	private ItemStack parseSymbol(String symbol, int questId, Set<String> unresolved) {
