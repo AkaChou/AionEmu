@@ -30,8 +30,8 @@ public class VipConfig {
 	/**
 	 * 是否自动启用账号 VIP。 / Whether to auto-enable account VIP.
 	 */
-	@Property(key = "loginserver.vip.auto-enable", defaultValue = "false")
-	public static boolean AUTO_ENABLE;
+	@Property(key = "loginserver.vip.auto-enable", defaultValue = "true")
+	public static boolean AUTO_ENABLE = true;
 
 	/**
 	 * 自动启用 VIP 的等级。 / Level granted when auto-enabling VIP.
@@ -41,8 +41,14 @@ public class VipConfig {
 	 * validation runs before the bound value is written, so 0 fails {@code @Min(1)} and aborts
 	 * binding in assembly contexts.</p>
 	 */
-	@Property(key = "loginserver.vip.auto-enable.level", defaultValue = "1")
-	public static int AUTO_ENABLE_LEVEL = 1;
+	@Property(key = "loginserver.vip.auto-enable.level", defaultValue = "6")
+	public static int AUTO_ENABLE_LEVEL = 6;
+
+	/**
+	 * 自动启用 VIP 的有效期天数。 / Validity in days when auto-enabling VIP.
+	 */
+	@Property(key = "loginserver.vip.auto-enable.days", defaultValue = "365")
+	public static int AUTO_ENABLE_DAYS = 365;
 
 	@Valid
 	private final AutoEnableProperties autoEnable = new AutoEnableProperties();
@@ -62,12 +68,15 @@ public class VipConfig {
 	}
 
 	/**
-	 * 校验配置值范围（VIP 等级）。
-	 * Validates configuration value ranges (VIP level).
+	 * 校验配置值范围（VIP 等级与有效期天数）。
+	 * Validates configuration value ranges (VIP level and validity days).
 	 */
 	public static void validate() {
 		if (AUTO_ENABLE && (AUTO_ENABLE_LEVEL < 1 || AUTO_ENABLE_LEVEL > 6)) {
 			throw new IllegalArgumentException("loginserver.vip.auto-enable.level must be between 1 and 6");
+		}
+		if (AUTO_ENABLE && AUTO_ENABLE_DAYS < 1) {
+			throw new IllegalArgumentException("loginserver.vip.auto-enable.days must be at least 1");
 		}
 	}
 
@@ -110,6 +119,15 @@ public class VipConfig {
 
 		public void setLevel(int level) {
 			AUTO_ENABLE_LEVEL = level;
+		}
+
+		@Min(1)
+		public int getDays() {
+			return AUTO_ENABLE_DAYS;
+		}
+
+		public void setDays(int days) {
+			AUTO_ENABLE_DAYS = days;
 		}
 	}
 }

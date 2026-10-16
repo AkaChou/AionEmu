@@ -87,7 +87,7 @@ public class LoginStartupSequence {
             log.info(I18n.get("log.189724bde746",
                 new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(System.currentTimeMillis()))));
             Config.load();
-            vipService.syncMissingAccounts();
+            vipService.grantToAllAccounts();
             startDeadlockDetector();
             initializeKeyGenerator();
             gameServerTable.load();

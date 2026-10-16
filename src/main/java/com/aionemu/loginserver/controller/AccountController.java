@@ -327,7 +327,8 @@ public class AccountController {
 
         if (accountDao.insertAccount(account)) {
             if (VipConfig.AUTO_ENABLE) {
-                accountVipDao.insertIfAbsent(account.getId(), VipConfig.AUTO_ENABLE_LEVEL);
+                accountVipDao.insertIfAbsent(account.getId(), VipConfig.AUTO_ENABLE_LEVEL,
+                    VipConfig.AUTO_ENABLE_DAYS);
             }
             return account;
         }

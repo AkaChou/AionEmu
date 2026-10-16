@@ -18,7 +18,7 @@ import com.aionemu.loginserver.model.Vip;
 class VipServiceTest {
 
     private final ConfigSnapshot vipConfigSnapshot = ConfigSnapshot.of(VipConfig.class,
-        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL");
+        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL", "AUTO_ENABLE_DAYS");
 
     @AfterEach
     void restoreConfig() {
@@ -32,22 +32,24 @@ class VipServiceTest {
 
         VipService service = new VipService(fakeDao(state));
 
-        assertEquals(0, service.syncMissingAccounts());
+        assertEquals(0, service.grantToAllAccounts());
         assertFalse(service.insertIfAbsent(42));
         assertEquals(0, state.writeCalls);
     }
 
     @Test
-    void enabledAutoEnableUsesConfiguredLevel() {
+    void enabledAutoEnableUsesConfiguredLevelAndDays() {
         FakeVipState state = new FakeVipState();
         VipConfig.AUTO_ENABLE = true;
-        VipConfig.AUTO_ENABLE_LEVEL = 4;
+        VipConfig.AUTO_ENABLE_LEVEL = 6;
+        VipConfig.AUTO_ENABLE_DAYS = 365;
 
         VipService service = new VipService(fakeDao(state));
 
-        assertEquals(3, service.syncMissingAccounts());
+        assertEquals(3, service.grantToAllAccounts());
         assertTrue(service.insertIfAbsent(42));
-        assertEquals(4, state.lastLevel);
+        assertEquals(6, state.lastLevel);
+        assertEquals(365, state.lastDays);
         assertEquals(42, state.lastAccountId);
     }
 
@@ -55,6 +57,15 @@ class VipServiceTest {
     void enabledAutoEnableRejectsInvalidLevel() {
         VipConfig.AUTO_ENABLE = true;
         VipConfig.AUTO_ENABLE_LEVEL = 7;
+
+        assertThrows(IllegalArgumentException.class, VipConfig::validate);
+    }
+
+    @Test
+    void enabledAutoEnableRejectsInvalidDays() {
+        VipConfig.AUTO_ENABLE = true;
+        VipConfig.AUTO_ENABLE_LEVEL = 6;
+        VipConfig.AUTO_ENABLE_DAYS = 0;
 
         assertThrows(IllegalArgumentException.class, VipConfig::validate);
     }
@@ -74,7 +85,7 @@ class VipServiceTest {
         VipConfig.AUTO_ENABLE_LEVEL = 1;
 
         AccountVipDao dao = fakeDao(state);
-        assertThrows(IllegalStateException.class, () -> new VipService(dao).syncMissingAccounts());
+        assertThrows(IllegalStateException.class, () -> new VipService(dao).grantToAllAccounts());
     }
 
     /**
@@ -85,18 +96,20 @@ class VipServiceTest {
         return (AccountVipDao) Proxy.newProxyInstance(AccountVipDao.class.getClassLoader(),
             new Class<?>[] { AccountVipDao.class }, (proxy, method, args) -> switch (method.getName()) {
                 case "findByAccountId" -> null;
-                case "syncMissingAccounts" -> {
+                case "grantToAllAccounts" -> {
                     if (state.failSync) {
                         throw new IllegalStateException("database unavailable");
                     }
                     state.writeCalls++;
                     state.lastLevel = (int) args[0];
+                    state.lastDays = (int) args[1];
                     yield 3;
                 }
                 case "insertIfAbsent" -> {
                     state.writeCalls++;
                     state.lastAccountId = (int) args[0];
                     state.lastLevel = (int) args[1];
+                    state.lastDays = (int) args[2];
                     yield true;
                 }
                 default -> throw new UnsupportedOperationException(method.getName());
@@ -108,6 +121,7 @@ class VipServiceTest {
         private int writeCalls;
         private int lastAccountId;
         private int lastLevel;
+        private int lastDays;
         private boolean failSync;
     }
 }

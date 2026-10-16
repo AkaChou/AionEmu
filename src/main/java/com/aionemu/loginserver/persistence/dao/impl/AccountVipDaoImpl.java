@@ -34,18 +34,18 @@ public class AccountVipDaoImpl extends ServiceImpl<AccountVipMapper, AccountVipP
 	}
 
 	@Override
-	public int syncMissingAccounts(int level) {
+	public int grantToAllAccounts(int level, int days) {
 		try {
-			return mapper.syncMissingAccounts(level);
+			return mapper.grantToAllAccounts(level, days);
 		} catch (DataAccessException e) {
-			throw new IllegalStateException("Could not synchronize missing account VIP data", e);
+			throw new IllegalStateException("Could not grant account VIP data", e);
 		}
 	}
 
 	@Override
-	public boolean insertIfAbsent(int accountId, int level) {
+	public boolean insertIfAbsent(int accountId, int level, int days) {
 		try {
-			return mapper.insertIfAbsent(accountId, level) > 0;
+			return mapper.insertIfAbsent(accountId, level, days) > 0;
 		} catch (DataAccessException e) {
 			return false;
 		}

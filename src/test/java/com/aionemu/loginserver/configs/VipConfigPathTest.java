@@ -17,7 +17,7 @@ class VipConfigPathTest {
     @TempDir
     Path tempDir;
     private final ConfigSnapshot vipSnapshot = ConfigSnapshot.of(VipConfig.class,
-        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL");
+        "AUTO_ENABLE", "AUTO_ENABLE_LEVEL", "AUTO_ENABLE_DAYS");
 
     @AfterEach
     void resetConfig() {
@@ -36,6 +36,7 @@ class VipConfigPathTest {
         Files.writeString(configDir.resolve("main/vip.properties"), """
             loginserver.vip.auto-enable = true
             loginserver.vip.auto-enable.level = 4
+            loginserver.vip.auto-enable.days = 30
             """);
         System.setProperty("aion.config.dir", configDir.toString());
 
@@ -43,6 +44,7 @@ class VipConfigPathTest {
 
         assertTrue(VipConfig.AUTO_ENABLE);
         assertEquals(4, VipConfig.AUTO_ENABLE_LEVEL);
+        assertEquals(30, VipConfig.AUTO_ENABLE_DAYS);
     }
 
     /**
@@ -60,6 +62,7 @@ class VipConfigPathTest {
         Files.writeString(configDir.resolve("main/vip.properties"), """
             loginserver.vip.auto-enable.value = true
             loginserver.vip.auto-enable.level = 4
+            loginserver.vip.auto-enable.days = 30
             """);
         System.setProperty("aion.config.dir", configDir.toString());
 
@@ -67,5 +70,6 @@ class VipConfigPathTest {
 
         assertTrue(VipConfig.AUTO_ENABLE);
         assertEquals(4, VipConfig.AUTO_ENABLE_LEVEL);
+        assertEquals(30, VipConfig.AUTO_ENABLE_DAYS);
     }
 }

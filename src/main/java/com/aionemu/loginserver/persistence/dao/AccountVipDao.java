@@ -11,9 +11,9 @@ public interface AccountVipDao extends IService<AccountVipPo> {
 
 	Vip findByAccountId(int accountId);
 
-	/** 为全部缺失 VIP 行的账号补齐记录（方言 SQL：INSERT IGNORE ... SELECT）。 */
-	int syncMissingAccounts(int level);
+	/** 为全部账号授予 VIP，已有记录同样提升（方言 SQL：INSERT ... SELECT ... ON DUPLICATE KEY UPDATE）。 */
+	int grantToAllAccounts(int level, int days);
 
 	/** 单账号补齐 VIP 行，已存在时不插入（方言 SQL：INSERT IGNORE）。 */
-	boolean insertIfAbsent(int accountId, int level);
+	boolean insertIfAbsent(int accountId, int level, int days);
 }
