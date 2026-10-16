@@ -113,6 +113,7 @@ cd AionEmu
 `patch/` 目录提供配套 Aion 5.8 客户端的兼容与体验补丁：
 
 - **`bin64/`** — 核心运行库（`Game.dll`），提供协议支持与兼容运行。
+- **`bin64.7z`** — 客户端运行库压缩包，需先解压再覆盖 `bin64/Game.dll`（详见 [`patch/README.md`](../patch/README.md)）。
 - **`L10N/CHS/`** — 简体中文任务文本与界面汉化包（`data.pak`）。
 - **`Levels/`** — 地图与地形数据修正（`Level.pak`）。
 - **`Textures/ui/`** — 界面 UI 图标与纹理更新（`ui.pak`）。

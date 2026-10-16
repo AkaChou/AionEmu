@@ -113,6 +113,7 @@ Configure your database credentials in `src/main/resources/aion/config/network/n
 The `patch/` directory contains companion enhancements for the Aion 5.8 64-bit client:
 
 - **`bin64/`** — Core runtime library (`Game.dll`) for protocol compatibility.
+- **`bin64.7z`** — Client runtime archive; extract it first, then overwrite `bin64/Game.dll` (see [`patch/README.md`](patch/README.md)).
 - **`L10N/CHS/`** — Simplified Chinese quest dialogue and UI localization (`data.pak`).
 - **`Levels/`** — Map terrain and coordinate corrections (`Level.pak`).
 - **`Textures/ui/`** — UI icons and interface assets (`ui.pak`).
