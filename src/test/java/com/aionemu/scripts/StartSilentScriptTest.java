@@ -202,9 +202,10 @@ class StartSilentScriptTest {
         // Shows the current IP and asks whether to change it; the shipped sample address counts as unset.
         assertTrue(ps1.contains("是否需要修改"));
         assertTrue(ps1.contains("PlaceholderIp"));
-        // 对外 IP 必须为局域网/公网 IPv4，本机地址被拒 / the advertised IP must be a LAN/public IPv4.
+        // 连接 IP 为 IPv4；未配置时直接回车默认 127.0.0.1（本机单机部署）。
+        // The server IP is an IPv4; pressing ENTER when unset defaults to 127.0.0.1 (local play).
         assertTrue(ps1.contains("Test-IPv4"));
-        assertTrue(ps1.contains("Test-LocalOnlyAddress"));
+        assertTrue(ps1.contains("$DefaultIp = '127.0.0.1'"));
         assertTrue(ps1.contains("Send-CtrlC"));
         assertTrue(ps1.contains("--init-file="));
         // 便携 MySQL 监听 0.0.0.0（my.ini），远程客户端可直连 / portable MySQL binds 0.0.0.0 via my.ini.
