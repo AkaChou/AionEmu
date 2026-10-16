@@ -198,12 +198,11 @@ class StartSilentScriptTest {
         assertTrue(ps1.contains("network.properties"));
         assertTrue(ps1.contains("Configure-NetworkAddress"));
         assertTrue(ps1.contains("Configure-CountryCode"));
-        // 已配置过时展示当前 IP 并询问是否修改；随包示例地址视为未配置。
-        // Shows the current IP and asks whether to change it; the shipped sample address counts as unset.
-        assertTrue(ps1.contains("是否需要修改"));
-        assertTrue(ps1.contains("PlaceholderIp"));
-        // 连接 IP 为 IPv4；未配置时直接回车默认 127.0.0.1（本机单机部署）。
-        // The server IP is an IPv4; pressing ENTER when unset defaults to 127.0.0.1 (local play).
+        // 连接 IP 只问一次：回车用 127.0.0.1，输入即采用；无"是否修改"二次确认。
+        // One single prompt for the server IP: ENTER keeps 127.0.0.1, the typed value is used as-is.
+        assertFalse(ps1.contains("是否需要修改"));
+        // 连接 IP 为 IPv4；直接回车默认 127.0.0.1（本机单机部署）。
+        // The server IP is an IPv4; pressing ENTER defaults to 127.0.0.1 (local play).
         assertTrue(ps1.contains("Test-IPv4"));
         assertTrue(ps1.contains("$DefaultIp = '127.0.0.1'"));
         assertTrue(ps1.contains("Send-CtrlC"));
@@ -214,6 +213,8 @@ class StartSilentScriptTest {
         // 前台运行 + 已在运行时说明原因 / foreground run + explain-and-exit when already running.
         assertTrue(ps1.contains("-NoNewWindow"));
         assertTrue(ps1.contains("已在运行"));
+        // start-mysql 需拦截 Ctrl+C 作为控制台输入以触发 finally 停止 MySQL / treat Ctrl+C as input to trigger finally.
+        assertTrue(ps1.contains("TreatControlCAsInput"));
         // 国内优先：JRE 走 TUNA，MySQL 走华为云 / China-first mirrors for JRE and MySQL.
         assertTrue(ps1.contains("mirrors.tuna.tsinghua.edu.cn"));
         assertTrue(ps1.contains("mirrors.huaweicloud.com"));
