@@ -223,6 +223,25 @@ class AionServiceLauncherTest {
     }
 
     @Test
+    void stopErrorInOneServiceDoesNotStrandTheRemainingServices() throws Exception {
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new RecordingTransportBoundary(events),
+            List.of(
+                new ErrorOnStopLifecycle(events),
+                new RecordingLifecycle("login", 100, true, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+        launcher.destroy();
+
+        assertEquals(
+            List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
+    }
+
+    @Test
     void gracefulShutdownRequestRunsOnlyOnce() {
         AtomicInteger requests = new AtomicInteger();
         AionServiceLauncher launcher = new AionServiceLauncher(
@@ -352,6 +371,19 @@ class AionServiceLauncherTest {
         public void start(ApplicationArguments args) {
             super.start(args);
             throw new IllegalStateException("boom");
+        }
+    }
+
+    /** 关服期才首次加载的类缺失：单点 Error 不得连累其余服务与传输边界的收尾。 */
+    private static final class ErrorOnStopLifecycle extends RecordingLifecycle {
+        private ErrorOnStopLifecycle(List<String> events) {
+            super("game", 300, true, events);
+        }
+
+        @Override
+        public void stop() {
+            super.stop();
+            throw new NoClassDefFoundError("com/aionemu/OnlyLoadedAtShutdown");
         }
     }
 }

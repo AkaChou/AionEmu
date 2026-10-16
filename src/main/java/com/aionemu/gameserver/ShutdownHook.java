@@ -303,15 +303,15 @@ public class ShutdownHook extends Thread {
 	}
 
 	/**
-	 * 执行单步关服任务并吞掉异常记录日志。
-	 * Runs one shutdown step and logs any thrown exception.
+	 * 进程级故障边界：执行单步关服任务并记录任何 Throwable，保证后续落盘步骤仍会执行。
+	 * Process-level failure boundary: logs any Throwable from one step so the remaining persist steps still run.
 	 * @param name 步骤名 / step name
 	 * @param step 步骤逻辑 / step logic
 	 */
 	private void runShutdownStep(String name, Runnable step) {
 		try {
 			step.run();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(I18n.get("shutdown.step_error", name), e);
 		}
 	}

@@ -110,6 +110,24 @@ class ShutdownHookTest {
         assertEquals(List.of(), liveNpcs);
     }
 
+    @Test
+    void shutdownStepErrorDoesNotAbortRemainingSteps() throws ReflectiveOperationException {
+        List<String> ran = new ArrayList<>();
+
+        invokeRunShutdownStep("dump runnable stats", () -> {
+            throw new NoClassDefFoundError("com/aionemu/commons/utils/concurrent/RunnableStatsManager$SortBy");
+        });
+        invokeRunShutdownStep("save game time", () -> ran.add("save game time"));
+
+        assertEquals(List.of("save game time"), ran);
+    }
+
+    private void invokeRunShutdownStep(String name, Runnable step) throws ReflectiveOperationException {
+        Method method = ShutdownHook.class.getDeclaredMethod("runShutdownStep", String.class, Runnable.class);
+        method.setAccessible(true);
+        method.invoke(new ShutdownHook(), name, step);
+    }
+
     private void invokeSendShutdownStatus(boolean status) throws ReflectiveOperationException {
         Method method = ShutdownHook.class.getDeclaredMethod("sendShutdownStatus", boolean.class);
         method.setAccessible(true);

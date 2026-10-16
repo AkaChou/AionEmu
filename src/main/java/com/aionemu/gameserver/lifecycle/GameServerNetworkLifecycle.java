@@ -122,25 +122,26 @@ public class GameServerNetworkLifecycle {
 	}
 
 	/**
-	 * 停止网络：断开登录/聊天对等端并关闭客户端传输。
-	 * Stop networking: disconnect login/chat peers and shut down the client transport.
+	 * 停止网络：断开登录/聊天对等端并关闭客户端传输。单点失败（含 Error）不得阻断其余清理。
+	 * Stop networking: disconnect login/chat peers and shut down the client transport. One failing step
+	 * (Errors included) must not block the remaining teardown.
 	 */
 	public void stop() {
 		try {
 			loginServer().disconnect();
-		} catch (Exception e) {
+		} catch (Exception | Error e) {
 			log.warn(I18n.get("shutdown.login_stop_failed"), e);
 		}
 		try {
 			chatServer().disconnect();
-		} catch (Exception e) {
+		} catch (Exception | Error e) {
 			log.warn(I18n.get("shutdown.chat_stop_failed"), e);
 		}
 		try {
 			if (gameClientTransport != null) {
 				gameClientTransport.shutdown();
 			}
-		} catch (Exception e) {
+		} catch (Exception | Error e) {
 			log.warn(I18n.get("shutdown.client_transport_stop_failed"), e);
 		}
 		gameClientTransport = null;
