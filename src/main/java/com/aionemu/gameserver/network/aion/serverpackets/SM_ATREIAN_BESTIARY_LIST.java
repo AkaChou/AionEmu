@@ -29,8 +29,8 @@ public class SM_ATREIAN_BESTIARY_LIST extends AionServerPacket {
 		for (PlayerABEntry entry : allAB) {
 			writeD(entry.getId()); // id
 			writeD(entry.getKillCount()); // current kill
-			writeC(entry.claimRewardLevel()); // claim Reward
-			writeC(entry.getLevel()); // current level
+			writeC(entry.getLevel()); // grade（真端 grade 在前 / retail: grade first）
+			writeC(entry.claimRewardLevel()); // receivedReward（已领奖阶段数 / claimed reward count）
 		}
 	}
 }
