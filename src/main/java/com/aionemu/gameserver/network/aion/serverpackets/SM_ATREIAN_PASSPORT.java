@@ -40,12 +40,14 @@ public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
+		// 真端 S_LOGIN_EVENT_LIST 布局：H 年, H 月, H 日, H 记录数, 记录数 × { D 事件ID, D 签到类型, D 已集印花数, C 今日已领 }
+		// Retail S_LOGIN_EVENT_LIST layout: H year, H month, H day, H recordCount, records × { D eventId, D attendType, D stamps, C claimedToday }
 		writeH(year);
 		writeH(month);
 		writeH(day);
-		writeH(1);
+		writeH(1); // 记录数，当前固定单条 / record count, currently a single record
 		writeD(passportId);
-		writeD(attendType);
+		writeD(attendType); // 固定下发 1（客户端 ANNIVERSARY 渲染路径），见 AtreianPassportService / always 1, see AtreianPassportService
 		writeD(countCollected);
 		writeC(hasCollected ? 0 : 1);
 	}

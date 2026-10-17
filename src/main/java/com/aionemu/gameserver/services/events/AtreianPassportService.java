@@ -6,8 +6,8 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,39 +76,77 @@ public class AtreianPassportService {
 		if (player == null) {
 			return;
 		}
-		int atreianId = 8;
 		int accountId = player.getPlayerAccount().getId();
 		Map<Integer, AtreianPassport> playerPassports = getPlayerPassports(accountId);
+		for (AtreianPassport template : activePassports()) {
+			syncPassport(player, accountId, template, playerPassports);
+		}
+	}
 
-		// 若全部印章已领取则添加重置 / Added reset if all Stamps are received
-		if (playerPassportsDAO.getStamps(accountId, atreianId) == 28) {
+	/**
+	 * 返回全部激活中的签到模板（active=1，按 ID 升序）。
+	 * All active passport templates (active=1, ordered by id).
+	 */
+	private List<AtreianPassport> activePassports() {
+		return data.values().stream()
+			.filter(p -> p.getActive() == 1)
+			.sorted(java.util.Comparator.comparingInt(AtreianPassport::getId))
+			.toList();
+	}
+
+	/**
+	 * 同步单个签到（插入新行、跨自然日解锁、下发状态包）。
+	 * Syncs a single passport (insert row, unlock on a new calendar day, send state packet).
+	 */
+	private void syncPassport(Player player, int accountId, AtreianPassport template,
+			Map<Integer, AtreianPassport> playerPassports) {
+		int atreianId = template.getId();
+		// 实测结论：客户端 BASIC(0) 路径按服务器年月取本地月历数据（5.8 客户端仅 2017 年 → 2026 年下发全黑无图标）；
+		// ANNIVERSARY(1) 路径按 eventId 索引本地数据填 28 槽网格（格数=本地该期奖励数），标题亦取本地该期。
+		// 故固定下发 1，由 eventId 选择期数 / Send ANNIVERSARY(1): the BASIC path reads local data by calendar
+		// month (empty for 2026), while ANNIVERSARY indexes by eventId and fills the 28-slot grid from it.
+		int attendTypeId = 1;
+
+		// 多格月历型签到印章集满则重置（满额 = 该签到的奖励格数）；单格型（如 passport 9）领完即止不重置
+		// Multi-stamp passports reset once full; single-reward passports (e.g. passport 9) end when claimed out
+		int maxStamps = template.getAtreianPassportRewards().size();
+		if (maxStamps > 1 && playerPassportsDAO.getStamps(accountId, atreianId) >= maxStamps) {
 			playerPassportsDAO.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
 		}
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(player.getCreationDate());
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int month = cal.get(Calendar.MONTH);
-		int year = cal.get(Calendar.YEAR);
+		// 真端下发的是服务器当前日期，客户端据此渲染当月月历
+		// Retail sends the current server date; the client renders the current month from it
+		LocalDate today = LocalDate.now();
+		int day = today.getDayOfMonth();
+		int month = today.getMonthValue();
+		int year = today.getYear();
 
 		if (!playerPassports.containsKey(atreianId)) {
 			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
 			playerPassportsDAO.insertPassport(accountId, atreianId, 0, now);
-			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId, 0, 1, false, day, month + 1, year));
+			PacketSendUtility.sendPacket(player,
+				new SM_ATREIAN_PASSPORT(atreianId, 0, attendTypeId, false, day, month, year));
 		} else {
 			int stamps = playerPassportsDAO.getStamps(accountId, atreianId);
-			Timestamp now2 = new Timestamp(System.currentTimeMillis());
 			Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
-			if (now2.getTime() - lastStamp.getTime() >= 86400000L) {
+			if (isNewDay(lastStamp)) {
 				playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false, lastStamp);
 				PacketSendUtility.sendPacket(player,
-					new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, false, day, month + 1, year));
+					new SM_ATREIAN_PASSPORT(atreianId, stamps, attendTypeId, false, day, month, year));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);
 			} else {
 				PacketSendUtility.sendPacket(player,
-					new SM_ATREIAN_PASSPORT(atreianId, stamps, 1, true, day, month + 1, year));
+					new SM_ATREIAN_PASSPORT(atreianId, stamps, attendTypeId, true, day, month, year));
 			}
 		}
+	}
+
+	/**
+	 * 判定上次盖章是否落在今天之前的自然日（本地时区），即今日是否可再领一次。
+	 * Whether the last stamp falls on a previous calendar day (local zone), i.e. another claim is allowed today.
+	 */
+	private static boolean isNewDay(Timestamp lastStamp) {
+		return lastStamp == null || !LocalDate.now().equals(lastStamp.toLocalDateTime().toLocalDate());
 	}
 
 	/**
@@ -136,24 +174,25 @@ public class AtreianPassportService {
 		if (!playerPassportsDAO.getPassports(accountId).contains(atreianId)) {
 			return;
 		}
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(player.getCreationDate());
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		int month = cal.get(Calendar.MONTH);
-		int year = cal.get(Calendar.YEAR);
+		// 真端下发的是服务器当前日期，客户端据此渲染当月月历
+		// Retail sends the current server date; the client renders the current month from it
+		LocalDate today = LocalDate.now();
+		int day = today.getDayOfMonth();
+		int month = today.getMonthValue();
+		int year = today.getYear();
+		int attendTypeId = 1; // 见 syncPassport 注释 / see note in syncPassport
 		int stamps = playerPassportsDAO.getStamps(accountId, atreianId);
+		Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
+		if (!isNewDay(lastStamp)) {
+			return;
+		}
 		for (AtreianPassportRewards component : loginRewardTemplate.getAtreianPassportRewards()) {
-			Timestamp now = new Timestamp(System.currentTimeMillis());
-			Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
-			if (now.getTime() - lastStamp.getTime() >= 86400000L) {
-				if (component.getRewardItemNum() == stamps + 1) {
-					ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
-					// PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(atreianId,
-					// OLD
-					PacketSendUtility.sendPacket(player,
-						new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, 1, true, day, month + 1, year));
-					playerPassportsDAO.updatePassport(accountId, atreianId, stamps + 1, true, now);
-				}
+			// 至多一个格子的序号等于 stamps+1，命中即发 / at most one slot equals stamps+1
+			if (component.getRewardItemNum() == stamps + 1) {
+				ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
+				PacketSendUtility.sendPacket(player,
+					new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, attendTypeId, true, day, month, year));
+				playerPassportsDAO.updatePassport(accountId, atreianId, stamps + 1, true, new Timestamp(System.currentTimeMillis()));
 			}
 		}
 	}

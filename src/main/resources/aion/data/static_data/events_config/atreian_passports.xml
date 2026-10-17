@@ -33,7 +33,17 @@
         <atreian_passport_reward reward_item_num="27" reward_item_count="1" reward_item="188058146" name="[Jakunerk] Greater Supplements Bundle (2000 units)"/>
         <atreian_passport_reward reward_item_num="28" reward_item_count="1" reward_item="188058154" reward_permit_level="66" name="[Jakunerk] Luxurious Equipment Box"/>
     </atreian_passport>
-    <atreian_passport id="9" name="2020_attend_01_anniversary" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="1" attend_type="ANNIVERSARY">
+    <atreian_passport id="9" name="2020_attend_01_anniversary" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="0" attend_type="ANNIVERSARY">
         <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188053423" reward_permit_level="66" name="[Stamp] Anniversary Gift Box"/>
+    </atreian_passport>
+    <!-- PC Basic attendance（retail id=10）；active=0：onLogin 会广播全部 active 签到，5.8 客户端本地 id=10 是"网吧切克隆的图章"月历，下发会覆盖正常面板 / keep inactive: onLogin broadcasts actives and the 5.8 client renders id=10 as the PC-bang calendar -->
+    <atreian_passport id="10" name="2017_attend_01_PCbasic" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="0" attend_type="BASIC">
+        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188055237"/>
+        <atreian_passport_reward reward_item_num="2" reward_item_count="1" reward_item="188055236"/>
+        <atreian_passport_reward reward_item_num="3" reward_item_count="1" reward_item="162001078"/>
+        <atreian_passport_reward reward_item_num="4" reward_item_count="1" reward_item="188058146"/>
+        <atreian_passport_reward reward_item_num="5" reward_item_count="1" reward_item="188055280"/>
+        <atreian_passport_reward reward_item_num="6" reward_item_count="1" reward_item="188058147"/>
+        <atreian_passport_reward reward_item_num="7" reward_item_count="1" reward_item="188058154"/>
     </atreian_passport>
 </atreian_passports>
