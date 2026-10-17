@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.persistence.dao.impl;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +129,14 @@ public class PlayerEventsWindowDaoImpl extends ServiceImpl<PlayerEventsWindowMap
 	public int getRewardRecivedCount(int accountId, int eventId) {
 		try {
 			PlayerEventsWindowPo po = mapper.selectOneByQuery(byAccountAndEvent(accountId, eventId));
-			return po == null || po.getRewardRecivedCount() == null ? 0 : po.getRewardRecivedCount();
+			if (po == null || po.getRewardRecivedCount() == null) {
+				return 0;
+			}
+			// 计数归属非当日时视为 0（每日按自然日重置）/ Counts from an earlier calendar day read as 0 (daily reset)
+			if (po.getCountDate() == null || !LocalDate.now().equals(po.getCountDate())) {
+				return 0;
+			}
+			return po.getRewardRecivedCount();
 		} catch (DataAccessException e) {
 			log.debug("No reward count found for account {}, event {}", accountId, eventId);
 		}
@@ -141,6 +149,7 @@ public class PlayerEventsWindowDaoImpl extends ServiceImpl<PlayerEventsWindowMap
 		try {
 			UpdateChain.of(PlayerEventsWindowPo.class)
 				.set(PlayerEventsWindowPo::getRewardRecivedCount, rewardRecivedCount)
+				.set(PlayerEventsWindowPo::getCountDate, LocalDate.now())
 				.set(PlayerEventsWindowPo::getElapsed, 0)
 				.set(PlayerEventsWindowPo::getLastStamp, QueryMethods.now())
 				.where(PlayerEventsWindowPo::getAccountId).eq(accountId)

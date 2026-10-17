@@ -119,7 +119,6 @@ public class EventWindowService {
 
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
 			final int elapsed = playerEventsWindowDAO.getElapsed(accountId, eventsWindow.getId());
-			final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventsWindow.getId());
 
 			if (!eventsWindow.getPeriodStart().isBefore(now) || !eventsWindow.getPeriodEnd().isAfter(now)) {
 				continue;
@@ -133,6 +132,8 @@ public class EventWindowService {
 			log.info(I18n.get("log.e1c6fecfcb1f", eventsWindow.getId(), eventsWindow.getRemainingTime()));
 			ThreadPoolManager.getInstance().schedule(() -> {
 				if (player.isOnline()) {
+					// 实时读计数：登录期快照会在跨自然日会话里吞掉当天奖励 / read live: a login-time snapshot swallows the new day's reward on cross-midnight sessions
+					int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventsWindow.getId());
 					if (recivedCount == eventsWindow.getMaxCountOfDay()) {
 						sendActiveEventsForPlayer.remove(eventsWindow.getId());
 						return;
