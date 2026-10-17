@@ -16,18 +16,18 @@ import lombok.Getter;
 @XmlAccessorType(XmlAccessType.NONE)
 public class LunaConsumeRewardsTemplate {
 	/** 返回 ID / Returns the id */
-	@XmlAttribute
+	@XmlAttribute(name = "id")
 	protected int id;
 	/** 获取名称。 / Returns the name. */
-	@XmlAttribute
+	@XmlAttribute(name = "name")
 	protected String name;
-	@XmlAttribute
+	@XmlAttribute(name = "luna_sum_count")
 	protected int luna_sum_count;
-	@XmlAttribute
+	@XmlAttribute(name = "gacha_cost")
 	protected int gacha_cost;
-	@XmlAttribute
+	@XmlAttribute(name = "create_1")
 	protected int create_1;
-	@XmlAttribute
+	@XmlAttribute(name = "num_1")
 	protected int num_1;
 
 	/** 返回累计消费次数 / Returns the sum count */

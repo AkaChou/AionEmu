@@ -1,75 +1,113 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 	Daishunerk's Game Of Fate — gold dice reward tables (grade 1..5 = C/B/A/S/SS),
-	ported from retail client_luna_gotcha_reward_list.xml (luna_dice_gotcha_*_01).
+	ported from the China client data/China/Luna/Luna.pak (client_luna_gotcha_reward_list.xml).
  -->
 <luna_dice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="luna_dice.xsd">
     <!-- Grade 1: C (Common) -->
     <table id="1">
-        <reward item_id="188052704" count="1"/>
-        <reward item_id="188052073" count="1"/>
-        <reward item_id="188053005" count="1"/>
-        <reward item_id="188052319" count="1"/>
-        <reward item_id="188054038" count="1"/>
-        <reward item_id="188054039" count="1"/>
+        <reward item_id="162000181" count="10"/>
+        <reward item_id="188056819" count="1"/>
         <reward item_id="188052674" count="1"/>
-        <reward item_id="188052632" count="1"/>
-        <reward item_id="188053644" count="1"/>
-        <reward item_id="188052693" count="1"/>
-        <reward item_id="188052716" count="1"/>
-        <reward item_id="161000003" count="1"/>
+        <reward item_id="186000051" count="1"/>
+        <reward item_id="186000414" count="20"/>
+        <reward item_id="186000237" count="10"/>
+        <reward item_id="186000236" count="20"/>
+        <reward item_id="188100335" count="250"/>
+        <reward item_id="188052496" count="1"/>
+        <reward item_id="162001062" count="1"/>
+        <reward item_id="188058251" count="1"/>
+        <reward item_id="186000237" count="25"/>
+        <reward item_id="188100391" count="350"/>
+        <reward item_id="186000469" count="350"/>
+        <reward item_id="190200000" count="25"/>
+        <reward item_id="169650000" count="1"/>
+        <reward item_id="188054345" count="1"/>
+        <reward item_id="188054348" count="1"/>
+        <reward item_id="166010001" count="1"/>
+        <reward item_id="188055680" count="1"/>
+        <reward item_id="165060001" count="1"/>
+        <reward item_id="187300002" count="1"/>
+        <reward item_id="190080005" count="1"/>
     </table>
     <!-- Grade 2: B (Rare) -->
     <table id="2">
-        <reward item_id="188053784" count="1"/>
-        <reward item_id="188053206" count="1"/>
-        <reward item_id="188053208" count="1"/>
-        <reward item_id="188053005" count="1"/>
-        <reward item_id="188052319" count="1"/>
-        <reward item_id="188054038" count="1"/>
-        <reward item_id="188054039" count="1"/>
-        <reward item_id="188052674" count="1"/>
-        <reward item_id="188052632" count="1"/>
-        <reward item_id="169200006" count="1"/>
-        <reward item_id="169200007" count="1"/>
-        <reward item_id="188053663" count="1"/>
-        <reward item_id="188053644" count="1"/>
-        <reward item_id="188052716" count="1"/>
+        <reward item_id="188052496" count="1"/>
+        <reward item_id="162001062" count="3"/>
+        <reward item_id="188058251" count="1"/>
+        <reward item_id="186000237" count="25"/>
+        <reward item_id="188100391" count="500"/>
+        <reward item_id="186000469" count="500"/>
+        <reward item_id="190200000" count="50"/>
+        <reward item_id="169650000" count="1"/>
+        <reward item_id="186000492" count="2"/>
+        <reward item_id="166010001" count="1"/>
+        <reward item_id="188055680" count="1"/>
+        <reward item_id="165060001" count="1"/>
+        <reward item_id="187300002" count="1"/>
+        <reward item_id="190080005" count="1"/>
+        <reward item_id="166030005" count="1"/>
+        <reward item_id="166020000" count="1"/>
+        <reward item_id="188056735" count="1"/>
+        <reward item_id="188055183" count="1"/>
+        <reward item_id="188055197" count="1"/>
+        <reward item_id="188055198" count="1"/>
+        <reward item_id="190080008" count="1"/>
     </table>
     <!-- Grade 3: A (Legend) -->
     <table id="3">
-        <reward item_id="188053785" count="1"/>
-        <reward item_id="188052559" count="1"/>
-        <reward item_id="187060091" count="1"/>
-        <reward item_id="187060094" count="1"/>
-        <reward item_id="188053295" count="1"/>
-        <reward item_id="169405339" count="1"/>
-        <reward item_id="188053005" count="1"/>
-        <reward item_id="188052319" count="1"/>
-        <reward item_id="188054038" count="1"/>
-        <reward item_id="188054039" count="1"/>
-        <reward item_id="188053663" count="3"/>
-        <reward item_id="188053663" count="2"/>
-        <reward item_id="188053663" count="1"/>
+        <reward item_id="188052496" count="5"/>
+        <reward item_id="162001062" count="10"/>
+        <reward item_id="188100391" count="500"/>
+        <reward item_id="186000469" count="500"/>
+        <reward item_id="190200000" count="100"/>
+        <reward item_id="188055682" count="1"/>
+        <reward item_id="186000492" count="5"/>
+        <reward item_id="166010001" count="1"/>
+        <reward item_id="188055681" count="1"/>
+        <reward item_id="187300002" count="1"/>
+        <reward item_id="190080005" count="1"/>
+        <reward item_id="166030005" count="1"/>
+        <reward item_id="166020000" count="1"/>
+        <reward item_id="188056735" count="1"/>
+        <reward item_id="188055183" count="1"/>
+        <reward item_id="188055197" count="1"/>
+        <reward item_id="188055198" count="1"/>
+        <reward item_id="190080008" count="1"/>
+        <reward item_id="188057669" count="1"/>
+        <reward item_id="188057670" count="1"/>
+        <reward item_id="188056802" count="1"/>
+        <reward item_id="188056803" count="1"/>
     </table>
     <!-- Grade 4: S (Unique) -->
     <table id="4">
-        <reward item_id="188053212" count="1"/>
-        <reward item_id="166500002" count="1"/>
-        <reward item_id="188051577" count="1"/>
-        <reward item_id="188052560" count="1"/>
-        <reward item_id="188053786" count="1"/>
-        <reward item_id="188053005" count="1"/>
-        <reward item_id="188052319" count="1"/>
-        <reward item_id="188054038" count="1"/>
-        <reward item_id="188054039" count="1"/>
+        <reward item_id="166010001" count="5"/>
+        <reward item_id="166030005" count="3"/>
+        <reward item_id="166020000" count="3"/>
+        <reward item_id="188056735" count="1"/>
+        <reward item_id="188057672" count="1"/>
+        <reward item_id="188055183" count="1"/>
+        <reward item_id="190080008" count="2"/>
+        <reward item_id="190080023" count="1"/>
+        <reward item_id="188057669" count="1"/>
+        <reward item_id="188057670" count="1"/>
+        <reward item_id="188058793" count="1"/>
+        <reward item_id="188056805" count="1"/>
+        <reward item_id="188056806" count="1"/>
     </table>
     <!-- Grade 5: SS (Mythic) -->
     <table id="5">
-        <reward item_id="188055177" count="1"/>
-        <reward item_id="188057261" count="1"/>
-        <reward item_id="188057037" count="1"/>
-        <reward item_id="188056957" count="1"/>
-        <reward item_id="188055791" count="1"/>
+        <reward item_id="166030005" count="5"/>
+        <reward item_id="166020000" count="5"/>
+        <reward item_id="166032001" count="1"/>
+        <reward item_id="188058795" count="1"/>
+        <reward item_id="188058797" count="1"/>
+        <reward item_id="190080023" count="1"/>
+        <reward item_id="188057669" count="1"/>
+        <reward item_id="188057670" count="1"/>
+        <reward item_id="188058789" count="1"/>
+        <reward item_id="188058793" count="1"/>
+        <reward item_id="188056805" count="1"/>
+        <reward item_id="188056806" count="1"/>
     </table>
 </luna_dice>

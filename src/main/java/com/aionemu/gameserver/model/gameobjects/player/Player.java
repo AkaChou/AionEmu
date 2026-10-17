@@ -347,7 +347,7 @@ public class Player extends Creature {
 	 */
 	private int LunaDiceGameTry = 0;
 	/**
-	 * 黄金骰子掷出的待领奖档位（1..5 = C/B/A/S/SS，0=无）。 / Pending gold dice grade (1..5 = C/B/A/S/SS, 0=none).
+	 * 黄金骰子掷出的待结算档位（1..5 = C/B/A/S/SS，0=无）。 / Pending gold dice grade (1..5 = C/B/A/S/SS, 0=none).
 	 */
 	private int LunaGoldDiceGrade = 0;
 	// PvP 系统： / Pvp System:

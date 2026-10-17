@@ -96,7 +96,9 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	private int lunaConsumePoint;
 	private int muni_keys;
 	private int consumeCount = 0;
-	private int wardrobeSlot;
+	/** 衣柜槽位，初始 2 格；0 会让打开衣柜的包发出去但客户端不认，表现为点击无反应。 */
+	/** Wardrobe slots, starting at 2; 0 makes the open-wardrobe packet arrive but hang the client. */
+	private int wardrobeSlot = 2;
 	private PlayerUpgradeArcade upgradeArcade;
 	// 成长光环 5.0 / Aura Of Growth 5.0
 	private long auraOfGrowth;

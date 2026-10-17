@@ -57,5 +57,4 @@ public class LunaDiceData {
 	public List<LunaDiceItem> getDiceItems(int tableId) {
 		return diceItemList.get(tableId);
 	}
-
 }

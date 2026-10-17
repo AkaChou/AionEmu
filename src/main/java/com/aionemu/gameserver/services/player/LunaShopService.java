@@ -6,7 +6,9 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,12 +58,13 @@ public class LunaShopService {
 	static final int MATERIAL_BOX_PRICE = 2;
 	static final int WARDROBE_APPEARANCE_PRICE = 12;
 	static final int LUNA_INSTANCE_PRICE = 20;
+	/** 无钥匙时露娜直开宝物盒的价格。 / Price to open a treasure chest with Luna when out of keys. */
 	static final int TREASURE_CHEST_PRICE = 5;
 	/** 露娜骰子每轮价格；真端无每日次数上限，露娜余额即闸门（User::StartRollDice 仅有格子段位区间检查）。 */
 	static final int LUNA_DICE_PRICE = 3;
-	/** 黄金骰子每轮价格（真端 client_luna_cost.xml: luna_dice_gotcha_golddice price01=200，每日 1 次）。 */
-	static final int LUNA_GOLD_DICE_PRICE = 200;
-	/** 掷满该次数即集齐 5 微笑，进入黄金骰子阶段。 */
+	/** 黄金骰子每轮价格（实机客户端「黄金骰子 35」按钮显示口径）。 */
+	static final int LUNA_GOLD_DICE_PRICE = 35;
+	/** 掷满该次数且本局无掷空，进入黄金骰子阶段。 */
 	static final int DICE_GOLD_STAGE_TRIES = 5;
 
 	private static volatile ObjectProvider<LunaShopService> instanceProvider;
@@ -106,6 +109,7 @@ public class LunaShopService {
 			dailyGenerated = false;
 			generateDailyCraft();
 			resetFreeLuna();
+			resetDailyConsumeAchievements();
 		}, daily);
 
 		CronService.requireCurrent().schedule(() -> {
@@ -181,6 +185,18 @@ public class LunaShopService {
 	public void resetFreeLuna() {
 		playerLunaShopDAO.delete();
 		updateFreeLuna();
+	}
+
+	/**
+	 * 每天 9 点重置全体在线玩家的露娜消耗档位成就：消耗点与已领基线清零，钥匙保留（面板口径“每天上午 9 点，成就初始化”）。
+	 * Resets the daily Luna consume ladder for all online players at 09:00 — points and claimed baseline reset, keys kept.
+	 */
+	public void resetDailyConsumeAchievements() {
+		World.getInstance().doOnAllPlayers(player -> {
+			player.setLunaConsumePoint(0);
+			player.setLunaConsumeCount(0);
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
+		});
 	}
 
 	public void sendSpecialCraft(Player player) {
@@ -263,6 +279,15 @@ public class LunaShopService {
 			pls.setPersistentState(PersistentState.UPDATE_REQUIRED);
 			player.setPlayerLunaShop(pls);
 			playerLunaShopDAO.add(player.getObjectId(), pls.isFreeUnderpath(), pls.isFreeFactory(), pls.isFreeChest());
+		}
+
+		if (needsDailyReset(player.getCommonData().getLastOnline())) {
+			player.setLunaConsumePoint(0);
+			player.setLunaConsumeCount(0);
+		} else {
+			// 同日内登录：补发已达成但因停服、网络或历史数据未到账的档位奖励。
+			// Same-day login: delivers reached tiers that were missed due to restart, network, or legacy data.
+			grantLunaConsumeRewards(player);
 		}
 
 		// PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(6));
@@ -404,7 +429,14 @@ public class LunaShopService {
 	 * itemObjId
 	 */
 	public void dorinerkWardrobeAct(Player player, int applySlot, int itemObjId) {
-		int itemId = player.getInventory().getItemByObjId(itemObjId).getItemId();
+		Item item = player.getInventory().getItemByObjId(itemObjId);
+		// 物品不存在时静默 NPE 会让客户端等不到回包而卡死；回失败包。
+		// A missing item would NPE and hang the client waiting for a reply; answer with a failure.
+		if (item == null || player.getWardrobe() == null) {
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(10, 0x01, applySlot, 0, 0));
+			return;
+		}
+		int itemId = item.getItemId();
 		int itemOnDB = playerWardrobeDAO.getWardrobeItemBySlot(player.getObjectId(), applySlot);
 		if (itemOnDB != 0) {
 			playerWardrobeDAO.delete(player.getObjectId(), itemOnDB);
@@ -429,6 +461,12 @@ public class LunaShopService {
 		ItemTemplate it = DataManager.ITEM_DATA.getItemTemplate(itemId);
 		Storage inventory = player.getInventory();
 		Item keepItem = inventory.getItemByObjId(itemObjId);
+		// 物品或外观模板缺失时静默 NPE 会让客户端卡死；回失败包。
+		// A missing item or skin template would NPE and hang the client; answer with a failure.
+		if (keepItem == null || it == null) {
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(11, applySlot));
+			return;
+		}
 		if (reskinCount != 0 && spendLunaFailed(player, WARDROBE_APPEARANCE_PRICE)) {
 			return;
 		}
@@ -572,52 +610,8 @@ public class LunaShopService {
 
 		if (player.getMuniKeys() > 0) {
 			player.setMuniKeys(player.getMuniKeys() - 1);
-		} else {
-			if (spendLunaFailed(player, TREASURE_CHEST_PRICE)) {
-				return;
-			}
-			player.setLunaConsumePoint(player.getLunaConsumePoint() + TREASURE_CHEST_PRICE);
-			boolean reciveBonus = false;
-			switch (player.getLunaConsumePoint()) {
-			case 25:
-				reciveBonus = true;
-				player.setLunaConsumeCount(1);
-				break;
-			case 50:
-				reciveBonus = true;
-				player.setLunaConsumeCount(2);
-				break;
-			case 100:
-				reciveBonus = true;
-				player.setLunaConsumeCount(3);
-				muniKeysController(player, player.getMuniKeys() + 1);
-				break;
-			case 150:
-				reciveBonus = true;
-				player.setLunaConsumeCount(4);
-				muniKeysController(player, player.getMuniKeys() + 1);
-				break;
-			case 300:
-				reciveBonus = true;
-				player.setLunaConsumeCount(5);
-				muniKeysController(player, player.getMuniKeys() + 2);
-				break;
-			case 500:
-				reciveBonus = true;
-				player.setLunaConsumeCount(6);
-				muniKeysController(player, player.getMuniKeys() + 2);
-				break;
-			case 1000:
-				reciveBonus = true;
-				player.setLunaConsumeCount(7);
-				muniKeysController(player, player.getMuniKeys() + 3);
-				break;
-			}
-			if (reciveBonus) {
-				LunaConsumeRewardsTemplate lt = DataManager.LUNA_CONSUME_REWARDS_DATA
-						.getLunaConsumeRewardsId(player.getLunaConsumeCount());
-				ItemService.addItem(player, lt.getCreateItemId(), lt.getCreateItemCount());
-			}
+		} else if (spendLunaFailed(player, TREASURE_CHEST_PRICE)) {
+			return;
 		}
 
 		final HashMap<Integer, Long> mt = new HashMap<>();
@@ -644,11 +638,8 @@ public class LunaShopService {
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0));
-		// 花费露娜可获得打开穆尼伦克宝箱的钥匙。 / As you spend Luna, you can earn keys to open Munirunerks Treasure Chest.
-		// 若没有钥匙，可花费 3 露娜开箱。 / If you do not have any keys, you can spend 3 Luna to open a chest
-		// 立即。 / immediately.
-		// 开箱消耗的露娜也会计入你的露娜统计。 / The Luna you spend on opening chests will also count towards your Luna
-		// 奖励！ / Rewards!
+		// 消耗露娜的成就档位发放宝物盒钥匙；开盒优先用钥匙，无钥匙则以露娜直开并照常计入消耗档位。
+		// Luna consume tiers grant treasure keys; opening prefers a key and falls back to Luna, which counts toward the tiers.
 	}
 
 	static int wardrobePrice(int wardrobeSlot) {
@@ -666,53 +657,49 @@ public class LunaShopService {
 	 */
 	public void diceGame(Player player) {
 		int diceTry = player.getLunaDiceGameTry();
-		// 掷满 5 次集齐 5 微笑后进入黄金骰子阶段（真端 golddice：200/次，掷出 C..SS 五档之一）。
-		// After 5 rolls (5 smiles collected) the gold dice stage begins (retail golddice: 200 each, rolls grade C..SS).
-		boolean goldStage = diceTry >= DICE_GOLD_STAGE_TRIES;
-		int price = goldStage ? LUNA_GOLD_DICE_PRICE : LUNA_DICE_PRICE;
-		if (spendLunaFailed(player, price)) {
-			// 真端拒绝路径必回掷骰结果包（result=2 露娜不足、dice=-1），否则客户端自动掷骰会卡死。
-			// The retail server always answers a rejected roll (result=2, dice=-1) or the client auto-roll hangs.
-			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(2, -1));
-			return;
-		}
-		if (goldStage) {
+		// 黄金骰子：5 槽全微笑（推进制下 = 掷满 5 次）后可掷，35 露娜/次，掷出 C..SS 五档之一，结算按档发放。
+		// Gold dice: after all 5 slots smile (5 rolls in the progressive model), 35 luna each, yields grade C..SS.
+		if (diceTry >= DICE_GOLD_STAGE_TRIES) {
+			// 真端黄金标志未清（未领奖）时拒绝再次黄金掷，否则会重复扣费并覆盖待领档位。
+			// Retail rejects another gold roll while the gold flag is set (reward not claimed yet).
+			if (player.getLunaGoldDiceGrade() > 0) {
+				PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(1, -1, false));
+				return;
+			}
+			if (spendLunaFailed(player, LUNA_GOLD_DICE_PRICE)) {
+				PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(2, -1, false));
+				return;
+			}
 			int grade = rollGoldGrade();
 			player.setLunaGoldDiceGrade(grade);
 			player.setLunaDiceGameTry(diceTry + 1);
-			player.setLunaConsumePoint(player.getLunaConsumePoint() + price);
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, 74));
-			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(0, grade));
+			// specialFlag=1 + 开牌序号 5..7 才会让客户端翻金骰、切宝箱档并显示领取按钮（真端 finalOpenNum 同源）。
+			// specialFlag=1 with open number 5..7 is what makes the client flip the gold dice, retier the chest and show the claim button.
+			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(0, goldDiceOpenNum(grade), true));
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
-			log.debug("Luna gold dice result. playerId={} grade={} tries={} consumed={}", player.getObjectId(), grade,
-					player.getLunaDiceGameTry(), player.getLunaConsumePoint());
+			log.debug("Luna gold dice roll. playerId={} grade={}", player.getObjectId(), grade);
 			return;
 		}
-		int random = Rnd.get(1, 1000);
-		// 微笑概率自定口径（真端为脚本表驱动）：1=30% / 2=25% / 3=20% / 4=15% / 5=10%，无掷空。
-		// Smile odds are a custom curve (retail weights are script-driven): 30/25/20/15/10, no blank roll.
-		if (random <= 300) {
-			player.setLunaDiceGame(1, false);
-		} else if (random <= 550) {
-			player.setLunaDiceGame(2, false);
-		} else if (random <= 750) {
-			player.setLunaDiceGame(3, false);
-		} else if (random <= 900) {
-			player.setLunaDiceGame(4, false);
-		} else {
-			player.setLunaDiceGame(5, false);
+		// 普通掷：从右到左确定性点亮一个微笑猫，3 露娜/次（蓝猫 = 未填槽的默认图，无随机失败）。
+		// Normal roll: deterministically lights the next smile shugo right-to-left, 3 luna each (no random miss).
+		if (spendLunaFailed(player, LUNA_DICE_PRICE)) {
+			// 真端拒绝路径必回掷骰结果包（result=2 露娜不足、dice=-1），否则客户端自动掷骰会卡死。
+			// The retail server always answers a rejected roll (result=2, dice=-1) or the client auto-roll hangs.
+			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(2, -1, false));
+			return;
 		}
-		player.setLunaDiceGameTry(diceTry + 1);
-		player.setLunaConsumePoint(player.getLunaConsumePoint() + LUNA_DICE_PRICE);
+		int progress = diceTry + 1;
+		player.setLunaDiceGame(progress, true);
+		player.setLunaDiceGameTry(progress);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, diceTry == 0 ? 72 : 73));
-		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(15));
+		PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(0, progress, false));
 		if (diceTry > 0) {
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
 		}
-		log.debug("Luna dice result. playerId={} random={} tries={} consumed={}", player.getObjectId(), random,
-				player.getLunaDiceGameTry(), player.getLunaConsumePoint());
+		log.debug("Luna dice roll. playerId={} progress={}", player.getObjectId(), progress);
 	}
 
 	/**
@@ -722,12 +709,13 @@ public class LunaShopService {
 	 */
 	public void diceGameReward(Player player) {
 		int goldGrade = player.getLunaGoldDiceGrade();
-		// 黄金档位掷出后按档从 luna_dice.xml 结算；未掷黄金则维持旧占位奖励。
-		// A pending gold grade settles from luna_dice.xml; without one the legacy placeholder reward applies.
-		LunaDiceItem goldReward = goldGrade > 0 ? rollGoldReward(goldGrade) : null;
-		int rewardItemId = goldReward != null ? goldReward.getItemId() : 162001014;
-		long rewardCount = goldReward != null ? goldReward.getCount() : 4;
-		if (!canClaimDiceReward(player.getLunaDiceGameTry()) || rewardItemId <= 0
+		int diceTry = player.getLunaDiceGameTry();
+		// 真端按当前 openNum 找到对应奖励表（普通掷同样可领，档位随微笑数提升），黄金掷则用其档位。
+		// Retail resolves the reward table from the current openNum (normal rolls are claimable too); gold rolls use their grade.
+		LunaDiceItem reward = rollDiceReward(goldGrade > 0 ? goldGrade : rewardTableFor(diceTry));
+		int rewardItemId = reward != null ? reward.getItemId() : 0;
+		long rewardCount = reward != null ? reward.getCount() : 0;
+		if (!canClaimDiceReward(diceTry) || rewardItemId <= 0
 				|| ItemService.addItem(player, rewardItemId, rewardCount) != 0) {
 			// 真端领奖失败回 result=1 + 空列表；静默 return 会让客户端领奖窗显示为空。
 			// Retail answers a failed claim (result=1, empty list); a silent return leaves the client reward window blank.
@@ -742,24 +730,43 @@ public class LunaShopService {
 	}
 
 	/**
-	 * 黄金骰子随机档位：1=C 35% / 2=B 25% / 3=A 20% / 4=S 12% / 5=SS 8%（真端权重在脚本 DLL 内不可得，此处为自定口径）。
-	 * Rolls a gold dice grade: 1=C 35% / 2=B 25% / 3=A 20% / 4=S 12% / 5=SS 8% (retail weights live in the script DLL).
+	 * 黄金骰子随机档位：按中国区 luna_dice_gotcha_ratio.xml 的 dice_set_05（5500/4000/500）出 A/S/SS 三档。
+	 * Rolls a gold dice grade from the China dice_set_05 weights (5500/4000/500) yielding A/S/SS only.
 	 */
 	static int rollGoldGrade() {
-		int roll = Rnd.get(1, 100);
-		if (roll <= 35) {
-			return 1;
-		}
-		if (roll <= 60) {
-			return 2;
-		}
-		if (roll <= 80) {
+		int roll = Rnd.get(1, 10000);
+		if (roll <= 5500) {
 			return 3;
 		}
-		return roll <= 92 ? 4 : 5;
+		return roll <= 9500 ? 4 : 5;
 	}
 
-	private static LunaDiceItem rollGoldReward(int grade) {
+	/**
+	 * 档位映射到黄金开牌序号 5..7（A/S/SS）。真端 finalOpenNum = 该组 &lt;success_total&gt; + 桶索引，
+	 * 中国区 dice_set_05 的 success_total=5、权重 5500/4000/500 → 5/6/7；客户端收到 ≥5 即进黄金分支，
+	 * 并以 openNum-5 作为翻牌颗数/宝箱档，special=1 时显示领取按钮。
+	 * Maps a grade to gold open number 5..7 (A/S/SS): retail finalOpenNum = success_total + bucket index.
+	 * China set dice_set_05 has success_total=5 and weights 5500/4000/500 -> 5/6/7; the client enters the
+	 * gold branch at >=5, and uses openNum-5 as the flip count and chest tier.
+	 */
+	static int goldDiceOpenNum(int grade) {
+		return grade + 2;
+	}
+
+	/**
+	 * 普通掷得奖的档位表：笑猫 1、2 只对应 C，3、4 对应 B，5 对应 A（中国区 gotcha id 10/11/12/13/14/15）。
+	 * Reward table for a normal roll: 1-2 smiles = C, 3-4 = B, 5 = A (China gotcha ids 10-15).
+	 * @param diceTry 当前开牌序号 / current open number
+	 * @return 奖励表 id / reward table id
+	 */
+	static int rewardTableFor(int diceTry) {
+		if (diceTry <= 2) {
+			return 1;
+		}
+		return diceTry <= 4 ? 2 : 3;
+	}
+
+	private static LunaDiceItem rollDiceReward(int grade) {
 		List<LunaDiceItem> items = DataManager.LUNA_DICE.getDiceItems(grade);
 		if (items == null || items.isEmpty()) {
 			log.warn("Luna gold dice table {} missing or empty.", grade);
@@ -774,6 +781,91 @@ public class LunaShopService {
 
 	static boolean canSpendLuna(long balance, long price) {
 		return price >= 0 && balance >= price;
+	}
+
+	/**
+	 * 发放所有已达成但尚未领取的露娜消耗档位奖励（钥匙 + 物品），以 lunaConsumeCount 为已领基线，
+	 * 因此旧版精确匹配漏发的档位会在下一次消耗时自动补发。
+	 * Grants every reached-but-unclaimed Luna consume-tier reward (keys + item) using lunaConsumeCount as the
+	 * claimed baseline, so tiers missed by the legacy exact-match check heal on the next spend.
+	 */
+	private void grantLunaConsumeRewards(Player player) {
+		for (LunaConsumeRewardsTemplate row : crossedTiers(
+				DataManager.LUNA_CONSUME_REWARDS_DATA.getAll().values(), player.getLunaConsumePoint(),
+				player.getLunaConsumeCount())) {
+			player.setLunaConsumeCount(row.getId());
+			if (row.getGachaCost() > 0) {
+				muniKeysController(player, player.getMuniKeys() + row.getGachaCost());
+			}
+			if (row.getCreateItemId() > 0) {
+				long remaining = ItemService.addItem(player, row.getCreateItemId(), row.getCreateItemCount());
+				if (remaining > 0) {
+					// 放入失败（背包满等）必须留痕，静默丢失会让“成就达成却没收到”无从排查。
+					// A failed delivery (full inventory etc.) must be logged or "tier reached but nothing arrived" is undebuggable.
+					log.warn(I18n.get("log.c3f1e2a4d7b8", player.getObjectId(), row.getId(), row.getCreateItemId(),
+							remaining));
+				}
+				ItemTemplate t = DataManager.ITEM_DATA.getItemTemplate(row.getCreateItemId());
+				if (t != null) {
+					if (row.getCreateItemCount() == 1) {
+						PacketSendUtility.sendPacket(player,
+								SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM(t.getNameId()));
+					} else if (row.getCreateItemCount() > 1) {
+						PacketSendUtility.sendPacket(player,
+								SM_SYSTEM_MESSAGE.STR_MSG_LUNA_REWARD_GOTCHA_ITEM_MULTI(row.getCreateItemCount(), t.getNameId()));
+					}
+				}
+				log.debug("Luna consume tier granted. playerId={} tier={} point={} keys+={} item={}x{}", player.getObjectId(),
+						row.getId(), player.getLunaConsumePoint(), row.getGachaCost(), row.getCreateItemId(),
+						row.getCreateItemCount());
+				// 面板“领取”状态靠这条推送点亮（真端 _SendLunaRewardGotchaPacket 同包形：subAction 12 + 物品对）。
+				// The panel lights the tier up from this push (retail _SendLunaRewardGotchaPacket: subAction 12 + item pairs).
+				HashMap<Integer, Long> granted = new HashMap<>();
+				granted.put(row.getCreateItemId(), (long) row.getCreateItemCount());
+				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(granted));
+			}
+		}
+		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
+	}
+
+	/**
+	 * 检查玩家是否需要重置每日露娜成就（以每天 09:00 为重置分界线）。
+	 * Checks if the player needs a daily reset (boundary at 09:00 every day).
+	 */
+	static boolean needsDailyReset(java.sql.Timestamp lastOnline) {
+		if (lastOnline == null) {
+			return false;
+		}
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
+		cal.set(java.util.Calendar.MINUTE, 0);
+		cal.set(java.util.Calendar.SECOND, 0);
+		cal.set(java.util.Calendar.MILLISECOND, 0);
+		long resetTime = cal.getTimeInMillis();
+		if (System.currentTimeMillis() < resetTime) {
+			resetTime -= 86400000L;
+		}
+		return lastOnline.getTime() < resetTime;
+	}
+
+	/**
+	 * 区间判档：档位 ≤ 累计消耗且 ID 大于已领基线的行，按 ID 升序（表内档位随 ID 单调递增）。
+	 * 若已领基线大于当前点数能达到的最大档位（历史脏数据，如 150 点却记录为 7），自动纠偏为 0 从头补发。
+	 * Range-based tier selection: rows with threshold ≤ consumed point and id above the claimed baseline, by id.
+	 * Heals legacy dirty state (e.g. claimedId=7 on consumePoint=150) by falling back to 0.
+	 */
+	static List<LunaConsumeRewardsTemplate> crossedTiers(Collection<LunaConsumeRewardsTemplate> rows, int consumePoint,
+			int claimedId) {
+		int maxAchievableId = rows.stream()
+				.filter(row -> row.getSumCount() <= consumePoint)
+				.mapToInt(LunaConsumeRewardsTemplate::getId)
+				.max()
+				.orElse(0);
+		int effectiveClaimedId = claimedId > maxAchievableId ? 0 : claimedId;
+		return rows.stream()
+				.filter(row -> row.getSumCount() <= consumePoint && row.getId() > effectiveClaimedId)
+				.sorted(Comparator.comparingInt(LunaConsumeRewardsTemplate::getId))
+				.toList();
 	}
 
 	private boolean spendLunaFailed(Player player, long price) {
@@ -798,6 +890,10 @@ public class LunaShopService {
 			if (player.getLunaAccount() != remaining) {
 				return true;
 			}
+			// 所有露娜消耗都计入档位成就（真端在 User::TryChangeLuna 唯一咽喉后自动判档发奖）。
+			// All Luna spending counts toward the consume tiers (retail auto-grants right after User::TryChangeLuna).
+			player.setLunaConsumePoint(player.getLunaConsumePoint() + (int) price);
+			grantLunaConsumeRewards(player);
 		}
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0));
 		return false;

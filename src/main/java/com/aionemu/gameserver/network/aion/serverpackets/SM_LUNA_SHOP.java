@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeEntry;
+import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -41,6 +42,8 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	// 月之骰子掷骰结果 / Luna dice roll result
 	private int rollResult;
 	private int diceValue = -1;
+	// 黄金骰子标志：1 让客户端翻金骰、切档并显示领取按钮 / gold dice flag driving the client flip and claim button
+	private boolean specialFlag;
 	// 月之骰子领奖结果 / Luna dice reward claim result
 	private int rewardResult;
 	private int rewardCount = -1;
@@ -137,17 +140,23 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		this.itemCount = itemCount;
 	}
 
+	public static SM_LUNA_SHOP diceRollResult(int rollResult, int diceValue) {
+		return diceRollResult(rollResult, diceValue, false);
+	}
+
 	/**
 	 * 月之骰子掷骰结果（真端 User::SendLunaDiceGotchaRollResult 同构载荷）。
 	 * Luna dice roll result (mirrors retail User::SendLunaDiceGotchaRollResult payload).
 	 * @param rollResult 结果码（0 成功 / 1 其他失败 / 2 露娜不足）/ result code (0 success / 1 other failure / 2 not enough luna)
-	 * @param diceValue 骰子值（-1 表示无）/ dice value (-1 for none)
+	 * @param diceValue 骰子开牌序号（-1 表示无）/ dice open number (-1 for none)
+	 * @param specialFlag 黄金骰子标志（true 翻开金骰并显示领取按钮）/ gold dice flag (flips gold dice and shows the claim button)
 	 * @return 掷骰结果包 / the roll result packet
 	 */
-	public static SM_LUNA_SHOP diceRollResult(int rollResult, int diceValue) {
+	public static SM_LUNA_SHOP diceRollResult(int rollResult, int diceValue, boolean specialFlag) {
 		SM_LUNA_SHOP packet = new SM_LUNA_SHOP(15);
 		packet.rollResult = rollResult;
 		packet.diceValue = diceValue;
+		packet.specialFlag = specialFlag;
 		return packet;
 	}
 
@@ -206,7 +215,13 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeC(0x00);
 			writeC(slotSize);
 			writeH(itemSize);
-			for (PlayerWardrobeEntry ce : player.getWardrobe().getAllWardrobe()) {
+			// 衣柜列表可能尚未加载（null）；NPE 会让包发不出去，客户端开衣柜卡死。
+			// The wardrobe list may be unloaded (null); an NPE drops the packet and hangs the client.
+			PlayerWardrobeList wardrobe = player.getWardrobe();
+			if (wardrobe == null) {
+				break;
+			}
+			for (PlayerWardrobeEntry ce : wardrobe.getAllWardrobe()) {
 				writeC(ce.getSlot());
 				writeD(ce.getItemId());
 				writeD(0x00);
@@ -228,9 +243,9 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeC(indun_id);
 			writeD(0x01);
 			break;
-		case 12:// open chest
-			writeC(0);// 未知 / unk
-			writeH(3);// size always 3
+		case 12:// open chest / consume-tier reward notify (retail _SendLunaRewardGotchaPacket shares this shape)
+			writeC(0);// 结果：0 成功 / result: success
+			writeH(munirunerk_treasure.size());
 			for (Map.Entry<Integer, Long> e : munirunerk_treasure.entrySet()) {
 				writeD(e.getKey());
 				writeQ(e.getValue());
@@ -244,7 +259,7 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			int dice = diceValue >= 0 ? diceValue : player.getLunaDiceGame();
 			writeC(rollResult);
 			writeH(dice);
-			writeC(0);
+			writeC(specialFlag ? 1 : 0);
 			break;
 		case 16:
 			writeC(rewardResult);
