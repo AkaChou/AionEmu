@@ -2011,14 +2011,16 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		fleeSource = source;
 		// 到达目标点后再选下一点（handleMoveArrived），定时器仅作卡死兜底
 		scheduleNextFlee(source, 0);
-		fleeStopTask = ThreadPoolManager.getInstance().schedule(
+		Future<?> stop = ThreadPoolManager.getInstance().schedule(
 			() -> stopFlee(source, pushState), Math.max(1L, integer(action, "seconds")) * 1000);
-		writableActionTasks().add(fleeStopTask);
+		fleeStopTask = stop;
+		writableActionTasks().add(stop);
 	}
 
 	private void scheduleNextFlee(Creature source, long delayMs) {
-		fleeMoveTask = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source), delayMs);
-		writableActionTasks().add(fleeMoveTask);
+		Future<?> next = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source), delayMs);
+		fleeMoveTask = next;
+		writableActionTasks().add(next);
 	}
 
 	private void moveAwayFrom(Creature source) {
@@ -2038,9 +2040,12 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		getOwner().getMoveController().moveToPoint(destination.getX(), destination.getY(), destination.getZ());
 		// 兜底：若迟迟未到达目标点（卡死/寻路失败），超时后重选
 		// Fallback: if the destination is not reached in time (stuck or pathfinding failure), reselect after the timeout.
-		fleeMoveTask = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source),
+		// 用局部变量登记：stopFlee 可能在赋值与登记之间把字段置空，直接 add 字段会因 null 抛 NPE
+		// Track the local: stopFlee may null the field between assignment and registration, and add(null) throws NPE.
+		Future<?> next = ThreadPoolManager.getInstance().schedule(() -> moveAwayFrom(source),
 			FLEE_RESELECT_TIMEOUT_MS);
-		writableActionTasks().add(fleeMoveTask);
+		fleeMoveTask = next;
+		writableActionTasks().add(next);
 	}
 
 	private synchronized void stopFlee(Creature source, boolean pushState) {
