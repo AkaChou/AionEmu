@@ -346,6 +346,10 @@ public class Player extends Creature {
 	 * 返回 luna dice game try / Returns the luna dice game try
 	 */
 	private int LunaDiceGameTry = 0;
+	/**
+	 * 黄金骰子掷出的待领奖档位（1..5 = C/B/A/S/SS，0=无）。 / Pending gold dice grade (1..5 = C/B/A/S/SS, 0=none).
+	 */
+	private int LunaGoldDiceGrade = 0;
 	// PvP 系统： / Pvp System:
 	private boolean bandit = false;
 	/**

@@ -48,5 +48,14 @@ public class LunaDiceData {
 		return diceItemList.size();
 	}
 
+	/**
+	 * 返回指定表 ID（黄金骰子奖励档位 1..5）的奖励物品列表。
+	 * Returns the reward item list for the given table id (gold dice grade 1..5).
+	 * @param tableId 表 ID / table id
+	 * @return 奖励列表，未命中为 null / reward list, or null if absent
+	 */
+	public List<LunaDiceItem> getDiceItems(int tableId) {
+		return diceItemList.get(tableId);
+	}
 
 }

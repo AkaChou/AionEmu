@@ -25,6 +25,7 @@ import com.aionemu.gameserver.model.gameobjects.player.PlayerLunaShop;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.luna.LunaConsumeRewardsTemplate;
+import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceItem;
 import com.aionemu.gameserver.model.templates.recipe.LunaComponent;
 import com.aionemu.gameserver.model.templates.recipe.LunaComponentElement;
 import com.aionemu.gameserver.model.templates.recipe.LunaTemplate;
@@ -56,6 +57,12 @@ public class LunaShopService {
 	static final int WARDROBE_APPEARANCE_PRICE = 12;
 	static final int LUNA_INSTANCE_PRICE = 20;
 	static final int TREASURE_CHEST_PRICE = 5;
+	/** 露娜骰子每轮价格；真端无每日次数上限，露娜余额即闸门（User::StartRollDice 仅有格子段位区间检查）。 */
+	static final int LUNA_DICE_PRICE = 3;
+	/** 黄金骰子每轮价格（真端 client_luna_cost.xml: luna_dice_gotcha_golddice price01=200，每日 1 次）。 */
+	static final int LUNA_GOLD_DICE_PRICE = 200;
+	/** 掷满该次数即集齐 5 微笑，进入黄金骰子阶段。 */
+	static final int DICE_GOLD_STAGE_TRIES = 5;
 
 	private static volatile ObjectProvider<LunaShopService> instanceProvider;
 	private static volatile LunaShopService resolvedInstance;
@@ -445,7 +452,14 @@ public class LunaShopService {
 	public void dorinerkWardrobeExtendSlots(Player player) {
 		int currentSlot = player.getWardrobeSlot();
 		int size = playerWardrobeDAO.getItemSize(player.getObjectId());
-		if (spendLunaFailed(player, wardrobePrice(currentSlot + 1))) {
+		int price = wardrobePrice(currentSlot + 1);
+		if (price < 0) {
+			// 衣柜已满 8 格：必须回当前状态包，否则客户端等待响应会卡死 UI。
+			// Wardrobe already at max slots: echo current state or the client UI hangs waiting.
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(9, currentSlot, size));
+			return;
+		}
+		if (spendLunaFailed(player, price)) {
 			return;
 		}
 		player.setWardrobeSlot(currentSlot + 1);
@@ -652,24 +666,45 @@ public class LunaShopService {
 	 */
 	public void diceGame(Player player) {
 		int diceTry = player.getLunaDiceGameTry();
-		int price = lunaDicePrice(diceTry);
+		// 掷满 5 次集齐 5 微笑后进入黄金骰子阶段（真端 golddice：200/次，掷出 C..SS 五档之一）。
+		// After 5 rolls (5 smiles collected) the gold dice stage begins (retail golddice: 200 each, rolls grade C..SS).
+		boolean goldStage = diceTry >= DICE_GOLD_STAGE_TRIES;
+		int price = goldStage ? LUNA_GOLD_DICE_PRICE : LUNA_DICE_PRICE;
 		if (spendLunaFailed(player, price)) {
+			// 真端拒绝路径必回掷骰结果包（result=2 露娜不足、dice=-1），否则客户端自动掷骰会卡死。
+			// The retail server always answers a rejected roll (result=2, dice=-1) or the client auto-roll hangs.
+			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(2, -1));
+			return;
+		}
+		if (goldStage) {
+			int grade = rollGoldGrade();
+			player.setLunaGoldDiceGrade(grade);
+			player.setLunaDiceGameTry(diceTry + 1);
+			player.setLunaConsumePoint(player.getLunaConsumePoint() + price);
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, 74));
+			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRollResult(0, grade));
+			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
+			log.debug("Luna gold dice result. playerId={} grade={} tries={} consumed={}", player.getObjectId(), grade,
+					player.getLunaDiceGameTry(), player.getLunaConsumePoint());
 			return;
 		}
 		int random = Rnd.get(1, 1000);
-		if (random >= 100 && random <= 400) {
+		// 微笑概率自定口径（真端为脚本表驱动）：1=30% / 2=25% / 3=20% / 4=15% / 5=10%，无掷空。
+		// Smile odds are a custom curve (retail weights are script-driven): 30/25/20/15/10, no blank roll.
+		if (random <= 300) {
 			player.setLunaDiceGame(1, false);
-		} else if (random >= 450 && random <= 749) {
+		} else if (random <= 550) {
 			player.setLunaDiceGame(2, false);
-		} else if (random >= 750 && random <= 849) {
+		} else if (random <= 750) {
 			player.setLunaDiceGame(3, false);
-		} else if (random >= 850 && random <= 900) {
+		} else if (random <= 900) {
 			player.setLunaDiceGame(4, false);
-		} else if (random >= 950 && random <= 1000) {
+		} else {
 			player.setLunaDiceGame(5, false);
 		}
 		player.setLunaDiceGameTry(diceTry + 1);
-		player.setLunaConsumePoint(player.getLunaConsumePoint() + price);
+		player.setLunaConsumePoint(player.getLunaConsumePoint() + LUNA_DICE_PRICE);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, diceTry == 0 ? 72 : 73));
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(15));
@@ -686,21 +721,55 @@ public class LunaShopService {
 	 * @param player 玩家 / player
 	 */
 	public void diceGameReward(Player player) {
-		if (!canClaimDiceReward(player.getLunaDiceGameTry()) || ItemService.addItem(player, 162001014, 4) != 0) {
+		int goldGrade = player.getLunaGoldDiceGrade();
+		// 黄金档位掷出后按档从 luna_dice.xml 结算；未掷黄金则维持旧占位奖励。
+		// A pending gold grade settles from luna_dice.xml; without one the legacy placeholder reward applies.
+		LunaDiceItem goldReward = goldGrade > 0 ? rollGoldReward(goldGrade) : null;
+		int rewardItemId = goldReward != null ? goldReward.getItemId() : 162001014;
+		long rewardCount = goldReward != null ? goldReward.getCount() : 4;
+		if (!canClaimDiceReward(player.getLunaDiceGameTry()) || rewardItemId <= 0
+				|| ItemService.addItem(player, rewardItemId, rewardCount) != 0) {
+			// 真端领奖失败回 result=1 + 空列表；静默 return 会让客户端领奖窗显示为空。
+			// Retail answers a failed claim (result=1, empty list); a silent return leaves the client reward window blank.
+			PacketSendUtility.sendPacket(player, SM_LUNA_SHOP.diceRewardFailure());
 			return;
 		}
-		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(16, 162001014, 4));
+		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(16, rewardItemId, rewardCount));
 		player.setLunaDiceGame(0, true);
 		player.setLunaDiceGameTry(0);
+		player.setLunaGoldDiceGrade(0);
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(1, 1, 72));
+	}
+
+	/**
+	 * 黄金骰子随机档位：1=C 35% / 2=B 25% / 3=A 20% / 4=S 12% / 5=SS 8%（真端权重在脚本 DLL 内不可得，此处为自定口径）。
+	 * Rolls a gold dice grade: 1=C 35% / 2=B 25% / 3=A 20% / 4=S 12% / 5=SS 8% (retail weights live in the script DLL).
+	 */
+	static int rollGoldGrade() {
+		int roll = Rnd.get(1, 100);
+		if (roll <= 35) {
+			return 1;
+		}
+		if (roll <= 60) {
+			return 2;
+		}
+		if (roll <= 80) {
+			return 3;
+		}
+		return roll <= 92 ? 4 : 5;
+	}
+
+	private static LunaDiceItem rollGoldReward(int grade) {
+		List<LunaDiceItem> items = DataManager.LUNA_DICE.getDiceItems(grade);
+		if (items == null || items.isEmpty()) {
+			log.warn("Luna gold dice table {} missing or empty.", grade);
+			return null;
+		}
+		return items.get(Rnd.get(0, items.size() - 1));
 	}
 
 	static boolean canClaimDiceReward(int diceTry) {
 		return diceTry > 0;
-	}
-
-	static int lunaDicePrice(int diceTry) {
-		return diceTry >= 0 && diceTry <= 10 ? 3 : -1;
 	}
 
 	static boolean canSpendLuna(long balance, long price) {
@@ -724,12 +793,14 @@ public class LunaShopService {
 			}
 			long remaining = balance - price;
 			player.setLunaAccount(remaining);
+			// 扣款未生效（LS 通信失败等）同样算失败，防止白给奖励。
+			// An unapplied deduction (e.g. LS communication failure) also counts as failure.
 			if (player.getLunaAccount() != remaining) {
-				return false;
+				return true;
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0));
-		return true;
+		return false;
 	}
 
 	/**

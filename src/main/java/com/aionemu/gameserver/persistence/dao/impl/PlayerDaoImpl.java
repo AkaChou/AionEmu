@@ -441,7 +441,9 @@ public class PlayerDaoImpl extends ServiceImpl<PlayerMapper, PlayerPo> implement
 		cd.setLunaConsumePoint(intValue(po.getLunaConsume()));
 		cd.setMuniKeys(intValue(po.getMuniKeys()));
 		cd.setLunaConsumeCount(intValue(po.getLunaConsumeCount()));
-		cd.setWardrobeSlot(intValue(po.getWardrobeSlot()));
+		// 存量角色可能带 0/1 脏值（旧创建路径未初始化 wardrobe_slot），衣柜最小合法槽位为 2，保存时自愈写回。
+		// Legacy rows may hold 0/1 (uninitialized wardrobe_slot from the old creation path); min valid is 2, healed on save.
+		cd.setWardrobeSlot(Math.max(2, intValue(po.getWardrobeSlot())));
 
 		PlayerUpgradeArcade pua = new PlayerUpgradeArcade();
 		pua.setFrenzyPoints(intValue(po.getFrenzyPoints()));

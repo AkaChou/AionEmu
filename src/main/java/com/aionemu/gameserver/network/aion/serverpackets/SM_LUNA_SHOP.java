@@ -38,6 +38,12 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 	private int itemSize;
 	private boolean success;
 	private long itemCount;
+	// 月之骰子掷骰结果 / Luna dice roll result
+	private int rollResult;
+	private int diceValue = -1;
+	// 月之骰子领奖结果 / Luna dice reward claim result
+	private int rewardResult;
+	private int rewardCount = -1;
 
 	/**
 	 * 卡鲁内克工坊（Karunerk's Workshop）制作结果。
@@ -131,6 +137,32 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 		this.itemCount = itemCount;
 	}
 
+	/**
+	 * 月之骰子掷骰结果（真端 User::SendLunaDiceGotchaRollResult 同构载荷）。
+	 * Luna dice roll result (mirrors retail User::SendLunaDiceGotchaRollResult payload).
+	 * @param rollResult 结果码（0 成功 / 1 其他失败 / 2 露娜不足）/ result code (0 success / 1 other failure / 2 not enough luna)
+	 * @param diceValue 骰子值（-1 表示无）/ dice value (-1 for none)
+	 * @return 掷骰结果包 / the roll result packet
+	 */
+	public static SM_LUNA_SHOP diceRollResult(int rollResult, int diceValue) {
+		SM_LUNA_SHOP packet = new SM_LUNA_SHOP(15);
+		packet.rollResult = rollResult;
+		packet.diceValue = diceValue;
+		return packet;
+	}
+
+	/**
+	 * 月之骰子领奖失败结果（真端 result=1 + 空奖励列表）。
+	 * Luna dice reward claim failure (retail result=1 with an empty reward list).
+	 * @return 领奖失败包 / the claim failure packet
+	 */
+	public static SM_LUNA_SHOP diceRewardFailure() {
+		SM_LUNA_SHOP packet = new SM_LUNA_SHOP(16);
+		packet.rewardResult = 1;
+		packet.rewardCount = 0;
+		return packet;
+	}
+
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
@@ -209,16 +241,18 @@ public class SM_LUNA_SHOP extends AionServerPacket {
 			writeD(indun_id);
 			break;
 		case 15:
-			int dice = player.getLunaDiceGame();
-			writeC(0);
+			int dice = diceValue >= 0 ? diceValue : player.getLunaDiceGame();
+			writeC(rollResult);
 			writeH(dice);
 			writeC(0);
 			break;
 		case 16:
-			writeC(0);
-			writeH(1);
-			writeD(itemId); // ItemId
-			writeQ(itemCount); // Item Count
+			writeC(rewardResult);
+			writeH(rewardCount >= 0 ? rewardCount : 1);
+			if (rewardCount != 0) {
+				writeD(itemId); // ItemId
+				writeQ(itemCount); // Item Count
+			}
 			break;
 		}
 	}
