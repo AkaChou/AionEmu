@@ -63000,13 +63000,13 @@
     <stats hp_regen="6630181" maxHp="13260363" pdef="555" walk_speed="0" mresist="2293" mboost_resist="1512" run_speed="0" accuracy="93" main_hand_attack="3040" main_hand_crit_rate="150" mdef="1756" mboost="0" parry="0" crit_spell="109" maxXp="9802022" block="0" main_hand_accuracy="3972" power="23" evasion="3152" run_speed_fight="0"/>
     <bound_radius side="1.0" upper="1.0" front="1.0"/>
   </npc_template>
-<npc_template name_desc="world_event_fifth_monster01" npc_type="NON_ATTACKABLE" level="75" rating="NORMAL" ai="quest_use_item" hpgauge_level="3" type="GENERAL" name_id="2325863" attack_delay="2000" abnormal_immunity="Stat_ArAll" npc_id="246844" sensory_range="7" tribe="MONSTER" name="Normal Misfortune" rank="DISCIPLINED" height="1.3">
-    <stats hp_regen="0" maxHp="7" pdef="65000" walk_speed="0.384" mresist="0" mboost_resist="0" run_speed="5.6" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="4.4"/>
+<npc_template name_desc="world_event_fifth_monster01" attack_range="2" npc_type="ATTACKABLE" level="55" attack_rate="1000" rating="NORMAL" ai="dummy" hpgauge_level="3" type="MONSTER" name_id="2325863" attack_delay="2000" abnormal_immunity="Stat_ArAll" npc_id="246844" sensory_range="7" tribe="MONSTER" name="Normal Misfortune" rank="VETERAN" height="1.3">
+    <stats hp_regen="0" maxHp="35000" pdef="1000" walk_speed="0.384" mresist="4000" mboost_resist="0" run_speed="5.6" accuracy="1000" main_hand_attack="1000" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="10000" block="0" main_hand_accuracy="1000" power="100" evasion="1000" run_speed_fight="4.4"/>
     <bound_radius side="3.12" upper="1.3" front="1.0"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="world_event_fifth_monster02" npc_type="NON_ATTACKABLE" level="75" rating="NORMAL" ai="quest_use_item" hpgauge_level="3" type="GENERAL" name_id="2325864" attack_delay="2000" abnormal_immunity="Stat_ArAll" npc_id="246845" sensory_range="7" tribe="MONSTER" name="Huge Misfortune" rank="DISCIPLINED" height="1.3">
-    <stats hp_regen="0" maxHp="30000" pdef="65000" walk_speed="0.384" mresist="0" mboost_resist="0" run_speed="5.6" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="4.4"/>
+<npc_template name_desc="world_event_fifth_monster02" attack_range="2" npc_type="ATTACKABLE" level="55" attack_rate="1000" rating="NORMAL" ai="dummy" hpgauge_level="3" type="MONSTER" name_id="2325864" attack_delay="2000" abnormal_immunity="Stat_ArAll" npc_id="246845" sensory_range="7" tribe="MONSTER" name="Huge Misfortune" rank="VETERAN" height="1.3">
+    <stats hp_regen="0" maxHp="35000" pdef="1000" walk_speed="0.384" mresist="4000" mboost_resist="0" run_speed="5.6" accuracy="1000" main_hand_attack="1000" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="10000" block="0" main_hand_accuracy="1000" power="100" evasion="1000" run_speed_fight="4.4"/>
     <bound_radius side="3.12" upper="1.3" front="1.0"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
