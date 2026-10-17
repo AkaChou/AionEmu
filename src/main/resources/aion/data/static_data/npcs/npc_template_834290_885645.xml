@@ -4980,6 +4980,177 @@
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
     <talk_info delay="3" distance="5"/>
+  </npc_template><npc_template name_desc="world_CN_LC1_event_npc_58teasing" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="1" attack_rate="1000" title_id="470084" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470082" attack_delay="2000" npc_id="835145" sensory_range="20" tribe="GENERAL" name="world_CN_LC1_event_npc_58teasing" rank="SEASONED" height="1.8">
+    <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.5" mresist="28" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110101578</item>
+      <item>113101440</item>
+      <item>114101469</item>
+      <item>112101376</item>
+      <item>111101422</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_CN_DC1_event_npc_58teasing" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="1" attack_rate="1000" title_id="470084" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470083" attack_delay="2000" npc_id="835146" sensory_range="20" tribe="GENERAL_DARK" name="world_CN_DC1_event_npc_58teasing" rank="SEASONED" height="1.8">
+    <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.5" mresist="28" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110101579</item>
+      <item>113101441</item>
+      <item>114101470</item>
+      <item>112101377</item>
+      <item>111101423</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Lilly" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="55" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466475" attack_delay="2000" npc_id="835147" sensory_range="20" tribe="USEALL" name="Sorcerer Lilly" rank="DISCIPLINED" height="1.8">
+    <stats hp_regen="9378" maxHp="18756" pdef="887" walk_speed="1.5" mresist="1089" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="416" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1684" power="23" evasion="1124" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125003911</item>
+      <item>110101725</item>
+      <item>113101566</item>
+      <item>114101600</item>
+      <item>112101504</item>
+      <item>111101554</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Polly" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="60" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466478" attack_delay="2000" npc_id="835148" sensory_range="20" tribe="USEALL" name="Cleric Polly" rank="DISCIPLINED" height="2">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125003911</item>
+      <item>110000022</item>
+      <item>113000046</item>
+      <item>114000084</item>
+      <item>112000035</item>
+      <item>111000076</item>
+      <item>101501427</item>
+    </equipment>
+    <bound_radius side="0.7" upper="2" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Rolly" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="55" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466474" attack_delay="2000" npc_id="835149" sensory_range="20" tribe="USEALL" name="Spiritmaster Lolly" rank="DISCIPLINED" height="0.64">
+    <stats hp_regen="9378" maxHp="18756" pdef="887" walk_speed="1.5" mresist="1089" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="416" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1684" power="23" evasion="1124" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125003911</item>
+      <item>110101725</item>
+      <item>113101566</item>
+      <item>114101600</item>
+      <item>112101504</item>
+      <item>111101554</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Rolo" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="60" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466477" attack_delay="2000" npc_id="835150" sensory_range="20" tribe="USEALL" name="Chanter Lollo" rank="DISCIPLINED" height="2">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125045571</item>
+      <item>110900958</item>
+      <item>113100276</item>
+      <item>114100294</item>
+      <item>112100256</item>
+      <item>111100277</item>
+      <item>101501427</item>
+    </equipment>
+    <bound_radius side="0.7" upper="2" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Ruru" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="55" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466476" attack_delay="2000" npc_id="835151" sensory_range="20" tribe="USEALL" name="Bardic Master Lulu" rank="DISCIPLINED" height="2">
+    <stats hp_regen="9378" maxHp="18756" pdef="887" walk_speed="1.5" mresist="1089" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="416" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1684" power="23" evasion="1124" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125045568</item>
+      <item>110900949</item>
+      <item>113100276</item>
+      <item>114100294</item>
+      <item>112100256</item>
+      <item>111100277</item>
+      <item>102001069</item>
+    </equipment>
+    <bound_radius side="0.7" upper="2" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Solly" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="55" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466480" attack_delay="2000" npc_id="835152" sensory_range="20" tribe="USEALL" name="Sorcerer Solly" rank="DISCIPLINED" height="2">
+    <stats hp_regen="9378" maxHp="18756" pdef="887" walk_speed="1.5" mresist="1089" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="416" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1684" power="23" evasion="1124" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125045423</item>
+      <item>110900716</item>
+      <item>113100276</item>
+      <item>114100294</item>
+      <item>112100256</item>
+      <item>111100277</item>
+      <item>100501254</item>
+    </equipment>
+    <bound_radius side="0.7" upper="2" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_Suri" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="65" attack_rate="2" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466479" attack_delay="2000" npc_id="835153" sensory_range="20" tribe="USEALL" name="Spiritmaster Suri" rank="DISCIPLINED" height="2">
+    <stats hp_regen="13058" maxHp="26116" pdef="1077" walk_speed="1.5" mresist="1306" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="554" main_hand_crit_rate="0" mdef="872" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1976" power="23" evasion="1347" run_speed_fight="4.2"/>
+    <equipment>
+      <item>125045423</item>
+      <item>110900716</item>
+      <item>113100276</item>
+      <item>114100294</item>
+      <item>112100256</item>
+      <item>111100277</item>
+      <item>100601364</item>
+    </equipment>
+    <bound_radius side="0.7" upper="2" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="event_isda" attack_range="2" npc_type="PEACE" race="ELYOS" level="60" attack_rate="1000" title_id="370418" rating="NORMAL" ai="general" hpgauge_level="12" type="GENERAL" name_id="463803" attack_delay="1900" npc_id="835154" sensory_range="5" tribe="GENERAL" name="isda" rank="DISCIPLINED" height="2">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1" mresist="1186" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="29" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>113301266</item>
+      <item>110301297</item>
+      <item>112301186</item>
+      <item>111301240</item>
+      <item>114301297</item>
+      <item>125002932</item>
+    </equipment>
+    <bound_radius side="0.35" upper="2" front="0.25"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_china" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="835155" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_china" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_china" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="835156" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_china" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_Luna_Elly_obj_01" attack_range="2" npc_type="NON_ATTACKABLE" level="1" attack_rate="1000" rating="NORMAL" ai="noaction" hpgauge_level="3" name_id="350000" attack_delay="2260" npc_id="835157" sensory_range="10" tribe="USEALL" name="world_Luna_Elly_obj_01" rank="DISCIPLINED" height="2.0">
+    <stats hp_regen="69420" maxHp="1" pdef="0" walk_speed="1.457" mresist="0" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="7"/>
+    <bound_radius side="0.7" upper="2.0" front="0.5"/>
+  </npc_template>
+<npc_template name_desc="world_bracelet_l_02_seller" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="466920" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466919" attack_delay="2000" npc_id="835158" sensory_range="20" tribe="GENERAL" name="world_bracelet_l_02_seller" rank="DISCIPLINED" height="1.375">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.23"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_bracelet_d_02_seller" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="466920" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466919" attack_delay="2000" npc_id="835159" sensory_range="20" tribe="GENERAL_DARK" name="world_bracelet_d_02_seller" rank="DISCIPLINED" height="1.375">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.23"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
   </npc_template>
 <npc_template name_desc="World_FOBJ_event_newyear_pavilion_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835181" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_FOBJ_event_newyear_pavilion_01" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>

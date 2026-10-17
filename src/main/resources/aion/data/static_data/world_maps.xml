@@ -220,6 +220,7 @@
 	<!-- Map Both Race -->
 	<map id="600010000" name="Silentera Canyon" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<map id="600040000" name="Tiamaranta's Eye" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
+	<map id="600041100" name="Tiamat Down" death_level="0" water_level="16" world_type="BALAUREA" world_size="1536" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<!-- Katalam (Need Client Patch) -->
 	<map id="600050000" name="Katalam" death_level="0" water_level="29" world_type="BALAUREA" world_size="3072" flags="BIND RECALL GLIDE FLY RIDE FLY_RIDE PVP DUEL_SAME_RACE DUEL_OTHER_RACE"/>
 	<!-- Tiamaranta's Eye/Live Party Concert Hall/Kaldor/Levinshor/Silentera Canyon  -->

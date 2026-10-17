@@ -32,9 +32,11 @@
 		<xs:attribute name="theme" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:complexType name="EventDrops">
-		<xs:sequence>
-			<xs:element name="event_drop" minOccurs="0" maxOccurs="unbounded" type="EventDrop"/>
-		</xs:sequence>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="event_drop" type="EventDrop"/>
+			<!-- 真端 drop config npc 语义：按 NPC 挂活动掉落，npc_id=0 时退化为全服随机 / retail per-NPC event drop, npc_id=0 falls back to global -->
+			<xs:element name="npc_drop" type="EventDrop"/>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="EventDrop">
 	    <xs:attribute name="loc_id" type="xs:int"/>

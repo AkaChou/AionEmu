@@ -141,6 +141,12 @@ public class DropRegistrationService {
 				}
 				List<EventDrop> eventDrops = eventTemplate.EventDrop().getEventDrops();
 				for (EventDrop eventDrop : eventDrops) {
+					// npc_id 非零时仅对该 NPC 生效（npc_drop）；0 表示全服随机掉落（event_drop）。
+					// Non-zero npc_id restricts the drop to that NPC (npc_drop); 0 means server-wide (event_drop).
+					int dropNpcId = eventDrop.getNpcId();
+					if (dropNpcId != 0 && dropNpcId != npc.getNpcId()) {
+						continue;
+					}
 					int diff = npc.getLevel() - eventDrop.getItemTemplate().getLevel();
 					int minDiff = eventDrop.getMinDiff();
 					int maxDiff = eventDrop.getMaxDiff();
