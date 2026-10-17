@@ -106,10 +106,11 @@ public final class NativeUnpinnedRewardWindow {
 		if (!rewardFlow.claim(new QuestEnv(null, player, questId, dialogId), rewardIndex).completed()) {
 			return false;
 		}
-		// 收尾 = 回选择对话页（与各族交付面领奖收尾同形：页 10、questId=0）。
-		// Tail = the selection dialog page, matching every family's delivery-face claim tail.
-		PacketSendUtility.sendPacket(player,
-			new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
+		// 收尾见 NativeClaimTail：普通 NPC 回选择对话页（页 10），物件型交互物关窗
+		// （无问候 html，页 10 必 load fail，2026-10-17 实机 1141 酒桶）。
+		// Tail: NativeClaimTail sends the selection page for plain npcs and closes the window
+		// for quest-use-item objects (no hello html, live 1141 barrel).
+		NativeClaimTail.send(player, objectId);
 		return true;
 	}
 }

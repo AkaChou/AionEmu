@@ -1006,7 +1006,9 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			// 失败页（select6=2716，如 1105「您别跟我开玩笑」）。检查按钮族只在 39 上匹配会让
 			// `HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE`(20002) 页的按钮静默落空（2026-10-06 实机
 			// 14110：玩家持 5/5 `quest_14110a` 点「拿出革命家的象征」→ 关窗零推进；该族 Talk 604 行）。
-			// 开门动作（26/-1）不推进、不跳步；契约无声明降级为一步直达。
+			// 开门动作（26/-1）不推进、不跳步；声明了报告页时随 31 同发，未声明降级为一步直达。
+			// Opens (26/-1) never advance; they show the declared report page like the row (31),
+			// or fall through to the one-step shape when the page is undeclared.
 			// Two-step report (adjudication a; the check-button family): the row selection (31) only shows
 			// the contract-declared report-confirm page; the confirm action — 1009 (direct) or the report
 			// page's turn-in check button (39 / 20002, retail cabb10 `0x4e22` family) — advances to REWARD
@@ -1021,7 +1023,13 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				// confirm action (the check button → the declared fail page), never on the page send itself.
 				boolean reportStepReached = vars >= relayCount(questId);
 				boolean reportReady = reportStepReached && holdsGateItems(questId, player);
-				if (dialogId == 31 && reportStepReached) {
+				if ((dialogId == 31 || dialogId == 26 || dialogId == -1) && reportStepReached) {
+					// 开门（26/-1）与任务行（31）同发客户端声明的报告页（原版对话平面「打开 → 阶段页」）：
+					// 物件型交付 NPC（如 1141 的 LF1a_Barrel 700122）无 NPC 问候 html，无上下文页 10 必
+					// load fail（2026-10-17 实机 1141 右键酒桶）。
+					// Opens (26/-1) ride the declared report page with the row (31), the retail
+					// "open → stage page" plane: an object reward NPC has no hello html, so the
+					// context-less page-10 fallback load-fails it (live 1141 on the barrel, 2026-10-17).
 					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：1118 的 select2 是
 					// Kustanon 中继树（按钮翻页），报告页是 select5（按钮「拿出药膏」=SELECT_QUEST_REWARD）。
 					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
@@ -1080,12 +1088,11 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					// 结算走 native 完成口（原版 quest.xml 奖励列 + 共用结算体），不再依赖 typed 模板。
 					// Settlement goes through the native completion port; no typed template required.
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
-						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
-						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
-						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
-						PacketSendUtility.sendPacket(player,
-								new SM_DIALOG_WINDOW(targetObjectId, QuestDialogPage.SELECT_QUEST.id()));
+						// 领奖收尾见 NativeClaimTail：普通 NPC 回选择对话页（页 10），物件型交付 NPC 关窗
+						// （无问候 html，页 10 必 load fail，2026-10-17 实机 1141 酒桶）。
+						// The claim tail: NativeClaimTail sends the selection page for plain npcs and
+						// closes the window for quest-use-item objects (no hello html, live 1141 barrel).
+						NativeClaimTail.send(player, npc, targetObjectId);
 						return true;
 					}
 				}

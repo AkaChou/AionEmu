@@ -983,12 +983,11 @@ public final class SimpleCollectItemHandler implements NativeSystemGrantLane {
 						|| dialogId == 108 || (dialogId >= 110 && dialogId <= 124)) {
 					int rewardIndex = dialogId >= 8 && dialogId <= 22 ? dialogId - 8 : 0;
 					if (rewardFlow.claim(env, rewardIndex).completed()) {
-						// 领奖收尾 = 原版 npc-complete finish=SELECTION_DIALOG（4801/4805）：回选择对话页
-						// （页 10，questId=0；9/28 旧引擎基线「状态=5 → 页=10」）。
-						// The claim tail follows the retail npc-complete finish=SELECTION_DIALOG: back to
-						// the selection dialog (page 10, questId=0; the legacy 9/28 log baseline).
-						PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(objectId, QuestDialogPage.SELECT_QUEST.id()));
+						// 领奖收尾见 NativeClaimTail：普通 NPC 回选择对话页（页 10），物件型交付 NPC 关窗
+						// （无问候 html，页 10 必 load fail，2026-10-17 实机 1141 酒桶）。
+						// The claim tail: NativeClaimTail sends the selection page for plain npcs and
+						// closes the window for quest-use-item objects (no hello html, live 1141 barrel).
+						NativeClaimTail.send(player, npc, objectId);
 						return true;
 					}
 				}

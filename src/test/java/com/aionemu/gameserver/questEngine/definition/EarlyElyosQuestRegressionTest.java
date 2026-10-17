@@ -232,7 +232,19 @@ class EarlyElyosQuestRegressionTest {
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 730001, 1141, 1002)), "接取确认");
 		NativeTalkFixture.assertOnlyDialogPage(player, SimpleTalkHandler.PAGE_ACCEPTED);
 
+		// 右键酒桶开局（-1）= 客户端声明的报告确认页（select5，携带 questId）：
+		// 物件交付 NPC 无问候 html，无上下文页 10 必 load fail（2026-10-17 实机 1141）。
+		// Right-clicking the barrel open (-1) shows the client-declared report page (select5,
+		// quest context carried): an object hand-in NPC has no hello html and the context-less
+		// page 10 load-fails it (live 1141, 2026-10-17).
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 700122, 1141, -1)), "酒桶开局");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, QuestDialogPage.SELECT5.id(), 1141);
+
 		// 报告：零中继 + 空门 ⇒ 直接翻 REWARD 并下发奖励窗（页 5 与选择按钮同 owner）。
+		// 结算（23）收尾的分型断言在 NativeClaimTailTest（物件关窗 / 普通 NPC 页 10）。
+		// The report turns REWARD with the reward window; the settlement-tail typing is
+		// pinned in NativeClaimTailTest (object close / plain-npc page 10).
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, 700122, 1141, 1009)), "酒桶报告");
 		assertEquals(QuestStatus.REWARD, player.getQuestStateList().getQuestState(1141).getStatus());
