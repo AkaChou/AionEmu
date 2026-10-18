@@ -281,9 +281,7 @@ public class QuestEngine implements GameEngine {
 		if (env == null || env.getPlayer() == null || !(env.getVisibleObject() instanceof Npc npc)) {
 			return false;
 		}
-		// 已删除或已死亡的 NPC 不构成权威攻击事实：诱导到点删除后在途攻击会空寻址 after-commit 监视动作。
-		// A deleted or dead NPC carries no authoritative attack fact: in-flight attacks after lure deletion would address no target in the after-commit watch action.
-		if (!npc.isSpawned() || npc.getLifeStats() == null || npc.getLifeStats().isAlreadyDead()) {
+		if (!attackFactIsAuthoritative(npc)) {
 			return true;
 		}
 		try {
@@ -306,6 +304,22 @@ public class QuestEngine implements GameEngine {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 攻击事实是否权威。
+	 * Whether an attack fact is authoritative.
+	 * <p>已删除且仍存活的 NPC 不构成权威事实：诱导到点删除后的在途攻击会空寻址 after-commit 监视动作。
+	 * 已死亡的 NPC 例外——伤害先于 {@code onAttack} 钩子结算，致命一击到达时已死亡（甚至刚被 0ms 尸体消散删除），
+	 * 但事实仍权威，低于 50% 之类的血量条件必须由它成立。</p>
+	 * <p>A deleted-but-alive NPC carries no authoritative fact: in-flight attacks after lure deletion would
+	 * address no target in the after-commit watch action. A dead NPC is the exception: damage settles before
+	 * the {@code onAttack} hook, so the lethal blow arrives already dead (possibly even decay-deleted) yet is
+	 * still authoritative — HP conditions such as "below 50%" must be satisfied by it.</p>
+	 */
+	static boolean attackFactIsAuthoritative(Npc npc) {
+		return npc.getLifeStats() != null
+				&& (npc.isSpawned() || npc.getLifeStats().isAlreadyDead());
 	}
 
 	private static QuestNpcAttackFacts attackFacts(Npc npc, Player player) {
