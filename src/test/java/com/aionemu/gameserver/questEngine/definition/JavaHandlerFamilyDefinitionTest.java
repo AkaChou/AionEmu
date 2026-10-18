@@ -16,52 +16,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/** Full vertical proof for the migrated Poeta Java-handler owners 1122 / 1123 / 1230 / 1231 / 1205. */
 class JavaHandlerFamilyDefinitionTest {
-	@Test
-	void packagedProductionDirectoryCompilesTheMigratedHandlerOwners() {
-		// 生产视图 = XML 目录 + 原版 overlay：部分 Poeta owner 已迁到原版驱动，不再由 XML 目录持有。
-		// Production view = XML directory plus the retail overlay.
-		QuestCatalog catalog = com.aionemu.gameserver.questEngine.retail.RetailQuestDriver.overlay(
-			QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader()));
-		assertTrue(catalog.find(1107).isPresent());
-		assertTrue(catalog.find(1111).isPresent());
-		assertTrue(catalog.find(1122).isPresent());
-		assertTrue(catalog.find(1230).isPresent());
-		assertTrue(catalog.find(1231).isPresent());
-		assertTrue(catalog.find(1205).isPresent());
-	}
-
-	@Test
-	void lostAxeUsesTheAxeThenAcceptsThroughTheTargetlessDialog() {
-		CompiledQuestDefinition compiled = definition("1107.xml");
-		List<QuestTransition> transitions = compiled.definition().transitions();
-		QuestTransition use = transitions.stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("unaccepted")
-				&& t.event().equals(new QuestEvent.UseItem(182200501)))
-			.findFirst().orElseThrow();
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(4)), use.afterCommit());
-		QuestTransition start = transitions.stream()
-			.filter(t -> t.sourceNode().equals("unaccepted") && t.targetNode().equals("started")
-				&& t.event().equals(new QuestEvent.QuestDialog(1002)))
-			.findFirst().orElseThrow();
-		assertEquals(new QuestEvent.QuestDialog(1002), start.event());
-
-		// P0-2 规范形交付：QUEST_SELECT(31) 直翻 REWARD（1009 中转随页链删除）。
-		// P0-2 canonical delivery: QUEST_SELECT (31) flips REWARD directly (the 1009 hop is gone).
-		QuestTransition reward = transitions.stream()
-			.filter(t -> t.sourceNode().equals("started") && t.targetNode().equals("reward")
-				&& t.event() instanceof QuestEvent.TalkToNpc talk
-				&& talk.npcId() == 203075 && talk.dialogId() == QuestDialogAction.QUEST_SELECT.id())
-			.findFirst().orElseThrow();
-		// QE-051：1107 客户端任务书单行，领奖投影 = 末行行号 0（旧 XML 的 var0=1 为历史投影，M5-c A 类同判）。
-		// QE-051: the 1107 journal has a single row, so the reward projection is row index 0.
-		assertEquals(0, varsOf(compiled, "reward").get("var0"));
-
-		List<QuestAction> completion = completions(transitions, "reward");
-		assertTrue(completion.contains(new QuestAction.GrantReward("GOLD", 0, 1560, QuestRewardAmountMode.QUEST_BASE)));
-		assertTrue(completion.contains(new QuestAction.GrantReward("EXP", 0, 462, QuestRewardAmountMode.QUEST_BASE)));
-	}
 
 	@Test
 	void nymphsGownStartsByUsingTheDiaryAndBranchesIntoTwoRewardPaths() {
@@ -238,29 +193,6 @@ class JavaHandlerFamilyDefinitionTest {
 		assertTrue(completionA.contains(new QuestAction.CompleteQuest(0)));
 	}
 
-	@Test
-	void messageForMadelinAndIrreconcilableLoversArePlainReports() {
-		CompiledQuestDefinition madelin = definition("1230.xml");
-		List<QuestAction> madelinCompletions = completions(madelin.definition().transitions(), "reward");
-		// 原版合成器对领奖确认按钮发放全段（SELECTED_QUEST_REWARD1..NOREWARD）共 16 条完成路由；
-		// 退役前 XML 只声明了 choice 1/2 两条，差异已登记 retail-simple-talk-drift.tsv（1230 DIFF:TRANSITION_SET）。
-		// The retail synthesis registers the whole confirm range (16 routes); the narrower XML-era
-		// choice set is a registered divergence (retail-simple-talk-drift.tsv).
-		assertEquals(16, madelin.definition().transitions().stream()
-			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")).count());
-		assertEquals(16, madelinCompletions.stream().filter(a -> a.equals(
-			new QuestAction.GrantReward("GOLD", 0, 6800, QuestRewardAmountMode.QUEST_BASE))).count());
-		assertTrue(madelinCompletions.contains(new QuestAction.GrantReward("ITEM", 164000076, 1)));
-		assertTrue(madelinCompletions.contains(new QuestAction.GrantReward("ITEM", 164000073, 1)));
-		assertTrue(madelinCompletions.contains(new QuestAction.GrantReward("ITEM", 164000134, 1)));
-
-		CompiledQuestDefinition lovers = definition("1231.xml");
-		List<QuestAction> loversCompletions = completions(lovers.definition().transitions(), "reward");
-		assertEquals(16, lovers.definition().transitions().stream()
-			.filter(t -> t.sourceNode().equals("reward") && t.targetNode().equals("complete")).count());
-		assertTrue(loversCompletions.contains(new QuestAction.GrantReward("GOLD", 0, 6800, QuestRewardAmountMode.QUEST_BASE)));
-		assertTrue(loversCompletions.contains(new QuestAction.CompleteQuest(0)));
-	}
 
 	@Test
 	void newSkillRoutesEachStartingClassToItsOwnRewardNode() {

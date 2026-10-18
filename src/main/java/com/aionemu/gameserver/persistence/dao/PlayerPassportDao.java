@@ -2,6 +2,7 @@ package com.aionemu.gameserver.persistence.dao;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.persistence.entity.PlayerPassportPo;
 import com.mybatisflex.core.service.IService;
@@ -44,11 +45,11 @@ public interface PlayerPassportDao extends IService<PlayerPassportPo> {
 	int getStamps(int accountId, int passportId);
 
 	/**
-	 * 获取护照最后时间戳。
-	 * Returns the last stamp timestamp for the passport.
+	 * 获取护照最后时间戳；无记录时为 null。
+	 * Returns the last stamp timestamp for the passport, or null when no record exists.
 	 * @param accountId 账号 ID / account id
 	 * @param passportId 通行证 ID / passport id
-	 * @return 最后时间戳 / last stamp
+	 * @return 最后时间戳，无记录为 null / last stamp, null when no record exists
 	 */
 	Timestamp getLastStamp(int accountId, int passportId);
 
@@ -59,4 +60,12 @@ public interface PlayerPassportDao extends IService<PlayerPassportPo> {
 	 * @return 通行证 ID 列表 / list of passport ids
 	 */
 	List<Integer> getPassports(int accountId);
+
+	/**
+	 * 一次读取账号下全部护照进度，避免逐条查询。
+	 * Reads every passport progress row for the account in one query.
+	 * @param accountId 账号 ID / account id
+	 * @return 通行证 ID 到行的映射 / passport id to row map
+	 */
+	Map<Integer, PlayerPassportPo> getPassportProgress(int accountId);
 }

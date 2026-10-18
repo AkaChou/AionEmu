@@ -96,7 +96,6 @@ import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
@@ -268,7 +267,6 @@ class GameServiceProviderCompatibilityTest {
                 "com.aionemu.gameserver.services.events.BanditService",
                 "com.aionemu.gameserver.services.events.BoostEventService",
                 "com.aionemu.gameserver.services.events.CrazyDaevaService",
-                "com.aionemu.gameserver.services.events.EventWindowService",
                 "com.aionemu.gameserver.services.events.FFAService",
                 "com.aionemu.gameserver.services.events.LadderService",
                 "com.aionemu.gameserver.services.events.ShugoSweepService",
@@ -384,7 +382,6 @@ class GameServiceProviderCompatibilityTest {
         MinionService minionService = instance(MinionService.class);
         ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
         AtreianPassportService atreianPassportService = instance(AtreianPassportService.class);
-        EventWindowService eventWindowService = instance(EventWindowService.class);
         QuestEngine questEngine = instance(QuestEngine.class);
         InstanceEngine instanceEngine = instance(InstanceEngine.class);
         AI2Engine ai2Engine = instance(AI2Engine.class);
@@ -604,7 +601,6 @@ class GameServiceProviderCompatibilityTest {
             MinionService.setInstanceProvider(provider(MinionService.class, minionService));
             ShugoSweepService.setInstanceProvider(provider(ShugoSweepService.class, shugoSweepService));
             AtreianPassportService.setInstanceProvider(provider(AtreianPassportService.class, atreianPassportService));
-            EventWindowService.setInstanceProvider(provider(EventWindowService.class, eventWindowService));
             QuestEngine.setInstanceProvider(provider(QuestEngine.class, questEngine));
             InstanceEngine.setInstanceProvider(provider(InstanceEngine.class, instanceEngine));
             AI2Engine.setInstanceProvider(provider(AI2Engine.class, ai2Engine));
@@ -718,7 +714,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(minionService, MinionService.getInstance());
             assertSame(shugoSweepService, ShugoSweepService.getInstance());
             assertSame(atreianPassportService, AtreianPassportService.getInstance());
-            assertSame(eventWindowService, EventWindowService.getInstance());
             assertSame(questEngine, QuestEngine.getInstance());
             assertSame(instanceEngine, InstanceEngine.getInstance());
             assertSame(ai2Engine, AI2Engine.getInstance());
@@ -851,7 +846,6 @@ class GameServiceProviderCompatibilityTest {
             MinionService.setInstanceProvider(null);
             ShugoSweepService.setInstanceProvider(null);
             AtreianPassportService.setInstanceProvider(null);
-            EventWindowService.setInstanceProvider(null);
             QuestEngine.setInstanceProvider(null);
             InstanceEngine.setInstanceProvider(null);
             AI2Engine.setInstanceProvider(null);
@@ -1095,7 +1089,6 @@ class GameServiceProviderCompatibilityTest {
         MinionService minionService = instance(MinionService.class);
         ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
         AtreianPassportService atreianPassportService = instance(AtreianPassportService.class);
-        EventWindowService eventWindowService = instance(EventWindowService.class);
         EventServiceBindings eventServices = new EventServiceBindings(
                 provider(EventService.class, eventService),
                 provider(PlayerEventService.class, playerEventService),
@@ -1107,8 +1100,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(LunaShopService.class, lunaShopService),
                 provider(MinionService.class, minionService),
                 provider(ShugoSweepService.class, shugoSweepService),
-                provider(AtreianPassportService.class, atreianPassportService),
-                provider(EventWindowService.class, eventWindowService));
+                provider(AtreianPassportService.class, atreianPassportService));
 
         try {
             assertSame(eventService, EventService.getInstance());
@@ -1121,7 +1113,6 @@ class GameServiceProviderCompatibilityTest {
             assertSame(minionService, MinionService.getInstance());
             assertSame(shugoSweepService, ShugoSweepService.getInstance());
             assertSame(atreianPassportService, AtreianPassportService.getInstance());
-            assertSame(eventWindowService, EventWindowService.getInstance());
 
             eventServices.destroy();
             eventServices = null;
@@ -1137,7 +1128,6 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(MinionService.class);
             assertProviderCleared(ShugoSweepService.class);
             assertProviderCleared(AtreianPassportService.class);
-            assertProviderCleared(EventWindowService.class);
         } finally {
             if (eventServices != null) {
                 eventServices.destroy();
@@ -1155,7 +1145,6 @@ class GameServiceProviderCompatibilityTest {
             MinionService.setInstanceProvider(null);
             ShugoSweepService.setInstanceProvider(null);
             AtreianPassportService.setInstanceProvider(null);
-            EventWindowService.setInstanceProvider(null);
         }
     }
 

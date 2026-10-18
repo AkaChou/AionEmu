@@ -49,7 +49,7 @@ class RemainingServiceBindingsTest {
         Map.entry("TaskManagerServiceBindings", List.of("ExpireTimerTask", "TeamEffectUpdater", "TeamMoveUpdater", "TemporaryTradeTimeTask")),
         Map.entry("CreativityServiceBindings", List.of("CreativityEssenceService", "CreativitySkillService", "CreativityStatsService", "CreativityTransfoService", "Accuracy", "Agility", "Health", "Knowledge", "Power", "Precision", "Will")),
         Map.entry("BattlefieldServiceBindings", List.of("KamarBattlefieldService", "EngulfedOphidanBridgeService", "SuspiciousOphidanBridgeService", "IronWallWarfrontService", "IdgelDomeService", "IdgelDomeLandmarkService", "HallOfTenacityService", "GrandArenaTrainingCampService", "IDRunService")),
-        Map.entry("EventBootstrapServiceBindings", List.of("LunaShopService", "MinionService", "ShugoSweepService", "AtreianPassportService", "EventWindowService")),
+        Map.entry("EventBootstrapServiceBindings", List.of("LunaShopService", "MinionService", "ShugoSweepService", "AtreianPassportService")),
         Map.entry("ServerNetworkServiceBindings", List.of("LoginServer", "ChatServer", "BannedMacManager", "NetworkController", "PacketLoggerService", "AionPacketHandlerFactory", "PacketFloodFilter", "LsPacketHandlerFactory")),
         Map.entry("HousingServiceBindings", List.of("HousingService", "HousingBidService", "TownService", "MaintenanceTask", "ChallengeTaskService")),
         Map.entry("RuntimeServiceBindings", List.of("InGameShopEn", "FindGroupService", "BrokerService", "Influence", "ExchangeService", "WeatherService", "PetitionService", "PlayerTransferService", "TerritoryService", "LimitedItemTradeService", "AdminService", "SurveyService", "GMService", "PeriodicSaveService", "AnnouncementService", "BoostEventService")),

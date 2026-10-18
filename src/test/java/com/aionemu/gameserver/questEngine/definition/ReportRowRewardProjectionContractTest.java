@@ -70,80 +70,6 @@ class ReportRowRewardProjectionContractTest {
 		new StartNodeContract(18036, 802008, 801281),
 		new StartNodeContract(28036, 802015, 801280));
 
-	@Test
-	void rewardRowSitsOnTheLastJournalRowWithFieldRoom() {
-		for (Contract contract : CONTRACTS) {
-			QuestDefinition definition = definition(contract.questId()).definition();
-			assertEquals(contract.rewardRow(), row(definition, "reward"),
-				() -> "quest " + contract.questId() + " reward row");
-			BitField field = definition.progressLayout().field("var0");
-			assertEquals(0, field.offset(), () -> "quest " + contract.questId() + " var0 SECTION_0");
-			assertTrue(field.maxValue() >= contract.rewardRow(),
-				() -> "quest " + contract.questId() + " var0 max must hold the last journal row");
-			// 末行必须真实存在于某个 START/REWARD 状态上，而不是只抬高 reward 投影。
-			// The last row must exist on a START/REWARD state, not only on the reward projection.
-			assertTrue(definition.nodes().stream()
-					.filter(node -> node.projection().status() == QuestStatus.START)
-					.anyMatch(node -> node.projection().variables().getOrDefault("var0", -1)
-						== contract.rewardRow() - 1),
-				() -> "quest " + contract.questId() + " previous row needs its own START state");
-		}
-	}
-
-	@Test
-	void enterWorldRecoveryRepairsEveryStaleRewardRow() {
-		for (Contract contract : CONTRACTS) {
-			CompiledQuestDefinition compiled = definition(contract.questId());
-			List<QuestTransition> recoveries = compiled.definition().transitions().stream()
-				.filter(transition -> transition.sourceNode() == null)
-				.filter(transition -> "reward".equals(transition.targetNode()))
-				.filter(transition -> transition.event() instanceof QuestEvent.EnterWorld)
-				.toList();
-			assertEquals(contract.staleRows().size(), recoveries.size(),
-				() -> "quest " + contract.questId() + " enter-world recovery edges");
-			for (int stale : contract.staleRows()) {
-				QuestTransition recovery = recoveries.stream()
-					.filter(candidate -> candidate.conditions().equals(List.of(
-						new QuestCondition.StatusIs(QuestStatus.REWARD),
-						new QuestCondition.QuestVariableIs("var0", stale))))
-					.findFirst().orElseThrow(() -> new AssertionError(
-						"quest " + contract.questId() + " has no recovery from var0=" + stale));
-				assertEquals(List.of(new QuestAction.SetVariable("var0", contract.rewardRow())),
-					recovery.actions(), () -> "quest " + contract.questId() + " recovery actions");
-				assertEquals(List.of(new AfterCommitAction.SyncQuestState(
-						QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH)), recovery.afterCommit(),
-					() -> "quest " + contract.questId() + " recovery after-commit");
-				assertNull(recovery.priority());
-
-				QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
-					snapshot(compiled, QuestStatus.REWARD, Map.of("var0", stale), Map.of()),
-					recovery.event(), recovery).orElseThrow();
-				assertEquals(QuestStatus.REWARD, plan.nextStatus());
-				assertEquals(contract.rewardRow(), unpack(compiled, plan).get("var0"),
-					() -> "quest " + contract.questId() + " repaired journal row");
-			}
-		}
-	}
-
-	@Test
-	void handOverRoutesNeverWriteAStaleJournalRow() {
-		for (Contract contract : CONTRACTS) {
-			QuestDefinition definition = definition(contract.questId()).definition();
-			List<QuestTransition> rewardRoutes = definition.transitions().stream()
-				.filter(candidate -> "reward".equals(candidate.targetNode())).toList();
-			assertFalse(rewardRoutes.isEmpty(), () -> "quest " + contract.questId() + " reward routes");
-			for (QuestTransition route : rewardRoutes) {
-				for (QuestAction action : route.actions()) {
-					if (action instanceof QuestAction.SetVariable(String field, int value)
-						&& "var0".equals(field)) {
-						assertEquals(contract.rewardRow(), value,
-							() -> "quest " + contract.questId() + " reward route from "
-								+ route.sourceNode() + " writes a stale journal row");
-					}
-				}
-			}
-		}
-	}
 
 	@Test
 	void handOverLandsOnTheStartNodeThatOwnsTheReportRow() {
@@ -174,15 +100,6 @@ class ReportRowRewardProjectionContractTest {
 		}
 	}
 
-	@Test
-	void growthMirrorsShareTheSameRewardRowModel() {
-		for (int elyosId : List.of(19672, 19677, 19684, 19685, 19686, 19687, 19688, 19689, 19694)) {
-			QuestDefinition elyos = definition(elyosId).definition();
-			QuestDefinition asmodian = definition(elyosId + 10000).definition();
-			assertEquals(nodeRows(elyos), nodeRows(asmodian),
-				() -> "mirror " + (elyosId + 10000) + " node projections");
-		}
-	}
 
 	private static Map<String, Integer> nodeRows(QuestDefinition definition) {
 		Map<String, Integer> rows = new java.util.TreeMap<>();

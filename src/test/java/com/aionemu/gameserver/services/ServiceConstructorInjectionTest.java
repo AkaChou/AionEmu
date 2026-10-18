@@ -29,7 +29,6 @@ import com.aionemu.gameserver.persistence.dao.impl.PlayerMinionDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerMacrosseDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerLunaShopDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerLifeStatDaoImpl;
-import com.aionemu.gameserver.persistence.dao.impl.PlayerEventsWindowDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerEquipmentSettingDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerEmotionDaoImpl;
 import com.aionemu.gameserver.persistence.dao.impl.PlayerEffectDaoImpl;
@@ -85,6 +84,9 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.simple.JdbcClient;
 
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+
 import com.aionemu.gameserver.persistence.dao.AbyssLandingDao;
 import com.aionemu.gameserver.persistence.dao.AbyssRankDao;
 import com.aionemu.gameserver.persistence.dao.SpecialLandingDao;
@@ -110,9 +112,9 @@ import com.aionemu.gameserver.persistence.dao.PetitionDao;
 import com.aionemu.gameserver.persistence.dao.PlayerAtreianBestiaryDao;
 import com.aionemu.gameserver.persistence.dao.PlayerAppearanceDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
-import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
+import com.aionemu.gameserver.persistence.entity.PlayerPassportPo;
 import com.aionemu.gameserver.persistence.dao.PlayerPetDao;
 import com.aionemu.gameserver.persistence.dao.PlayerPunishmentDao;
 import com.aionemu.gameserver.persistence.dao.PlayerQuestDao;
@@ -143,7 +145,6 @@ import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.town.Town;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
@@ -551,10 +552,21 @@ class ServiceConstructorInjectionTest {
 		InventoryDao inventoryDAO = new InventoryDaoImpl();
 		ItemStoneDao itemStoneListDAO = new ItemStoneDaoImpl();
 
-		PeriodicSaveService service = new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
-				playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO,
-				new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
-		assertNotNull(service);
+		// PeriodicSaveService 构造期会注册周期任务，本用例临时提供静态线程池门面；
+		// 其余用例仍需验证构造期 fail-fast，因此不能类级预装。
+		// PeriodicSaveService schedules periodic tasks during construction, so this case supplies the
+		// static thread-pool facade temporarily; other cases still verify fail-fast and must not get it.
+		ThreadPoolManager threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+		try {
+			PeriodicSaveService service = new PeriodicSaveService(abyssRankDAO, playerSkillListDAO, playerQuestListDAO,
+					playerDAO, playerStigmasEquippedDAO, inventoryDAO, itemStoneListDAO,
+					new org.objenesis.ObjenesisStd().newInstance(LegionService.class));
+			assertNotNull(service);
+		} finally {
+			TestServiceProviders.clear(ThreadPoolManager.class);
+			threadPoolManager.shutdown();
+		}
 	}
 
 	@Test
@@ -643,6 +655,11 @@ class ServiceConstructorInjectionTest {
 			@Override
 			public void updatePassport(int accountId, int passportId, int stamps, boolean reset, Timestamp lastStamp) {
 			}
+
+			@Override
+			public Map<Integer, PlayerPassportPo> getPassportProgress(int accountId) {
+				return Map.of();
+			}
 		};
 
 		AtreianPassportService service = new AtreianPassportService(stubPassportsDAO);
@@ -655,14 +672,6 @@ class ServiceConstructorInjectionTest {
 		PlayerShugoSweepDao shugoSweepDAO = new PlayerShugoSweepDaoImpl();
 		PlayerDao playerDAO = new PlayerDaoImpl();
 		ShugoSweepService service = new ShugoSweepService(shugoSweepDAO, playerDAO);
-		assertNotNull(service);
-	}
-
-	@Test
-	void eventWindowServiceConstructsWithInjectedDao() {
-		JdbcClient client = createNoAccessJdbcClient();
-		PlayerEventsWindowDao dao = new PlayerEventsWindowDaoImpl();
-		EventWindowService service = new EventWindowService(dao);
 		assertNotNull(service);
 	}
 
@@ -754,7 +763,6 @@ class ServiceConstructorInjectionTest {
 			new BlockDaoImpl(new PlayerDaoImpl()),
 			new PlayerTitleDaoImpl(),
 			new PlayerCpDaoImpl(),
-			new PlayerEventsWindowDaoImpl(),
 			new PlayerAtreianBestiaryDaoImpl(),
 			new PlayerWardrobeDaoImpl(),
 			new F2paccountDaoImpl(),
@@ -970,7 +978,6 @@ class ServiceConstructorInjectionTest {
 		assertThrows(NullPointerException.class, () -> new ArmsfusionService(null));
 		assertThrows(NullPointerException.class, () -> new AtreianPassportService(null));
 		assertThrows(NullPointerException.class, () -> new ShugoSweepService(null, null));
-		assertThrows(NullPointerException.class, () -> new EventWindowService(null));
 		assertThrows(NullPointerException.class, () -> new LunaShopService(null, null));
 		assertThrows(NullPointerException.class, () -> new AtreianBestiaryService(null));
 		assertThrows(NullPointerException.class, () -> new LegionService(null, null, null, null, null));
@@ -988,6 +995,6 @@ class ServiceConstructorInjectionTest {
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
 			null, null, null, null, null, null, null, null, null, null,
-			null, null, null, null, null, null));
+			null, null, null, null, null));
 	}
 }

@@ -769,7 +769,7 @@ public class LunaShopService {
 	private static LunaDiceItem rollDiceReward(int grade) {
 		List<LunaDiceItem> items = DataManager.LUNA_DICE.getDiceItems(grade);
 		if (items == null || items.isEmpty()) {
-			log.warn("Luna gold dice table {} missing or empty.", grade);
+			log.warn(I18n.get("log.3cc414ca700e", grade));
 			return null;
 		}
 		return items.get(Rnd.get(0, items.size() - 1));

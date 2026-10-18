@@ -54,7 +54,11 @@ class QuestMultistepChainContractTest {
 	private record Step(int npcId, QuestDialogPage page) {
 	}
 
-	private record Chain(int questId, int rows, List<Step> steps, int rewardNpc, QuestDialogPage rewardPage) {
+	private record Chain(int questId, int rows, List<Step> steps, int rewardNpc, QuestDialogPage rewardPage,
+			int rewardVar0) {
+		Chain(int questId, int rows, List<Step> steps, int rewardNpc, QuestDialogPage rewardPage) {
+			this(questId, rows, steps, rewardNpc, rewardPage, rows - 1);
+		}
 	}
 
 	/**
@@ -108,7 +112,9 @@ class QuestMultistepChainContractTest {
 			new Step(203907, QuestDialogPage.SELECT6),
 			new Step(798050, QuestDialogPage.SELECT7),
 			new Step(798049, QuestDialogPage.SELECT8),
-			new Step(205240, QuestDialogPage.SELECT9)), 203908, QuestDialogPage.SELECT10),
+			new Step(205240, QuestDialogPage.SELECT9)), 203908, QuestDialogPage.SELECT10,
+			// QE-054 权威领奖行：1319 的领奖状态与第 8 行共用槽位，投影为 7。
+			7),
 		new Chain(2449, 2, List.of(
 			new Step(798115, QuestDialogPage.SELECT1)), 798080, QuestDialogPage.DEFAULT_SUCCESS));
 
@@ -140,9 +146,17 @@ class QuestMultistepChainContractTest {
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 1514, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2.id());
+		// QE-141：26 只开该级页；顺次推进必须发该级 SETPRO（10000/10001）。
+		// QE-141: 26 only opens the step page; advancing requires that step's SETPRO action.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), 1514, 10000)));
+		NativeTalkFixture.assertCloseDialog(player);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 1514, 26)));
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT3.id());
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.get(1), 1514, 10001)));
+		NativeTalkFixture.assertCloseDialog(player);
 
 		int rewardNpc = handler.rewardNpcs(1514).getFirst();
 		// 两步报告（裁定 a）：31 只发报告确认页——select2/3 都被中继步占用，分型取客户端声明的
@@ -178,11 +192,11 @@ class QuestMultistepChainContractTest {
 			assertEquals(IntStream.range(0, chain.rows()).boxed().toList(), startRows,
 				"quest " + chain.questId() + " 的 START 状态必须逐行覆盖 var0=0.." + (chain.rows() - 1));
 
-			// 领奖行额外拥有同 var0 的 REWARD 状态。
+			// 领奖行额外拥有同 var0 的 REWARD 状态（REWARD 投影由 QE-054 决定，可能与末行行号不同）。
 			assertTrue(definition.nodes().stream()
 					.anyMatch(node -> node.projection().status() == QuestStatus.REWARD
-						&& node.projection().variables().get("var0") == chain.rows() - 1),
-				"quest " + chain.questId() + " 的领奖行必须是 var0=" + (chain.rows() - 1));
+						&& node.projection().variables().get("var0") == chain.rewardVar0()),
+				"quest " + chain.questId() + " 的领奖行必须是 var0=" + chain.rewardVar0());
 		}
 	}
 
@@ -238,8 +252,10 @@ class QuestMultistepChainContractTest {
 	void onlyTheRewardRowNpcOwnsRewardRowRoutesAndCompletion() {
 		for (Chain chain : CHAINS) {
 			QuestDefinition definition = definition(chain.questId());
+			// 领奖行本身是最后一个 START 行（rows-1）；REWARD 投影可能与之不同（如 1319 投影 7）。
+			// The reward row is the last START row (rows-1); the REWARD projection may differ (1319 projects 7).
 			String rewardRow = startLabel(definition, chain.rows() - 1);
-			String reward = rewardLabel(definition, chain.rows() - 1);
+			String reward = rewardLabel(definition, chain.rewardVar0());
 
 			// 领奖行的所有对话路由（领奖页、提交页）只能属于领奖行 NPC。
 			List<Integer> npcs = definition.transitions().stream()
@@ -296,17 +312,17 @@ class QuestMultistepChainContractTest {
 					"quest " + chain.questId() + " 第 " + (index + 1) + " 步后仍是进行中（领奖行尚未提交）");
 			}
 
-			// 领奖行自己的客户端提交动作才把第 rows-1 行推进到 REWARD。
+			// 领奖行自己的客户端提交动作才把第 rows-1 行推进到 REWARD（REWARD 投影由 QE-054 决定）。
 			QuestTransition turnIn = talk(definition, startLabel(definition, chain.rows() - 1),
-				rewardLabel(definition, chain.rows() - 1), chain.rewardNpc(),
+				rewardLabel(definition, chain.rewardVar0()), chain.rewardNpc(),
 				QuestDialogAction.SELECT_QUEST_REWARD.id());
 			QuestMutationPlan plan = QuestMutationPlanner.plan(compiled,
 				snapshot(compiled, status, variables), turnIn.event(), turnIn).orElseThrow();
 			assertEquals(QuestStatus.REWARD, plan.nextStatus(),
 				"quest " + chain.questId() + " 领奖行提交后应进入 REWARD");
-			assertEquals(chain.rows() - 1,
+			assertEquals(chain.rewardVar0(),
 				definition.progressLayout().unpack(plan.nextPackedVariables()).get("var0"),
-				"quest " + chain.questId() + " 领奖行的 var0 必须停在末行行号");
+				"quest " + chain.questId() + " 领奖行的 var0 必须停在权威领奖投影");
 		}
 	}
 

@@ -39,7 +39,6 @@ import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.cp.PlayerCPList;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeList;
-import com.aionemu.gameserver.model.event_window.PlayerEventWindowList;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Kisk;
@@ -318,7 +317,6 @@ public class Player extends Creature {
 	private F2p f2p;
 	private PlayerCPList cp;
 	private PlayerABList ab;
-	private PlayerEventWindowList ew;
 	private PlayerWardrobeList wardrobe;
 	private PlayerLunaShop lunaShop;
 	private PlayerSweep shugoSweep;
@@ -1654,14 +1652,6 @@ public class Player extends Creature {
 
 	public void setAtreianBestiary(PlayerABList ab) {
 		this.ab = ab;
-	}
-
-	public PlayerEventWindowList getEventWindow() {
-		return ew;
-	}
-
-	public void setEventWindow(PlayerEventWindowList ew) {
-		this.ew = ew;
 	}
 
 	public void setHotTeleObservers(ActionObserver observer) {

@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import com.aionemu.gameserver.model.templates.event.AtreianPassportRewards;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATREIAN_PASSPORT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
+import com.aionemu.gameserver.persistence.entity.PlayerPassportPo;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -52,21 +54,6 @@ public class AtreianPassportService {
 	}
 
 	/**
-	 * getPlayerPassports 方法。
-	 * getPlayerPassports method.
-	 * accountId
-	 * result
-	 */
-	public Map<Integer, AtreianPassport> getPlayerPassports(int accountId) {
-		Map<Integer, AtreianPassport> passports = new HashMap<>();
-		List<Integer> ids = playerPassportsDAO.getPassports(accountId);
-		for (Integer i : ids) {
-			passports.put(i, data.get(i));
-		}
-		return passports;
-	}
-
-	/**
 	 * 玩家登录时同步状态。
 	 * Syncs state when a player logs in.
 	 *
@@ -77,9 +64,19 @@ public class AtreianPassportService {
 			return;
 		}
 		int accountId = player.getPlayerAccount().getId();
-		Map<Integer, AtreianPassport> playerPassports = getPlayerPassports(accountId);
+		Map<Integer, PlayerPassportPo> progress = playerPassportsDAO.getPassportProgress(accountId);
+		List<SM_ATREIAN_PASSPORT.Record> records = new ArrayList<>();
+		boolean newDay = false;
 		for (AtreianPassport template : activePassports()) {
-			syncPassport(player, accountId, template, playerPassports);
+			newDay |= syncPassport(accountId, template, progress, records);
+		}
+		if (!records.isEmpty()) {
+			LocalDate today = LocalDate.now();
+			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(records, today.getDayOfMonth(),
+				today.getMonthValue(), today.getYear()));
+			if (newDay) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);
+			}
 		}
 	}
 
@@ -95,50 +92,48 @@ public class AtreianPassportService {
 	}
 
 	/**
-	 * 同步单个签到（插入新行、跨自然日解锁、下发状态包）。
-	 * Syncs a single passport (insert row, unlock on a new calendar day, send state packet).
+	 * 同步单个签到（插入新行、跨自然日解锁、追加下发记录）。
+	 * Syncs a single passport (insert row, unlock on a new calendar day, append the outgoing record).
+	 * @return 本次是否跨自然日解锁 / whether the passport unlocked on a new calendar day
 	 */
-	private void syncPassport(Player player, int accountId, AtreianPassport template,
-			Map<Integer, AtreianPassport> playerPassports) {
+	private boolean syncPassport(int accountId, AtreianPassport template,
+			Map<Integer, PlayerPassportPo> progress, List<SM_ATREIAN_PASSPORT.Record> records) {
 		int atreianId = template.getId();
-		// 实测结论：客户端 BASIC(0) 路径按服务器年月取本地月历数据（5.8 客户端仅 2017 年 → 2026 年下发全黑无图标）；
-		// ANNIVERSARY(1) 路径按 eventId 索引本地数据填 28 槽网格（格数=本地该期奖励数），标题亦取本地该期。
-		// 故固定下发 1，由 eventId 选择期数 / Send ANNIVERSARY(1): the BASIC path reads local data by calendar
-		// month (empty for 2026), while ANNIVERSARY indexes by eventId and fills the 28-slot grid from it.
-		int attendTypeId = 1;
+		// 真端下发的是签到类型枚举（0=anniversary, 1=basic, 2=pc_basic），由 eventId 选择期数。
+		// 历史实测（旧实现留下的结论，尚未用本轮数据复核）：客户端 BASIC 路径按服务器年月取本地月历数据，
+		// 5.8 客户端只有 2017 年数据，故非 2017 年份下发 BASIC 可能全黑无图标；ANNIVERSARY 路径按 eventId
+		// 索引本地数据填槽位，标题同源。旧实现因此对所有签到固定下发 1，但它把 1 记作 ANNIVERSARY，
+		// 与真端枚举（anniversary=0 / basic=1）矛盾——id=8 在两种口径下都发 1 故无差异，
+		// 风险集中在本轮新激活的 id=9（anniversary，下发 0）。上线前须实机确认 id=9 面板渲染。
+		// Retail sends the attendance-type enum (0=anniversary, 1=basic, 2=pc_basic); eventId selects the
+		// period. The old implementation always sent 1 and labelled it ANNIVERSARY, which contradicts the
+		// retail enum, so id=8 is unaffected either way but the newly activated id=9 (anniversary, sends 0)
+		// needs a live check before shipping.
+		int attendTypeId = template.getAttendType().getId();
 
 		// 多格月历型签到印章集满则重置（满额 = 该签到的奖励格数）；单格型（如 passport 9）领完即止不重置
 		// Multi-stamp passports reset once full; single-reward passports (e.g. passport 9) end when claimed out
 		int maxStamps = template.getAtreianPassportRewards().size();
-		if (maxStamps > 1 && playerPassportsDAO.getStamps(accountId, atreianId) >= maxStamps) {
+		PlayerPassportPo row = progress.get(atreianId);
+		int stamps = row == null || row.getStamps() == null ? 0 : row.getStamps();
+		if (maxStamps > 1 && stamps >= maxStamps) {
 			playerPassportsDAO.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
+			stamps = 0;
 		}
 
-		// 真端下发的是服务器当前日期，客户端据此渲染当月月历
-		// Retail sends the current server date; the client renders the current month from it
-		LocalDate today = LocalDate.now();
-		int day = today.getDayOfMonth();
-		int month = today.getMonthValue();
-		int year = today.getYear();
-
-		if (!playerPassports.containsKey(atreianId)) {
+		if (row == null) {
 			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
 			playerPassportsDAO.insertPassport(accountId, atreianId, 0, now);
-			PacketSendUtility.sendPacket(player,
-				new SM_ATREIAN_PASSPORT(atreianId, 0, attendTypeId, false, day, month, year));
-		} else {
-			int stamps = playerPassportsDAO.getStamps(accountId, atreianId);
-			Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
-			if (isNewDay(lastStamp)) {
-				playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false, lastStamp);
-				PacketSendUtility.sendPacket(player,
-					new SM_ATREIAN_PASSPORT(atreianId, stamps, attendTypeId, false, day, month, year));
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NEW_PASSPORT_AVAIBLE);
-			} else {
-				PacketSendUtility.sendPacket(player,
-					new SM_ATREIAN_PASSPORT(atreianId, stamps, attendTypeId, true, day, month, year));
-			}
+			records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, 0, attendTypeId, false));
+			return false;
 		}
+		if (isNewDay(row.getLastStamp())) {
+			playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false, row.getLastStamp());
+			records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, stamps, attendTypeId, false));
+			return true;
+		}
+		records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, stamps, attendTypeId, true));
+		return false;
 	}
 
 	/**
@@ -171,30 +166,51 @@ public class AtreianPassportService {
 			return;
 		}
 		int accountId = player.getPlayerAccount().getId();
-		if (!playerPassportsDAO.getPassports(accountId).contains(atreianId)) {
+		Map<Integer, PlayerPassportPo> progress = playerPassportsDAO.getPassportProgress(accountId);
+		PlayerPassportPo row = progress.get(atreianId);
+		if (row == null) {
 			return;
 		}
 		// 真端下发的是服务器当前日期，客户端据此渲染当月月历
 		// Retail sends the current server date; the client renders the current month from it
 		LocalDate today = LocalDate.now();
-		int day = today.getDayOfMonth();
-		int month = today.getMonthValue();
-		int year = today.getYear();
-		int attendTypeId = 1; // 见 syncPassport 注释 / see note in syncPassport
-		int stamps = playerPassportsDAO.getStamps(accountId, atreianId);
-		Timestamp lastStamp = playerPassportsDAO.getLastStamp(accountId, atreianId);
-		if (!isNewDay(lastStamp)) {
+		int stamps = row.getStamps() == null ? 0 : row.getStamps();
+		if (!isNewDay(row.getLastStamp())) {
 			return;
 		}
 		for (AtreianPassportRewards component : loginRewardTemplate.getAtreianPassportRewards()) {
 			// 至多一个格子的序号等于 stamps+1，命中即发 / at most one slot equals stamps+1
 			if (component.getRewardItemNum() == stamps + 1) {
 				ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
-				PacketSendUtility.sendPacket(player,
-					new SM_ATREIAN_PASSPORT(atreianId, stamps + 1, attendTypeId, true, day, month, year));
 				playerPassportsDAO.updatePassport(accountId, atreianId, stamps + 1, true, new Timestamp(System.currentTimeMillis()));
 			}
 		}
+		// 真端领奖后一次性回发全部签到状态（S_LOGIN_EVENT_LIST），客户端据此刷新整个面板
+		// Retail replies with the whole attendance list after a claim, so the client can refresh the panel
+		List<SM_ATREIAN_PASSPORT.Record> records =
+			buildRecords(activePassports(), playerPassportsDAO.getPassportProgress(accountId));
+		PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(records, today.getDayOfMonth(),
+			today.getMonthValue(), today.getYear()));
+	}
+
+	/**
+	 * 按库内真实进度构建下发记录：计数与「今日已领」一律取库内值，不按领取意图推算。
+	 * Builds the outgoing records from stored progress; a miss writes nothing, so the panel always matches the DB.
+	 * @param templates 激活中的签到模板 / active passport templates
+	 * @param progress 账号进度行 / stored progress rows by passport id
+	 * @return 下发记录 / outgoing records
+	 */
+	static List<SM_ATREIAN_PASSPORT.Record> buildRecords(List<AtreianPassport> templates,
+			Map<Integer, PlayerPassportPo> progress) {
+		List<SM_ATREIAN_PASSPORT.Record> records = new ArrayList<>(templates.size());
+		for (AtreianPassport template : templates) {
+			int id = template.getId();
+			PlayerPassportPo row = progress.get(id);
+			int count = row == null || row.getStamps() == null ? 0 : row.getStamps();
+			boolean claimed = row != null && !isNewDay(row.getLastStamp());
+			records.add(new SM_ATREIAN_PASSPORT.Record(id, count, template.getAttendType().getId(), claimed));
+		}
+		return records;
 	}
 
 	/**
@@ -207,14 +223,8 @@ public class AtreianPassportService {
 		data.putAll(raw);
 		for (AtreianPassport atp : data.values()) {
 			switch (atp.getAttendType()) {
-				case BASIC:
-					getBasicPassports(atp.getId(), atp);
-					break;
-				case ANNIVERSARY:
-					getAnniversaryPassports(atp.getId(), atp);
-					break;
-				default:
-					break;
+				case BASIC, PC_BASIC -> getBasicPassports(atp.getId(), atp);
+				case ANNIVERSARY -> getAnniversaryPassports(atp.getId(), atp);
 			}
 		}
 		log.info(I18n.get("log.a141967cbb98", basic.size()));
@@ -229,10 +239,7 @@ public class AtreianPassportService {
 	 *           atp
 	 */
 	public void getPassports(int id, AtreianPassport atp) {
-		if (data.containsValue(id)) {
-			return;
-		}
-		data.put(id, atp);
+		data.putIfAbsent(id, atp);
 	}
 
 	/**

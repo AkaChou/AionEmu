@@ -8079,6 +8079,28 @@
     <variable name="idluna_def_phase_3_1"/>
     <variable name="idluna_def_phase_3_6"/>
     <variable name="idluna_def_phase_3_7"/>
+    <variable name="idluna_def_barricade_01"/>
+    <variable name="idluna_def_barricade_02"/>
+    <variable name="idluna_def_barricade_03"/>
+    <variable name="idluna_def_end"/>
+    <variable name="idluna_def_phase_1"/>
+    <variable name="idluna_def_phase_1_2"/>
+    <variable name="idluna_def_phase_1_4"/>
+    <variable name="idluna_def_phase_1_5"/>
+    <variable name="idluna_def_phase_2"/>
+    <variable name="idluna_def_phase_2_2"/>
+    <variable name="idluna_def_phase_2_4"/>
+    <variable name="idluna_def_phase_2_5"/>
+    <variable name="idluna_def_phase_3"/>
+    <variable name="idluna_def_phase_3_2"/>
+    <variable name="idluna_def_phase_3_3"/>
+    <variable name="idluna_def_phase_3_4"/>
+    <variable name="idluna_def_phase_3_5"/>
+    <variable name="idluna_def_phase_4"/>
+    <variable name="idluna_def_phase_4_1"/>
+    <variable name="idluna_def_phase_5_1"/>
+    <variable name="idluna_def_phase_7_1"/>
+    <variable name="timeattack_play_start"/>
     <condition id="1043" expression="IDLUNA_DEF_PHASE_1_1==1" despawn_at_other="true" group_mode="all" source="IDLuna_def/world_N.xml#1">
       <group probability="1000">
         <slot>
@@ -9776,7 +9798,848 @@
         </slot>
       </group>
     </condition>
-  </world>
+      <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#900). -->
+    <condition id="1248" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#900">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1248:p">
+            <npc id="245543" probability="10000" x="238.079636" y="290.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="238.079636" y="291.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="239.079636" y="290.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="239.079636" y="291.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.079636" y="291.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="240.079636" y="291.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.079636" y="292.528046" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave5" respawn_delay="40" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#2075). -->
+    <condition id="1249" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#2075">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1249:p">
+            <npc id="245550" probability="10000" x="235.507599" y="296.497437" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave8"/>
+            <npc id="245550" probability="10000" x="236.507599" y="297.497437" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave8"/>
+            <npc id="245551" probability="10000" x="237.507599" y="297.497437" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave8"/>
+            <npc id="245551" probability="10000" x="238.507599" y="297.497437" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave8"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#2572). -->
+    <condition id="1250" expression="IDLUNA_DEF_PHASE_1_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#2572">
+      <group probability="1000">
+        <slot>
+          <npc id="245549" probability="10000" x="236.447937" y="292.55835" z="163.434204" heading="1" initial_delay="20" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_04_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#3313). -->
+    <condition id="1251" expression="idluna_def_barricade_03&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#3313">
+      <group probability="1000">
+        <slot>
+          <npc id="834482" probability="10000" x="222.901352" y="217.598373" z="163.25264" heading="1" initial_delay="0" initial_delay_extra="1" respawn_delay="1" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#3388). -->
+    <condition id="1252" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#3388">
+      <group probability="1000">
+        <slot>
+          <npc id="834526" probability="10000" x="223.97699" y="201.23999" z="163.444183" heading="1" initial_delay="3" initial_delay_extra="1" respawn_delay="3" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#4034). -->
+    <condition id="1253" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#4034">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1253:p">
+            <npc id="245543" probability="10000" x="235.955246" y="288.075897" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave1" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.955246" y="289.075897" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave1" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.955246" y="288.075897" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave1" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.955246" y="289.075897" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave1" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="237.955246" y="289.075897" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave1" respawn_delay="40" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#4748). -->
+    <condition id="1254" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#4748">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="237.507339" y="296.37381" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#5371). -->
+    <condition id="1255" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#5371">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="237.507339" y="296.390869" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#6551). -->
+    <condition id="1256" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#6551">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="236.414551" y="292.650543" z="163.39122" heading="1" initial_delay="40" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave5"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#7527). -->
+    <condition id="1257" expression="IDLUNA_DEF_PHASE_2_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#7527">
+      <group probability="1000">
+        <slot>
+          <npc id="245559" probability="10000" x="236.984146" y="288.979401" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_04_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#9167). -->
+    <condition id="1258" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#9167">
+      <group probability="1000">
+        <slot>
+          <npc id="245561" probability="10000" x="242.185043" y="292.70047" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#9437). -->
+    <condition id="1259" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#9437">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="242.507172" y="289.727753" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#9731). -->
+    <condition id="1260" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#9731">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1260:p">
+            <npc id="245550" probability="10000" x="236.468445" y="291.150024" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave1"/>
+            <npc id="245551" probability="10000" x="237.468445" y="292.150024" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#10313). -->
+    <condition id="1261" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#10313">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="242.507172" y="289.801361" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave7"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#10752). -->
+    <condition id="1262" expression="IDLUNA_DEF_PHASE_2_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#10752">
+      <group probability="1000">
+        <slot>
+          <npc id="245559" probability="10000" x="236.984146" y="289.014008" z="163.486542" heading="1" initial_delay="25" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_04_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#10878). -->
+    <condition id="1263" expression="IDLUNA_DEF_PHASE_2_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#10878">
+      <group probability="1000">
+        <slot>
+          <npc id="245559" probability="10000" x="236.481873" y="292.366333" z="163.486542" heading="1" initial_delay="25" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_04_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#11100). -->
+    <condition id="1264" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#11100">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1264:p">
+            <npc id="245560" probability="10000" x="239.65477" y="295.607574" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave9"/>
+            <npc id="245561" probability="10000" x="240.65477" y="296.607574" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave9"/>
+            <npc id="245561" probability="10000" x="241.65477" y="296.607574" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave9"/>
+            <npc id="245561" probability="10000" x="242.65477" y="296.607574" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave9"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#11836). -->
+    <condition id="1265" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#11836">
+      <group probability="1000">
+        <slot>
+          <npc id="245561" probability="10000" x="241.65477" y="295.605957" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave5"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#12106). -->
+    <condition id="1266" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#12106">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1266:p">
+            <npc id="245550" probability="10000" x="235.507523" y="296.501587" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave2"/>
+            <npc id="245551" probability="10000" x="236.507523" y="297.501587" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave2"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#12545). -->
+    <condition id="1267" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#12545">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="236.955566" y="288.949768" z="163.434204" heading="1" initial_delay="20" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#12621). -->
+    <condition id="1268" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#12621">
+      <group probability="1000">
+        <slot>
+          <npc id="834525" probability="10000" x="223.97699" y="201.247879" z="162.523026" heading="1" initial_delay="6" initial_delay_extra="1" respawn_delay="6" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#13244). -->
+    <condition id="1269" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#13244">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="238.468262" y="291.110565" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#14355). -->
+    <condition id="1270" expression="IDLUNA_DEF_PHASE_4&gt;=2" despawn_at_other="true" group_mode="all" source="IDLuna_def#14355">
+      <group probability="1000">
+        <slot>
+          <npc id="834027" probability="10000" x="248.51535" y="295.065704" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#14751). -->
+    <condition id="1271" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#14751">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="235.258911" y="250.491837" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#15021). -->
+    <condition id="1272" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#15021">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="242.507172" y="289.744812" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#15099). -->
+    <condition id="1273" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#15099">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="224.103973" y="268.63205" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave8"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#15169). -->
+    <condition id="1274" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#15169">
+      <group probability="1000">
+        <slot>
+          <npc id="834048" probability="10000" x="229.901825" y="214.826355" z="160.818253" heading="90" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#16537). -->
+    <condition id="1275" expression="IDLUNA_DEF_PHASE_3&gt;=450" despawn_at_other="true" group_mode="all" source="IDLuna_def#16537">
+      <group probability="1000">
+        <slot>
+          <npc id="834026" probability="10000" x="248.51535" y="293.496155" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#16614). -->
+    <condition id="1276" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#16614">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="234.565231" y="255.406311" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#16684). -->
+    <condition id="1277" expression="idluna_def_barricade_01&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#16684">
+      <group probability="1000">
+        <slot>
+          <npc id="834491" probability="10000" x="236.998169" y="215.59581" z="163.833527" heading="270" initial_delay="0" initial_delay_extra="1" respawn_delay="60" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#16821). -->
+    <condition id="1278" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#16821">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1278:p">
+            <npc id="245543" probability="10000" x="238.61615" y="287.633362" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave4" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="238.61615" y="288.633362" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave4" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="239.61615" y="287.633362" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave4" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="239.61615" y="288.633362" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave4" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.61615" y="288.633362" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave4" respawn_delay="40" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#17210). -->
+    <condition id="1279" expression="idluna_def_barricade_02&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#17210">
+      <group probability="1000">
+        <slot>
+          <npc id="834481" probability="10000" x="222.919052" y="216.313843" z="163.25264" heading="1" initial_delay="0" initial_delay_extra="1" respawn_delay="3" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#17504). -->
+    <condition id="1280" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#17504">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1280:p">
+            <npc id="245560" probability="10000" x="236.468109" y="291.154053" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave1"/>
+            <npc id="245561" probability="10000" x="237.468109" y="292.154053" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#17754). -->
+    <condition id="1281" expression="idluna_def_barricade_01&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#17754">
+      <group probability="1000">
+        <slot>
+          <npc id="834480" probability="10000" x="222.919052" y="214.928162" z="163.25264" heading="1" initial_delay="0" initial_delay_extra="1" respawn_delay="3" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#18877). -->
+    <condition id="1282" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#18877">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1282:p">
+            <npc id="245560" probability="10000" x="235.507187" y="296.505615" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave2"/>
+            <npc id="245561" probability="10000" x="236.507187" y="297.505615" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave2"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#20516). -->
+    <condition id="1283" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#20516">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="238.468262" y="291.127625" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#21231). -->
+    <condition id="1284" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#21231">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1284:p">
+            <npc id="245543" probability="10000" x="235.456161" y="290.760132" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave2" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="235.456161" y="291.760132" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave2" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.456161" y="290.760132" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave2" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.456161" y="291.760132" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave2" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="237.456161" y="291.760132" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave2" respawn_delay="40" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#21564). -->
+    <condition id="1285" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#21564">
+      <group probability="1000">
+        <slot>
+          <npc id="834479" probability="10000" x="222.901428" y="213.544861" z="163.25264" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#23136). -->
+    <condition id="1286" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#23136">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1286:p">
+            <npc id="245543" probability="10000" x="235.955246" y="288.062195" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave1" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.955246" y="289.062195" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave1" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.955246" y="288.062195" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave1" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.955246" y="289.062195" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave1" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="237.955246" y="289.062195" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave1" respawn_delay="30" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#23291). -->
+    <condition id="1287" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#23291">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="236.955566" y="288.973816" z="163.39122" heading="1" initial_delay="40" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#24444). -->
+    <condition id="1288" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#24444">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1288:p">
+            <npc id="245543" probability="10000" x="235.456161" y="290.746429" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave2" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="235.456161" y="291.746429" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave2" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.456161" y="290.746429" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave2" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.456161" y="291.746429" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave2" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="237.456161" y="291.746429" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave2" respawn_delay="30" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#25119). -->
+    <condition id="1289" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#25119">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1289:p">
+            <npc id="245560" probability="10000" x="240.507019" y="289.820007" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave3"/>
+            <npc id="245561" probability="10000" x="241.507019" y="290.820007" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave3"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#25554). -->
+    <condition id="1290" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#25554">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="224.340363" y="255.218094" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave5"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#27676). -->
+    <condition id="1291" expression="IDLUNA_DEF_PHASE_2&gt;=300" despawn_at_other="true" group_mode="all" source="IDLuna_def#27676">
+      <group probability="1000">
+        <slot>
+          <npc id="834025" probability="10000" x="248.51535" y="291.994598" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#27969). -->
+    <condition id="1292" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#27969">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1292:p">
+            <npc id="245550" probability="10000" x="236.468521" y="291.145874" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave6"/>
+            <npc id="245550" probability="10000" x="237.468521" y="292.145874" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave6"/>
+            <npc id="245551" probability="10000" x="238.468521" y="292.145874" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave6"/>
+            <npc id="245551" probability="10000" x="239.468521" y="292.145874" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave6"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#29344). -->
+    <condition id="1293" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#29344">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1293:p">
+            <npc id="245560" probability="10000" x="235.507187" y="296.507233" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave8"/>
+            <npc id="245560" probability="10000" x="236.507187" y="297.507233" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave8"/>
+            <npc id="245561" probability="10000" x="237.507187" y="297.507233" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave8"/>
+            <npc id="245561" probability="10000" x="238.507187" y="297.507233" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave8"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#29923). -->
+    <condition id="1294" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#29923">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1294:p">
+            <npc id="245560" probability="10000" x="240.185043" y="292.702087" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave7"/>
+            <npc id="245561" probability="10000" x="241.185043" y="293.702087" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave7"/>
+            <npc id="245561" probability="10000" x="242.185043" y="293.702087" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave7"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#33134). -->
+    <condition id="1295" expression="IDLUNA_DEF_END==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#33134">
+      <group probability="1000">
+        <slot>
+          <npc id="834483" probability="10000" x="222.884766" y="214.681046" z="161.50351" heading="1" initial_delay="0" initial_delay_extra="1" respawn_delay="1" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#33355). -->
+    <condition id="1296" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#33355">
+      <group probability="1000">
+        <slot>
+          <npc id="245551" probability="10000" x="241.655106" y="295.601929" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave5"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#33737). -->
+    <condition id="1297" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#33737">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1297:p">
+            <npc id="245550" probability="10000" x="239.655182" y="295.597778" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave7"/>
+            <npc id="245551" probability="10000" x="240.655182" y="296.597778" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave7"/>
+            <npc id="245551" probability="10000" x="241.655182" y="296.597778" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave7"/>
+            <npc id="245551" probability="10000" x="242.655182" y="296.597778" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave7"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#33849). -->
+    <condition id="1298" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#33849">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1298:p">
+            <npc id="245543" probability="10000" x="234.940567" y="293.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="234.940567" y="294.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.940567" y="293.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.940567" y="294.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.940567" y="294.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.940567" y="294.586151" z="163.434204" heading="1" initial_delay="240" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_02_wave3" respawn_delay="40" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#35140). -->
+    <condition id="1299" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#35140">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="226.354523" y="251.345474" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave6"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#35446). -->
+    <condition id="1300" expression="idluna_def_barricade_03&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#35446">
+      <group probability="1000">
+        <slot>
+          <npc id="834491" probability="10000" x="236.63472" y="202.535065" z="164.879562" heading="270" initial_delay="0" initial_delay_extra="1" respawn_delay="60" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#35833). -->
+    <condition id="1301" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#35833">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="238.442001" y="291.172546" z="163.434204" heading="1" initial_delay="20" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#37216). -->
+    <condition id="1302" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#37216">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1302:p">
+            <npc id="245550" probability="10000" x="240.507431" y="289.811829" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave9"/>
+            <npc id="245551" probability="10000" x="241.507431" y="290.811829" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave9"/>
+            <npc id="245551" probability="10000" x="242.507431" y="290.811829" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave9"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#37425). -->
+    <condition id="1303" expression="IDLUNA_DEF_PHASE_2_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#37425">
+      <group probability="1000">
+        <slot>
+          <npc id="245559" probability="10000" x="236.481873" y="292.331726" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_04_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#37495). -->
+    <condition id="1304" expression="idluna_def_barricade_02&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#37495">
+      <group probability="1000">
+        <slot>
+          <npc id="834491" probability="10000" x="236.63472" y="202.535065" z="163.833527" heading="270" initial_delay="0" initial_delay_extra="1" respawn_delay="60" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#38069). -->
+    <condition id="1305" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#38069">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="237.507339" y="296.393158" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave5"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#38500). -->
+    <condition id="1306" expression="IDLUNA_DEF_PHASE_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#38500">
+      <group probability="1000">
+        <slot>
+          <npc id="245575" probability="10000" x="236.456161" y="291.754272" z="163.434204" heading="1" initial_delay="5" initial_delay_extra="1" walker="retail:301630000:npcpath4_phase_01_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#40384). -->
+    <condition id="1307" expression="IDLUNA_DEF_PHASE_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#40384">
+      <group probability="1000">
+        <slot>
+          <npc id="834222" probability="1000" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834223" probability="2600" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834224" probability="1900" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834225" probability="900" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834226" probability="1900" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834227" probability="1100" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834228" probability="600" x="246.781403" y="292.802673" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#40891). -->
+    <condition id="1308" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#40891">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1308:p">
+            <npc id="245543" probability="10000" x="238.079636" y="290.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="238.079636" y="291.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="239.079636" y="290.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="239.079636" y="291.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.079636" y="291.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="240.079636" y="291.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.079636" y="292.514343" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave5" respawn_delay="20" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#41234). -->
+    <condition id="1309" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#41234">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="238.442001" y="291.181885" z="163.434204" heading="1" initial_delay="40" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave6"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#41354). -->
+    <condition id="1310" expression="IDLUNA_DEF_PHASE_1_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#41354">
+      <group probability="1000">
+        <slot>
+          <npc id="245549" probability="10000" x="236.955246" y="289.368866" z="163.477173" heading="1" initial_delay="35" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_04_wave3"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#41480). -->
+    <condition id="1311" expression="IDLUNA_DEF_PHASE_1_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#41480">
+      <group probability="1000">
+        <slot>
+          <npc id="245549" probability="10000" x="236.447937" y="292.55835" z="163.477173" heading="1" initial_delay="35" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_04_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#42023). -->
+    <condition id="1312" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#42023">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="225.16124" y="264.235657" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave7"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#42612). -->
+    <condition id="1313" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#42612">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="242.507172" y="289.747101" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave6"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#42750). -->
+    <condition id="1314" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#42750">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1314:p">
+            <npc id="245543" probability="10000" x="238.61615" y="287.619659" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave4" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="238.61615" y="288.619659" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave4" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="239.61615" y="287.619659" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave4" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="239.61615" y="288.619659" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave4" respawn_delay="30" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="240.61615" y="288.619659" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave4" respawn_delay="30" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#42936). -->
+    <condition id="1315" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#42936">
+      <group probability="1000">
+        <slot>
+          <npc id="834215" probability="2600" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834216" probability="1100" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834217" probability="1100" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834218" probability="2600" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834219" probability="1100" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834220" probability="1100" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834221" probability="400" x="246.781403" y="291.227783" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#43772). -->
+    <condition id="1316" expression="IDLUNA_DEF_PHASE_1&gt;=300" despawn_at_other="true" group_mode="all" source="IDLuna_def#43772">
+      <group probability="1000">
+        <slot>
+          <npc id="834024" probability="10000" x="248.51535" y="290.419708" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#44385). -->
+    <condition id="1317" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#44385">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="237.507339" y="296.486969" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave8"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#45758). -->
+    <condition id="1318" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#45758">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1318:p">
+            <npc id="245560" probability="10000" x="240.507019" y="289.821625" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave10"/>
+            <npc id="245561" probability="10000" x="241.507019" y="290.821625" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave10"/>
+            <npc id="245561" probability="10000" x="242.507019" y="290.821625" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave10"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#46781). -->
+    <condition id="1319" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#46781">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1319:p">
+            <npc id="245543" probability="10000" x="234.940567" y="293.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="234.940567" y="294.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.940567" y="293.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="235.940567" y="294.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245543" probability="10000" x="236.940567" y="294.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+            <npc id="245544" probability="10000" x="236.940567" y="294.572449" z="163.434204" heading="1" initial_delay="60" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave3" respawn_delay="20" respawn_delay_extra="1"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#46993). -->
+    <condition id="1320" expression="IDLUNA_DEF_PHASE_3_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#46993">
+      <group probability="1000">
+        <slot>
+          <npc id="245569" probability="10000" x="236.414551" y="292.626495" z="163.434204" heading="1" initial_delay="20" initial_delay_extra="1" walker="retail:301630000:npcpath3_phase_04_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#48020). -->
+    <condition id="1321" expression="IDLUNA_DEF_PHASE_2_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#48020">
+      <group probability="1000">
+        <slot>
+          <npc id="245556" probability="10000" x="238.468262" y="291.129913" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_02_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#48458). -->
+    <condition id="1322" expression="TIMEATTACK_PLAY_START&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#48458">
+      <group probability="1000">
+        <slot>
+          <npc id="833813" probability="10000" x="230.16124" y="239.178177" z="160.385773" heading="90" initial_delay="60" initial_delay_extra="1" respawn_delay="60" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#48819). -->
+    <condition id="1323" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#48819">
+      <group probability="1000">
+        <slot>
+          <npc id="834524" probability="10000" x="223.97699" y="201.275803" z="161.50351" heading="1" initial_delay="2" initial_delay_extra="1" respawn_delay="2" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#49444). -->
+    <condition id="1324" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#49444">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="223.350571" y="251.27626" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave4"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#49981). -->
+    <condition id="1325" expression="IDLUNA_DEF_PHASE_2_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#49981">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1325:p">
+            <npc id="245560" probability="10000" x="236.468109" y="291.15567" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave6"/>
+            <npc id="245560" probability="10000" x="237.468109" y="292.15567" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave6"/>
+            <npc id="245561" probability="10000" x="238.468109" y="292.15567" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave6"/>
+            <npc id="245561" probability="10000" x="239.468109" y="292.15567" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath2_phase_05_wave6"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#50079). -->
+    <condition id="1326" expression="IDLUNA_DEF_PHASE_3==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#50079">
+      <group probability="1000">
+        <slot>
+          <npc id="834229" probability="3300" x="246.781403" y="294.30423" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834232" probability="2200" x="246.781403" y="294.30423" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834234" probability="3600" x="246.781403" y="294.30423" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+          <npc id="834235" probability="900" x="246.781403" y="294.30423" z="161.960449" heading="1" initial_delay="0" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#50354). -->
+    <condition id="1327" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#50354">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1327:p">
+            <npc id="245550" probability="10000" x="240.185455" y="292.692291" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave10"/>
+            <npc id="245551" probability="10000" x="241.185455" y="293.692291" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave10"/>
+            <npc id="245551" probability="10000" x="242.185455" y="293.692291" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave10"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#50693). -->
+    <condition id="1328" expression="(TIMEATTACK_PLAY_START&gt;=1)&amp;&amp;(IDLUNA_DEF_PHASE_3&lt;=450)" despawn_at_other="true" group_mode="all" source="IDLuna_def#50693">
+      <group probability="1000">
+        <slot>
+          <npc id="243647" probability="10000" x="238.018494" y="293.463684" z="163.434204" heading="1" initial_delay="80" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_01_wave6" respawn_delay="80" respawn_delay_extra="60"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#50987). -->
+    <condition id="1329" expression="IDLUNA_DEF_PHASE_1_2==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#50987">
+      <group probability="1000">
+        <slot>
+          <npc id="245546" probability="10000" x="238.468262" y="291.135406" z="163.434204" heading="1" initial_delay="30" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_02_wave9"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#51715). -->
+    <condition id="1330" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#51715">
+      <group probability="1000">
+        <slot>
+          <party probability="10000" token="luna:301630000:1330:p">
+            <npc id="245550" probability="10000" x="240.507355" y="289.815979" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave3"/>
+            <npc id="245551" probability="10000" x="241.507355" y="290.815979" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave3"/>
+          </party>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#51805). -->
+    <condition id="1331" expression="TIMEATTACK_PLAY_START&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#51805">
+      <group probability="1000">
+        <slot>
+          <npc id="833813" probability="10000" x="230.146317" y="239.178177" z="160.385773" heading="270" initial_delay="60" initial_delay_extra="1" respawn_delay="60" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#53161). -->
+    <condition id="1332" expression="IDLUNA_DEF_PHASE_4&gt;=1" despawn_at_other="true" group_mode="all" source="IDLuna_def#53161">
+      <group probability="1000">
+        <slot>
+          <npc id="246173" probability="10000" x="232.70282" y="251.965683" z="161.099762" heading="180" initial_delay="2" initial_delay_extra="1" walker="retail:301630000:npcpath5_phase_04_wave2"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#54179). -->
+    <condition id="1333" expression="IDLUNA_DEF_PHASE_1_4==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#54179">
+      <group probability="1000">
+        <slot>
+          <npc id="245549" probability="10000" x="236.955246" y="289.368866" z="163.434204" heading="1" initial_delay="20" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_04_wave1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_def#55056). -->
+    <condition id="1334" expression="IDLUNA_DEF_PHASE_1_5==1" despawn_at_other="true" group_mode="all" source="IDLuna_def#55056">
+      <group probability="1000">
+        <slot>
+          <npc id="245551" probability="10000" x="242.185379" y="292.696442" z="163.434204" heading="1" initial_delay="10" initial_delay_extra="1" walker="retail:301630000:npcpath1_phase_05_wave4"/>
+        </slot>
+      </group>
+    </condition>
+</world>
   <world id="301640000" name="IDLuna_siege">
     <variable name="ally_cannon"/>
     <variable name="bomb_spawn"/>
@@ -9802,6 +10665,18 @@
     <variable name="random_bomb_03"/>
     <variable name="repeat_spawn"/>
     <variable name="reward_treasure_02"/>
+    <variable name="2stage_open"/>
+    <variable name="alarm_spawn"/>
+    <variable name="allstage_end"/>
+    <variable name="blue_bomb"/>
+    <variable name="left_bomb_spawn"/>
+    <variable name="rolling_golem_01"/>
+    <variable name="rolling_golem_02"/>
+    <variable name="rolling_golem_03"/>
+    <variable name="rolling_golem_04"/>
+    <variable name="teleport_stage2"/>
+    <variable name="timeattack_play_start"/>
+    <variable name="yellow_bomb"/>
     <condition id="1185" expression="EXP_SPAWN_06==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege/world_N.xml#1">
       <group probability="1000">
         <slot>
@@ -10243,7 +11118,727 @@
         </slot>
       </group>
     </condition>
-  </world>
+      <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#573). -->
+    <condition id="1335" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#573">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path119"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#609). -->
+    <condition id="1336" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#609">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path119"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#645). -->
+    <condition id="1337" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#645">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path119"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#681). -->
+    <condition id="1338" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#681">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path119"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1018). -->
+    <condition id="1339" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1018">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path142"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1054). -->
+    <condition id="1340" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1054">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path142"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1090). -->
+    <condition id="1341" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1090">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path142"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1126). -->
+    <condition id="1342" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1126">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path142"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1337). -->
+    <condition id="1343" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1337">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path140"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1373). -->
+    <condition id="1344" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1373">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path140"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1409). -->
+    <condition id="1345" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1409">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path140"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1445). -->
+    <condition id="1346" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1445">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path140"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1515). -->
+    <condition id="1347" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1515">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path116"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1551). -->
+    <condition id="1348" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1551">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path116"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1587). -->
+    <condition id="1349" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1587">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path116"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1623). -->
+    <condition id="1350" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#1623">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="154.017853" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path116"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#1701). -->
+    <condition id="1351" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#1701">
+      <group probability="1000">
+        <slot>
+          <npc id="833828" probability="10000" x="387.514404" y="289.154694" z="200.866928" heading="180" initial_delay="7" initial_delay_extra="8" walker="retail:301640000:npcpathally_npc_path6" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2014). -->
+    <condition id="1352" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2014">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path138"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2050). -->
+    <condition id="1353" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2050">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path138"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2086). -->
+    <condition id="1354" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2086">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path138"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2122). -->
+    <condition id="1355" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2122">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path138"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2260). -->
+    <condition id="1356" expression="ALARM_SPAWN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#2260">
+      <group probability="1000">
+        <slot>
+          <npc id="245760" probability="10000" x="182.230576" y="255.594559" z="194.521133" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2343). -->
+    <condition id="1357" expression="BLUE_BOMB==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#2343">
+      <group probability="1000">
+        <slot>
+          <npc id="243661" probability="10000" x="133.529465" y="229.744522" z="194.505432" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path1" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2413). -->
+    <condition id="1358" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2413">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="243.076385" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path121"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2449). -->
+    <condition id="1359" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2449">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="243.076385" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path121"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2485). -->
+    <condition id="1360" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2485">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="243.076385" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path121"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2521). -->
+    <condition id="1361" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2521">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="243.076385" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path121"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2591). -->
+    <condition id="1362" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2591">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="253.765594" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path123"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2627). -->
+    <condition id="1363" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2627">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="253.765594" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path123"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2663). -->
+    <condition id="1364" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2663">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="253.765594" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path123"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2699). -->
+    <condition id="1365" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#2699">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="253.765594" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path123"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#2838). -->
+    <condition id="1366" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#2838">
+      <group probability="1000">
+        <slot>
+          <npc id="703289" probability="10000" x="373.959778" y="284.163574" z="200.832092" heading="342" initial_delay="1" initial_delay_extra="2" respawn_delay="120" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#3869). -->
+    <condition id="1367" expression="ALARM_SPAWN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#3869">
+      <group probability="1000">
+        <slot>
+          <npc id="245760" probability="10000" x="183.470474" y="253.070602" z="194.521133" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5021). -->
+    <condition id="1368" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5021">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="271.559021" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path125"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5057). -->
+    <condition id="1369" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5057">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="271.559021" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path125"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5093). -->
+    <condition id="1370" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5093">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="271.559021" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path125"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5129). -->
+    <condition id="1371" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5129">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="140.268784" y="271.559021" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path125"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5199). -->
+    <condition id="1372" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5199">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="248.432571" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path122"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5235). -->
+    <condition id="1373" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5235">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="248.432571" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path122"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5271). -->
+    <condition id="1374" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5271">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="248.432571" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path122"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5307). -->
+    <condition id="1375" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5307">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="248.432571" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path122"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5506). -->
+    <condition id="1376" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5506">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="276.752747" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path126"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5542). -->
+    <condition id="1377" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5542">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="276.752747" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path126"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5578). -->
+    <condition id="1378" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5578">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="276.752747" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path126"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5614). -->
+    <condition id="1379" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#5614">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="276.752747" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path126"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#5954). -->
+    <condition id="1380" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#5954">
+      <group probability="1000">
+        <slot>
+          <npc id="833826" probability="10000" x="385.284973" y="286.914185" z="201.411926" heading="180" initial_delay="7" initial_delay_extra="8" walker="retail:301640000:npcpathally_npc_path5" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#6471). -->
+    <condition id="1381" expression="ALLSTAGE_END==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#6471">
+      <group probability="1000">
+        <slot>
+          <npc id="833998" probability="10000" x="145.684235" y="268.698029" z="196.444427" heading="0" initial_delay="0" initial_delay_extra="0" respawn_delay="300" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#6548). -->
+    <condition id="1382" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#6548">
+      <group probability="1000">
+        <slot>
+          <npc id="833897" probability="10000" x="387.919891" y="281.457855" z="200.48175" heading="180" initial_delay="7" initial_delay_extra="8" walker="retail:301640000:npcpathally_npc_path4" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#6807). -->
+    <condition id="1383" expression="Rolling_Golem_04==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#6807">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="162.444595" y="235.898514" z="193.783127" heading="90" initial_delay="1" initial_delay_extra="1" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#6997). -->
+    <condition id="1384" expression="ALLSTAGE_END==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#6997">
+      <group probability="1000">
+        <slot>
+          <npc id="834167" probability="10000" x="162.667175" y="260.049072" z="196.856949" heading="180" initial_delay="1" initial_delay_extra="2" respawn_delay="120" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7378). -->
+    <condition id="1385" expression="Rolling_Golem_03==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7378">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="265.430481" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path124"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7414). -->
+    <condition id="1386" expression="Rolling_Golem_03==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7414">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="265.430481" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path124"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7450). -->
+    <condition id="1387" expression="Rolling_Golem_03==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7450">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="265.430481" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path124"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7486). -->
+    <condition id="1388" expression="Rolling_Golem_03==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7486">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="140.268784" y="265.430481" z="193.731384" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path124"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7691). -->
+    <condition id="1389" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7691">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path141"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7727). -->
+    <condition id="1390" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7727">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path141"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7763). -->
+    <condition id="1391" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7763">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path141"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7799). -->
+    <condition id="1392" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7799">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path141"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7921). -->
+    <condition id="1393" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7921">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path117"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7957). -->
+    <condition id="1394" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7957">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path117"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#7993). -->
+    <condition id="1395" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#7993">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path117"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#8029). -->
+    <condition id="1396" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#8029">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="159.455215" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path117"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#8838). -->
+    <condition id="1397" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#8838">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path115"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#8874). -->
+    <condition id="1398" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#8874">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path115"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#8910). -->
+    <condition id="1399" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#8910">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path115"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#8946). -->
+    <condition id="1400" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#8946">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path115"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#9325). -->
+    <condition id="1401" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#9325">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path137"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#9361). -->
+    <condition id="1402" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#9361">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path137"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#9397). -->
+    <condition id="1403" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#9397">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path137"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#9433). -->
+    <condition id="1404" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#9433">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="170.377319" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path137"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10004). -->
+    <condition id="1405" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10004">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path118"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10040). -->
+    <condition id="1406" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10040">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path118"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10076). -->
+    <condition id="1407" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10076">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path118"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10112). -->
+    <condition id="1408" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10112">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="164.751419" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path118"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10259). -->
+    <condition id="1409" expression="2STAGE_OPEN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#10259">
+      <group probability="1000">
+        <slot>
+          <npc id="245759" probability="10000" x="182.359329" y="259.419159" z="194.521133" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10639). -->
+    <condition id="1410" expression="Rolling_Golem_02==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10639">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path139"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10675). -->
+    <condition id="1411" expression="Rolling_Golem_02==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10675">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path139"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10711). -->
+    <condition id="1412" expression="Rolling_Golem_02==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10711">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path139"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#10747). -->
+    <condition id="1413" expression="Rolling_Golem_02==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#10747">
+      <group probability="1000">
+        <slot>
+          <npc id="244136" probability="10000" x="148.348312" y="235.892365" z="193.731384" heading="90" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path139"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11006). -->
+    <condition id="1414" expression="Teleport_Stage2==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#11006">
+      <group probability="1000">
+        <slot>
+          <npc id="833989" probability="10000" x="378.230377" y="277.990082" z="200.832092" heading="60" initial_delay="1" initial_delay_extra="2" respawn_delay="120" respawn_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11158). -->
+    <condition id="1415" expression="ALARM_SPAWN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#11158">
+      <group probability="1000">
+        <slot>
+          <npc id="245760" probability="10000" x="183.404877" y="265.191071" z="194.521133" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11654). -->
+    <condition id="1416" expression="Rolling_Golem_01==1" despawn_at_other="false" group_mode="all" source="IDLuna_siege#11654">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path120"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11690). -->
+    <condition id="1417" expression="Rolling_Golem_01==2" despawn_at_other="false" group_mode="all" source="IDLuna_siege#11690">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path120"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11726). -->
+    <condition id="1418" expression="Rolling_Golem_01==3" despawn_at_other="false" group_mode="all" source="IDLuna_siege#11726">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path120"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#11762). -->
+    <condition id="1419" expression="Rolling_Golem_01==4" despawn_at_other="false" group_mode="all" source="IDLuna_siege#11762">
+      <group probability="1000">
+        <slot>
+          <npc id="244135" probability="10000" x="175.317123" y="283.018921" z="193.731384" heading="270" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path120"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#12716). -->
+    <condition id="1420" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#12716">
+      <group probability="1000">
+        <slot>
+          <npc id="833827" probability="10000" x="385.912201" y="282.713562" z="201.178879" heading="180" initial_delay="7" initial_delay_extra="8" walker="retail:301640000:npcpathally_npc_path3" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#13002). -->
+    <condition id="1421" expression="TIMEATTACK_PLAY_START==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#13002">
+      <group probability="1000">
+        <slot>
+          <npc id="833829" probability="10000" x="382.413574" y="283.834656" z="200.445465" heading="180" initial_delay="6" initial_delay_extra="6" walker="retail:301640000:npcpathally_npc_path2" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#13146). -->
+    <condition id="1422" expression="LEFT_BOMB_SPAWN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#13146">
+      <group probability="1000">
+        <slot>
+          <npc id="243853" probability="10000" x="133.55777" y="229.71962" z="193.784927" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path1" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#13491). -->
+    <condition id="1423" expression="YELLOW_BOMB==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#13491">
+      <group probability="1000">
+        <slot>
+          <npc id="243662" probability="10000" x="134.587875" y="288.47641" z="194.505432" heading="0" initial_delay="1" initial_delay_extra="1" walker="retail:301640000:npcpath2nd_monster_path2" respawn_delay="1" respawn_delay_extra="0"/>
+        </slot>
+      </group>
+    </condition>
+    <!-- 原版条件刷怪投影 / Retail condition spawn (source: IDLuna_siege#13932). -->
+    <condition id="1424" expression="ALARM_SPAWN==1" despawn_at_other="true" group_mode="all" source="IDLuna_siege#13932">
+      <group probability="1000">
+        <slot>
+          <npc id="245760" probability="10000" x="182.396561" y="262.827179" z="194.521133" heading="0" initial_delay="1" initial_delay_extra="1"/>
+        </slot>
+      </group>
+    </condition>
+</world>
   <world id="300610000" name="IDRaksha_solo">
     <variable name="bomb_box_spawn"/>
     <variable name="idraksha_3f_envoyspawn"/>

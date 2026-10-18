@@ -30,7 +30,6 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEffectDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEmotionDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEquipmentSettingDao;
-import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLifeStatDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerMacrosseDao;
@@ -191,11 +190,6 @@ public class StubPersistenceDaos {
 	@Bean
 	PlayerCpDao playerCpDao() {
 		return stub(PlayerCpDao.class);
-	}
-
-	@Bean
-	PlayerEventsWindowDao playerEventsWindowDao() {
-		return stub(PlayerEventsWindowDao.class);
 	}
 
 	@Bean

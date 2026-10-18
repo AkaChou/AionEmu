@@ -6,9 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicate;
+
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AIState;
@@ -24,6 +29,22 @@ import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 
 class MoveTaskManagerTest {
+
+	private static ThreadPoolManager threadPoolManager;
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		// run() 在 ForkJoin 池上并行步进，静态门面必须由测试提供。
+		// run() advances movers in parallel on the ForkJoin pool, so the static facade must be provided here.
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
 
 	@Test
 	void runMovesRegisteredCreaturesOnce() {

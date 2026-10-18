@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
@@ -10,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * 事件引导生命周期：按步骤初始化露娜商店、役从、修勾扫荡、护照与事件窗口，加载状态由基类承载。
- * Event-bootstrap lifecycle: step-wise initialization of Luna shop, minion, Shugo sweep, passport,
- * and event window; load state is hosted by the base class.
+ * 事件引导生命周期：按步骤初始化露娜商店、役从、修勾扫荡与护照，加载状态由基类承载。
+ * Event-bootstrap lifecycle: step-wise initialization of Luna shop, minion, Shugo sweep and passport;
+ * load state is hosted by the base class.
  */
 @Component
 public class GameEventBootstrapLifecycle extends GameStartupStage {
@@ -42,11 +41,6 @@ public class GameEventBootstrapLifecycle extends GameStartupStage {
      * Atreian-passport service provider.
      */
     private ObjectProvider<AtreianPassportService> atreianPassportServiceProvider;
-    /**
-     * 事件窗口服务提供者。
-     * Event-window service provider.
-     */
-    private ObjectProvider<EventWindowService> eventWindowServiceProvider;
 
     /**
      * 使用当前控制台进度报告器构造。
@@ -105,16 +99,6 @@ public class GameEventBootstrapLifecycle extends GameStartupStage {
         this.atreianPassportServiceProvider = atreianPassportServiceProvider;
     }
 
-    /**
-     * 可选注入事件窗口服务提供者。
-     * Optionally inject the event-window service provider.
-     * @param eventWindowServiceProvider 事件窗口服务提供者 / Event-window service provider
-     */
-    @Autowired(required = false)
-    void setEventWindowServiceProvider(ObjectProvider<EventWindowService> eventWindowServiceProvider) {
-        this.eventWindowServiceProvider = eventWindowServiceProvider;
-    }
-
 
     /**
      * 启动本阶段：引导全部游戏事件子系统并报告进度。
@@ -129,7 +113,6 @@ public class GameEventBootstrapLifecycle extends GameStartupStage {
             loadStep("Minion System", this::initializeMinionSystem);
             loadStep("Shugo Sweep System", this::initializeShugoSweepSystem);
             loadStep("Atreian Passport System", this::initializeAtreianPassportSystem);
-            loadStep("Event Window System", this::initializeEventWindowSystem);
             progressReporter.finish("game event systems", System.currentTimeMillis() - start);
         } catch (RuntimeException | Error e) {
             progressReporter.failed();
@@ -170,14 +153,6 @@ public class GameEventBootstrapLifecycle extends GameStartupStage {
     }
 
     /**
-     * 初始化事件窗口系统。
-     * Initialize the event-window system.
-     */
-    protected void initializeEventWindowSystem() {
-        eventWindowService().initialize();
-    }
-
-    /**
      * 解析露娜商店服务。
      * Resolve the Luna-shop service.
      * @return 露娜商店服务 / Luna-shop service
@@ -211,15 +186,6 @@ public class GameEventBootstrapLifecycle extends GameStartupStage {
      */
     private AtreianPassportService atreianPassportService() {
         return atreianPassportServiceProvider.getObject();
-    }
-
-    /**
-     * 解析事件窗口服务。
-     * Resolve the event-window service.
-     * @return 事件窗口服务 / Event-window service
-     */
-    private EventWindowService eventWindowService() {
-        return eventWindowServiceProvider.getObject();
     }
 
 

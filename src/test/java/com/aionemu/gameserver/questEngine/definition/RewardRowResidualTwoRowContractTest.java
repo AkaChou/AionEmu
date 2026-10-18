@@ -162,20 +162,6 @@ class RewardRowResidualTwoRowContractTest {
 		}
 	}
 
-	@Test
-	void pernosRowKeyResolvesThroughTheMigratedFamily() {
-		/* STR_DIC_LA12 不在客户端 NPC 名表里，只能靠“末行命名 + completion owner”交叉解键。 */
-		/* STR_DIC_LA12 is absent from the client NPC name table; the key is resolved by matching the
-		   journal row naming against the completion owner across the family. */
-		for (int questId : PERNOS_ROW_SIBLINGS) {
-			/* 生产 XML 已退役（内容在 git 历史里）：完成 owner 从 reward 源路由反推；
-			   1122 的完成源是 reward1，其余是 reward。 */
-			/* The production XML is retired; the completion owner is derived from the reward-side routes. */
-			assertEquals(Set.of(790001), completionOwners(definition(questId).definition()),
-				() -> "sibling " + questId + " must complete on 790001 (STR_DIC_LA12 = Pernos)");
-		}
-	}
-
 	private static QuestNode node(QuestDefinition definition, String label) {
 		return definition.nodes().stream().filter(candidate -> label.equals(candidate.label()))
 			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));

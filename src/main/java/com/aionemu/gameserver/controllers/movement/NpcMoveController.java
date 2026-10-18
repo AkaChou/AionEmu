@@ -2443,7 +2443,7 @@ public class NpcMoveController
      */
     private float resolveGroundZ(float x, float y, float fallbackZ) {
         if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isInFlyingState()) {
-            return GeoService.getInstance().getZ(owner.getWorldId(), x, y, fallbackZ - 1, 100f, 1);
+            return GeoService.getInstance().getZ(owner.getWorldId(), x, y, fallbackZ - 1, 100f, owner.getInstanceId());
         }
         return fallbackZ;
     }
@@ -2702,8 +2702,13 @@ public class NpcMoveController
         // Single place to drop the previous leg's path cache and in-flight request (chase/home never
         // enter through setRouteStep).
         resetPath();
-        if (!always && PathService.getInstance().canWalkStraightLine(owner.getWorldId(),
-                owner.getX(), owner.getY(), owner.getZ(), pointX, pointY, pointZ)) {
+        GeoMap map = GeoService.getInstance().getGeoMap(owner.getWorldId());
+        float dist = (float) Math.hypot(pointX - owner.getX(), pointY - owner.getY());
+        float fromZ = resolveGroundZ(owner.getX(), owner.getY(), owner.getZ());
+        float toZ = resolveGroundZ(pointX, pointY, pointZ);
+        boolean canPassInstance = dist <= 50f && (map == null || map.canPassWalker(owner.getX(), owner.getY(), fromZ, pointX, pointY, toZ, dist + 1f, owner.getInstanceId()));
+        if (!always && canPassInstance && PathService.getInstance().canWalkStraightLine(owner.getWorldId(),
+                owner.getX(), owner.getY(), fromZ, pointX, pointY, toZ)) {
             return;
         }
         this.walkerLegNeedsPath = true;

@@ -41,43 +41,12 @@ class QuestInteractionObjectCatalogTest {
 		"npc_template_270058_286320.xml", "npc_template_286321_800030.xml",
 		"npc_template_800031_834289.xml", "npc_template_834290_885645.xml");
 
-	@Test
-	void productionQuestUseItemTalkRoutesDeclareActionEligibility() throws Exception {
-		QuestCatalog catalog;
-		try (InputStream input = resource(
-			"aion/data/static_data/quest/definitions/quest_definition_catalog.xml")) {
-			catalog = QuestDefinitionCatalogManifest.compile(input, getClass().getClassLoader());
-		}
-		Set<Integer> questUseItemNpcs = QuestInteractionObjectTestData.questUseItemNpcIds(
-			getClass().getClassLoader());
-		List<String> missing = new ArrayList<>();
-		for (CompiledQuestDefinition definition : catalog.executables()) {
-			List<QuestTransition> transitions = definition.definition().transitions();
-			for (var transition : transitions) {
-				if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
-					|| (talk.dialogId() != null && talk.dialogId() != -1)
-					|| !questUseItemNpcs.contains(talk.npcId())) {
-					continue;
-				}
-				boolean started = definition.definition().nodes().stream()
-					.anyMatch(node -> node.label().equals(transition.sourceNode())
-						&& node.projection().status() == QuestStatus.START);
-				if (!started) {
-					continue;
-				}
-				boolean eligible = transitions.stream().anyMatch(candidate ->
-					Objects.equals(candidate.sourceNode(), transition.sourceNode())
-						&& candidate.event() instanceof QuestEvent.CanAct(int templateId, String actionType)
-						&& templateId == talk.npcId()
-						&& "ACTION_ITEM_USE".equals(actionType));
-				if (!eligible) {
-					missing.add(definition.id() + ":" + transition.sourceNode() + ":" + talk.npcId());
-				}
-			}
-		}
-		assertEquals(List.of(), missing);
-	}
-
+	// quest_use_item 物件有两条合法入口：TalkToNpc(-1)（推进物件，QuestItemNpcAI2 先派发该路由）
+	// 与 CanAct(ACTION_ITEM_USE)（纯采集物的掉落归属）。有 talk 路由的推进物件不需要额外 CanAct；
+	// 本类只锁定仍依赖 CanAct 的掉落 eligibility。
+	// quest_use_item objects have two valid entries: the TalkToNpc(-1) progression route (dispatched
+	// first by QuestItemNpcAI2) and CanAct(ACTION_ITEM_USE) for pure-harvest drop ownership. Objects
+	// with a talk route need no additional CanAct; this class gates only the drop eligibility.
 	@Test
 	void productionQuestUseItemDropsDeclareActionEligibility() throws Exception {
 		QuestCatalog catalog;

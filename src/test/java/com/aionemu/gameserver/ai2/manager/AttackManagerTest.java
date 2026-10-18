@@ -65,7 +65,7 @@ class AttackManagerTest {
 						+ " / The hit-driven resume must reuse the same asynchronous retry path.");
 
 		String retry = methodBody(source, "private static void scheduleAttackRetry(NpcAI2 npcAI, int delay)");
-		assertTrue(retry.contains("threadPoolManager().schedule("),
+		assertTrue(retry.contains("ThreadPoolManager.getInstance().schedule("),
 				"重排必须在 AI 线程池上延迟执行，不能在受击调用栈内同步攻击。"
 						+ " / Retries must run on the AI thread pool, never synchronously inside the hit stack.");
 		assertFalse(retry.contains("scheduleNextAttack(npcAI)"),

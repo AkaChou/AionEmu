@@ -115,32 +115,32 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 215456: //Shishir.
-				registerDropItemIfAbsent(dropItems, npc, 185000088, 1); //Shishir's Corrosive Fluid.
-				registerDropItemIfAbsent(dropItems, npc, 164000137, 1); //Shishir's Powerstone.
+				registerGuaranteedDrop(dropItems, npc, 185000088, 1); //Shishir's Corrosive Fluid.
+				registerGuaranteedDrop(dropItems, npc, 164000137, 1); //Shishir's Powerstone.
 			break;
 			case 215478: //Neith.
-				registerDropItemIfAbsent(dropItems, npc, 185000108, 1); //Dorkin's Pocket Knife.
-				registerDropItemIfAbsent(dropItems, npc, 164000139, 1); //Neith's Sleepstone.
+				registerGuaranteedDrop(dropItems, npc, 185000108, 1); //Dorkin's Pocket Knife.
+				registerGuaranteedDrop(dropItems, npc, 164000139, 1); //Neith's Sleepstone.
 			break;
 			case 215482, 246241: //Gellmar / special-server Gellmar.
-				registerDropItemIfAbsent(dropItems, npc, 164000138, 1); //Gellmar's Wardstone.
+				registerGuaranteedDrop(dropItems, npc, 164000138, 1); //Gellmar's Wardstone.
 			break;
 			case 215488, 246242: //Celestius / special-server Celestius.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-						registerDropItemIfAbsent(dropItems, npc, 190080005, 2); //低级随从契约。 / Lesser Minion Contract.
+						registerGuaranteedDrop(dropItems, npc, 190080005, 2); //低级随从契约。 / Lesser Minion Contract.
 					break;
 					case 2:
-						registerDropItemIfAbsent(dropItems, npc, 190080006, 2); //高级随从契约。 / Greater Minion Contract.
+						registerGuaranteedDrop(dropItems, npc, 190080006, 2); //高级随从契约。 / Greater Minion Contract.
 					break;
 					case 3:
-						registerDropItemIfAbsent(dropItems, npc, 190080007, 2); //大型随从契约。 / Major Minion Contract.
+						registerGuaranteedDrop(dropItems, npc, 190080007, 2); //大型随从契约。 / Major Minion Contract.
 					break;
 					case 4:
-						registerDropItemIfAbsent(dropItems, npc, 190080008, 2); //可爱随从契约。 / Cute Minion Contract.
+						registerGuaranteedDrop(dropItems, npc, 190080008, 2); //可爱随从契约。 / Cute Minion Contract.
 					break;
 					case 5:
-						registerDropItemIfAbsent(dropItems, npc, 190200000, 50); //Minium.
+						registerGuaranteedDrop(dropItems, npc, 190200000, 50); //Minium.
 					break;
 				}
 			break;
@@ -148,24 +148,27 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	}
 
 	/**
-	 * 仅当基础掉落尚未包含目标物品时补充一条实例兜底掉落。
-	 * Adds an instance fallback drop only when the base drop data does not already contain the item.
-	 * <p>基础 NPC 掉落与任务掉落先于实例 Handler 注册；无条件追加会产生重复条目。索引暂用 1
-	 * 占位，registerDrop 在释放掉落列表前会统一重排为唯一值。 /
-	 * Base NPC and quest drops are registered before the instance handler; unconditional additions create
-	 * duplicate entries. The index is a placeholder because registerDrop renumbers all entries before release.
+	 * 登记一条保底掉落：移除同物品的既有条目后按 100% 追加唯一一条。
+	 * Registers one guaranteed drop: removes any existing entry for the item, then appends exactly one at 100%.
+	 * <p>基础 NPC 掉落与任务掉落先于实例 Handler 注册；零售表可能已用低概率登记同一物品，
+	 * 直接追加会留下重复条目并让保底失效。索引暂用 1 占位，registerDrop 在释放掉落列表前
+	 * 会统一重排为唯一值。 /
+	 * Base NPC and quest drops are registered before the instance handler; the retail table may already
+	 * list the same item at a low chance, so appending would leave a duplicate and defeat the guarantee.
+	 * The index is a placeholder because registerDrop renumbers all entries before release.
 	 * @param dropItems 当前掉落集合 / current drop set
 	 * @param npc 死亡 NPC / dead NPC
 	 * @param itemId 物品 ID / item id
 	 * @param count 数量 / count
 	 */
-	private void registerDropItemIfAbsent(Set<DropItem> dropItems, Npc npc, int itemId, long count) {
-		boolean alreadyRegistered = dropItems.stream()
-			.anyMatch(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
-		if (!alreadyRegistered) {
-			dropItems.add(DropRegistrationService.getInstance()
-				.regDropItem(1, 0, npc.getObjectId(), itemId, count));
-		}
+	private void registerGuaranteedDrop(Set<DropItem> dropItems, Npc npc, int itemId, long count) {
+		// 零售掉落表可能已登记同名低概率条目（如 Shishir 腐蚀液 7.05%）；实例关键道具必须保底，
+		// 因此先移除同物品条目，再按 100% 登记唯一一条。
+		// The retail table may already list the item at a low chance (e.g. Shishir's Fluid 7.05%);
+		// instance-critical items must be guaranteed, so drop the existing entry and register one at 100%.
+		dropItems.removeIf(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
+		dropItems.add(DropRegistrationService.getInstance()
+			.regDropItem(1, 0, npc.getObjectId(), itemId, count));
 	}
 
 	/**

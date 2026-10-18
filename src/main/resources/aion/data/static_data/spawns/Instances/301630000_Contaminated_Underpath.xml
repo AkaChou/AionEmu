@@ -1,125 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-	Contaminated Underpath 5.0.5
-	Rework by MATTY
+	Contaminated Underpath (301630000) 静态刷怪。
+	数据来源：真端 IDLuna_def/world.xml 的非条件 territory（46 条，与真端逐条一致）。
+	Static spawns for Contaminated Underpath, projected 1:1 from the retail IDLuna_def/world.xml
+	static (non-condition) territories. Condition/AI-owned spawns are intentionally absent.
  -->
 <spawns>
 	<spawn_map map_id="301630000">
-		<!-- Defense Turret -->
+		<!-- 防御炮塔原型（开关位）/ Defense turret prototype (switch positions) -->
 		<spawn npc_id="833811">
-            <spot h="30" z="160.28148" y="216.26958" x="234.99348"/>
-            <spot h="29" z="160.28148" y="216.2353" x="225.43164"/>
-            <spot h="29" z="160.46976" y="200.70279" x="226.7053"/>
-            <spot h="30" z="160.28148" y="201.02507" x="232.78462"/>
-			<spot h="30" z="160.28148" y="212.1204" x="225.56688"/>
-            <spot h="30" z="160.28148" y="220.05914" x="225.30981"/>
-            <spot h="30" z="160.28148" y="212.23697" x="233.11311"/>
+			<spot x="225.178940" y="217.809265" z="161.616913" h="90" random_walk="1"/>
+			<spot x="233.980148" y="214.386765" z="161.610947" h="90" random_walk="1"/>
+			<spot x="233.981995" y="217.820084" z="161.616913" h="90" random_walk="1"/>
+			<spot x="225.166901" y="214.419815" z="161.616913" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Defense Turret Platform -->
+		<!-- 基地炮塔原型 / Base turret prototype -->
 		<spawn npc_id="834121">
-            <spot h="30" z="160.28148" y="216.26958" x="234.99348"/>
-            <spot h="29" z="160.28148" y="216.2353" x="225.43164"/>
-            <spot h="29" z="160.46976" y="200.70279" x="226.7053"/>
-            <spot h="30" z="160.28148" y="201.02507" x="232.78462"/>
-			<spot h="30" z="160.28148" y="212.1204" x="225.56688"/>
-            <spot h="30" z="160.28148" y="220.05914" x="225.30981"/>
-            <spot h="30" z="160.28148" y="212.23697" x="233.11311"/>
-        </spawn>
-		<!-- Flame Switch -->
-		<spawn npc_id="833812">
-		    <spot h="30" z="160.48653" y="233.30714" x="225.18036"/>
-            <spot h="30" z="160.36285" y="233.65443" x="234.59277"/>
+			<spot x="233.945023" y="214.398682" z="160.724686" h="90" random_walk="1"/>
+			<spot x="233.966446" y="217.835632" z="160.724686" h="90" random_walk="1"/>
+			<spot x="225.155090" y="217.868240" z="160.724686" h="90" random_walk="1"/>
+			<spot x="225.143707" y="214.443039" z="160.724686" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Gladiator -->
+		<!-- 普通/精锐士兵 / Normal and strong soldiers -->
 		<spawn npc_id="833814">
-			<spot h="30" z="160.28148" y="221.02437" x="229.99448"/>
+			<spot x="225.701050" y="220.756485" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Marksman -->
 		<spawn npc_id="833815">
-			<spot h="30" z="160.28148" y="220.77525" x="227.00024"/>
-            <spot h="30" z="160.28148" y="220.75653" x="232.94443"/>
+			<spot x="227.130005" y="220.238342" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Bright Aether Supply Chest -->
-		<spawn npc_id="833866">
-			<spot h="89" z="164.60033" y="177.30127" x="233.315"/>
+		<spawn npc_id="833817">
+			<spot x="229.709442" y="219.702698" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Underground Scout Operative -->
-		<spawn npc_id="833991">
-			<spot h="31" z="160.28148" y="201.33379" x="229.9068"/>
+		<spawn npc_id="833819">
+			<spot x="230.611694" y="209.745041" z="161.503510" h="90" random_walk="1"/>
+			<spot x="224.851959" y="208.111343" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Gladiator -->
+		<spawn npc_id="833821">
+			<spot x="232.364685" y="207.933716" z="161.503510" h="90" random_walk="1"/>
+		</spawn>
 		<spawn npc_id="834072">
-			<spot h="30" z="160.28148" y="219.55135" x="228.55026"/>
-            <spot h="30" z="160.28148" y="219.57056" x="231.85626"/>
+			<spot x="227.913239" y="221.310547" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Marksman -->
 		<spawn npc_id="834073">
-			<spot h="19" z="160.28148" y="218.38287" x="226.45319"/>
-            <spot h="42" z="160.28148" y="218.91037" x="233.5097"/>
+			<spot x="228.127182" y="219.115097" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Marksman Captain -->
+		<spawn npc_id="834074">
+			<spot x="229.431244" y="221.293396" z="161.503510" h="90" random_walk="1"/>
+		</spawn>
 		<spawn npc_id="834077">
-			<spot h="30" z="160.28148" y="207.69037" x="226.58174"/>
+			<spot x="233.390533" y="207.742950" z="161.503510" h="90" random_walk="1"/>
+			<spot x="225.960846" y="208.882980" z="161.503510" h="90" random_walk="1"/>
+			<spot x="231.469467" y="209.291687" z="161.503510" h="90" random_walk="1"/>
+			<spot x="229.399948" y="209.758789" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Sorcerer Captain -->
 		<spawn npc_id="834079">
-			<spot h="30" z="160.28148" y="209.27747" x="228.32663"/>
-            <spot h="30" z="160.28148" y="209.29005" x="230.71407"/>
+			<spot x="227.452148" y="209.509018" z="161.503510" h="90" random_walk="1"/>
+			<spot x="232.650314" y="209.031677" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Gladiator -->
 		<spawn npc_id="834080">
-			<spot h="43" z="160.28148" y="217.50992" x="231.89679"/>
-            <spot h="25" z="160.28148" y="217.5947" x="228.72643"/>
+			<spot x="232.650421" y="220.937241" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Marksman -->
 		<spawn npc_id="834081">
-			<spot h="23" z="160.28148" y="215.37708" x="227.61847"/>
-            <spot h="37" z="160.28148" y="215.39406" x="233.10631"/>
+			<spot x="230.994400" y="219.738205" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Marksman Captain -->
+		<spawn npc_id="834082">
+			<spot x="231.307495" y="221.249466" z="161.503510" h="90" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="834083">
+			<spot x="232.152603" y="219.019363" z="161.503510" h="90" random_walk="1"/>
+		</spawn>
 		<spawn npc_id="834085">
-			<spot h="30" z="160.28148" y="207.88148" x="231.99141"/>
+			<spot x="228.563690" y="209.839691" z="161.503510" h="90" random_walk="1"/>
+			<spot x="234.030853" y="208.741180" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Luna Gladiator Hurt -->
-		<spawn npc_id="834110">
-            <spot h="0" z="160.28148" y="219.00117" x="223.27286"/>
-            <spot h="60" z="160.28148" y="218.5612" x="236.23476"/>
-            <spot h="0" z="160.28148" y="215.89339" x="222.98317"/>
-            <spot h="60" z="160.28148" y="215.8953" x="237.17998"/>
-            <spot h="20" z="160.28148" y="211.60173" x="223.99855"/>
+		<spawn npc_id="834087">
+			<spot x="231.035110" y="208.179962" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
-		<!-- Antidote Table -->
-		<spawn npc_id="834460">
-            <spot x="236.26814" y="170.42638" z="164.60033" h="59"/>
-        </spawn>
-		<!-- Antidote Caudron -->
-		<spawn npc_id="834461">
-            <spot x="236.34093" y="177.0105" z="164.60033" h="14"/>
-        </spawn>
-		<!-- Antidote Researcher -->
-		<spawn npc_id="834462">
-            <spot x="234.83168" y="170.43358" z="164.60033" h="0"/>
-        </spawn>
-		<!-- Underground Medic Officer -->
-		<spawn npc_id="834463">
-            <spot x="235.59137" y="176.13751" z="164.60033" h="19"/>
-        </spawn>
-		<!-- Frontal Barricade -->
+		<!-- 火焰陷阱 / Firetraps -->
+		<spawn npc_id="833847">
+			<spot x="234.117706" y="238.873611" z="162.195953" h="60" random_walk="1"/>
+			<spot x="225.195786" y="238.873611" z="162.195953" h="60" random_walk="1"/>
+			<spot x="230.013901" y="238.880707" z="162.210129" h="60" random_walk="1"/>
+		</spawn>
+		<!-- 路障 / Barricades (editor_id -> entity_id) -->
 		<spawn npc_id="833863">
-		    <spot x="229.51772" y="210.93599" z="160.23035" entity_id="1"/>
-			<spot x="229.51772" y="210.93599" z="160.23035" entity_id="51"/>
+			<spot x="229.596222" y="222.581406" z="160.818253" h="90" entity_id="117"/>
 		</spawn>
-		<!-- Rear Barricade -->
 		<spawn npc_id="833864">
-			<spot x="229.58612" y="222.39656" z="160.27055" entity_id="117"/>
+			<spot x="229.550430" y="211.185028" z="162.244400" h="90" entity_id="1"/>
 		</spawn>
-		<!-- Corridor To Atreia -->
+		<spawn npc_id="833985">
+			<spot x="229.550430" y="211.113708" z="162.058762" h="90" entity_id="51"/>
+		</spawn>
+		<!-- 宝箱 / 出口 / 入口 NPC -->
+		<spawn npc_id="833866">
+			<spot x="234.515594" y="177.610260" z="165.052689" h="63" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="833990">
+			<spot x="227.412415" y="208.217590" z="161.489777" h="90" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="833991">
+			<spot x="229.163834" y="208.338440" z="161.456116" h="90" random_walk="1"/>
+		</spawn>
 		<spawn npc_id="834163">
-			<spot x="229.34059" y="162.03040" z="164.797840" entity_id="82"/>
+			<spot x="229.230728" y="161.962189" z="166.020462" h="90" random_walk="1" entity_id="82"/>
 		</spawn>
-		<!-- Maedrunerk Legion Treasures -->
 		<spawn npc_id="834253">
-            <spot x="229.80789" y="199.18262" z="160.28148" h="30"/>
-        </spawn>
+			<spot x="229.558716" y="197.010529" z="161.946838" h="90" random_walk="1"/>
+		</spawn>
+		<!-- 引导/医生 NPC / Guide and doctor NPCs -->
+		<spawn npc_id="834460">
+			<spot x="236.814789" y="172.982040" z="165.141632" h="60" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="834461">
+			<spot x="236.381363" y="176.544083" z="165.141632" h="60" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="834462">
+			<spot x="235.511581" y="172.678299" z="165.079422" h="21" random_walk="1"/>
+		</spawn>
+		<spawn npc_id="834463">
+			<spot x="235.466248" y="175.077713" z="165.079422" h="45" random_walk="1"/>
+		</spawn>
+		<!-- 等级检查 / Level check -->
+		<spawn npc_id="834492">
+			<spot x="228.200714" y="171.271225" z="166.162384" h="109" random_walk="1"/>
+		</spawn>
 	</spawn_map>
 </spawns>

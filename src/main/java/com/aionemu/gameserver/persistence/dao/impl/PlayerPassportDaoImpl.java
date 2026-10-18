@@ -2,6 +2,9 @@ package com.aionemu.gameserver.persistence.dao.impl;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataAccessException;
@@ -83,7 +86,9 @@ public class PlayerPassportDaoImpl extends ServiceImpl<PlayerPassportMapper, Pla
 			log.error(I18n.get("log.52b96dcdcf0e", accountId), e);
 		}
 
-		return new Timestamp(System.currentTimeMillis());
+		// 无记录返回 null：调用方据此区分「从未签到」与「今天已领」，伪造 now 会把未签到判成已领
+		// Returns null when no row exists so callers can tell "never signed in" from "already claimed today"
+		return null;
 	}
 
 	@Override
@@ -96,6 +101,18 @@ public class PlayerPassportDaoImpl extends ServiceImpl<PlayerPassportMapper, Pla
 		} catch (DataAccessException e) {
 			log.error(I18n.get("log.add8e8df4ec5", accountId), e);
 			return List.of();
+		}
+	}
+
+	@Override
+	public Map<Integer, PlayerPassportPo> getPassportProgress(int accountId) {
+		try {
+			return mapper.selectListByQuery(QueryWrapper.create()
+				.eq(PlayerPassportPo::getAccountId, accountId)).stream()
+				.collect(Collectors.toMap(PlayerPassportPo::getPassportId, Function.identity()));
+		} catch (DataAccessException e) {
+			log.error(I18n.get("log.add8e8df4ec5", accountId), e);
+			return Map.of();
 		}
 	}
 }

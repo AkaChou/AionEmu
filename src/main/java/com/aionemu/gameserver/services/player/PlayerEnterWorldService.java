@@ -13,7 +13,6 @@ import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
@@ -490,9 +489,6 @@ public final class PlayerEnterWorldService {
 
 			// 争议之地 / DisputeLand
 			DisputeLandService.getInstance().onLogin(player);
-
-			// 活动窗口 / Event Window
-			EventWindowService.getInstance().onLogin(player);
 
 			// 欧比斯军阶 / Abyss Rank
 			client.sendPacket(new SM_ABYSS_RANK(player.getAbyssRank()));

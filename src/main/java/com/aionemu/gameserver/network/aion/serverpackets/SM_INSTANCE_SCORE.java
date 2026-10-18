@@ -1133,7 +1133,7 @@ public class SM_INSTANCE_SCORE extends AionServerPacket {
 					writeD(0);
 					writeD(0);
 					if (cur.getPoints() >= 50) {
-						writeD(188055664); // Contaminated Underpath Special Pouch.
+						writeD(188057960); // 真端 b_bonus_item1 / Retail b_bonus_item1.
 						writeD(playerReward.getContaminatedUnderpathSpecialPouch());
 						writeD(188055599); // Contaminated Highest Reward Bundle.
 					} else {

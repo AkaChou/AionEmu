@@ -7,6 +7,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestDsl;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestAiPerceptionFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestHousingFacts;
+import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
 import com.aionemu.gameserver.questEngine.definition.QuestMovementFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpInstanceFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestRecoveryFacts;
@@ -66,7 +67,9 @@ class RemainingCapabilityPortTest {
 			.node("start", QuestDsl.project(QuestStatus.START, QuestDsl.vars("var0", 0)))
 			.node("done", QuestDsl.project(QuestStatus.REWARD, QuestDsl.vars("var0", 1)))
 			.on(QuestDsl.addAggroList(277224)).from("start").when(QuestDsl.statusIs(QuestStatus.START))
-			.goTo("done").compile();
+			.goTo("done")
+			.afterCommit(QuestDsl.syncQuestState(QuestStateSyncMode.VISIBILITY_REFRESH))
+			.compile();
 		QuestAiPerceptionFacts facts = new QuestAiPerceptionFacts(7, 20, 277224, 20, true, true,
 			210050000, 210050000, 1, 1, 10d, 50, true, true);
 		assertEquals(List.of(14211), new QuestEventIndex(new ImmutableQuestCatalog(List.of(definition)))

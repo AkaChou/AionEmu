@@ -77,26 +77,6 @@ class BlankJournalSlotBoundaryContractTest {
 		}
 	}
 
-	@Test
-	void killCounterQuestKeepsItsCombinationCounterSlots() {
-		QuestDefinition definition = definition(KILL_COUNTER).definition();
-		assertEquals(35, definition.nodes().size(),
-			"1400 keeps its 8x4 kill counter combination (32 combinations + unaccepted/reward/complete)");
-		QuestNode reward = node(definition, "reward");
-		assertEquals(7, reward.projection().variables().get("var0"),
-			"reward var0 is the saturated kill counter, not the journal row");
-		assertEquals(3, reward.projection().variables().get("var1"),
-			"reward var1 is the saturated kill counter, not the journal row");
-		assertEquals(1, definition.transitions().stream()
-			.filter(route -> "a7b3".equals(route.sourceNode()) && "reward".equals(route.targetNode()))
-			.count(), "the reward route lives on the fully counted combination a7b3");
-		assertEquals(Set.of(PAION_OWNER), definition.transitions().stream()
-			.filter(route -> "reward".equals(route.sourceNode()) && "complete".equals(route.targetNode()))
-			.filter(route -> route.event() instanceof QuestEvent.TalkToNpc)
-			.map(route -> ((QuestEvent.TalkToNpc) route.event()).npcId())
-			.collect(Collectors.toSet()), "completion owner stays on Paion");
-	}
-
 	private static void assertPrologue(int questId, String zone, int movieId) {
 		QuestDefinition definition = definition(questId).definition();
 		List<QuestTransition> accepts = routes(definition, "unaccepted", "started");

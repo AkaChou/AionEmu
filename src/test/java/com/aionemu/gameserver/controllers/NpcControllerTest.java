@@ -8,15 +8,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 class NpcControllerTest {
 
+	private static ThreadPoolManager threadPoolManager;
+
 	private final ObjenesisStd objenesis = new ObjenesisStd();
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		// scheduleRespawn 经 RespawnService 使用静态线程池门面，静态兜底已退役。
+		// scheduleRespawn goes through the static thread-pool facade in RespawnService, whose fallback is retired.
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
 
 	@Test
 	void onBeforeSpawnPreservesConfiguredHeight() throws Exception {
@@ -47,8 +67,8 @@ class NpcControllerTest {
 	@Test
 	void deadNpcRestoresLootStatusImmediatelyAfterDeathPacket() throws Exception {
 		String controller = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"));
-		int deathPacket = controller.indexOf("new SM_EMOTION(owner, EmotionType.DIE");
-		assertTrue(controller.indexOf("dropService().see(player, owner)", deathPacket) > deathPacket);
+		int deathPacket = controller.indexOf("new SM_EMOTION(owner, EmotionType.DIE, 0, 0)");
+		assertTrue(controller.indexOf("DropService.getInstance().see(player, owner)", deathPacket) > deathPacket);
 
 		String dropService = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropService.java"));
 		String seeMethod = dropService.substring(dropService.indexOf("public void see("), dropService.indexOf("private void uniqueDropAnnounce"));

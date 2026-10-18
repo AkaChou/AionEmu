@@ -26,12 +26,31 @@ public final class TestServiceProviders {
 	}
 
 	/**
-	 * 清空指定类型的 provider。
-	 * Clears the provider of the given type.
+	 * 清空指定类型的 provider 与已解析缓存。
+	 * Clears the provider and the resolved cache of the given type.
 	 * @param type 服务类型 / service type
 	 */
 	public static void clear(Class<?> type) {
 		apply(type, null);
+		resetResolvedInstance(type);
+	}
+
+	/**
+	 * 直接清空静态已解析缓存，避免 provider 之外的第二层缓存跨测试泄漏。
+	 * Clears the static resolved cache directly so the second-level cache does not leak across tests.
+	 * @param type 服务类型 / service type
+	 */
+	private static void resetResolvedInstance(Class<?> type) {
+		try {
+			var field = type.getDeclaredField("resolvedInstance");
+			field.setAccessible(true);
+			field.set(null, null);
+		} catch (NoSuchFieldException e) {
+			// 该类没有已解析缓存，无需处理。
+			// No resolved cache on this type; nothing to clear.
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("无法清空实例缓存 / cannot clear resolved instance: " + type.getName(), e);
+		}
 	}
 
 	private static void apply(Class<?> type, ObjectProvider<?> provider) {

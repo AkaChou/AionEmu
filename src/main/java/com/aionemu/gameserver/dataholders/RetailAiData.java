@@ -561,7 +561,18 @@ public final class RetailAiData {
 		}
 	}
 
+	/**
+	 * 条件刷出的单个 NPC 模板。
+	 * One NPC template spawned by a condition.
+	 * <p>
+	 * {@code respawnDelay}/{@code respawnDelayExtra} 对应原版的 {@code spawn_time}/{@code spawn_time_ex}：
+	 * 所属 territory 的 {@code no_respawn="FALSE"} 时，NPC 消失或死亡后按该间隔反复重建；
+	 * 0 表示一次性刷出。
+	 * They mirror retail {@code spawn_time}/{@code spawn_time_ex}: when the source territory has
+	 * {@code no_respawn="FALSE"} the NPC is rebuilt on that cadence after it dies or despawns; 0 means one-shot.
+	 */
 	public record ConditionSpawnNpc(int id, float x, float y, float z, int heading,
-			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly, int entityId) {
+			int initialDelay, int initialDelayExtra, String walkerId, Area sensoryArea, boolean fly, int entityId,
+			int respawnDelay, int respawnDelayExtra) {
 	}
 }

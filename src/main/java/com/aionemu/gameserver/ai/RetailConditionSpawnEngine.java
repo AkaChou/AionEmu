@@ -179,6 +179,53 @@ public final class RetailConditionSpawnEngine {
 		if (state.active.get(conditionId) != active) {
 			return;
 		}
+		VisibleObject object = spawnOnce(instance, npc, partyId);
+		if (object == null) {
+			return;
+		}
+		active.objects.add(object);
+		if (npc.respawnDelay() > 0) {
+			scheduleRespawn(instance, state, conditionId, active, partyId, npc, object);
+		}
+	}
+
+	/**
+	 * 按原版 {@code spawn_time} 维持一个条件刷出的 NPC。
+	 * Keeps a condition-spawned NPC alive on the retail {@code spawn_time} cadence.
+	 * <p>
+	 * 原版 NPCMaker 在 NPC 被移除（死亡或被 AI 清退）后按 {@code spawn_time + Rnd(0, spawn_time_ex)} 重建，
+	 * 与 NPC 如何消失无关；这里用同节奏的单次任务链复现该语义。
+	 * Retail NPCMaker rebuilds a removed NPC (death or AI despawn) after
+	 * {@code spawn_time + Rnd(0, spawn_time_ex)}, regardless of how it disappeared; the same one-shot task
+	 * chain reproduces that here.
+	 */
+	private static void scheduleRespawn(WorldMapInstance instance, State state, int conditionId, ActiveSpawn active,
+										String partyId, ConditionSpawnNpc npc, VisibleObject object) {
+		long delay = (long) (npc.respawnDelay() + Rnd.get(0, npc.respawnDelayExtra())) * 1000;
+		ThreadPoolManager.getInstance().schedule(() -> {
+			synchronized (state) {
+				if (STATES.get(instance) != state || state.active.get(conditionId) != active) {
+					return;
+				}
+				if (object.isSpawned() && !isDead(object)) {
+					scheduleRespawn(instance, state, conditionId, active, partyId, npc, object);
+					return;
+				}
+				active.objects.remove(object);
+				VisibleObject spawned = spawnOnce(instance, npc, partyId);
+				if (spawned != null) {
+					active.objects.add(spawned);
+					scheduleRespawn(instance, state, conditionId, active, partyId, npc, spawned);
+				}
+			}
+		}, delay);
+	}
+
+	private static boolean isDead(VisibleObject object) {
+		return object instanceof Npc npc && npc.getLifeStats().isAlreadyDead();
+	}
+
+	private static VisibleObject spawnOnce(WorldMapInstance instance, ConditionSpawnNpc npc, String partyId) {
 		SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(instance.getMapId(), npc.id(), npc.x(), npc.y(),
 			npc.z(), MathUtil.convertDegreeToHeading(npc.heading()));
 		template.setResolveZ(true);
@@ -198,7 +245,7 @@ public final class RetailConditionSpawnEngine {
 			// Condition-spawned walkers bypass SpawnEngine.spawnAll's organization phase and must start after entering the world.
 			WalkManager.startWalking(npcAI);
 		}
-		active.objects.add(object);
+		return object;
 	}
 
 	private static void delete(ActiveSpawn active) {

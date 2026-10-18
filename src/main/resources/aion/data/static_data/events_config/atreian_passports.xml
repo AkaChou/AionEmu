@@ -1,49 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	Made by (Encom)
- -->
+	真端 5.8 国服登录签到数据（来源：客户端 data/China/items/items.pak 的 client_login_event.xml，
+	奖励名按 name_desc 解析为物品 ID；与服务端 Map/XML/China/login_event.xml 的 event id 对齐）。
+	Retail 5.8 CN login-attendance data (from the client pak client_login_event.xml; reward names resolved
+	to item ids by name_desc; event ids aligned with the retail server login_event.xml).
+-->
 <atreian_passports xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="atreian_passports.xsd">
-    <atreian_passport id="8" name="2020_attend_01_basic" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="1" attend_type="BASIC">
-        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188055235" name="[Jakunerk] Noble Potion Bundle"/>
-        <atreian_passport_reward reward_item_num="2" reward_item_count="1" reward_item="188055237" name="[Jakunerk] Noble Scroll Bundle"/>
-        <atreian_passport_reward reward_item_num="3" reward_item_count="1" reward_item="188055236" name="[Jakunerk] Noble Serum Bundle"/>
-        <atreian_passport_reward reward_item_num="4" reward_item_count="1" reward_item="188055238" name="[Jakunerk] Shining Elemental Defense Bundle>"/>
-        <atreian_passport_reward reward_item_num="5" reward_item_count="1" reward_item="188058139" name="[Jakunerk] Supplements Bundle (50 units)"/>
-        <atreian_passport_reward reward_item_num="6" reward_item_count="1" reward_item="188058143" name="[Jakunerk] Greater Supplements Bundle (50 units)"/>
-        <atreian_passport_reward reward_item_num="7" reward_item_count="1" reward_item="162001078" name="[Jakunerk] Lodas' Greater Golden Star (7 days)"/>
-        <atreian_passport_reward reward_item_num="8" reward_item_count="1" reward_item="188055235" name="[Jakunerk] Noble Potion Bundle"/>
-        <atreian_passport_reward reward_item_num="9" reward_item_count="1" reward_item="188055237" name="[Jakunerk] Noble Scroll Bundle"/>
-        <atreian_passport_reward reward_item_num="10" reward_item_count="1" reward_item="188055236" name="[Jakunerk] Noble Serum Bundle"/>
-        <atreian_passport_reward reward_item_num="11" reward_item_count="1" reward_item="188055238" name="[Jakunerk] Shining Elemental Defense Bundle>"/>
-        <atreian_passport_reward reward_item_num="12" reward_item_count="1" reward_item="188058140" name="[Jakunerk] Supplements Bundle (100 units)"/>
-        <atreian_passport_reward reward_item_num="13" reward_item_count="1" reward_item="188058144" name="[Jakunerk] Greater Supplements Bundle (100 units)"/>
-        <atreian_passport_reward reward_item_num="14" reward_item_count="1" reward_item="188058147" name="[Jakunerk] Bundle of Entry Scrolls"/>
-        <atreian_passport_reward reward_item_num="15" reward_item_count="1" reward_item="188055235" name="[Jakunerk] Noble Potion Bundle"/>
-        <atreian_passport_reward reward_item_num="16" reward_item_count="1" reward_item="188055237" name="[Jakunerk] Noble Scroll Bundle"/>
-        <atreian_passport_reward reward_item_num="17" reward_item_count="1" reward_item="188055236" name="[Jakunerk] Noble Serum Bundle"/>
-        <atreian_passport_reward reward_item_num="18" reward_item_count="1" reward_item="188055238" name="[Jakunerk] Shining Elemental Defense Bundle>"/>
-        <atreian_passport_reward reward_item_num="19" reward_item_count="1" reward_item="188058141" name="[Jakunerk] Supplements Bundle (150 units)"/>
-        <atreian_passport_reward reward_item_num="20" reward_item_count="1" reward_item="188058145" name="[Jakunerk] Greater Supplements Bundle (150 units)"/>
-        <atreian_passport_reward reward_item_num="21" reward_item_count="1" reward_item="188055280" name="[Jakunerk] Augmentation Bundle"/>
-        <atreian_passport_reward reward_item_num="22" reward_item_count="1" reward_item="188055235" name="[Jakunerk] Noble Potion Bundle"/>
-        <atreian_passport_reward reward_item_num="23" reward_item_count="1" reward_item="188055237" name="[Jakunerk] Noble Scroll Bundle"/>
-        <atreian_passport_reward reward_item_num="24" reward_item_count="1" reward_item="188055236" name="[Jakunerk] Noble Serum Bundle"/>
-        <atreian_passport_reward reward_item_num="25" reward_item_count="1" reward_item="188055238" name="[Jakunerk] Shining Elemental Defense Bundle>"/>
-        <atreian_passport_reward reward_item_num="26" reward_item_count="1" reward_item="188058142" name="[Jakunerk] Supplements Bundle (200 units)"/>
-        <atreian_passport_reward reward_item_num="27" reward_item_count="1" reward_item="188058146" name="[Jakunerk] Greater Supplements Bundle (2000 units)"/>
-        <atreian_passport_reward reward_item_num="28" reward_item_count="1" reward_item="188058154" reward_permit_level="66" name="[Jakunerk] Luxurious Equipment Box"/>
+    <atreian_passport id="8" name="2017_attend_01_basic" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="1" attend_type="BASIC">
+        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188055235" name="wrap_login_remedy_all_70a"/>
+        <atreian_passport_reward reward_item_num="2" reward_item_count="1" reward_item="188055237" name="wrap_login_scroll_speed_all_50a"/>
+        <atreian_passport_reward reward_item_num="3" reward_item_count="1" reward_item="188055236" name="wrap_login_potion_all_70a"/>
+        <atreian_passport_reward reward_item_num="4" reward_item_count="1" reward_item="188055238" name="wrap_login_scroll_regist_all_60a"/>
+        <atreian_passport_reward reward_item_num="5" reward_item_count="1" reward_item="188058139" name="wrap_login_sub_mater_10_50_01a"/>
+        <atreian_passport_reward reward_item_num="6" reward_item_count="1" reward_item="188058143" name="wrap_login_sub_mater_15_50_01a"/>
+        <atreian_passport_reward reward_item_num="7" reward_item_count="1" reward_item="162001078" name="login_cash_item_absoluteexp_recovery_live_big"/>
+        <atreian_passport_reward reward_item_num="8" reward_item_count="1" reward_item="188055235" name="wrap_login_remedy_all_70a"/>
+        <atreian_passport_reward reward_item_num="9" reward_item_count="1" reward_item="188055237" name="wrap_login_scroll_speed_all_50a"/>
+        <atreian_passport_reward reward_item_num="10" reward_item_count="1" reward_item="188055236" name="wrap_login_potion_all_70a"/>
+        <atreian_passport_reward reward_item_num="11" reward_item_count="1" reward_item="188055238" name="wrap_login_scroll_regist_all_60a"/>
+        <atreian_passport_reward reward_item_num="12" reward_item_count="1" reward_item="188058140" name="wrap_login_sub_mater_10_100_01a"/>
+        <atreian_passport_reward reward_item_num="13" reward_item_count="1" reward_item="188058144" name="wrap_login_sub_mater_15_100_01a"/>
+        <atreian_passport_reward reward_item_num="14" reward_item_count="1" reward_item="188058147" name="wrap_login_scroll_init_coolt_war_01a"/>
+        <atreian_passport_reward reward_item_num="15" reward_item_count="1" reward_item="188055235" name="wrap_login_remedy_all_70a"/>
+        <atreian_passport_reward reward_item_num="16" reward_item_count="1" reward_item="188055237" name="wrap_login_scroll_speed_all_50a"/>
+        <atreian_passport_reward reward_item_num="17" reward_item_count="1" reward_item="188055236" name="wrap_login_potion_all_70a"/>
+        <atreian_passport_reward reward_item_num="18" reward_item_count="1" reward_item="188055238" name="wrap_login_scroll_regist_all_60a"/>
+        <atreian_passport_reward reward_item_num="19" reward_item_count="1" reward_item="188058141" name="wrap_login_sub_mater_10_150_01a"/>
+        <atreian_passport_reward reward_item_num="20" reward_item_count="1" reward_item="188058145" name="wrap_login_sub_mater_15_150_01a"/>
+        <atreian_passport_reward reward_item_num="21" reward_item_count="1" reward_item="188055280" name="wrap_login_acharge_item_piece_02_70a"/>
+        <atreian_passport_reward reward_item_num="22" reward_item_count="1" reward_item="188055235" name="wrap_login_remedy_all_70a"/>
+        <atreian_passport_reward reward_item_num="23" reward_item_count="1" reward_item="188055237" name="wrap_login_scroll_speed_all_50a"/>
+        <atreian_passport_reward reward_item_num="24" reward_item_count="1" reward_item="188055236" name="wrap_login_potion_all_70a"/>
+        <atreian_passport_reward reward_item_num="25" reward_item_count="1" reward_item="188055238" name="wrap_login_scroll_regist_all_60a"/>
+        <atreian_passport_reward reward_item_num="26" reward_item_count="1" reward_item="188058142" name="wrap_login_sub_mater_10_200_01a"/>
+        <atreian_passport_reward reward_item_num="27" reward_item_count="1" reward_item="188058146" name="wrap_login_sub_mater_15_200_01a"/>
+        <atreian_passport_reward reward_item_num="28" reward_item_count="1" reward_item="188058154" reward_permit_level="66" name="wrap_login_28th_armor_all_a01"/>
     </atreian_passport>
-    <atreian_passport id="9" name="2020_attend_01_anniversary" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="0" attend_type="ANNIVERSARY">
-        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188053423" reward_permit_level="66" name="[Stamp] Anniversary Gift Box"/>
+    <atreian_passport id="9" name="2017_attend_01_anniversary" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="1" attend_type="ANNIVERSARY">
+        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188053423" reward_permit_level="66" name="wrap_login_create_year_01_reward"/>
     </atreian_passport>
-    <!-- PC Basic attendance（retail id=10）；active=0：onLogin 会广播全部 active 签到，5.8 客户端本地 id=10 是"网吧切克隆的图章"月历，下发会覆盖正常面板 / keep inactive: onLogin broadcasts actives and the 5.8 client renders id=10 as the PC-bang calendar -->
-    <atreian_passport id="10" name="2017_attend_01_PCbasic" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="0" attend_type="BASIC">
-        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188055237"/>
-        <atreian_passport_reward reward_item_num="2" reward_item_count="1" reward_item="188055236"/>
-        <atreian_passport_reward reward_item_num="3" reward_item_count="1" reward_item="162001078"/>
-        <atreian_passport_reward reward_item_num="4" reward_item_count="1" reward_item="188058146"/>
-        <atreian_passport_reward reward_item_num="5" reward_item_count="1" reward_item="188055280"/>
-        <atreian_passport_reward reward_item_num="6" reward_item_count="1" reward_item="188058147"/>
-        <atreian_passport_reward reward_item_num="7" reward_item_count="1" reward_item="188058154"/>
+    <atreian_passport id="10" name="2017_attend_01_PCbasic" period_start="2020-01-01T00:00:00" period_end="2030-02-01T00:00:00" active="0" attend_type="PC_BASIC">
+        <atreian_passport_reward reward_item_num="1" reward_item_count="1" reward_item="188055237" name="wrap_login_scroll_speed_all_50a"/>
+        <atreian_passport_reward reward_item_num="2" reward_item_count="1" reward_item="188055236" name="wrap_login_potion_all_70a"/>
+        <atreian_passport_reward reward_item_num="3" reward_item_count="1" reward_item="162001078" name="login_cash_item_absoluteexp_recovery_live_big"/>
+        <atreian_passport_reward reward_item_num="4" reward_item_count="1" reward_item="188058146" name="wrap_login_sub_mater_15_200_01a"/>
+        <atreian_passport_reward reward_item_num="5" reward_item_count="1" reward_item="188055280" name="wrap_login_acharge_item_piece_02_70a"/>
+        <atreian_passport_reward reward_item_num="6" reward_item_count="1" reward_item="188058147" name="wrap_login_scroll_init_coolt_war_01a"/>
+        <atreian_passport_reward reward_item_num="7" reward_item_count="1" reward_item="188058154" reward_permit_level="66" name="wrap_login_28th_armor_all_a01"/>
     </atreian_passport>
 </atreian_passports>

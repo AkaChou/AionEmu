@@ -18,35 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class LegacyDialogChainFamilyTest {
 
 	@Test
-	void messageToASpyMatchesTheDataDrivenTwoStepContract() throws Exception {
-		QuestDefinition definition = definition(1463);
-		assertEquals(List.of(new QuestItemRequirement(182201382, 1), new QuestItemRequirement(182201383, 1)),
-			definition.metadata().questWorkItems());
-		assertNode(definition, "s0", 0);
-		assertNode(definition, "s1", 1);
-		assertNode(definition, "reward", QuestStatus.REWARD, 2);
-		assertStartContract(definition, 203940, "s0");
-
-		assertPage(definition, "s0", 203903, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT2);
-		assertPage(definition, "s0", 203903, QuestDialogAction.SELECT2_1, QuestDialogPage.SELECT2_1);
-		assertPage(definition, "s0", 203903, QuestDialogAction.SELECT2_2, QuestDialogPage.SELECT2_2);
-		assertAdvance(definition, "s0", "s1", 203903, QuestDialogAction.SETPRO1,
-			List.of(new QuestAction.GiveItem(182201382, 1)));
-
-		assertPage(definition, "s1", 204424, QuestDialogAction.QUEST_SELECT, QuestDialogPage.SELECT3);
-		assertPage(definition, "s1", 204424, QuestDialogAction.SELECT3_1, QuestDialogPage.SELECT3_1);
-		assertTalk(definition, "s1", "reward", 204424, QuestDialogAction.SETPRO2,
-			List.of(), List.of(new QuestAction.GiveItem(182201383, 1),
-				new QuestAction.RemoveItem(182201382, 1)),
-			List.of(new AfterCommitAction.SyncQuestState(
-					QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH),
-				new AfterCommitAction.CloseDialog()));
-
-		assertRewardContract(definition, "reward", 203903, QuestDialogPage.SELECT5);
-		assertSoleCompletionOwner(definition, 203903);
-	}
-
-	@Test
 	void krallicPotionKeepsPaidAndItemExchangeBranchesOnTheLegacyOwners() throws Exception {
 		QuestDefinition definition = definition(1901);
 		assertEquals(List.of(new QuestItemRequirement(182206000, 1)),

@@ -25,7 +25,6 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEffectDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEmotionDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEquipmentSettingDao;
-import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLifeStatDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerMacrosseDao;
@@ -82,7 +81,6 @@ public record PlayerServiceDaos(
 		BlockDao blockListDAO,
 		PlayerTitleDao playerTitleListDAO,
 		PlayerCpDao playerCreativityPointsDAO,
-		PlayerEventsWindowDao playerEventsWindowDAO,
 		PlayerAtreianBestiaryDao playerABDAO,
 		PlayerWardrobeDao playerWardrobeDAO,
 		F2paccountDao f2pDAO,
@@ -134,7 +132,6 @@ public record PlayerServiceDaos(
 		Objects.requireNonNull(blockListDAO, "blockListDAO must not be null");
 		Objects.requireNonNull(playerTitleListDAO, "playerTitleListDAO must not be null");
 		Objects.requireNonNull(playerCreativityPointsDAO, "playerCreativityPointsDAO must not be null");
-		Objects.requireNonNull(playerEventsWindowDAO, "playerEventsWindowDAO must not be null");
 		Objects.requireNonNull(playerABDAO, "playerABDAO must not be null");
 		Objects.requireNonNull(playerWardrobeDAO, "playerWardrobeDAO must not be null");
 		Objects.requireNonNull(f2pDAO, "f2pDAO must not be null");

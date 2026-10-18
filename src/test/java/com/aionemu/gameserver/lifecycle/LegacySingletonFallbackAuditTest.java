@@ -102,7 +102,6 @@ class LegacySingletonFallbackAuditTest {
 		"com/aionemu/gameserver/services/events/BanditService.java",
 		"com/aionemu/gameserver/services/events/BoostEventService.java",
 		"com/aionemu/gameserver/services/events/CrazyDaevaService.java",
-		"com/aionemu/gameserver/services/events/EventWindowService.java",
 		"com/aionemu/gameserver/services/events/FFAService.java",
 		"com/aionemu/gameserver/services/events/LadderService.java",
 		"com/aionemu/gameserver/services/events/ShugoSweepService.java",

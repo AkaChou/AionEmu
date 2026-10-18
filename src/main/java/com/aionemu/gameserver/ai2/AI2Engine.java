@@ -52,7 +52,7 @@ public class AI2Engine implements GameEngine {
 	 * Scripted interaction protocols, lifecycle or combat-phase spawns must not be bypassed by an incomplete retail pattern.
 	 */
 	private static final Set<String> QUEST_SIDE_EFFECT_AI = Set.of(
-		"Mechaturerk", "anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
+		"anikiki", "betrayer_icaronix", "bighorn_wendigo", "blood_fungus_skinwalker",
 		"colossal_forest_flavia", "coral_corask", "crimson_crested_slink", "devious_manduri_beacon",
 		"dynamic_iluma_monster", "dynamic_norsvold_monster", "Elim_SmogEffect", "forest_of_life_brohum_changeling",
 		"frostgullet_kirrin", "frosty_petrahulk", "gatorback_skilex", "giant_razorback_frillneck",

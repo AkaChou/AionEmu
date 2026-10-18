@@ -66,12 +66,12 @@ class FlyTeleportMinionSuspendGateTest {
 		String restore = methodBody(service, "public void restoreAfterFlyTeleport");
 
 		assertTrue(suspend.contains("minion.isSpawned()"));
-		assertTrue(suspend.contains("world().despawn(minion)"));
+		assertTrue(suspend.contains("World.getInstance().despawn(minion)"));
 		assertFalse(suspend.contains("setMinion(null)"), "收起不是收回：不得清空主人引用 / hiding is not releasing: the master reference must survive");
 
 		assertTrue(restore.contains("!minion.isSpawned()"));
-		assertTrue(restore.contains("world().setPosition(minion, player.getWorldId(), player.getInstanceId(),"));
-		assertTrue(restore.contains("world().spawn(minion)"));
+		assertTrue(restore.contains("World.getInstance().setPosition(minion, player.getWorldId(), player.getInstanceId(),"));
+		assertTrue(restore.contains("World.getInstance().spawn(minion)"));
 	}
 
 	private static String methodBody(String source, String signature) {

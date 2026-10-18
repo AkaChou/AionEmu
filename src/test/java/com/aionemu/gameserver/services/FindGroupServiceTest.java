@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.model.Race;
@@ -9,6 +10,9 @@ import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.FindGroup;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
@@ -19,6 +23,32 @@ import org.objenesis.ObjenesisStd;
 class FindGroupServiceTest {
 
 	private final ObjenesisStd objenesis = new ObjenesisStd();
+
+	@Test
+	void listenersCaptureTheConstructingInstance() throws IOException {
+		String source = Files.readString(
+			Path.of("src/main/java/com/aionemu/gameserver/services/FindGroupService.java"));
+		int constructorStart = source.indexOf("public FindGroupService()");
+		int bodyStart = source.indexOf('{', constructorStart);
+		int depth = 0;
+		int bodyEnd = bodyStart;
+		for (int i = bodyStart; i < source.length(); i++) {
+			char ch = source.charAt(i);
+			if (ch == '{') {
+				depth++;
+			} else if (ch == '}' && --depth == 0) {
+				bodyEnd = i;
+				break;
+			}
+		}
+		String constructor = source.substring(bodyStart, bodyEnd);
+
+		// 监听闭包必须捕获构造中的实例；getInstance() 在容器外构造（如测试、启动早期）会 fail-fast。
+		// The listener closures must capture the constructing instance; getInstance() fails fast when
+		// constructed outside the container (tests, early startup).
+		assertTrue(constructor.contains("final FindGroupService self = this;"));
+		assertFalse(constructor.contains("FindGroupService.getInstance()"));
+	}
 
 	@Test
 	void cleanRemovesExpiredGroupsWithoutConcurrentModification() throws ReflectiveOperationException {

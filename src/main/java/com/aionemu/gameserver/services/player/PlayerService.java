@@ -194,7 +194,6 @@ public class PlayerService {
 		player.setBlockList(daos().blockListDAO().load(player));
 		player.setTitleList(daos().playerTitleListDAO().loadTitleList(playerObjId));
 		player.setCP(daos().playerCreativityPointsDAO().loadCP(player));
-		player.setEventWindow(daos().playerEventsWindowDAO().load(player));
 		player.setAtreianBestiary(daos().playerABDAO().load(player));
 		player.setWardrobe(daos().playerWardrobeDAO().load(player));
 		daos().f2pDAO().loadF2pInfo(player);

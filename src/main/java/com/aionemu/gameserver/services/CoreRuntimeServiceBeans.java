@@ -62,7 +62,6 @@ import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEffectDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEmotionDao;
 import com.aionemu.gameserver.persistence.dao.PlayerEquipmentSettingDao;
-import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLifeStatDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerMacrosseDao;
@@ -300,7 +299,6 @@ public class CoreRuntimeServiceBeans {
                 daoFrom(beanFactory, BlockDao.class),
                 daoFrom(beanFactory, PlayerTitleDao.class),
                 daoFrom(beanFactory, PlayerCpDao.class),
-                daoFrom(beanFactory, PlayerEventsWindowDao.class),
                 daoFrom(beanFactory, PlayerAtreianBestiaryDao.class),
                 daoFrom(beanFactory, PlayerWardrobeDao.class),
                 daoFrom(beanFactory, F2paccountDao.class),

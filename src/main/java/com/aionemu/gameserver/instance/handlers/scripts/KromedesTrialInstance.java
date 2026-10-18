@@ -201,16 +201,16 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 216967: //Petrahulk Gatekeeper.
-				registerDropItemIfAbsent(dropItems, npcId, 185000098); //Temple Vault Door Key.
+				registerGuaranteedDrop(dropItems, npcId, 185000098); //Temple Vault Door Key.
 			break;
 			case 216968: //Divine Hisen.
-				registerDropItemIfAbsent(dropItems, npcId, 185000109); //Relic Key.
+				registerGuaranteedDrop(dropItems, npcId, 185000109); //Relic Key.
 			break;
 			case 216980: //Warden Baal.
-				registerDropItemIfAbsent(dropItems, npcId, 185000099); //Dungeon Grate Key.
+				registerGuaranteedDrop(dropItems, npcId, 185000099); //Dungeon Grate Key.
 			break;
 			case 216981: //Manor Guard Captain.
-				registerDropItemIfAbsent(dropItems, npcId, 185000100); //Dungeon Door Key.
+				registerGuaranteedDrop(dropItems, npcId, 185000100); //Dungeon Door Key.
 			break;
 			case 216999: //Jesse.
 			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000101, 1)); //Secret Safe Key.
@@ -218,7 +218,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
 				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188052826, 1)); //Judge's Fabled Weapon Chest.
-				registerDropItemIfAbsent(dropItems, npcId, 185000102); //Kaliga's Key.
+				registerGuaranteedDrop(dropItems, npcId, 185000102); //Kaliga's Key.
 				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053787, 1)); //烙印之石支援包。 / Stigma Support Bundle.
 				switch (Rnd.get(1, 5)) {
 					case 1:
@@ -455,12 +455,21 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		}
 	}
 
-	private void registerDropItemIfAbsent(Set<DropItem> dropItems, int npcId, int itemId) {
-		boolean alreadyRegistered = dropItems.stream()
-			.anyMatch(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
-		if (!alreadyRegistered) {
-			dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, itemId, 1));
-		}
+	/**
+	 * 登记一条保底钥匙：移除同物品的既有条目后按 100% 追加唯一一条。
+	 * Registers one guaranteed key: removes any existing entry for the item, then appends exactly one at 100%.
+	 * <p>零售掉落表已用低概率登记同名钥匙（如 185000098 为 7.71%），仅“缺失才补”会让门禁钥匙
+	 * 按概率不掉落。索引暂用 1 占位，registerDrop 释放前会统一重排。
+	 * The retail table already lists these keys at low chances (e.g. 185000098 at 7.71%), so an
+	 * "add only when absent" check would leave the gate key probabilistic. The index is a placeholder
+	 * because registerDrop renumbers all entries before release.
+	 * @param dropItems 当前掉落集合 / current drop set
+	 * @param npcId NPC 模板 ID / NPC template id
+	 * @param itemId 物品 ID / item id
+	 */
+	private void registerGuaranteedDrop(Set<DropItem> dropItems, int npcId, int itemId) {
+		dropItems.removeIf(dropItem -> dropItem.getDropTemplate().getItemId() == itemId);
+		dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, itemId, 1));
 	}
 
 	/**

@@ -119,9 +119,9 @@ class QuestCounterProjectionLockFollowUpTest {
 			runtime.prepare(finalKill);
 			assertTrue(runtime.dispatchPrepared().handled());
 			assertEquals(QuestStatus.REWARD, runtime.state().status());
-			// QE-051：quest_q4711 的任务书共 4 行，领奖行是最后的“向 Votan 报告”行 3。
-			// QE-051: quest_q4711 owns four journal rows, so the reward row is row 3.
-			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 3)),
+			// QE-054 权威领奖行：4711 的领奖状态与第 3 行共用槽位，投影为 2。
+			// QE-054 authoritative reward row: 4711 shares the third row slot, so the projection is 2.
+			assertEquals(new NodeProjection(QuestStatus.REWARD, Map.of("var0", 2)),
 				node(definition, "reward").projection());
 		}
 	}

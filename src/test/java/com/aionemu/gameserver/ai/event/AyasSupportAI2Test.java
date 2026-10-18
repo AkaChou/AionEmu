@@ -46,7 +46,7 @@ class AyasSupportAI2Test {
 	void cheerButtonOutranksTheQuestEngineAndSendsNoDialogPacket() throws IOException {
 		String source = Files.readString(SOURCE);
 
-		assertTrue(source.indexOf("dialogId == 10000") < source.indexOf("questEngine().onDialog"),
+		assertTrue(source.indexOf("dialogId == 10000") < source.indexOf("QuestEngine.getInstance().onDialog"),
 			"应援按钮必须先于任务引擎处理（任务面认领会劫走 buff）");
 		assertFalse(source.contains("new SM_DIALOG_WINDOW(getObjectId(), 0)"),
 			"应援增益后零发页、零关窗（对齐参照 NPC 831031 / Npc_SupportAI2，避免打断施法动作）");

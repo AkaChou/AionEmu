@@ -188,7 +188,9 @@ class RetailAiDefinitionLoaderTest {
 		// The BT repairs then added the 11 Macunbello stage condition spawns plus 2 Ahbana rows
 		// (threshold 10, driven by the monument patterns) and the 10 corridor statue-array rows
 		// (one weighted random NPC per group) for world 300170000.
-		assertEquals(4462, data.conditionSpawnCount());
+		// 露娜副本补齐 301630000 的 87 条与 301640000 的 90 条原版条件投影（TIMEATTACK/Rolling_Golem 链等）。
+		// The Luna repair added the 87 Underpath and 90 Factory retail condition rows (TIMEATTACK / Rolling_Golem chains).
+		assertEquals(4639, data.conditionSpawnCount());
 		assertTrue(data.supportsConditionVariable(300170000, "debufflich"));
 		assertTrue(data.supportsConditionVariable(300170000, "bt_page"));
 		assertTrue(data.supportsConditionVariable(300170000, "IDCT_SpecterN_Spawn"));
@@ -377,7 +379,9 @@ class RetailAiDefinitionLoaderTest {
 
 		// 5ccb10261 为塔洛克之 Hollow 补齐了一条 300190000 的完整世界路径模板。
 		// 5ccb10261 added the complete Taloc's Hollow world-scoped waypoint template for 300190000.
-		assertEquals(3207, data.size());
+		// 露娜副本补齐 301640000 的 NPCPath1st_Monster_Path6/9/14 三条世界路径。
+		// The Luna repair added the three 301640000 world paths NPCPath1st_Monster_Path6/9/14.
+		assertEquals(3210, data.size());
 		assertNotNull(data.getWalkerTemplate("retail:300190000:idelim_path_1f_sheluk_keynm_52_ae_1"));
 		var rudra = data.getWalkerTemplate("retail:300170000:npcpathpath_rudrawindc1");
 		assertNotNull(rudra);

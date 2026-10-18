@@ -6,7 +6,6 @@ import com.aionemu.gameserver.persistence.dao.LadderPlayerDao;
 import com.aionemu.gameserver.persistence.dao.PlayerMinionDao;
 import com.aionemu.gameserver.persistence.dao.PlayerDao;
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
-import com.aionemu.gameserver.persistence.dao.PlayerEventsWindowDao;
 import com.aionemu.gameserver.persistence.dao.PlayerLunaShopDao;
 import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
 import com.aionemu.gameserver.persistence.dao.PlayerShugoSweepDao;
@@ -18,7 +17,6 @@ import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
@@ -139,12 +137,6 @@ public class EventBeans {
     @Lazy
     public AtreianPassportService atreianPassportService(PlayerPassportDao dao) {
         return new AtreianPassportService(dao);
-    }
-
-    @Bean
-    @Lazy
-    public EventWindowService eventWindowService(PlayerEventsWindowDao dao) {
-        return new EventWindowService(dao);
     }
 
     @Bean

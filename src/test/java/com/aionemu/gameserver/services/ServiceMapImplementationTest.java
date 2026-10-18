@@ -11,7 +11,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
@@ -25,11 +24,6 @@ class ServiceMapImplementationTest {
 
 		assertHashMap(service, "sphereShields");
 		assertHashMap(service, "registeredShields");
-	}
-
-	@Test
-	void eventWindowServiceDoesNotStorePlayerPendingEventsInServiceState() {
-		assertThrows(NoSuchFieldException.class, () -> findField(EventWindowService.class, "sendActiveEventsForPlayer"));
 	}
 
 	@Test

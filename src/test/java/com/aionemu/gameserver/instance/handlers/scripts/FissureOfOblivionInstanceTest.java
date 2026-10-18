@@ -34,8 +34,6 @@ class FissureOfOblivionInstanceTest {
 		"src/main/resources/aion/data/static_data/npcs");
 	private static final Path PORTAL_TEMPLATES = Path.of(
 			"src/main/resources/aion/data/static_data/portals/portal_template2.xml");
-	private static final Path QUEST_DEFINITION = Path.of(
-			"src/main/resources/aion/data/static_data/quest/definitions/quests/17510.xml");
 
 	@Test
 	void fourthMinionKillDeletesEveryFirstRoomAirWallController() throws Exception {
@@ -101,31 +99,6 @@ class FissureOfOblivionInstanceTest {
 		assertTrue(controllerSpawn >= 0, "the fourth-room air-wall controller must still spawn");
 		assertTrue(bossSpawn > controllerSpawn,
 				"the attackable boss must spawn after the overlapping non-attackable controller");
-	}
-
-	@Test
-	void entranceKeepsOnlyTheQuestAndPortalOwnedExit() throws Exception {
-		assertEquals(1, nodes(INSTANCE_SPAWNS,
-				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834194']/spot"
-						+ "[@entity_id='29' and @x='272.26187']").getLength());
-		assertEquals(1, nodes(INSTANCE_SPAWNS,
-				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834194']/spot"
-						+ "[@entity_id='278' and @x='924.38348']").getLength());
-		assertEquals(0, nodes(INSTANCE_SPAWNS,
-				"/spawns/spawn_map[@map_id='302100000']/spawn[@npc_id='834195']").getLength());
-		assertTrue(nodes(PORTAL_TEMPLATES, "//portal_dialog[@npc_id='834194']/portal_path").getLength() > 0);
-		assertEquals(1, nodes(QUEST_DEFINITION,
-				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='QUEST_SELECT']").getLength());
-		assertEquals(2, nodes(QUEST_DEFINITION,
-				"//transition[@source='s4']/after-commit/dialog[@page='SELECT5_1_1']").getLength());
-		assertEquals(1, nodes(QUEST_DEFINITION,
-				"//transition[@source='s4']/event/dialog[@npc-id='834194' and @action='SELECT5_1']").getLength());
-		assertEquals(1, nodes(QUEST_DEFINITION,
-				"//transition[@source='s4']/after-commit/dialog[@page='SELECT5_1']").getLength());
-		assertEquals(1, nodes(QUEST_DEFINITION,
-				"//transition[@source='s4' and @target='reward']/event/dialog"
-						+ "[@npc-id='834194' and @action='SET_SUCCEED']").getLength());
-		assertEquals(0, nodes(QUEST_DEFINITION, "//dialog[@npc-id='834195']").getLength());
 	}
 
 	private static NodeList nodes(Path path, String expression) throws Exception {

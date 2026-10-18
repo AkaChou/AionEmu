@@ -162,7 +162,6 @@ public final class DataManager {
     public static ItemSkillEnhanceData ITEM_SKILL_ENHANCE_DATA;
     public static BoostEventdata BOOST_EVENT_DATA;
     public static AtreianBestiaryData ATREIAN_BESTIARY;
-    public static EventsWindowData EVENTS_WINDOW;
     public static MailRewardData MAIL_REWARD;
     public static LunaDiceData LUNA_DICE;
     public static ReviveWorldStartPointsData REVIVE_WORLD_START_POINTS;
@@ -411,7 +410,6 @@ public final class DataManager {
         ITEM_SKILL_ENHANCE_DATA = data.itemSkillEnhance;
         BOOST_EVENT_DATA = data.boostEvents;
         ATREIAN_BESTIARY = data.atreianBestiary;
-        EVENTS_WINDOW = data.eventsWindow;
         MAIL_REWARD = data.mailReward;
         LUNA_DICE = data.lunaDice;
         REVIVE_WORLD_START_POINTS = data.reviveWorldStartPoints;

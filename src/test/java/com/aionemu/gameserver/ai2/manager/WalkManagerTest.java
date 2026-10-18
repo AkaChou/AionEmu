@@ -3,9 +3,30 @@ package com.aionemu.gameserver.ai2.manager;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+
 class WalkManagerTest {
+
+	private static ThreadPoolManager threadPoolManager;
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		// WalkManager 的静态初始化会注册 Z 检查任务，必须先装好线程池门面。
+		// WalkManager's static initializer registers the Z-check task, so the thread pool facade must exist first.
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
 
 	@Test
 	void randomWalkLeashIgnoresSpawnHeightDifference() {

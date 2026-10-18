@@ -224,10 +224,6 @@ INSERT INTO `aion_emu`.`player_emotions` (`player_id`,`emotion`,`remaining`) SEL
 DELETE FROM `aion_emu`.`player_equipment_setting`;
 INSERT INTO `aion_emu`.`player_equipment_setting` (`player_id`,`slot`,`name`,`display`,`m_hand`,`s_hand`,`helmet`,`torso`,`glove`,`boots`,`earrings_left`,`earrings_right`,`ring_left`,`ring_right`,`necklace`,`shoulder`,`pants`,`powershard_left`,`powershard_right`,`wings`,`waist`,`m_off_hand`,`s_off_hand`,`plume`,`bracelet`) SELECT `player_id`,`slot`,`name`,`display`,`m_hand`,`s_hand`,`helmet`,`torso`,`glove`,`boots`,`earrings_left`,`earrings_right`,`ring_left`,`ring_right`,`necklace`,`shoulder`,`pants`,`powershard_left`,`powershard_right`,`wings`,`waist`,`m_off_hand`,`s_off_hand`,`plume`,`bracelet` FROM `al_server_gs`.`player_equipment_setting`;
 
--- ==== player_events_window  <-  al_server_gs.player_events_window ====
-DELETE FROM `aion_emu`.`player_events_window`;
-INSERT INTO `aion_emu`.`player_events_window` (`account_id`,`event_id`,`last_stamp`,`elapsed`,`reward_recived_count`) SELECT `account_id`,`event_id`,`last_stamp`,`elapsed`,`reward_recived_count` FROM `al_server_gs`.`player_events_window`;
-
 -- ==== player_life_stats  <-  al_server_gs.player_life_stats ====
 DELETE FROM `aion_emu`.`player_life_stats`;
 INSERT INTO `aion_emu`.`player_life_stats` (`player_id`,`hp`,`mp`,`fp`) SELECT `player_id`,`hp`,`mp`,`fp` FROM `al_server_gs`.`player_life_stats`;
@@ -426,7 +422,7 @@ ANALYZE TABLE
   `aion_emu`.`limited_quest_counters`, `aion_emu`.`mail`, `aion_emu`.`old_names`, `aion_emu`.`outpost_location`,
   `aion_emu`.`petitions`, `aion_emu`.`player_appearance`, `aion_emu`.`player_atreian_bestiary`,
   `aion_emu`.`player_bind_point`, `aion_emu`.`player_cooldowns`, `aion_emu`.`player_cp`, `aion_emu`.`player_effects`,
-  `aion_emu`.`player_emotions`, `aion_emu`.`player_equipment_setting`, `aion_emu`.`player_events_window`,
+  `aion_emu`.`player_emotions`, `aion_emu`.`player_equipment_setting`,
   `aion_emu`.`player_life_stats`, `aion_emu`.`player_luna_shop`, `aion_emu`.`player_macrosses`,
   `aion_emu`.`player_minions`, `aion_emu`.`player_motions`, `aion_emu`.`player_npc_factions`,
   `aion_emu`.`player_passkey`, `aion_emu`.`player_passports`, `aion_emu`.`player_pets`,
@@ -528,8 +524,6 @@ SELECT * FROM (
   SELECT 'player_emotions' AS tbl, (SELECT COUNT(*) FROM `al_server_gs`.`player_emotions`) AS src_rows, (SELECT COUNT(*) FROM `aion_emu`.`player_emotions`) AS dst_rows
   UNION ALL
   SELECT 'player_equipment_setting' AS tbl, (SELECT COUNT(*) FROM `al_server_gs`.`player_equipment_setting`) AS src_rows, (SELECT COUNT(*) FROM `aion_emu`.`player_equipment_setting`) AS dst_rows
-  UNION ALL
-  SELECT 'player_events_window' AS tbl, (SELECT COUNT(*) FROM `al_server_gs`.`player_events_window`) AS src_rows, (SELECT COUNT(*) FROM `aion_emu`.`player_events_window`) AS dst_rows
   UNION ALL
   SELECT 'player_life_stats' AS tbl, (SELECT COUNT(*) FROM `al_server_gs`.`player_life_stats`) AS src_rows, (SELECT COUNT(*) FROM `aion_emu`.`player_life_stats`) AS dst_rows
   UNION ALL

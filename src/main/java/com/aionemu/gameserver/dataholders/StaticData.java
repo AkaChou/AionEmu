@@ -267,8 +267,6 @@ public class StaticData {
 	public BoostEventdata boostEvents;
 	@XmlElement(name = "monster_books")
 	public AtreianBestiaryData atreianBestiary;
-	@XmlElement(name = "events_window")
-	public EventsWindowData eventsWindow;
 	@XmlElement(name = "reward_mail_templates")
 	public MailRewardData mailReward;
 	@XmlElement(name = "luna_dice")
@@ -426,7 +424,6 @@ public class StaticData {
 		log.info(I18n.get("log.596d2257b5ed", atreianBestiary.size()));
 		log.info(I18n.get("log.2e9957f776eb", skillData.sizeOfGroup()));
 		log.info(I18n.get("log.274e3cdb640a", chargeSkillData.size()));
-		log.info(I18n.get("log.6d91ec4699d0", eventsWindow.size()));
 		log.info(I18n.get("log.9de8a898475b", mailReward.size()));
 		log.info(I18n.get("log.ea3bbb559359", lunaDice.size()));
 		log.info(I18n.get("log.f71810db7f3e", reviveWorldStartPoints.size()));

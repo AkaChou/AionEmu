@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
@@ -10,32 +12,31 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  */
 public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 
+	/**
+	 * 单条签到记录。
+	 * A single attendance record.
+	 * @param passportId 签到 ID / passport id
+	 * @param countCollected 已集印花数 / number of stamps collected
+	 * @param attendType 签到类型（真端枚举：0=anniversary, 1=basic, 2=pc_basic）/ attendance type
+	 * @param hasCollected 今日是否已领取 / whether today's stamp was already collected
+	 */
+	public record Record(int passportId, int countCollected, int attendType, boolean hasCollected) {
+	}
+
+	private final List<Record> records;
+	private final int day;
 	private final int month;
 	private final int year;
-	private final int day;
-	private final int passportId;
-	private final int countCollected;
-	private final int attendType;
-	private final boolean hasCollected;
 
 	/**
-	 * passport template id
-	 * @param countCollected 已收集印花数 / number of stamps collected
-	 * attendance type
-	 * @param hasCollected 今日是否已领取 / whether today's stamp was already collected
-	 * day
-	 * month
-	 * year
+	 * 以多条记录构造：真端 S_LOGIN_EVENT_LIST 一次下发全部签到。
+	 * Builds the packet from multiple records: retail S_LOGIN_EVENT_LIST sends every attendance at once.
 	 */
-	public SM_ATREIAN_PASSPORT(int passportId, int countCollected, int attendType, boolean hasCollected,
-			int day, int month, int year) {
+	public SM_ATREIAN_PASSPORT(List<Record> records, int day, int month, int year) {
+		this.records = List.copyOf(records);
+		this.day = day;
 		this.month = month;
 		this.year = year;
-		this.day = day;
-		this.passportId = passportId;
-		this.countCollected = countCollected;
-		this.attendType = attendType;
-		this.hasCollected = hasCollected;
 	}
 
 	@Override
@@ -45,10 +46,12 @@ public class SM_ATREIAN_PASSPORT extends AionServerPacket {
 		writeH(year);
 		writeH(month);
 		writeH(day);
-		writeH(1); // 记录数，当前固定单条 / record count, currently a single record
-		writeD(passportId);
-		writeD(attendType); // 固定下发 1（客户端 ANNIVERSARY 渲染路径），见 AtreianPassportService / always 1, see AtreianPassportService
-		writeD(countCollected);
-		writeC(hasCollected ? 0 : 1);
+		writeH(records.size());
+		for (Record record : records) {
+			writeD(record.passportId());
+			writeD(record.attendType());
+			writeD(record.countCollected());
+			writeC(record.hasCollected() ? 0 : 1);
+		}
 	}
 }

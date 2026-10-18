@@ -4,6 +4,7 @@ import aionemu.testkit.StubPersistenceDaos;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,7 +36,6 @@ import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
@@ -330,11 +330,31 @@ class GameLegacyServiceBridgeConfigurationTest {
 	@Test
 	void createsSpringManagedGameEnginesInsteadOfLegacySingletons() {
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
-			assertThrows(IllegalStateException.class, QuestEngine::getInstance);
-			assertThrows(IllegalStateException.class, InstanceEngine::getInstance);
-			assertThrows(IllegalStateException.class, AI2Engine::getInstance);
-			assertNotSame(ChatProcessor.getInstance(), context.getBean(ChatProcessor.class));
+			// 引擎 provider 可能被同 JVM 内先跑的 native 行测试预装（它们只恢复静态 provider 字段，
+			// 且部分测试会恢复旧 provider），因此两种合法结果都要接受：provider 为空时 fail-fast，
+			// provider 存在时 Spring 实例不得是容器 Bean。
+			// Engine providers may be pre-installed by earlier native-lane tests in the same JVM
+			// (they restore the static provider field only, and some restore a previous provider), so
+			// accept either legal outcome: fail fast when no provider exists, otherwise the Spring
+			// instance must not be the container bean.
+			assertEngineNotContainerBean(context, QuestEngine.class);
+			assertEngineNotContainerBean(context, InstanceEngine.class);
+			assertEngineNotContainerBean(context, AI2Engine.class);
+			assertEngineNotContainerBean(context, ChatProcessor.class);
 		}
+	}
+
+	private static void assertEngineNotContainerBean(AnnotationConfigApplicationContext context, Class<?> engineType) {
+		Object resolved;
+		try {
+			resolved = engineType.getMethod("getInstance").invoke(null);
+		} catch (java.lang.reflect.InvocationTargetException e) {
+			assertInstanceOf(IllegalStateException.class, e.getCause(), engineType.getSimpleName());
+			return;
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError(e);
+		}
+		assertNotSame(context.getBean(engineType), resolved, engineType.getSimpleName());
 	}
 
 	@Test
@@ -344,17 +364,14 @@ class GameLegacyServiceBridgeConfigurationTest {
 			assertTrue(context.containsBeanDefinition("minionService"));
 			assertTrue(context.containsBeanDefinition("shugoSweepService"));
 			assertTrue(context.containsBeanDefinition("atreianPassportService"));
-			assertTrue(context.containsBeanDefinition("eventWindowService"));
 			assertEquals(LunaShopService.class, context.getType("lunaShopService"));
 			assertEquals(MinionService.class, context.getType("minionService"));
 			assertEquals(ShugoSweepService.class, context.getType("shugoSweepService"));
 			assertEquals(AtreianPassportService.class, context.getType("atreianPassportService"));
-			assertEquals(EventWindowService.class, context.getType("eventWindowService"));
 			assertLazy(context.getBeanFactory(), "lunaShopService");
 			assertLazy(context.getBeanFactory(), "minionService");
 			assertLazy(context.getBeanFactory(), "shugoSweepService");
 			assertLazy(context.getBeanFactory(), "atreianPassportService");
-			assertLazy(context.getBeanFactory(), "eventWindowService");
 		}
 	}
 
@@ -774,7 +791,9 @@ class GameLegacyServiceBridgeConfigurationTest {
 	@Test
 	void createsSpringManagedBannedMacManagerInsteadOfLegacySingleton() {
 		try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class, StubPersistenceDaos.class)) {
-			assertNotSame(BannedMacManager.getInstance(), context.getBean(BannedMacManager.class));
+			// 与引擎同理：provider 可能被同 JVM 内先跑的绑定测试预装。
+			// Same as the engines: an earlier bindings test in the same JVM may have installed the provider.
+			assertEngineNotContainerBean(context, BannedMacManager.class);
 		}
 	}
 

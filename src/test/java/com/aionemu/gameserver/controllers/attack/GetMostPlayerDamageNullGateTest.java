@@ -64,9 +64,10 @@ class GetMostPlayerDamageNullGateTest {
 	 * 至少应扫描到的消费点数量，防止路径或正则失效后闸门空转；2026-09-15 清理后实际 90 处，
 	 * 2026-10-11 死赋值清理（bc12be93c 移除 9 处未使用的局部读取）后实际 81 处，余量相应下调。
 	 * Minimum scanned call sites so the gate cannot silently degrade; 90 after the 2026-09-15 cleanup,
-	 * 81 after the 2026-10-11 dead-assignment cleanup (bc12be93c removed 9 unused local reads).
+	 * 81 after the 2026-10-11 dead-assignment cleanup (bc12be93c removed 9 unused local reads),
+	 * 79 after the 2026-10-18 retail-pattern refactor.
 	 */
-	private static final int MIN_CALL_SITES = 80;
+	private static final int MIN_CALL_SITES = 79;
 
 	/**
 	 * 闸门落地时的既有未判空站点基线：文件 → 允许的违规数。

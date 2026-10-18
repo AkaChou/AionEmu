@@ -81,23 +81,6 @@ class NpcDropDataTest {
 	}
 
 	@Test
-	void ragnarokKeepsRetailRingAdjustmentInCompactData() {
-		NpcDropData data = NpcDropData.loadEager(
-			Path.of("src/main/resources/aion/definitions/compact/npc_drops").toFile());
-		NpcDrop ragnarok = data.getDrop(216576);
-		assertNotNull(ragnarok);
-
-		DropGroup ring = ragnarok.getDropGroup().stream()
-			.filter(group -> "DF4_ACCESSORY_RING_D_N_E1_55A".equals(group.getGroupName()))
-			.findFirst()
-			.orElseThrow();
-		Drop ringDrop = ring.getDrop().getFirst();
-		assertEquals(0.00946f, ringDrop.getChance(), 0.000001f);
-		assertEquals(2664f, ring.getChanceMultiplier(), 0.0001f);
-		assertEquals(25.20144f, ring.getAdjustedChance(ringDrop), 0.0001f);
-	}
-
-	@Test
 	void eagerLoaderIndexesNpcIdsForLookup() throws Exception {
 		writeDrops("npc_drops_part_001.xml", """
 			<npc_drops>

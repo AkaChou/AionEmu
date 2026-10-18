@@ -19,7 +19,7 @@ class KromedesTrialInstanceTest {
 	private static final Path SPAWNS = Path.of(
 			"src/main/resources/aion/data/static_data/spawns/Instances/300230000_Kromede's_Trial.xml");
 	private static final Path NPC_DROPS = Path.of(
-			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_006.xml");
+			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_007.xml");
 
 	@Test
 	void onDieDoesNotDereferenceMissingDamageOwnerForClassTreasure() throws IOException {
@@ -91,16 +91,16 @@ class KromedesTrialInstanceTest {
 	}
 
 	@Test
-	void handlerRegistersKeysOnlyWhenDropDataDidNotProvideThem() throws IOException {
+	void handlerRegistersGuaranteedKeys() throws IOException {
 		String source = Files.readString(SOURCE);
 		String onDropRegistered = methodBody(source,
 				"public void onDropRegistered(Npc npc)");
 
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000098);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000109);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000099);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000100);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npcId, 185000102);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npcId, 185000098);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npcId, 185000109);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npcId, 185000099);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npcId, 185000100);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npcId, 185000102);"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000098, 1)"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000099, 1)"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000100, 1)"));
@@ -108,16 +108,15 @@ class KromedesTrialInstanceTest {
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000109, 1)"));
 
 		String helper = methodBody(source,
-				"private void registerDropItemIfAbsent(Set<DropItem> dropItems, int npcId, int itemId)");
-		int existingDropCheck = helper.indexOf("getDropTemplate().getItemId() == itemId");
-		int addDrop = helper.indexOf(".add(", existingDropCheck);
+				"private void registerGuaranteedDrop(Set<DropItem> dropItems, int npcId, int itemId)");
 
-		assertTrue(existingDropCheck >= 0);
-		assertTrue(addDrop > existingDropCheck);
+		assertTrue(helper.contains("removeIf(dropItem -> dropItem.getDropTemplate().getItemId() == itemId)"),
+			"零售低概率钥匙必须先移除，避免门禁钥匙按概率掉落");
+		assertTrue(helper.contains("regDropItem(1, 0, npcId, itemId, 1)"));
 	}
 
 	@Test
-	void baseDropDataProvidesExactlyOneKeyForEachGateNpc() throws IOException {
+	void baseDropDataKeepsOneEntryPerGateKey() throws IOException {
 		String npcDrops = Files.readString(NPC_DROPS);
 
 		assertSingleKeyDrop(npcDrops, 216967, 185000098);
@@ -215,8 +214,6 @@ class KromedesTrialInstanceTest {
 
 		assertTrue(firstOccurrence >= 0);
 		assertEquals(firstOccurrence, lastOccurrence);
-		assertTrue(npcDrop.substring(firstOccurrence, npcDrop.indexOf("/>", firstOccurrence))
-				.contains("chance=\"100.00\" min_amount=\"1\" max_amount=\"1\""));
 	}
 
 	private static String npcDropBody(String source, int npcId) {

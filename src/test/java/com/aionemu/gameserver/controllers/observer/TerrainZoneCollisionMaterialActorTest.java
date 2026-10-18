@@ -10,16 +10,37 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.controllers.CreatureController;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 
 class TerrainZoneCollisionMaterialActorTest {
+
+	private static ThreadPoolManager threadPoolManager;
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		// act() 会注册地形材质周期任务，静态线程池门面必须由测试提供。
+		// act() registers the terrain-material periodic task, so the static thread-pool facade must be provided.
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
+
 	@Test
 	void zoneAndTerrainMaterialTasksCoexist() throws Exception {
 		TestCreatureController controller = new TestCreatureController();

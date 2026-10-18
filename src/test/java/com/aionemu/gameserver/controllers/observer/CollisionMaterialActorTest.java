@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.controllers.observer.AbstractCollisionObserver.CheckType;
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 import com.aionemu.gameserver.persistence.dao.ServerVariableDao;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
@@ -30,6 +34,22 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldPosition;
 
 class CollisionMaterialActorTest {
+
+	private static ThreadPoolManager threadPoolManager;
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		// act() 会注册周期任务，静态线程池门面必须由测试提供。
+		// act() registers periodic tasks, so the static thread-pool facade must be provided by the test.
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
 
 	@Test
 	void restartsUnchangedMaterialAfterSharedTaskWasCancelled() throws Exception {

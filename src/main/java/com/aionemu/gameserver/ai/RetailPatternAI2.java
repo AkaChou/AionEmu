@@ -484,7 +484,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	private AISubState fleeReturnSubState = AISubState.NONE;
 	private Creature deathKiller;
 
-	private record RetailMessage(int type, int param1, int param2, Creature sender, Creature paramObject) {
+	public record RetailMessage(int type, int param1, int param2, Creature sender, Creature paramObject) {
 	}
 
 	private record PendingCutsceneTeleport(int cutsceneId, String alias) {
@@ -2260,9 +2260,13 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		ThreadPoolManager.getInstance().schedule(() -> instance.doOnAllNpcs(npc -> {
 			if (npc != owner && npc.isSpawned() && MathUtil.isIn3dRange(owner, npc, range)
 				&& npc.getAi2() instanceof RetailPatternAI2 ai) {
-				ai.runEvent("on_message", null, message.paramObject(), message);
+				ai.onRetailMessage(message);
 			}
 		}), 1);
+	}
+
+	public void onRetailMessage(RetailMessage message) {
+		runEvent("on_message", null, message == null ? null : message.paramObject(), message);
 	}
 
 	private void broadcastMessageToParty(Operation action, Creature eventTarget, RetailMessage sourceMessage) {
@@ -2392,6 +2396,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				 "OBJI_SEEN", "OBJI_TALKER" -> eventTarget;
 			case "OBJI_MESSAGE_SENDER" -> message == null ? null : message.sender();
 			case "OBJI_MESSAGE_PARAM", "OBJI_FRIEND" -> message == null ? null : message.paramObject();
+			case "OBJI_CUR_TARGET" -> resolveCurrentTarget(previousTarget, skill);
 			default -> previousTarget;
 		};
 		if (target == null) {
@@ -2408,6 +2413,75 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			getOwner().setTarget(previousTarget);
 		}
 		return duration;
+	}
+
+	private VisibleObject resolveCurrentTarget(VisibleObject previousTarget, NpcSkillEntry skill) {
+		// 索敌半径必须与技能自身射程一致：炮塔的感官范围（50m）远大于技能施法距离（20~30m），
+		// 若按感官范围选目标，技能会因超距被 Properties 校验拒绝，表现为"装置无伤害"。
+		// Target search must match the skill's own cast range: turret sensory range (50m) far exceeds the skill
+		// range (20-30m), and a farther pick is rejected by Properties validation — the "turret deals no damage" bug.
+		final float range = skillCastRange(skill);
+		if (isHostileSkillTarget(previousTarget, range)) {
+			return previousTarget;
+		}
+		Creature mostHated = getAggroList().getMostHated();
+		if (isHostileSkillTarget(mostHated, range)) {
+			return mostHated;
+		}
+		Npc owner = getOwner();
+		Creature closest = null;
+		double closestDist = Double.MAX_VALUE;
+		for (VisibleObject obj : owner.getKnownList().getKnownObjectsSnapshot()) {
+			if (obj instanceof Creature c && isHostileSkillTarget(c, range)) {
+				double dist = MathUtil.getDistance(owner, c);
+				if (dist < closestDist) {
+					closest = c;
+					closestDist = dist;
+				}
+			}
+		}
+		return closest;
+	}
+
+	/**
+	 * 是否为当前技能可攻击的敌对目标：存活、在技能射程内，且对施法者敌对。
+	 * 玩家只按部落/仇恨图标判定——{@code Npc.isEnemy(Player)} 对任意 AggressiveNpcAI2 恒为 true，
+	 * 否则友方的防御炮塔会把玩家当成目标。
+	 * Whether the target is attackable with the current skill: alive, in cast range and hostile to the owner.
+	 * Players are matched only through tribe/aggro-icon hostility — {@code Npc.isEnemy(Player)} is always true
+	 * for any AggressiveNpcAI2, which would make friendly defence turrets shoot the players.
+	 */
+	private boolean isHostileSkillTarget(VisibleObject target, float range) {
+		if (!(target instanceof Creature creature) || creature.getLifeStats().isAlreadyDead()) {
+			return false;
+		}
+		Npc owner = getOwner();
+		if (!MathUtil.isInAttackRange(owner, creature, range)) {
+			return false;
+		}
+		return creature instanceof Player ? owner.isAggressiveTo(creature)
+			: owner.isEnemy(creature) || owner.isAggressiveTo(creature);
+	}
+
+	/**
+	 * 返回技能的有效施法距离（首选目标射程 + 2m 容差，与 FirstTargetRangeProperty 一致）；无射程限制时退回感官范围。
+	 * Returns the skill's effective cast range (first-target range plus the 2m tolerance used by
+	 * FirstTargetRangeProperty); falls back to the sensory range for unrestricted skills.
+	 */
+	private float skillCastRange(NpcSkillEntry skill) {
+		SkillTemplate template = skill == null ? null : DataManager.SKILL_DATA.getSkillTemplate(skill.getSkillId());
+		int firstTargetRange = template == null || template.getProperties() == null ? 0
+			: template.getProperties().getFirstTargetRange();
+		if (firstTargetRange > 0) {
+			return firstTargetRange + 2f;
+		}
+		Npc owner = getOwner();
+		var definition = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpc(owner.getNpcId());
+		if (definition != null && definition.sensoryRange() > 0) {
+			return definition.sensoryRange();
+		}
+		return owner.getObjectTemplate() != null && owner.getObjectTemplate().getAttackRange() > 0
+			? owner.getObjectTemplate().getAttackRange() : 37f;
 	}
 
 	private int activateSkillArea(Operation action, NpcSkillEntry skillEntry) {

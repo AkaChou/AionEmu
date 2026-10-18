@@ -48,6 +48,11 @@ public class FindGroupService {
 	 * Registers group/alliance callbacks that keep find-group listings consistent.
 	 */
 	public FindGroupService() {
+		// 闭包必须使用构造中的 this，而不是 getInstance()：Spring Bean 与静态访问器是两条通道，
+		// 在容器外构造时 getInstance() 会 fail-fast。
+		// The listeners must capture the constructing instance instead of getInstance(): the Spring bean
+		// and the static accessor are separate channels, and getInstance() fails fast outside the container.
+		final FindGroupService self = this;
 		if (!LISTENERS_REGISTERED.compareAndSet(false, true)) {
 			return;
 		}
@@ -55,69 +60,69 @@ public class FindGroupService {
 		PlayerGroupService.addListener(new PlayerGroupService.PlayerGroupListener() {
 			@Override
 			public void onGroupCreated(Player leader) {
-				FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
+				FindGroup inviterFindGroup = self.removeFindGroup(
 						leader.getRace(), 0x00, leader.getObjectId());
 				if (inviterFindGroup == null) {
-					inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
+					inviterFindGroup = self.removeFindGroup(
 							leader.getRace(), 0x04, leader.getObjectId());
 				}
 				if (inviterFindGroup != null) {
-					FindGroupService.getInstance().addFindGroupList(leader, 0x02,
+					self.addFindGroupList(leader, 0x02,
 							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
 				}
 			}
 
 			@Override
 			public void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {
-				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+				self.removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				self.removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 			}
 
 			@Override
 			public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
 				if (group.isFull()) {
-					FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getObjectId());
+					self.removeFindGroup(group.getRace(), 0, group.getObjectId());
 				}
 			}
 
 			@Override
 			public void onGroupDisbanded(PlayerGroup group) {
-				FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getTeamId());
+				self.removeFindGroup(group.getRace(), 0, group.getTeamId());
 			}
 		});
 
 		PlayerAllianceService.addListener(new PlayerAllianceService.PlayerAllianceListener() {
 			@Override
 			public void onAllianceCreated(Player leader) {
-				FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
+				FindGroup inviterFindGroup = self.removeFindGroup(
 						leader.getRace(), 0x00, leader.getObjectId());
 				if (inviterFindGroup == null) {
-					inviterFindGroup = FindGroupService.getInstance().removeFindGroup(
+					inviterFindGroup = self.removeFindGroup(
 							leader.getRace(), 0x04, leader.getObjectId());
 				}
 				if (inviterFindGroup != null) {
-					FindGroupService.getInstance().addFindGroupList(leader, 0x02,
+					self.addFindGroupList(leader, 0x02,
 							inviterFindGroup.getMessage(), inviterFindGroup.getGroupType());
 				}
 			}
 
 			@Override
 			public void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
-				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-				FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+				self.removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+				self.removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 			}
 
 			@Override
 			public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
 				if (alliance.isFull()) {
-					FindGroupService.getInstance().removeFindGroup(
+					self.removeFindGroup(
 							alliance.getRace(), 0, alliance.getObjectId());
 				}
 			}
 
 			@Override
 			public void onBeforeAllianceDisbanded(PlayerAlliance alliance) {
-				FindGroupService.getInstance().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
+				self.removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
 			}
 		});
 	}

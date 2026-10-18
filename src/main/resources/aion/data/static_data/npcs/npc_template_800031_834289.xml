@@ -88226,11 +88226,11 @@
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
     <talk_info delay="3" distance="1"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Barricade_01a" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="468299" attack_delay="2000" npc_id="833863" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="Frontal Barricade" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Barricade_01a" npc_type="ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="468299" attack_delay="2000" npc_id="833863" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="Frontal Barricade" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="0" maxHp="1500000" pdef="2000" walk_speed="0" mresist="1646" mboost_resist="957" run_speed="0" accuracy="93" main_hand_attack="790" main_hand_crit_rate="131" mdef="2000" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3351" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Barricade_02a" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="468300" attack_delay="2000" npc_id="833864" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="Rear Barricade" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Barricade_02a" npc_type="ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="468300" attack_delay="2000" npc_id="833864" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="Rear Barricade" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="0" maxHp="1500000" pdef="2000" walk_speed="0" mresist="1646" mboost_resist="957" run_speed="0" accuracy="93" main_hand_attack="790" main_hand_crit_rate="131" mdef="2000" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3351" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>

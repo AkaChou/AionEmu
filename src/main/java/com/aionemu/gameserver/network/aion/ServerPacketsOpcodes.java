@@ -290,8 +290,6 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_ATREIAN_BESTIARY_LIST.class, 0x15B, idSet); // 5.8
 		addPacketOpcode(SM_ATREIAN_BESTIARY.class, 0x15C, idSet); // 5.8
 		// -----------------活动窗口-------------------- / -----------------EVENT WINDOW--------------------//
-		addPacketOpcode(SM_EVENT_WINDOW.class, 0x13E, idSet); // 5.8
-		addPacketOpcode(SM_EVENT_WINDOW_ITEMS.class, 0x154, idSet); // 5.8
 		// -------------------游戏卫士------------------------ / -------------------GAMEGUARD------------------------//
 		addPacketOpcode(SM_GAMEGUARD.class, 0x128, idSet); // 5.8
 		// -----------------未知数据包-------------------- / -----------------UNKNOWN PACKETS--------------------//

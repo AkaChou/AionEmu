@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
@@ -28,18 +27,15 @@ public final class EventBootstrapServiceBindings implements DisposableBean {
      * @param minionServiceProvider MinionService 提供者 / MinionService provider
      * @param shugoSweepServiceProvider ShugoSweepService 提供者 / ShugoSweepService provider
      * @param atreianPassportServiceProvider AtreianPassportService 提供者 / AtreianPassportService provider
-     * @param eventWindowServiceProvider EventWindowService 提供者 / EventWindowService provider
      */
     public EventBootstrapServiceBindings(ObjectProvider<LunaShopService> lunaShopServiceProvider,
             ObjectProvider<MinionService> minionServiceProvider,
             ObjectProvider<ShugoSweepService> shugoSweepServiceProvider,
-            ObjectProvider<AtreianPassportService> atreianPassportServiceProvider,
-            ObjectProvider<EventWindowService> eventWindowServiceProvider) {
+            ObjectProvider<AtreianPassportService> atreianPassportServiceProvider) {
         LunaShopService.setInstanceProvider(lunaShopServiceProvider);
         MinionService.setInstanceProvider(minionServiceProvider);
         ShugoSweepService.setInstanceProvider(shugoSweepServiceProvider);
         AtreianPassportService.setInstanceProvider(atreianPassportServiceProvider);
-        EventWindowService.setInstanceProvider(eventWindowServiceProvider);
     }
 
     /**
@@ -52,6 +48,5 @@ public final class EventBootstrapServiceBindings implements DisposableBean {
         MinionService.setInstanceProvider(null);
         ShugoSweepService.setInstanceProvider(null);
         AtreianPassportService.setInstanceProvider(null);
-        EventWindowService.setInstanceProvider(null);
     }
 }

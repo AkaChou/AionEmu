@@ -12,27 +12,17 @@ import lombok.Getter;
 @XmlEnum
 public enum AttendType {
 
-	/** 无 / None. */
-	NONE(0),
-	/** 基础签到 / Basic */
+	/** 周年签到（真端枚举 0）/ Anniversary (retail enum 0) */
+	ANNIVERSARY(0),
+	/** 基础签到（真端枚举 1）/ Basic (retail enum 1) */
 	BASIC(1),
-	/** 周年签到 / Anniversary */
-	ANNIVERSARY(2);
+	/** 网吧签到（真端枚举 2）/ PC-bang attendance (retail enum 2) */
+	PC_BASIC(2);
 
-	/** 返回 ID / Returns the id */
+	/** 返回 ID（真端 S_LOGIN_EVENT_LIST 下发的类型值）/ Returns the id sent by retail S_LOGIN_EVENT_LIST */
 	private final int id;
 
 	AttendType(int id) {
 		this.id = id;
-	}
-
-	/** 按 ID 返回登录类型 / Returns the login type by id */
-	public static AttendType getLoginTypeById(int id) {
-		for (AttendType attendType : values()) {
-			if (attendType.getId() == id) {
-				return attendType;
-			}
-		}
-		return AttendType.NONE;
 	}
 }

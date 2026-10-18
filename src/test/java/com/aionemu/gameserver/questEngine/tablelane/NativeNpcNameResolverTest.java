@@ -7,15 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 /**
- * NPC 名解析器门测试（夹具事实来自 P1 对拍与分片实读：模板定义 87968 个、独立规范名 116225 个、
+ * NPC 名解析器门测试（夹具事实来自 P1 对拍与分片实读：模板定义 87983 个、独立规范名 116231 个、
  * 分片间重复 id 836025、原版占位 name=" "）。 / NPC name resolver gate tests (fixture facts from the
- * P1 reconciliation and live shard reads: 87968 template definitions, 116225 distinct normalized
+ * P1 reconciliation and live shard reads: 87983 template definitions, 116231 distinct normalized
  * names, cross-shard duplicate id 836025, retail name=" " placeholders).
  */
 class NativeNpcNameResolverTest {
 
-	private static final int EXPECTED_TEMPLATES = 87968;
-	private static final int EXPECTED_NAMES = 116225;
+	private static final int EXPECTED_TEMPLATES = 87983;
+	private static final int EXPECTED_NAMES = 116231;
 
 	@Test
 	void loadsFullShardIndex() {

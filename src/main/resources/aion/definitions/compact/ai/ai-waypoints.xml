@@ -40996,6 +40996,23 @@
     <routestep step="79" x="382.075562" y="287.394806" z="199.55687"/>
     <routestep step="80" x="386.909393" y="289.13205" z="199.415787"/>
   </walker_template>
+  <walker_template route_id="retail:301640000:npcpath1st_monster_path6" pool="1"><!-- IDLuna_siege -->
+    <routestep step="1" x="340.735077" y="255.711441" z="194.636993"/>
+    <routestep step="2" x="328.023315" y="257.585754" z="194.051590"/>
+    <routestep step="3" x="328.320129" y="258.246155" z="193.817230"/>
+    <routestep step="4" x="340.456726" y="256.103455" z="194.323517"/>
+  </walker_template>
+  <walker_template route_id="retail:301640000:npcpath1st_monster_path9" pool="1"><!-- IDLuna_siege -->
+    <routestep step="1" x="309.058319" y="251.760895" z="192.456116"/>
+    <routestep step="2" x="309.117645" y="251.781021" z="192.456116"/>
+    <routestep step="3" x="310.862762" y="244.340286" z="192.456116"/>
+  </walker_template>
+  <walker_template route_id="retail:301640000:npcpath1st_monster_path14" pool="1"><!-- IDLuna_siege -->
+    <routestep step="1" x="259.671967" y="268.210114" z="192.831085"/>
+    <routestep step="2" x="267.230377" y="268.117004" z="192.831070"/>
+    <routestep step="3" x="267.350006" y="267.444244" z="192.731079"/>
+    <routestep step="4" x="259.809875" y="267.409210" z="192.831070"/>
+  </walker_template>
   <walker_template route_id="retail:301650000:path_drakannoble_11" pool="1"><!-- IDDreadgion_04 -->
     <routestep step="1" x="487.236786" y="605.296814" z="391.041077"/>
     <routestep step="2" x="492.046814" y="603.477966" z="390.941071"/>

@@ -11,7 +11,6 @@ import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.drop.DropService;
 import lombok.extern.slf4j.Slf4j;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
@@ -171,7 +170,6 @@ public class PlayerLeaveWorldService {
 		PlayerAccountData pad = player.getPlayerAccount().getPlayerAccountData(player.getObjectId());
 		pad.setEquipment(player.getEquipment().getEquippedItems());
 		StigmaLinkedService.onLogOut(player);
-		EventWindowService.getInstance().onLogout(player);
 	}
 
 	/**

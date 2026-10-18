@@ -9,9 +9,28 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+
 class FIFOSimpleExecutableQueueTest {
+
+	private static ThreadPoolManager threadPoolManager;
+
+	@BeforeAll
+	static void installThreadPoolProvider() {
+		threadPoolManager = new ThreadPoolManager();
+		TestServiceProviders.install(ThreadPoolManager.class, threadPoolManager);
+	}
+
+	@AfterAll
+	static void clearThreadPoolProvider() {
+		TestServiceProviders.clear(ThreadPoolManager.class);
+		threadPoolManager.shutdown();
+	}
 
 	@Test
 	void executesQueuedTasksInFifoOrder() throws InterruptedException {

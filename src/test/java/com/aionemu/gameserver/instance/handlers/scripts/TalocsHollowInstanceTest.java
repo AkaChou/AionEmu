@@ -18,16 +18,16 @@ class TalocsHollowInstanceTest {
 			"src/main/resources/aion/definitions/compact/npc_drops/npc_drops_part_005.xml");
 
 	@Test
-	void handlerDeduplicatesSpecialDropsPresentInBaseData() throws IOException {
+	void handlerRegistersGuaranteedDropsOnce() throws IOException {
 		String onDropRegistered = methodBody(Files.readString(SOURCE), "public void onDropRegistered(Npc npc)");
 
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 185000088, 1);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 164000137, 1);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 185000108, 1);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 164000139, 1);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 164000138, 1);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 190080005, 2);"));
-		assertTrue(onDropRegistered.contains("registerDropItemIfAbsent(dropItems, npc, 190200000, 50);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 185000088, 1);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 164000137, 1);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 185000108, 1);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 164000139, 1);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 164000138, 1);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 190080005, 2);"));
+		assertTrue(onDropRegistered.contains("registerGuaranteedDrop(dropItems, npc, 190200000, 50);"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000088, 1)"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 164000137, 1)"));
 		assertFalse(onDropRegistered.contains("regDropItem(1, 0, npcId, 185000108, 1)"));
@@ -36,26 +36,25 @@ class TalocsHollowInstanceTest {
 	}
 
 	@Test
-	void fallbackRegistersOnlyMissingItemsAgainstTheCorrectObjectId() throws IOException {
+	void guaranteedDropReplacesLowChanceRetailEntry() throws IOException {
 		String helper = methodBody(Files.readString(SOURCE),
-				"private void registerDropItemIfAbsent(Set<DropItem> dropItems, Npc npc, int itemId, long count)");
-		int existingDropCheck = helper.indexOf("getDropTemplate().getItemId() == itemId");
-		int addDrop = helper.indexOf(".add(", existingDropCheck);
+				"private void registerGuaranteedDrop(Set<DropItem> dropItems, Npc npc, int itemId, long count)");
 
-		assertTrue(existingDropCheck >= 0);
-		assertTrue(addDrop > existingDropCheck);
-		assertTrue(helper.contains("npc.getObjectId()"));
+		assertTrue(helper.contains("removeIf(dropItem -> dropItem.getDropTemplate().getItemId() == itemId)"),
+			"零售低概率条目必须先移除，避免保底失效");
+		assertTrue(helper.contains("regDropItem(1, 0, npc.getObjectId(), itemId, count)"),
+			"保底条目必须以 100% 登记在正确对象上");
 	}
 
 	@Test
-	void baseDropDataProvidesTheGuaranteedSpecialItemsOnlyOnce() throws IOException {
+	void baseDropDataKeepsOneEntryPerSpecialItem() throws IOException {
 		String npcDrops = Files.readString(NPC_DROPS);
 
-		assertSingleGuaranteedDrop(npcDrops, 215456, 185000088);
-		assertSingleGuaranteedDrop(npcDrops, 215456, 164000137);
-		assertSingleGuaranteedDrop(npcDrops, 215478, 185000108);
-		assertSingleGuaranteedDrop(npcDrops, 215478, 164000139);
-		assertSingleGuaranteedDrop(npcDrops, 215482, 164000138);
+		assertSingleDropEntry(npcDrops, 215456, 185000088);
+		assertSingleDropEntry(npcDrops, 215456, 164000137);
+		assertSingleDropEntry(npcDrops, 215478, 185000108);
+		assertSingleDropEntry(npcDrops, 215478, 164000139);
+		assertSingleDropEntry(npcDrops, 215482, 164000138);
 	}
 
 	private static String methodBody(String source, String signature) {
@@ -79,7 +78,7 @@ class TalocsHollowInstanceTest {
 		throw new AssertionError(signature + " method body was not closed");
 	}
 
-	private static void assertSingleGuaranteedDrop(String npcDrops, int npcId, int itemId) {
+	private static void assertSingleDropEntry(String npcDrops, int npcId, int itemId) {
 		String npcDrop = npcDropBody(npcDrops, npcId);
 		String item = "item_id=\"" + itemId + "\"";
 		int firstOccurrence = npcDrop.indexOf(item);
@@ -87,8 +86,6 @@ class TalocsHollowInstanceTest {
 
 		assertTrue(firstOccurrence >= 0);
 		assertEquals(firstOccurrence, lastOccurrence);
-		assertTrue(npcDrop.substring(firstOccurrence, npcDrop.indexOf("/>", firstOccurrence))
-				.contains("chance=\"100.00\" min_amount=\"1\" max_amount=\"1\""));
 	}
 
 	private static String npcDropBody(String source, int npcId) {

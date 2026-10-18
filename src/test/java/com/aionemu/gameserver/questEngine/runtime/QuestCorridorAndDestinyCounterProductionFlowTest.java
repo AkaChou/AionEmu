@@ -54,10 +54,9 @@ class QuestCorridorAndDestinyCounterProductionFlowTest {
 		assertNode(definition, "s6", QuestStatus.START, Map.of("var0", 6));
 		assertNode(definition, "s7", QuestStatus.START, Map.of("var0", 7, "var1", 0));
 		assertNode(definition, "s8", QuestStatus.START, Map.of("var0", 8, "var1", 0));
-		// QE-051：客户端 quest_q24030.html 共 10 行，末行为领奖行，reward 投影 = 9（批次 1-7 已收口）。
-		// QE-051: quest_q24030.html has 10 journal rows and the last one is the reward row, so the REWARD
-		// projection is 9 (closed by batches 1-7).
-		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 9, "var1", 0));
+		// QE-054 权威领奖行：24030 的领奖状态与第 9 行共用槽位，投影为 8。
+		// QE-054 authoritative reward row: 24030 shares the ninth row slot, so the REWARD projection is 8.
+		assertNode(definition, "reward", QuestStatus.REWARD, Map.of("var0", 8, "var1", 0));
 
 		QuestEvent targets = new QuestEvent.KillNpcSet(DESTINY_TARGETS);
 		QuestTransition continuing = transition(definition, "s6", "s6", targets);

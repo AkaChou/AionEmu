@@ -197,9 +197,6 @@
 	<import file="items/item_skill_enhances.xml"/>
     <import file="events_config/boost_events.xml"/>
 	<import file="monster_book/monster_books.xml"/>
-	<events_window>
-		<import file="events_window/events_window.xml" skipRoot="true"/>
-	</events_window>
 	<import file="reward/reward_mail_template.xml"/>
 	<import file="luna/luna_dice.xml"/>
 	<import file="revive_start_points/revive_world_start_points.xml"/>

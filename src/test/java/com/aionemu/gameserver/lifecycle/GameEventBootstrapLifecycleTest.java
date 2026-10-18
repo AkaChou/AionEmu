@@ -16,7 +16,6 @@ class GameEventBootstrapLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "minionServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "shugoSweepServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "atreianPassportServiceProvider"));
-        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapLifecycle.class, "eventWindowServiceProvider"));
     }
 
     @Test
@@ -28,7 +27,7 @@ class GameEventBootstrapLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("luna", "minion", "shugoSweep", "passport", "eventWindow"), events);
+        assertEquals(List.of("luna", "minion", "shugoSweep", "passport"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
 		assertNull(lifecycle.getLastFailure());
     }
@@ -53,12 +52,10 @@ class GameEventBootstrapLifecycleTest {
             "minion",
             "shugoSweep",
             "passport",
-            "eventWindow",
             "luna",
             "minion",
             "shugoSweep",
-            "passport",
-            "eventWindow"
+            "passport"
         ), events);
 		assertNull(lifecycle.getLastFailure());
     }
@@ -88,9 +85,6 @@ class GameEventBootstrapLifecycleTest {
             "progress:started:Atreian Passport System",
             "load:Atreian Passport System",
             "progress:finished:Atreian Passport System",
-            "progress:started:Event Window System",
-            "load:Event Window System",
-            "progress:finished:Event Window System",
             "progress:finish:game event systems"
         ), events);
     }
@@ -120,8 +114,7 @@ class GameEventBootstrapLifecycleTest {
             events.add("minion");
             events.add("shugoSweep");
             events.add("passport");
-            events.add("eventWindow");
-            if (events.size() == 5 && firstFailure != null) {
+            if (events.size() == 4 && firstFailure != null) {
                 throw firstFailure;
             }
         }
@@ -154,11 +147,6 @@ class GameEventBootstrapLifecycleTest {
         @Override
         protected void initializeAtreianPassportSystem() {
             events.add("load:Atreian Passport System");
-        }
-
-        @Override
-        protected void initializeEventWindowSystem() {
-            events.add("load:Event Window System");
         }
     }
 }

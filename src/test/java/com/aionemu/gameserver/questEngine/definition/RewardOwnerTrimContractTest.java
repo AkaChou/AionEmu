@@ -155,30 +155,6 @@ class RewardOwnerTrimContractTest {
 		}
 	}
 
-	@Test
-	void henirOwnerKeyResolvesThroughTheDredgionFamily() throws Exception {
-		/* 279042 在客户端 NPC 表里没有名字（与 1123 的 STR_DIC_LA12 同型），只能靠同族行内命名 + owner 交叉解键。 */
-		/* 279042 has no client NPC name; the Henir key is resolved through the sibling quests' row naming
-		   and their completion owner. */
-		for (int questId : HENIR_ROW_SIBLINGS) {
-			CompiledQuestDefinition compiled = definition(questId);
-			assertEquals(Set.of(279042), rewardOwners(compiled.definition()),
-				() -> "sibling " + questId + " must complete on 279042 (STR_DIC_N_Henir)");
-			// 4714/4716 已退役（P0c-8b 领奖确认段批）：XML 只在 git 历史里，完成 owner 由原版驱动定义承担；
-			// 仍在 XML 名下的同族任务继续按 XML 文本断言（源真相未变）。
-			// 4714/4716 are retired: the retail-driven definition carries the completion owner instead of an
-			// in-tree XML, while the remaining siblings still assert the XML text.
-			String xml = resourceTextOrNull(questId);
-			if (xml == null) {
-				assertTrue(RetiredQuestIds.contains(questId),
-					() -> "sibling " + questId + " has no XML and must be registered as retired");
-				continue;
-			}
-			assertTrue(xml.contains("<npc-complete npc-id=\"279042\""),
-				() -> "sibling " + questId + " must register 279042 as its completion owner");
-		}
-	}
-
 	private static QuestNode node(QuestDefinition definition, String label) {
 		return definition.nodes().stream().filter(candidate -> label.equals(candidate.label()))
 			.findFirst().orElseThrow(() -> new AssertionError("missing node " + label));

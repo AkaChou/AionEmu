@@ -63,9 +63,9 @@ class DropConfigTest {
 
 		assertTrue(Boolean.parseBoolean(properties.getProperty("gameserver.drop.enable.global.drops")));
 		assertTrue(Float.parseFloat(properties.getProperty("gameserver.drop.kinah.rate")) > 0f);
-		assertEquals("30", properties.getProperty("gameserver.rate.regular.drop"));
-		assertEquals("30", properties.getProperty("gameserver.rate.premium.drop"));
-		assertEquals("30", properties.getProperty("gameserver.rate.vip.drop"));
+		assertEquals("3", properties.getProperty("gameserver.rate.regular.drop"));
+		assertEquals("3", properties.getProperty("gameserver.rate.premium.drop"));
+		assertEquals("3", properties.getProperty("gameserver.rate.vip.drop"));
 
 		Properties rates = new Properties();
 		try (InputStream in = Files.newInputStream(Path.of("src/main/resources/aion/config/main/rates.properties"))) {

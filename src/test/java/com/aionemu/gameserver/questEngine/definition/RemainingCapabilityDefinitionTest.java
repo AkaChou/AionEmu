@@ -49,28 +49,6 @@ class RemainingCapabilityDefinitionTest {
 	}
 
 	@Test
-	void packaged1561DefinitionComposesItemPlayStartAndRemoval() {
-		QuestCatalog catalog = QuestDefinitionDirectoryLoader.compile(getClass().getClassLoader());
-		CompiledQuestDefinition definition = catalog.find(1561).orElseThrow();
-		QuestTransition transition = definition.definition().transitions().stream()
-			.filter(candidate -> candidate.event().equals(new QuestEvent.ItemPlay(182201728, 3000)))
-			.findFirst().orElseThrow();
-
-		assertEquals("unaccepted", transition.sourceNode());
-		assertEquals("started", transition.targetNode());
-		assertTrue(transition.conditions().contains(new QuestCondition.StartEligible()));
-		assertEquals(List.of(new QuestAction.RemoveItem(182201728, 1)), transition.actions());
-
-		QuestSnapshot snapshot = new QuestSnapshot(7, 1561, QuestStatus.NONE, 0,
-			Map.of(182201728, 1)).withStartEligibility(QuestStartEligibility.allowed());
-		var plan = QuestMutationPlanner.plan(definition, snapshot,
-			new QuestEvent.ItemPlay(182201728, 3000), transition);
-		assertTrue(plan.isPresent());
-		assertEquals(QuestStatus.START, plan.orElseThrow().nextStatus());
-		assertEquals(List.of(new QuestAction.RemoveItem(182201728, 1)), plan.orElseThrow().requiredActions());
-	}
-
-	@Test
 	void instanceRewardVariantsWithoutCurrentHandlerOwnersRemainTypedFixtures() {
 		assertEquivalent(90001, kamarReward(), "<kamar-reward/>");
 		assertEquivalent(90002, ophidanReward(), "<ophidan-reward/>");

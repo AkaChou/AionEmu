@@ -47,7 +47,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.DefaultApplicationArguments;
 
 class GameServiceLifecycleTest {
@@ -56,7 +55,7 @@ class GameServiceLifecycleTest {
     void usesDirectLifecycleCollaboratorsInsteadOfActionAdapters() {
         assertEquals(GameStartupSequenceLifecycle.class, fieldType("startupSequenceLifecycle"));
         assertEquals(GameServerNetworkLifecycle.class, fieldType("serverNetworkLifecycle"));
-        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolLifecycle.class, "threadPoolManagerProvider"));
+        assertEquals(GameThreadPoolLifecycle.class, fieldType("threadPoolLifecycle"));
     }
 
     @Test
@@ -81,14 +80,6 @@ class GameServiceLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             return GameServiceLifecycle.class.getDeclaredField(name).getType();
-        } catch (NoSuchFieldException e) {
-            throw new AssertionError("Missing field: " + name, e);
-        }
-    }
-
-    private static Class<?> fieldType(Class<?> type, String name) {
-        try {
-            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }

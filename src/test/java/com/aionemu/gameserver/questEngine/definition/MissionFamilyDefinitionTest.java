@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /** Full vertical proof for the migrated Poeta mission-chain owners 1000 / 1002 / 1003 / 1100. */
@@ -232,16 +233,18 @@ class MissionFamilyDefinitionTest {
 
 		// Ampeis advances to s1.
 		QuestTransition ampeis = talk(transitions, "s0", 203076, 10000, "s1");
-		assertTrue(ampeis.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)));
+		assertFalse(ampeis.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)));
 
-		// Legacy defaultCloseDialog returned to the NPC quest-selection page after each step.
+		// 真端 SETPROn 分支只做推进 + 0x5d8 刷新，零发页（QE-143）；页 10 系旧翻译夸大。
+		// Retail SETPROn advances with a 0x5d8 refresh and emits no page (QE-143); page 10 was a
+		// translation overstatement.
 		for (QuestTransition transition : List.of(
 			ampeis,
 			talk(transitions, "s1", 730007, 10001, "s2"),
 			talk(transitions, "s5", 730007, 10002, "s6"),
 			talk(transitions, "s12", 730007, 10003, "s13"),
 			talk(transitions, "s14", 730008, 10005, "reward"))) {
-			assertTrue(transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
+			assertFalse(transition.afterCommit().contains(new AfterCommitAction.ShowQuestSelectionDialog(10)),
 				transition::toString);
 		}
 		// Kalio's reward preview accepts both the legacy -1 and SELECT_REWARD (1009) pages.

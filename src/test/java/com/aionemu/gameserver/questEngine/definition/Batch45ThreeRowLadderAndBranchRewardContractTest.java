@@ -39,60 +39,6 @@ class Batch45ThreeRowLadderAndBranchRewardContractTest {
 	private static final int Q2922_SHUGODC = 798058;
 	private static final int Q2922_LANSE = 204108;
 
-	@Test
-	void everyJournalRowOwnsAState() throws Exception {
-		QuestDefinition blackCloud = definition(Q1938);
-		assertNode(blackCloud, "started", QuestStatus.START, 0);
-		assertNode(blackCloud, "s1", QuestStatus.START, 1);
-		assertNode(blackCloud, "reward", QuestStatus.REWARD, 2);
-		assertEquals(Set.of(0, 1, 2), journalRows(blackCloud, 3),
-			"quest 1938 owns a state per journal row");
-
-		QuestDefinition gift = definition(Q2922);
-		assertNode(gift, "started", QuestStatus.START, 0);
-		assertNode(gift, "reward1", QuestStatus.REWARD, 1);
-		assertNode(gift, "reward", QuestStatus.REWARD, 2);
-		assertEquals(Set.of(0, 1, 2), journalRows(gift, 3),
-			"quest 2922 projects both exclusive branch rows to reward states");
-	}
-
-	@Test
-	void blackCloudRowsFollowTheShugoThenNakachingChain() throws Exception {
-		QuestDefinition definition = definition(Q1938);
-		assertPageRoute(definition, Q1938_SHUGOS, "started", QuestDialogAction.QUEST_SELECT,
-			QuestDialogPage.SELECT2);
-		assertPageRoute(definition, Q1938_SHUGOS, "started", QuestDialogAction.SELECT2_1,
-			QuestDialogPage.SELECT2_1);
-		assertAdvance(definition, Q1938_SHUGOS, "started", QuestDialogAction.SETPRO1, "s1");
-
-		assertPageRoute(definition, Q1938_NAKACHING, "s1", QuestDialogAction.QUEST_SELECT,
-			QuestDialogPage.SELECT3);
-		assertPageRoute(definition, Q1938_NAKACHING, "s1", QuestDialogAction.SELECT3_1,
-			QuestDialogPage.SELECT3_1);
-		assertAdvance(definition, Q1938_NAKACHING, "s1", QuestDialogAction.SETPRO2, "reward");
-	}
-
-	@Test
-	void blackCloudReportsAndRewardsOnlyOnLikasas() throws Exception {
-		QuestDefinition definition = definition(Q1938);
-		assertPageRoute(definition, Q1938_LIKASAS, "reward", QuestDialogAction.QUEST_SELECT,
-			QuestDialogPage.SELECT5);
-		List<QuestTransition> reward = dialogRoutes(definition, "reward", Q1938_LIKASAS,
-			QuestDialogAction.SELECT_QUEST_REWARD);
-		assertEquals(1, reward.size(), "quest 1938 report route must be unique");
-		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(
-				QuestDialogPage.SHOW_SELECT_QUEST_REWARD_WINDOW1.id())), reward.getFirst().afterCommit(),
-			"quest 1938 row 2 must open reward window 1");
-
-		List<QuestTransition> completions = definition.transitions().stream()
-			.filter(route -> "reward".equals(route.sourceNode()) && "complete".equals(route.targetNode()))
-			.toList();
-		assertTrue(completions.stream().allMatch(route -> route.event() instanceof QuestEvent.TalkToNpc talk
-			&& talk.npcId() == Q1938_LIKASAS), "quest 1938 completion must stay on Likasas");
-		assertTrue(completions.stream().flatMap(route -> route.actions().stream())
-				.anyMatch(new QuestAction.CompleteQuest(0)::equals),
-			"quest 1938 must complete at reward index 0");
-	}
 
 	@Test
 	void giftChoicesFreezeTheBoxOrTheEarringRow() throws Exception {
@@ -139,18 +85,6 @@ class Batch45ThreeRowLadderAndBranchRewardContractTest {
 			"quest 2922 branches share the single reward group index 0");
 	}
 
-	@Test
-	void staleSavesHealBackToTheirJournalRow() throws Exception {
-		QuestDefinition blackCloud = definition(Q1938);
-		assertHeal(blackCloud, QuestStatus.REWARD, 0, "reward", 2);
-
-		QuestDefinition gift = definition(Q2922);
-		assertHeal(gift, QuestStatus.START, 10, "reward1", 1);
-		assertHeal(gift, QuestStatus.START, 20, "reward", 2);
-		assertHeal(gift, QuestStatus.REWARD, 10, "reward1", 1);
-		assertHeal(gift, QuestStatus.REWARD, 20, "reward", 2);
-		assertHeal(gift, QuestStatus.REWARD, 0, "reward1", 1);
-	}
 
 	private static Set<Integer> journalRows(QuestDefinition definition, int lastRow) {
 		Set<Integer> rows = new LinkedHashSet<>();

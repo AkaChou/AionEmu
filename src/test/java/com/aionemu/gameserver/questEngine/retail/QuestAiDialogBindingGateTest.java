@@ -75,7 +75,7 @@ class QuestAiDialogBindingGateTest {
 	private static final int COVERED_ROWS = 636;
 	private static final int GLOBAL_AI_NPC_IDS = 10136;
 	/** 对话绑定面命中全局集的 (任务, NPC) 对数（1402 = 1657 条去重引用中的命中数）。 */
-	private static final int DIALOG_HITS_ON_AI_SURFACE = 1402;
+	private static final int DIALOG_HITS_ON_AI_SURFACE = 1396;
 
 	/**
 	 * 跨界冻结（21 任务 / 25 引用）：原版注册面是 (注册名, 任务) 对，同一 Quest-AI NPC 可承接

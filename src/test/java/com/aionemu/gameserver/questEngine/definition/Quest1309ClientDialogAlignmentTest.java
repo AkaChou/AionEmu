@@ -74,8 +74,14 @@ class Quest1309ClientDialogAlignmentTest {
 		NativeTalkFixture.start(player, QUEST_ID);
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), QUEST_ID, 26)),
-			"中继 NPC 对话必须推进链条");
+			"中继 NPC 对话打开该级页");
 		NativeTalkFixture.assertOnlyDialogPage(player, QuestDialogPage.SELECT2.id());
+		// QE-141：26 只开页，推进必须发该级 SETPRO（10000）。
+		// QE-141: 26 only opens the page; advancing requires the step's SETPRO action.
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, relays.getFirst(), QUEST_ID, 10000)),
+			"中继 SETPRO1 必须推进链条");
+		NativeTalkFixture.assertCloseDialog(player);
 
 		int rewardNpc = handler.rewardNpcs(QUEST_ID).getFirst();
 		assertFalse(relays.contains(rewardNpc), "交付 NPC 独立于中继链");

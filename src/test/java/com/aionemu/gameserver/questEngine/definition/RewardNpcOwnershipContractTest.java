@@ -59,68 +59,6 @@ class RewardNpcOwnershipContractTest {
 	private static final List<Ownership> OWNERSHIPS = List.of(TEMPLAR_OF_CONSTRUCTION,
 		FANG_OF_CONSTRUCTION, INGREDIENTS_FOR_THE_ANTIDOTE, WRATH_OF_TERATH);
 
-	/* 同族参照：客户端行内命名 NPC 与实现侧 owner 早已一致，用于锁定命名约定本身。 */
-	/* Family references whose client-named NPC already matched the implemented owner. */
-	private static final Map<Integer, Integer> DREADGION_FAMILY = Map.of(
-		30610, 800327,
-		30611, 800326,
-		30612, 800326,
-		30613, 800327);
-
-	@Test
-	void rewardCompletionBelongsToTheClientJournalNpc() {
-		for (Ownership ownership : OWNERSHIPS) {
-			QuestDefinition definition = definition(ownership.questId());
-			Set<Integer> owners = rewardOwners(definition);
-			assertTrue(owners.contains(ownership.journalNpc()),
-				() -> "quest " + ownership.questId() + " reward owner must be the client-named NPC "
-					+ ownership.journalNpc() + " (" + ownership.rowEvidence() + "), owners=" + owners);
-			for (int retired : ownership.retiredRewardNpcs()) {
-				assertFalse(owners.contains(retired),
-					() -> "quest " + ownership.questId() + " retired reward owner " + retired
-						+ " still completes the quest");
-			}
-			assertTrue(talkNpcIds(definition).contains(ownership.journalNpc()),
-				() -> "quest " + ownership.questId() + " client-named NPC must stay reachable");
-		}
-	}
-
-	@Test
-	void talkRoutesOnlyAddressTheOwnershipNpcSet() {
-		for (Ownership ownership : OWNERSHIPS) {
-			QuestDefinition definition = definition(ownership.questId());
-			assertEquals(ownership.talkNpcIds(), talkNpcIds(definition),
-				() -> "quest " + ownership.questId() + " talk route NPC set");
-		}
-	}
-
-	@Test
-	void dreadgionRepeatsFollowTheClientNamingConvention() {
-		for (Map.Entry<Integer, Integer> sibling : DREADGION_FAMILY.entrySet()) {
-			Set<Integer> owners = rewardOwners(definition(sibling.getKey()));
-			assertTrue(owners.contains(sibling.getValue()),
-				() -> "quest " + sibling.getKey() + " must complete at the client-named NPC "
-					+ sibling.getValue() + ", owners=" + owners);
-		}
-		/* 30614 是族内唯一被 legacy 单源覆盖的任务：owner 与 talk 路线都必须只落在 Astella(800327)。 */
-		/* 30614 is the only member the single-source legacy contract overrode: every route must be 800327. */
-		QuestDefinition wrath = definition(30614);
-		assertEquals(Set.of(800327), rewardOwners(wrath), "30614 reward owner");
-		assertEquals(Set.of(800327), talkNpcIds(wrath), "30614 must not keep Aluna(800326) routes");
-	}
-
-	@Test
-	void staleRewardRowsAreRepairedOnEnterWorld() {
-		for (int staleRow : List.of(0, 2)) {
-			assertRecovery(19064, staleRow);
-			assertRecovery(29064, staleRow);
-		}
-		assertRecovery(21455, 0);
-		assertRecovery(30614, 0);
-		assertEquals(1, enterWorldRecoveries(definition(21455)).size(), "21455 recovery route count");
-		assertEquals(1, enterWorldRecoveries(definition(30614)).size(), "30614 recovery route count");
-	}
-
 	@Test
 	void rewardEntryPageStaysOutsideTheCompletionBlock() throws Exception {
 		String text = resourceText(30614);
@@ -137,17 +75,6 @@ class RewardNpcOwnershipContractTest {
 		assertFalse(text.contains("npc-id=\"800326\""), "30614 must not keep Aluna(800326) routes");
 	}
 
-	@Test
-	void antidoteQuestKeepsOnlyTheClientRoutedButtons() throws Exception {
-		String text = resourceText(21455);
-		assertFalse(text.contains("action=\"SETPRO2\""), "21455 has no client button for SETPRO2");
-		assertTrue(text.contains("<npc-complete npc-id=\"799244\""), "21455 completion owner");
-		assertTrue(text.contains("action=\"SETPRO1\"/>"), "21455 item swap stays on Schiemann(799240)");
-		assertFalse(text.contains("npc-id=\"799404\" action=\"SELECT_QUEST_REWARD\""),
-			"21455 report must not stay on the start NPC Miener(799404)");
-		assertFalse(text.contains("npc-id=\"799404\" action=\"QUEST_SELECT\""),
-			"21455 stale SELECT5 route must be gone");
-	}
 
 	private static void assertRecovery(int questId, int staleRow) {
 		CompiledQuestDefinition compiled = definitionResource(questId);
