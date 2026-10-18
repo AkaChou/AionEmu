@@ -24,6 +24,12 @@ import org.springframework.stereotype.Component;
 public class GameStartupSequenceLifecycle {
 
     /**
+     * INFO 级别输出的阶段耗时行数；其余行降为 DEBUG。
+     * Number of phase-timing rows printed at INFO; the rest are demoted to DEBUG.
+     */
+    private static final int INFO_TIMING_ROWS = 5;
+
+    /**
      * 线程池生命周期。
      * Thread-pool lifecycle.
      */
@@ -305,7 +311,9 @@ public class GameStartupSequenceLifecycle {
     // ponytail: each lifecycle records its own loadTimeMillis; reflectively aggregate them here once, new lifecycles are picked up automatically without a maintenance list
     /**
      * 反射读取各 lifecycle 字段的 {@code getLoadTimeMillis()}，按耗时降序打印阶段计时。
-     * Reflectively read each lifecycle field's {@code getLoadTimeMillis()} and log timings descending.
+     * INFO 仅打印最慢的 {@value #INFO_TIMING_ROWS} 个阶段，其余明细走 DEBUG。
+     * Reflectively read each lifecycle field's {@code getLoadTimeMillis()} and log timings
+     * descending. INFO prints only the slowest {@value #INFO_TIMING_ROWS} phases; the rest go to DEBUG.
      */
     private void logStartupPhaseTimings() {
         List<Map.Entry<String, Long>> timings = new ArrayList<>();
@@ -322,8 +330,20 @@ public class GameStartupSequenceLifecycle {
                 // Skip non-lifecycle fields or those without a timing method.
             }
         }
+        if (timings.isEmpty()) {
+            return;
+        }
         timings.sort(Map.Entry.<String, Long>comparingByValue().reversed());
         log.info(I18n.get("console.startup.phase_timings"));
-        timings.forEach(e -> log.info(I18n.get("log.f50a88761c02", String.format("%-28s", e.getKey()), String.format("%7d", e.getValue()))));
+        for (int i = 0; i < timings.size(); i++) {
+            Map.Entry<String, Long> entry = timings.get(i);
+            String line = I18n.get("log.f50a88761c02",
+                String.format("%-28s", entry.getKey()), String.format("%7d", entry.getValue()));
+            if (i < INFO_TIMING_ROWS) {
+                log.info(line);
+            } else {
+                log.debug(line);
+            }
+        }
     }
 }

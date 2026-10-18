@@ -118,7 +118,8 @@ public class GameSystemLifecycle {
         log.info(I18n.get("console.memory.status", totalMemory, freeMemory, usedMemory, maxMemory));
 
         long startupTimeSeconds = (System.currentTimeMillis() - serverStartTimeMillis) / 1000;
-        log.info(I18n.get("console.startup.completed", startupTimeSeconds));
+        // 收尾耗时由 GameStartupCompletionLifecycle 统一输出，这里降为 DEBUG 以避免重复。 / Completion timing is owned by GameStartupCompletionLifecycle.
+        log.debug(I18n.get("console.startup.completed", startupTimeSeconds));
         return startupTimeSeconds;
     }
 

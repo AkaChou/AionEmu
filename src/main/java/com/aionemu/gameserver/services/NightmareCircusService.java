@@ -61,7 +61,7 @@ public class NightmareCircusService {
 			}
 			log.info(I18n.get("log.64f9e92187e6", nightmareCircus.size()));
 		} else {
-			log.info(I18n.get("log.643edc83114c"));
+			log.debug(I18n.get("log.643edc83114c"));
 			nightmareCircus = Collections.emptyMap();
 		}
 	}
@@ -72,7 +72,7 @@ public class NightmareCircusService {
 	 */
 	public void initCircus() {
 		if (CustomConfig.NIGHTMARE_CIRCUS_ENABLE) {
-			log.info(I18n.get("log.7985c458fc25"));
+			log.debug(I18n.get("log.7985c458fc25"));
 		}
 		reloadSchedule();
 	}

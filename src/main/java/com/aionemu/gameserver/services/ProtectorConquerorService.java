@@ -62,7 +62,7 @@ public class ProtectorConquerorService {
 	 * Initializes the protector/conqueror system and refresh task.
 	 */
 	public synchronized void initSystem() {
-		log.info(I18n.get("log.efc341530358"));
+		log.debug(I18n.get("log.efc341530358"));
 		if (refreshTask != null) {
 			refreshTask.cancel(false);
 			refreshTask = null;

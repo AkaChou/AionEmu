@@ -50,7 +50,7 @@ public class BanditService {
 	 * Initializes the service.
 	 */
 	public void onInit() {
-		log.info(I18n.get("log.74d903aaf6ee"));
+		log.debug(I18n.get("log.74d903aaf6ee"));
 	}
 
 	/**

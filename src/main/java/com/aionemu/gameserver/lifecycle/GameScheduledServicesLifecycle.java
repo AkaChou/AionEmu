@@ -42,7 +42,7 @@ public class GameScheduledServicesLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.scheduled_services"));
+        Util.printSectionIfVerbose(I18n.get("console.section.scheduled_services"));
         if (EventsConfig.ENABLE_PIG_POPPY_EVENT) {
             PigPoppyEventService.ScheduleCron();
         }

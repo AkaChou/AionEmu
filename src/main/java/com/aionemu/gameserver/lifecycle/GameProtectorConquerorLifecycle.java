@@ -39,7 +39,7 @@ public class GameProtectorConquerorLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.protector_conqueror"));
+        Util.printSectionIfVerbose(I18n.get("console.section.protector_conqueror"));
         protectorConquerorService().initSystem();
     }
 

@@ -61,7 +61,7 @@ public class OutpostService {
 	 * Initializes outpost location data and loads DB state.
 	 */
 	public void initOutpostLocations() {
-		log.info(I18n.get("log.e8bd199248a9"));
+		log.debug(I18n.get("log.e8bd199248a9"));
 		outposts = DataManager.OUTPOST_DATA.getOutpostLocations();
 		outpostDAO.loadOutposLocations(outposts);
 	}
@@ -82,7 +82,7 @@ public class OutpostService {
 	 */
 	public void initOupostReset() {
 		Race race = null;
-		log.info(I18n.get("log.9028be61d10e"));
+		log.debug(I18n.get("log.9028be61d10e"));
 		String weekly = "0 0 9 ? * WED *";
 		CronService.requireCurrent().schedule(() -> {
 			// 英吉斯温。 / Inggison.
@@ -174,7 +174,7 @@ public class OutpostService {
 	public void capture(int id, Race race) {
 		Outpost<?> outpost = getActiveOutpost(id);
 		if (outpost == null) {
-			log.info(I18n.get("log.0094a6179979"));
+			log.debug(I18n.get("log.0094a6179979"));
 			return;
 		}
 		OutpostLocation outpostLocation = getOutpostLocation(id);

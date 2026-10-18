@@ -114,7 +114,7 @@ public class HousingService {
 	 */
 	public HousingService(@NonNull HouseDao housesDAO) {
 		this.housesDAO = housesDAO;
-		log.info(I18n.get("log.f983a3184f1a"));
+		log.debug(I18n.get("log.f983a3184f1a"));
 		Map<Integer, House> loadedCustom = null;
 		Map<Integer, House> loadedStudios = null;
 		try {
@@ -200,7 +200,7 @@ public class HousingService {
 			housesByMapId.computeIfAbsent(worldId, _ -> new CopyOnWriteArrayList<>()).addAll(spawnedHouses);
 		}
 		if (spawnedCounter > 0) {
-			log.info(I18n.get("log.76ad8f8cf6ea", worldId, instanceId, spawnedCounter));
+			log.debug(I18n.get("log.76ad8f8cf6ea", worldId, instanceId, spawnedCounter));
 		}
 	}
 

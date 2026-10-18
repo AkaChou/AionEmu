@@ -65,7 +65,7 @@ public class MoltenusService {
 			log.info(I18n.get("log.81dabfa11dc2", moltenus.size()));
 
 		} else {
-			log.info(I18n.get("log.681bddb050f1"));
+			log.debug(I18n.get("log.681bddb050f1"));
 			moltenus = Collections.emptyMap();
 		}
 	}
@@ -76,7 +76,7 @@ public class MoltenusService {
 	 */
 	public void initMoltenus() {
 		if (CustomConfig.MOLTENUS_ENABLED) {
-			log.info(I18n.get("log.67f190aa0332"));
+			log.debug(I18n.get("log.67f190aa0332"));
 		}
 		reloadSchedule();
 	}

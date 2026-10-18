@@ -56,7 +56,7 @@ public class EventScheduler implements Runnable {
 	 */
 	public EventScheduler() {
 		ThreadPoolManager.getInstance().schedule(this, 1);
-		log.info(I18n.get("log.103bcf34081c"));
+		log.debug(I18n.get("log.103bcf34081c"));
 	}
 
 	/**

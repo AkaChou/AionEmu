@@ -24,7 +24,9 @@ final class ChatServerStartupSequence {
 
         startupBridge.initializeLogger();
 
+        long configStart = startupBridge.currentTimeMillis();
         startupBridge.loadConfig();
+        log.info(I18n.get("console.startup.config_loaded", startupBridge.currentTimeMillis() - configStart));
         startupBridge.printInfos();
         dependencies.idFactory();
         dependencies.gameServerService();

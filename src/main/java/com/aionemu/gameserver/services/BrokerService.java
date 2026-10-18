@@ -141,7 +141,7 @@ public class BrokerService {
 	}
 
 	private void initBrokerService() {
-		log.info(I18n.get("log.907fa7107b89"));
+		log.debug(I18n.get("log.907fa7107b89"));
 		int loadedBrokerItemsCount = 0;
 		int loadedSettledItemsCount = 0;
 

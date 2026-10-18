@@ -34,7 +34,9 @@ class ChatServerTest {
         assertEquals(List.of(
             "time",
             "logger:init",
+            "time",
             "config:load",
+            "time",
             "infos:print",
             "idFactory",
             "gameServerService",
@@ -56,7 +58,9 @@ class ChatServerTest {
         assertEquals(List.of(
             "time",
             "logger:init",
+            "time",
             "config:load",
+            "time",
             "infos:print",
             "idFactory",
             "gameServerService",

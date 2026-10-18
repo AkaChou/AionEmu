@@ -63,7 +63,7 @@ public class IdianDepthsService {
 				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!"));
 			}, () -> CustomConfig.IDIAN_DEPTHS_SCHEDULE);
 		} else {
-			log.info(I18n.get("log.b09d3ab19771"));
+			log.debug(I18n.get("log.b09d3ab19771"));
 			idianDepths = Collections.emptyMap();
 		}
 	}
@@ -74,7 +74,7 @@ public class IdianDepthsService {
 	 */
 	public void initIdianDepths() {
 		if (CustomConfig.IDIAN_DEPTHS_ENABLED) {
-			log.info(I18n.get("log.5227a2ba2e5f"));
+			log.debug(I18n.get("log.5227a2ba2e5f"));
 		}
 	}
 

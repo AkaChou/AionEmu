@@ -501,7 +501,7 @@ public class SpawnEngine {
 	 */
 	public static void spawnAll() {
 		if (!DeveloperConfig.SPAWN_ENABLE) {
-			log.info(I18n.get("log.6bd421074785"));
+			log.debug(I18n.get("log.6bd421074785"));
 			return;
 		}
 		List<WorldMapTemplate> worldTemplates = new ArrayList<>();
@@ -642,7 +642,7 @@ public class SpawnEngine {
 			}
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
-		log.info(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
+		log.debug(I18n.get("log.1a270a579228", worldId, instanceId, spawnedCounter));
 		HousingService.getInstance().spawnHouses(worldId, instanceId, ownerId);
 		RetailNpcPartyEngine.initialize(instance);
 		RetailConditionSpawnEngine.initialize(instance);

@@ -129,7 +129,7 @@ public class LadderService {
 		boundLadderDAO = ladderDAO;
 		int intervalMs = RANK_UPDATE_INTERVAL * 60 * 1000;
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(this::UpdateRanks, intervalMs, intervalMs);
-		log.info(I18n.get("log.feb60173643c"));
+		log.debug(I18n.get("log.feb60173643c"));
 	}
 
 	/**

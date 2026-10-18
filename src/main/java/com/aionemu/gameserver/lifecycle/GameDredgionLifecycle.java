@@ -57,7 +57,7 @@ public class GameDredgionLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.dredgion"));
+        Util.printSectionIfVerbose(I18n.get("console.section.dredgion"));
         if (isAutoGroupEnabled()) {
             dredgionService().initDredgion();
         }

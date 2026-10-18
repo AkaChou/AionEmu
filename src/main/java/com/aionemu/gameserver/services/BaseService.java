@@ -61,7 +61,7 @@ public class BaseService {
 	 * Starts all bases.
 	 */
 	public void initBases() {
-		log.info(I18n.get("log.b00d281537f8"));
+		log.debug(I18n.get("log.b00d281537f8"));
 		for (BaseLocation base : getBaseLocations().values()) {
 			start(base.getId());
 		}
@@ -73,7 +73,7 @@ public class BaseService {
 	 */
 	public void initBaseReset() {
 		Race race = null;
-		log.info(I18n.get("log.0b82f7fdbd34"));
+		log.debug(I18n.get("log.0b82f7fdbd34"));
 		String weekly = "0 0 9 ? * WED *";
 		CronService.requireCurrent().schedule(() -> {
 			// 埃尔特内。 / Elten.
@@ -186,7 +186,7 @@ public class BaseService {
 	 */
 	public void capture(int id, Race race) {
 		if (!isActive(id)) {
-			//log.info(I18n.get("log.ecbf9933ee2c"));
+			//log.debug(I18n.get("log.ecbf9933ee2c"));
 			return;
 		}
 		getActiveBase(id).setRace(race);

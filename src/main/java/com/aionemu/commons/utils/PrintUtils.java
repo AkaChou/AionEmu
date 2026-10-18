@@ -38,6 +38,21 @@ public class PrintUtils {
 	}
 
 	/**
+	 * 以 DEBUG 级别打印分区标题与分隔线；默认 INFO 控制台不输出。
+	 * Print a section title with a rule line at DEBUG level; hidden from the default INFO console.
+	 *
+	 * @param sectionName 分区名称 / Section name
+	 */
+	public void printSectionIfVerbose(String sectionName) {
+		String title = normalizeTitle(sectionName);
+		CONSOLE.debug("");
+		if (!title.isEmpty()) {
+			CONSOLE.debug("  {}", title);
+		}
+		CONSOLE.debug("  {}", RULE);
+	}
+
+	/**
 	 * 打印子分区标题。
 	 * Print a sub-section title.
 	 *

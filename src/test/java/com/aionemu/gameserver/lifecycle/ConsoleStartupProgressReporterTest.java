@@ -4,18 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Locale;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 import com.aionemu.boot.i18n.I18n;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.StaticMessageSource;
 
 class ConsoleStartupProgressReporterTest {
+
+	private ListAppender<ILoggingEvent> appender;
+	private Logger consoleLogger;
+
 	@BeforeEach
 	void setUpMessages() {
 		StaticMessageSource source = new StaticMessageSource();
@@ -23,20 +31,24 @@ class ConsoleStartupProgressReporterTest {
 		source.addMessage("console.progress.loaded_group", Locale.ENGLISH, "Loaded {0} in {1} ms");
 		I18n.setMessageSource(source);
 		I18n.applyCountryCode(1);
+
+		consoleLogger = (Logger) LoggerFactory.getLogger("aion.console");
+		appender = new ListAppender<>();
+		appender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
+		appender.start();
+		consoleLogger.addAppender(appender);
 	}
 
 	@AfterEach
 	void clearMessages() {
+		consoleLogger.detachAppender(appender);
+		appender.stop();
 		I18n.setMessageSource(null);
 	}
 
 	@Test
-	void enabledReporterPrintsSectionSeparatorAndSummaryWithoutProgressBars() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			true
-		);
+	void enabledReporterPrintsSectionAndSummaryWithoutProgressBars() {
+		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(true);
 
 		reporter.start("game world");
 		reporter.stepStarted("IDFactory");
@@ -45,48 +57,42 @@ class ConsoleStartupProgressReporterTest {
 		reporter.stepFinished("Zone");
 		reporter.finish("game world", 123);
 
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.startsWith("────────────────────────────────────────────────────────\nLoading game world..\n"));
-		assertTrue(output.contains("Loaded game world in 123 ms\n"));
+		List<ILoggingEvent> events = appender.list;
+		assertEquals(4, events.size());
+		assertEquals("", events.get(0).getFormattedMessage());
+		assertEquals("  Loading game world..", events.get(1).getFormattedMessage());
+		assertEquals("  " + "─".repeat(46), events.get(2).getFormattedMessage());
+		assertEquals("Loaded game world in 123 ms", events.get(3).getFormattedMessage());
 		// 进度条已移除：不含方块字符、回车覆盖或逐步骤进度行。 / Progress bar removed: no block chars, carriage returns, or per-step progress lines.
+		String output = events.stream().map(ILoggingEvent::getFormattedMessage).reduce("", (a, b) -> a + b);
 		assertFalse(output.contains("█"));
 		assertFalse(output.contains("░"));
 		assertFalse(output.contains("\r"));
 		assertFalse(output.contains("\"IDFactory\""));
 		assertFalse(output.contains("\"Zone\""));
-		assertEquals(3, output.chars().filter(character -> character == '\n').count());
 	}
 
 	@Test
 	void stepStartedDoesNotLeaveUnfinishedZeroProgressLine() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			true
-		);
+		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(true);
 
 		reporter.start("game world");
 		reporter.stepStarted("IDFactory");
 
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.endsWith("Loading game world..\n"));
-		assertFalse(output.contains("IDFactory"));
-		assertFalse(output.contains("\r"));
+		assertEquals(3, appender.list.size());
+		assertEquals("  Loading game world..", appender.list.get(1).getFormattedMessage());
+		assertTrue(appender.list.stream().noneMatch(event -> event.getFormattedMessage().contains("IDFactory")));
 	}
 
 	@Test
 	void disabledReporterWritesNothing() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			false
-		);
+		ConsoleStartupProgressReporter reporter = new ConsoleStartupProgressReporter(false);
 
 		reporter.start("game world");
 		reporter.stepStarted("IDFactory");
 		reporter.stepFinished("IDFactory");
 		reporter.finish("game world", 1);
 
-		assertEquals("", bytes.toString(StandardCharsets.UTF_8));
+		assertEquals(List.of(), appender.list);
 	}
 }

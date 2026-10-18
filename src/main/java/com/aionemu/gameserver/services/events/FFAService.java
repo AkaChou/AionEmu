@@ -101,7 +101,7 @@ public class FFAService {
 			return;
 		}
 
-		log.info(I18n.get("log.86a16ce407e0"));
+		log.debug(I18n.get("log.86a16ce407e0"));
 		isAvailable = true;
 
 		// 诺克萨纳训练营。 / Nochsana Training Camp.

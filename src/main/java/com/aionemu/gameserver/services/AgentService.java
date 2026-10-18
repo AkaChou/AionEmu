@@ -63,7 +63,7 @@ public class AgentService {
 			}
 			log.info(I18n.get("log.055cf27529a4", agent.size()));
 		} else {
-			log.info(I18n.get("log.976c5af9708b"));
+			log.debug(I18n.get("log.976c5af9708b"));
 			agent = Collections.emptyMap();
 		}
 	}
@@ -74,7 +74,7 @@ public class AgentService {
 	 */
 	public void initAgent() {
 		if (CustomConfig.AGENT_ENABLED) {
-			log.info(I18n.get("log.60d4830bec5f"));
+			log.debug(I18n.get("log.60d4830bec5f"));
 		}
 		reloadSchedule();
 	}

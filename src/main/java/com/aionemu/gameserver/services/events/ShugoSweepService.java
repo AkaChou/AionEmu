@@ -57,7 +57,7 @@ public class ShugoSweepService {
 	 * Initializes Shugo Sweep and registers the weekly reset cron.
 	 */
 	public void initShugoSweep() {
-		log.info(I18n.get("log.a06db47829be"));
+		log.debug(I18n.get("log.a06db47829be"));
 		String weekly = "0 0 9 ? * WED *";
 		CronService.requireCurrent().schedule(playerShugoSweepDAO::delete, weekly);
 	}

@@ -93,7 +93,7 @@ public class ChatProcessor implements GameEngine {
 	@Override
 	public void load(CountDownLatch progressLatch) {
 		try {
-			log.info(I18n.get("log.cc321cc5ac7d"));
+			log.debug(I18n.get("log.cc321cc5ac7d"));
 			init(this);
 		} finally {
 			if (progressLatch != null) {

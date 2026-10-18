@@ -115,7 +115,7 @@ public class GameHousingLifecycle extends GameStartupStage {
      * Print the housing section header.
      */
     private void printHousingSection() {
-        Util.printSection(I18n.get("console.section.housing"));
+        Util.printSectionIfVerbose(I18n.get("console.section.housing"));
     }
 
     /**

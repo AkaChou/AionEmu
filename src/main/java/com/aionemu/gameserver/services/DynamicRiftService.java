@@ -88,9 +88,9 @@ public class DynamicRiftService {
 	 */
 	public void initDynamicRift() {
 		if (CustomConfig.DYNAMIC_RIFT_ENABLED) {
-			log.info(I18n.get("log.8d47511e47ac"));
+			log.debug(I18n.get("log.8d47511e47ac"));
 		} else {
-			log.info(I18n.get("log.f7a5bb06c320"));
+			log.debug(I18n.get("log.f7a5bb06c320"));
 		}
 	}
 

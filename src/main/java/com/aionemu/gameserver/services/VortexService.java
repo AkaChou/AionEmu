@@ -74,7 +74,7 @@ public class VortexService {
 	 */
 	public void initVortex() {
 		if (CustomConfig.VORTEX_ENABLED) {
-			log.info(I18n.get("log.2422075c2e20"));
+			log.debug(I18n.get("log.2422075c2e20"));
 		}
 		reloadSchedule();
 	}

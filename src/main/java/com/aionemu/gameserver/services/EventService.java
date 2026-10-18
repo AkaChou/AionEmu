@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
+import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EventType;
@@ -55,6 +56,9 @@ public class EventService {
 
 	/** 周期检查任务。 / Periodic check task. */
 	private Future<?> checkTask = null;
+
+	/** 是否已输出启动期活跃活动汇总；后续周期刷新不再重复。 / Whether the startup active-event summary was logged; later refreshes stay silent. */
+	private boolean startupSummaryLogged = false;
 
 	/** 当前活跃活动列表。 / Currently active events. */
 	private final List<EventTemplate> activeEvents;
@@ -245,6 +249,7 @@ public class EventService {
 			checkTask.cancel(false);
 		}
 		isStarted = true;
+		startupSummaryLogged = false;
 
 		checkTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(this::checkEvents, 0, CHECK_TIME_PERIOD);
 	}
@@ -287,6 +292,11 @@ public class EventService {
 			eventsForMaintainQuest.clear();
 			activeEvents.addAll(newEvents);
 			updateQuestMap();
+		}
+
+		if (!startupSummaryLogged) {
+			startupSummaryLogged = true;
+			log.info(I18n.get("console.events.active", newEvents.size()));
 		}
 
 		newEvents.clear();

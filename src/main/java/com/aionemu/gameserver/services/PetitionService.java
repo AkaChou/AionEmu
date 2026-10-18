@@ -86,7 +86,7 @@ public record PetitionService(PetitionDao petitionDAO) {
 
 	public PetitionService(@NonNull PetitionDao petitionDAO) {
 		this.petitionDAO = petitionDAO;
-		log.info(I18n.get("log.f495913b1078"));
+		log.debug(I18n.get("log.f495913b1078"));
 		try {
 			Set<Petition> petitions = this.petitionDAO.getPetitions();
 			if (petitions != null) {

@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
-import java.io.PrintStream;
-
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.PrintUtils;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
@@ -10,13 +9,15 @@ import lombok.AccessLevel;
 /**
  * 控制台静态数据加载进度报告器，将各分段进度渲染到启动控制台。
  * Console static-data progress reporter that renders section progress on the startup console.
+ * <p>
+ * 明细行统一走 {@code aion.console} 的 DEBUG 级别；INFO 控制台的静态数据里程碑由
+ * {@code DataManager} 的分区标题与加载结果行承担，避免重复输出。
+ * Detail lines run at the {@code aion.console} DEBUG level; the INFO static-data milestone is
+ * owned by {@code DataManager}'s section header and result line, so nothing is duplicated.
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ConsoleStaticDataProgressReporter implements StaticDataProgressReporter {
 
-	private static final String SECTION_SEPARATOR = "────────────────────────────────────────────────────────";
-
-	private final PrintStream out;
 	private final boolean enabled;
 
 	/**
@@ -25,12 +26,12 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	 * @return 控制台进度报告器 / console progress reporter
 	 */
 	static StaticDataProgressReporter forCurrentConsole() {
-		return new ConsoleStaticDataProgressReporter(System.out, GSConfig.STARTUP_PROGRESS_ENABLE);
+		return new ConsoleStaticDataProgressReporter(GSConfig.STARTUP_PROGRESS_ENABLE);
 	}
 
 	/**
-	 * 开始加载：打印分段分隔线与加载提示。
-	 * Starts loading: prints the section separator and loading banner.
+	 * 开始加载：以 DEBUG 输出分段标题，不打扰 INFO 控制台。
+	 * Starts loading: prints the section title at DEBUG, keeping the INFO console quiet.
 	 * @param totalSections 分段总数 / total section count
 	 */
 	@Override
@@ -38,9 +39,7 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 		if (!progressEnabled()) {
 			return;
 		}
-		out.println(SECTION_SEPARATOR);
-		out.println(I18n.get("console.static_data.loading"));
-		out.flush();
+		PrintUtils.printSectionIfVerbose(I18n.get("console.static_data.loading"));
 	}
 
 	/**
@@ -84,18 +83,14 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 	}
 
 	/**
-	 * 全部加载完成：打印耗时摘要。
-	 * Finishes loading: prints the elapsed-time summary.
+	 * 全部加载完成：不再输出耗时（由 {@code DataManager} 的加载耗时行统一承担）。
+	 * Finishes loading: no elapsed output (the {@code DataManager} timing line owns it).
 	 * @param totalSections 分段总数 / total section count
 	 * @param elapsedMillis 耗时毫秒数 / elapsed milliseconds
 	 */
 	@Override
 	public void finish(int totalSections, long elapsedMillis) {
-		if (!enabled) {
-			return;
-		}
-		out.println(I18n.get("console.static_data.loaded", elapsedMillis));
-		out.flush();
+		// 静态数据耗时由 DataManager 的权威结果行输出，这里不再重复。 / Timing is owned by DataManager's authoritative result line.
 	}
 
 	/**

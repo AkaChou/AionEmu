@@ -109,9 +109,9 @@ public class GeoService {
 				this.geoData = new DummyGeoData();
 			}
 		}
-		log.info(I18n.get("log.f0cb8ab09daf"));
+		log.debug(I18n.get("log.f0cb8ab09daf"));
 
-		log.info(I18n.get("log.dfefaa9da2af"));
+		log.debug(I18n.get("log.dfefaa9da2af"));
 
 		this.geoData.loadGeoMaps();
 	}

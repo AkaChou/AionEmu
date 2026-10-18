@@ -84,7 +84,7 @@ public class BeritraService {
 	 */
 	public void initBeritra() {
 		if (CustomConfig.BERITRA_ENABLED) {
-			log.info(I18n.get("log.8317eae99b1f"));
+			log.debug(I18n.get("log.8317eae99b1f"));
 		}
 		reloadSchedule();
 	}

@@ -29,7 +29,7 @@ public class BGService {
 
 	public BGService() {
 		register(DELAY);
-		log.info(I18n.get("log.e0322d9a5480"));
+		log.debug(I18n.get("log.e0322d9a5480"));
 	}
 
 	/**

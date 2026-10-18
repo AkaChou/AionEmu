@@ -61,7 +61,7 @@ public class RealGeoData implements GeoData {
 	 * @param models 已加载的网格模型表 / loaded mesh model table
 	 */
 	protected void loadWorldMaps(final Map<String, Spatial> models) {
-		log.info(I18n.get("log.b518dba13a24"));
+		log.debug(I18n.get("log.b518dba13a24"));
 		final List<Integer> mapsWithErrors = new ArrayList<>();
 		final Set<String> missingMeshes = ConcurrentHashMap.newKeySet();
 		List<Callable<Void>> tasks = new ArrayList<>();
@@ -125,7 +125,7 @@ public class RealGeoData implements GeoData {
 	 * @return 名称 → 空间节点映射 / name → spatial map
 	 */
 	protected Map<String, Spatial> loadMeshes() {
-		log.info(I18n.get("log.f40bcb01bf83"));
+		log.debug(I18n.get("log.f40bcb01bf83"));
 		try {
 			return GeoWorldLoader.loadMeshs("geo/models.mesh");
 		} catch (IOException e) {

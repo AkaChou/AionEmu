@@ -88,7 +88,7 @@ public class DisputeLandService {
 	 */
 	public void initDisputeLand() {
 		if (CustomConfig.DISPUTE_LAND_ENABLED) {
-			log.info(I18n.get("log.87d65384cfca"));
+			log.debug(I18n.get("log.87d65384cfca"));
 			CronService.requireCurrent().schedule(() -> {
 				if (isActive()) {
 					ThreadPoolManager.getInstance().schedule(() -> setActive(false), (long) CustomConfig.DISPUTE_LAND_DURATION * 3600 * 1000);

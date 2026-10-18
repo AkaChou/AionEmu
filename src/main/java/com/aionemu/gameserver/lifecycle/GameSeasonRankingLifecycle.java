@@ -39,7 +39,7 @@ public class GameSeasonRankingLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.season_ranking"));
+        Util.printSectionIfVerbose(I18n.get("console.section.season_ranking"));
         seasonRankingUpdateService().onStart();
     }
 

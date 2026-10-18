@@ -165,7 +165,7 @@ public class SiegeService {
 			artifacts = Collections.emptyMap();
 			fortresses = Collections.emptyMap();
 			locations = Collections.emptyMap();
-			log.info(I18n.get("log.9929433ec536"));
+			log.debug(I18n.get("log.9929433ec536"));
 		}
 	}
 
@@ -174,7 +174,7 @@ public class SiegeService {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return;
 		}
-		log.info(I18n.get("log.5fc5ca1430d6"));
+		log.debug(I18n.get("log.5fc5ca1430d6"));
 
 		for (Integer i : getSiegeLocations().keySet()) {
 			deSpawnNpcs(i);

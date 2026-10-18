@@ -4,6 +4,7 @@ import com.aionemu.boot.i18n.I18n;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @UtilityClass
 public class AEInfos {
+
+    /**
+     * 是否已打印过完整运行时信息；保证三个内嵌服务只输出一份。
+     * Whether the full runtime-info block was printed; keeps the three embedded services to one copy.
+     */
+    private final AtomicBoolean ALL_INFOS_PRINTED = new AtomicBoolean(false);
 
     /**
      * 构建内存信息行。
@@ -161,10 +168,21 @@ public class AEInfos {
     }
 
     /**
-     * 分段打印全部运行时信息。
-     * Print all runtime info by section.
+     * 复位「已打印」状态，仅供测试隔离使用。
+     * Reset the "already printed" state for test isolation only.
+     */
+    void resetPrintedStateForTest() {
+        ALL_INFOS_PRINTED.set(false);
+    }
+
+    /**
+     * 分段打印全部运行时信息；仅首次调用输出，后续调用直接返回。
+     * Print all runtime info by section; only the first call prints, later calls return immediately.
      */
     public void printAllInfos() {
+        if (!ALL_INFOS_PRINTED.compareAndSet(false, true)) {
+            return;
+        }
         printSectioned(I18n.get("system.info.section.os"), getOSInfo());
         printSectioned(I18n.get("system.info.section.cpu"), getCPUInfo());
         printSectioned(I18n.get("system.info.section.jre"), getJREInfo());

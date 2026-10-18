@@ -64,7 +64,7 @@ public class SvsService {
 			}
 			log.info(I18n.get("log.52d31014b3d7", svs.size()));
 		} else {
-			log.info(I18n.get("log.4719a93aa4c6"));
+			log.debug(I18n.get("log.4719a93aa4c6"));
 			svs = Collections.emptyMap();
 		}
 	}
@@ -75,7 +75,7 @@ public class SvsService {
 	 */
 	public void initSvs() {
 		if (CustomConfig.SVS_ENABLED) {
-			log.info(I18n.get("log.9f1c04e917fb"));
+			log.debug(I18n.get("log.9f1c04e917fb"));
 		}
 		reloadSchedule();
 	}

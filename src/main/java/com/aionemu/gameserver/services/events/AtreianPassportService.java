@@ -155,7 +155,7 @@ public class AtreianPassportService {
 		} else {
 			log.warn(I18n.get("log.2ea564e44e72"));
 		}
-		log.info(I18n.get("log.9ae8def154d9"));
+		log.debug(I18n.get("log.9ae8def154d9"));
 	}
 
 	public void getReward(Player player, int atreianId) {

@@ -21,6 +21,15 @@ public class Util {
 	}
 
 	/**
+	 * 以 DEBUG 级别打印带分隔线的章节标题；默认 INFO 控制台不可见。
+	 * Prints a section title with separator lines at DEBUG; hidden from the default INFO console.
+	 * @param s 章节标题 / Section title
+	 */
+	public static void printSectionIfVerbose(String s) {
+		PrintUtils.printSectionIfVerbose(s);
+	}
+
+	/**
 	 * 将 ByteBuffer 中的数据转为十六进制转储（含偏移与 ASCII 侧栏）。
 	 * Converts data from the given ByteBuffer into a hex dump with offsets and ASCII sidebar.
 	 * @param data 字节缓冲 / Byte buffer

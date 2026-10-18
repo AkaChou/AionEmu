@@ -172,6 +172,12 @@ public class XmlDataLoader {
 	private static final int NESTED_PARENT_TASKS =
 		Integer.getInteger("aion.staticData.extraLoaders", 5);
 
+	/**
+	 * INFO 级别输出的耗时行数；其余行降为 DEBUG。
+	 * Number of timing rows printed at INFO; the rest are demoted to DEBUG.
+	 */
+	private static final int INFO_TIMING_ROWS = 5;
+
 	private static final java.util.concurrent.ExecutorService STATIC_DATA_POOL =
 		java.util.concurrent.Executors.newFixedThreadPool(
 			Runtime.getRuntime().availableProcessors() + NESTED_PARENT_TASKS, runnable -> {
@@ -340,7 +346,7 @@ public class XmlDataLoader {
 			if (logPhaseTimings) {
 				logStaticDataPhaseTimings(phaseTimings);
 			}
-			log.info(I18n.get("log.20818547282f", elapsed));
+			log.debug(I18n.get("log.20818547282f", elapsed));
 			return data;
 		}
 		/*
@@ -1139,14 +1145,27 @@ public class XmlDataLoader {
 			.toList();
 	}
 
+	/**
+	 * 输出静态数据阶段耗时：INFO 仅打印最慢的 {@value #INFO_TIMING_ROWS} 行，其余明细走 DEBUG。
+	 * Log static-data phase timings: INFO prints only the slowest {@value #INFO_TIMING_ROWS} rows;
+	 * the remaining detail goes to DEBUG.
+	 * @param timings 阶段名到耗时的映射 / phase-name to duration mapping
+	 */
 	private static void logSlowSectionTimings(Map<String, Long> timings) {
 		List<Map.Entry<String, Long>> slowest = slowestSectionTimings(timings, timings.size());
 		if (slowest.isEmpty()) {
 			return;
 		}
 		log.info(I18n.get("log.6a77df723c2e"));
-		for (Map.Entry<String, Long> timing : slowest) {
-			log.info(I18n.get("log.b6609c40aca7", String.format("%-32s", timing.getKey()), timing.getValue()));
+		int infoCount = Math.min(INFO_TIMING_ROWS, slowest.size());
+		for (int i = 0; i < slowest.size(); i++) {
+			Map.Entry<String, Long> timing = slowest.get(i);
+			String row = String.format("%-32s", timing.getKey());
+			if (i < infoCount) {
+				log.info(I18n.get("log.b6609c40aca7", row, timing.getValue()));
+			} else {
+				log.debug(I18n.get("log.b6609c40aca7", row, timing.getValue()));
+			}
 		}
 	}
 

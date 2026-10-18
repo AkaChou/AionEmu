@@ -88,7 +88,7 @@ public class TowerOfEternityService {
 				openRandomTowerOfWorld(ASMODIAN_TOWER_WORLD);
 			}, () -> CustomConfig.TOWER_OF_ETERNITY_SCHEDULE);
 		} else {
-			log.info(I18n.get("log.1f021afa9f81"));
+			log.debug(I18n.get("log.1f021afa9f81"));
 			towerOfEternity = Collections.emptyMap();
 		}
 	}
@@ -99,7 +99,7 @@ public class TowerOfEternityService {
 	 */
 	public void initTowerOfEternity() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
-			log.info(I18n.get("log.8cba40ef1e05"));
+			log.debug(I18n.get("log.8cba40ef1e05"));
 		}
 	}
 

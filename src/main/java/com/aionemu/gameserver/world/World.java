@@ -27,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.container.PlayerContainer;
 import com.aionemu.gameserver.world.exceptions.AlreadySpawnedException;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
@@ -68,7 +67,7 @@ public class World {
 	 * Construct the world and load all map templates.
 	 */
 	public World() {
-		Util.printSection(I18n.get("console.section.world"));
+		// 分节头由世界引导阶段统一输出；这里只保留构造结果，避免重复标题。 / The bootstrap phase owns the section header; keep only the result here.
 		allPlayers = new PlayerContainer();
 		allObjects = Collections.synchronizedMap(new LinkedHashMap<>());
 		allNpcs = Collections.synchronizedMap(new LinkedHashMap<>());

@@ -66,7 +66,8 @@ public class GameNetworkStartupLifecycle {
             serverStarter.run();
             printMiscSection();
             boolean bootEmbeddedMode = isBootEmbedded();
-            log.info(I18n.get(bootEmbeddedMode ? "log.71d26b100f77" : "log.0a68de7d6fac"));
+            // 网络就绪行由 GameServerNetworkLifecycle 输出，这里仅保留 DEBUG 细节。 / Readiness is owned by GameServerNetworkLifecycle.
+            log.debug(I18n.get(bootEmbeddedMode ? "log.71d26b100f77" : "log.0a68de7d6fac"));
             if (!bootEmbeddedMode) {
                 registerShutdownHook(shutdownHook());
             }
@@ -94,7 +95,7 @@ public class GameNetworkStartupLifecycle {
      * Print the misc section header.
      */
     protected void printMiscSection() {
-        Util.printSection(I18n.get("console.section.misc"));
+        Util.printSectionIfVerbose(I18n.get("console.section.misc"));
     }
 
     /**

@@ -191,7 +191,7 @@ public class Config {
         try {
             Properties myProps = null;
             try {
-                log.info(I18n.get("log.d74fbaa2d37d"));
+                log.debug(I18n.get("log.d74fbaa2d37d"));
                 myProps = PropertiesUtils.load(configDir() + "/login/myls.properties");
             } catch (Exception e) {
                 log.info(I18n.get("log.c453f21e95f6"));
@@ -201,15 +201,15 @@ public class Config {
             Properties[] props = loadProperties(config);
             PropertiesUtils.overrideProperties(props, myProps);
             PropertiesUtils.overrideProperties(props, bootOverrides);
-            log.info(I18n.get("log.82761a77d855", config));
+            log.debug(I18n.get("log.82761a77d855", config));
             ConfigurableProcessor.process(Config.class, props);
-            log.info(I18n.get("log.b4cc54f61657", config));
+            log.debug(I18n.get("log.b4cc54f61657", config));
             ConfigurableProcessor.process(SvStatsConfig.class, props);
             ConfigurableProcessor.process(VipConfig.class, props);
             VipConfig.validate();
-            log.info(I18n.get("log.9d5403420a43", config));
+            log.debug(I18n.get("log.9d5403420a43", config));
             ConfigurableProcessor.process(CommonsConfig.class, props);
-            log.info(I18n.get("log.e2109203a77c", config));
+            log.debug(I18n.get("log.e2109203a77c", config));
             ConfigurableProcessor.process(DatabaseConfig.class, props);
 
         } catch (Exception e) {

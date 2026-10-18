@@ -64,7 +64,7 @@ public class IuService {
 				World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN));
 			}, () -> CustomConfig.IU_SCHEDULE);
 		} else {
-			//log.info(I18n.get("log.14574ab2d3ba"));
+			//log.debug(I18n.get("log.14574ab2d3ba"));
 			iu = Collections.emptyMap();
 		}
 	}
@@ -75,9 +75,9 @@ public class IuService {
 	 */
 	public void initConcert() {
 		if (CustomConfig.IU_ENABLED) {
-			log.info(I18n.get("log.3f20fa884766"));
+			log.debug(I18n.get("log.3f20fa884766"));
 		} else {
-			log.info(I18n.get("log.14574ab2d3ba"));
+			log.debug(I18n.get("log.14574ab2d3ba"));
 		}
 	}
 

@@ -268,7 +268,7 @@ public final class DataManager {
                 assignStaticData(data, itemData);
 
                 long timeMillis = System.currentTimeMillis() - start;
-                log.info(I18n.get("log.07c1c49f4c8b"));
+                log.debug(I18n.get("log.07c1c49f4c8b"));
                 log.info(I18n.get("log.c7dc526fc9f6", TimeUnit.MILLISECONDS.toSeconds(timeMillis)));
                 LOADED.set(true);
             } finally {

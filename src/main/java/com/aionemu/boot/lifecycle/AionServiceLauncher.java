@@ -167,12 +167,13 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
      */
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
-        log.info(I18n.get("boot.startup.starting", name));
+        log.debug(I18n.get("boot.startup.starting", name));
         startedServices.add(serviceLifecycle);
+        long start = System.currentTimeMillis();
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.start(args);
         }
-        log.info(I18n.get("boot.startup.returned", name));
+        log.info(I18n.get("boot.startup.service_ready", name, System.currentTimeMillis() - start));
     }
 
     /**

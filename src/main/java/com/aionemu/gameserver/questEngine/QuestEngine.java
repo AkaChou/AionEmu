@@ -1533,7 +1533,7 @@ public class QuestEngine implements GameEngine {
 
 	/** Loads the typed production catalog using an already compiled and validated typed snapshot. */
 	public void load(CountDownLatch progressLatch, PreparedProductionDefinitions prepared) {
-		log.info(I18n.get("log.5359e35f8f99"));
+		log.debug(I18n.get("log.5359e35f8f99"));
 		try {
 			// P0b 数据基础：启动期装载原版页注册表；缺失/损坏页表必须让启动失败（fail-fast）。
 			// P0b data foundation: eagerly load the retail page registry at startup; a missing or

@@ -4,9 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.boot.i18n.I18n;
@@ -14,78 +18,73 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.slf4j.LoggerFactory;
 
 class ConsoleStaticDataProgressReporterTest {
 
-	private final PrintStream originalOut = System.out;
 	private final ConfigSnapshot gsConfigSnapshot = ConfigSnapshot.of(GSConfig.class,
 		"STARTUP_PROGRESS_ENABLE", "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE");
+
+	private ListAppender<ILoggingEvent> appender;
+	private Logger consoleLogger;
+	private Level previousLevel;
 
 	@BeforeEach
 	void enableProgressEntryCounts() {
 		GSConfig.STARTUP_PROGRESS_ENABLE = true;
 		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = true;
+
+		consoleLogger = (Logger) LoggerFactory.getLogger("aion.console");
+		previousLevel = consoleLogger.getLevel();
+		consoleLogger.setLevel(Level.DEBUG);
+		appender = new ListAppender<>();
+		appender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
+		appender.start();
+		consoleLogger.addAppender(appender);
 	}
 
 	@AfterEach
 	void restoreOutputAndProperties() {
-		System.setOut(originalOut);
+		consoleLogger.detachAppender(appender);
+		appender.stop();
+		consoleLogger.setLevel(previousLevel);
 		gsConfigSnapshot.restore();
 	}
 
 	@Test
-	void enabledReporterPrintsSeparatorAndSummaryWithoutProgressBars() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			true
-		);
+	void enabledReporterPrintsSectionTitleAtDebugWithoutDuplicatingElapsedTime() {
+		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(true);
 
 		reporter.start(3);
 		reporter.sectionStarted(1, 3, "ItemData", 87);
 		reporter.sectionProgress(1, 3, "ItemData", 41, 87);
 		reporter.sectionFinished(1, 3, "ItemData", 87);
-		reporter.sectionStarted(2, 3, "NpcDropData", 5342);
-		reporter.sectionProgress(2, 3, "NpcDropData", 41, 5342);
-		reporter.sectionFinished(2, 3, "NpcDropData", 5342);
 		reporter.finish(3, 1234);
 
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.startsWith("────────────────────────────────────────────────────────\n" + I18n.get("console.static_data.loading") + "\n"));
-		assertTrue(output.contains(I18n.get("console.static_data.loaded", 1234) + "\n"));
-		// 进度条已移除：不含方块字符、回车覆盖或分段进度行。 / Progress bar removed: no block chars, carriage returns, or section progress lines.
-		assertFalse(output.contains("█"));
-		assertFalse(output.contains("░"));
-		assertFalse(output.contains("\r"));
-		assertFalse(output.contains("\"ItemData\""));
-		assertFalse(output.contains("\"NpcDropData\""));
-		assertEquals(3, output.chars().filter(character -> character == '\n').count());
+		List<ILoggingEvent> events = appender.list;
+		assertEquals(3, events.size());
+		assertTrue(events.stream().allMatch(event -> event.getLevel() == Level.DEBUG));
+		assertEquals("", events.get(0).getFormattedMessage());
+		assertEquals("  " + I18n.get("console.static_data.loading"), events.get(1).getFormattedMessage());
+		// 耗时由 DataManager 的权威结果行输出，报告器不再重复。 / Timing is owned by DataManager's authoritative result line.
+		assertTrue(events.stream().noneMatch(event -> event.getFormattedMessage().contains("1234")));
+		assertFalse(events.stream().anyMatch(event -> event.getFormattedMessage().contains("ItemData")));
 	}
 
 	@Test
 	void sectionStartedDoesNotLeaveUnfinishedZeroProgressLine() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			true
-		);
+		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(true);
 
 		reporter.start(1);
 		reporter.sectionStarted(1, 1, "MotionData", 333);
 
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.endsWith(I18n.get("console.static_data.loading") + "\n"));
-		assertFalse(output.contains("MotionData"));
-		assertFalse(output.contains("\r"));
+		assertEquals(3, appender.list.size());
+		assertTrue(appender.list.stream().noneMatch(event -> event.getFormattedMessage().contains("MotionData")));
 	}
 
 	@Test
-	void disabledReporterDoesNotWriteControlCharactersToOutput() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(
-			new PrintStream(bytes, true, StandardCharsets.UTF_8),
-			false
-		);
+	void disabledReporterWritesNothing() {
+		ConsoleStaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(false);
 
 		reporter.start(2);
 		reporter.sectionStarted(1, 2, "ItemData", 1);
@@ -93,15 +92,11 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.sectionFinished(1, 2, "ItemData", 1);
 		reporter.finish(2, 10);
 
-		assertFalse(bytes.toString(StandardCharsets.UTF_8).contains("\r"));
-		assertEquals("", bytes.toString(StandardCharsets.UTF_8));
+		assertEquals(List.of(), appender.list);
 	}
 
 	@Test
-	void currentConsoleReporterWritesSummaryWhenEntryCountsAreEnabled() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
-
+	void currentConsoleReporterWritesNothingWhenEntryCountsAreEnabled() {
 		StaticDataProgressReporter reporter = ConsoleStaticDataProgressReporter.forCurrentConsole();
 
 		reporter.start(1);
@@ -110,20 +105,13 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.sectionFinished(1, 1, "ItemData", 1);
 		reporter.finish(1, 5);
 
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.contains(I18n.get("console.static_data.loading")));
-		assertTrue(output.contains(I18n.get("console.static_data.loaded", 5)));
-		// 进度条已移除：不含方块字符或回车覆盖。 / Progress bar removed: no block chars or carriage returns.
-		assertFalse(output.contains("█"));
-		assertFalse(output.contains("\r"));
+		assertEquals(3, appender.list.size());
+		assertTrue(appender.list.stream().allMatch(event -> event.getLevel() == Level.DEBUG));
 	}
 
 	@Test
 	void disablePropertySuppressesCurrentConsoleReporter() {
-		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-		System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
 		GSConfig.STARTUP_PROGRESS_ENABLE = false;
-
 		StaticDataProgressReporter reporter = ConsoleStaticDataProgressReporter.forCurrentConsole();
 
 		reporter.start(1);
@@ -132,6 +120,6 @@ class ConsoleStaticDataProgressReporterTest {
 		reporter.sectionFinished(1, 1, "ItemData", 1);
 		reporter.finish(1, 5);
 
-		assertEquals("", bytes.toString(StandardCharsets.UTF_8));
+		assertEquals(List.of(), appender.list);
 	}
 }

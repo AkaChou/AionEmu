@@ -62,7 +62,7 @@ public class InstanceRiftService {
 			}
 			log.info(I18n.get("log.da34bb44d09e", instanceRift.size()));
 		} else {
-			log.info(I18n.get("log.a881539ad74c"));
+			log.debug(I18n.get("log.a881539ad74c"));
 			instanceRift = Collections.emptyMap();
 		}
 	}
@@ -73,7 +73,7 @@ public class InstanceRiftService {
 	 */
 	public void initInstance() {
 		if (CustomConfig.INSTANCE_RIFT_ENABLED) {
-			log.info(I18n.get("log.9c13f28080ec"));
+			log.debug(I18n.get("log.9c13f28080ec"));
 		}
 		reloadSchedule();
 	}

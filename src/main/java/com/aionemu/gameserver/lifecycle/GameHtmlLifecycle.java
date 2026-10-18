@@ -37,7 +37,7 @@ public class GameHtmlLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.html"));
+        Util.printSectionIfVerbose(I18n.get("console.section.html"));
         htmlCacheProvider.getObject();
     }
 }

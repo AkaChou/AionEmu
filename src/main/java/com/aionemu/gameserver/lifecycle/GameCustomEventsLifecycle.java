@@ -92,7 +92,7 @@ public class GameCustomEventsLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.custom_events"));
+        Util.printSectionIfVerbose(I18n.get("console.section.custom_events"));
         if (FFAConfig.FFA_ENABLED) {
             ffaServiceProvider.getObject();
         }

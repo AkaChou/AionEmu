@@ -294,6 +294,6 @@ public class GameBattlefieldLifecycle extends GameStartupStage {
      * Print the battlefield section header.
      */
     private void printBattlefieldSection() {
-        Util.printSection(I18n.get("console.section.battlefield"));
+        Util.printSectionIfVerbose(I18n.get("console.section.battlefield"));
     }
 }

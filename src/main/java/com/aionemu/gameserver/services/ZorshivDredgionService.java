@@ -67,7 +67,7 @@ public class ZorshivDredgionService {
 			}
 			log.info(I18n.get("log.10861add441d", zorshivDredgion.size()));
 		} else {
-			log.info(I18n.get("log.14c1b1085d6f"));
+			log.debug(I18n.get("log.14c1b1085d6f"));
 			zorshivDredgion = Collections.emptyMap();
 		}
 	}
@@ -78,7 +78,7 @@ public class ZorshivDredgionService {
 	 */
 	public void initZorshivDredgion() {
 		if (CustomConfig.ZORSHIV_DREDGION_ENABLED) {
-			log.info(I18n.get("log.7aab3940411b"));
+			log.debug(I18n.get("log.7aab3940411b"));
 		}
 		reloadSchedule();
 	}

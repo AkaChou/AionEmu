@@ -174,7 +174,7 @@ public class Config {
 
             Properties myProps = null;
             try {
-                log.info(I18n.get("log.42a96ab0c032"));
+                log.debug(I18n.get("log.42a96ab0c032"));
                 myProps = PropertiesUtils.load(configDir() + "/chat/mycs.properties");
             } catch (Exception e) {
                 log.info(I18n.get("log.c453f21e95f6"));
@@ -184,9 +184,9 @@ public class Config {
             PropertiesUtils.overrideProperties(props, myProps);
             PropertiesUtils.overrideProperties(props, bootOverrides);
 
-            log.info(I18n.get("log.985e991606f9"));
+            log.debug(I18n.get("log.985e991606f9"));
             ConfigurableProcessor.process(CommonsConfig.class, props);
-            log.info(I18n.get("log.2d8e1d8b4e5a"));
+            log.debug(I18n.get("log.2d8e1d8b4e5a"));
             ConfigurableProcessor.process(Config.class, props);
         } catch (Exception e) {
             log.error(I18n.get("log.7e1c21e90609"), e);

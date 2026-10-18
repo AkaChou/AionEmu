@@ -47,10 +47,14 @@ public class ChatServerStartupBridge {
     }
 
     /**
-     * 打印运行时环境信息。
-     * Print runtime environment information.
+     * 打印运行时环境信息；嵌入式启动已由游戏服输出，跳过以免重复。
+     * Print runtime environment information; skipped in embedded mode because the game service
+     * already prints it, which keeps a single copy.
      */
     public void printInfos() {
+        if (AionRuntimeMode.isBootEmbedded()) {
+            return;
+        }
         AEInfos.printAllInfos();
     }
 

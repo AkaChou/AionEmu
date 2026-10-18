@@ -480,7 +480,7 @@ public class GameRuntimeServicesLifecycle extends GameStartupStage {
      * Print the runtime-services section header.
      */
     private void printServicesSection() {
-        Util.printSection(I18n.get("console.section.services"));
+        Util.printSectionIfVerbose(I18n.get("console.section.services"));
     }
 
     /**

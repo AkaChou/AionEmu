@@ -1,8 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
-import java.io.PrintStream;
-
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.PrintUtils;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
@@ -10,21 +9,13 @@ import lombok.AccessLevel;
 /**
  * 控制台启动进度报告器：按分组输出加载进度行。
  * Console startup progress reporter: prints load progress lines per group.
+ * <p>
+ * 输出统一走 {@code aion.console} logger，与 logback 的其余启动日志保持同一通道与线宽。
+ * Output goes through the {@code aion.console} logger so it shares the channel and rule width
+ * with the rest of the logback startup output.
  */
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 final class ConsoleStartupProgressReporter implements StartupProgressReporter {
-
-	/**
-	 * 分组分隔线。
-	 * Section separator line.
-	 */
-	private static final String SECTION_SEPARATOR = "────────────────────────────────────────────────────────";
-
-	/**
-	 * 输出流。
-	 * Output stream.
-	 */
-	private final PrintStream out;
 
 	/**
 	 * 是否启用进度输出。
@@ -38,7 +29,7 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 	 * @return 启动进度报告器 / Startup progress reporter
 	 */
 	static StartupProgressReporter forCurrentConsole() {
-		return new ConsoleStartupProgressReporter(System.out, GSConfig.STARTUP_PROGRESS_ENABLE);
+		return new ConsoleStartupProgressReporter(GSConfig.STARTUP_PROGRESS_ENABLE);
 	}
 
 	/**
@@ -51,9 +42,7 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 		if (!enabled) {
 			return;
 		}
-		out.println(SECTION_SEPARATOR);
-		out.println(I18n.get("console.progress.loading_group", localizedGroupName(groupName)));
-		out.flush();
+		PrintUtils.printSection(I18n.get("console.progress.loading_group", localizedGroupName(groupName)));
 	}
 
 	/**
@@ -87,8 +76,7 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 		if (!enabled) {
 			return;
 		}
-		out.println(I18n.get("console.progress.loaded_group", localizedGroupName(groupName), elapsedMillis));
-		out.flush();
+		PrintUtils.printBannerLine(I18n.get("console.progress.loaded_group", localizedGroupName(groupName), elapsedMillis));
 	}
 
 	private String localizedGroupName(String groupName) {

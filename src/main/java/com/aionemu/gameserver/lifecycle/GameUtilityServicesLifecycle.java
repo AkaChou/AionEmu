@@ -88,7 +88,7 @@ public class GameUtilityServicesLifecycle {
     protected void reportCallbackSupport() {
         // 构建期织入后回调系统恒就绪：仅保留启动提示，不再保留 javaagent 探测外壳。
         // The callback system is always ready after build-time weaving: keep the startup hint only.
-        log.info(I18n.get("console.startup.callback_ok"));
+        log.debug(I18n.get("console.startup.callback_ok"));
     }
 
     /**
@@ -104,7 +104,7 @@ public class GameUtilityServicesLifecycle {
      * Print the config section header.
      */
     protected void printConfigSection() {
-        Util.printSection(I18n.get("console.section.config"));
+        Util.printSectionIfVerbose(I18n.get("console.section.config"));
     }
 
     /**
@@ -130,7 +130,7 @@ public class GameUtilityServicesLifecycle {
      * Print the database section header.
      */
     protected void printDatabaseSection() {
-        Util.printSection(I18n.get("console.section.database"));
+        Util.printSectionIfVerbose(I18n.get("console.section.database"));
     }
 
     /**

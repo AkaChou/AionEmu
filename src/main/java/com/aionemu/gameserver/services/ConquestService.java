@@ -57,7 +57,7 @@ public class ConquestService {
 			}
 			log.info(I18n.get("log.cdddb02cbd65", conquest.size()));
 		} else {
-			log.info(I18n.get("log.0364874809b0"));
+			log.debug(I18n.get("log.0364874809b0"));
 			conquest = Collections.emptyMap();
 		}
 	}
@@ -68,7 +68,7 @@ public class ConquestService {
 	 */
 	public void initOffering() {
 		if (CustomConfig.CONQUEST_ENABLED) {
-			log.info(I18n.get("log.ba7e51410ef5"));
+			log.debug(I18n.get("log.ba7e51410ef5"));
 		}
 		reloadSchedule();
 	}

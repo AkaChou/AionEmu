@@ -12,16 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,12 +43,18 @@ import com.aionemu.gameserver.dataholders.NpcData;
 import com.aionemu.gameserver.dataholders.PetDopingData;
 import com.aionemu.gameserver.dataholders.PetMerchandData;
 import com.aionemu.gameserver.dataholders.StaticData;
-import com.aionemu.boot.i18n.I18n;
 import com.aionemu.testutil.ConfigSnapshot;
 import jakarta.xml.bind.annotation.XmlElement;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.springframework.context.support.StaticMessageSource;
+import org.slf4j.LoggerFactory;
 
 class XmlDataLoaderTest {
 
@@ -134,25 +137,30 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void consoleReporterOnlyPrintsElapsedTimeWhenEntryCountsAreDisabled() {
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
+	void consoleReporterStaysSilentWhenEntryCountsAreDisabled() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(GSConfig.class, "STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE");
+		Logger consoleLogger = (Logger) LoggerFactory.getLogger("aion.console");
+		Level previousLevel = consoleLogger.getLevel();
+		ListAppender<ILoggingEvent> appender = new ListAppender<>();
+		appender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
+		appender.start();
+		consoleLogger.addAppender(appender);
+		consoleLogger.setLevel(Level.DEBUG);
 		try {
 			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
-			StaticMessageSource messages = new StaticMessageSource();
-			messages.addMessage("console.static_data.loaded", Locale.ENGLISH, "Loaded static data in {0} ms");
-			I18n.setMessageSource(messages);
-			I18n.applyCountryCode(1);
-			StaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(new PrintStream(output), true);
+			StaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(true);
 
 			reporter.start(10);
 			reporter.sectionProgress(1, 10, "ItemData", 1, 1);
 			reporter.sectionFinished(1, 10, "ItemData", 1);
 			reporter.finish(10, 1234);
 
-			assertEquals("Loaded static data in 1234 ms%n".formatted(), output.toString());
+			// 耗时由 DataManager 的权威结果行输出，报告器在禁用条目计数时保持静默。 / Timing is owned by DataManager; the reporter stays silent when entry counts are disabled.
+			assertTrue(appender.list.isEmpty());
 		} finally {
-			I18n.setMessageSource(null);
+			consoleLogger.detachAppender(appender);
+			appender.stop();
+			consoleLogger.setLevel(previousLevel);
 			snapshot.restore();
 		}
 	}

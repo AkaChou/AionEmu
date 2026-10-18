@@ -155,7 +155,7 @@ public final class ZoneService implements GameEngine {
 	 */
 	@Override
 	public void load(CountDownLatch progressLatch) {
-		log.info(I18n.get("log.b89b79895cf7"));
+		log.debug(I18n.get("log.b89b79895cf7"));
 
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());

@@ -162,7 +162,7 @@ public class EventTemplate {
 					}
 				}
 			}
-			log.info(I18n.get("log.ac12f1e2f672", spawnCount, this.getName()));
+			log.debug(I18n.get("log.ac12f1e2f672", spawnCount, this.getName()));
 			DataManager.SPAWNS_DATA2.afterUnmarshal(null, null);
 			DataManager.SPAWNS_DATA2.clearTemplates();
 		}

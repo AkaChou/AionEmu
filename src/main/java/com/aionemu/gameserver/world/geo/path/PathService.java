@@ -124,7 +124,7 @@ public final class PathService implements DisposableBean {
 
 	public void initializePath() {
 		if (!GeoDataConfig.GEO_PATH_ENABLE) {
-			log.info(I18n.get("log.20e0075b3ab6"));
+			log.debug(I18n.get("log.20e0075b3ab6"));
 			return;
 		}
 		long start = System.currentTimeMillis();

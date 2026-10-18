@@ -51,7 +51,7 @@ public class InstanceEngine implements GameEngine {
 	 */
 	@Override
 	public void load(CountDownLatch progressLatch) {
-		log.info(I18n.get("log.05ae1f3c90a6"));
+		log.debug(I18n.get("log.05ae1f3c90a6"));
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());

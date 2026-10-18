@@ -80,7 +80,7 @@ public class RvrService {
 	 */
 	public void initRvr() {
 		if (CustomConfig.RVR_ENABLED) {
-			log.info(I18n.get("log.7869fd4b7e68"));
+			log.debug(I18n.get("log.7869fd4b7e68"));
 		}
 		reloadSchedule();
 	}

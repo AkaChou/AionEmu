@@ -415,7 +415,7 @@ public class GameLocationBootstrapLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.locations.siege_battlefield"));
+        Util.printSectionIfVerbose(I18n.get("console.section.locations.siege_battlefield"));
         siegeService().initSiegeLocations();
         BaseService baseService = baseService();
         baseService.initBaseLocations();
@@ -423,7 +423,7 @@ public class GameLocationBootstrapLifecycle extends GameStartupStage {
         OutpostService outpostService = outpostService();
         outpostService.initOutpostLocations();
         outpostService.initOupostReset();
-        Util.printSection(I18n.get("console.section.locations.vortex_world_boss"));
+        Util.printSectionIfVerbose(I18n.get("console.section.locations.vortex_world_boss"));
         VortexService vortexService = vortexService();
         vortexService.initVortex();
         vortexService.initVortexLocations();
@@ -439,7 +439,7 @@ public class GameLocationBootstrapLifecycle extends GameStartupStage {
         SvsService svsService = svsService();
         svsService.initSvs();
         svsService.initSvsLocations();
-        Util.printSection(I18n.get("console.section.locations.pvp_rvr"));
+        Util.printSectionIfVerbose(I18n.get("console.section.locations.pvp_rvr"));
         RvrService rvrService = rvrService();
         rvrService.initRvr();
         rvrService.initRvrLocations();
@@ -452,7 +452,7 @@ public class GameLocationBootstrapLifecycle extends GameStartupStage {
         DynamicRiftService dynamicRiftService = dynamicRiftService();
         dynamicRiftService.initDynamicRift();
         dynamicRiftService.initDynamicRiftLocations();
-        Util.printSection(I18n.get("console.section.locations.instance_dungeon"));
+        Util.printSectionIfVerbose(I18n.get("console.section.locations.instance_dungeon"));
         InstanceRiftService instanceRiftService = instanceRiftService();
         instanceRiftService.initInstance();
         instanceRiftService.initInstanceLocations();
@@ -474,7 +474,7 @@ public class GameLocationBootstrapLifecycle extends GameStartupStage {
         TowerOfEternityService towerOfEternityService = towerOfEternityService();
         towerOfEternityService.initTowerOfEternity();
         towerOfEternityService.initTowerOfEternityLocation();
-        Util.printSection(I18n.get("console.section.locations.abyss_landing"));
+        Util.printSectionIfVerbose(I18n.get("console.section.locations.abyss_landing"));
         abyssLandingService().initLandingLocations();
         LandingUpdateService landingUpdateService = landingUpdateService();
         landingUpdateService.initResetQuestPoints();

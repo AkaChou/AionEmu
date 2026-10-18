@@ -68,4 +68,24 @@ class PrintUtilsTest {
 		PrintUtils.printSection("***");
 		assertTrue(appender.list.stream().anyMatch(e -> e.getFormattedMessage().startsWith("  ─")));
 	}
+
+	@Test
+	void printSectionIfVerboseIsSilentAtInfoAndVisibleAtDebug() {
+		ch.qos.logback.classic.Level original = consoleLogger.getLevel();
+		try {
+			consoleLogger.setLevel(ch.qos.logback.classic.Level.INFO);
+			PrintUtils.printSectionIfVerbose(" *** Config *** ");
+			assertEquals(0, appender.list.size());
+
+			consoleLogger.setLevel(ch.qos.logback.classic.Level.DEBUG);
+			PrintUtils.printSectionIfVerbose(" *** Config *** ");
+			List<ILoggingEvent> events = appender.list;
+			assertEquals(3, events.size());
+			assertEquals("", events.get(0).getFormattedMessage());
+			assertEquals("  Config", events.get(1).getFormattedMessage());
+			assertEquals("  " + "─".repeat(46), events.get(2).getFormattedMessage());
+		} finally {
+			consoleLogger.setLevel(original);
+		}
+	}
 }

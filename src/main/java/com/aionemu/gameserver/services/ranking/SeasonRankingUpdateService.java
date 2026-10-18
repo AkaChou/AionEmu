@@ -50,7 +50,7 @@ public class SeasonRankingUpdateService {
 		renewPlayerRanking(SeasonRankingEnum.ARENA_OF_TENACITY.getId(), I18n.get("ranking.arena_of_tenacity"));
 		renewPlayerRanking(SeasonRankingEnum.TOWER_OF_CHALLENGE.getId(), I18n.get("ranking.tower_of_challenge"));
 		renewPlayerRanking(SeasonRankingEnum.ARENA_6V6.getId(), I18n.get("ranking.arena_6v6"));
-		log.info(I18n.get("log.7b171ec16882"));
+		log.info(I18n.get("log.7b171ec16882", players.size()));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class SeasonRankingUpdateService {
 		newlyCalculated = loadRankPacket(tableId);
 		players.remove(tableId);
 		players.put(tableId, newlyCalculated);
-		log.info(I18n.get("log.34194b33f70d", rankingName));
+		log.debug(I18n.get("log.34194b33f70d", rankingName));
 	}
 
 	/**

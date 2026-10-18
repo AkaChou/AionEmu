@@ -47,7 +47,6 @@ public class CmdAttrBonus extends AbstractGMHandler implements StatOwner {
 		Pattern pattern = Pattern.compile("((.*)\\s(-?\\d+))");
 		Matcher matcher = pattern.matcher(params);
 		if (!matcher.find()) {
-//			System.out.println("no matches found");
 			return;
 		}
 

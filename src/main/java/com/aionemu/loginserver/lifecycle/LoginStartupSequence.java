@@ -84,9 +84,11 @@ public class LoginStartupSequence {
         try {
             initializeLogger();
             loginCronService.initialize();
-            log.info(I18n.get("log.189724bde746",
+            log.debug(I18n.get("log.189724bde746",
                 new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(System.currentTimeMillis()))));
+            long configStart = System.currentTimeMillis();
             Config.load();
+            log.info(I18n.get("console.startup.config_loaded", System.currentTimeMillis() - configStart));
             vipService.grantToAllAccounts();
             startDeadlockDetector();
             initializeKeyGenerator();
@@ -98,7 +100,10 @@ public class LoginStartupSequence {
             if (!AionRuntimeMode.isBootEmbedded()) {
                 Runtime.getRuntime().addShutdownHook(shutdown);
             }
-            AEInfos.printAllInfos();
+            // 嵌入式启动由游戏服统一输出环境信息，避免三服务各打一份。 / Embedded boot lets the game service print it once.
+            if (!AionRuntimeMode.isBootEmbedded()) {
+                AEInfos.printAllInfos();
+            }
             loaded = true;
         } catch (RuntimeException | Error e) {
             loaded = false;

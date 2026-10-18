@@ -72,7 +72,7 @@ public class AnohaService {
 			}
 			log.info(I18n.get("log.70a3e3cac875", anoha.size()));
 		} else {
-			log.info(I18n.get("log.1175d3b2bf44"));
+			log.debug(I18n.get("log.1175d3b2bf44"));
 			anoha = Collections.emptyMap();
 		}
 	}
@@ -83,7 +83,7 @@ public class AnohaService {
 	 */
 	public void initAnoha() {
 		if (CustomConfig.ANOHA_ENABLED) {
-			log.info(I18n.get("log.aa7a391f4ea1"));
+			log.debug(I18n.get("log.aa7a391f4ea1"));
 		}
 		reloadSchedule();
 	}

@@ -190,7 +190,7 @@ public class Config {
 	private static void processAllConfigClasses() throws IOException {
 		Properties myProps = null;
 		try {
-			log.info(I18n.get("log.5685ceb915cb"));
+			log.debug(I18n.get("log.5685ceb915cb"));
 			myProps = PropertiesUtils.load(configDir() + "/mygs.properties");
 		} catch (Exception e) {
 			log.info(I18n.get("log.c453f21e95f6"));

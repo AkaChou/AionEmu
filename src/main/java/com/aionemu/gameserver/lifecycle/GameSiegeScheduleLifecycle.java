@@ -55,7 +55,7 @@ public class GameSiegeScheduleLifecycle extends GameStartupStage {
      */
     @Override
     protected void runStage() {
-        Util.printSection(I18n.get("console.section.sieges"));
+        Util.printSectionIfVerbose(I18n.get("console.section.sieges"));
         siegeService().initSieges();
         baseService().initBases();
     }

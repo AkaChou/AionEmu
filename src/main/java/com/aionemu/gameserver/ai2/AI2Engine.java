@@ -74,7 +74,7 @@ public class AI2Engine implements GameEngine {
 	 */
 	@Override
 	public void load(CountDownLatch progressLatch) {
-		log.info(I18n.get("log.526564512218"));
+		log.debug(I18n.get("log.526564512218"));
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());

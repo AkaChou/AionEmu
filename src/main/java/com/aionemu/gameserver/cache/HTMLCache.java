@@ -130,7 +130,7 @@ public final class HTMLCache {
 		loadedFiles = 0;
 		size = 0;
 
-		log.info(I18n.get("log.c7a3e61e3ad9"));
+		log.debug(I18n.get("log.c7a3e61e3ad9"));
 
 		parseDir(htmlRoot());
 

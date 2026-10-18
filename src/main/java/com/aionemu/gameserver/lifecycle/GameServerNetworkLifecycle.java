@@ -95,7 +95,7 @@ public class GameServerNetworkLifecycle {
 	 * Start the client Netty transport, initialize banned-MAC, and connect login/chat peers.
 	 */
 	public void start() {
-		log.info(I18n.get("console.startup.network_config", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS));
+		log.debug(I18n.get("console.startup.network_config", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS));
 
 		gameClientTransport = createNettyTransport();
 
@@ -110,7 +110,7 @@ public class GameServerNetworkLifecycle {
 		long transportStart = System.currentTimeMillis();
 		gameClientTransport.connect();
 		long transportTime = System.currentTimeMillis() - transportStart;
-		log.info(I18n.get("console.startup.netty_started", transportTime));
+		log.debug(I18n.get("console.startup.netty_started", transportTime));
 
 		connectPeer("Login Server", loginServer);
 
@@ -119,6 +119,8 @@ public class GameServerNetworkLifecycle {
 		} else {
 			log.info(I18n.get("console.startup.chat_disabled"));
 		}
+
+		log.info(I18n.get("console.network.ready", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT));
 	}
 
 	/**
@@ -216,7 +218,7 @@ public class GameServerNetworkLifecycle {
 			peer.connect();
 		}
 		long time = System.currentTimeMillis() - start;
-		log.info(I18n.get("console.startup.peer_timing", peerName, bootEmbedded ? I18n.get("console.startup.peer_scheduled") : I18n.get("console.startup.peer_connected"), time));
+		log.debug(I18n.get("console.startup.peer_timing", peerName, bootEmbedded ? I18n.get("console.startup.peer_scheduled") : I18n.get("console.startup.peer_connected"), time));
 	}
 
 	/**
