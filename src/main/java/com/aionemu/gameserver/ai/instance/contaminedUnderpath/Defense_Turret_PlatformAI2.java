@@ -45,8 +45,8 @@ public class Defense_Turret_PlatformAI2 extends NpcAI2 {
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 				AI2Actions.deleteOwner(this);
 			} else {
-				// 奥德不足：提示道具不足并关闭对话，绝不删除基座 / Insufficient aether: notify and keep platform
-				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300489)); // 没有足够的道具。 / Not enough items.
+				// 奥德不足：提示物品数量不足并关闭对话，绝不删除基座 / Insufficient aether: notify and keep platform
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401544)); // 物品数量不足。 / Not enough items.
 				PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 			}
 			return true;

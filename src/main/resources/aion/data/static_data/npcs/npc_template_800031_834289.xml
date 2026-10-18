@@ -88768,7 +88768,7 @@
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Barricade_03a" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="general" hpgauge_level="22" type="GENERAL" name_id="350000" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833985" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="IDLuna_Barricade_03a" rank="DISCIPLINED" state="1" height="2.0">
+<npc_template name_desc="IDLuna_Barricade_03a" npc_type="ATTACKABLE" race="BROWNIE" level="75" rating="NORMAL" ai="general" hpgauge_level="22" type="GENERAL" name_id="350000" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833985" sensory_range="0" tribe="IDLUNA_DEF_NPC5" name="IDLuna_Barricade_03a" rank="DISCIPLINED" state="1" height="2.0">
     <stats hp_regen="0" maxHp="99999" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="577" main_hand_crit_rate="18" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="0" block="0" main_hand_accuracy="3276" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>

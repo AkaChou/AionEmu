@@ -425,16 +425,12 @@ public class PlayerController extends CreatureController<Player> {
 	 * Processing when the player enters the world.
 	 */
 	public void onEnterWorld() {
-		InstanceService.onEnterInstance(getOwner());
-		TeleportService2.playerTransformation(getOwner());
-		TeleportService2.instanceTransformation(getOwner());
-		TeleportService2.archdaevaTransformation(getOwner());
-		// 原版表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
-		// DataDriven LevelUpLogIn acquire walk (best-effort; no-op until the switch batch).
-		QuestEngine.getInstance().onLoggedIn(getOwner());
-		if (getOwner().getPosition().getWorldMapInstance().getParent().isExceptBuff()) {
-			getOwner().getEffectController().removeAllEffects();
-		}
+		// 先剥离上一世界遗留的 NPC 增益与欧比斯变身，再执行副本入场钩子。
+		// 副本入场变身技能（污染暗道/秘密军工厂 21345..21348、克罗梅德试炼 19220/19270）的
+		// dispel_category 均为 NPC_BUFF：若在入场钩子之后再剥离，刚施加的变身会被立刻清掉，玩家进本不变身。
+		// Strip the previous world's NPC buffs and abyss transform BEFORE the instance entry hook: the instance entry
+		// transforms (Underpath/Factory 21345..21348, Kromedes Trial 19220/19270) all use dispel_category=NPC_BUFF,
+		// so stripping after the hook would clear the transform the moment it is applied.
 		for (Effect ef : getOwner().getEffectController().getAbnormalEffects()) {
 			if (ef.isDeityAvatar()) {
 				// 若世界类型非欧比斯/巴劳雷亚/帕内斯特拉则移除欧比斯变身。 / Remove abyss transformation if worldtype != "Abyss" && worldtype != "Balaurea" && worldtype != "Panesterra"
@@ -446,6 +442,16 @@ public class PlayerController extends CreatureController<Player> {
 				ef.endEffect();
 				getOwner().getEffectController().clearEffect(ef);
 			}
+		}
+		InstanceService.onEnterInstance(getOwner());
+		TeleportService2.playerTransformation(getOwner());
+		TeleportService2.instanceTransformation(getOwner());
+		TeleportService2.archdaevaTransformation(getOwner());
+		// 原版表驱动车道：DD LevelUpLogIn 接取遍历（best-effort，路由集为空 ⇒ 恒 false）。
+		// DataDriven LevelUpLogIn acquire walk (best-effort; no-op until the switch batch).
+		QuestEngine.getInstance().onLoggedIn(getOwner());
+		if (getOwner().getPosition().getWorldMapInstance().getParent().isExceptBuff()) {
+			getOwner().getEffectController().removeAllEffects();
 		}
 	}
 

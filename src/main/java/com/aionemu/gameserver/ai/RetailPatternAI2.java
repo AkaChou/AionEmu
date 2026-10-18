@@ -245,6 +245,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	// 整型变量（懒物化）。 / Integer variables, materialised lazily.
 	private volatile Map<String, Integer> intVars = EMPTY_INT_VARS;
 	private volatile Set<Integer> usersInSensoryArea = EMPTY_SENSORY_USERS;
+	// 已进入真端视野（sensory_range/angle）的玩家；离开视野后移除，使 on_see_user 可再次触发。
+	// Players currently inside retail sight (sensory_range/angle); removed on leaving so on_see_user can fire again.
+	private volatile Set<Integer> usersInSight = EMPTY_SENSORY_USERS;
 	private volatile Map<Player, ItemUseObserver> gaugeObservers = EMPTY_GAUGE_OBSERVERS;
 	private volatile Map<Integer, PendingCutsceneTeleport> pendingCutsceneTeleports = EMPTY_PENDING_TELEPORTS;
 
@@ -301,6 +304,24 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				usersInSensoryArea = ConcurrentHashMap.newKeySet();
 			}
 			return usersInSensoryArea;
+		}
+	}
+
+	/**
+	 * 物化视野内玩家集合（范式同 {@link #writableActionTasks()}）。
+	 * Materialises the in-sight player set like {@link #writableActionTasks()}.
+	 * @return 可写集合 / writable set
+	 */
+	private Set<Integer> writableUsersInSight() {
+		Set<Integer> current = usersInSight;
+		if (current != EMPTY_SENSORY_USERS) {
+			return current;
+		}
+		synchronized (this) {
+			if (usersInSight == EMPTY_SENSORY_USERS) {
+				usersInSight = ConcurrentHashMap.newKeySet();
+			}
+			return usersInSight;
 		}
 	}
 
@@ -929,7 +950,9 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	protected void handleCreatureSee(Creature creature) {
 		super.handleCreatureSee(creature);
 		if (creature instanceof Player) {
-			runEvent("on_see_user", null, creature);
+			if (enterRetailSight(creature, true)) {
+				runEvent("on_see_user", null, creature);
+			}
 		} else if (creature instanceof Npc) {
 			runEvent("on_see_npc", null, creature);
 		}
@@ -939,10 +962,48 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	protected void handleCreatureMoved(Creature creature) {
 		super.handleCreatureMoved(creature);
 		if (creature instanceof Player) {
+			// 玩家跨入感知范围的那一刻补发 on_see_user：已知列表进入事件发生在 95m，远早于真实视野。
+			// Fire on_see_user the moment a player crosses into the sensory range: the known-list entry happens at 95m.
+			if (enterRetailSight(creature, false)) {
+				runEvent("on_see_user", null, creature);
+			}
 			runEvent("on_see_user_move", null, creature);
 		} else if (creature instanceof Npc) {
 			runEvent("on_see_npc_move", null, creature);
 		}
+	}
+
+	@Override
+	protected void handleCreatureNotSee(Creature creature) {
+		if (creature instanceof Player) {
+			usersInSight.remove(creature.getObjectId());
+		}
+		super.handleCreatureNotSee(creature);
+	}
+
+	/**
+	 * 玩家是否刚进入真端视野（sensory_range/sensory_angle）：进入时登记并返回 {@code true}，离开视野时清除登记。
+	 * 真端 {@code on_see_user} 由感知范围驱动，而非 95m 的已知列表；{@code sensory_range<=0} 的隐形触发器
+	 * 保持旧行为（仅在进入已知列表时触发一次），避免影响非感知驱动的触发 NPC。
+	 * Whether the player just entered retail sight (sensory_range/sensory_angle): records and returns {@code true}
+	 * on entry, clears the record when leaving. Retail {@code on_see_user} is driven by the sensory range, not the
+	 * 95m known list; invisible triggers with {@code sensory_range<=0} keep the legacy behaviour (fired once on
+	 * known-list entry) so non-sensory trigger NPCs are unaffected.
+	 * @param creature 进入或移动的玩家 / entering or moving player
+	 * @param seenEvent 是否来自已知列表进入事件 / whether this call comes from the known-list entry event
+	 * @return 本刻刚进入视野时为 {@code true} / {@code true} when the player just entered sight
+	 */
+	boolean enterRetailSight(Creature creature, boolean seenEvent) {
+		var definition = DataManager.RETAIL_AI_DATA == null ? null : DataManager.RETAIL_AI_DATA.getNpc(getNpcId());
+		float range = definition == null ? 0 : definition.sensoryRange();
+		if (range <= 0) {
+			return seenEvent;
+		}
+		if (!inRetailSight(getOwner(), creature, range, definition.sensoryAngle())) {
+			usersInSight.remove(creature.getObjectId());
+			return false;
+		}
+		return writableUsersInSight().add(creature.getObjectId());
 	}
 
 	@Override

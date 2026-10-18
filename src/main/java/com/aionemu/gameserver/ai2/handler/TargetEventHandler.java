@@ -161,9 +161,29 @@ public class TargetEventHandler {
 				}
 				break;
 			case RETURN_TO_SP:
+				if (keepEngagedOnPathFailure(owner, target)) {
+					owner.getMoveController().clearPathFailureContext();
+					break;
+				}
 				returnToSpawn(npcAI);
 				break;
 		}
+	}
+
+	/**
+	 * 目标已在攻击距离内时，寻路失败不应触发归位。
+	 * 怪物被路障/可放置物挡住去路、却又正好站在攻击距离内时，归位会让它掉头走回出生点，
+	 * 客户端表现成「打一会儿就往回走」（污染暗道路障处的怪物即为此例）。
+	 * A path failure must not trigger a return-home while the target is already within attack range: when a
+	 * monster is blocked by a barricade/placeable yet stands in range, returning home makes it turn around and
+	 * walk back to its spawn point ("attacks for a while, then walks home").
+	 * @param owner  NPC / npc
+	 * @param target 目标 / target
+	 * @return 应保持交战（不归位）时为 {@code true} / {@code true} to stay engaged instead of returning home
+	 */
+	static boolean keepEngagedOnPathFailure(Npc owner, Creature target) {
+		return target != null && target.getLifeStats() != null && !target.getLifeStats().isAlreadyDead()
+			&& MathUtil.isInAttackRange(owner, target, owner.getController().getAttackDistanceToTarget());
 	}
 
 	private static void returnToSpawn(NpcAI2 npcAI) {

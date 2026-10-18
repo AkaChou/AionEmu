@@ -7,16 +7,22 @@ import com.aionemu.gameserver.dataholders.RetailAiData.Operation;
 import com.aionemu.gameserver.dataholders.RetailAiData.Pattern;
 import com.aionemu.gameserver.dataholders.RetailAiData.Rule;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import com.aionemu.gameserver.ai2.AbstractAI;
+import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -101,6 +107,153 @@ class RetailLunaPatternSupportTest {
 			}
 		}
 		assertTrue(undeclared.isEmpty(), () -> "未声明的条件变量 / Undeclared condition variables: " + undeclared);
+	}
+
+	@Test
+	void lunaBarricadesStayAttackable() throws Exception {
+		// 路障链 833863→833864→833985 必须可被攻击：真端 npcs.xml 三者均为 unattackable=0。
+		// The barricade chain 833863→833864→833985 must stay attackable: retail npcs.xml marks all three unattackable=0.
+		String templates = java.nio.file.Files.readString(java.nio.file.Path.of(
+			"src/main/resources/aion/data/static_data/npcs/npc_template_800031_834289.xml"));
+		for (int npcId : List.of(833863, 833864, 833985)) {
+			var matcher = java.util.regex.Pattern.compile(
+				"<npc_template [^>]*npc_id=\"" + npcId + "\"[^>]*>").matcher(templates);
+			assertTrue(matcher.find(), () -> "缺少 NPC 模板 / missing NPC template: " + npcId);
+			assertTrue(matcher.group().contains("npc_type=\"ATTACKABLE\""),
+				() -> "路障必须可被攻击 / barricade must be attackable: " + npcId);
+		}
+	}
+
+	@Test
+	void onSeeUserIsGatedByRetailSensoryRange() throws Exception {
+		// 治疗之泉（834491，sensory_range=3）的 on_see_user 必须由感知范围驱动：若按 95m 已知列表触发，
+		// 它会在玩家赶到前治疗并自毁，玩家就再也见不到治疗点。
+		// The healing spring (834491, sensory_range=3) must fire on_see_user from its sensory range: firing on the
+		// 95m known-list entry makes it heal and despawn before the player arrives, so the healing spot vanishes.
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		SightNpc spring = new ObjenesisStd().newInstance(SightNpc.class);
+		spring.npcId = 834491;
+		setField(AbstractAI.class, ai, "owner", spring);
+		SightPlayer player = new ObjenesisStd().newInstance(SightPlayer.class);
+
+		player.x = 50f;
+		assertFalse(ai.enterRetailSight(player, true), "95m 已知列表进入不得触发 / known-list entry must not fire");
+		player.x = 1f;
+		assertTrue(ai.enterRetailSight(player, false), "跨入 3m 视野时应触发 / crossing into the 3m sight must fire");
+		assertFalse(ai.enterRetailSight(player, false), "仍在视野内不得重复触发 / must not repeat while inside");
+		player.x = 50f;
+		assertFalse(ai.enterRetailSight(player, false), "离开视野不触发 / leaving sight must not fire");
+		player.x = 1f;
+		assertTrue(ai.enterRetailSight(player, false), "重新进入视野再次触发 / re-entering must fire again");
+
+		// 无感知范围的隐形触发器沿用旧语义（仅进入已知列表时触发一次）。
+		// Invisible triggers without a sensory range keep the legacy semantics (fired once on known-list entry).
+		SightNpc trigger = new ObjenesisStd().newInstance(SightNpc.class);
+		trigger.npcId = 833863;
+		setField(AbstractAI.class, ai, "owner", trigger);
+		assertTrue(ai.enterRetailSight(player, true), "range<=0 保持旧行为 / range<=0 keeps the legacy behaviour");
+		assertFalse(ai.enterRetailSight(player, false), "range<=0 移动事件不触发 / range<=0 does not fire on move");
+	}
+
+	private static void setField(Class<?> owner, Object target, String name, Object value) throws ReflectiveOperationException {
+		Field field = owner.getDeclaredField(name);
+		field.setAccessible(true);
+		field.set(target, value);
+	}
+
+	/**
+	 * 仅提供感知判定所需坐标/朝向的 NPC 测试替身。
+	 * NPC test double exposing only the coordinates/heading needed by the sight check.
+	 */
+	private static final class SightNpc extends Npc {
+		private int npcId;
+		private float x, y, z;
+
+		private SightNpc() {
+			super(0, null, null, null);
+		}
+
+		@Override
+		public int getNpcId() {
+			return npcId;
+		}
+
+		@Override
+		public Integer getObjectId() {
+			return 1;
+		}
+
+		@Override
+		public int getWorldId() {
+			return 0;
+		}
+
+		@Override
+		public int getInstanceId() {
+			return 0;
+		}
+
+		@Override
+		public byte getHeading() {
+			return 0;
+		}
+
+		@Override
+		public float getX() {
+			return x;
+		}
+
+		@Override
+		public float getY() {
+			return y;
+		}
+
+		@Override
+		public float getZ() {
+			return z;
+		}
+	}
+
+	/**
+	 * 仅提供感知判定所需坐标的玩家测试替身。
+	 * Player test double exposing only the coordinates needed by the sight check.
+	 */
+	private static final class SightPlayer extends Player {
+		private float x, y, z;
+
+		private SightPlayer() {
+			super(null, null, null, null);
+		}
+
+		@Override
+		public Integer getObjectId() {
+			return 2;
+		}
+
+		@Override
+		public int getWorldId() {
+			return 0;
+		}
+
+		@Override
+		public int getInstanceId() {
+			return 0;
+		}
+
+		@Override
+		public float getX() {
+			return x;
+		}
+
+		@Override
+		public float getY() {
+			return y;
+		}
+
+		@Override
+		public float getZ() {
+			return z;
+		}
 	}
 
 	@Test
