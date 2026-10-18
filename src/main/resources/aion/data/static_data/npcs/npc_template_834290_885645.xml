@@ -11378,6 +11378,7 @@
 <npc_template name_desc="World_event_halloween_Bombstop_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="836103" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_Bombstop_01" rank="SEASONED" height="0.64">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="1.4" upper="0.64" front="1.4"/>
+    <talk_info delay="1" distance="3"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_Bombstop_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="chest" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="836104" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_Bombstop_02" rank="SEASONED" height="0.64">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="0"/>
@@ -11387,6 +11388,7 @@
 <npc_template name_desc="World_event_halloween_Bombstop_03" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="836105" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_Bombstop_03" rank="SEASONED" height="0.64">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="1.4" upper="0.64" front="1.4"/>
+    <talk_info delay="1" distance="3"/>
   </npc_template>
 <npc_template name_desc="1011_L_Sub_Matter_10" npc_type="PEACE" race="ELYOS" level="75" title_id="358409" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="469908" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="836110" sensory_range="0" tribe="GENERAL" name="1011_L_Sub_Matter_10" rank="SEASONED" height="2.0">
     <stats hp_regen="14193" maxHp="28386" pdef="1329" walk_speed="0" mresist="1503" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="965" main_hand_crit_rate="17" mdef="1028" mboost="0" parry="0" crit_spell="12" maxXp="0" block="0" main_hand_accuracy="2379" power="23" evasion="1634" run_speed_fight="0"/>
