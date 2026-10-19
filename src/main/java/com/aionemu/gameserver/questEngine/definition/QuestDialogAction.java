@@ -261,6 +261,31 @@ public enum QuestDialogAction {
 	public static final int AUTO_REWARD_SLOT_COUNT = 15;
 
 	/**
+	 * 原版对话平面的「继续说话」按钮（{@code HACTION_SELECT<n>}，动作 id = 目标页 id）：小于
+	 * {@link #ASK_QUEST_ACCEPT} 且属于选择对话续页族的动作。
+	 * <p>
+	 * 该动作族在客户端是<b>页内导航</b>：{@code QUEST_Q1174.html} 的 select1 只有一个
+	 * {@code HACTION_SELECT1_1} 按钮，由客户端本地翻到 select1_1（接取入口 1007 在那一页），服务端
+	 * 回发该页本身不产生新页——但原版对话平面收到它后要按主线槽位下发阶段页（见
+	 * {@link QuestDialogPage#mainLineSlot(int)}）。
+	 * <p>
+	 * The retail "keep talking" button ({@code HACTION_SELECT<n>}, whose action id is the target page
+	 * id): a selection continuation page action below {@link #ASK_QUEST_ACCEPT}. The client navigates
+	 * these locally (a quest page's select1 carries one continuation button and nothing else), so an
+	 * echo of the same page is no visible step; the retail dialog plane answers with the main-line
+	 * stage page instead.
+	 * @param actionId 对话动作 ID / dialog action id
+	 * @return 是否为续页动作 / whether it is a selection continuation act
+	 */
+	public static boolean isSelectionContinuationAction(int actionId) {
+		// 页 id 动作：页 4（接取）与主线页 SELECT⟨n⟩（1011=1、1352=2、…）及其子页。
+		// Page-id acts: page 4 (accept) and the main-line pages SELECT<n> (1011=1, 1352=2, ...).
+		return actionId == QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()
+			|| (actionId > 0 && actionId <= QuestDialogPage.SELECT1.id()
+				&& QuestDialogPage.mainLineSlot(actionId) > 0);
+	}
+
+	/**
 	 * 判断是否为客户端奖励窗口的确认动作（SELECTED_QUEST_REWARD1..SELECTED_QUEST_NOREWARD，
 	 * 以及自动确认通道 SELECTED_QUEST_AUTO_REWARD 与 SELECTED_QUEST_AUTO_REWARD1..15）。
 	 * Returns whether the id is a client reward-window confirmation action

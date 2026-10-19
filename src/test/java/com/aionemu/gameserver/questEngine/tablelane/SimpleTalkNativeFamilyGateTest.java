@@ -25,8 +25,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.network.aion.clientpackets.CM_DIALOG_SELECT;
 import com.aionemu.gameserver.questEngine.definition.QuestCatalogDrop;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -205,6 +207,51 @@ class SimpleTalkNativeFamilyGateTest {
 		Player ineligible = createTestPlayer();
 		assertFalse(handler.onDialog(new QuestEnv(createMockNpc(handler.acquireNpc(CHAINED_QUEST)),
 			ineligible, CHAINED_QUEST, 31)), "等级轴不可达/前置未完成不得进接取面");
+	}
+
+	/**
+	 * 多任务 NPC 的开门相位（2026-10-19 实机 1174/1173）：<b>进行中</b>的行在右键打开（-1）与任务行（31）
+	 * 上只开当前阶段页、从不结算，且不遮蔽同 NPC 可接取行的接取面；接取页动作（页 4/1011）按原版
+	 * 「领取中任务」槽位受理，槽位在接取入口页打开时登记。
+	 * The open phase on a multi-quest npc: a live row only shows its stage page (never settles, never
+	 * hides the npc's acquire phase); accept-page acts are gated by the acquiring slot recorded when
+	 * the entry page opens.
+	 */
+	@Test
+	void liveRowsNeverSettleOrHideTheAcquirePhase() {
+		// 1117：同 NPC 接取/交付（Pranoa 203074），进行中的行就在这个 NPC 上。
+		// 1117: same-npc acquire and hand-in, so its live row lives on this npc.
+		int questId = 1117;
+		Npc npc = createMockNpc(handler.acquireNpc(questId));
+		Player player = NativeTalkFixture.player();
+
+		// 未接取：入口页打开即登记「领取中任务」槽位。 / The entry page records the acquiring slot.
+		assertTrue(handler.onDialog(new QuestEnv(npc, player, questId, 31)));
+		assertEquals(questId, player.getNpcQuestDialogAcquiringQuestId(npc.getObjectId()));
+
+		QuestState state = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
+		player.getQuestStateList().addQuest(questId, state);
+
+		// 进行中：右键打开（-1）只开「当前阶段」页，零状态写、零扣物；报告步未到 ⇒ 阶段页基址（页 4），
+		// 报告步已到 ⇒ 契约声明的报告确认页（1117 无中继 ⇒ 首次打开即报告页）。两者都不得推进任务。
+		// Live: the open only shows the current stage page and never settles — the stage base before the
+		// report step, the declared report page after it (1117 has no relay, so its report step is met).
+		inventory.calls.clear();
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(handler.onDialog(new QuestEnv(npc, player, questId, QuestDialogAction.USE_OBJECT.id())));
+		int reportPage = QuestDialogContract.loadDefault().reportConfirmPage(questId, 0);
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player,
+			reportPage > 0 ? reportPage : QuestDialogPage.stageBasePageForSlot(0), questId);
+		assertEquals(QuestStatus.START, state.getStatus(), "打开不得推进进行中的任务");
+		assertTrue(inventory.calls.isEmpty(), "打开零扣物");
+
+		// 页 4 上的接取按钮由「领取中任务」槽位受理（原版 OnHyperlinkAction）。
+		// The page-4 accept act is admitted through the acquiring slot.
+		assertEquals(questId, CM_DIALOG_SELECT.appraisableQuestId(player, npc,
+			QuestDialogPage.stageBasePageForSlot(0), 0));
+		player.clearNpcQuestDialogAcquiring();
+		assertEquals(0, CM_DIALOG_SELECT.appraisableQuestId(player, npc,
+			QuestDialogPage.stageBasePageForSlot(0), 0), "未登记槽位且包内无任务上下文的页 4 动作不受理");
 	}
 
 	/**

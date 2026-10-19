@@ -594,6 +594,7 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 				if (dialogId == 31 || dialogId == 26) {
 					// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
+					player.setNpcQuestDialogAcquiring(targetObjectId, questId);
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
 						QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
@@ -645,16 +646,13 @@ public final class SimpleHuntHandler implements NativeSystemGrantLane {
 			return false;
 		}
 
-		// 2. 进行中状态：检查中继对话或未完成提示
+		// 2. 进行中状态：不答页。原实现在进度未满时回页 10（无任务上下文的通用列表页，任务页契约
+		// 不声明它），在多任务 NPC 上会把客户端踢出任务对话树（2026-10-19，Roseino 的狩猎行与
+		// Talk 行并存）；未推进的行不认领开门，由路由层继续重放同 NPC 其余行（见 QuestDialogRouter）。
+		// In progress: answer nothing. The old page-10 reply is the context-less list page the task
+		// contract never declares and kicked the client out of the dialog tree on a multi-quest npc;
+		// the unadvanced row keeps the open unclaimed for the router's replay.
 		if (status == QuestStatus.START) {
-			List<Integer> rewNpcs = rewardNpcIdsByQuestId.get(questId);
-			if (rewNpcs != null && rewNpcs.contains(npcId)) {
-				if (dialogId == 31 || dialogId == 26) {
-					// 尚未完成杀怪：常规未完成对话提示 (page 10)
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
-					return true;
-				}
-			}
 			return false;
 		}
 

@@ -89,6 +89,11 @@ public final class NativeTalkFixture {
 		return QuestDialogContract.loadDefault().retailEntryPage(questId);
 	}
 
+	/** 报告确认页（契约分型，无声明 -1）。 / The report-confirm page of the contract, or -1. */
+	public static int reportConfirmPage(int questId) {
+		return QuestDialogContract.loadDefault().reportConfirmPage(questId, 0);
+	}
+
 	/** 页动作 1007(ASK_QUEST_ACCEPT) 的目标页（客户端未声明即 -1）。 / The ask window page for action 1007. */
 	public static int askWindowPage(int questId) {
 		return QuestDialogContract.loadDefault().askWindowPage(questId);
@@ -155,6 +160,14 @@ public final class NativeTalkFixture {
 		setField(Player.class, player, "questStateList", new QuestStateList());
 		setField(Player.class, player, "clientConnection", packetConnection());
 		return player;
+	}
+
+	/**
+	 * 给没有包捕获连接的玩家（如 {@code createTestPlayer()} 造的）挂上 fixture 连接，供发页断言使用。
+	 * Attaches the fixture connection to a player built without one, so packet assertions can read it.
+	 */
+	public static void attachFixtureConnection(Player player) {
+		setField(Player.class, player, "clientConnection", packetConnection());
 	}
 
 	/** 对话窗口页序列（最近一次清空之后）。 / Dialog-window pages sent since the last clear. */

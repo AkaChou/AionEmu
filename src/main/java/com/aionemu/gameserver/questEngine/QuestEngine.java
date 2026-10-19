@@ -1417,6 +1417,83 @@ public class QuestEngine implements GameEngine {
 	}
 
 	/**
+	 * 该行是否仍在指定 NPC 的接取清单里（原版 {@code OnHyperlinkAction} 对页 4/1011 动作的受理轴：
+	 * 该 NPC 服务器给玩家标记了这条可接任务）。判定与附近任务列表同一函数（原版
+	 * {@code User::CheckQuestAcquireCondition} 与清单共用 {@code Quest::CanAcquireQuest}）。
+	 * <p>
+	 * Whether the row is still offered at the npc (the retail intake axis of accept-page acts: the
+	 * npc server flagged the row acquirable for this player). Same verdict as the nearby list.
+	 */
+	public boolean isQuestReceivableAt(Player player, int npcId, int questId) {
+		if (player == null || npcId <= 0 || questId <= 0) {
+			return false;
+		}
+		if (!isQuestRowAtNpc(npcId, questId)) {
+			return false;
+		}
+		return nativeAcquireAllowed(player, questId);
+	}
+
+	/**
+	 * 该行是否由指定 NPC 发放（各 native 族的接取节点表）：原版页 4/1011 的动作只在「该 NPC 的对话树」
+	 * 里出现，别的 NPC 上的同 id 行不受理。
+	 * Whether the row is offered at the npc (each native family's acquire node); accept-page acts only
+	 * exist inside the npc's own dialog tree.
+	 */
+	public boolean isQuestRowAtNpc(int npcId, int questId) {
+		if (npcId <= 0 || questId <= 0) {
+			return false;
+		}
+		return SimpleTalkHandler.instance().acquireNpcs(questId).contains(npcId)
+			|| SimpleHuntHandler.instance().acquireNpcs(questId).contains(npcId)
+			|| SimpleSerialHuntHandler.instance().acquireNpc(questId) != null
+				&& SimpleSerialHuntHandler.instance().acquireNpc(questId) == npcId
+			|| SimpleCollectItemHandler.instance().acquireNpcs(questId).contains(npcId)
+			|| SimpleItemPlayHandler.instance().acquireNpcs(questId).contains(npcId);
+	}
+
+	/**
+	 * 该 NPC 上仍在发放的接取行（各族接取节点 ∪，按附近任务清单同一判定过滤）。
+	 * The rows this npc still offers (every native family's acquire nodes, same verdict as the list).
+	 */
+	public List<Integer> receivableQuestIdsAtNpc(Player player, int npcId) {
+		if (player == null || npcId <= 0) {
+			return List.of();
+		}
+		List<Integer> receivable = new java.util.ArrayList<>();
+		for (int questId : SimpleTalkHandler.instance().acquireQuestIdsForNpc(npcId)) {
+			if (SimpleTalkHandler.instance().routes(questId) && nativeAcquireAllowed(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		for (int questId : SimpleHuntHandler.instance().questsForNpc(npcId)) {
+			if (SimpleHuntHandler.instance().acquireNpcs(questId).contains(npcId)
+					&& nativeAcquireAllowed(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		for (int questId : SimpleSerialHuntHandler.instance().questsForNpc(npcId)) {
+			Integer acquire = SimpleSerialHuntHandler.instance().acquireNpc(questId);
+			if (acquire != null && acquire == npcId && nativeAcquireAllowed(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		for (int questId : SimpleCollectItemHandler.instance().ownedQuestIds()) {
+			if (SimpleCollectItemHandler.instance().acquireNpcs(questId).contains(npcId)
+					&& nativeAcquireAllowed(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		for (int questId : SimpleItemPlayHandler.instance().ownedQuestIds()) {
+			if (SimpleItemPlayHandler.instance().acquireNpcs(questId).contains(npcId)
+					&& nativeAcquireAllowed(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		return receivable;
+	}
+
+	/**
 	 * 原生行是否可放弃：owner 命中即由 {@link #onNativeAbandon(Player, int)} + 共用清理段收尾；
 	 * 「能否放弃」由原版 {@code cannot_giveup} 元数据轴在 {@code QuestService} 侧判定。
 	 * Whether the native lane declares the abandon path for the row; the retail {@code cannot_giveup}

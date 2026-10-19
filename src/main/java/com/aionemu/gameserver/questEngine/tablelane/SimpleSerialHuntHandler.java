@@ -370,6 +370,7 @@ public final class SimpleSerialHuntHandler {
 					// 打开（-1）不认领——归引擎开门规则（进行中重放，否则通用页 10 列表，2026-10-05 同 DD 面修复）。
 					// The accept entry page is the retail letter/stage page (page 4 is 1007-only); the open
 					// action (-1) is left to the engine open rule (page-10 list), same fix as the DD face.
+					player.setNpcQuestDialogAcquiring(targetObjectId, questId);
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId,
 							QuestDialogContract.loadDefault().retailEntryPage(questId), questId));
 					return true;
@@ -446,10 +447,12 @@ public final class SimpleSerialHuntHandler {
 								new SM_DIALOG_WINDOW(targetObjectId, QuestDialogPage.SELECT2.id(), questId));
 						return true;
 					} else if (dialogId == 26 || dialogId == -1) {
-						// 打开类动作维持通用选择页 10（与引擎开门规则同口径）。
-						// Generic open keeps the page-10 selection list.
-						PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
-						return true;
+						// 打开类动作不答页：引擎开门只按相位（可交付 → 可接取 → 进行中）下发唯一页，
+						// 页 10 是无任务上下文的通用列表页（任务页契约不声明它），认领它会把客户端
+						// 踢出任务对话树（2026-10-19 Roseino 1174/1173）。
+						// Opens answer nothing: the engine open sends one phase page; page 10 is the
+						// context-less list page the task contract never declares.
+						return false;
 					} else if (dialogId == QuestDialogAction.SETPRO1.id()) {
 						// 行 0b（原版退役 XML）：简报页「结束对话」SETPRO1(10000) → 清 var5
 						// （briefed 投影 = var0/var1/var5 全 0）+ 状态同步 + 关窗（原版 close-dialog，
@@ -464,14 +467,11 @@ public final class SimpleSerialHuntHandler {
 					}
 				}
 			}
-			Integer rewNpc = rewardNpcByQuestId.get(questId);
-			if (rewNpc != null && rewNpc == npcId) {
-				if (dialogId == 31 || dialogId == 26) {
-					// 尚未完成杀怪：常规未完成对话提示 (page 10)
-					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(targetObjectId, 10));
-					return true;
-				}
-			}
+			// 进度未满（或已到简报前）：页 10 是无任务上下文的通用列表页（任务页契约不声明它），
+			// 在多任务 NPC 上会把客户端踢出任务对话树；未推进的行不认领开门，由路由层继续重放
+			// 同 NPC 其余行。
+			// In progress: page 10 is the context-less list page; the unadvanced row stays unclaimed
+			// so the router keeps replaying the npc's other rows.
 			return false;
 		}
 

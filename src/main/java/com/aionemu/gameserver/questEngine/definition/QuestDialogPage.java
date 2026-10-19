@@ -220,11 +220,82 @@ public enum QuestDialogPage {
 		if (page == null) {
 			return false;
 		}
-		String name = page.name();
+		return isSelectionSubPageName(page.name());
+	}
+
+	/**
+	 * 按页名判定选择对话续页（{@link #isSelectionSubPage(int)} 的命名判据）。
+	 * The naming predicate of a selection sub-page (shared by {@link #isSelectionSubPage(int)}).
+	 */
+	private static boolean isSelectionSubPageName(String name) {
 		// 「SELECT+数字+下划线」才是子页：排除 SELECT_QUEST(10)/SELECT_NONE(4762) 等顶层含下划线名。
 		// Only SELECT⟨digits⟩_⟨…⟩ counts: excludes top-level underscore names such as SELECT_QUEST.
 		int underscore = name.indexOf('_');
 		return name.startsWith("SELECT") && underscore > 0 && Character.isDigit(name.charAt(underscore - 1));
+	}
+
+	/**
+	 * 续页的主线槽位序号：{@code SELECT⟨n⟩} 或 {@code SELECT⟨n⟩_…} → {@code n}；
+	 * {@code SELECT_NONE…} 与主线页以外的名字返回 {@code 0}。
+	 * <p>
+	 * 客户端把续页按钮的动作 id 直接写成目标页 id，「继续说话」按钮因此按<b>第几条主线</b>编码。原版
+	 * 对话平面（{@code FUN_180c474b0}）对页 0/10 的打开与对续页动作都用同一套槽位切换阶段页：
+	 * 槽位 {@code n} 下发 {@code SELECT⟨n⟩ + 2} 的<b>基址</b>（页 0 → 4、1 → 1352、2 → 1693、
+	 * 3 → 2034……；基址是阶段页所在主线的首个子页，没有子页时就是主线页本身）。
+	 * <p>
+	 * The main-line slot of a continuation page: {@code n} for {@code SELECT⟨n⟩} / {@code SELECT⟨n⟩_…},
+	 * zero for {@code SELECT_NONE…} and anything off the client's main line. The retail dialog plane
+	 * switches stage pages in this same slot space for both the page 0/10 open and a continuation act.
+	 */
+	public static int mainLineSlot(int id) {
+		QuestDialogPage page = BY_ID.get(id);
+		if (page == null) {
+			return 0;
+		}
+		String name = page.name();
+		// SELECT⟨n⟩ 的主线号紧跟 SELECT；SELECT_NONE… 等带下划线前缀不是主线页。
+		// The line number follows SELECT directly; underscore-prefixed pages are not main-line pages.
+		if (!name.startsWith("SELECT") || name.length() <= 6 || name.charAt(6) == '_') {
+			return 0;
+		}
+		int end = 6;
+		while (end < name.length() && Character.isDigit(name.charAt(end))) {
+			end++;
+		}
+		if (end == 6 || (end < name.length() && name.charAt(end) != '_')) {
+			return 0;
+		}
+		return Integer.parseInt(name.substring(6, end));
+	}
+
+	/**
+	 * 原版对话平面槽位 {@code slot} 的阶段页基址（{@code FUN_180c474b0} 的页表）：槽位 {@code n}
+	 * 取 {@code SELECT⟨n⟩} 所在主线的首个子页（{@code SELECT⟨n⟩_1}），该主线没有子页时取主线页本身
+	 * （{@code SELECT⟨n⟩}）；槽位未登记返回 {@code -1}。
+	 * <p>
+	 * The stage-page base of a retail dialog-plane slot (the {@code FUN_180c474b0} page table): slot
+	 * {@code n} resolves to the first child of the {@code SELECT⟨n⟩} line ({@code SELECT⟨n⟩_1}), or the
+	 * line page itself when it has no child; -1 when the slot is undeclared.
+	 */
+	public static int stageBasePageForSlot(int slot) {
+		if (slot <= 0) {
+			return -1;
+		}
+		String line = "SELECT" + slot;
+		int linePage = -1;
+		int firstChild = -1;
+		for (QuestDialogPage page : BY_ID.values()) {
+			String name = page.name();
+			if (!isSelectionSubPageName(name) || mainLineSlot(page.id()) != slot) {
+				continue;
+			}
+			if (name.equals(line)) {
+				linePage = page.id();
+			} else if (name.indexOf('_') == line.length() && firstChild < 0) {
+				firstChild = page.id();
+			}
+		}
+		return firstChild > 0 ? firstChild : linePage;
 	}
 
 	/**

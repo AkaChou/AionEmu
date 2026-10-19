@@ -47,7 +47,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  *       + {@code GiveItem}(give_itemK) + {@code RemoveItem}(remove_itemK)，
  *       步页 = SELECT2/SELECT3/SELECT4（1352/1693/2034）；乱序或重复的动作零推进；</li>
  *   <li>报告（原版 {@code cabb10} finalStep + {@code caad20} 完成门）：中继全满且交付门通过时，
- *       交付 NPC 的 1009 → 扣除工作物品 + REWARD + 奖励窗（页 5）；未满/未持有 → 进行中页 10；</li>
+ *       交付 NPC 的 1009 → 扣除工作物品 + REWARD + 奖励窗（页 5）；未满/未持有 → 页 10（无任务上下文）；</li>
+ *   <li>进行中：任务行/打开（31/26/-1）只开当前阶段页（报告已到 = 报告确认页，否则页 4），从不结算；
+ *       交付检查按钮（39/20002）未持满 → 客户端声明的失败页；</li>
  *   <li>领奖：8..23 / 108 / 110+k → 结算并完成（页 1008）。</li>
  * </ul>
  * <p>
@@ -181,13 +183,6 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 
 	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
 			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory,
-			Set<Integer> xmlOwnedIds, NativeMoviePort moviePort) {
-		this(tableLoader, nameResolver, itemIndex, questXml, inventory, xmlOwnedIds, moviePort,
-				NativeReportRewardFlow.instance());
-	}
-
-	SimpleTalkHandler(NativeQuestTableLoader tableLoader, NativeNpcNameResolver nameResolver,
-			RetailItemNameIndex itemIndex, NativeQuestXmlTable questXml, NativeInventoryPort inventory,
 			Set<Integer> xmlOwnedIds, NativeMoviePort moviePort, NativeReportRewardFlow rewardFlow) {
 		this.tableLoader = tableLoader;
 		this.nameResolver = nameResolver;
@@ -243,7 +238,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					continue;
 				}
 				for (int npcId : relayMembers) {
-					relays.computeIfAbsent(npcId, key -> new ArrayList<>())
+					relays.computeIfAbsent(npcId, _ -> new ArrayList<>())
 							.add(new RelayStep(qid, index + 1, npcId));
 				}
 			}
@@ -296,7 +291,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				RetailQuestMetadataCompiler.Outcome dropMeta = metadataOf(qid);
 				if (dropMeta != null && dropMeta.clean()) {
 					for (var drop : dropMeta.metadata().drops()) {
-						dropsByNpc.computeIfAbsent(drop.npcId(), key -> new ArrayList<>())
+						dropsByNpc.computeIfAbsent(drop.npcId(), _ -> new ArrayList<>())
 							.add(QuestCatalogDrop.catalog(qid, dropMeta.metadata(), drop));
 					}
 				}
@@ -328,7 +323,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		// Reverse index: questId → npcIds inverted to npcId → questIds, stable by first occurrence.
 		Map<Integer, List<Integer>> acquireByNpc = new LinkedHashMap<>();
 		acquires.forEach((acquireQuestId, npcIds) -> npcIds.forEach(
-			npcId -> acquireByNpc.computeIfAbsent(npcId, key -> new ArrayList<>()).add(acquireQuestId)));
+			npcId -> acquireByNpc.computeIfAbsent(npcId, _ -> new ArrayList<>()).add(acquireQuestId)));
 		this.acquireQuestIdsByNpcId = Collections.unmodifiableMap(acquireByNpc);
 		this.rewardNpcIdsByQuestId = Collections.unmodifiableMap(rewards);
 		this.relaysByNpcId = Collections.unmodifiableMap(relays);
@@ -788,6 +783,43 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 	}
 
 	/**
+	 * 该 NPC 上原版<b>可接取</b>（{@code CanAcquireQuest == 2}，与附近任务清单同一判定函数）的
+	 * SimpleTalk 行：未接取 / 可重复行（COMPLETE 且重复窗已开）/ 本族路由行。
+	 * <p>
+	 * 客户端任务列表（页 10）只列<b>尚未接取且资格通过</b>的任务行——接取 1174 之后列表里不再有
+	 * 1174 的行，同一 NPC 上的 1173 仍在列表里。对话平面按这个集合决定开门是否进入「领任务」这一层：
+	 * 「本任务接取页已在客户端可见时，打开 → 该任务接取页」（原版 {@code User::OnHyperlinkAction}
+	 * 在页 4/1011 上先核对 questId 是否等于领取中的任务或被 NPC 服务器标记为可接取的任务），
+	 * 其余情况「打开 → 任务列表」（{@code FUN_180c474b0} 页 0/10）。
+	 * <p>
+	 * The rows this npc can still hand out ({@code CanAcquireQuest == 2}, the same verdict the nearby
+	 * list uses): unrouted or repeatable rows belonging to this family. The client task list shows
+	 * exactly these, so the dialog plane opens a quest's acquire page only while its row is still
+	 * offered and falls back to the list otherwise.
+	 */
+	public List<Integer> receivableQuestIdsForNpc(Player player, int npcId) {
+		List<Integer> receivable = new ArrayList<>();
+		if (player == null || npcId <= 0) {
+			return receivable;
+		}
+		for (int questId : acquireQuestIdsForNpc(npcId)) {
+			if (routes(questId) && isReceivable(player, questId)) {
+				receivable.add(questId);
+			}
+		}
+		return receivable;
+	}
+
+	/**
+	 * 接取面判定：与 {@code NativeQuestStartPort#zoneVerdict} 同源（无进行中记录 + 资格轴 + 重复窗）。
+	 * The accept-face verdict, shared with the nearby-list verdict.
+	 */
+	private boolean isReceivable(Player player, int questId) {
+		return NativeQuestStartPort.instance().zoneVerdict(player, questId)
+			== NativeQuestStartPort.ZoneVerdict.ACQUIRABLE;
+	}
+
+	/**
 	 * 处理 NPC 对话（接取 / 中继步进 / 报告 / 领奖）。
 	 * Handles a dialog event (accept, relay step, report, reward).
 	 *
@@ -856,7 +888,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 			// Entry actions: the quest-row open (31/26) and the context-less object/npc open (-1,
 			// USE_OBJECT). The retail object accept self-loop enters the same entry page, and the page
 			// must carry the quest id (live 2026-10-07, quest 18645 / object 730777).
-			if (dialogId == 31 || dialogId == 26 || dialogId == QuestDialogAction.USE_OBJECT.id()) {
+			if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
 				// 原版清单与接取面同用 CanAcquireQuest（P7-REPORT §「同一判定函数」）：资格不满足
 				// （等级/前置/种族/职业/限制位）不进接取面，避免「能点进接取页、点接受却被静默拒」。
 				// The retail list and acquire face share CanAcquireQuest: an ineligible player never
@@ -864,8 +896,14 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 				if (!NativeQuestStartPort.instance().evaluateNpcAcquire(player, questId).started()) {
 					return false;
 				}
-				// 接取入口页 = 原版信页/阶段页（页 4 只能由 1007 打开，见 QuestDialogContract#retailEntryPage）。
-				// The accept entry page is the retail letter/stage page (page 4 is 1007-only).
+				// 接取入口页 = 原版信页（QuestDialogContract#retailEntryPage），页 4 只能由该行自己的
+				// 1007 接取窗打开。
+				// The accept entry page is the retail letter page (page 4 is 1007-only).
+				// 每个进接取面的行登记「领取中任务」：页 4/1011 上的接取按钮随包不带任务上下文，
+				// 原版靠该槽位把它路由回本行（依次点开多行时以最后一次打开为准）。
+				// Every row that enters the acquire face records the acquiring slot: the accept button
+				// on page 4/1011 carries no quest context and is routed through it (last open wins).
+				player.setNpcQuestDialogAcquiring(targetObjectId, questId);
 				PacketSendUtility.sendPacket(player,
 						new SM_DIALOG_WINDOW(targetObjectId, dialogContract.retailEntryPage(questId), questId));
 				return true;
@@ -962,8 +1000,11 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 						DialogService.closeDialog(npc, player);
 						return true;
 					}
-					// 未推进（重复/乱序重放）：原版无匹配转换 ⇒ close-dialog 兜底（本服 loop breaker 同语义）。
-					// No matching retail transition on a replayed advance: close the dialog.
+					// 重复/乱序重放：关窗即服务完毕（原版无匹配转换只关窗）。此处必须认领：同 NPC 的
+					// 其余行由路由在<b>打开</b>相位重放，任务行只对玩家点中的那一行负责
+					// （2026-10-19 1174/1173 的修复点在开门编排，不在行级重放）。
+					// A replayed advance only closes the window (the retail "no transition" shape) and is
+					// still served; the open phase, not the row act, replays the npc's other rows.
 					DialogService.closeDialog(npc, player);
 					return true;
 				}
@@ -998,58 +1039,13 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					return true;
 				}
 			}
-			// 3. 报告（原版 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
-			// 两步语义（裁定 a，2026-10-03；检查按钮族 2026-10-04/10-06）：任务行（31）只发客户端声明的报告
-			// 确认页（NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002，契约与退役
-			// XML 交叉印证）；报告确认才推进 REWARD + 奖励窗——直翻型 = 1009（10002 型由客户端自动回发），
-			// 检查型 = 报告页的交付检查按钮（原版 cabb10 `0x4e22`/39 同族），未持满时下发客户端声明的
-			// 失败页（select6=2716，如 1105「您别跟我开玩笑」）。检查按钮族只在 39 上匹配会让
-			// `HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE`(20002) 页的按钮静默落空（2026-10-06 实机
-			// 14110：玩家持 5/5 `quest_14110a` 点「拿出革命家的象征」→ 关窗零推进；该族 Talk 604 行）。
-			// 开门动作（26/-1）不推进、不跳步；声明了报告页时随 31 同发，未声明降级为一步直达。
-			// Opens (26/-1) never advance; they show the declared report page like the row (31),
-			// or fall through to the one-step shape when the page is undeclared.
-			// Two-step report (adjudication a; the check-button family): the row selection (31) only shows
-			// the contract-declared report-confirm page; the confirm action — 1009 (direct) or the report
-			// page's turn-in check button (39 / 20002, retail cabb10 `0x4e22` family) — advances to REWARD
-			// plus the reward window; a failed check shows the client-declared fail page (select6).
-			// Matching only 39 silently drops every 20002 button (live 14110, 2026-10-06).
-			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
-			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
-				// 报告页只随「报告步已到」下发——**物品门不计入页条件**（缺陷 T，2026-10-05 实机 1126：
-				// 未集齐点任务行被回页 10＝「没反应」；退役 XML 1126/1137/80482：started 态 TALK 31 →
-				// SELECT5/报告页 无 conditions，就绪分叉在确认动作上：检查按钮未持满 → 声明失败页）。
-				// The confirm page rides the report step alone (defect T): the item gate forks on the
-				// confirm action (the check button → the declared fail page), never on the page send itself.
-				boolean reportStepReached = vars >= relayCount(questId);
-				boolean reportReady = reportStepReached && holdsGateItems(questId, player);
-				if ((dialogId == 31 || dialogId == 26 || dialogId == -1) && reportStepReached) {
-					// 开门（26/-1）与任务行（31）同发客户端声明的报告页（原版对话平面「打开 → 阶段页」）：
-					// 物件型交付 NPC（如 1141 的 LF1a_Barrel 700122）无 NPC 问候 html，无上下文页 10 必
-					// load fail（2026-10-17 实机 1141 右键酒桶）。
-					// Opens (26/-1) ride the declared report page with the row (31), the retail
-					// "open → stage page" plane: an object reward NPC has no hello html, so the
-					// context-less page-10 fallback load-fails it (live 1141 on the barrel, 2026-10-17).
-					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：1118 的 select2 是
-					// Kustanon 中继树（按钮翻页），报告页是 select5（按钮「拿出药膏」=SELECT_QUEST_REWARD）。
-					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
-					int reportPage = dialogContract.reportConfirmPage(questId, relayCount(questId));
-					if (reportPage > 0) {
-						PacketSendUtility.sendPacket(player,
-								new SM_DIALOG_WINDOW(targetObjectId, reportPage, questId));
-						return true;
-					}
-				}
-				if (QuestDialogAction.isItemCheckAction(dialogId) && !reportReady) {
-					int failPage = dialogContract.checkFailPage(questId);
-					if (failPage > 0) {
-						PacketSendUtility.sendPacket(player,
-								new SM_DIALOG_WINDOW(targetObjectId, failPage, questId));
-						return true;
-					}
-				}
-				if (reportReady && (dialogId == 1009 || dialogId == 31
-						|| QuestDialogAction.isItemCheckAction(dialogId))) {
+			// 报告确认动作（SELECT_QUEST_REWARD 1009 / 检查按钮 39/20002）：交付门通过 → 扣门物 + REWARD + 奖励窗；
+			// 未持满 → 检查按钮走客户端声明失败页（1009 保持原行为静默）。
+			// A report-confirm act settles when the gate holds; a short gate only forks the check buttons.
+			if ((dialogId == QuestDialogAction.SELECT_QUEST_REWARD.id()
+					|| QuestDialogAction.isItemCheckAction(dialogId))
+					&& rewardNpcIdsByQuestId.getOrDefault(questId, List.of()).contains(npcId)) {
+				if (vars >= relayCount(questId) && holdsGateItems(questId, player)) {
 					removeGateItems(questId, player);
 					qs.setStatus(QuestStatus.REWARD);
 					qs.setPersistentState(PersistentState.UPDATE_REQUIRED);
@@ -1060,15 +1056,76 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 					NativeQuestStartPort.refreshVisibility(player);
 					return true;
 				}
-				if (dialogId == 1009 || dialogId == 31 || dialogId == 26 || dialogId == -1) {
-					PacketSendUtility.sendPacket(player,
-							new SM_DIALOG_WINDOW(targetObjectId, PAGE_IN_PROGRESS));
-					return true;
+				if (QuestDialogAction.isItemCheckAction(dialogId)) {
+					int failPage = dialogContract.checkFailPage(questId);
+					if (failPage > 0) {
+						PacketSendUtility.sendPacket(player,
+								new SM_DIALOG_WINDOW(targetObjectId, failPage, questId));
+						return true;
+					}
+					return false;
+				}
+				// 直翻型报告确认（1009）未就绪（中继未满 / 门未持）：原行为回无任务上下文的进行中页。
+				// A not-ready direct report confirm keeps the old context-less in-progress page.
+				PacketSendUtility.sendPacket(player,
+						new SM_DIALOG_WINDOW(targetObjectId, PAGE_IN_PROGRESS));
+				return true;
+			}
+			// 3. 报告（原版 cabb10 finalStep + caad20 完成门）：中继全满且交付门通过才开奖励窗。
+			// 两步语义（裁定 a，2026-10-03；检查按钮族 2026-10-04/10-06）：任务行（31）只发客户端声明的报告
+			// 确认页（NPC_REPORT 分型 SELECT2=1352/SELECT5=2375/DEFAULT_SUCCESS=10002，契约与退役
+			// XML 交叉印证）；报告确认才推进 REWARD + 奖励窗——直翻型 = 1009（10002 型由客户端自动回发），
+			// 检查型 = 报告页的交付检查按钮（原版 cabb10 `0x4e22`/39 同族），未持满时下发客户端声明的
+			// 失败页（select6=2716，如 1105「您别跟我开玩笑」）。检查按钮族只在 39 上匹配会让
+			// `HACTION_CHECK_USER_HAS_QUEST_ITEM_SIMPLE`(20002) 页的按钮静默落空（2026-10-06 实机
+			// 14110：玩家持 5/5 `quest_14110a` 点「拿出革命家的象征」→ 关窗零推进；该族 Talk 604 行）。
+			// 任务行（31）与开门（26/-1）只开页、**不推进、不结算**；结算只走报告确认动作
+			// （1009 / 交付检查按钮 39/20002），且必须持满交付门。
+			// Two-step report (adjudication a; the check-button family): the row selection (31) only shows
+			// the contract-declared report-confirm page; the confirm action — 1009 (direct) or the report
+			// page's turn-in check button (39 / 20002, retail cabb10 `0x4e22` family) — advances to REWARD
+			// plus the reward window; a failed check shows the client-declared fail page (select6).
+			// Matching only 39 silently drops every 20002 button (live 14110, 2026-10-06). The row and
+			// the open never settle; only a report-confirm act does.
+			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
+			if (rewardNpcs != null && rewardNpcs.contains(npcId)) {
+				// 报告页只随「报告步已到」下发——**物品门不计入页条件**（缺陷 T，2026-10-05 实机 1126：
+				// 未集齐点任务行被回页 10＝「没反应」；退役 XML 1126/1137/80482：started 态 TALK 31 →
+				// SELECT5/报告页 无 conditions，就绪分叉在确认动作上：检查按钮未持满 → 声明失败页）。
+				// The confirm page rides the report step alone (defect T): the item gate forks on the
+				// confirm action (the check button → the declared fail page), never on the page send itself.
+				boolean reportStepReached = vars >= relayCount(questId);
+				if (dialogId == 31 || dialogId == 26 || dialogId == -1) {
+					// 任务行（31/26）与右键打开（-1）只开「该行当前阶段」的页，**不推进、不结算**
+					// （2026-10-19 实机 1174：旧实现从这些动作结算，收集途中被推到 REWARD，页 4 与它
+					// 所属的任务行一起从客户端任务列表消失，同 NPC 的 1173 无法再接）：
+					// 报告步已到且已声明 → 声明的报告确认页（1105/1117 等任务行与打开共用）；
+					// 否则任务行 → 客户端声明的入口页（原版 cabb10 页 0/10 事件只切阶段页，任务行由
+					// 客户端本地翻到 selected 页后发 1011），右键打开 → 阶段页基址（页 4「正在领取」）。
+					// The row (31/26) and the right-click open (-1) only show the row's current stage page
+					// and never advance or settle (live 1174, 2026-10-19: the old shape settled here and the
+					// client dropped page 4 with its row, so the npc's 1173 could no longer be taken):
+					// once the report step is reached and declared, the report page; otherwise the row
+					// reopens the client entry page and the open falls back to the stage base (page 4).
+					// 报告页分型跳过被中继步占用的 SELECT2（缺陷 S，2026-10-05）：1118 的 select2 是
+					// Kustanon 中继树（按钮翻页），报告页是 select5（按钮「拿出药膏」=SELECT_QUEST_REWARD）。
+					// The report-page typing skips SELECT2 when relay steps consume it (defect S).
+					int pageToSend = reportStepReached
+						? dialogContract.reportConfirmPage(questId, relayCount(questId)) : -1;
+					if (pageToSend <= 0) {
+						pageToSend = dialogId == QuestDialogAction.USE_OBJECT.id()
+							? dialogContract.stagePage(questId, QuestDialogPage.stageBasePageForSlot(0))
+							: dialogContract.retailEntryPage(questId);
+					}
+					if (pageToSend > 0) {
+						PacketSendUtility.sendPacket(player,
+								new SM_DIALOG_WINDOW(targetObjectId, pageToSend, questId));
+						return true;
+					}
 				}
 			}
 			return false;
 		}
-
 		// 4. 领奖：交付 NPC 的奖励窗与结算档位。
 		if (status == QuestStatus.REWARD) {
 			List<Integer> rewardNpcs = rewardNpcIdsByQuestId.get(questId);
@@ -1103,10 +1160,7 @@ public final class SimpleTalkHandler implements NativeSystemGrantLane {
 		// 表声明的过场触发动作（原版把 movie 挂在页动作上，如 SELECT2_1/SELECT3_1/QUEST_REFUSE_4）：
 		// 不推进状态，但必须被服务（否则客户端停在页上），movie 由 onDialog 包装层下发。
 		Cutscene cutscene = cutsceneByQuestId.get(questId);
-		if (cutscene != null && cutscene.triggerAction() == dialogId) {
-			return true;
-		}
-		return false;
+		return cutscene != null && cutscene.triggerAction() == dialogId;
 	}
 
 	/** 交付门（item_check）持有量检查：缺一即不放行。 / The item_check hold gate; a single shortfall holds it. */

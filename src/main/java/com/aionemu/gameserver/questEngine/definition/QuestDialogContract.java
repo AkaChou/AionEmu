@@ -240,6 +240,31 @@ public final class QuestDialogContract {
 		return buttonPages.getOrDefault(questId, Map.of()).containsKey(pageId);
 	}
 
+	/**
+	 * 原版对话平面槽位 0 的阶段页（页 4，{@code SHOW_ASK_QUEST_ACCEPT_WINDOW}；页表
+	 * {@link QuestDialogPage#stageBasePageForSlot(int)}）。该页是全客户端共用的任务页，不依赖任务契约
+	 * 声明——按钮动作即页 id（原版 {@code User::OnHyperlinkAction} 以页 4/1011 受理接取）。
+	 * <p>
+	 * The retail dialog-plane slot-0 stage page (page 4). It is a global task page shared by every
+	 * quest rather than a page a quest declares; its button action is the page id itself.
+	 */
+	public int stageBasePage() {
+		return QuestDialogPage.stageBasePageForSlot(0);
+	}
+
+	/**
+	 * 任务的阶段页：客户端任务页声明了 {@code page} 时用 {@code page}，否则回落到全局阶段页
+	 * {@link #stageBasePage()}；页 4 不可用。无可用页返回 {@code -1}。
+	 * The stage page of a quest: the declared {@code page} when the task html carries it, otherwise the
+	 * global stage page; -1 when neither exists.
+	 */
+	public int stagePage(int questId, int page) {
+		if (page > 0 && hasButtonPage(questId, page)) {
+			return page;
+		}
+		return stageBasePage();
+	}
+
 	public String pageName(int questId, int pageId) {
 		return buttonPages.getOrDefault(questId, Map.of()).get(pageId);
 	}

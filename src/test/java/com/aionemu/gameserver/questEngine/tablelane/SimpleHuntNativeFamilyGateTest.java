@@ -35,7 +35,7 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
  * 2. CameraRegistry 完整包含全部 939 行相机参数，且 fullValue 与槽位需求一致；
  * 3. 击杀三守卫约束：非 START 状态不动作、已满槽超杀零动作、合规击杀单次加一；
  * 4. 双通道推进：未达满值普通写入 (0xf0)，达到整行满值触发推进写入 (0x100) 并进入 REWARD 状态；
- * 5. 对话流闭环：未接取问询页 (4)、接取确认 (1003)、未完成回页 (10)、领奖窗口 (5) 与领奖收尾回选择对话页 (10)。
+ * 5. 对话流闭环：未接取问询页 (4)、接取确认 (1003)、进行中零发页、领奖窗口 (5) 与领奖收尾回选择对话页 (10)。
  */
 class SimpleHuntNativeFamilyGateTest {
 
@@ -168,11 +168,20 @@ class SimpleHuntNativeFamilyGateTest {
 		QuestEnv envAccept = new QuestEnv(acqNpc, player, 2354, 1002);
 		// 接取分支由 startQuest 执行
 
-		// 4. 进行中状态 (START)：向交付 NPC 说话弹出未完成提示页 (10)
+		// 4. 进行中状态 (START)：交付 NPC 上的任务行不给页、不认领（页 10 是无任务上下文的通用列表页，
+		//    在多任务 NPC 上会把客户端踢出任务对话树；2026-10-19 Roseino 1174/1173）
+		// In progress: no page and no claim at the hand-in npc (page 10 is the context-less list page).
 		QuestState qs = new QuestState(2354, QuestStatus.START, 0, 0, null, 0, null);
 		qsl.addQuest(2354, qs);
+		// player 由 createTestPlayer() 构造、没有包捕获连接：先挂 fixture 连接再断言包。
+
+		// createTestPlayer() carries no fixture connection; attach one before capturing packets.
+
+		NativeTalkFixture.attachFixtureConnection(player);
+		NativeTalkFixture.clearPackets(player);
 		QuestEnv envInProgress = new QuestEnv(rewNpc, player, 2354, 31);
-		assertTrue(handler.onDialog(envInProgress));
+		assertFalse(handler.onDialog(envInProgress), "进度未满的任务行不得认领");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "进度未满的任务行零发页");
 
 		// 5. 待领奖状态 (REWARD)：向交付 NPC 说话弹出奖励选择窗口页 (5)
 		qs.setStatus(QuestStatus.REWARD);

@@ -175,11 +175,20 @@ class SimpleSerialHuntNativeFamilyGateTest {
 		QuestEnv envRefuse = new QuestEnv(ganofus, player, questId, 1003);
 		assertTrue(handler.onDialog(envRefuse));
 
-		// 3. 进行中状态：向交付 NPC 说话弹出未完成提示 (10)
+		// 3. 进行中状态：交付 NPC 上不给页、不认领（页 10 是无任务上下文的通用列表页，在多任务 NPC
+		//    上会把客户端踢出任务对话树；2026-10-19 Roseino 1174/1173 同型）
+		// In progress: no page and no claim at the hand-in npc (page 10 is the context-less list page).
 		QuestState qs = new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null);
 		player.getQuestStateList().addQuest(questId, qs);
+		// player 由 createTestPlayer() 构造、没有包捕获连接：先挂 fixture 连接再断言包。
+
+		// createTestPlayer() carries no fixture connection; attach one before capturing packets.
+
+		NativeTalkFixture.attachFixtureConnection(player);
+		NativeTalkFixture.clearPackets(player);
 		QuestEnv envInProgress = new QuestEnv(ganofus, player, questId, 31);
-		assertTrue(handler.onDialog(envInProgress));
+		assertFalse(handler.onDialog(envInProgress), "进度未满的任务行不得认领");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "进度未满的任务行零发页");
 
 		// 4. 待交付状态 (REWARD)：展示奖励选择窗口 (5)
 		qs.setStatus(QuestStatus.REWARD);

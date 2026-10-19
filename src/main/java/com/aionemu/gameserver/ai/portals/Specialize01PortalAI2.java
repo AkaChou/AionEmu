@@ -94,7 +94,14 @@ public class Specialize01PortalAI2 extends PortalAI2
 				if (qs != null && (qs.getStatus() == QuestStatus.START || qs.getStatus() == QuestStatus.REWARD)) {
 					playerHasQuest = true;
 					break;
-				} else if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
+				}
+				// 接取相（原版「先可接取、后进行中」）：只有仍在发放的行（原版 CanAcquireQuest == 2，
+				// 与附近任务列表同一判定）才进可接取相；未接取但不可接（等级/上限/限制）的行既不是
+				// 可接取也不是进行中，不得把打开降到 NPC 问候页（native 行无 typed 起始条件可查）。
+				// The acquire phase: only rows the npc still offers enter it (the nearby-list verdict).
+				// An unaccepted row that can no longer be acquired is neither phase and must not push the
+				// open down to the npc hello page.
+				if (qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat()) {
 					if (QuestService.checkStartConditions(new QuestEnv(getOwner(), player, questId, 0), false)) {
 						playerCanStartQuest = true;
 						continue;

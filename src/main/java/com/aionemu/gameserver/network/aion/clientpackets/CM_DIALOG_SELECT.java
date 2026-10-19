@@ -15,6 +15,7 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
@@ -185,13 +186,17 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 					return;
 				}
 			}
-			// Page 10 only accepts the quest-row action (31). A different action must not
-			// enter QuestEngine through the targetless/class-change branch, even when the
-			// client attaches a candidate quest id while normal-quest markers are hidden.
-			// 第 10 页只允许任务行动作（31）；即使客户端在关闭普通任务标记时附带候选任务 ID，
-			// 其他动作也不能通过无目标/玩家对象分支进入任务引擎。
+			// 通用任务页（页 10）上的非任务行动作（关闭任务列表 / NPC 对话树翻页）：始终按 NPC 对话
+			// 导航处理，不建立任务上下文（原版对话平面在页 0/10 事件里切阶段页；页内导航由客户端
+			// 本地完成）。
+			// Non-row acts on the generic task page (close, dialog-tree turns) are npc navigation and
+			// never establish a quest context.
 			if (isGenericQuestSelectionPage(dialogId, lastPage)) {
 				player.clearNpcQuestDialogSelection();
+				VisibleObject genericTarget = player.getKnownList().getObject(targetObjectId);
+				if (genericTarget instanceof Creature genericCreature) {
+					genericCreature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+				}
 				return;
 			}
 			if (questId > 0 && isNormalQuestOutsideActiveProgress(metadata,
@@ -218,7 +223,15 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			}
 			int rememberedQuestId = obj instanceof Npc npc
 				? player.getNpcQuestDialogSelectionQuestId(npc.getObjectId()) : 0;
-			int routedQuestId = resolveRoutedQuestId(questId, rememberedQuestId, genericQuestPage);
+			// 原版 OnHyperlinkAction：页 4/1011 的接取页动作在「questId == 领取中任务」或「该行仍在
+			// NPC 可接任务清单（CanAcquireQuest == 2）」时才受理。
+			// Retail OnHyperlinkAction: an accept-page act is accepted only for the acquiring quest or
+			// for a row the npc still offers (CanAcquireQuest == 2).
+			int acceptPageQuestId = obj instanceof Npc npc
+				? appraisableQuestId(player, npc, dialogId, questId) : 0;
+			boolean acceptPage = acceptPageQuestId != 0;
+			int routedQuestId = acceptPage ? acceptPageQuestId
+				: resolveRoutedQuestId(questId, rememberedQuestId, genericQuestPage);
 			// 没有任务上下文的 NPC 选项只是普通对话：关闭“未满65级普通任务标记”后，5.8 客户端
 			// 仍可能把 NPC 对话页上的任务按钮发回来；若绑定未接取任务 owner，服务端会下发带 questId
 			// 的任务页并触发 load fail。与“该 NPC 任务已全部完成”一致，跳过任务引擎，直接交给
@@ -229,10 +242,11 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			// Match the "all quests on this NPC are done" behavior by skipping the quest engine and
 			// letting the NPC AI / DialogService navigate the page. A real quest context keeps the
 			// original quest routing.
-			if (hasQuestDialogContext(npcTarget, routedQuestId)) {
-				creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
-			} else {
-				creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+			deliverNpcSelect(obj, dialogId, player, routedQuestId, extendedRewardIndex, npcTarget);
+			if (acceptPage) {
+				Npc npc = (Npc) obj;
+				player.clearNpcQuestDialogAcquiring();
+				player.rememberNpcQuestDialogSelection(npc.getObjectId(), acceptPageQuestId);
 			}
 		} else if (obj == null && questId > 0 && QuestDialogAction.isRewardWindowAction(dialogId)
 				&& questEngine.onDialog(new QuestEnv(null, player, questId, dialogId))) {
@@ -244,6 +258,52 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 			// The carried object is unresolvable: a reward-window confirmation is still routed by quest id
 			// alone (the ownerless retail protocol); every gate stays inside the engine.
 		}
+	}
+
+	/** 按任务上下文/普通对话分派到 NPC 控制器。 / Routes to the npc controller by context or as a plain dialog. */
+	private static void deliverNpcSelect(VisibleObject obj, int dialogId, Player player, int routedQuestId,
+			int extendedRewardIndex, boolean npcTarget) {
+		Creature creature = (Creature) obj;
+		if (hasQuestDialogContext(npcTarget, routedQuestId)) {
+			creature.getController().onDialogSelect(dialogId, player, routedQuestId, extendedRewardIndex);
+		} else {
+			creature.getController().onSimpleDialogSelect(dialogId, player, extendedRewardIndex);
+		}
+	}
+
+	/**
+	 * 接取页动作（原版页 4/1011 的接取按钮，动作 id = 页 id）的任务上下文：
+	 * ① 动作等于该 NPC 对话的「领取中任务」槽位 → 该任务（原版 {@code questIdAcquiring}）；
+	 * ② 包内 questId 的接取页正是该页且该行在 NPC 可接任务清单内 → 包内 questId。
+	 * 其他动作返回 0。原版 {@code User::OnHyperlinkAction} 以此为受理门：页 4/1011 上
+	 * 「不是领取中任务、也不在可接清单」的动作只留日志不推进。
+	 * <p>
+	 * The quest context of an accept-page act (page 4/1011 accept buttons, whose action id is the page
+	 * id): the npc dialog's acquiring slot, or a carried quest id whose accept page is this page while
+	 * its row is still offered. Any other act returns 0, matching the retail intake gate.
+	 */
+	public static int appraisableQuestId(Player player, Npc npc, int dialogId, int carriedQuestId) {
+		int acquiringQuestId = player.getNpcQuestDialogAcquiringQuestId(npc.getObjectId());
+		if (acquiringQuestId > 0) {
+			if (dialogId == QuestDialogContract.loadDefault().stageBasePage()
+					|| dialogId == QuestDialogContract.loadDefault().retailEntryPage(acquiringQuestId)) {
+				return acquiringQuestId;
+			}
+		}
+		if (carriedQuestId <= 0 || !isAcceptPageAct(carriedQuestId, dialogId)) {
+			return 0;
+		}
+		return QuestEngine.getInstance().isQuestReceivableAt(player, npc.getNpcId(), carriedQuestId)
+			? carriedQuestId : 0;
+	}
+
+	/**
+	 * 该动作是否为该任务的接取页动作（页 4/1011 打开时下发的那一页，动作 id = 页 id）。
+	 * Whether the act is the quest's accept-page act (the page opened for it; act id = page id).
+	 */
+	static boolean isAcceptPageAct(int questId, int dialogId) {
+		return dialogId == QuestDialogContract.loadDefault().stageBasePage()
+			|| dialogId == QuestDialogContract.loadDefault().retailEntryPage(questId);
 	}
 
 	/**

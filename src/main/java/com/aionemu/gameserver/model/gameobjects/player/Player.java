@@ -167,6 +167,10 @@ public class Player extends Creature {
 	private final Set<Integer> pendingQuestShares = ConcurrentHashMap.newKeySet();
 	private volatile NpcQuestDialogSelection npcQuestDialogSelection;
 	/**
+	 * NPC 对话「领取中任务」槽位（原版 {@code questIdAcquiring}）。 / The npc-dialog acquiring slot.
+	 */
+	private volatile NpcQuestDialogSelection npcQuestDialogAcquiring;
+	/**
 	 * -- GETTER --
 	 * 返回上一次客户端对话选择的重发跟踪状态；没有记录时为 null。 / Returns the repeat-tracking state of the last client dialog selection, or null when absent.
 	 * -- SETTER --
@@ -672,6 +676,37 @@ public class Player extends Creature {
 	 */
 	public void clearDialogSelectRepeat() {
 		dialogSelectRepeat = null;
+	}
+
+	/**
+	 * 设置/清除 NPC 对话的「领取中任务」槽位（原版 {@code User::OnHyperlinkAction} 的
+	 * {@code questIdAcquiring}）：页 4/1011 的接取页打开时登记，接取点击（客户端把页 id 当动作
+	 * 回发）时消费。
+	 * <p>
+	 * Sets or clears the npc-dialog acquiring slot (retail {@code questIdAcquiring}): recorded when an
+	 * accept page opens, consumed by the accept click (the client sends the page id back as the act).
+	 */
+	public void setNpcQuestDialogAcquiring(int interactionObjectId, int questId) {
+		if (interactionObjectId <= 0 || questId <= 0) {
+			npcQuestDialogAcquiring = null;
+			return;
+		}
+		npcQuestDialogAcquiring = new NpcQuestDialogSelection(interactionObjectId, questId);
+	}
+
+	/**
+	 * 返回同一 NPC 对话的「领取中任务」ID；没有登记时返回 0。 / The acquiring quest of this npc dialog, or 0.
+	 */
+	public int getNpcQuestDialogAcquiringQuestId(int interactionObjectId) {
+		NpcQuestDialogSelection acquiring = npcQuestDialogAcquiring;
+		return acquiring != null && acquiring.interactionObjectId() == interactionObjectId ? acquiring.questId() : 0;
+	}
+
+	/**
+	 * 清除 NPC 对话的「领取中任务」槽位。 / Clears the npc-dialog acquiring slot.
+	 */
+	public void clearNpcQuestDialogAcquiring() {
+		npcQuestDialogAcquiring = null;
 	}
 
 	private record NpcQuestDialogSelection(int interactionObjectId, int questId) {
