@@ -809,6 +809,7 @@
 				<xs:attribute name="cant_use_skill" type="xs:boolean" default="false"/>
 				<xs:attribute name="cant_move" type="xs:boolean" default="false"/>
 				<xs:attribute name="animation_skill_id" type="skillId"/>
+				<xs:attribute name="tribe" type="TribeClass"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

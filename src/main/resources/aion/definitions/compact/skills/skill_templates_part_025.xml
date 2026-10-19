@@ -14838,7 +14838,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202588" type="FORM1" panelid="25" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202588" type="FORM1" panelid="25" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHL" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>
@@ -14868,7 +14868,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202589" type="FORM1" panelid="26" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202589" type="FORM1" panelid="26" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHL" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>
@@ -14898,7 +14898,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202590" type="FORM1" panelid="27" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202590" type="FORM1" panelid="27" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHL" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>
@@ -15036,7 +15036,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202592" type="FORM1" panelid="25" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202592" type="FORM1" panelid="25" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHD" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>
@@ -15066,7 +15066,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202593" type="FORM1" panelid="26" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202593" type="FORM1" panelid="26" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHD" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>
@@ -15096,7 +15096,7 @@
     <group_ref id="SG_F0F788DD2DDA6735" />
     <group_ref id="SG_D41ED527F0140E41" />
     <effects>
-      <polymorph model="202594" type="FORM1" panelid="27" transform_level="175" cant_attack="true" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
+      <polymorph model="202594" type="FORM1" panelid="27" transform_level="175" cant_attack="true" tribe="IDEVENT01_POLYMORPHD" duration1="0" duration2="86400000" randomtime="0" effectid="175" e="1" basiclvl="0" noresist="true" accmod1="0" accmod2="0" preeffect_prob="100" critprobmod2="100" hoptype="DAMAGE" hopa="0" hopb="0" />
     </effects>
     <group_ref id="SG_E41CB4A4C753623A" />
     <retail>

@@ -106,6 +106,7 @@ public class TransformModel {
 		transformLevel = 0;
 		useItem = false;
 		animationSkillId = 0;
+		transformTribe = null;
 		isActive = false;
 	}
 

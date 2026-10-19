@@ -4,19 +4,25 @@ import java.util.Objects;
 
 import com.aionemu.gameserver.persistence.dao.PlayerTransformDao;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.gameobjects.TransformModel;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRANSFORM;
+import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
+import com.aionemu.gameserver.skillengine.effect.TransformEffect;
+import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * 传送后变身面板同步：恢复大天使/副本/活动变形的技能面板关联。
  * Post-teleport transform panel sync: restores archdaeva/instance/event transform skill panels.
  * <p>该类型只服务 {@link TeleportService2}：玩家使用传送/飞行/热点/回程卷轴或管理员传送命令后，
- * 若仍处于变形效果中，必须重发效果关联的技能面板。全部为静态方法，不持有状态；
+ * 若仍处于变形效果中，必须重发效果关联的技能面板；活动效果优先于持久化面板与遗留技能映射。
+ * 全部为静态方法，不持有状态；
  * 对外仍通过 {@link TeleportService2} 的原 public static 方法访问（门面签名不变）。
  * This type only serves {@link TeleportService2}: after a teleport/fly/hotspot/return scroll or an
  * admin goto/movetoplayer/movetonpc, the skill panel linked to a still-active transform effect must
- * be re-sent. All static, stateless; external callers keep using the original public static
+ * be re-sent; the active effect takes precedence over persisted panels and legacy skill mappings.
+ * All static, stateless; external callers keep using the original public static
  * {@link TeleportService2} facade methods with unchanged signatures.</p>
  */
 final class TransformPanelSync {
@@ -56,13 +62,39 @@ final class TransformPanelSync {
 	}
 
 	/**
-	 * 从数据库加载并同步玩家变形状态到客户端。
-	 * Loads and syncs player transformation state to the client.
+	 * 优先同步活动变形的技能面板；没有效果关联面板时保留数据库加载行为。
+	 * Prefers the active transform's skill panel, preserving database loading when no effect-linked panel exists.
 	 * @param player 玩家 / Player
 	 */
 	static void loadAndSyncTransformation(Player player) {
+		if (syncActiveTransform(player)) {
+			return;
+		}
 		playerTransformDAO().loadPlTransfo(player);
-		PacketSendUtility.sendPacket(player, new SM_TRANSFORM(player, player.getTransformModel().getPanelId(), true, player.getTransformModel().getItemId()));
+		TransformModel model = player.getTransformModel();
+		PacketSendUtility.sendPacket(player, new SM_TRANSFORM(player, model.getPanelId(), true, model.getItemId()));
+	}
+
+	/**
+	 * 按活动效果已选定的非空面板同步，不依赖技能 ID；无面板的变形仍使用既有兼容路径。
+	 * Syncs a nonempty panel selected by the active effect without skill IDs; panel-less forms retain legacy fallbacks.
+	 * @return 已同步活动面板时为 true / True when an active panel was synchronized
+	 */
+	private static boolean syncActiveTransform(Player player) {
+		TransformModel model = player.getTransformModel();
+		Effect activeEffect = model.getActiveTransformEffect();
+		if (activeEffect == null) {
+			return false;
+		}
+		for (EffectTemplate template : activeEffect.getEffectTemplates()) {
+			if (template instanceof TransformEffect transform && transform.getPanelId() > 0) {
+				model.setPanelId(transform.getPanelId());
+				PacketSendUtility.sendPacket(player,
+					new SM_TRANSFORM(player, model.getPanelId(), true, model.getItemId()));
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -75,6 +107,9 @@ final class TransformPanelSync {
 	 * @param player 玩家 / Player
 	 */
 	static void syncArchdaevaPanels(Player player) {
+		if (syncActiveTransform(player)) {
+			return;
+		}
 		if (!player.isInGroup2() || player != null) {
 			if (player.getEffectController().hasAbnormalEffect(4752)) {
 				if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -152,6 +187,9 @@ final class TransformPanelSync {
 	 * @param player 玩家 / Player
 	 */
 	static void syncInstanceEventPanels(Player player) {
+		if (syncActiveTransform(player)) {
+			return;
+		}
 		if (!player.isInGroup2() || player != null) {
 			// 【PvP】竞技场 / [PvP] Arena
 			if (player.getEffectController().hasAbnormalEffect(10405)) {

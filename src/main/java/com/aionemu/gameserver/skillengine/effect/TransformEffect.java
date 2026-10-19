@@ -5,13 +5,15 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
-import com.aionemu.gameserver.services.player.PlayerService;
-
+import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Summon;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_NPC_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TRANSFORM;
+import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -54,6 +56,18 @@ public abstract class TransformEffect extends EffectTemplate {
 	protected boolean cantMove;
 	@XmlAttribute(name = "animation_skill_id")
 	protected int animationSkillId;
+	@XmlAttribute(name = "tribe")
+	protected TribeClass tribe;
+
+	/**
+	 * 返回模板面板 ID，供活动效果优先的面板同步使用。
+	 * Returns the template panel id for active-effect-first panel synchronization.
+	 *
+	 * @return 模板面板 ID / template panel id
+	 */
+	public int getPanelId() {
+		return panelid;
+	}
 
 	@Override
 	public void applyEffect(Effect effect) {
@@ -130,12 +144,15 @@ public abstract class TransformEffect extends EffectTemplate {
 
 	private void applyTransform(Effect effect) {
 		Creature effected = effect.getEffected();
+		TribeClass previousTribe = effected.getTribe();
+		effected.getTransformModel().setTribe(tribe, false);
 		effected.getTransformModel().setModelId(model);
 		effected.getTransformModel().setPanelId(panelid);
 		effected.getTransformModel().setItemId(itemId);
 		effected.getTransformModel().setTransformType(type);
 		effected.getTransformModel().setActiveTransform(effect, transformLevel, useItem, animationSkillId);
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TRANSFORM(effected, panelid, true, itemId));
+		refreshNpcRelationsIfTribeChanged(effected, previousTribe);
 
 		if (effected instanceof Player player) {
 			player.setTransformedModelId(model);
@@ -145,6 +162,7 @@ public abstract class TransformEffect extends EffectTemplate {
 	}
 
 	private void clearTransform(Creature effected) {
+		TribeClass previousTribe = effected.getTribe();
 		if (effected instanceof Summon || effected instanceof Player) {
 			effected.getTransformModel().setModelId(0);
 		} else if (effected instanceof Npc) {
@@ -155,10 +173,41 @@ public abstract class TransformEffect extends EffectTemplate {
 		effected.getTransformModel().setTransformType(effected instanceof Player ? TransformType.PC : TransformType.NONE);
 		effected.getTransformModel().clearActiveTransform();
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_TRANSFORM(effected, 0, false, 0));
+		refreshNpcRelationsIfTribeChanged(effected, previousTribe);
 
 		if (effected instanceof Player player) {
 			player.setTransformedModelId(0);
 			player.setTransformedItemId(0);
+		}
+	}
+
+	/**
+	 * 仅在玩家阵营关系实际变化时重发可见 NPC 信息。
+	 * Resends visible NPC info only when the player's tribe relation actually changes.
+	 *
+	 * @param effected 受影响生物 / effected creature
+	 * @param previousTribe 变更前的部落 / tribe before the change
+	 */
+	private void refreshNpcRelationsIfTribeChanged(Creature effected, TribeClass previousTribe) {
+		if (effected.getTribe() != previousTribe) {
+			refreshNpcRelations(effected);
+		}
+	}
+
+	/**
+	 * 重发玩家当前可见 NPC 的关系类型，避免客户端保留变身前的友好/攻击状态。
+	 * Resends visible NPC relation types so the client does not retain pre-transform friendliness.
+	 *
+	 * @param effected 受影响生物 / effected creature
+	 */
+	private void refreshNpcRelations(Creature effected) {
+		if (!(effected instanceof Player player) || player.getKnownList() == null) {
+			return;
+		}
+		for (VisibleObject visibleObject : player.getKnownList().getVisibleObjectsSnapshot()) {
+			if (visibleObject instanceof Npc npc) {
+				PacketSendUtility.sendPacket(player, new SM_NPC_INFO(npc, player));
+			}
 		}
 	}
 }
