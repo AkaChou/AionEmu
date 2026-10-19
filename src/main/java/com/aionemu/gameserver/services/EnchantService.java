@@ -119,6 +119,31 @@ public class EnchantService {
 	}
 
 	/**
+	 * 获取天烙之石（埃斯蒂玛）强化等级上限（配置优先，默认 15，上限 50）。
+	 * Returns the Estima (CP stone) enchant cap (config first, default 15, capped at 50).
+	 *
+	 * @return 天烙之石最大强化等级 / Estima max enchant level
+	 */
+	public static int getMaxEstimaEnchantLevel() {
+		int configured = EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL;
+		if (configured <= 0) {
+			configured = 15;
+		}
+		return Math.min(configured, 50);
+	}
+
+	/**
+	 * 将天烙之石的强化等级限制在配置上限内。
+	 * Caps an Estima enchant level to the configured maximum.
+	 *
+	 * @param enchantLevel 原始强化等级 / raw enchant level
+	 * @return 限制后的等级 / capped level
+	 */
+	public static int capEstimaEnchantLevel(int enchantLevel) {
+		return Math.min(enchantLevel, getMaxEstimaEnchantLevel());
+	}
+
+	/**
 	 * 获取物品的觉醒等级上限（羽饰、手镯各取专用配置，其余饰品取首饰配置）。
 	 * Returns the authorize cap for an item (plume and bracelet have their own keys, other accessories the accessory key).
 	 *
@@ -214,6 +239,26 @@ public class EnchantService {
 	}
 
 	/**
+	 * 计算天烙之石当前等级下的强化成功率（%）：基础成功率每级递减 1%，不低于配置下限。
+	 * Computes the Estima enchant success rate (%) for the current level:
+	 * the configured base rate drops by 1% per level, never below the configured floor.
+	 *
+	 * @param enchantLevel 当前强化等级 / current enchant level
+	 * @return 成功率（%） / success rate (%)
+	 */
+	public static float getEstimaEnchantRate(int enchantLevel) {
+		float base = EnchantsConfig.ENCHANT_ESTIMA;
+		if (base <= 0) {
+			base = 100;
+		}
+		float floor = EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE;
+		if (floor < 0) {
+			floor = 0;
+		}
+		return Math.max(base - enchantLevel, Math.min(floor, base));
+	}
+
+	/**
 	 * 执行 Estima 附魔流程。
 	 * Runs the Estima enchant flow.
 	 *
@@ -223,8 +268,8 @@ public class EnchantService {
 	 */
 	public static void estimaEnchant(final Player player, final Item parentItem, final Item targetItem) {
 		int estimaKinah = 34323;
-		int chance = 100 - targetItem.getEnchantLevel();
-		final boolean isEstimaSuccess = chance >= 60;
+		float rate = getEstimaEnchantRate(targetItem.getEnchantLevel());
+		final boolean isEstimaSuccess = Rnd.get(1, 1000) / 10f <= rate;
 		if (player.getInventory().getKinah() < estimaKinah) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
 			return;
@@ -254,7 +299,7 @@ public class EnchantService {
 				player.getObserveController().removeObserver(observer);
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentObjectId, parentItemId, 0, 1, 1), true);
 				player.getInventory().decreaseByObjectId(parentObjectId, 1);
-				targetItem.setEnchantLevel(targetEnchantLvl + 1);
+				targetItem.setEnchantLevel(capEstimaEnchantLevel(targetEnchantLvl + 1));
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId)));
 			} else {
 				player.getInventory().decreaseByObjectId(parentObjectId, 1);

@@ -39,6 +39,24 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "50")
 	public static int MAX_EQUIPMENT_ENCHANT_LEVEL;
 	/**
+	 * 天烙之石（埃斯蒂玛）最大强化等级。
+	 * Maximum Estima (CP stone) enchant level.
+	 */
+	@Property(key = "gameserver.enchant.estima.max.level", defaultValue = "15")
+	public static int MAX_ESTIMA_ENCHANT_LEVEL;
+	/**
+	 * 天烙之石（埃斯蒂玛）强化基础成功率（%），每级递减 1%。
+	 * Estima (CP stone) enchant base success rate (%), decreasing 1% per level.
+	 */
+	@Property(key = "gameserver.enchant.estima", defaultValue = "100")
+	public static float ENCHANT_ESTIMA;
+	/**
+	 * 天烙之石强化成功率下限（%）。
+	 * Estima enchant success rate floor (%).
+	 */
+	@Property(key = "gameserver.enchant.estima.min.rate", defaultValue = "10")
+	public static float ENCHANT_ESTIMA_MIN_RATE;
+	/**
 	 * 首饰（耳环/戒指/项链/头盔/腰带）最大觉醒等级。
 	 * Maximum accessory (earrings/rings/necklace/helmet/belt) authorize level.
 	 */
@@ -133,10 +151,19 @@ public class EnchantsConfig {
 	public static class EnchantProperties {
 		private final ItemProperties item = new ItemProperties();
 		private final EquipmentProperties equipment = new EquipmentProperties();
+		private final EstimaProperties estima = new EstimaProperties();
 		private final AuthorizeProperties authorize = new AuthorizeProperties();
 		private final CastProperties cast = new CastProperties();
 
 		public void setItem(ItemProperties item) {
+		}
+
+		/**
+		 * 裸标量键存在时由 Binder 忽略；保留以兼容 {@code gameserver.enchant.estima=100}。
+		 * Ignored by the Binder when the bare scalar key is present; kept for
+		 * {@code gameserver.enchant.estima=100} compatibility.
+		 */
+		public void setEstima(EstimaProperties estima) {
 		}
 
 		public float getPlume() {
@@ -169,6 +196,61 @@ public class EnchantsConfig {
 
 		public void setStigma(float stigma) {
 			ENCHANT_STIGMA = stigma;
+		}
+
+		/**
+		 * 天烙之石强化档（成功率与等级上限）。
+		 * Estima enchant properties (success rate and level cap).
+		 */
+		@Getter
+		public static class EstimaProperties {
+			private final MaxProperties max = new MaxProperties();
+			private final MinProperties min = new MinProperties();
+
+			/**
+			 * 支持裸标量形式 {@code gameserver.enchant.estima=100}。
+			 * Supports the bare scalar form {@code gameserver.enchant.estima=100}.
+			 */
+			public static EstimaProperties valueOf(String value) {
+				EstimaProperties props = new EstimaProperties();
+				try {
+					ENCHANT_ESTIMA = Float.parseFloat(value);
+				} catch (NumberFormatException ignored) {
+				}
+				return props;
+			}
+
+			public float getValue() {
+				return ENCHANT_ESTIMA;
+			}
+
+			public void setValue(float value) {
+				ENCHANT_ESTIMA = value;
+			}
+
+			public static class MaxProperties {
+				public int getLevel() {
+					return MAX_ESTIMA_ENCHANT_LEVEL;
+				}
+
+				public void setLevel(int level) {
+					MAX_ESTIMA_ENCHANT_LEVEL = level;
+				}
+			}
+
+			/**
+			 * 成功率下限（{@code gameserver.enchant.estima.min.rate}）。
+			 * Success-rate floor ({@code gameserver.enchant.estima.min.rate}).
+			 */
+			public static class MinProperties {
+				public float getRate() {
+					return ENCHANT_ESTIMA_MIN_RATE;
+				}
+
+				public void setRate(float rate) {
+					ENCHANT_ESTIMA_MIN_RATE = rate;
+				}
+			}
 		}
 
 		@Getter

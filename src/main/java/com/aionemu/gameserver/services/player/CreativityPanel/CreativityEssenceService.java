@@ -544,26 +544,7 @@ public class CreativityEssenceService {
 		estimaCp = 1;
 		Item addEstima = player.getEquipment().getEquippedItemByObjId(objId);
 		if (addEstima != null) {
-			switch (addEstima.getEnchantLevel()) {
-			case 6:
-				estimaCp = 8;
-				break;
-			case 7:
-				estimaCp = 10;
-				break;
-			case 8:
-				estimaCp = 12;
-				break;
-			case 9:
-				estimaCp = 14;
-				break;
-			case 10:
-				estimaCp = 17;
-				break;
-			default:
-				estimaCp = (addEstima.getEnchantLevel() + 1);
-				break;
-			}
+			estimaCp = estimaCpForEnchantLevel(addEstima.getEnchantLevel());
 		}
 		currentCp = player.getCreativityPoint();
 		int totalCp = (currentCp + estimaCp);
@@ -571,6 +552,35 @@ public class CreativityEssenceService {
 		int size = cpDAO.getSlotSize(player.getObjectId());
 		PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS(totalCp, player.getCPStep(), size, true));
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
+	}
+
+	/**
+	 * 按天烙之石强化等级计算其提供的创造力点数。
+	 * 真端档位为 6/7/8/9/10 级 → 8/10/12/14/17 点，其余等级按相邻档斜率延续，
+	 * 使 +10 以上继续增长而不是回落到“等级 + 1”造成倒挂。
+	 * Returns the creativity points granted by an Estima stone at the given enchant level.
+	 * The retail tiers map levels 6/7/8/9/10 to 8/10/12/14/17 points; levels outside the
+	 * table continue along the adjacent tier slope so levels above +10 keep growing
+	 * instead of falling back to "level + 1" and inverting the reward.
+	 *
+	 * @param enchantLevel 天烙之石强化等级 / Estima enchant level
+	 * @return 创造力点数 / creativity points
+	 */
+	static int estimaCpForEnchantLevel(int enchantLevel) {
+		int level = Math.max(0, enchantLevel);
+		if (level < 6) {
+			return level + 1;
+		}
+		if (level <= 10) {
+			return switch (level) {
+				case 6 -> 8;
+				case 7 -> 10;
+				case 8 -> 12;
+				case 9 -> 14;
+				default -> 17;
+			};
+		}
+		return 17 + 3 * (level - 10);
 	}
 
 	/**
@@ -582,14 +592,7 @@ public class CreativityEssenceService {
 	public void removeEstimaCp(Player player, Item item) {
 		estimaCp = 0;
 		if (item != null) {
-			switch (item.getEnchantLevel()) {
-			case 6: estimaCp = 8; break;
-			case 7: estimaCp = 10; break;
-			case 8: estimaCp = 12; break;
-			case 9: estimaCp = 14; break;
-			case 10: estimaCp = 17; break;
-			default: estimaCp = (item.getEnchantLevel() + 1); break;
-			}
+			estimaCp = estimaCpForEnchantLevel(item.getEnchantLevel());
 		}
 		currentCp = player.getCreativityPoint();
 		int totalCp = (currentCp - estimaCp);

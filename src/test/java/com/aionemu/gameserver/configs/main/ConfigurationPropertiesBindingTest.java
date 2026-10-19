@@ -286,7 +286,8 @@ class ConfigurationPropertiesBindingTest {
 	void bindsEnchantsConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
-			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_AUTHORIZE_ACCESSORY_LEVEL",
+			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_ESTIMA_ENCHANT_LEVEL", "ENCHANT_ESTIMA", "ENCHANT_ESTIMA_MIN_RATE",
+			"MAX_AUTHORIZE_ACCESSORY_LEVEL",
 			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
 			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
 			"ENABLE_ARCHDAEVA_ITEM_BROKE");
@@ -298,6 +299,9 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.enchant.item.kinah", "50000"),
 				Map.entry("gameserver.enchant.item.broke", "false"),
 				Map.entry("gameserver.enchant.equipment.max.level", "50"),
+				Map.entry("gameserver.enchant.estima.max.level", "30"),
+				Map.entry("gameserver.enchant.estima.value", "85.0"),
+				Map.entry("gameserver.enchant.estima.min.rate", "12.0"),
 				Map.entry("gameserver.enchant.authorize.accessory.max.level", "42"),
 				Map.entry("gameserver.enchant.authorize.plume.max.level", "48"),
 				Map.entry("gameserver.enchant.authorize.bracelet.max.level", "52"),
@@ -318,6 +322,9 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(50000, EnchantsConfig.ENCHANT_ITEM_KINAH);
 			assertFalse(EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE);
 			assertEquals(50, EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL);
+			assertEquals(30, EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL);
+			assertEquals(85.0f, EnchantsConfig.ENCHANT_ESTIMA);
+			assertEquals(12.0f, EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE);
 			assertEquals(42, EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL);
 			assertEquals(48, EnchantsConfig.MAX_AUTHORIZE_PLUME_LEVEL);
 			assertEquals(52, EnchantsConfig.MAX_AUTHORIZE_BRACELET_LEVEL);
@@ -346,6 +353,24 @@ class ConfigurationPropertiesBindingTest {
 			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
 
 			assertEquals(88.5f, EnchantsConfig.ENCHANT_ITEM);
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	@Test
+	void bindsEnchantsConfigLegacyScalarEstimaProperty() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ESTIMA");
+		try {
+			StandardEnvironment environment = new StandardEnvironment();
+			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
+				"gameserver.enchant.estima", "77.5"
+			)));
+
+			EnchantsConfig config = new EnchantsConfig();
+			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
+
+			assertEquals(77.5f, EnchantsConfig.ENCHANT_ESTIMA);
 		} finally {
 			snapshot.restore();
 		}

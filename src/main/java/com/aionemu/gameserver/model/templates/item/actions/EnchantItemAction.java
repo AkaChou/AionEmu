@@ -64,7 +64,8 @@ public class EnchantItemAction extends AbstractItemAction {
 		if (isSupplementAction()) {
 			return false;
 		}
-		if (targetItem.getItemTemplate().isEstima() && targetItem.getEnchantLevel() >= 10) {
+		if (targetItem.getItemTemplate().isEstima()
+			&& targetItem.getEnchantLevel() >= EnchantService.getMaxEstimaEnchantLevel()) {
 			// 你无法添加精华。 / You cannot add Essence.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
 			return false;

@@ -18,7 +18,8 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 class EnchantServiceTest {
 
 	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
-		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL",
+		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_ESTIMA_ENCHANT_LEVEL",
+		"ENCHANT_ESTIMA", "ENCHANT_ESTIMA_MIN_RATE",
 		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL");
 
 	@AfterEach
@@ -82,6 +83,69 @@ class EnchantServiceTest {
 
 		assertEquals(200, EnchantService.getMaxEquipmentEnchantLevel());
 		assertEquals(200, EnchantService.capEquipmentEnchantLevel(250));
+	}
+
+	@Test
+	void declaresEstimaCapWithFifteenAsDefault() throws Exception {
+		Property property = EnchantsConfig.class.getDeclaredField("MAX_ESTIMA_ENCHANT_LEVEL")
+				.getAnnotation(Property.class);
+
+		assertEquals("gameserver.enchant.estima.max.level", property.key());
+		assertEquals("15", property.defaultValue());
+		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
+	}
+
+	@Test
+	void allowsEstimaEnchantUpToFifty() {
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 50;
+
+		assertEquals(11, EnchantService.capEstimaEnchantLevel(11));
+		assertEquals(50, EnchantService.capEstimaEnchantLevel(50));
+		assertEquals(50, EnchantService.capEstimaEnchantLevel(51));
+	}
+
+	@Test
+	void capsEstimaEnchantLevelAtFiftyWhenConfiguredHigher() {
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 80;
+
+		assertEquals(50, EnchantService.getMaxEstimaEnchantLevel());
+		assertEquals(50, EnchantService.capEstimaEnchantLevel(60));
+	}
+
+	@Test
+	void fallsBackToFifteenWhenEstimaCapIsNotPositive() {
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 0;
+
+		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
+	}
+
+	@Test
+	void derivesEstimaRateFromConfiguredBaseMinusLevel() {
+		EnchantsConfig.ENCHANT_ESTIMA = 100;
+		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 10;
+
+		assertEquals(100f, EnchantService.getEstimaEnchantRate(0));
+		assertEquals(90f, EnchantService.getEstimaEnchantRate(10));
+		assertEquals(50f, EnchantService.getEstimaEnchantRate(50));
+	}
+
+	@Test
+	void neverDropsEstimaRateBelowConfiguredFloor() {
+		EnchantsConfig.ENCHANT_ESTIMA = 30;
+		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 10;
+
+		assertEquals(20f, EnchantService.getEstimaEnchantRate(10));
+		assertEquals(10f, EnchantService.getEstimaEnchantRate(20));
+		assertEquals(10f, EnchantService.getEstimaEnchantRate(50));
+	}
+
+	@Test
+	void keepsEstimaRateAtZeroFloorReachable() {
+		EnchantsConfig.ENCHANT_ESTIMA = 20;
+		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 0;
+
+		assertEquals(0f, EnchantService.getEstimaEnchantRate(20));
+		assertEquals(0f, EnchantService.getEstimaEnchantRate(40));
 	}
 
 	@Test
