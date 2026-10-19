@@ -4,7 +4,7 @@
     Event
 	Make & Remake By (Encom)
  -->
-	<active>Thecla Royan;Museum Inventory;Museum;Doppelgangers;Ascension Energy Inventory;Ascension Energy;Daru Days;Ardent Heat Inventory;Ardent Heat;Valentine's Day Event;Event Growth;October Fest;Patron Mark Inventory;Event Maid Promotion;Pink Petal Inventory;Pink Petal Event;Pumpkin Cookie Inventory;Pumpkin Cookie Event;Fluffy Snow Crystal Inventory;Fluffy Snow Event;Gift Giver Inventory;Gift Giver Event;Celebrate Solorius Inventory;Solorius Coin Inventory;Celebrate Solorius Event;New Year Event;Guardian General Event;Mega Kinah Event;Code Red: Atreia;Captain Harlock Inventory;Captain Harlock Event;Dafarunerk Inventory;Dafarunerk Event;Snowy Freezy Inventory;Snowy Freezy;Shop Event;All Dolled Up;Summer Block Party Event;The Alchemist Event;Sweet Fruits Drop;Sweet Fruits;Flower Day Event;The Lost Words Drop;The Lost Words;Divine Bonfire Inventory;Divine Bonfire;Daeva Day New Inventory;Daeva Day New;Legendary Symphony Event;Joker Wild Event;White Day Inventory;Rainbow Snake Inventory 1;Rainbow Snake Inventory 2;Rainbow Snake Inventory 3;Rainbow Snake Festival;Wishing Fountain Inventory;Wishing Fountain Event;Black Star Event;9th Anniversary Inventory;9th Anniversary Event;Dreaming Nether Weapon Event;Prestige Pack Inventory;Prestige Pack Event;Luna Event;Wings With Stars Event;Holy Water Event;Homeward Bound Event;Toy Festival;Enemy Land Event;Buff Event;Curse Of Aion Event;IDEvent S3 Event;Miniring Event;Shugo Ranger Event;Creativity Event;Archdaeva Growth Event;Mooncake Event;Secrets Of The Ancients;Dark Dragon King Weapons;Novice Event Inventory;Novice Event;Golden Feather Inventory;Golden Feather Event;Pumpkin Kings Haunt Inventory;Pumpkin Kings Haunt;Dragon Cultist Scheme;10th Daeva Day Event;The Giving Tree Event;Lucky NPC Event;Magical Spring Event;Ice Festival Event;Winter Festival Event;Golden Rice Event;My Pet Event;DreadQ Event;Fruit Festival Event;Halloween Candy Bomb Event;Tiamat Down Event;Blue Sheep Event;Sweet China Event;Egypt Event;F6 Construct Event;Luna Elly Event;World Blessers;GoldStar Event;Ruhnadium Bonus;Novice Event Inventory1;Upgrade Arcade Inventory;Upgrade Arcade;Return To The Shugo Tomb;Alchemist's Gift Drop;Alchemist's Gift;Sweet Fruits Inventory;The Heroine Weeks;Violet Revolution Drop;Violet Revolution;Live Party Concert Hall;Shugo Emperor's Vault;Rainbow Snake Festival Inventory;Rainbow Snake Festival Inventory 1;Rainbow Snake Festival Inventory 2;Wishing Fountain;Fire Temple of Memory;Joker's Wild 2017;Axe Soup Inventory;Axe Soup;Eggstravaganza Inventory;Eggstravaganza;Kumuki Hideout;Highdaeva Growth Event;Tiamaranta Eye;Secret of the Ancients Returns Inventory;Secret of the Ancients Returns;Sheep on the Rampage Inventory;Sheep on the Rampage;8th Daeva Day Event;9th Daeva Day Event;Fifth Event</active>
+	<active>Thecla Royan;Museum Inventory;Museum;Doppelgangers;Ascension Energy Inventory;Ascension Energy;Daru Days;Ardent Heat Inventory;Ardent Heat;Valentine's Day Event;Event Growth;October Fest;Patron Mark Inventory;Event Maid Promotion;Pink Petal Inventory;Pink Petal Event;Pumpkin Cookie Inventory;Pumpkin Cookie Event;Fluffy Snow Crystal Inventory;Fluffy Snow Event;Gift Giver Inventory;Gift Giver Event;Celebrate Solorius Inventory;Solorius Coin Inventory;Celebrate Solorius Event;New Year Event;Guardian General Event;Mega Kinah Event;Code Red: Atreia;Captain Harlock Inventory;Captain Harlock Event;Dafarunerk Inventory;Dafarunerk Event;Snowy Freezy Inventory;Snowy Freezy;Shop Event;All Dolled Up;Summer Block Party Event;The Alchemist Event;Sweet Fruits Drop;Sweet Fruits;Flower Day Event;The Lost Words Drop;The Lost Words;Divine Bonfire Inventory;Divine Bonfire;Daeva Day New Inventory;Daeva Day New;Legendary Symphony Event;Joker Wild Event;White Day Inventory;Rainbow Snake Inventory 1;Rainbow Snake Inventory 2;Rainbow Snake Inventory 3;Rainbow Snake Festival;Wishing Fountain Inventory;Wishing Fountain Event;Black Star Event;9th Anniversary Inventory;9th Anniversary Event;Dreaming Nether Weapon Event;Prestige Pack Inventory;Prestige Pack Event;Luna Event;Wings With Stars Event;Holy Water Event;Homeward Bound Event;Toy Festival;Enemy Land Event;Buff Event;Curse Of Aion Event;IDEvent S3 Event;Miniring Event;Shugo Ranger Event;Creativity Event;Archdaeva Growth Event;Mooncake Event;Secrets Of The Ancients;Dark Dragon King Weapons;Novice Event Inventory;Novice Event;Golden Feather Inventory;Golden Feather Event;Dragon Cultist Scheme;10th Daeva Day Event;The Giving Tree Event;Lucky NPC Event;Magical Spring Event;Ice Festival Event;Winter Festival Event;Golden Rice Event;My Pet Event;DreadQ Event;Fruit Festival Event;Tiamat Down Event;Blue Sheep Event;Sweet China Event;Egypt Event;F6 Construct Event;Luna Elly Event;World Blessers;GoldStar Event;Ruhnadium Bonus;Novice Event Inventory1;Upgrade Arcade Inventory;Upgrade Arcade;Return To The Shugo Tomb;Alchemist's Gift Drop;Alchemist's Gift;Sweet Fruits Inventory;The Heroine Weeks;Violet Revolution Drop;Violet Revolution;Live Party Concert Hall;Shugo Emperor's Vault;Rainbow Snake Festival Inventory;Rainbow Snake Festival Inventory 1;Rainbow Snake Festival Inventory 2;Wishing Fountain;Fire Temple of Memory;Joker's Wild 2017;Axe Soup Inventory;Axe Soup;Eggstravaganza Inventory;Eggstravaganza;Kumuki Hideout;Highdaeva Growth Event;Tiamaranta Eye;Secret of the Ancients Returns Inventory;Secret of the Ancients Returns;Sheep on the Rampage Inventory;Sheep on the Rampage;8th Daeva Day Event;9th Daeva Day Event;Fifth Event</active>
   	<events>
 		<event name="Thecla Royan" start="2027-06-21T00:00:00+00:00" end="2027-06-30T00:00:00+00:00">
             <spawns>
@@ -3429,6 +3429,17 @@
 					</spawn>
 				</spawn_map>
 			</spawns>
+			<event_drops>
+				<!-- 真端 IDLuna_Def_Item_Drop/eventsetup.txt：MAAD-S 的等级奖励箱必然掉落 Q80881 任务道具。 -->
+				<!-- Retail IDLuna_Def_Item_Drop/eventsetup.txt: MAAD-S's level reward boxes always drop the Q80881 item. -->
+				<npc_drop npc_id="246159" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246166" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246167" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246168" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246169" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246170" item_id="182216110" count="1" chance="100"/>
+				<npc_drop npc_id="246171" item_id="182216110" count="1" chance="100"/>
+			</event_drops>
 		</event>
 		<!-- http://aion.power.plaync.com/wiki/%EB%B4%84%EA%B8%B0%EC%9A%B4%EC%97%90+%EC%8C%8D%EB%A3%A1%EC%9D%B4+%EB%82%98%EB%A5%B4%EC%83%A4 -->
 		<event name="Wings With Stars Event" start="2027-01-01T00:00:00+00:00" end="2028-01-01T00:00:00+00:00">
@@ -8185,82 +8196,134 @@
                         <spot x="1169.6" y="1359.6" z="220.0" h="48"/>
                     </spawn>
                 </spawn_map>
+        <spawn_map map_id="210100000"><!-- Esterra -->
+        <!-- Anubis ||| World_event_egypt_kingmonster_01 -->
+        <spawn npc_id="247233" respawn_time="3600">
+        <spot x="1701.2" y="1415.7" z="305.64252" h="67"/>
+        </spawn>
+        <!-- Ancient Box ||| World_event_egypt_monster_02 -->
+        <spawn npc_id="247234" respawn_time="295">
+        <spot x="1693.3" y="1412.9" z="306.04376" h="89"/>
+        <spot x="1698.6" y="1407.6" z="305.5175" h="94"/>
+        <spot x="1698.8" y="1411.4" z="305.7375" h="77"/>
+        <spot x="1696.9" y="1418.1" z="306.0" h="34"/>
+        <spot x="1702.8" y="1411.8" z="305.21246" h="76"/>
+        </spawn>
+        <!-- Ancient Box ||| World_event_egypt_monster_03 -->
+        <spawn npc_id="247235" respawn_time="295">
+        <spot x="1690.5" y="1411.0" z="306.25" h="51"/>
+        <spot x="1693.7" y="1408.3" z="305.7875" h="53"/>
+        <spot x="1696.6" y="1413.1" z="305.92313" h="43"/>
+        <spot x="1697.8" y="1416.3" z="306.0" h="65"/>
+        <spot x="1703.7" y="1408.3" z="304.71878" h="0"/>
+        </spawn>
+        <!-- None ||| World_FOBJ_Egypt_portal_01 -->
+        <spawn npc_id="835556" respawn_time="295">
+        <spot x="1703.8" y="1416.7" z="305.3625" h="67"/>
+        </spawn>
+        </spawn_map>
+        <spawn_map map_id="220110000"><!-- Nosra -->
+        <!-- Anubis ||| World_event_egypt_kingmonster_01 -->
+        <spawn npc_id="247233" respawn_time="3600">
+        <spot x="1533.0" y="2037.4" z="172.66876" h="39"/>
+        </spawn>
+        <!-- Ancient Box ||| World_event_egypt_monster_02 -->
+        <spawn npc_id="247234" respawn_time="295">
+        <spot x="1533.6" y="2042.2" z="172.83499" h="27"/>
+        <spot x="1535.9" y="2042.6" z="173.26877" h="44"/>
+        <spot x="1530.5" y="2042.1" z="172.4375" h="89"/>
+        <spot x="1532.1" y="2045.0" z="172.64374" h="76"/>
+        <spot x="1529.0" y="2044.8" z="172.25" h="94"/>
+        </spawn>
+        <!-- Ancient Box ||| World_event_egypt_monster_03 -->
+        <spawn npc_id="247235" respawn_time="295">
+        <spot x="1535.7" y="2045.0" z="173.31874" h="0"/>
+        <spot x="1532.7" y="2050.3" z="172.89343" h="51"/>
+        <spot x="1534.3" y="2048.1" z="173.06157" h="65"/>
+        <spot x="1527.9" y="2047.5" z="172.20782" h="43"/>
+        <spot x="1530.6" y="2048.3" z="172.575" h="53"/>
+        </spawn>
+        <!-- None ||| World_FOBJ_Egypt_portal_01 -->
+        <spawn npc_id="835556" respawn_time="295">
+        <spot x="1535.1" y="2033.6" z="172.94249" h="39"/>
+        </spawn>
+        </spawn_map>
             </spawns>
             <event_drops>
-            	<npc_drop npc_id="220426" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="220426" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="220427" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="220427" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="220450" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="220450" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="220593" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="220593" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="230857" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="230857" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="230858" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="230858" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233632" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233632" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233633" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233633" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233675" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233675" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233676" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233676" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233718" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233718" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233719" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233719" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233740" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233740" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="233898" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="233898" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="234686" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="234686" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="234691" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="234691" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="234990" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="234990" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="234991" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="234991" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="235619" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="235619" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="235620" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="235620" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="235621" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="235621" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="236300" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="236300" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="701542" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="701542" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="702729" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="702729" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="832858" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="832858" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="832859" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="832859" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="832860" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="832860" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="833012" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="833012" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="833013" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="833013" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="833015" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="833015" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="835484" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="835484" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="835485" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="835485" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="835486" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="835486" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="835733" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="835733" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="857460" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="857460" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="857462" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="857462" item_id="188057812" count="1" chance="100"/>
-            	<npc_drop npc_id="857464" item_id="186000479" count="1" chance="100"/>
-            	<npc_drop npc_id="857464" item_id="188057812" count="1" chance="100"/>
+			<!-- 真端 Event_CN_Egypt_Item_Drop：目标 NPC 必掉古代碎片，不掉钥匙 -->
+			<npc_drop npc_id="832858" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="832858"/> <!-- 下一环 832859 -->
+			<npc_drop npc_id="832859" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="832859"/> <!-- 下一环 832860 -->
+			<npc_drop npc_id="832860" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="832860"/> <!-- 下一环 236300 -->
+			<npc_drop npc_id="236300" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="236300"/> <!-- 下一环 857460 -->
+			<npc_drop npc_id="857460" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="857460"/> <!-- 下一环 857462 -->
+			<npc_drop npc_id="857462" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="857462"/> <!-- 下一环 857464 -->
+			<npc_drop npc_id="857464" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="857464"/> <!-- 下一环 235619 -->
+			<npc_drop npc_id="235619" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="235619"/> <!-- 下一环 235620 -->
+			<npc_drop npc_id="235620" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="235620"/> <!-- 下一环 235621 -->
+			<npc_drop npc_id="235621" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="235621"/> <!-- 下一环 835733 -->
+			<npc_drop npc_id="835733" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="835733"/> <!-- 下一环 833015 -->
+			<npc_drop npc_id="833015" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="833015"/> <!-- 下一环 833013 -->
+			<npc_drop npc_id="833013" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="833013"/> <!-- 下一环 833012 -->
+			<npc_drop npc_id="833012" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="833012"/> <!-- 下一环 835484 -->
+			<npc_drop npc_id="835484" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="835484"/> <!-- 下一环 835485 -->
+			<npc_drop npc_id="835485" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="835485"/> <!-- 下一环 835486 -->
+			<npc_drop npc_id="835486" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="835486"/> <!-- 下一环 234990 -->
+			<npc_drop npc_id="234990" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="234990"/> <!-- 下一环 234991 -->
+			<npc_drop npc_id="234991" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="234991"/> <!-- 下一环 233898 -->
+			<npc_drop npc_id="233898" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233898"/> <!-- 下一环 233740 -->
+			<npc_drop npc_id="233740" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233740"/> <!-- 下一环 233718 -->
+			<npc_drop npc_id="233718" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233718"/> <!-- 下一环 233719 -->
+			<npc_drop npc_id="233719" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233719"/> <!-- 下一环 233675 -->
+			<npc_drop npc_id="233675" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233675"/> <!-- 下一环 233676 -->
+			<npc_drop npc_id="233676" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233676"/> <!-- 下一环 233632 -->
+			<npc_drop npc_id="233632" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233632"/> <!-- 下一环 233633 -->
+			<npc_drop npc_id="233633" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="233633"/> <!-- 下一环 230857 -->
+			<npc_drop npc_id="230857" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="230857"/> <!-- 下一环 230858 -->
+			<npc_drop npc_id="230858" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="230858"/> <!-- 下一环 220426 -->
+			<npc_drop npc_id="220426" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="220426"/> <!-- 下一环 220427 -->
+			<npc_drop npc_id="220427" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="220427"/> <!-- 下一环 220450 -->
+			<npc_drop npc_id="220450" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="220450"/> <!-- 下一环 220593 -->
+			<npc_drop npc_id="220593" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="220593"/> <!-- 下一环 701542 -->
+			<npc_drop npc_id="701542" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="701542"/> <!-- 下一环 702729 -->
+			<npc_drop npc_id="702729" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="702729"/> <!-- 下一环 234686 -->
+			<npc_drop npc_id="234686" item_id="186000479" count="10000000" chance="100"/>
+			<event_drop item_id="188100438" count="1" chance="100" npc_id="234686"/> <!-- 下一环 234691 -->
+			<npc_drop npc_id="234691" item_id="186000479" count="10000000" chance="100"/>
             </event_drops>
         </event>
 
@@ -9709,8 +9772,8 @@
 
         <event name="Secret of the Ancients Returns" start="2027-06-13T00:00:00+00:00" end="2027-07-04T00:00:00+00:00">
         <event_drops>
+        <!-- 真端事件表只保留全服随机碎片掉落；安努比斯增补与 minLvl 门槛在真端不存在。 -->
         <event_drop item_id="186000479" count="1" chance="2" minDiff="66" maxDiff="75"/> <!-- Ancient Shard -->
-        <event_drop item_id="186000479" count="1" chance="100" minDiff="1" maxDiff="10" minLvl="66" npc_id="247233"/> <!-- Anubis -->
         </event_drops>
         <quests>
         <maintainable>80949;80950;80951;80952;80953</maintainable>
@@ -9758,58 +9821,6 @@
         <!-- None ||| World_FOBJ_Egypt_desert_01 -->
         <spawn npc_id="835555" respawn_time="295">
         <spot x="1169.6" y="1359.6" z="209.67447" h="16"/>
-        </spawn>
-        </spawn_map>
-        <spawn_map map_id="210100000"><!-- Esterra -->
-        <!-- Anubis ||| World_event_egypt_kingmonster_01 -->
-        <spawn npc_id="247233" respawn_time="3600">
-        <spot x="1701.2" y="1415.7" z="305.64252" h="67"/>
-        </spawn>
-        <!-- Ancient Box ||| World_event_egypt_monster_02 -->
-        <spawn npc_id="247234" respawn_time="295">
-        <spot x="1693.3" y="1412.9" z="306.04376" h="89"/>
-        <spot x="1698.6" y="1407.6" z="305.5175" h="94"/>
-        <spot x="1698.8" y="1411.4" z="305.7375" h="77"/>
-        <spot x="1696.9" y="1418.1" z="306.0" h="34"/>
-        <spot x="1702.8" y="1411.8" z="305.21246" h="76"/>
-        </spawn>
-        <!-- Ancient Box ||| World_event_egypt_monster_03 -->
-        <spawn npc_id="247235" respawn_time="295">
-        <spot x="1690.5" y="1411.0" z="306.25" h="51"/>
-        <spot x="1693.7" y="1408.3" z="305.7875" h="53"/>
-        <spot x="1696.6" y="1413.1" z="305.92313" h="43"/>
-        <spot x="1697.8" y="1416.3" z="306.0" h="65"/>
-        <spot x="1703.7" y="1408.3" z="304.71878" h="0"/>
-        </spawn>
-        <!-- None ||| World_FOBJ_Egypt_portal_01 -->
-        <spawn npc_id="835556" respawn_time="295">
-        <spot x="1703.8" y="1416.7" z="305.3625" h="67"/>
-        </spawn>
-        </spawn_map>
-        <spawn_map map_id="220110000"><!-- Nosra -->
-        <!-- Anubis ||| World_event_egypt_kingmonster_01 -->
-        <spawn npc_id="247233" respawn_time="3600">
-        <spot x="1533.0" y="2037.4" z="172.66876" h="39"/>
-        </spawn>
-        <!-- Ancient Box ||| World_event_egypt_monster_02 -->
-        <spawn npc_id="247234" respawn_time="295">
-        <spot x="1533.6" y="2042.2" z="172.83499" h="27"/>
-        <spot x="1535.9" y="2042.6" z="173.26877" h="44"/>
-        <spot x="1530.5" y="2042.1" z="172.4375" h="89"/>
-        <spot x="1532.1" y="2045.0" z="172.64374" h="76"/>
-        <spot x="1529.0" y="2044.8" z="172.25" h="94"/>
-        </spawn>
-        <!-- Ancient Box ||| World_event_egypt_monster_03 -->
-        <spawn npc_id="247235" respawn_time="295">
-        <spot x="1535.7" y="2045.0" z="173.31874" h="0"/>
-        <spot x="1532.7" y="2050.3" z="172.89343" h="51"/>
-        <spot x="1534.3" y="2048.1" z="173.06157" h="65"/>
-        <spot x="1527.9" y="2047.5" z="172.20782" h="43"/>
-        <spot x="1530.6" y="2048.3" z="172.575" h="53"/>
-        </spawn>
-        <!-- None ||| World_FOBJ_Egypt_portal_01 -->
-        <spawn npc_id="835556" respawn_time="295">
-        <spot x="1535.1" y="2033.6" z="172.94249" h="39"/>
         </spawn>
         </spawn_map>
         </spawns>
