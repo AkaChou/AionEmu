@@ -25,8 +25,8 @@ import lombok.Getter;
 import com.aionemu.gameserver.world.World;
 
 /**
- * Enchant 物品动作模板（静态数据/XML）。
- * XML template.
+ * 强化与镶嵌动作模板；天烙之石按目标类型分派到独立强化流程。
+ * Enchant and socket action template, routing Estima targets to their dedicated enchant flow.
  */
 
 @Getter
@@ -56,25 +56,24 @@ public class EnchantItemAction extends AbstractItemAction {
 	private float chance;
 
 	/**
-	 * @return 是否允许执行。 / Whether act
+	 * 检查物品与费用；天烙之石仅使用其专用强化规则。
+	 * Checks items and costs, using only the dedicated enchant rules for Estima stones.
+	 * @return 是否允许执行 / whether the action is allowed
 	 */
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
-		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
-		if (isSupplementAction()) {
-			return false;
-		}
-		if (targetItem.getItemTemplate().isEstima()
-			&& targetItem.getEnchantLevel() >= EnchantService.getMaxEstimaEnchantLevel()) {
-			// 你无法添加精华。 / You cannot add Essence.
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
-			return false;
-		}
 		if (parentItem == null || targetItem == null) {
 			// 找不到该物品。 / The item cannot be found.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
+		if (isSupplementAction()) {
+			return false;
+		}
+		if (targetItem.getItemTemplate().isEstima()) {
+			return parentItem.getItemId() / 1000000 == 166 && EnchantService.canEnchantEstima(player, targetItem);
+		}
+		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
 		// 鉴定门禁：未鉴定的装备不可强化（魔石/神石走各自专用消息）。
 		// Identify gate: an unidentified item cannot be enchanted (manastone/godstone have dedicated messages).
 		if (targetItem.hasRetuning()) {
@@ -112,9 +111,16 @@ public class EnchantItemAction extends AbstractItemAction {
 	}
 
 	/**
-	 * 执行 / act.
+	 * 按目标类型执行强化，避免天烙强化材料被普通强化石分支优先匹配。
+	 * Executes enchanting by target type so ordinary stone classification cannot intercept Estima materials.
 	 */
 	public void act(final Player player, final Item parentItem, final Item targetItem, final Item supplementItem, final int targetWeapon) {
+		if (targetItem != null && targetItem.getItemTemplate().isEstima()) {
+			if (canAct(player, parentItem, targetItem)) {
+				EnchantService.estimaEnchant(player, parentItem, targetItem);
+			}
+			return;
+		}
 		if ((supplementItem != null) && (!checkSupplementLevel(player, supplementItem.getItemTemplate(), targetItem.getItemTemplate()))) {
 			return;
 		}
@@ -156,8 +162,6 @@ public class EnchantItemAction extends AbstractItemAction {
 				ItemTemplate itemTemplate = parentItem.getItemTemplate();
 				if (itemTemplate.isEnchantmentStone() || itemTemplate.isAmplificationStone()) {
 					EnchantService.enchantItemAct(player, parentItem, targetItem, currentEnchant, isSuccess);
-				} else if (targetItem.getItemTemplate().isCpStones()) {
-					EnchantService.estimaEnchant(player, parentItem, targetItem);
 				} else {
 					EnchantService.socketManastoneAct(player, parentItem, targetItem, targetWeapon, isSuccess);
 				}

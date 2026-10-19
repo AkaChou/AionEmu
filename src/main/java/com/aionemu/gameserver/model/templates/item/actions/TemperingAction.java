@@ -20,8 +20,8 @@ import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * Tempering 动作模板（静态数据/XML）。
- * XML template.
+ * 羽饰、手镯与饰品觉醒动作，按部位判定概率并仅向操作的 GM 提示本次成功率。
+ * Plume, bracelet and accessory tempering action, reporting per-slot chances only to the acting GM.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -178,22 +178,28 @@ public class TemperingAction extends AbstractItemAction {
 	}
 
 	/**
-	 * 判定淬炼是否成功（按部位概率）。
-	 * Determines whether the tempering succeeds (per-slot probability).
+	 * 按部位概率判定觉醒结果，并向操作的 GM 本人发送本次成功率。
+	 * Rolls the per-slot tempering result and sends this attempt's chance only to the acting GM.
 	 * @param player 淬炼玩家 / the tempering player
 	 * @param item 被淬炼物品 / the item being tempered
 	 * @return 成功则为 true / true if successful
 	 */
 	public boolean isTemperingSuccess(Player player, Item item) {
-		// 配置值即成功率百分比，100 为必定成功 / configured value is the percent itself, 100 always succeeds
+		float successRate;
+		String operationKey;
 		if (item.getItemTemplate().isBracelet()) {
-			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_BRACELET;
+			successRate = EnchantsConfig.ENCHANT_BRACELET;
+			operationKey = "item.upgrade.bracelet";
 		} else if (item.getItemTemplate().isPlume()) {
-			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_PLUME;
+			successRate = EnchantsConfig.ENCHANT_PLUME;
+			operationKey = "item.upgrade.plume";
 		} else if (item.getItemTemplate().isAccessory()) {
-			return Rnd.get(1, 100) <= EnchantsConfig.ENCHANT_ACCESSORY;
+			successRate = EnchantsConfig.ENCHANT_ACCESSORY;
+			operationKey = "item.upgrade.accessory";
 		} else {
 			return false;
 		}
+		EnchantService.sendUpgradeChance(player, item, operationKey, successRate);
+		return Rnd.get(1, 100) <= successRate;
 	}
 }

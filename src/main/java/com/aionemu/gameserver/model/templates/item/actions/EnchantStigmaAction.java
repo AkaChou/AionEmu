@@ -13,14 +13,15 @@ import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.EnchantService;
+import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
- * EnchantStigma 动作模板（静态数据/XML）。
- * XML template.
+ * 烙印之石强化动作模板，完成时先同步结果属性再通知强化窗口。
+ * Stigma enchant action template, syncing result attributes before notifying the enchant window.
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -67,17 +68,21 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		return true;
 	}
 
-	/** 执行 / act. */
+	/**
+	 * 执行烙印强化，按既有保护规则应用结果，并在刷新物品后发送完成通知。
+	 * Enchants a stigma using the existing protection rules, refreshing the item before sending completion.
+	 */
 	@Override
 	public void act(final Player player, final Item parentItem, final Item targetItem) {
 		if (!canAct(player, parentItem, targetItem)) {
 			return;
 		}
-		final boolean isSuccess = Rnd.chance(EnchantsConfig.ENCHANT_STIGMA);
+		final float successRate = EnchantsConfig.ENCHANT_STIGMA;
+		EnchantService.sendUpgradeChance(player, targetItem, "item.upgrade.stigma", successRate);
+		final boolean isSuccess = Rnd.chance(successRate);
 		final int parentItemId = parentItem.getItemId();
-		final int parntObjectId = parentItem.getObjectId();
+		final int parentObjectId = parentItem.getObjectId();
 		final int parentNameId = parentItem.getNameId();
-		final int nameId = targetItem.getNameId();
 		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 3000, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
@@ -91,53 +96,31 @@ public class EnchantStigmaAction extends AbstractItemAction {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_CANCELED(new DescriptionId(parentNameId)));
 				// %0 的烙印之石强化已取消。 / Stigma enchantment of %0 has been cancelled.
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_CANCEL(new DescriptionId(parentNameId)));
-				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 2, 0), true);
+				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentObjectId, parentItemId, 0, 2, 0), true);
 				player.getObserveController().removeObserver(this);
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().scheduleTask(TaskId.ITEM_USE, new Runnable() {
-			/** 运行 / run. */
-			@Override
-			public void run() {
-				if (isSuccess) {
-					player.getObserveController().removeObserver(observer);
-					player.getInventory().decreaseKinah(getStigmaByQuality(parentItem));
-					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 1, 1), true);
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId)));
-					player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
-					targetItem.setEnchantLevel(targetItem.getEnchantLevel() + 1);
-					targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
-					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-					player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
-				} else {
-					player.getObserveController().removeObserver(observer);
-					player.getInventory().decreaseKinah(getStigmaByQuality(parentItem));
-					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parntObjectId, parentItemId, 0, 2, 1), true);
-					
-					boolean hasStigmaProtection = false;
-					if (player.getEffectController() != null) {
-						hasStigmaProtection = player.getEffectController().hasEffectById(147141);
-					}
-
-					if (hasStigmaProtection) {
-						int currentLevel = targetItem.getEnchantLevel();
-						int newLevel = Math.max(0, currentLevel - 1);
-						targetItem.setEnchantLevel(newLevel);
-						
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId()));
-						
-						PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-					} else {
-						targetItem.setEnchantLevel(0);
-						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId)));
-						PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-					}
-					
-					targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
-					player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
-				}
+		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			player.getObserveController().removeObserver(observer);
+			player.getInventory().decreaseKinah(getStigmaByQuality(parentItem));
+			SM_SYSTEM_MESSAGE resultMessage;
+			if (isSuccess) {
+				player.getInventory().decreaseByObjectId(parentObjectId, 1);
+				targetItem.setEnchantLevel(targetItem.getEnchantLevel() + 1);
+				resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId));
+			} else if (player.getEffectController() != null
+				&& player.getEffectController().hasEffectById(147141)) {
+				targetItem.setEnchantLevel(Math.max(0, targetItem.getEnchantLevel() - 1));
+				resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId());
+			} else {
+				targetItem.setEnchantLevel(0);
+				resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId));
 			}
+			targetItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
+			ItemPacketService.sendEnchantResult(player, parentItem, targetItem, isSuccess);
+			PacketSendUtility.sendPacket(player, resultMessage);
 		}, 3000);
 	}
 

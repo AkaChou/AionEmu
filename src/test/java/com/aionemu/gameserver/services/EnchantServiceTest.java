@@ -15,11 +15,14 @@ import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
+/**
+ * 验证强化费用、独立等级上限与天烙成功率，并在各测试后恢复静态配置。
+ * Verifies enchant costs, independent caps and Estima success rates, restoring static settings after each test.
+ */
 class EnchantServiceTest {
 
 	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
 		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_ESTIMA_ENCHANT_LEVEL",
-		"ENCHANT_ESTIMA", "ENCHANT_ESTIMA_MIN_RATE",
 		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL");
 
 	@AfterEach
@@ -96,20 +99,30 @@ class EnchantServiceTest {
 	}
 
 	@Test
-	void allowsEstimaEnchantUpToFifty() {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 50;
+	void allowsEstimaEnchantUpToOneHundred() {
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
 
 		assertEquals(11, EnchantService.capEstimaEnchantLevel(11));
 		assertEquals(50, EnchantService.capEstimaEnchantLevel(50));
-		assertEquals(50, EnchantService.capEstimaEnchantLevel(51));
+		assertEquals(99, EnchantService.capEstimaEnchantLevel(99));
+		assertEquals(100, EnchantService.capEstimaEnchantLevel(100));
+		assertEquals(100, EnchantService.capEstimaEnchantLevel(101));
 	}
 
 	@Test
-	void capsEstimaEnchantLevelAtFiftyWhenConfiguredHigher() {
+	void capsEstimaEnchantLevelAtOneHundredWhenConfiguredHigher() {
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 150;
+
+		assertEquals(100, EnchantService.getMaxEstimaEnchantLevel());
+		assertEquals(100, EnchantService.capEstimaEnchantLevel(120));
+	}
+
+	@Test
+	void honorsEstimaCapsBetweenFiftyAndOneHundred() {
 		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 80;
 
-		assertEquals(50, EnchantService.getMaxEstimaEnchantLevel());
-		assertEquals(50, EnchantService.capEstimaEnchantLevel(60));
+		assertEquals(80, EnchantService.getMaxEstimaEnchantLevel());
+		assertEquals(80, EnchantService.capEstimaEnchantLevel(81));
 	}
 
 	@Test
@@ -117,35 +130,18 @@ class EnchantServiceTest {
 		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 0;
 
 		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
+
+		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = -1;
+		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
 	}
 
 	@Test
-	void derivesEstimaRateFromConfiguredBaseMinusLevel() {
-		EnchantsConfig.ENCHANT_ESTIMA = 100;
-		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 10;
+	void declaresIndependentEstimaCastSpeedWithFiveSecondsAsDefault() throws Exception {
+		Property property = EnchantsConfig.class.getDeclaredField("ESTIMA_ENCHANT_SPEED")
+			.getAnnotation(Property.class);
 
-		assertEquals(100f, EnchantService.getEstimaEnchantRate(0));
-		assertEquals(90f, EnchantService.getEstimaEnchantRate(10));
-		assertEquals(50f, EnchantService.getEstimaEnchantRate(50));
-	}
-
-	@Test
-	void neverDropsEstimaRateBelowConfiguredFloor() {
-		EnchantsConfig.ENCHANT_ESTIMA = 30;
-		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 10;
-
-		assertEquals(20f, EnchantService.getEstimaEnchantRate(10));
-		assertEquals(10f, EnchantService.getEstimaEnchantRate(20));
-		assertEquals(10f, EnchantService.getEstimaEnchantRate(50));
-	}
-
-	@Test
-	void keepsEstimaRateAtZeroFloorReachable() {
-		EnchantsConfig.ENCHANT_ESTIMA = 20;
-		EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE = 0;
-
-		assertEquals(0f, EnchantService.getEstimaEnchantRate(20));
-		assertEquals(0f, EnchantService.getEstimaEnchantRate(40));
+		assertEquals("gameserver.enchant.estima.speed", property.key());
+		assertEquals("5000", property.defaultValue());
 	}
 
 	@Test
@@ -168,7 +164,7 @@ class EnchantServiceTest {
 	@Test
 	void declaresFullSuccessRatesByDefault() throws Exception {
 		for (String field : new String[] { "SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_PLUME", "ENCHANT_BRACELET",
-			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA" }) {
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "ENCHANT_ESTIMA" }) {
 			Property property = EnchantsConfig.class.getDeclaredField(field).getAnnotation(Property.class);
 			assertEquals("100", property.defaultValue(), field);
 		}

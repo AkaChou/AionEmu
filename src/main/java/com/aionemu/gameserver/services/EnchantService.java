@@ -39,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 附魔服务：装备强化、拆解、魔力石镶嵌、手镯/装备词条应用，以及相关套装与技能判定。
@@ -48,6 +49,8 @@ import java.util.List;
  */
 @Slf4j
 public class EnchantService {
+
+	private static final int ESTIMA_ENCHANT_KINAH = 34323;
 
 	private static final int[] archDaevaStoneItems = {169405421, 169405422, 169405423};
 
@@ -119,8 +122,8 @@ public class EnchantService {
 	}
 
 	/**
-	 * 获取天烙之石（埃斯蒂玛）强化等级上限（配置优先，默认 15，上限 50）。
-	 * Returns the Estima (CP stone) enchant cap (config first, default 15, capped at 50).
+	 * 获取天烙之石（埃斯蒂玛）强化等级上限（配置优先，默认 15，上限 100）。
+	 * Returns the Estima (CP stone) enchant cap (config first, default 15, capped at 100).
 	 *
 	 * @return 天烙之石最大强化等级 / Estima max enchant level
 	 */
@@ -129,7 +132,31 @@ public class EnchantService {
 		if (configured <= 0) {
 			configured = 15;
 		}
-		return Math.min(configured, 50);
+		return Math.min(configured, 100);
+	}
+
+	/**
+	 * 将运行时天烙之石模板的强化上限同步为配置值，避免模板中的 max_enchant 继续把上限固定在 10。
+	 * Synchronizes the runtime Estima template cap with configuration so max_enchant no longer stays at 10.
+	 *
+	 * @param template 物品模板 / item template
+	 */
+	public static void applyEstimaEnchantCap(ItemTemplate template) {
+		if (template != null && template.isEstima()) {
+			template.setMaxEnchant(getMaxEstimaEnchantLevel());
+		}
+	}
+
+	/**
+	 * 应用配置中的天烙之石强化上限；热更新后旧实例仍保留原上限时也可显式刷新。
+	 * Applies the configured Estima cap, including explicit refreshes of existing instances after a config change.
+	 *
+	 * @param templates 待刷新的物品模板 / item templates to refresh
+	 */
+	public static void applyEstimaEnchantCap(Iterable<ItemTemplate> templates) {
+		for (ItemTemplate template : templates) {
+			applyEstimaEnchantCap(template);
+		}
 	}
 
 	/**
@@ -239,47 +266,83 @@ public class EnchantService {
 	}
 
 	/**
-	 * 计算天烙之石当前等级下的强化成功率（%）：基础成功率每级递减 1%，不低于配置下限。
-	 * Computes the Estima enchant success rate (%) for the current level:
-	 * the configured base rate drops by 1% per level, never below the configured floor.
+	 * 仅向操作的 GM 本人发送本次物品升级成功率，不修改概率或执行额外随机判定。
+	 * Sends this item's upgrade chance only to the acting GM, without changing rates or rolling again.
 	 *
-	 * @param enchantLevel 当前强化等级 / current enchant level
-	 * @return 成功率（%） / success rate (%)
+	 * @param player 操作玩家；为空时不发送 / acting player; null suppresses the notice
+	 * @param targetItem 升级目标 / upgrade target
+	 * @param operationKey 操作名称的本地化键 / localization key for the operation name
+	 * @param successRate 本次判定使用的百分比 / percentage used for this attempt
 	 */
-	public static float getEstimaEnchantRate(int enchantLevel) {
-		float base = EnchantsConfig.ENCHANT_ESTIMA;
-		if (base <= 0) {
-			base = 100;
-		}
-		float floor = EnchantsConfig.ENCHANT_ESTIMA_MIN_RATE;
-		if (floor < 0) {
-			floor = 0;
-		}
-		return Math.max(base - enchantLevel, Math.min(floor, base));
+	public static void sendUpgradeChance(Player player, Item targetItem, String operationKey, float successRate) {
+		sendUpgradeChance(player, targetItem, operationKey, successRate, successRate);
 	}
 
 	/**
-	 * 执行 Estima 附魔流程。
-	 * Runs the Estima enchant flow.
+	 * 区分常规概率与 GM 保底后的生效概率；只将显示值限制在 0 到 100 之间。
+	 * Distinguishes the normal chance from the GM override, clamping only displayed values to 0 through 100.
+	 */
+	private static void sendUpgradeChance(Player player, Item targetItem, String operationKey,
+		float normalRate, float effectiveRate) {
+		if (player == null || !player.isGM()) {
+			return;
+		}
+		String normal = String.format(Locale.ROOT, "%.2f", Math.clamp(normalRate, 0f, 100f));
+		String effective = String.format(Locale.ROOT, "%.2f", Math.clamp(effectiveRate, 0f, 100f));
+		String messageKey = normal.equals(effective) ? "item.upgrade.chance" : "item.upgrade.chance.gm_override";
+		player.sendMessage(I18n.get(messageKey, I18n.get(operationKey), targetItem.getItemId(), effective, normal));
+	}
+
+	/**
+	 * 检查天烙之石专用强化上限、装备状态与费用，不使用普通装备的等级和价格配置。
+	 * Checks the Estima cap, equipped state and cost independently of ordinary equipment settings.
+	 *
+	 * @param player 玩家 / player
+	 * @param targetItem 目标天烙之石 / target Estima stone
+	 * @return 是否允许强化；拒绝时发送对应提示 / whether enchanting is allowed, sending a message on refusal
+	 */
+	public static boolean canEnchantEstima(Player player, Item targetItem) {
+		if (!targetItem.getItemTemplate().isEstima()) {
+			return false;
+		}
+		if (targetItem.getEnchantLevel() >= getMaxEstimaEnchantLevel()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
+			return false;
+		}
+		if (targetItem.isEquipped()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_ENCHANT_EQUIPED);
+			return false;
+		}
+		if (player.getInventory().getKinah() < ESTIMA_ENCHANT_KINAH) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 执行天烙之石专用强化流程，在扣费前重新检查上限与装备状态。
+	 * Runs the dedicated Estima enchant flow, rechecking the cap and equipped state before charging.
 	 *
 	 * @param player     玩家 / player
 	 * @param parentItem 主物品 / parent item
 	 * @param targetItem 目标物品 / target item
 	 */
 	public static void estimaEnchant(final Player player, final Item parentItem, final Item targetItem) {
-		int estimaKinah = 34323;
-		float rate = getEstimaEnchantRate(targetItem.getEnchantLevel());
-		final boolean isEstimaSuccess = Rnd.get(1, 1000) / 10f <= rate;
-		if (player.getInventory().getKinah() < estimaKinah) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
+		if (!canEnchantEstima(player, targetItem)) {
 			return;
 		}
-		player.getInventory().decreaseKinah(estimaKinah);
+		float rate = EnchantsConfig.ENCHANT_ESTIMA;
+		sendUpgradeChance(player, targetItem, "item.upgrade.estima", rate);
+		final boolean isEstimaSuccess = Rnd.get(1, 1000) / 10f <= rate;
+		player.getInventory().decreaseKinah(ESTIMA_ENCHANT_KINAH);
 		final int parentItemId = parentItem.getItemId();
 		final int parentObjectId = parentItem.getObjectId();
 		final int parentNameId = parentItem.getNameId();
 		final int targetEnchantLvl = targetItem.getEnchantLevel();
-		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 5000, 0, 0), true);
+		final int castTime = EnchantsConfig.ESTIMA_ENCHANT_SPEED;
+		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(
+			player.getObjectId(), parentObjectId, parentItemId, castTime, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
 			public void abort() {
@@ -295,23 +358,18 @@ public class EnchantService {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
+			player.getInventory().decreaseByObjectId(parentObjectId, 1);
 			if (isEstimaSuccess) {
-				player.getObserveController().removeObserver(observer);
-				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentObjectId, parentItemId, 0, 1, 1), true);
-				player.getInventory().decreaseByObjectId(parentObjectId, 1);
 				targetItem.setEnchantLevel(capEstimaEnchantLevel(targetEnchantLvl + 1));
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId)));
 			} else {
-				player.getInventory().decreaseByObjectId(parentObjectId, 1);
 				targetItem.setEnchantLevel(0);
-				PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId)));
 			}
 			player.getObserveController().removeObserver(observer);
-			PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
-			ItemPacketService.updateItemAfterInfoChange(player, targetItem);
-			PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, isEstimaSuccess ? 1 : 2, 0));
-		}, 5000);
+			ItemPacketService.sendEnchantResult(player, parentItem, targetItem, isEstimaSuccess);
+			PacketSendUtility.sendPacket(player, isEstimaSuccess
+				? SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_SUCCESS(new DescriptionId(parentNameId))
+				: SM_SYSTEM_MESSAGE.STR_MSG_STIGMA_ENCHANT_FAIL(new DescriptionId(parentNameId)));
+		}, castTime);
 	}
 
 	/**
@@ -384,16 +442,15 @@ public class EnchantService {
 		if (targetItem.isAmplified() && enchantStone.isAmplificationStone()) {
 			success += 180 - targetItem.getEnchantLevel() * 1.0f;
 		}
+		float normalSuccess = success;
 		if (player.isGM()) {
 			success = 100;
 		}
+		sendUpgradeChance(player, targetItem, "item.upgrade.equipment", normalSuccess, success);
 		boolean result = false;
 		float random = Rnd.get(1, 1000) / 10f;
 		if (random <= success) {
 			result = true;
-		}
-		if (player.getAccessLevel() > 0) {
-			PacketSendUtility.sendMessage(player, (result ? "Success" : "Fail") + " Rnd:" + random + " Luck:" + success);
 		}
 		return result;
 	}
@@ -700,6 +757,7 @@ public class EnchantService {
 			success += addSuccessRate;
 			player.subtractSupplements(supplementUseCount, supplementTemplate.getTemplateId());
 		}
+		sendUpgradeChance(player, targetItem, "item.upgrade.manastone", success);
 		float random = Rnd.get(1, 1000) / 10f;
 		return random <= success;
 	}

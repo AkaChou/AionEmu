@@ -39,23 +39,23 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "50")
 	public static int MAX_EQUIPMENT_ENCHANT_LEVEL;
 	/**
-	 * 天烙之石（埃斯蒂玛）最大强化等级。
-	 * Maximum Estima (CP stone) enchant level.
+	 * 天烙之石（埃斯蒂玛）最大强化等级，默认 15，最高 100。
+	 * Maximum Estima (CP stone) enchant level, defaulting to 15 and capped at 100.
 	 */
 	@Property(key = "gameserver.enchant.estima.max.level", defaultValue = "15")
 	public static int MAX_ESTIMA_ENCHANT_LEVEL;
 	/**
-	 * 天烙之石（埃斯蒂玛）强化基础成功率（%），每级递减 1%。
-	 * Estima (CP stone) enchant base success rate (%), decreasing 1% per level.
+	 * 天烙之石（埃斯蒂玛）强化基础成功率（%），不随强化等级变化。
+	 * Estima (CP stone) enchant base success rate (%), independent of enchant level.
 	 */
 	@Property(key = "gameserver.enchant.estima", defaultValue = "100")
 	public static float ENCHANT_ESTIMA;
 	/**
-	 * 天烙之石强化成功率下限（%）。
-	 * Estima enchant success rate floor (%).
+	 * 天烙之石强化施法速度（毫秒）。
+	 * Estima enchant cast speed in milliseconds.
 	 */
-	@Property(key = "gameserver.enchant.estima.min.rate", defaultValue = "10")
-	public static float ENCHANT_ESTIMA_MIN_RATE;
+	@Property(key = "gameserver.enchant.estima.speed", defaultValue = "5000")
+	public static int ESTIMA_ENCHANT_SPEED;
 	/**
 	 * 首饰（耳环/戒指/项链/头盔/腰带）最大觉醒等级。
 	 * Maximum accessory (earrings/rings/necklace/helmet/belt) authorize level.
@@ -199,13 +199,12 @@ public class EnchantsConfig {
 		}
 
 		/**
-		 * 天烙之石强化档（成功率与等级上限）。
-		 * Estima enchant properties (success rate and level cap).
+		 * 天烙之石强化配置：基础成功率、等级上限与施法速度，绑定至静态配置门面。
+		 * Binds Estima base success rate, level cap and cast speed to the static configuration facade.
 		 */
 		@Getter
 		public static class EstimaProperties {
 			private final MaxProperties max = new MaxProperties();
-			private final MinProperties min = new MinProperties();
 
 			/**
 			 * 支持裸标量形式 {@code gameserver.enchant.estima=100}。
@@ -228,6 +227,14 @@ public class EnchantsConfig {
 				ENCHANT_ESTIMA = value;
 			}
 
+			public int getSpeed() {
+				return ESTIMA_ENCHANT_SPEED;
+			}
+
+			public void setSpeed(int speed) {
+				ESTIMA_ENCHANT_SPEED = speed;
+			}
+
 			public static class MaxProperties {
 				public int getLevel() {
 					return MAX_ESTIMA_ENCHANT_LEVEL;
@@ -235,20 +242,6 @@ public class EnchantsConfig {
 
 				public void setLevel(int level) {
 					MAX_ESTIMA_ENCHANT_LEVEL = level;
-				}
-			}
-
-			/**
-			 * 成功率下限（{@code gameserver.enchant.estima.min.rate}）。
-			 * Success-rate floor ({@code gameserver.enchant.estima.min.rate}).
-			 */
-			public static class MinProperties {
-				public float getRate() {
-					return ENCHANT_ESTIMA_MIN_RATE;
-				}
-
-				public void setRate(float rate) {
-					ENCHANT_ESTIMA_MIN_RATE = rate;
 				}
 			}
 		}

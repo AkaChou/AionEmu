@@ -10,6 +10,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE_WAREHOUSE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_ADD_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_EDIT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_ADD_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_UPDATE_ITEM;
@@ -173,6 +174,21 @@ public class ItemPacketService {
 	 */
 	public static void updateItemAfterInfoChange(Player player, Item item, ItemUpdateType updateType) {
 		PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, item, updateType));
+	}
+
+	/**
+	 * 先同步已写入的强化属性，再发送一次完成通知，避免强化窗口读取上次等级。
+	 * Syncs applied enchant attributes before a single completion event so the window reads the new level.
+	 *
+	 * @param player 强化玩家 / enchanting player
+	 * @param material 强化材料 / enchant material
+	 * @param target 已应用成功或失败结果的物品 / item with the success or failure result already applied
+	 * @param success 是否强化成功 / whether enchanting succeeded
+	 */
+	public static void sendEnchantResult(Player player, Item material, Item target, boolean success) {
+		updateItemAfterInfoChange(player, target, ItemUpdateType.STATS_CHANGE);
+		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+			material.getObjectId(), material.getItemId(), 0, success ? 1 : 2, 1));
 	}
 
 	/**
