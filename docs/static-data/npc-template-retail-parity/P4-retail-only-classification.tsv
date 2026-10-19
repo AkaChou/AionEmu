@@ -1,0 +1,288 @@
+retail_element	count	category	subcategory	coverage	local_carrier	recommendation
+idle_name	87719	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+scale	87684	纯外观/客户端	模型/外观	client+server	客户端 npc_client / npc-ai-parts@model_scale	客户端外观字段；真端服务端同时用它缩放 bound_radius，本地 AI 投影已有同一值
+weapon_scale	87684	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端武器模型缩放
+max_enemy_count	87586	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+hit_count	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+dp_reduce	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_light	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_dark	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_earth	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_air	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_water	87383	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+elemental_defend_fire	87376	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+abyss_point	87331	尚未建模	PvP/深渊/奖励	partial	玩家侧深渊/PvP 系统存在，但 NPC 模板字段未接	需要奖励设计，不建议照抄
+can_see_polymorph	87278	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+concentration	87177	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+pet_ai_name	87116	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+dp	87077	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+chase_flying	86914	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+abyss_rank	86564	尚未建模	PvP/深渊/奖励	partial	玩家侧深渊/PvP 系统存在，但 NPC 模板字段未接	需要奖励设计，不建议照抄
+first_attack_split_rate	86205	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+magical_hit_accuracy	85865	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+can_see_invisible	85746	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+cancel_level	85657	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+__spawn_zonename__	84323	尚未建模	其他/元数据	none	无	优先级低
+abnormal_resist_name	82683	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+abnormal_resist_value	82683	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+altitude	80503	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+sensory_range_short	78328	已由其他子系统承载	AI 投影	full	npc-ai-parts@sensory_range_short	已由 AI 投影承载
+move_speed_flee	76479	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+decrease_sensory_range_return	76325	已由其他子系统承载	AI 投影	full	npc-ai-parts@decrease_sensory_range_return	已由 AI 投影承载
+dual	75539	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+hate_decrease_a	75204	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+disk_type	74914	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+magical_critical_reduce_rate	74677	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+physical_damage_trim	74639	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+magical_damage_trim	74639	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+physical_critical_reduce_rate	74467	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+physical_critical_damage_reduce	74467	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+magical_critical_damage_reduce	74467	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+noreducespell_immune	74124	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+magical_skill_boost_resist	71724	已由其他子系统承载	技能/战斗覆盖层	full	stats@mboost_resist	已由本地 stats 属性承载；无需回写
+hate_decrease_type	70991	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+chase_range_fromsp	68403	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+abnormal_penetration_value	66745	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+move_speed_return	64608	已由其他子系统承载	AI 投影	full	npc-ai-parts@move_speed_return	已由 AI 投影承载
+dir	60046	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+mesh	60023	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+hate_decrease_b	59857	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+__design_reference__	48523	尚未建模	其他/元数据	none	无	优先级低
+game_lang	44369	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+visible_equipments/main	44143	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+glory_point	37689	尚未建模	PvP/深渊/奖励	partial	玩家侧深渊/PvP 系统存在，但 NPC 模板字段未接	需要奖励设计，不建议照抄
+proc_reduce_rate	37663	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+min_cash_amount	36448	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+max_cash_amount	36448	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+cash_drop_prob	36447	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+drop_group_min	36447	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+drop_group_max	36447	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+prob	36334	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+no_looting_despawn_time	36236	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+common_drop_adjustment	36112	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+npc_title	35622	已由其他子系统承载	任务/对话/社交/图鉴	partial	NpcTemplate.title_id / TalkEventHandler	本地已有 title_id，是否与真端 npc_title 同义待抽样确认
+appearance/pc_type	27088	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端外观；服务端无需建模
+visible_equipments/torso	27084	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+__ai_name_ref__	27010	尚未建模	其他/元数据	none	无	优先级低
+appearance/hair_type	26377	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端外观；服务端无需建模
+hide_path	26264	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+hide_map	26095	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+appearance/face_type	25882	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端外观；服务端无需建模
+visible_equipments/foot	25364	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+visible_equipments/glove	25286	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+drop_group_idx	25014	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+ui_type	25004	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+item	24629	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+drop_attribute	24628	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+visible_equipments/leg	24476	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+abnormal_penetration_name	23727	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+visible_equipments/shoulder	23550	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+item_count	22109	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+abnormal_immunity_list	21933	已由其他子系统承载	技能/战斗覆盖层	full	NpcTemplate.abnormal_immunity（位掩码）	已由本地异常免疫位图承载；无需回写
+common_drop_group_idx	21290	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+common_drop	21289	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+quest_ai_name	20600	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+can_pass_wall	19989	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+no_penalty	19770	尚未建模	服务开关/功能入口	none	无数据化入口	NPC 功能由 AI/Java 硬编码，未数据化
+ammo_speed	18140	已由其他子系统承载	技能/战斗覆盖层	field-only	NpcTemplate.ammoSpeed（已入模板，无运行时消费者）	字段已存在但不参与计算；无需对齐
+visible_equipments/sub	16996	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+siege_involve	16203	尚未建模	服务开关/功能入口	none	无数据化入口	NPC 功能由 AI/Java 硬编码，未数据化
+visible_equipments/head	14664	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+stat_ratio	13951	已由其他子系统承载	技能/战斗覆盖层	full	compact/npc-combat.xml + NpcStatsTemplate.statRatio	已由战斗覆盖层承载；无需回写模板
+no_check_animation	9555	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+limit_attribute_reduce_value	7676	已由其他子系统承载	技能/战斗覆盖层	full	compact/npc-combat.xml + NpcStatsTemplate	已由战斗覆盖层承载；无需回写模板
+limit_attribute	7600	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+monsterbook_name	6660	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+appearance/face_color	5446	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端外观；服务端无需建模
+gossip	5130	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+talk_delay_time	4867	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+verbosity	4825	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+user_animation	4349	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+die_fx	3045	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+skill_property_list	2878	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+named_monster	2390	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+flag_type	2010	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+object_type	1728	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+appearance/hair_color	1660	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据	纯客户端外观；服务端无需建模
+tab	1387	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+buy_price_rate	1261	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+visible_range	1202	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+visible_equipments/wing_always	997	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+check_can_see	970	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+mobile_event	925	尚未建模	其他/元数据	none	无	优先级低
+undetectable	918	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+dmg_texture	777	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+visible_equipments/wing_mesh	731	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据（.cgf）	本地无 NPC 翅膀字段；如做视觉对齐需新增数据通道
+etab	672	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+subdialog_type	653	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+spawn_channel	561	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+airlines_name	545	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+ignore_contribution	452	尚未建模	服务开关/功能入口	none	无数据化入口	NPC 功能由 AI/Java 硬编码，未数据化
+atab	448	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+char_warehouse	344	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+account_warehouse	344	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+master_item_max_hp_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_max_hp_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_hpregen_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_hpregen_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_attack_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_attack_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_critical_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_critical_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_hit_accuracy_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_hit_accuracy_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_dodge_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_dodge_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_parry_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_parry_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_block_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_block_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_defend_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_defend_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_attack_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_attack_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_defend_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_defend_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_skill_boost_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_skill_boost_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_skill_boost_resist_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_skill_boost_resist_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_hit_accuracy_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_hit_accuracy_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_resist_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_resist_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_light_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_light_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_dark_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_dark_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_fire_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_fire_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_water_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_water_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_air_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_air_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_earth_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_elemental_defend_earth_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_concentration_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_concentration_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_heal_skill_boost_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_heal_skill_boost_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_critical_reduce_rate_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_critical_reduce_rate_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_critical_damage_reduce_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_physical_critical_damage_reduce_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_reduce_rate_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_reduce_rate_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_damage_reduce_ratio	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+master_item_magical_critical_damage_reduce_limit	342	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+extendcharwarehouse_start	338	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+extendcharwarehouse_end	338	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+sell_price_rate	285	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+custom_match_maker	272	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+recovery	250	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+recovery_opt1	250	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+recovery_opt2	250	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+omit_system_msg	216	纯外观/客户端	客户端 UI/本地化	client-only	客户端资源	纯客户端字段
+ap_buy_price_rate2	198	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+buy_atab	196	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+ttab	191	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+init_state	189	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+exclusive_attribute	179	已由其他子系统承载	技能/战斗覆盖层	full/partial	npc-skills.xml / compact/npc-combat.xml / NpcStatsTemplate	技能装配与伤害区间已由专用子系统承载
+exclusive_attribute_tag	179	已由其他子系统承载	技能/战斗覆盖层	full/partial	npc-skills.xml / compact/npc-combat.xml / NpcStatsTemplate	技能装配与伤害区间已由专用子系统承载
+elemental_immunity_list	167	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+unrotatable	167	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+can_talk_invisible	161	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+skill_name	150	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+skill_level	150	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+skill_rate	149	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+use_script	146	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+massive_looting_min_level	144	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+resurrect_bind	141	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+resurrect_bind_fee	141	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+massive_looting_num	135	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+massive_looting_item	135	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+massive_looting_max_level	135	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+subdialog_value	122	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+save_trade_count	118	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+npc_pve_attack_ratio_physical	115	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+ap_sell_price_rate	113	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+artifact_id	108	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+guild_warehouse	95	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+exchange_coin_quest	94	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+hate_resurrection	92	尚未建模	AI 感知/威胁	none	无	若要做真端感知/仇恨对齐，单独立项
+warpoint	92	尚未建模	PvP/深渊/奖励	partial	玩家侧深渊/PvP 系统存在，但 NPC 模板字段未接	需要奖励设计，不建议照抄
+stigma_equip	91	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+bindstone_type	90	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+bindstone_livetime	90	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+bindstone_capacity	90	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+bindstone_usecount	86	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+vendor_race	85	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_itemcharge	75	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+npcfaction_name	74	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+func_itemcharge2	72	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+remove_item_option	67	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+gather_skill_levelup	64	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+npc_pve_defend_ratio_physical	62	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+npc_pve_attack_ratio_magical	62	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+npc_pve_defend_ratio_magical	62	尚未建模	战斗数值	none	无	涉及命中/减伤/元素防御，需先定战斗公式再建模
+buy_tab	60	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+exclusion_list	58	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+buy_price_rate2	58	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+visible_equipments/right_finger	53	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+func_giveup_craftskill	51	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+deadbody_name_id	40	纯外观/客户端	客户端 UI/本地化	client-only	客户端资源	纯客户端字段
+display_msg_attacked	35	纯外观/客户端	客户端 UI/本地化	client-only	客户端资源	纯客户端字段
+display_msg_die	34	纯外观/客户端	客户端 UI/本地化	client-only	客户端资源	纯客户端字段
+town_residence	33	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+rotation_period	33	纯外观/客户端	模型/外观	client-only	客户端 npc_client 数据 / 客户端物品网格	服务端不需要；客户端自行解析
+direct_portal_npc_type	32	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+scaling_drop	22	已由其他子系统承载	掉落/战利品	full/partial	npc_drops / NpcDrop / DropGroup / MassiveLooting	保留在掉落子系统，补现金掉落需另立需求
+func_personal_auction	20	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+match_maker	18	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+instance_entry	17	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+ins_creation_id_1	17	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+func_housing_change_building	17	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_housing_config	17	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+item_replace	13	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_housing_pay_rent	13	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_housing_kick	13	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+pvpzone_location_alias	11	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+ins_creation_id_2	11	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+create_guild	10	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+monsterbook_race	10	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+func_housing_script	10	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+visible_equipments/right_ear	9	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+skill_delay_time	8	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+change_item_skin	7	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_pet_manage	7	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+ettab	7	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+sell_price_rate2	6	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+ap_sell_price_rate2	6	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+item_upgrade	6	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+package_permitted	5	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+skill_count	5	已由其他子系统承载	技能/战斗覆盖层	full	npc-skills.xml / compact skills	技能装配已由技能子系统承载
+visible_equipments/left_ear	5	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+ktab	5	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+vip_grade_min	5	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+vip_grade_max	5	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+give_item_proc	4	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+pvpzone	4	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+pvpzone_world_name	4	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+jobfaction_name	4	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+ctab	4	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+itemcharge_rate	4	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_town_challenge	3	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+extendinventory_start	2	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+extendinventory_end	2	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+edit_character_gender	2	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+edit_character_all	2	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+visible_equipments/left_finger	2	纯外观/客户端	模型/外观	mappable	ItemTemplate.name_desc（网格名）	可经 name_desc 建立映射；不要用它替换本地 <item> id
+faction_amount	2	已由其他子系统承载	任务/对话/社交/图鉴	partial	quest engine / TalkInfo / npc_factions / monster_book	对话与任务由任务引擎/DSL 承载；标题本地已有 title_id
+func_enterhouse_to_instant	2	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+func_recreate_personal_ins	2	已由其他子系统承载	传送/副本/区域	partial	TeleporterData / portals / instance handlers	按 NPC id 绑定传送与副本入口，模板字段不必复制
+extendaccountwarehouse_start	1	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+extendaccountwarehouse_end	1	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+compound_weapon	1	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
+ap_buy_price_rate	1	已由其他子系统承载	商店/仓库/交易/服务	partial	TradeListTemplate / 仓库与物品服务 Java 实现	服务入口由 AI/Java 承载，价格与页签可回填 TradeListTemplate
