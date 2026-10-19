@@ -16,6 +16,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,10 +49,6 @@ public class ThreadPoolManager implements Executor {
      * 定时任务线程池执行器。
      * Scheduled task thread-pool executor.
      */
-    /**
-     * 定时任务线程池执行器。
-     * Scheduled task thread-pool executor.
-     */
     private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
     private final ListeningScheduledExecutorService scheduledThreadPool;
 
@@ -61,6 +58,7 @@ public class ThreadPoolManager implements Executor {
      */
     private final ThreadPoolExecutor generalPacketsThreadPoolExecutor;
     private final ListeningExecutorService generalPacketsThreadPool;
+    private final AtomicBoolean shutdownStarted = new AtomicBoolean();
 
     /**
      * 初始化线程池并启动死锁检测。
@@ -161,19 +159,44 @@ public class ThreadPoolManager implements Executor {
     }
 
     /**
-     * 关闭全部线程池。
-     * Shutdown all thread pools.
+     * 实例级幂等关闭网络线程池，按原等待时限汇总结果；失败和剩余任务仍告警。
+     * Idempotently shuts down network pools per instance, retaining wait limits and warnings for incomplete work.
      */
     public void shutdown() {
+        if (!shutdownStarted.compareAndSet(false, true)) {
+            return;
+        }
+        long begin = System.nanoTime();
+        boolean success = true;
         try {
             scheduledThreadPool.shutdown();
+        } catch (RuntimeException e) {
+            success = false;
+            log.error(I18n.get("threadpool.shutdown.pool_failed", "network", "scheduled"), e);
+        }
+        try {
             generalPacketsThreadPool.shutdown();
-            scheduledThreadPool.awaitTermination(2, TimeUnit.SECONDS);
-            generalPacketsThreadPool.awaitTermination(2, TimeUnit.SECONDS);
-            log.info(I18n.get("log.4ed0b19373c7"));
+        } catch (RuntimeException e) {
+            success = false;
+            log.error(I18n.get("threadpool.shutdown.pool_failed", "network", "packets"), e);
+        }
+        try {
+            success &= scheduledThreadPool.awaitTermination(2, TimeUnit.SECONDS);
+            success &= generalPacketsThreadPool.awaitTermination(2, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
+            success = false;
             log.error(I18n.get("log.6fb05b263d35"), e);
             Thread.currentThread().interrupt();
+        }
+        int scheduled = scheduledThreadPoolExecutor.getQueue().size() + scheduledThreadPoolExecutor.getActiveCount();
+        int packets = generalPacketsThreadPoolExecutor.getQueue().size()
+            + generalPacketsThreadPoolExecutor.getActiveCount();
+        success &= scheduled == 0 && packets == 0;
+        long elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - begin);
+        if (success) {
+            log.info(I18n.get("threadpool.network.shutdown.result", true, elapsed, scheduled, packets));
+        } else {
+            log.warn(I18n.get("threadpool.network.shutdown.result", false, elapsed, scheduled, packets));
         }
     }
 }

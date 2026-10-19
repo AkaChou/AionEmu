@@ -160,7 +160,7 @@ public class ChatService {
             if (chatClient.getChannelHandler() != null) {
                 chatClient.getChannelHandler().close();
             } else {
-                log.warn(I18n.get("log.d22b2f1b1e32", playerId));
+                log.debug(I18n.get("log.d22b2f1b1e32", playerId));
             }
         }
     }

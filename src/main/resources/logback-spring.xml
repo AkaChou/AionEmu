@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <configuration>
 	<property name="logFolder" value="${aion.log.dir:-log/}"/>
-	<property name="fileConsolePattern" value="%date{MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %message%n"/>
-	<property name="coloredConsolePattern" value="%date{MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %message%n"/>
+	<property name="fileConsolePattern" value="%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger - %message%n"/>
+	<property name="coloredConsolePattern" value="%date{MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger) - %message%n"/>
 	<property name="messagePattern" value="%date %message%n"/>
 
 	<appender name="app_console" class="ch.qos.logback.core.FileAppender">
@@ -179,6 +179,7 @@
 			<Pattern>${messagePattern}</Pattern>
 		</encoder>
 	</appender>
+	<!-- File appenders retain full timestamps, threads, package names and stack traces. -->
 	<appender name="out_error" class="ch.qos.logback.core.FileAppender">
 		<filter class="com.aionemu.commons.logging.slf4j.filters.ExactLevelFilter">
 			<targetLevel>ERROR</targetLevel>
@@ -188,7 +189,7 @@
 		<file>${logFolder}/error.log</file>
 		<append>true</append>
 		<encoder>
-			<Pattern>${messagePattern}</Pattern>
+			<Pattern>${fileConsolePattern}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="out_warn" class="ch.qos.logback.core.FileAppender">
@@ -200,7 +201,7 @@
 		<file>${logFolder}/warn.log</file>
 		<append>true</append>
 		<encoder>
-			<Pattern>${messagePattern}</Pattern>
+			<Pattern>${fileConsolePattern}</Pattern>
 		</encoder>
 	</appender>
 

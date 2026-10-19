@@ -22,6 +22,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
  * 游戏服连接聊天服的门面：负责建连、重连、断开以及玩家登录/登出通知。
  * Facade for the game server's connection to the chat server: connect, reconnect,
  * disconnect, and player login/logout notifications.
+ * 资源认领在实例锁内，网络关闭在锁外；在途建连结束后补清理。
+ * Resources are claimed under the instance lock, closed outside it, and drained again after in-flight connects.
  */
 @Slf4j
 public class ChatServer {
@@ -108,7 +110,7 @@ public class ChatServer {
 	 * 为建连做准备，清除关闭标记。
 	 * Prepares for connection by clearing the shutdown flag.
 	 */
-	public void prepareForConnect() {
+	public synchronized void prepareForConnect() {
 		serverShutdown = false;
 	}
 
@@ -178,21 +180,41 @@ public class ChatServer {
 	 */
 	private boolean connectWithNetty() {
 		shutdownNettyClient();
-		try {
-			CsPacketHandler handler = buildPacketHandler();
-			NettyClient client = new NettyClient(NetworkConfig.CHAT_ADDRESS, "ChatServer", transport -> {
-				ChatServerConnection connection = new ChatServerConnection(transport, handler);
+		CsPacketHandler handler = buildPacketHandler();
+		NettyClient client = new NettyClient(NetworkConfig.CHAT_ADDRESS, "ChatServer", transport -> {
+			ChatServerConnection connection = new ChatServerConnection(transport, handler);
+			synchronized (this) {
 				chatServer = connection;
-				return connection;
-			});
-			nettyClient = client;
+			}
+			return connection;
+		});
+		return connectWithNetty(client);
+	}
+
+	/**
+	 * 建连后复查关闭状态，保留本次客户端以释放关闭后才创建的资源。
+	 * Rechecks shutdown after connecting and retains this client to release resources created after close.
+	 */
+	private boolean connectWithNetty(NettyClient client) {
+		try {
+			synchronized (this) {
+				nettyClient = client;
+			}
 			client.connect();
-			return chatServer != null;
+			return chatServer != null && !chatServer.isClosing();
 		} catch (Exception e) {
 			chatServer = null;
 			shutdownNettyClient();
-			log.info(I18n.get("log.4b5f26f1f747", e.getMessage()));
+			log.info(I18n.get("log.4b5f26f1f747", e.getMessage()), e);
 			return false;
+		} finally {
+			if (serverShutdown) {
+				try {
+					gameServerDisconnected();
+				} finally {
+					client.shutdown();
+				}
+			}
 		}
 	}
 
@@ -201,7 +223,9 @@ public class ChatServer {
 	 * Callback when the chat server goes down: clear connection and reschedule reconnect if not shutting down.
 	 */
 	public void chatServerDown() {
-		log.warn(I18n.get("log.913b9c4068ef"));
+		if (!serverShutdown) {
+			log.warn(I18n.get("log.913b9c4068ef"));
+		}
 		chatServer = null;
 		shutdownNettyClient();
 		if (!serverShutdown) {
@@ -210,18 +234,29 @@ public class ChatServer {
 	}
 
 	/**
-	 * 游戏服主动断开与聊天服的连接（关闭流程）。
-	 * Actively disconnects from the chat server (game-server shutdown path).
+	 * 主动关闭并认领当前资源；重复调用清理迟到连接，但只记录一次结果。
+	 * Claims resources for active shutdown; repeated calls drain late connections but log only once.
 	 */
 	public void gameServerDisconnected() {
-		serverShutdown = true;
-		cancelConnectionTask();
-		if (chatServer != null) {
-			chatServer.close(false);
+		ChatServerConnection connection;
+		boolean firstShutdown;
+		synchronized (this) {
+			firstShutdown = !serverShutdown;
+			serverShutdown = true;
+			cancelConnectionTask();
+			connection = chatServer;
 			chatServer = null;
 		}
-		shutdownNettyClient();
-		log.info(I18n.get("log.29e4ab1c55a4"));
+		try {
+			if (connection != null) {
+				connection.close(false);
+			}
+		} finally {
+			shutdownNettyClient();
+		}
+		if (firstShutdown) {
+			log.info(I18n.get("log.29e4ab1c55a4"));
+		}
 	}
 
 	/**
@@ -229,9 +264,12 @@ public class ChatServer {
 	 * Shuts down and releases the underlying Netty client.
 	 */
 	private void shutdownNettyClient() {
-		NettyClient client = nettyClient;
-		if (client != null) {
+		NettyClient client;
+		synchronized (this) {
+			client = nettyClient;
 			nettyClient = null;
+		}
+		if (client != null) {
 			client.shutdown();
 		}
 	}

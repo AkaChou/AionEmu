@@ -1,6 +1,7 @@
 package com.aionemu.loginserver;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.loginserver.configs.Config;
@@ -27,6 +28,7 @@ public class PingPongThread implements Runnable {
 	 */
 	public volatile boolean uptime;
 	private final SM_PING ping;
+	private final AtomicBoolean started = new AtomicBoolean();
 	private byte requests = 0;
 	private int serverPID = -1;
 
@@ -48,7 +50,11 @@ public class PingPongThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		log.info(I18n.get("log.edfb7eb94901", this.connection.getGameServerInfo().getId()));
+		GameServerInfo infoAtStart = connection.getGameServerInfo();
+		if (!started.get() || !uptime || infoAtStart == null) {
+			return;
+		}
+		log.debug(I18n.get("log.edfb7eb94901", infoAtStart.getId()));
 		while (uptime) {
 			try {
 				Thread.sleep(Config.PINGPONG_DELAY);
@@ -70,7 +76,7 @@ public class PingPongThread implements Runnable {
 					updateSvStatsOnline(info.getId(), info.getCurrentPlayers(), info.getMaxPlayers());
 				}
 			} catch (Exception ex) {
-				log.error(I18n.get("log.2d2a3f2b47fe", connection.getGameServerInfo().getId()), ex);
+					log.error(I18n.get("log.2d2a3f2b47fe", infoAtStart.getId()), ex);
 			}
 		}
 	}
@@ -94,13 +100,14 @@ public class PingPongThread implements Runnable {
 	 */
 	public boolean validateResponse() {
 		if (requests >= 2) {
-			uptime = false;
-			log.info(I18n.get("log.3054e06f2cb1", connection.getGameServerInfo().getId(), this.serverPID));
-
 			GameServerInfo timedOutInfo = connection.getGameServerInfo();
-			if (timedOutInfo != null) {
-				updateSvStatsOffline(timedOutInfo.getId());
+			if (!uptime || timedOutInfo == null) {
+				return true;
 			}
+			uptime = false;
+			log.info(I18n.get("log.3054e06f2cb1", timedOutInfo.getId(), this.serverPID));
+
+			updateSvStatsOffline(timedOutInfo.getId());
 			connection.close(false);
 			if (false && serverPID != -1) {
 				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
@@ -128,6 +135,15 @@ public class PingPongThread implements Runnable {
 		if (gameServerInfo != null) {
 			updateSvStatsOffline(gameServerInfo.getId());
 		}
+	}
+
+	/**
+	 * 原子认领一次心跳循环启动；关闭连接的心跳不可再启动。
+	 * Atomically claims a single heartbeat-loop start; closed heartbeats cannot start.
+	 * @return 认领成功返回 true / {@code true} when the start was claimed
+	 */
+	public boolean claimStart() {
+		return uptime && started.compareAndSet(false, true);
 	}
 
 	/**

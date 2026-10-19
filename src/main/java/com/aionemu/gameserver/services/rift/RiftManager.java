@@ -2,14 +2,6 @@ package com.aionemu.gameserver.services.rift;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.gameserver.controllers.RVController;
 import com.aionemu.gameserver.controllers.effect.EffectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -22,12 +14,19 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
-import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 裂隙管理器，负责裂隙/漩涡 NPC 的生成模板登记与实例生成。
  * Rift manager responsible for spawn-template registration and rift/vortex NPC spawning.
+ *
  * @author Rinzler (Encom)
  */
 @Slf4j
@@ -42,14 +41,14 @@ public class RiftManager {
 	/**
 	 * 登记裂隙生成组模板（按锚点名索引）。
 	 * Registers rift spawn-group templates (indexed by anchor name).
+	 *
 	 * @param spawn 生成组 / Spawn group
 	 */
 	public static void addRiftSpawnTemplate(SpawnGroup2 spawn) {
 		if (spawn.hasPool()) {
 			SpawnTemplate template = spawn.getSpawnTemplates().getFirst();
 			riftGroups.put(template.getAnchor(), template);
-		}
-		else {
+		} else {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
 				riftGroups.put(template.getAnchor(), template);
 			}
@@ -57,8 +56,74 @@ public class RiftManager {
 	}
 
 	/**
+	 * 从已生成裂隙注册表移除指定 NPC（裂隙 NPC 删除时调用）。
+	 * Removes the given NPC from the spawned-rift registry (called when a rift NPC is deleted).
+	 *
+	 * @param npc 裂隙 NPC / the rift NPC
+	 */
+	public static void removeSpawned(Npc npc) {
+		rifts.remove(npc);
+	}
+
+	/**
+	 * 返回当前已生成裂隙 NPC 的快照副本。
+	 * Returns a snapshot copy of currently spawned rift NPCs.
+	 *
+	 * @return 裂隙 NPC 列表 / Rift NPC list
+	 */
+	public static List<Npc> getSpawned() {
+		synchronized (rifts) {
+			return new ArrayList<>(rifts);
+		}
+	}
+
+	/**
+	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
+	 * Returns the instance, which must be supplied by Spring.
+	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
+	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
+	 * creating a second instance outside the container.</p>
+	 *
+	 * @return 由 Spring 提供的实例 / the Spring-provided instance
+	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
+	 *                               when no provider or bean is available
+	 */
+	public static RiftManager getInstance() {
+		RiftManager resolved = resolvedInstance;
+		if (resolved != null) {
+			return resolved;
+		}
+		ObjectProvider<RiftManager> provider = instanceProvider;
+		resolved = provider == null ? null : provider.getIfAvailable();
+		if (resolved == null) {
+			throw new IllegalStateException("RiftManager 未由 Spring 提供："
+				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
+				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		}
+		resolvedInstance = resolved;
+		return resolved;
+	}
+
+	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
+		NpcTemplate masterObjectTemplate = DataManager.NPC_DATA.getNpcTemplate(template.getNpcId());
+		Npc npc = new Npc(IDFactory.getInstance().nextId(), controller, template, masterObjectTemplate);
+
+		npc.setKnownlist(new NpcKnownList(npc));
+		npc.setEffectController(new EffectController(npc));
+
+		World world = World.getInstance();
+		world.storeObject(npc);
+		world.setPosition(npc, template.getWorldId(), instance, template.getX(), template.getY(), template.getZ(), template.getHeading());
+		world.spawn(npc);
+		rifts.add(npc);
+
+		return npc;
+	}
+
+	/**
 	 * 在裂隙位置生成主从端裂隙 NPC。
 	 * Spawns master/slave rift NPCs at a rift location.
+	 *
 	 * @param loc 裂隙位置 / Rift location
 	 */
 	public void spawnRift(RiftLocation loc) {
@@ -69,6 +134,7 @@ public class RiftManager {
 	/**
 	 * 在漩涡位置生成次元漩涡主从端 NPC。
 	 * Spawns master/slave vortex NPCs at a vortex location.
+	 *
 	 * @param loc 漩涡位置 / Vortex location
 	 */
 	public void spawnVortex(VortexLocation loc) {
@@ -98,79 +164,19 @@ public class RiftManager {
 
 			if (rift.isVortex()) {
 				vl.setVortexController((RVController) master.getController());
-				spawned = vl.getSpawned().size();
 				vl.getSpawned().add(master);
 				vl.getSpawned().add(slave);
+			} else {
+				rl.getSpawned().add(master);
+				rl.getSpawned().add(slave);
 			}
-            else {
-               rl.getSpawned().add(master);
-               rl.getSpawned().add(slave);
-           }
-           spawned += 2;
-       }
-       log.info(I18n.get("log.918c2ef9c33c", rift.name(), spawned));
-	}
-
-	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
-		NpcTemplate masterObjectTemplate = DataManager.NPC_DATA.getNpcTemplate(template.getNpcId());
-		Npc npc = new Npc(IDFactory.getInstance().nextId(), controller, template, masterObjectTemplate);
-
-		npc.setKnownlist(new NpcKnownList(npc));
-		npc.setEffectController(new EffectController(npc));
-
-		World world = World.getInstance();
-		world.storeObject(npc);
-		world.setPosition(npc, template.getWorldId(), instance, template.getX(), template.getY(), template.getZ(), template.getHeading());
-		world.spawn(npc);
-		rifts.add(npc);
-
-		return npc;
-	}
-
-	/**
-	 * 从已生成裂隙注册表移除指定 NPC（裂隙 NPC 删除时调用）。
-	 * Removes the given NPC from the spawned-rift registry (called when a rift NPC is deleted).
-	 * @param npc 裂隙 NPC / the rift NPC
-	 */
-	public static void removeSpawned(Npc npc) {
-		rifts.remove(npc);
-	}
-
-	/**
-	 * 返回当前已生成裂隙 NPC 的快照副本。
-	 * Returns a snapshot copy of currently spawned rift NPCs.
-	 * @return 裂隙 NPC 列表 / Rift NPC list
-	 */
-	public static List<Npc> getSpawned() {
-        synchronized (rifts) {
-        return new ArrayList<>(rifts);
-    }
-    }
-
-	/**
-	 * 获取实例：必须由 Spring 提供（{@link #setInstanceProvider(ObjectProvider)}）。
-	 * Returns the instance, which must be supplied by Spring.
-	 * <p>双源静态兜底已退役：缺少 provider 时直接 fail-fast，避免在容器之外静默创建第二套实例。
-	 * The legacy static fallback is retired: a missing provider now fails fast instead of silently
-	 * creating a second instance outside the container.</p>
-	 * @return 由 Spring 提供的实例 / the Spring-provided instance
-	 * @throws IllegalStateException provider 未注入或容器中没有该 Bean /
-	 *         when no provider or bean is available
-	 */
-	public static RiftManager getInstance() {
-		RiftManager resolved = resolvedInstance;
-		if (resolved != null) {
-			return resolved;
+			spawned += 2;
 		}
-		ObjectProvider<RiftManager> provider = instanceProvider;
-		resolved = provider == null ? null : provider.getIfAvailable();
-		if (resolved == null) {
-			throw new IllegalStateException("RiftManager 未由 Spring 提供："
-				+ (provider == null ? "instanceProvider 未注入" : "容器中不存在该 Bean")
-				+ "（静态兜底已退役，见 LegacySingletonFallbackAuditTest）");
+		// 每张图已完成生成时才记录；零实例地图不输出明细。
+		// Log only completed map spawns; zero-instance maps stay silent.
+		if (spawned > 0) {
+			log.debug(I18n.get("log.918c2ef9c33c", rift.name(), spawned));
 		}
-		resolvedInstance = resolved;
-		return resolved;
 	}
 
 	/**

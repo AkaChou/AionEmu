@@ -9,6 +9,7 @@ import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 内嵌模式下 GameServer 与 LoginServer 的进程内直连通道。
@@ -78,8 +79,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
 
     @Override
     public void close() {
-        gameServerSide.close(true);
-        loginServerSide.close(true);
+        gameServerSide.transportBridge().close(true);
     }
 
     /**
@@ -87,7 +87,8 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      * Hand whole frames from the source write buffer directly to the peer.
      * <p>{@code writeData} 完成后缓冲已处于读模式（position=0、limit=帧长），因此禁止再次 flip；
      * 载荷视图必须与 socket 读缓冲一致使用小端序；投递给对端时必须切到接收方自己的服务上下文，
-     * 否则对端的状态机与延迟任务会带着发送方上下文运行（socket 模式下每端各自在自身上下文中处理入站）。
+ * 否则对端的状态机与延迟任务会带着发送方上下文运行
+ * （socket 模式下每端各自在自身上下文中处理入站）。
      * After {@code writeData} the buffer is already in read mode (position=0, limit=frame size), so it must not
      * be flipped again; the payload view must be little-endian to match the socket read buffer; and delivery
      * must switch to the receiving side's service context, otherwise the peer's state machine and delayed tasks
@@ -136,7 +137,11 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
 
         String serviceContext();
 
-        void markClosed();
+        /**
+         * 原子认领端点清理；不得获取对端锁。
+         * Atomically claim cleanup without taking the peer's lock.
+         */
+        boolean claimClose();
 
         void cleanupDirect();
     }
@@ -146,6 +151,8 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      * GameServer-side connection bridge.
      */
     private static final class DirectLoginServerConnection extends LoginServerConnection implements DirectEndpoint {
+
+        private final AtomicBoolean cleanupClaimed = new AtomicBoolean();
 
         DirectLoginServerConnection(ConnectionTransport transport) {
             super(transport);
@@ -167,7 +174,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
 
         @Override
         public boolean isWriteEnabled() {
-            return !isWriteDisabled();
+            return !cleanupClaimed.get() && !isWriteDisabled();
         }
 
         @Override
@@ -186,8 +193,12 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
         }
 
         @Override
-        public void markClosed() {
+        public boolean claimClose() {
+            if (!cleanupClaimed.compareAndSet(false, true)) {
+                return false;
+            }
             closed = true;
+            return true;
         }
 
         @Override
@@ -205,6 +216,8 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
      * LoginServer-side GS connection bridge.
      */
     private static final class DirectGsConnection extends GsConnection implements DirectEndpoint {
+
+        private final AtomicBoolean cleanupClaimed = new AtomicBoolean();
 
         DirectGsConnection(ConnectionTransport transport, GsPacketHandlerFactory packetFactory, SvstatDao svstatsDao,
                 ThreadPoolManager threadPoolManager) {
@@ -227,7 +240,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
 
         @Override
         public boolean isWriteEnabled() {
-            return !isWriteDisabled();
+            return !cleanupClaimed.get() && !isWriteDisabled();
         }
 
         @Override
@@ -246,8 +259,12 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
         }
 
         @Override
-        public void markClosed() {
+        public boolean claimClose() {
+            if (!cleanupClaimed.compareAndSet(false, true)) {
+                return false;
+            }
             closed = true;
+            return true;
         }
 
         @Override
@@ -297,8 +314,7 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
 
         @Override
         public void close(boolean forced) {
-            cleanupEndpoint(owner);
-            cleanupEndpoint(peer);
+            cleanupEndpoints(owner, peer);
         }
 
         @Override
@@ -308,16 +324,38 @@ public final class DirectMemoryLoginChannel implements LoginMessageDispatcher {
     }
 
     /**
-     * 在端点自身服务上下文中执行关闭清理。
-     * Runs an endpoint's close cleanup inside its own service context.
+     * 两端都必须清理；第二端的运行时失败作为 suppressed 保留，不掩盖第一端失败。
+     * Cleans both endpoints, retaining the second runtime failure as suppressed rather than masking the first.
+     */
+    private static void cleanupEndpoints(DirectEndpoint owner, DirectEndpoint peer) {
+        RuntimeException failure = null;
+        try {
+            cleanupEndpoint(owner);
+        } catch (RuntimeException e) {
+            failure = e;
+            throw e;
+        } finally {
+            try {
+                cleanupEndpoint(peer);
+            } catch (RuntimeException e) {
+                if (failure == null) {
+                    throw e;
+                }
+                failure.addSuppressed(e);
+            }
+        }
+    }
+
+    /**
+     * 原子认领后在端点自身服务上下文中执行一次清理，不嵌套获取双端锁。
+     * Atomically claims cleanup once in the endpoint's service context without nesting endpoint locks.
      * @param endpoint 待清理端点 / endpoint to clean up
      */
     static void cleanupEndpoint(DirectEndpoint endpoint) {
-        if (endpoint == null) {
+        if (endpoint == null || !endpoint.claimClose()) {
             return;
         }
         try (ServiceContext.Scope ignored = ServiceContext.use(endpoint.serviceContext())) {
-            endpoint.markClosed();
             endpoint.cleanupDirect();
         }
     }

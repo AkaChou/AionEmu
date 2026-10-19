@@ -3,6 +3,7 @@ package com.aionemu.gameserver;
 import com.aionemu.boot.i18n.I18n;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import static com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE.STR_SERVER_SHUTDOWN;
 
 import java.util.ArrayList;
@@ -76,6 +77,15 @@ public class ShutdownHook extends Thread {
 
 		ShutdownMode(String text) {
 			this.text = text;
+		}
+
+		/** 取得当前语言的模式文案。 / Returns the mode text in the current language. */
+		private String localizedText() {
+			return switch (this) {
+				case NONE -> I18n.get("shutdown.mode.terminate");
+				case SHUTDOWN -> I18n.get("shutdown.mode.shutdown");
+				case RESTART -> I18n.get("shutdown.mode.restart");
+			};
 		}
 	}
 
@@ -164,16 +174,16 @@ public class ShutdownHook extends Thread {
 	 * @return 可继续关服为 true / {@code true} if shutdown may continue
 	 */
 	public boolean waitForPlayersToLeave(int delay, int announceInterval, ShutdownMode mode) {
-		log.info(I18n.get("shutdown.process_start", mode.getText(), delay));
+		log.info(I18n.get("shutdown.process_start", mode.localizedText(), delay));
 
 		for (int i = delay; i >= announceInterval; i -= announceInterval) {
 			try {
 				if (World.getInstance().getPlayersIterator().hasNext()) {
-					log.info(I18n.get("shutdown.runtime_in_seconds", mode.getText(), i));
+					log.info(I18n.get("shutdown.runtime_in_seconds", mode.localizedText(), i));
 					sendShutdownMessage(i);
 					sendShutdownStatus(ShutdownConfig.SAFE_REBOOT);
 				} else {
-					log.info(I18n.get("shutdown.no_players_proceed"));
+					log.debug(I18n.get("shutdown.no_players_proceed"));
 					break;
 				}
 
@@ -208,17 +218,17 @@ public class ShutdownHook extends Thread {
 	 * @param haltRuntime 是否强制终止当前进程 / whether to halt the current process
 	 */
 	public void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
-		log.info(I18n.get("shutdown.final_sequence"));
+		log.debug(I18n.get("shutdown.final_sequence"));
 
 		try {
 			LoginServer.getInstance().gameServerDisconnected();
-			log.info(I18n.get("shutdown.disconnected_login"));
+			log.debug(I18n.get("shutdown.disconnected_login"));
 		} catch (Exception e) {
 			log.error(I18n.get("shutdown.disconnect_login_error"), e);
 		}
 		try {
 			ChatServer.getInstance().gameServerDisconnected();
-			log.info(I18n.get("shutdown.disconnected_chat"));
+			log.debug(I18n.get("shutdown.disconnected_chat"));
 		} catch (Exception e) {
 			log.error(I18n.get("shutdown.disconnect_chat_error"), e);
 		}
@@ -238,7 +248,7 @@ public class ShutdownHook extends Thread {
 			for (Player player : playersToDisconnect) {
 				try {
 					if (player != null && player.isOnline()) {
-						log.info(I18n.get("shutdown.disconnecting_player", player.getName()));
+						log.debug(I18n.get("shutdown.disconnecting_player", player.getName()));
 						PlayerLeaveWorldService.startLeaveWorld(player);
 					}
 				} catch (Exception e) {
@@ -260,17 +270,17 @@ public class ShutdownHook extends Thread {
 			}
 
 			try {
-				log.info(I18n.get("shutdown.wait_disconnect"));
+				log.debug(I18n.get("shutdown.wait_disconnect"));
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				log.warn(I18n.get("shutdown.final_wait_interrupted"));
 				Thread.currentThread().interrupt();
 			}
 		} else {
-			log.info(I18n.get("shutdown.no_players_disconnect"));
+			log.debug(I18n.get("shutdown.no_players_disconnect"));
 		}
 
-		log.info(I18n.get("shutdown.players_processed"));
+		log.debug(I18n.get("shutdown.players_processed"));
 
 		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
 		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
@@ -278,13 +288,13 @@ public class ShutdownHook extends Thread {
 		runShutdownStep("shutdown QuestEngine", () -> QuestEngine.getInstance().shutdown());
 		runShutdownStep("shutdown CronService", CronService::shutdownCurrentIfInitialized);
 		if (AionRuntimeMode.isBootEmbedded()) {
-			log.info(I18n.get("shutdown.threadpool_managed"));
+			log.debug(I18n.get("shutdown.threadpool_managed"));
 		} else {
 			runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
 		}
 		log.info(I18n.get("shutdown.steps_completed"));
 
-		log.info(I18n.get("shutdown.runtime_now", mode.getText()));
+		log.info(I18n.get("shutdown.runtime_now", mode.localizedText()));
 
 		try {
 			Thread.sleep(1000);

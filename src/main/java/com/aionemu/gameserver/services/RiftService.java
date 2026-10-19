@@ -2,19 +2,8 @@ package com.aionemu.gameserver.services;
 
 
 import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.services.RiftService;
-
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.springframework.beans.factory.ObjectProvider;
-
+import com.aionemu.boot.i18n.I18n;
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule.Rift;
@@ -26,12 +15,21 @@ import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
- * 裂隙服务，管理世界裂隙开关、刷怪与定时计划。
- * Rift service managing world rifts open/close, spawns, and schedules.
+ * 裂隙服务，管理世界裂隙开关、刷怪与定时计划，批量操作按地图记录实际新增摘要。
+ * Rift service managing spawns and schedules, reporting actual additions per map for batch opens.
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class RiftService {
 	private static volatile ObjectProvider<RiftService> instanceProvider;
 	private static volatile RiftService resolvedInstance;
@@ -40,6 +38,7 @@ public class RiftService {
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
 	private final Map<Integer, RiftLocation> activeRifts = new HashMap<>();
+	private final Map<Integer, Object> pendingCloses = new HashMap<>();
 
 	/**
 	 * 初始化裂隙地点数据。
@@ -119,19 +118,36 @@ public class RiftService {
 					RiftInformer.sendRiftsInfo(rift.getWorldId());
 					return true;
 				}
+				log.info(I18n.get("rift.open.result", rift.getId(), 0, 0));
 			} else {
-				boolean opened = false;
-				for (RiftLocation rift : getRiftLocations().values()) {
-					if (rift.getWorldId() == id && rift.getSpawned().isEmpty()) {
-						openRifts(rift);
-						opened = true;
-					}
-				}
+				boolean opened = openRiftsOnMap(id);
 				RiftInformer.sendRiftsInfo(id);
 				return opened;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 按地图执行入口开启并汇总实际新增数量；返回值保留原有尝试开启语义。
+	 * Opens entrances on a map and summarizes actual additions, preserving the attempted-open return semantics.
+	 */
+	private boolean openRiftsOnMap(int worldId) {
+		boolean opened = false;
+		int entrances = 0;
+		int npcs = 0;
+		for (RiftLocation rift : getRiftLocations().values()) {
+			if (rift.getWorldId() == worldId && rift.getSpawned().isEmpty()) {
+				int spawned = openRift(rift);
+				if (spawned > 0) {
+					entrances++;
+					npcs += spawned;
+				}
+				opened = true;
+			}
+		}
+		log.info(I18n.get("rift.open.map_summary", worldId, entrances, npcs));
+		return opened;
 	}
 
 	/**
@@ -168,15 +184,71 @@ public class RiftService {
 	 * @param location rift location
 	 */
 	public void openRifts(RiftLocation location) {
-		location.setOpened(true);
-		RiftManager.getInstance().spawnRift(location);
+		if (!location.getSpawned().isEmpty()) {
+			log.info(I18n.get("rift.open.result", location.getId(), 0, 0));
+			return;
+		}
+		cancelPendingClose(location);
+		int spawned = openRift(location);
+		log.info(I18n.get("rift.open.result", location.getId(), spawned > 0 ? 1 : 0, spawned));
+	}
+
+	/**
+	 * 重新开启时退出旧计时器阶段，避免旧关闭任务作用于本次开启。
+	 * Leaves the previous timer phase on reopen so its close task cannot affect this opening.
+	 * @param location 裂隙地点 / rift location
+	 */
+	private void cancelPendingClose(RiftLocation location) {
 		closing.lock();
 		try {
-			activeRifts.put(location.getId(), location);
+			pendingCloses.remove(location.getId());
+			activeRifts.remove(location.getId());
 		} finally {
 			closing.unlock();
 		}
-		ThreadPoolManager.getInstance().schedule(this::closeRifts, (long) CustomConfig.RIFT_DURATION * 3600 * 1000);
+	}
+
+	/**
+	 * 开启尚未生成的入口，返回实际新增 NPC 数；批量调用不输出逐入口 INFO。
+	 * Opens an unspawned entrance and returns actual new NPCs, without per-entrance INFO in batches.
+	 */
+	private int openRift(RiftLocation location) {
+		if (!location.getSpawned().isEmpty()) {
+			return 0;
+		}
+		location.setOpened(true);
+		RiftManager.getInstance().spawnRift(location);
+		Object phase = new Object();
+		closing.lock();
+		try {
+			activeRifts.put(location.getId(), location);
+			pendingCloses.put(location.getId(), phase);
+		} finally {
+			closing.unlock();
+		}
+		ThreadPoolManager.getInstance().schedule(() -> closeOpenedRift(location, phase),
+			(long) CustomConfig.RIFT_DURATION * 3600 * 1000);
+		return location.getSpawned().size();
+	}
+
+	/**
+	 * 仅在入口仍处于待关闭状态时关闭该入口，避免迟到旧计时任务关闭重新开启的裂隙。
+	 * Closes only while the entrance is still pending, preventing a late old timer from closing a reopened rift.
+	 * @param location 裂隙地点 / rift location
+	 * @param phase 本次开启的计时阶段 / timer phase of this opening
+	 */
+	private void closeOpenedRift(RiftLocation location, Object phase) {
+		closing.lock();
+		try {
+			if (pendingCloses.get(location.getId()) != phase) {
+				return;
+			}
+			pendingCloses.remove(location.getId());
+			activeRifts.remove(location.getId());
+		} finally {
+			closing.unlock();
+		}
+		closeRift(location);
 	}
 
 	/**
@@ -203,6 +275,7 @@ public class RiftService {
 		try {
 			rifts = new ArrayList<>(activeRifts.values());
 			activeRifts.clear();
+			pendingCloses.clear();
 		} finally {
 			closing.unlock();
 		}
@@ -276,24 +349,18 @@ public class RiftService {
 		resolvedInstance = null;
 	}
 
-    /**
-     * 裂隙开启定时任务，按世界 ID 打开对应裂隙并向玩家广播状态。
-     * Runnable that opens rifts for a world id and broadcasts rift state to players.
-     */
-    private record RiftOpenRunnable(RiftService service, int worldId) implements Runnable {
-        /**
-         * 打开该世界全部裂隙位置并发送裂隙信息。
-         * Opens all rift locations in the world and sends rift info.
-         */
-        @Override
-        public void run() {
-            Map<Integer, RiftLocation> locations = service.getRiftLocations();
-            for (final RiftLocation loc : locations.values()) {
-                if (loc.getWorldId() == worldId) {
-                    service.openRifts(loc);
-                }
-            }
-            RiftInformer.sendRiftsInfo(worldId);
-        }
-    }
+	/**
+	 * 裂隙开启定时任务，按世界 ID 打开对应裂隙并向玩家广播状态。
+	 * Runnable that opens rifts for a world id and broadcasts rift state to players.
+	 */
+	private record RiftOpenRunnable(RiftService service, int worldId) implements Runnable {
+		/**
+		 * 打开该世界全部裂隙位置并发送裂隙信息。
+		 * Opens all rift locations in the world and sends rift info.
+		 */
+		@Override
+		public void run() {
+			service.openRifts(worldId);
+		}
+	}
 }

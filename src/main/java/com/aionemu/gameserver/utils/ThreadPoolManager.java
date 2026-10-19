@@ -2,26 +2,19 @@ package com.aionemu.gameserver.utils;
 
 
 import com.aionemu.boot.i18n.I18n;
-import lombok.extern.slf4j.Slf4j;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.commons.network.util.ThreadUncaughtExceptionHandler;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import java.util.concurrent.ForkJoinWorkerThread;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 游戏服线程池管理器：调度、即时、长任务与工作窃取池的统一入口。
@@ -54,6 +47,7 @@ public final class ThreadPoolManager {
 
 	/** 无警告的最大运行时长（毫秒） / Max runtime without warning (ms) */
 	private final long maxRuntimeInMillisWithoutWarning;
+	private final AtomicBoolean shutdownStarted = new AtomicBoolean();
 
 	/**
 	 * 以遗留静态门面初始化各线程池（非 Bean 回退路径与既有测试使用）。
@@ -164,6 +158,18 @@ public final class ThreadPoolManager {
 	}
 
 	/**
+	 * 在长任务池中启动已有心跳循环，不改变该池的慢任务告警阈值。
+	 * Starts an existing heartbeat loop on the long-running pool without changing its slow-task warning threshold.
+	 * @param heartbeat 已有心跳循环 / existing heartbeat loop
+	 */
+	public void executeHeartbeat(Runnable heartbeat) {
+		if (shutdownStarted.get()) {
+			return;
+		}
+		longRunningPool.execute(heartbeat);
+	}
+
+	/**
 	 * 在即时池中执行任务。
 	 * Execute a task on the instant pool.
 	 * @param r 任务 / Task
@@ -229,32 +235,68 @@ public final class ThreadPoolManager {
 	 * Gracefully shut down all pools and log queue state.
 	 */
 	public void shutdown() {
-		final long begin = System.currentTimeMillis();
-		log.info(I18n.get("log.8a50f53595f0"));
-		log.info(I18n.get("log.e0894695d98b", getTaskCount(scheduledPool)));
-		log.info(I18n.get("log.6aca868692a9", getTaskCount(instantPool)));
-		log.info(I18n.get("log.f6e5ab713d99", getTaskCount(longRunningPool)));
-		log.info(I18n.get("log.ab2806542e7c", (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())));
-		scheduledPool.shutdown();
-		instantPool.shutdown();
-		longRunningPool.shutdown();
-		workStealingPool.shutdown();
-		boolean success = false;
+		if (!shutdownStarted.compareAndSet(false, true)) {
+			return;
+		}
+		long begin = System.nanoTime();
+		log.debug(I18n.get("threadpool.shutdown.before", "game", getTaskCount(scheduledPool),
+			getTaskCount(instantPool), getTaskCount(longRunningPool),
+			forkTasks()));
+		boolean success = shutdownPool(scheduledPool, "scheduled");
+		success &= shutdownPool(instantPool, "instant");
+		success &= shutdownPool(longRunningPool, "long-running");
+		success &= shutdownPool(workStealingPool, "work-stealing");
+		boolean terminated = false;
 		try {
-			success |= awaitTermination(5000);
+			awaitTermination(5000);
 			scheduledPool.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
-			success |= awaitTermination(10000);
+			terminated = awaitTermination(10000);
 		} catch (InterruptedException e) {
 			log.warn(I18n.get("log.8f2ed10ffefe"), e);
 			Thread.currentThread().interrupt();
+		} finally {
+			scheduledPool.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
+			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
 		}
-		log.info(I18n.get("log.e2793575e244", success, (System.currentTimeMillis() - begin)));
-		log.info(I18n.get("log.a4e82809c60b", getTaskCount(scheduledPool)));
-		log.info(I18n.get("log.5e21f4d731c1", getTaskCount(instantPool)));
-		log.info(I18n.get("log.63d1ee00d183", getTaskCount(longRunningPool)));
-		log.info(I18n.get("log.ab2806542e7c", (workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount())));
+		int scheduled = getTaskCount(scheduledPool);
+		int instant = getTaskCount(instantPool);
+		int longRunning = getTaskCount(longRunningPool);
+		long fork = forkTasks();
+		success &= terminated && scheduled == 0 && instant == 0 && longRunning == 0 && fork == 0;
+		success &= scheduledPool.isTerminated() && instantPool.isTerminated() && longRunningPool.isTerminated()
+			&& workStealingPool.isTerminated();
+		long elapsed = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - begin);
+		if (success) {
+			log.info(I18n.get("threadpool.shutdown.result", "game", true, elapsed,
+				scheduled, instant, longRunning, fork));
+		} else {
+			log.warn(I18n.get("threadpool.shutdown.result", "game", false, elapsed,
+				scheduled, instant, longRunning, fork));
+		}
 		workStealingPool.shutdownNow();
+	}
+
+	/**
+	 * 关闭单个池；保留失败原因并继续关闭其他池。
+	 * Shuts down one pool, retaining the failure cause while allowing other pools to close.
+	 * @param pool 线程池 / thread pool
+	 * @param name 池名称 / pool name
+	 * @return 关闭调用是否成功 / whether the shutdown call succeeded
+	 */
+	private boolean shutdownPool(ExecutorService pool, String name) {
+		try {
+			pool.shutdown();
+			return true;
+		} catch (RuntimeException e) {
+			log.error(I18n.get("threadpool.shutdown.pool_failed", "game", name), e);
+			return false;
+		}
+	}
+
+	private long forkTasks() {
+		return workStealingPool.getQueuedTaskCount() + workStealingPool.getQueuedSubmissionCount()
+			+ workStealingPool.getActiveThreadCount();
 	}
 
 	/**

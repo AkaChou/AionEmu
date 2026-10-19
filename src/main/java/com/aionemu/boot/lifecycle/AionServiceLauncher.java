@@ -300,7 +300,11 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
         if (!stopping.compareAndSet(false, true)) {
             return;
         }
-        log.info(I18n.get("boot.embedded.requested", mode.name().toLowerCase()));
+        String localizedMode = switch (mode) {
+            case SHUTDOWN -> I18n.get("shutdown.mode.shutdown");
+            case RESTART -> I18n.get("shutdown.mode.restart");
+        };
+        log.info(I18n.get("boot.embedded.requested", localizedMode));
         stopServicesAndCloseContext();
         if (mode == AionEmbeddedShutdownMode.RESTART) {
             haltAction.accept(mode.exitCode());

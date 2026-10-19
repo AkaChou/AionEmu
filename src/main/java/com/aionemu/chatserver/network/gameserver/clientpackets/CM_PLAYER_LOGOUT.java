@@ -49,6 +49,6 @@ public class CM_PLAYER_LOGOUT extends GsClientPacket {
     @Override
     protected void runImpl() {
         ChatCoreServices.chatService().playerLogout(playerId);
-        log.info(I18n.get("log.855c53b4ef96", playerId));
+        log.debug(I18n.get("log.855c53b4ef96", playerId));
     }
 }

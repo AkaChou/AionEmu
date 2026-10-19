@@ -61,7 +61,7 @@ public class AbyssRankingCache {
 	 * Recompute rankings from DAO, refresh player/legion caches, reset online players' ranking flags.
 	 */
 	public void reloadRankings() {
-		log.info(I18n.get("log.d227d2ed702b"));
+		log.debug(I18n.get("log.d227d2ed702b"));
 		this.lastUpdate = (int) (System.currentTimeMillis() / 1000);
 		abyssRankDAO.updateRankList();
 		renewPlayerRanking(Race.ASMODIANS);

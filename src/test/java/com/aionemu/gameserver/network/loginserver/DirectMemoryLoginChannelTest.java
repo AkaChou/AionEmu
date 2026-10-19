@@ -1,8 +1,11 @@
 package com.aionemu.gameserver.network.loginserver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.aionemu.testutil.ServiceContextUnwind;
 import com.aionemu.commons.services.ServiceContext;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.loginserver.DirectMemoryLoginChannel.DirectEndpoint;
 
 import java.nio.ByteBuffer;
@@ -11,20 +14,37 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 
+/**
+ * 验证直连端序、上下文及双端并发关闭时的一次性清理。
+ * Verifies direct framing, contexts and exactly-once cleanup during concurrent endpoint closure.
+ */
 class DirectMemoryLoginChannelTest {
+
+	@AfterEach
+	void unwindContext() {
+		ServiceContextUnwind.unwind();
+	}
 
 	@Test
 	void deliversLittleEndianFramesToPeer() {
 		SenderEndpoint source = new SenderEndpoint(new PortPacket());
 		CollectorEndpoint target = new CollectorEndpoint();
 
+		String previous = ServiceContext.current();
 		DirectMemoryLoginChannel.pumpWrites(source, target);
+		assertEquals(previous, ServiceContext.current());
 
 		assertEquals(1, target.frames.size());
-		assertEquals("game", target.lastDeliveryContext);
+		assertEquals("login", source.lastWriteContext);
 		ByteBuffer received = target.frames.getFirst();
 		assertEquals(ByteOrder.LITTLE_ENDIAN, received.order());
 		assertEquals(0x05, Byte.toUnsignedInt(received.get()));
@@ -39,9 +59,76 @@ class DirectMemoryLoginChannelTest {
 
 		DirectMemoryLoginChannel.cleanupEndpoint(source);
 		DirectMemoryLoginChannel.cleanupEndpoint(target);
+		DirectMemoryLoginChannel.cleanupEndpoint(source);
+		DirectMemoryLoginChannel.cleanupEndpoint(target);
 
 		assertEquals("login", source.lastCleanupContext);
 		assertEquals("game", target.lastCleanupContext);
+		assertEquals(1, source.cleanupCount.get());
+		assertEquals(1, target.cleanupCount.get());
+	}
+
+	@Test
+	void bothEndsCanCloseConcurrentlyWithoutTakingEachOthersGuard() throws Exception {
+		SenderEndpoint source = new SenderEndpoint();
+		CollectorEndpoint target = new CollectorEndpoint();
+		ConnectionTransport first = transport(source, target);
+		ConnectionTransport second = transport(target, source);
+		CountDownLatch ready = new CountDownLatch(2);
+		var executor = Executors.newFixedThreadPool(2, Thread.ofPlatform().daemon(true).factory());
+		try {
+			var a = executor.submit(() -> closeUnderGuard(first, source, ready));
+			var b = executor.submit(() -> closeUnderGuard(second, target, ready));
+			a.get(5, TimeUnit.SECONDS);
+			b.get(5, TimeUnit.SECONDS);
+			first.close(true);
+			second.close(true);
+			assertEquals(1, source.cleanupCount.get());
+			assertEquals(1, target.cleanupCount.get());
+			assertEquals("login", source.lastCleanupContext);
+			assertEquals("game", target.lastCleanupContext);
+		} finally {
+			executor.shutdownNow();
+		}
+	}
+
+	@Test
+	void failingOwnerStillCleansPeerAndIsNotRetried() throws Exception {
+		SenderEndpoint source = new SenderEndpoint();
+		source.failCleanup = true;
+		CollectorEndpoint target = new CollectorEndpoint();
+		ConnectionTransport transport = transport(source, target);
+
+		assertThrows(IllegalStateException.class, () -> transport.close(true));
+		transport.close(true);
+		assertEquals(1, source.cleanupCount.get());
+		assertEquals(1, target.cleanupCount.get());
+	}
+
+	private static ConnectionTransport transport(DirectEndpoint owner, DirectEndpoint peer) throws Exception {
+		Class<?> type = Class.forName(DirectMemoryLoginChannel.class.getName() + "$DirectTransport");
+		var constructor = type.getDeclaredConstructor(String.class);
+		constructor.setAccessible(true);
+		ConnectionTransport transport = (ConnectionTransport) constructor.newInstance("127.0.0.1");
+		var connect = type.getDeclaredMethod("connectTo", DirectEndpoint.class, DirectEndpoint.class);
+		connect.setAccessible(true);
+		connect.invoke(transport, owner, peer);
+		return transport;
+	}
+
+	private static void closeUnderGuard(ConnectionTransport transport, DirectEndpoint endpoint, CountDownLatch ready) {
+		synchronized (endpoint.syncGuard()) {
+			ready.countDown();
+			try {
+				if (!ready.await(3, TimeUnit.SECONDS)) {
+					throw new AssertionError("both endpoint guards must be held");
+				}
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				throw new AssertionError(e);
+			}
+			transport.close(true);
+		}
 	}
 
 	@Test
@@ -84,7 +171,11 @@ class DirectMemoryLoginChannelTest {
 
 		private final Deque<LsServerPacket> pending = new ArrayDeque<>();
 		private final ByteBuffer buffer = ByteBuffer.allocate(256).order(ByteOrder.LITTLE_ENDIAN).flip();
+		private String lastWriteContext;
 		private String lastCleanupContext;
+		private final AtomicBoolean closed = new AtomicBoolean();
+		private final AtomicInteger cleanupCount = new AtomicInteger();
+		private boolean failCleanup;
 
 		private SenderEndpoint(LsServerPacket... packets) {
 			for (LsServerPacket packet : packets) {
@@ -94,6 +185,7 @@ class DirectMemoryLoginChannelTest {
 
 		@Override
 		public boolean writeDirect(ByteBuffer target) {
+			lastWriteContext = ServiceContext.current();
 			LsServerPacket packet = pending.pollFirst();
 			if (packet == null) {
 				return false;
@@ -128,12 +220,17 @@ class DirectMemoryLoginChannelTest {
 		}
 
 		@Override
-		public void markClosed() {
+		public boolean claimClose() {
+			return closed.compareAndSet(false, true);
 		}
 
 		@Override
 		public void cleanupDirect() {
 			lastCleanupContext = ServiceContext.current();
+			cleanupCount.incrementAndGet();
+			if (failCleanup) {
+				throw new IllegalStateException("owner cleanup failed");
+			}
 		}
 	}
 
@@ -146,6 +243,8 @@ class DirectMemoryLoginChannelTest {
 		private final List<ByteBuffer> frames = new ArrayList<>();
 		private String lastDeliveryContext;
 		private String lastCleanupContext;
+		private final AtomicBoolean closed = new AtomicBoolean();
+		private final AtomicInteger cleanupCount = new AtomicInteger();
 
 		@Override
 		public boolean writeDirect(ByteBuffer buffer) {
@@ -183,12 +282,14 @@ class DirectMemoryLoginChannelTest {
 		}
 
 		@Override
-		public void markClosed() {
+		public boolean claimClose() {
+			return closed.compareAndSet(false, true);
 		}
 
 		@Override
 		public void cleanupDirect() {
 			lastCleanupContext = ServiceContext.current();
+			cleanupCount.incrementAndGet();
 		}
 	}
 }

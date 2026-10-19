@@ -154,7 +154,7 @@ public class AbyssRankUpdateService {
 	 * Run full rank refresh: persist online players, limited GP ranks, ranking cache.
 	 */
 	public void performUpdate() {
-		log.info(I18n.get("log.97b1fd95b293"));
+		log.debug(I18n.get("log.97b1fd95b293"));
 		long startTime = System.currentTimeMillis();
 		World.getInstance().doOnAllPlayers(player -> {
 			AbyssPointsService.AbyssRankCheck(player);
@@ -165,7 +165,7 @@ public class AbyssRankUpdateService {
 		});
 		updateLimitedGpRanks();
 		AbyssRankingCacheUpdate();
-		log.info(I18n.get("log.06a04520551c", (System.currentTimeMillis() - startTime) / 1000));
+		log.info(I18n.get("log.06a04520551c", System.currentTimeMillis() - startTime));
 	}
 
 	/**

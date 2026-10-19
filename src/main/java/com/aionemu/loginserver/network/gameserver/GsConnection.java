@@ -20,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 表示 LoginServer 与 GameServer 之间的一条网络连接。
  * Object representing a connection between LoginServer and GameServer.
+ * 心跳创建与停止在独立锁内串行化，断线后禁止延迟启动；网络清理不嵌套端点锁。
+ * Heartbeat creation and stop are serialized on a separate lock;
+ * disconnect prevents late starts without nesting endpoint locks.
  * @author -Nemesiss-
  */
 @Slf4j
@@ -70,8 +73,10 @@ public class GsConnection extends AConnection {
      */
     @Setter
     @Getter
-    private GameServerInfo gameServerInfo = null;
-    private PingPongThread pingThread;
+	private volatile GameServerInfo gameServerInfo;
+	private volatile PingPongThread pingThread;
+	private final Object heartbeatGuard = new Object();
+	private boolean disconnected;
 
     /**
      * 封包工厂：解析入站包并注入其所需服务。
@@ -156,22 +161,25 @@ public class GsConnection extends AConnection {
      * Cleanup after disconnect: stop ping and unbind game-server accounts.
      */
     @Override
-    protected final void onDisconnect() {
-        // ping 线程只在 initialized() 里创建：连接在初始化前就被关闭（或同一次关闭被两端各清理一遍）时
-        // pingThread 仍为 null，早先这里会抛 NPE 并跳过下面的账号解绑与 gameServerInfo 清理。
-        // The ping thread is only created in initialized(): a connection closed before init (or cleaned up once per
-        // endpoint) still has a null pingThread, and the old code threw an NPE that skipped the unbind/cleanup below.
-        PingPongThread ping = this.pingThread;
-        if (Config.ENABLE_PINGPONG && ping != null) {
-            ping.closeMe();
-        }
-        log.info(I18n.get("log.e803a1d01bbf", this));
-        if (gameServerInfo != null) {
-            gameServerInfo.setConnection(null);
-            gameServerInfo.clearAccountsOnGameServer();
-            gameServerInfo = null;
-        }
-    }
+	protected final void onDisconnect() {
+		PingPongThread ping;
+		synchronized (heartbeatGuard) {
+			if (disconnected) {
+				return;
+			}
+			disconnected = true;
+			ping = pingThread;
+		}
+		if (ping != null) {
+			ping.closeMe();
+		}
+		log.info(I18n.get("log.e803a1d01bbf", this));
+		if (gameServerInfo != null) {
+			gameServerInfo.setConnection(null);
+			gameServerInfo.clearAccountsOnGameServer();
+			gameServerInfo = null;
+		}
+	}
 
     /**
      * 登录服关闭时关闭本连接。
@@ -219,18 +227,42 @@ public class GsConnection extends AConnection {
     }
 
 	/**
-     * 设置连接状态；进入 AUTHED 时按配置启动 ping。
-     * Set connection state; when AUTHED, start ping if configured.
-     * @param state 新状态 / New state
-     */
-    public void setState(State state) {
-        this.state = state;
-        if (state == State.AUTHED) {
-            if (Config.ENABLE_PINGPONG) {
-                threadPoolManager.schedule(pingThread, 5000);
-            }
-        }
-    }
+	 * 进入 AUTHED 后保留 5 秒延迟，再将心跳循环交给长任务池；
+	 * 关闭后不再启动，心跳实例只投递一次。
+	 * On AUTHED, retain the 5-second delay then start the heartbeat on the long-running pool unless closed;
+	 * each heartbeat instance is submitted at most once.
+	 * @param state 新状态 / New state
+	 */
+	public void setState(State state) {
+		synchronized (heartbeatGuard) {
+			if (disconnected || isWriteDisabled()) {
+				return;
+			}
+			State previous = this.state;
+			this.state = state;
+			PingPongThread ping = pingThread;
+			if (state == State.AUTHED && previous != State.AUTHED && Config.ENABLE_PINGPONG && ping != null) {
+				threadPoolManager.schedule(() -> {
+					if (claimHeartbeatStart(ping)) {
+						threadPoolManager.executeHeartbeat(ping);
+					}
+				}, 5000);
+			}
+		}
+	}
+
+	/**
+	 * 延迟启动前再次核对连接、关闭标记及心跳状态，并认领心跳实例；避免断线或重复投递启动循环。
+	 * Rechecks connection, shutdown flag and heartbeat state before delayed start, and claims the
+	 * heartbeat instance to prevent late or duplicate loops.
+	 * @param ping 待启动的心跳 / heartbeat to start
+	 * @return 可启动返回 true / {@code true} when the heartbeat may start
+	 */
+	private boolean claimHeartbeatStart(PingPongThread ping) {
+		synchronized (heartbeatGuard) {
+			return !disconnected && !isWriteDisabled() && ping == pingThread && ping.claimStart();
+		}
+	}
 
 	/**
      * 返回连接的可读描述（服务器 ID 与 IP）。
@@ -256,8 +288,9 @@ public class GsConnection extends AConnection {
      * @param pid Ping ID / Ping id
      */
     public void pong(int pid) {
-        if (Config.ENABLE_PINGPONG) {
-            this.pingThread.onResponse(pid);
+        PingPongThread ping = pingThread;
+        if (Config.ENABLE_PINGPONG && ping != null) {
+            ping.onResponse(pid);
         }
     }
 
@@ -266,14 +299,17 @@ public class GsConnection extends AConnection {
      * Connection init: set CONNECTED and create ping thread if needed.
      */
     @Override
-    protected void initialized() {
-        state = State.CONNECTED;
-        String ip = getIP();
+	protected void initialized() {
+		synchronized (heartbeatGuard) {
+			if (disconnected || isWriteDisabled()) {
+				return;
+			}
+			state = State.CONNECTED;
+			if (Config.ENABLE_PINGPONG) {
+				pingThread = new PingPongThread(this);
+			}
+		}
 
-        if (Config.ENABLE_PINGPONG) {
-            pingThread = new PingPongThread(this);
-        }
-
-        log.info(I18n.get("log.25ae763a9d55", ip));
-    }
+		log.info(I18n.get("log.25ae763a9d55", getIP()));
+	}
 }

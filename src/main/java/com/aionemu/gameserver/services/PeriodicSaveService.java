@@ -225,7 +225,7 @@ public class PeriodicSaveService {
 
 		@Override
 		public void run() {
-			log.info(I18n.get("log.cda6066cb95d"));
+			log.debug(I18n.get("log.cda6066cb95d"));
 			long startTime = System.currentTimeMillis();
 			Iterator<Legion> legionsIterator = legionService.getCachedLegionIterator();
 			int legionWhUpdated = 0;
@@ -242,7 +242,8 @@ public class PeriodicSaveService {
 				legionWhUpdated++;
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info(I18n.get("log.b1fef96f6a2c", workTime, legionWhUpdated));
+			log.atLevel(legionWhUpdated == 0 ? org.slf4j.event.Level.DEBUG : org.slf4j.event.Level.INFO)
+				.log(I18n.get("log.b1fef96f6a2c", workTime, legionWhUpdated));
 		}
 	}
 
@@ -261,7 +262,8 @@ public class PeriodicSaveService {
 				}
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info(I18n.get("log.8e83f631917d", workTime, playersUpdated));
+			log.atLevel(playersUpdated == 0 ? org.slf4j.event.Level.DEBUG : org.slf4j.event.Level.INFO)
+				.log(I18n.get("log.8e83f631917d", workTime, playersUpdated));
 		}
 	}
 
@@ -280,7 +282,8 @@ public class PeriodicSaveService {
 				}
 			}
 			long workTime = System.currentTimeMillis() - startTime;
-			log.info(I18n.get("log.b8e76df845b1", workTime, playersUpdated));
+			log.atLevel(playersUpdated == 0 ? org.slf4j.event.Level.DEBUG : org.slf4j.event.Level.INFO)
+				.log(I18n.get("log.b8e76df845b1", workTime, playersUpdated));
 		}
 	}
 
@@ -289,7 +292,7 @@ public class PeriodicSaveService {
 	 * Saves pending data immediately on shutdown and cancels periodic tasks.
 	 */
 	public void onShutdown() {
-		log.info(I18n.get("log.dd47b038ccfb"));
+		log.debug(I18n.get("log.dd47b038ccfb"));
 		cancelAllTasks();
 		// 保存军团仓库 / save legion warehouse
 		new LegionWhUpdateTask().run();

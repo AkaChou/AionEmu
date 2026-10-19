@@ -3,15 +3,6 @@ package com.aionemu.gameserver.network.loginserver;
 
 import com.aionemu.boot.i18n.I18n;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.springframework.beans.factory.ObjectProvider;
-
 import com.aionemu.commons.network.NettyClient;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -24,6 +15,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_RECONNECT_KEY;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.loginserver.persistence.dao.SvstatDao;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_AUTH;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_DISCONNECTED;
@@ -35,6 +32,9 @@ import com.aionemu.gameserver.services.AccountService;
 /**
  * 游戏服与登录服通信的门面工具类。
  * Utility facade for connecting the GameServer to the LoginServer.
+ * 关闭按实例认领资源，在途建连结束后补清理；服务间连接在门面锁外关闭。
+ * Shutdown claims resources per instance and drains in-flight connects,
+ * closing peer connections outside the facade lock.
  * @author -Nemesiss-
  */
 @Slf4j
@@ -156,7 +156,7 @@ public class LoginServer {
 	 * 为建立连接做准备（清除关闭标志）。
 	 * Prepare for connecting (clears the shutdown flag).
 	 */
-	public void prepareForConnect() {
+	public synchronized void prepareForConnect() {
 		serverShutdown = false;
 	}
 
@@ -218,13 +218,19 @@ public class LoginServer {
 		if (AionRuntimeMode.isBootEmbedded()) {
 			try {
 				DirectMemoryLoginChannel channel = DirectMemoryLoginChannel.open(loginPacketFactory, loginSvstatsDao, loginThreadPoolManager);
-				loginServer = channel.gameServerConnection();
-				dispatcher = channel;
+				synchronized (this) {
+					loginServer = channel.gameServerConnection();
+					dispatcher = channel;
+				}
 				log.info(I18n.get("log.0548078e4933", "in-memory"));
 				return true;
 			} catch (Exception e) {
 				log.warn(I18n.get("log.26fdd67c39d5", e.getMessage()), e);
 				return false;
+			} finally {
+				if (serverShutdown) {
+					gameServerDisconnected();
+				}
 			}
 		}
 		log.info(I18n.get("log.0548078e4933", NetworkConfig.LOGIN_ADDRESS));
@@ -238,22 +244,43 @@ public class LoginServer {
 	 */
 	private boolean connectWithNetty() {
 		shutdownNettyClient();
-		try {
-			NettyClient client = new NettyClient(NetworkConfig.LOGIN_ADDRESS, "LoginServer", transport -> {
-				LoginServerConnection connection = new LoginServerConnection(transport);
+		NettyClient client = new NettyClient(NetworkConfig.LOGIN_ADDRESS, "LoginServer", transport -> {
+			LoginServerConnection connection = new LoginServerConnection(transport);
+			synchronized (this) {
 				loginServer = connection;
 				dispatcher = new SocketLoginMessageDispatcher(connection);
-				return connection;
-			});
-			nettyClient = client;
+			}
+			return connection;
+		});
+		return connectWithNetty(client);
+	}
+
+	/**
+	 * 建连完成后仍检查关闭状态，并保留本次客户端引用以释放关闭期间迟到的传输资源。
+	 * Rechecks shutdown after connecting and retains this client to release transport resources created after close.
+	 */
+	private boolean connectWithNetty(NettyClient client) {
+		try {
+			synchronized (this) {
+				nettyClient = client;
+			}
 			client.connect();
-			return loginServer != null;
+			LoginServerConnection connection = loginServer;
+			return connection != null && dispatcher != null && !connection.isClosing();
 		} catch (Exception e) {
 			loginServer = null;
 			dispatcher = null;
 			shutdownNettyClient();
-			log.info(I18n.get("log.26fdd67c39d5", e.getMessage()));
+			log.info(I18n.get("log.26fdd67c39d5", e.getMessage()), e);
 			return false;
+		} finally {
+			if (serverShutdown) {
+				try {
+					gameServerDisconnected();
+				} finally {
+					client.shutdown();
+				}
+			}
 		}
 	}
 
@@ -262,11 +289,16 @@ public class LoginServer {
 	 * Called when the LoginServer link is lost: disconnect clients pending auth and reconnect after 5s unless shutting down.
 	 */
 	public void loginServerDown() {
-		log.warn(I18n.get("log.8bebb9784be8"));
+		if (!serverShutdown) {
+			log.warn(I18n.get("log.8bebb9784be8"));
+		}
 
-		loginServer = null;
-		LoginMessageDispatcher currentDispatcher = dispatcher;
-		dispatcher = null;
+		LoginMessageDispatcher currentDispatcher;
+		synchronized (this) {
+			loginServer = null;
+			currentDispatcher = dispatcher;
+			dispatcher = null;
+		}
 		if (currentDispatcher != null) {
 			currentDispatcher.close();
 		}
@@ -302,7 +334,7 @@ public class LoginServer {
 	 * @param accountId 账号 ID / Account id
 	 */
 	private void sendAccountDisconnected(int accountId) {
-		log.info(I18n.get("log.2affe124175e", accountId));
+		log.debug(I18n.get("log.2affe124175e", accountId));
 		if (loginServer != null && loginServer.getState() == State.AUTHED) {
 			sendPacket(new SM_ACCOUNT_DISCONNECTED(accountId));
 		}
@@ -476,25 +508,41 @@ public class LoginServer {
 	}
 
 	/**
-	 * 游戏服关闭时：关闭所有等待中的客户端连接并断开登录服。
-	 * On GameServer shutdown: close all pending client connections and disconnect LoginServer.
+	 * 关闭时认领当前资源，重复调用仍清理在途建连发布的新资源，但仅记录一次结果。
+	 * Claims current resources on shutdown; repeated calls drain late connections but log the result only once.
 	 */
 	public void gameServerDisconnected() {
+		LoginServerConnection connection;
+		LoginMessageDispatcher currentDispatcher;
+		boolean firstShutdown;
 		synchronized (this) {
+			firstShutdown = !serverShutdown;
 			serverShutdown = true;
 			cancelConnectionTask();
-            for (AionConnection client : loginRequests.values()) {
+			for (AionConnection client : loginRequests.values()) {
 				client.close(true);
 			}
 			loginRequests.clear();
 
-			if (loginServer != null) {
-				loginServer.close(false);
-				loginServer = null;
+			connection = loginServer;
+			loginServer = null;
+			currentDispatcher = dispatcher;
+			dispatcher = null;
+		}
+		try {
+			if (currentDispatcher instanceof DirectMemoryLoginChannel) {
+				currentDispatcher.close();
+			} else if (connection != null) {
+				connection.close(false);
+			} else if (currentDispatcher != null) {
+				currentDispatcher.close();
 			}
+		} finally {
 			shutdownNettyClient();
 		}
-		log.info(I18n.get("log.79fd1a51455e"));
+		if (firstShutdown) {
+			log.info(I18n.get("log.79fd1a51455e"));
+		}
 	}
 
 	/**
@@ -502,9 +550,12 @@ public class LoginServer {
 	 * Shut down and clear the Netty client.
 	 */
 	private void shutdownNettyClient() {
-		NettyClient client = nettyClient;
-		if (client != null) {
+		NettyClient client;
+		synchronized (this) {
+			client = nettyClient;
 			nettyClient = null;
+		}
+		if (client != null) {
 			client.shutdown();
 		}
 	}

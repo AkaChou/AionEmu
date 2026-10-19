@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.boot.i18n.I18n;
+import com.aionemu.testutil.LocalizedMessages;
+import com.aionemu.testutil.LogCapture;
 import com.aionemu.testutil.ConfigSnapshot;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
@@ -30,6 +33,10 @@ import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+/**
+ * 验证关机请求、本地化文案以及单步失败后继续清理，不终止测试进程。
+ * Verifies shutdown requests, localized messages and continued cleanup after step failures without terminating the test JVM.
+ */
 class ShutdownHookTest {
 
     private final ObjenesisStd objenesis = new ObjenesisStd();
@@ -57,6 +64,22 @@ class ShutdownHookTest {
 
         assertEquals(AionEmbeddedShutdownMode.RESTART, requestedMode.get());
     }
+
+	@Test
+	void shutdownModesUseLocalizedMessagesWithoutChangingPublicText() throws Exception {
+		try (LocalizedMessages messages = new LocalizedMessages(); LogCapture logs = new LogCapture(ShutdownHook.class)) {
+			ShutdownMode[] modes = { ShutdownMode.NONE, ShutdownMode.SHUTDOWN, ShutdownMode.RESTART };
+			String[] keys = { "shutdown.mode.terminate", "shutdown.mode.shutdown", "shutdown.mode.restart" };
+			for (int i = 0; i < modes.length; i++) {
+				new ShutdownHook().waitForPlayersToLeave(0, 1, modes[i]);
+				assertEquals(I18n.get("shutdown.process_start", I18n.get(keys[i]), 0),
+					logs.events().get(i).getFormattedMessage());
+			}
+			assertEquals("terminating", ShutdownMode.NONE.getText());
+			assertEquals("shutting down", ShutdownMode.SHUTDOWN.getText());
+			assertEquals("restarting", ShutdownMode.RESTART.getText());
+		}
+	}
 
     @Test
     void shutdownContinuesEarlyAfterLastPlayerLogsOut() throws Exception {

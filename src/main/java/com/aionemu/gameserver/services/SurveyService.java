@@ -191,7 +191,7 @@ public class SurveyService {
 
 		@Override
 		public void run() {
-			log.info(I18n.get("log.644783da9bbc"));
+			log.debug(I18n.get("log.644783da9bbc"));
 			taskUpdate();
 		}
 	}

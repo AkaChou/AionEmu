@@ -119,6 +119,15 @@ public abstract class AConnection {
     }
 
     /**
+     * 返回连接是否已关闭或处于待关闭状态。
+     * Returns whether this connection is closed or pending close.
+     * @return 已关闭或待关闭时为 true / true when closed or pending close
+     */
+    public final boolean isClosing() {
+        return isWriteDisabled();
+    }
+
+    /**
      * 获取连接 IP。
      * Get connection IP.
      * @return IP 地址 / IP address
