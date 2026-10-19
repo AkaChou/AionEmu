@@ -10,6 +10,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_TARGET_UPDATE;
+import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.DashStatus;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillMoveType;
@@ -35,8 +36,8 @@ public class MoveBehindEffect extends DamageEffect {
 	}
 
 	/**
-	 * 计算绕后位移坐标与伤害。
-	 * Calculates behind-target position and damage.
+	 * 计算绕后位移坐标与物理伤害。
+	 * Calculates behind-target position and physical damage.
 	 */
 	@Override
 	public void calculate(Effect effect) {
@@ -66,5 +67,6 @@ public class MoveBehindEffect extends DamageEffect {
 				closestCollision.getZ(), effected.getHeading());
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effected.getHeading());
+		super.calculate(effect, DamageType.PHYSICAL);
 	}
 }

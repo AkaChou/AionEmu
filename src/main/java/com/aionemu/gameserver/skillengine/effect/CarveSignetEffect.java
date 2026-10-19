@@ -7,6 +7,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.skillengine.action.DamageType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
@@ -80,11 +81,12 @@ public class CarveSignetEffect extends DamageEffect {
 	}
 
 	/**
-	 * 计算物理伤害是否命中。
-	 * Calculates whether the physical damage hits.
+	 * 按物理伤害结算命中，命中后才登记为成功效果。
+	 * Resolves the physical hit; only a successful hit is registered as a success effect.
 	 * @param effect 运行时效果 / runtime effect
 	 */
 	@Override
 	public void calculate(Effect effect) {
+		super.calculate(effect, DamageType.PHYSICAL);
 	}
 }
