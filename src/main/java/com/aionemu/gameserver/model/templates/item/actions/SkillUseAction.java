@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Item;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.RequestResponseHandler;
@@ -52,6 +53,12 @@ public class SkillUseAction extends AbstractItemAction {
 	protected int level;
 	@XmlAttribute(required = false)
 	private Integer mapid;
+	/**
+	 * 真端 {@code activate_target_race}：只允许对指定种族的敌对目标使用，空白表示不限制。
+	 * Retail {@code activate_target_race}: only enemy targets of the named race are legal; blank means no restriction.
+	 */
+	@XmlAttribute(name = "target_race", required = false)
+	private String targetRace;
 	boolean teleportBack = false;
 
 	/**
@@ -65,6 +72,10 @@ public class SkillUseAction extends AbstractItemAction {
 			return false;
 		}
 		int nameId = parentItem.getItemTemplate().getNameId();
+		if (!isTargetRaceAllowed(targetRace, player)) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_SKILL_TARGET_IS_NOT_VALID);
+			return false;
+		}
 		byte levelRestrict = parentItem.getItemTemplate().getMaxLevelRestrict(player);
 		if (levelRestrict != 0) {
 			PacketSendUtility.sendPacket(player,
@@ -97,6 +108,27 @@ public class SkillUseAction extends AbstractItemAction {
 			}
 		}
 		return skill.canUseSkill();
+	}
+
+	/**
+	 * 校验目标是否符合种族限制：目标须是可攻击的敌对 NPC，且种族与 target_race 同名。
+	 * Validates the race restriction: the target must be an attackable enemy NPC whose race name matches target_race.
+	 * <p>真端 {@code { ... }|{ ... }} 并列写法表示任一命中即可；这里按并列拆分逐项匹配。
+	 * The retail {@code { ... }|{ ... }} form lists alternatives; each alternative is matched separately.</p>
+	 */
+	static boolean isTargetRaceAllowed(String targetRace, Player player) {
+		if (targetRace == null || targetRace.isBlank()) {
+			return true;
+		}
+		if (!(player.getTarget() instanceof Npc npc) || !npc.isAttackableNpc() || !player.isEnemy(npc)) {
+			return false;
+		}
+		for (String alternative : targetRace.replace("{", "").replace("}", "").split("\\|")) {
+			if (npc.getRace().name().equalsIgnoreCase(alternative.trim())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** 执行 / act. */

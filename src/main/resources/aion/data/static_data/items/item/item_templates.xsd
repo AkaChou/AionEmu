@@ -318,6 +318,7 @@
 				<xs:attribute name="skillid" type="xs:int"/>
 				<xs:attribute name="level" type="xs:int"/>
 				<xs:attribute name="mapid" type="xs:int" use="optional"/>
+				<xs:attribute name="target_race" type="xs:string" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

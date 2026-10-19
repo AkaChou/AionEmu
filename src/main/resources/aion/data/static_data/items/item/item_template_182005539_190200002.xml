@@ -2016,7 +2016,7 @@
   </item_template>
 <item_template name_desc="World_event_halloween_Candybomb" race="PC_ALL" level="1" item_type="NORMAL" max_stack_count="1000" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1" quality="UNIQUE" price="5" name="World_event_halloween_Candybomb" id="182007423" category="NONE" mask="28742" desc="1759283">
     <actions>
-      <skilluse skillid="11416" level="1"/>
+      <skilluse skillid="11416" level="1" target_race="Event_halloween"/>
     </actions>
     <uselimits usedelayid="61"/>
   </item_template>
