@@ -160,15 +160,25 @@ public class GameSystemLifecycle {
     }
 
 	/**
-	 * 组装横幅行（艺术字 + 启动成功文案）。
-	 * Build banner lines (art plus successful-startup caption).
+	 * 组装横幅行（艺术字 + 启动成功文案 + 开源声明）。
+	 * Build banner lines (art, successful-startup caption, then the open-source notice).
+	 *
+	 * <p>开源声明无配置开关、固定输出在启动成功横幅之后，便于用户在每次启动时确认本软件免费开源，
+	 * 避免从第三方渠道付费购买或被误导；输出经 {@code aion.console} 写入控制台与 console.log。
+	 * The open-source notice has no config switch and always follows the startup caption so users can
+	 * confirm on every boot that the software is free and open source, guarding against paid resale or
+	 * misleading third-party channels; it is written through {@code aion.console} to the console and console.log.</p>
 	 *
 	 * @return 横幅行列表 / Banner line list
 	 */
 	private static List<String> bannerLines() {
-		List<String> lines = new ArrayList<>(BANNER_ART.size() + 1);
+		List<String> lines = new ArrayList<>(BANNER_ART.size() + 6);
 		lines.addAll(BANNER_ART);
 		lines.add("  " + I18n.get("console.startup.successful"));
+		lines.add("");
+		lines.add("  " + I18n.get("console.startup.open_source_notice"));
+		lines.add("  " + I18n.get("console.startup.open_source_license"));
+		lines.add("  " + I18n.get("console.startup.open_source_project"));
 		return lines;
 	}
 }
