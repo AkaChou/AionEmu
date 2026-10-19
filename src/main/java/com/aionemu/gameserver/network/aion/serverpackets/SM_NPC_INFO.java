@@ -36,6 +36,8 @@ public class SM_NPC_INFO extends AionServerPacket {
 	private final Creature _npc;
 	private final NpcTemplate npcTemplate;
 	private final int npcId;
+	/** 隐藏型 NPC 类型：客户端据此不渲染对象（原版模型替换语义）。 / Hidden npc type: the client renders nothing (retail mesh-swap semantics). */
+	private static final int HIDDEN_NPC_TYPE_ID = NpcType.INVULNERABLE.getId();
 	private int creatorId;
 	private String masterName;
 	private int npcTypeId;
@@ -50,7 +52,10 @@ public class SM_NPC_INFO extends AionServerPacket {
 		this._npc = npc;
 		npcTemplate = npc.getObjectTemplate();
 		npcTypeId = npc.getNpcType().getId();
-		if (npc.isPeace()) {
+		if (player == null) {
+			// 无观察者时保留模板关系类型（用于替换体撤销后原样重发生成者）。
+			// Without an observer keep the template relation type (used to re-send a generator verbatim).
+		} else if (npc.isPeace()) {
 			if (npc.getRace().equals(player.getRace()) || (player.getRace().equals(Race.ELYOS)
 					&& (npc.getTribe().equals(TribeClass.FIELD_OBJECT_LIGHT)
 							|| npc.getTribe().equals(TribeClass.GENERAL))
@@ -67,6 +72,20 @@ public class SM_NPC_INFO extends AionServerPacket {
 		} else if (npc.isNoneRelation(player)) {
 			npcTypeId = NpcType.PEACE.getId();
 		}
+		npcId = npc.getNpcId();
+		creatorId = npc.getCreatorId();
+		masterName = npc.getMasterName();
+	}
+
+	/**
+	 * 构造“从客户端隐藏”的 NPC 信息包：对象仍留在世界与已知列表，只是客户端不再渲染。
+	 * Builds an info packet that hides the NPC on the client: it stays in the world and known list, just unrendered.
+	 * @param npc 目标 NPC / target NPC
+	 */
+	public SM_NPC_INFO(Npc npc) {
+		this._npc = npc;
+		npcTemplate = npc.getObjectTemplate();
+		npcTypeId = HIDDEN_NPC_TYPE_ID;
 		npcId = npc.getNpcId();
 		creatorId = npc.getCreatorId();
 		masterName = npc.getMasterName();

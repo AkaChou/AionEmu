@@ -7646,27 +7646,27 @@
 <npc_template name_desc="World_event_halloween_candle_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="Halloween_Candle" hpgauge_level="3" type="GENERAL" name_id="469482" attack_delay="2000" npc_id="835619" sensory_range="10" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_01" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
-    <talk_info delay="3" distance="5"/>
+    <talk_info delay="3" distance="2"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_candle_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="Halloween_Candle" hpgauge_level="3" type="GENERAL" name_id="469483" attack_delay="2000" npc_id="835620" sensory_range="10" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_02" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
-    <talk_info delay="3" distance="5"/>
+    <talk_info delay="3" distance="2"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_candle_03" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="Halloween_Candle" hpgauge_level="3" type="GENERAL" name_id="469484" attack_delay="2000" npc_id="835621" sensory_range="10" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_03" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
-    <talk_info delay="3" distance="5"/>
+    <talk_info delay="3" distance="2"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_candle_04" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="Halloween_Candle" hpgauge_level="3" type="GENERAL" name_id="469485" attack_delay="2000" npc_id="835622" sensory_range="10" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_04" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
-    <talk_info delay="3" distance="5"/>
+    <talk_info delay="3" distance="2"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_candle_05" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="Halloween_Candle" hpgauge_level="3" type="GENERAL" name_id="469486" attack_delay="2000" npc_id="835623" sensory_range="10" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_05" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
-    <talk_info delay="3" distance="5"/>
+    <talk_info delay="3" distance="2"/>
   </npc_template>
 <npc_template name_desc="World_event_halloween_candle_active_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="noaction" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835624" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_candle_active_01" rank="SEASONED" height="2.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
@@ -7688,27 +7688,27 @@
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="322826" attack_delay="2000" npc_id="835629" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_01" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835629" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_01" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="322827" attack_delay="2000" npc_id="835630" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_02" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835630" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_02" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_03" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="322828" attack_delay="2000" npc_id="835631" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_03" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_03" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835631" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_03" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_04" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="322829" attack_delay="2000" npc_id="835632" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_04" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_04" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835632" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_04" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_common_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="305981" attack_delay="2000" npc_id="835633" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_common_01" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_common_01" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835633" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_common_01" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>
-<npc_template name_desc="World_event_halloween_invisible_npc_common_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="305982" attack_delay="2000" npc_id="835634" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_common_02" rank="SEASONED" height="5.0">
+<npc_template name_desc="World_event_halloween_invisible_npc_common_02" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="835634" sensory_range="0" tribe="FIELD_OBJECT_ALL" name="World_event_halloween_invisible_npc_common_02" rank="SEASONED" height="5.0">
     <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="0" mresist="1186" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="0"/>
     <bound_radius side="9.0" upper="5.0" front="9.0"/>
   </npc_template>

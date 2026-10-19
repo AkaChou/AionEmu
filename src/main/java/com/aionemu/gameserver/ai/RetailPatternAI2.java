@@ -27,6 +27,7 @@ import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.model.instance.StageType;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 import com.aionemu.gameserver.model.skill.NpcSkillList;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.walker.RouteStep;
@@ -231,10 +232,20 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 	 * pending-teleport removals only touch an already materialised map.
 	 */
 	private static final Map<VisibleObject, Boolean> EMPTY_DESPAWN_STATES = Collections.emptyMap();
+	private static final Map<VisibleObject, VisibleObject> EMPTY_VISUAL_SWAPS = Collections.emptyMap();
+	private static final Set<VisibleObject> EMPTY_HIDDEN_GENERATORS = Collections.emptySet();
 	private static final Map<Player, ItemUseObserver> EMPTY_GAUGE_OBSERVERS = Collections.emptyMap();
 	private static final Map<Integer, PendingCutsceneTeleport> EMPTY_PENDING_TELEPORTS = Collections.emptyMap();
 
 	private volatile Map<VisibleObject, Boolean> despawnAtAttackState = EMPTY_DESPAWN_STATES;
+	// 模型替换登记：替换体 → 被它顶替的生成者。替换体存活期间生成者不向客户端下发（原版生成者已 despawn）。
+	// Mesh-swap registry: replacement → the generator it replaces. The generator stays out of the client while the
+	// replacement lives (retail despawns the generator first).
+	private volatile Map<VisibleObject, VisibleObject> visualSwaps = EMPTY_VISUAL_SWAPS;
+	// 已被模型替换对本实例玩家隐藏的生成者：同一轮替换结束后统一重新下发，避免多替换体连续切换时闪现。
+	// Generators hidden from this instance's players by an active mesh swap: re-sent once no replacement remains, so
+	// back-to-back replacements never flash the unlit candle.
+	private volatile Set<VisibleObject> hiddenGenerators = EMPTY_HIDDEN_GENERATORS;
 	// 生命周期独立于生成者状态重置的子对象：自带 live_time 的由到期任务管理；生成者死亡/消失事件链里生成的
 	// 子对象（例如死亡后才现身的对话 NPC）没有到期任务，但同样不能在生成者重置时被删除。
 	// Spawns whose lifetime is independent of the spawner's state reset: own live_time tasks, plus children spawned by
@@ -340,6 +351,42 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 				despawnAtAttackState = new ConcurrentHashMap<>();
 			}
 			return despawnAtAttackState;
+		}
+	}
+
+	/**
+	 * 物化隐藏生成者集合（范式同 {@link #writableDespawnStates()}）。
+	 * Materialises the hidden-generator set like {@link #writableDespawnStates()}.
+	 * @return 可写集合 / writable set
+	 */
+	private Set<VisibleObject> writableHiddenGenerators() {
+		Set<VisibleObject> current = hiddenGenerators;
+		if (current != EMPTY_HIDDEN_GENERATORS) {
+			return current;
+		}
+		synchronized (this) {
+			if (hiddenGenerators == EMPTY_HIDDEN_GENERATORS) {
+				hiddenGenerators = ConcurrentHashMap.newKeySet();
+			}
+			return hiddenGenerators;
+		}
+	}
+
+	/**
+	 * 物化模型替换登记表（范式同 {@link #writableDespawnStates()}）。
+	 * Materialises the mesh-swap registry like {@link #writableDespawnStates()}.
+	 * @return 可写表 / writable map
+	 */
+	private Map<VisibleObject, VisibleObject> writableVisualSwaps() {
+		Map<VisibleObject, VisibleObject> current = visualSwaps;
+		if (current != EMPTY_VISUAL_SWAPS) {
+			return current;
+		}
+		synchronized (this) {
+			if (visualSwaps == EMPTY_VISUAL_SWAPS) {
+				visualSwaps = new ConcurrentHashMap<>();
+			}
+			return visualSwaps;
 		}
 	}
 
@@ -482,7 +529,157 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (delayed != EMPTY_DESPAWN_STATES) {
 			delayed.remove(object);
 		}
+		releaseVisualSwap(object);
 	}
+
+	/**
+	 * 判断刷出对象是否只是生成者的原版模型替换。
+	 * Whether the spawned object is only the generator's retail mesh swap.
+	 * <p>判定条件：同一实例、同一网格坐标，且模板相同（ID 相同）或两者同名（点燃外观与原蜡烛同名）。
+	 * 原版这类动作都是「先让生成者 despawn，再在原位刷替换体」，两者本就不会同时出现。
+	 * Criteria: same instance and exact point, and either the same template or the same name (a lit appearance shares
+	 * the unlit candle's name). Retail always despawns the generator before spawning such a replacement.
+	 * @param generator 生成者 / generator
+	 * @param npcId     子对象模板 ID / spawned template id
+	 * @param x         子对象 X / spawn X
+	 * @param y         子对象 Y / spawn Y
+	 * @param z         子对象 Z / spawn Z
+	 * @return 是模型替换返回 {@code true} / {@code true} for a mesh swap
+	 */
+	static boolean isRetailVisualSwap(Npc generator, int npcId, float x, float y, float z) {
+		if (generator == null || generator.getPosition() == null || npcId <= 0) {
+			return false;
+		}
+		if (!MathUtil.isIn3dRange(generator.getX(), generator.getY(), generator.getZ(), x, y, z, 0.05f)) {
+			return false;
+		}
+		// 同模板在原位重刷就是替换（无数据环境也能判定）；同名判定还需要模板表。
+		// Re-spawning the same template in place is a swap (works without template data); the name check needs the
+		// template table.
+		if (npcId == generator.getNpcId()) {
+			return true;
+		}
+		// 隐形辅助的模板名只是内部标识，不参与「点燃外观同名」判定。
+		// A helper's template name is an internal id and never counts as a lit appearance's shared name.
+		NpcTemplate own = generator.getObjectTemplate();
+		if (own == null || own.getName() == null || own.getName().isEmpty()) {
+			return false;
+		}
+		var template = DataManager.NPC_DATA == null ? null : DataManager.NPC_DATA.getNpcTemplate(npcId);
+		return template != null && own.getName().equals(template.getName());
+	}
+
+	/**
+	 * 释放对象承担的模型替换：生成者重新下发，替换体不再顶替任何人。
+	 * Releases the mesh swap the object took part in: the generator is re-sent and the replacement stops hiding it.
+	 * <p>替换体先消失时生成者重新出现并接管原位；生成者先消失时注销其替换体，替换体继续存活。
+	 * When the replacement goes first the generator reappears and owns the spot again; when the generator goes first
+	 * its replacements are unregistered and keep living.
+	 * @param object 参与的替换体或生成者 / either participant
+	 */
+	private void releaseVisualSwap(VisibleObject object) {
+		Map<VisibleObject, VisibleObject> swaps = visualSwaps;
+		if (swaps == EMPTY_VISUAL_SWAPS) {
+			return;
+		}
+		VisibleObject generator = swaps.remove(object);
+		if (generator == null) {
+			// 生成者消失：注销以它为目标的所有替换体。 / Generator gone: unregister every replacement that covered it.
+			for (VisibleObject replacement : List.copyOf(swaps.keySet())) {
+				if (swaps.get(replacement) == object) {
+					swaps.remove(replacement);
+				}
+			}
+			return;
+		}
+		if (generator == object) {
+			return;
+		}
+		// 替换体消失：登记的生成者若已不再被任何替换体覆盖且仍在场，稍后重新下发。
+		// Replacement gone: once no replacement covers the registered generator and it still lives, re-send it.
+		writableHiddenGenerators().add(generator);
+		restoreHiddenGeneratorsSoon();
+	}
+
+	/**
+	 * 下一 tick 统一恢复不再被覆盖的隐藏生成者（同一轮连续替换不会让原蜡烛闪现）。
+	 * Restores uncovered hidden generators on the next tick (back-to-back replacements never flash the unlit candle).
+	 */
+	private void restoreHiddenGeneratorsSoon() {
+		ThreadPoolManager.getInstance().schedule(this::restoreUncoveredHiddenGenerators, 1);
+	}
+
+	private void restoreUncoveredHiddenGenerators() {
+		Set<VisibleObject> hidden = hiddenGenerators;
+		Map<VisibleObject, VisibleObject> swaps = visualSwaps;
+		if (hidden == EMPTY_HIDDEN_GENERATORS) {
+			return;
+		}
+		for (VisibleObject generator : List.copyOf(hidden)) {
+			if (!hidden.remove(generator)) {
+				continue;
+			}
+			if (swaps != EMPTY_VISUAL_SWAPS && swaps.containsValue(generator)) {
+				// 已被新的替换体接管：保持隐藏。 / Taken over by a newer replacement: stay hidden.
+				continue;
+			}
+			if (generator.isSpawned()) {
+				resendHiddenGenerator(generator);
+			}
+		}
+	}
+
+	/**
+	 * 实例销毁时清空替换登记，避免残留引用。
+	 * Clears the swap registry on instance teardown so no stale references survive.
+	 */
+	private void releaseVisualSwaps() {
+		Map<VisibleObject, VisibleObject> swaps = visualSwaps;
+		visualSwaps = EMPTY_VISUAL_SWAPS;
+		Set<VisibleObject> hidden = hiddenGenerators;
+		hiddenGenerators = EMPTY_HIDDEN_GENERATORS;
+		if (hidden != EMPTY_HIDDEN_GENERATORS) {
+			for (VisibleObject generator : new HashSet<>(hidden)) {
+				if (generator != null && generator.isSpawned()) {
+					resendHiddenGenerator(generator);
+				}
+			}
+		}
+		if (swaps == EMPTY_VISUAL_SWAPS) {
+			return;
+		}
+		for (VisibleObject generator : new HashSet<>(swaps.values())) {
+			if (generator != null && generator.isSpawned()) {
+				resendHiddenGenerator(generator);
+			}
+		}
+	}
+
+	/**
+	 * 向已知列表内的玩家重新下发被隐藏的生成者。
+	 * Re-sends a hidden generator to the players that already know it.
+	 * @param generator 生成者 / generator
+	 */
+	private static void resendHiddenGenerator(VisibleObject generator) {
+		PacketSendUtility.broadcastPacketAndReceive(generator, new SM_NPC_INFO((Npc) generator, null));
+	}
+
+	/**
+	 * 向已知列表内的玩家下发“隐藏型” NPC 信息，让客户端撤销该对象的渲染。
+	 * Sends the hidden-form NPC info to every player that knows the object so the client drops its render.
+	 * @param npc 待隐藏 NPC / NPC to hide
+	 */
+	static void hideFromKnownPlayers(Npc npc) {
+		if (npc == null || !npc.isSpawned()) {
+			return;
+		}
+		SM_NPC_INFO hidden = new SM_NPC_INFO(npc);
+		PacketSendUtility.broadcastPacket(npc, hidden);
+		// 新进入已知列表的玩家会收到完整 NPC_INFO，因此再做一次已知列表更新把新到达者一并隐藏。
+		// Players entering the known list receive a full NPC_INFO, so one known-list refresh hides new arrivals too.
+		npc.getKnownList().doUpdate();
+	}
+
 
 	private Pattern pattern;
 	// 是否正在执行生成者生命周期结束事件链 / whether a spawner-ending event chain is executing
@@ -1088,19 +1285,34 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (pattern == null || !pattern.event("on_hyperlink_clicked").isEmpty()) {
 			return false;
 		}
+		// 原版判定是“规则级”：交互型规则（内联动作或状态广播）自己收尾，默认 HTML 只会闪开即关；
+		// 其余规则（如只发系统提示/只显示消息）才是真对话，仍下发默认 NPC 页。
+		// Retail judges per rule: interaction rules (inline actions or a state broadcast) close
+		// themselves, so a default HTML page would only flash and vanish; other rules are real dialogs.
 		for (Rule rule : pattern.event("on_talked_by_user")) {
-			for (Operation action : rule.actions()) {
-				if (isDirectTalkAction(action)) {
-					return true;
-				}
+			if (isDirectTalkRule(rule)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isDirectTalkRule(Rule rule) {
+		for (Operation action : rule.actions()) {
+			if (isDirectTalkAction(action)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
 	private static boolean isDirectTalkAction(Operation action) {
+		// 自毁型交互无法保留对话窗：默认对话框只会闪开，随即被删除包关掉。
+		// 状态广播同理：作用完就该静默结束（万圣节第二至第五根蜡烛只广播 1001..1004）。
+		// Self-removing interactions cannot keep a dialog open: the default window would flash and close on
+		// delete. State broadcasts end silently as well (Halloween candles 2-5 only broadcast 1001..1004).
 		return switch (action.type()) {
-			case "use_skill", "teleport_target", "teleport_target_alias" -> true;
+			case "use_skill", "teleport_target", "teleport_target_alias", "despawn_self", "broadcast_message" -> true;
 			default -> false;
 		};
 	}
@@ -1449,6 +1661,7 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 
 	@Override
 	protected void handleDespawned() {
+		releaseVisualSwaps();
 		runEvent("on_despawn", null, null);
 		unregisterSensoryArea();
 		resetPatternState();
@@ -3053,16 +3266,44 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 			float radius = (float) (Rnd.nextDouble() * range);
 			float spawnX = x + (float) Math.cos(angle) * radius;
 			float spawnY = y + (float) Math.sin(angle) * radius;
+			// 原版以施法者为基准的刷怪同样落在地面上：模板 z 只作参考（首领/小怪在地面，不能用 0）。
+			// Retail caster-relative spawns also land on the ground: the template z is only a reference
+			// (bosses and adds stand on the floor, so a literal 0 would leave them floating).
+			float spawnZ = GeoService.getInstance().projectGroundZ(getOwner().getWorldId(), spawnX, spawnY, z,
+				getOwner().getInstanceId());
 			SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), npcId, spawnX, spawnY,
-				z, heading);
+				Float.isFinite(spawnZ) ? spawnZ : z, heading);
 			template.setMaster(getOwner());
 			template.setCreatorId(getOwner().getObjectId());
-			template.setMasterName(getOwner().getName());
+			// 原版刷怪动作不写主人名：写进去会让子 NPC 在客户端名字后带上“（发起 NPC 名）”，
+			// 例如万圣节蜡烛链的隐形辅助 NPC 会顶着上一根蜡烛的名字（World_event_halloween_can）。
+			// Retail spawn actions carry no master name: writing one appends "(spawner)" to the child's
+			// client name, e.g. the Halloween chain helpers would show the previous candle's name.
+			template.setMasterName("");
 			if (walkerId != null) {
 				template.setWalkerId(walkerId);
 			}
 			template.setFly(value(action, "is_aerial_spawn").equals("TRUE") ? 1 : 0);
 			VisibleObject spawned = SpawnEngine.spawnObject(template, getOwner().getInstanceId());
+			// 与生成者同点、同模板（或与生成者同名的点燃外观）的子对象只是原版的模型替换：
+			// 原版生成者已 despawn，替换体独占该位置；服务端生成者仍在场时两者会重叠成两根实体。
+			// A child spawned on the generator's exact point as either the same template or a lit
+			// appearance of the same name is the retail mesh swap: retail despawns the generator first,
+			// so keep the generator out of the client while the replacement lives.
+			if (spawned != null && isRetailVisualSwap(getOwner(), npcId, template.getX(), template.getY(), template.getZ())) {
+				// 对象本体对生成者的已知玩家不可见；显式隐藏后由替换体独占该点。
+				// The object itself stays out of the generator's known players; it is explicitly hidden and the
+				// replacement then owns the spot.
+				writableVisualSwaps().put(spawned, getOwner());
+				ThreadPoolManager.getInstance().schedule(() -> {
+					if (spawned instanceof Npc hidden && hidden.isSpawned()) {
+						hideFromKnownPlayers(hidden);
+					}
+				}, 100);
+				if (isLogging()) {
+					AI2Logger.info(this, "Visual swap npc=" + npcId + " replaces generator=" + getOwner().getNpcId());
+				}
+			}
 			if (isLogging()) {
 				AI2Logger.info(this, "Spawn action npc=" + npcId + " spawnId=" + value(action, "spawn_id")
 					+ " at " + spawnX + "/" + spawnY + "/" + z
@@ -3724,7 +3965,10 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (teleports != EMPTY_PENDING_TELEPORTS) {
 			teleports.clear();
 		}
-		flags.clear();
+		// 原版标记位在一场战斗内只置位一次：首领的 80/60/40/20% 召唤档位不能因脱战/回位而重置，
+		// 否则 MAAD-S 每次重新进入战斗都会再召唤 20 只寄生噬人虫，越打越多。
+		// Retail flags latch for the whole encounter: the boss 80/60/40/20% summon phases must not reset on
+		// disengage/return-home, otherwise MAAD-S re-summons 20 Clodworms on every re-engage.
 		intVars.clear();
 		fighting = false;
 		wakeUpUntil = 0;

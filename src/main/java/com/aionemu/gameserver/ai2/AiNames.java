@@ -15,7 +15,9 @@ public enum AiNames {
 	/** 空壳/哑元 NPC AI / Dummy NPC AI */
 	DUMMY_NPC("dummy"),
 	/** 主动攻击型 NPC AI / Aggressive NPC AI */
-	AGGRESSIVE_NPC("aggressive");
+	AGGRESSIVE_NPC("aggressive"),
+	/** 原版“仅外观”NPC AI：无交互、无对话 / Retail visual-only NPC AI: no interaction, no dialog */
+	RETAIL_VISUAL_ONLY("retail_visual_only");
 
 	/**
 	 * 获取 AI 注册名称字符串。

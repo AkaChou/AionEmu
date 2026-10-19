@@ -29,14 +29,14 @@
 			<spot x="227.130005" y="220.238342" z="161.503510" h="90" random_walk="1"/>
 		</spawn>
 		<spawn npc_id="833817">
-			<spot x="229.709442" y="219.702698" z="161.503510" h="90" random_walk="1"/>
+			<spot x="229.709442" y="219.702698" z="161.503510" h="90" random_walk="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="833819">
-			<spot x="230.611694" y="209.745041" z="161.503510" h="90" random_walk="1"/>
-			<spot x="224.851959" y="208.111343" z="161.503510" h="90" random_walk="1"/>
+			<spot x="230.611694" y="209.745041" z="161.503510" h="90" random_walk="1" resolve_z="true"/>
+			<spot x="224.851959" y="208.111343" z="161.503510" h="90" random_walk="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="833821">
-			<spot x="232.364685" y="207.933716" z="161.503510" h="90" random_walk="1"/>
+			<spot x="232.364685" y="207.933716" z="161.503510" h="90" random_walk="1" resolve_z="true"/>
 		</spawn>
 		<spawn npc_id="834072">
 			<spot x="227.913239" y="221.310547" z="161.503510" h="90" random_walk="1"/>

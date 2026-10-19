@@ -633,6 +633,46 @@ class RetailPatternAI2Test {
 	}
 
 	@Test
+	void treatsStateBroadcastTalkAsDirectInteraction() {
+		// 万圣节第二至第五根蜡烛：只广播状态（1001..1004），随后靠广播链点亮下一根；不能弹默认对话页（load fail）。
+		// Halloween candles 2-5 only broadcast a state message (1001..1004); no default dialog may open (load fail).
+		Pattern candleBroadcast = new Pattern("World_Event_Halloween_candle_02", Map.of("on_talked_by_user", List.of(
+			new Rule(7, "DIRECT", List.of(),
+				List.of(new Operation("broadcast_message", Map.of(
+					"message_type", "1001", "param1", "0", "param2", "0",
+					"range_as_meter", "100", "param_obj", "OBJI_SELF")))))));
+		// 显示系统提示的规则是真对话（如 NPC 205438），仍下发默认 NPC 页。
+		// System-message rules are real dialogs (e.g. NPC 205438) and keep the default NPC page.
+		Pattern systemMessageTalk = new Pattern("system_message_talk", Map.of("on_talked_by_user", List.of(
+			new Rule(7, "PLANNED", List.of(),
+				List.of(new Operation("display_system_message", Map.of("string_id", "STR_TEST")))))));
+
+		assertTrue(RetailPatternAI2.isDirectTalkInteraction(candleBroadcast));
+		assertFalse(RetailPatternAI2.isDirectTalkInteraction(systemMessageTalk));
+	}
+
+	@Test
+	void treatsSelfRemovingTalkRewardAsDirectInteraction() {
+		// 万圣节 Bombstop：点击发 3 个糖果后自毁，不能先弹默认对话窗（会闪开即关）。
+		// Halloween Bombstop: gives 3 candies then despawns; no default dialog may open (it would flash and close).
+		Pattern selfRemovingReward = new Pattern("World_event_halloween_Bombstop_01", Map.of("on_talked_by_user", List.of(
+			new Rule(7, "PLANNED", List.of(),
+				List.of(
+					new Operation("give_item_by_user_indicator", Map.of(
+						"receiver", "USERI_TALKER", "item_id", "World_event_halloween_Candybomb",
+						"min", "3", "max", "3")),
+					new Operation("despawn_self", Map.of()))))));
+		// 只发奖、不自毁的模式保留默认对话窗行为。 / Reward-only patterns keep the default dialog.
+		Pattern rewardOnly = new Pattern("reward_only", Map.of("on_talked_by_user", List.of(
+			new Rule(1, "PLANNED", List.of(),
+				List.of(new Operation("give_item_by_user_indicator", Map.of(
+					"receiver", "USERI_TALKER", "item_id", "ITEM", "min", "1", "max", "1")))))));
+
+		assertTrue(RetailPatternAI2.isDirectTalkInteraction(selfRemovingReward));
+		assertFalse(RetailPatternAI2.isDirectTalkInteraction(rewardOnly));
+	}
+
+	@Test
 	void detectsGaugeDrivenTalkPatterns() {
 		Pattern gauge = new Pattern("gauge_talk", Map.of(
 			"on_gauge_begin", List.of(new Rule(1, "DIRECT", List.of(),
@@ -1385,6 +1425,45 @@ class RetailPatternAI2Test {
 		assertEquals(1, cleanupController.deletes);
 		assertTrue(noQueuedFuture);
 		assertTrue(spawned(ai).isEmpty());
+	}
+
+	@Test
+	void treatsSamePlaceSameNameSpawnAsVisualSwap() throws ReflectiveOperationException {
+		// 万圣节蜡烛链：点击后在原蜡烛同一点刷出同名的点燃外观（candle_01_A），原版这是模型替换而不是第二根蜡烛。
+		// Halloween candle chain: the lit appearance (candle_01_A) is spawned on the candle's exact point and shares
+		// its name — retail treats that as a mesh swap, not a second candle.
+		final MasterNpc candle = new ObjenesisStd().newInstance(MasterNpc.class);
+		com.aionemu.gameserver.model.templates.npc.NpcTemplate candleTemplate =
+			new com.aionemu.gameserver.model.templates.npc.NpcTemplate();
+		setField(com.aionemu.gameserver.model.templates.npc.NpcTemplate.class, candleTemplate, "name",
+			"World_event_halloween_candle_01");
+		setField(VisibleObject.class, candle, "objectTemplate", candleTemplate);
+		setField(com.aionemu.gameserver.model.templates.npc.NpcTemplate.class, candleTemplate, "npcId", 835619);
+		com.aionemu.gameserver.world.WorldPosition position =
+			new com.aionemu.gameserver.world.WorldPosition(210130000);
+		setField(com.aionemu.gameserver.world.WorldPosition.class, position, "x", 1497.23f);
+		setField(com.aionemu.gameserver.world.WorldPosition.class, position, "y", 1511.62f);
+		setField(com.aionemu.gameserver.world.WorldPosition.class, position, "z", 565.94f);
+		setField(VisibleObject.class, candle, "position", position);
+
+		assertTrue(RetailPatternAI2.isRetailVisualSwap(candle, 835619, 1497.23f, 1511.62f, 565.94f));
+		// 同模板在原位重刷算替换；同名点燃外观需要 NPC 模板数据，离线测试环境未加载，此处只验证不误判。
+		// Re-spawning the same template in place is a swap; the same-name lit appearance needs NPC template data, which
+		// the offline test environment does not load, so here we only check it is not mistaken for one.
+		assertFalse(RetailPatternAI2.isRetailVisualSwap(candle, 836256, 1497.23f, 1511.62f, 565.94f));
+		// 同模板刷到别处不是替换。 / The same template spawned elsewhere is not a swap.
+		assertFalse(RetailPatternAI2.isRetailVisualSwap(candle, 835619, 1560f, 1511.62f, 565.94f));
+	}
+
+	@Test
+	void patternResetKeepsPhaseFlagsLatched() throws ReflectiveOperationException {		// 原版首领的 80/60/40/20% 召唤档位靠标记位去重：脱战/回位重置 pattern 时不能清标记，
+		// 否则 MAAD-S 每次重新进入战斗都会再召唤 20 只寄生噬人虫，越打越多。
+		// The boss 80/60/40/20% summon phases latch through flags: resetting the pattern on disengage/return-home
+		// must not clear them, or MAAD-S re-summons 20 Clodworms every re-engage.
+		RetailPatternAI2 ai = new RetailPatternAI2();
+		setField(RetailPatternAI2.class, ai, "flags", new java.util.HashSet<>(Set.of("FLAGVARI_ALPHA_1")));
+		resetPatternState(ai);
+		assertEquals(Set.of("FLAGVARI_ALPHA_1"), flags(ai), "脱战重置不得清空已置位的 pattern 标记");
 	}
 
 	@Test
