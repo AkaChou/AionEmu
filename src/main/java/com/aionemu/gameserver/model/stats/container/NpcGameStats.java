@@ -167,7 +167,7 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	/** 返回攻击范围 / Returns the attack range*/
 	@Override
 	public Stat2 getAttackRange() {
-		return getStat(StatEnum.ATTACK_RANGE, owner.getObjectTemplate().getAttackRange() * 1000);
+		return getStat(StatEnum.ATTACK_RANGE, Math.round(owner.getObjectTemplate().getMaxAttackRange() * 1000));
 	}
 
 	/** 返回 p def / Returns the p def */

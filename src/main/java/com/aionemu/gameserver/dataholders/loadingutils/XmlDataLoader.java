@@ -70,6 +70,7 @@ public class XmlDataLoader {
 	private static final String ITEM_SHARD_DIR = ITEM_DATA_DIR + "/item";
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
 	private static final String NPC_COMBAT_DEFINITIONS_FILE = "./definitions/compact/npc-combat.xml";
+	private static final String NPC_ATTACK_DEFINITIONS_FILE = "./definitions/compact/npc-attack-profiles.xml";
 	private static final String HOTSPOT_LOCATION_DEFINITIONS_FILE = "./definitions/compact/hotspot_location/hotspot_location.xml";
 	private static final String SKILL_DEFINITIONS_DIR = "./definitions/compact/skills";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/npc-skills.xml";
@@ -290,6 +291,7 @@ public class XmlDataLoader {
 		CompletableFuture<NpcData> npcDataFuture = timedAsync("NpcData", () -> {
 			NpcData data = loadNpcDataSharded();
 			NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data);
+			NpcAttackDefinitionLoader.apply(Config.definitionFile(NPC_ATTACK_DEFINITIONS_FILE), data);
 			return data;
 		}, phaseTimings);
 		List<CompletableFuture<?>> definitionFutures = List.of(petDefinitionsFuture, npcDropDataFuture,

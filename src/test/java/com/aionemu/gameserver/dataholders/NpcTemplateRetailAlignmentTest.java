@@ -45,6 +45,22 @@ class NpcTemplateRetailAlignmentTest {
 	}
 
 	@Test
+	void numericTailsAreAligned() throws Exception {
+		Map<Integer, Map<String, String>> templates = readFullTemplates(
+			Set.of(836785, 213576, 235892, 247236, 836196));
+
+		assertAttributes(templates, 836785, Map.of(
+			"level", "40", "sensory_range", "10", "stats.maxHp", "9426", "stats.hp_regen", "4713",
+			"stats.pdef", "662", "stats.mresist", "782", "stats.main_hand_accuracy", "1034",
+			"stats.evasion", "723", "stats.maxXp", "6166"));
+		assertAttributes(templates, 213576, Map.of("level", "35", "sensory_range", "8"));
+		assertAttributes(templates, 235892, Map.of("level", "62"));
+		assertAttributes(templates, 247236, Map.of("sensory_range", "0"));
+		assertAttributes(templates, 836196, Map.of(
+			"level", "15", "stats.main_hand_accuracy", "504", "stats.evasion", "352"));
+	}
+
+	@Test
 	void combatRangesCoverRetailProjection() throws Exception {
 		Map<Integer, Map<String, String>> combat = readCombat();
 
@@ -82,6 +98,59 @@ class NpcTemplateRetailAlignmentTest {
 		assertEquals(min, row.get("min_damage"), () -> "min_damage of " + npcId);
 		assertEquals(max, row.get("max_damage"), () -> "max_damage of " + npcId);
 		assertEquals(ratio, row.get("stat_ratio"), () -> "stat_ratio of " + npcId);
+	}
+
+	private static void assertAttributes(Map<Integer, Map<String, String>> templates, int npcId,
+		Map<String, String> expected) {
+		Map<String, String> attrs = templates.get(npcId);
+		assertTrue(attrs != null, () -> "missing npc template " + npcId);
+		for (Map.Entry<String, String> entry : expected.entrySet()) {
+			assertEquals(entry.getValue(), attrs.get(entry.getKey()),
+				() -> entry.getKey() + " of " + npcId);
+		}
+	}
+
+	private static Map<Integer, Map<String, String>> readFullTemplates(Set<Integer> wanted) throws Exception {
+		Map<Integer, Map<String, String>> rows = new HashMap<>();
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		List<Path> files;
+		try (Stream<Path> stream = Files.list(NPC_SHARDS)) {
+			files = stream.filter(p -> p.getFileName().toString().startsWith("npc_template_")).toList();
+		}
+		for (Path file : files) {
+			try (InputStream in = Files.newInputStream(file)) {
+				XMLStreamReader reader = factory.createXMLStreamReader(in);
+				int currentId = -1;
+				while (reader.hasNext()) {
+					int event = reader.next();
+					if (event != XMLStreamConstants.START_ELEMENT) {
+						continue;
+					}
+					if ("npc_template".equals(reader.getLocalName())) {
+						currentId = Integer.parseInt(reader.getAttributeValue(null, "npc_id"));
+						if (wanted.contains(currentId)) {
+							Map<String, String> attrs = new HashMap<>();
+							for (int i = 0; i < reader.getAttributeCount(); i++) {
+								attrs.put(reader.getAttributeLocalName(i), reader.getAttributeValue(i));
+							}
+							rows.put(currentId, attrs);
+						} else {
+							currentId = -1;
+						}
+					} else if ("stats".equals(reader.getLocalName()) && currentId > 0) {
+						Map<String, String> attrs = rows.get(currentId);
+						if (attrs != null) {
+							for (int i = 0; i < reader.getAttributeCount(); i++) {
+								attrs.put("stats." + reader.getAttributeLocalName(i),
+									reader.getAttributeValue(i));
+							}
+						}
+					}
+				}
+				reader.close();
+			}
+		}
+		return rows;
 	}
 
 	private static Map<Integer, Map<String, String>> readTemplates(Set<Integer> wanted) throws Exception {

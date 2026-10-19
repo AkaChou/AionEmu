@@ -87791,7 +87791,7 @@
     <stats hp_regen="0" maxHp="13200" pdef="2056" walk_speed="0" mresist="2063" mboost_resist="1335" run_speed="0" accuracy="93" main_hand_attack="5403" main_hand_crit_rate="131" mdef="2539" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3595" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Fi_65_Ae" attack_range="6" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="833814" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Fi_65_Ae" attack_range="6" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="833814" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="45000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="800" main_hand_crit_rate="102" mdef="718" mboost="0" parry="0" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="2815" run_speed_fight="0"/>
     <equipment>
       <item>125045873</item>
@@ -87805,7 +87805,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Ra_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="833815" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Ra_65_Ae" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="833815" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="25000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="1500" main_hand_crit_rate="102" mdef="1693" mboost="0" parry="2999" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -87832,7 +87832,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Wi_65_Ae" attack_range="25" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="833817" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Wi_65_Ae" attack_range="25" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="833817" sensory_range="60" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="20000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="102" mdef="2016" mboost="0" parry="2915" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -87859,7 +87859,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Ra_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833819" sensory_range="55" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Ra_65_Ae" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833819" sensory_range="55" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="131" mdef="2539" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -87886,7 +87886,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Wi_65_Ae" attack_range="25" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833821" sensory_range="55" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Wi_65_Ae" attack_range="25" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="833821" sensory_range="55" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2500" main_hand_crit_rate="131" mdef="3024" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89194,11 +89194,11 @@
     <bound_radius side="1.4" upper="0.64" front="1.4"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_N_Fi_65_Ae" attack_range="4" npc_type="NON_ATTACKABLE" race="UNDEAD" level="75" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="11" type="GENERAL" name_id="468104" attack_delay="1995" npc_id="834062" sensory_range="50" tribe="IDLUNA_DEF_MONSTER" name="IDLuna_Normal_N_Fi_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_N_Fi_65_Ae" attack_range="4" npc_type="ATTACKABLE" race="UNDEAD" level="75" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="11" type="GENERAL" name_id="468104" attack_delay="1995" npc_id="834062" sensory_range="50" tribe="IDLUNA_DEF_MONSTER" name="IDLuna_Normal_N_Fi_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="1000" maxHp="30000" pdef="518" walk_speed="1.5" mresist="1646" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1000" main_hand_crit_rate="58" mdef="663" mboost="0" parry="0" crit_spell="42" maxXp="0" block="0" main_hand_accuracy="3127" power="1232" evasion="2522" run_speed_fight="6"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_N_Ra_65_Ae" attack_range="4" npc_type="NON_ATTACKABLE" race="UNDEAD" level="75" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="11" type="GENERAL" name_id="468105" attack_delay="1995" npc_id="834063" sensory_range="50" tribe="IDLUNA_DEF_MONSTER" name="IDLuna_Normal_N_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_N_Ra_65_Ae" attack_range="4" npc_type="ATTACKABLE" race="UNDEAD" level="75" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="11" type="GENERAL" name_id="468105" attack_delay="1995" npc_id="834063" sensory_range="50" tribe="IDLUNA_DEF_MONSTER" name="IDLuna_Normal_N_Ra_65_Ae" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="1000" maxHp="30000" pdef="518" walk_speed="1.5" mresist="1646" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="1000" main_hand_crit_rate="58" mdef="663" mboost="0" parry="0" crit_spell="42" maxXp="0" block="0" main_hand_accuracy="3127" power="1232" evasion="2522" run_speed_fight="6"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
@@ -89239,7 +89239,7 @@
     <bound_radius side="0.888" upper="1.375" front="1.4"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Fi_65_Ae2" attack_range="6" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="834072" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Fi_65_Ae2" attack_range="6" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="834072" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="45000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="800" main_hand_crit_rate="102" mdef="718" mboost="0" parry="0" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="2815" run_speed_fight="0"/>
     <equipment>
       <item>125045873</item>
@@ -89253,7 +89253,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Ra_65_Ae2" attack_range="17" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="834073" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Ra_65_Ae2" attack_range="17" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="834073" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="25000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="1500" main_hand_crit_rate="102" mdef="1693" mboost="0" parry="2999" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89266,7 +89266,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_As_65_Ae2" attack_range="6" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="11" type="GENERAL" name_id="467792" attack_delay="1900" npc_id="834074" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_As_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_As_65_Ae2" attack_range="6" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="11" type="GENERAL" name_id="467792" attack_delay="1900" npc_id="834074" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_As_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="35000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="1200" main_hand_crit_rate="102" mdef="1693" mboost="0" parry="3056" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89280,7 +89280,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Wi_65_Ae2" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="834075" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Wi_65_Ae2" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="834075" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="20000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="102" mdef="2016" mboost="0" parry="2915" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89307,7 +89307,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Ra_65_Ae2" attack_range="17" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834077" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Ra_65_Ae2" attack_range="17" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834077" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="131" mdef="2539" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89334,7 +89334,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Wi_65_Ae2" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834079" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae2" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Wi_65_Ae2" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834079" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae2" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2500" main_hand_crit_rate="131" mdef="3024" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89347,7 +89347,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Fi_65_Ae3" attack_range="6" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="834080" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Fi_65_Ae3" attack_range="6" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467790" attack_delay="2100" npc_id="834080" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Fi_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="45000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="800" main_hand_crit_rate="102" mdef="718" mboost="0" parry="0" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="2815" run_speed_fight="0"/>
     <equipment>
       <item>125045873</item>
@@ -89361,7 +89361,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Ra_65_Ae3" attack_range="17" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="834081" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Ra_65_Ae3" attack_range="17" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467791" attack_delay="2260" npc_id="834081" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Ra_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="25000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="1500" main_hand_crit_rate="102" mdef="1693" mboost="0" parry="2999" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89374,7 +89374,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_As_65_Ae3" attack_range="6" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="11" type="GENERAL" name_id="467792" attack_delay="1900" npc_id="834082" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_As_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_As_65_Ae3" attack_range="6" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="11" type="GENERAL" name_id="467792" attack_delay="1900" npc_id="834082" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_As_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="35000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="1200" main_hand_crit_rate="102" mdef="1693" mboost="0" parry="3056" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89388,7 +89388,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Normal_Wi_65_Ae3" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="834083" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Normal_Wi_65_Ae3" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="14" type="GENERAL" name_id="467793" attack_delay="2300" npc_id="834083" sensory_range="50" tribe="IDLUNA_DEF_NPC" name="IDLuna_Normal_Wi_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="260" maxHp="20000" pdef="2016" walk_speed="0" mresist="1646" mboost_resist="817" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="102" mdef="2016" mboost="0" parry="2915" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3576" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89415,7 +89415,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Ra_65_Ae3" attack_range="17" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834085" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Ra_65_Ae3" attack_range="17" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467795" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834085" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Ra_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2000" main_hand_crit_rate="131" mdef="2539" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>
@@ -89442,7 +89442,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDLuna_Strong_Wi_65_Ae3" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834087" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae3" rank="DISCIPLINED" height="2.0">
+<npc_template name_desc="IDLuna_Strong_Wi_65_Ae3" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="75" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="GENERAL" name_id="467797" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="834087" sensory_range="50" tribe="IDLUNA_DEF_NPC3" name="IDLuna_Strong_Wi_65_Ae3" rank="DISCIPLINED" height="2.0">
     <stats hp_regen="38817" maxHp="3500000" pdef="48471" walk_speed="0" mresist="1943" mboost_resist="1150" run_speed="0" accuracy="2370" main_hand_attack="2500" main_hand_crit_rate="131" mdef="3024" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3441" power="1232" evasion="2973" run_speed_fight="0"/>
     <equipment>
       <item>125045874</item>

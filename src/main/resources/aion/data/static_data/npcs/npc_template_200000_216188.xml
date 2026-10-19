@@ -70936,28 +70936,28 @@
     </equipment>
     <bound_radius side="2" upper="2.886" front="1.025"/>
   </npc_template>
-<npc_template name_desc="IDAbGateQ_LizardRaRed_40_An" attack_range="20" npc_type="ATTACKABLE" race="LIZARDMAN" level="40" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="315570" attack_delay="2260" npc_id="213576" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="draconute scout" rank="SEASONED" height="1.8">
+<npc_template name_desc="IDAbGateQ_LizardRaRed_40_An" attack_range="20" npc_type="ATTACKABLE" race="LIZARDMAN" level="35" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="315570" attack_delay="2260" npc_id="213576" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="draconute scout" rank="SEASONED" height="1.8">
     <stats hp_regen="2832" maxHp="5663" pdef="473" walk_speed="1.76" mresist="686" mboost_resist="0" run_speed="7" accuracy="920" main_hand_attack="336" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="16212" block="668" main_hand_accuracy="928" power="300" evasion="0" run_speed_fight="6"/>
     <equipment>
       <item>101700015</item>
     </equipment>
     <bound_radius side="1.625" upper="1.8" front="0.725"/>
   </npc_template>
-<npc_template name_desc="IDAbGateQ_MissionNagaWi_40_An" attack_range="16" npc_type="ATTACKABLE" race="NAGA" level="40" attack_rate="1000" title_id="314332" rating="NORMAL" ai="mage" hpgauge_level="5" type="MONSTER" name_id="315571" attack_delay="2300" npc_id="213577" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala mage" rank="SEASONED" height="1.56">
+<npc_template name_desc="IDAbGateQ_MissionNagaWi_40_An" attack_range="16" npc_type="ATTACKABLE" race="NAGA" level="35" attack_rate="1000" title_id="314332" rating="NORMAL" ai="mage" hpgauge_level="5" type="MONSTER" name_id="315571" attack_delay="2300" npc_id="213577" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala mage" rank="SEASONED" height="1.56">
     <stats hp_regen="2702" maxHp="5403" pdef="246" walk_speed="1" mresist="686" mboost_resist="0" run_speed="7" accuracy="1104" main_hand_attack="360" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="16212" block="649" main_hand_accuracy="928" power="539" evasion="0" run_speed_fight="6"/>
     <equipment>
       <item>100500008</item>
     </equipment>
     <bound_radius side="1.9" upper="1.56" front="1"/>
   </npc_template>
-<npc_template name_desc="IDAbGateQ_MissionNagaFi_40_An" attack_range="2" npc_type="ATTACKABLE" race="NAGA" level="40" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="315572" attack_delay="2100" npc_id="213578" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala scaleguard" rank="SEASONED" height="2.3">
+<npc_template name_desc="IDAbGateQ_MissionNagaFi_40_An" attack_range="2" npc_type="ATTACKABLE" race="NAGA" level="35" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="315572" attack_delay="2100" npc_id="213578" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala scaleguard" rank="SEASONED" height="2.3">
     <stats hp_regen="3581" maxHp="7161" pdef="701" walk_speed="1" mresist="686" mboost_resist="0" run_speed="7" accuracy="1104" main_hand_attack="286" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="16212" block="649" main_hand_accuracy="928" power="539" evasion="0" run_speed_fight="6"/>
     <equipment>
       <item>100900013</item>
     </equipment>
     <bound_radius side="1.9" upper="2.3" front="1"/>
   </npc_template>
-<npc_template name_desc="IDAbGateQ_MissionNagaKn_40_An" attack_range="2" npc_type="ATTACKABLE" race="NAGA" level="40" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="315573" attack_delay="2100" npc_id="213579" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala fangblade" rank="SEASONED" height="2.3">
+<npc_template name_desc="IDAbGateQ_MissionNagaKn_40_An" attack_range="2" npc_type="ATTACKABLE" race="NAGA" level="35" attack_rate="1000" title_id="314332" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="315573" attack_delay="2100" npc_id="213579" sensory_range="8" tribe="DRAMA_KIMEIA_MOB" name="chandala fangblade" rank="SEASONED" height="2.3">
     <stats hp_regen="3743" maxHp="7486" pdef="701" walk_speed="1" mresist="686" mboost_resist="0" run_speed="7" accuracy="1104" main_hand_attack="283" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="16212" block="649" main_hand_accuracy="928" power="539" evasion="0" run_speed_fight="6"/>
     <equipment>
       <item>100000016</item>

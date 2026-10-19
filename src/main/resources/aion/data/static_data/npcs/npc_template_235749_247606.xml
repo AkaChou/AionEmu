@@ -788,11 +788,11 @@
     <stats hp_regen="9972" maxHp="19944" pdef="927" walk_speed="1.1" mresist="1388" mboost_resist="0" run_speed="7.8" accuracy="1185" main_hand_attack="461" main_hand_crit_rate="12" mdef="1052" mboost="0" parry="0" crit_spell="9" maxXp="75670" block="0" main_hand_accuracy="1900" power="932" evasion="0" run_speed_fight="7.8"/>
     <bound_radius side="1.4" upper="2.7" front="2.0"/>
   </npc_template>
-<npc_template name_desc="LF5_H_Ettin_61_An" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="61" attack_rate="850" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="333998" attack_delay="2142" npc_id="235892" sensory_range="8" tribe="ETTIN" name="Primeval Webbed Ettin" rank="SEASONED" height="1.1">
+<npc_template name_desc="LF5_H_Ettin_61_An" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="62" attack_rate="850" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="333998" attack_delay="2142" npc_id="235892" sensory_range="8" tribe="ETTIN" name="Primeval Webbed Ettin" rank="SEASONED" height="1.1">
     <stats hp_regen="11823" maxHp="23645" pdef="1350" walk_speed="0.75" mresist="1238" mboost_resist="0" run_speed="7" accuracy="1185" main_hand_attack="522" main_hand_crit_rate="12" mdef="499" mboost="0" parry="0" crit_spell="9" maxXp="75670" block="0" main_hand_accuracy="1900" power="932" evasion="0" run_speed_fight="6"/>
     <bound_radius side="1.15" upper="1.1" front="2.6"/>
   </npc_template>
-<npc_template name_desc="LF5_H_Ettin_62_An" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="62" attack_rate="850" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="333999" attack_delay="2142" npc_id="235893" sensory_range="8" tribe="ETTIN" name="Primeval Webbed Ettin" rank="SEASONED" height="1.1">
+<npc_template name_desc="LF5_H_Ettin_62_An" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="63" attack_rate="850" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="333999" attack_delay="2142" npc_id="235893" sensory_range="8" tribe="ETTIN" name="Primeval Webbed Ettin" rank="SEASONED" height="1.1">
     <stats hp_regen="12195" maxHp="24391" pdef="1377" walk_speed="0.75" mresist="1258" mboost_resist="0" run_speed="7" accuracy="1185" main_hand_attack="540" main_hand_crit_rate="13" mdef="508" mboost="0" parry="0" crit_spell="9" maxXp="79454" block="0" main_hand_accuracy="1945" power="932" evasion="0" run_speed_fight="6"/>
     <bound_radius side="1.15" upper="1.1" front="2.6"/>
   </npc_template>
@@ -44997,7 +44997,7 @@
     <stats hp_regen="99999999" maxHp="99999999" pdef="0" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.35" upper="2" front="0.25"/>
   </npc_template>
-<npc_template name_desc="LF6_FDUMMY1_Guardian_Li_Kn_80_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="80" attack_rate="1000" title_id="2305766" rating="ELITE" ai="aggressive" hpgauge_level="27" name_id="2305798" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243651" sensory_range="5" tribe="LDF5_DUMMY1_LGUARD" name="LF6_FDUMMY1_Guardian_Li_Kn_80_Ae" rank="SEASONED" height="2.0">
+<npc_template name_desc="LF6_FDUMMY1_Guardian_Li_Kn_80_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="80" attack_rate="1000" title_id="2305766" rating="ELITE" ai="aggressive" hpgauge_level="27" name_id="2305798" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243651" sensory_range="10" tribe="LDF5_DUMMY1_LGUARD" name="LF6_FDUMMY1_Guardian_Li_Kn_80_Ae" rank="SEASONED" height="2.0">
     <stats hp_regen="11832185" maxHp="23664371" pdef="2103" walk_speed="1.457" mresist="2468" mboost_resist="2010" run_speed="6" accuracy="2370" main_hand_attack="3717" main_hand_crit_rate="266" mdef="749" mboost="0" parry="4090" crit_spell="176" maxXp="38909177" block="0" main_hand_accuracy="4113" power="2" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>125004497</item>
@@ -45007,7 +45007,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="LF6_FDUMMY2_Guardian_Li_Fi_80_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="80" attack_rate="1000" title_id="2305766" rating="ELITE" ai="aggressive" hpgauge_level="27" name_id="2305799" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243652" sensory_range="5" tribe="LDF5_DUMMY2_LGUARD" name="LF6_FDUMMY2_Guardian_Li_Fi_80_Ae" rank="SEASONED" height="2.0">
+<npc_template name_desc="LF6_FDUMMY2_Guardian_Li_Fi_80_Ae" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="80" attack_rate="1000" title_id="2305766" rating="ELITE" ai="aggressive" hpgauge_level="27" name_id="2305799" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243652" sensory_range="10" tribe="LDF5_DUMMY2_LGUARD" name="LF6_FDUMMY2_Guardian_Li_Fi_80_Ae" rank="SEASONED" height="2.0">
     <stats hp_regen="11832185" maxHp="23664371" pdef="2103" walk_speed="1.457" mresist="2468" mboost_resist="2010" run_speed="6" accuracy="2370" main_hand_attack="3717" main_hand_crit_rate="266" mdef="749" mboost="0" parry="4090" crit_spell="176" maxXp="38909177" block="0" main_hand_accuracy="4113" power="2" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>125004497</item>
@@ -45024,7 +45024,7 @@
     <stats hp_regen="99999999" maxHp="99999999" pdef="0" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.35" upper="2" front="0.25"/>
   </npc_template>
-<npc_template name_desc="DF6_OP_TGuard_Fi_75_Ah" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="80" attack_rate="1000" title_id="467443" rating="ELITE" ai="aggressive" hpgauge_level="21" name_id="2305802" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243655" sensory_range="5" tribe="DF5_DUMMY1_DGUARD" name="DF6_OP_TGuard_Fi_75_Ah" rank="SEASONED" height="2.0">
+<npc_template name_desc="DF6_OP_TGuard_Fi_75_Ah" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="80" attack_rate="1000" title_id="467443" rating="ELITE" ai="aggressive" hpgauge_level="21" name_id="2305802" attack_delay="2100" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243655" sensory_range="20" tribe="DF5_DUMMY1_DGUARD" name="DF6_OP_TGuard_Fi_75_Ah" rank="SEASONED" height="2.0">
     <stats hp_regen="1442340" maxHp="2884679" pdef="2002" walk_speed="1.457" mresist="2242" mboost_resist="1672" run_speed="6" accuracy="2370" main_hand_attack="2564" main_hand_crit_rate="266" mdef="714" mboost="0" parry="3946" crit_spell="176" maxXp="9050980" block="0" main_hand_accuracy="3955" power="2" evasion="0" run_speed_fight="6"/>
     <equipment>
       <item>125004501</item>
@@ -45033,7 +45033,7 @@
     </equipment>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
-<npc_template name_desc="DF6_OP_TGuard_As_75_Ah" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="80" attack_rate="1000" title_id="467443" rating="ELITE" ai="aggressive" hpgauge_level="21" name_id="2305803" attack_delay="1900" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243656" sensory_range="5" tribe="DF5_DUMMY2_DGUARD" name="DF6_OP_TGuard_As_75_Ah" rank="SEASONED" height="2.0">
+<npc_template name_desc="DF6_OP_TGuard_As_75_Ah" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="80" attack_rate="1000" title_id="467443" rating="ELITE" ai="aggressive" hpgauge_level="21" name_id="2305803" attack_delay="1900" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="243656" sensory_range="20" tribe="DF5_DUMMY2_DGUARD" name="DF6_OP_TGuard_As_75_Ah" rank="SEASONED" height="2.0">
     <stats hp_regen="1088311" maxHp="2176622" pdef="1361" walk_speed="1.457" mresist="2242" mboost_resist="1672" run_speed="6" accuracy="2370" main_hand_attack="3392" main_hand_crit_rate="266" mdef="1681" mboost="0" parry="0" crit_spell="176" maxXp="9050980" block="0" main_hand_accuracy="3955" power="2" evasion="3733" run_speed_fight="6"/>
     <equipment>
       <item>125004501</item>
@@ -65336,27 +65336,27 @@
     <stats hp_regen="0" maxHp="26000" pdef="1393" walk_speed="1.215" mresist="1333" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="200" main_hand_crit_rate="15" mdef="489" mboost="0" parry="0" crit_spell="11" maxXp="170000" block="0" main_hand_accuracy="2155" power="1232" evasion="1482" run_speed_fight="8"/>
     <bound_radius side="3.12" upper="1.3" front="1.0"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_04" attack_range="16" npc_type="ATTACKABLE" race="KRALL" level="66" ammo_speed="50" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326365" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247236" sensory_range="18" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_04" rank="SEASONED" height="1.02">
+<npc_template name_desc="IDInfinity_Named_04" attack_range="16" npc_type="ATTACKABLE" race="KRALL" level="66" ammo_speed="50" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326365" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247236" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_04" rank="SEASONED" height="1.02">
     <stats hp_regen="131623" maxHp="263245" pdef="1210" walk_speed="0" mresist="1738" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="907" main_hand_crit_rate="59" mdef="501" mboost="0" parry="2563" crit_spell="43" maxXp="0" block="0" main_hand_accuracy="2875" power="1232" evasion="0" run_speed_fight="0"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_08" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="68" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326366" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247237" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_08" rank="SEASONED" height="5.7">
+<npc_template name_desc="IDInfinity_Named_08" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="68" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326366" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247237" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_08" rank="SEASONED" height="5.7">
     <stats hp_regen="136784" maxHp="273569" pdef="1257" walk_speed="1.8" mresist="1804" mboost_resist="30" run_speed="6.5" accuracy="2370" main_hand_attack="956" main_hand_crit_rate="61" mdef="515" mboost="0" parry="2650" crit_spell="44" maxXp="0" block="0" main_hand_accuracy="2972" power="1232" evasion="0" run_speed_fight="6.5"/>
     <bound_radius side="2.5" upper="5.7" front="2.5"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_12" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="70" attack_rate="1000" rating="NORMAL" ai="IDInfinity_Named_12" hpgauge_level="5" type="MONSTER" name_id="2326367" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247238" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_12" rank="SEASONED" height="5.7">
+<npc_template name_desc="IDInfinity_Named_12" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="70" attack_rate="1000" rating="NORMAL" ai="IDInfinity_Named_12" hpgauge_level="5" type="MONSTER" name_id="2326367" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247238" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_12" rank="SEASONED" height="5.7">
     <stats hp_regen="42638" maxHp="85276" pdef="886" walk_speed="4.5" mresist="1798" mboost_resist="0" run_speed="4.5" accuracy="2370" main_hand_attack="1063" main_hand_crit_rate="31" mdef="1248" mboost="0" parry="0" crit_spell="23" maxXp="0" block="0" main_hand_accuracy="2895" power="1232" evasion="2431" run_speed_fight="4.5"/>
     <bound_radius side="2.5" upper="5.7" front="2.5"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_16" attack_range="2" npc_type="ATTACKABLE" race="DRAKAN" level="71" rating="NORMAL" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326368" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247239" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_16" rank="SEASONED" height="5.7" attack_rate="1000">
+<npc_template name_desc="IDInfinity_Named_16" attack_range="2" npc_type="ATTACKABLE" race="DRAKAN" level="71" rating="NORMAL" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326368" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247239" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_16" rank="SEASONED" height="5.7" attack_rate="1000">
     <stats hp_regen="146052" maxHp="292103" pdef="1329" walk_speed="4.5" mresist="1904" mboost_resist="190" run_speed="4.5" accuracy="2370" main_hand_attack="317" main_hand_crit_rate="63" mdef="538" mboost="0" parry="2781" crit_spell="46" maxXp="0" block="0" main_hand_accuracy="3117" power="1232" evasion="0" run_speed_fight="4.5"/>
     <bound_radius side="8.0" upper="6.2" front="8.0"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_20" attack_range="16" npc_type="ATTACKABLE" race="DRAKAN" level="72" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326369" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247240" sensory_range="18" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_20" rank="SEASONED" height="6.2">
+<npc_template name_desc="IDInfinity_Named_20" attack_range="16" npc_type="ATTACKABLE" race="DRAKAN" level="72" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326369" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247240" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_20" rank="SEASONED" height="6.2">
     <stats hp_regen="0" maxHp="104692" pdef="921" walk_speed="2.192" mresist="1937" mboost_resist="230" run_speed="12" accuracy="2370" main_hand_attack="1398" main_hand_crit_rate="64" mdef="1285" mboost="0" parry="0" crit_spell="46" maxXp="0" block="0" main_hand_accuracy="3166" power="1232" evasion="2671" run_speed_fight="12"/>
     <bound_radius side="8.0" upper="6.2" front="8.0"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_24" attack_range="16" npc_type="ATTACKABLE" race="KRALL" level="73" attack_rate="1000" ammo_speed="60" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326370" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247241" sensory_range="18" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_24" rank="SEASONED" height="1.77">
+<npc_template name_desc="IDInfinity_Named_24" attack_range="16" npc_type="ATTACKABLE" race="KRALL" level="73" attack_rate="1000" ammo_speed="60" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326370" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247241" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_24" rank="SEASONED" height="1.77">
     <stats hp_regen="114138" maxHp="228277" pdef="486" walk_speed="0.778" mresist="1969" mboost_resist="270" run_speed="7" accuracy="2370" main_hand_attack="1867" main_hand_crit_rate="65" mdef="1551" mboost="0" parry="0" crit_spell="47" maxXp="0" block="0" main_hand_accuracy="3214" power="1232" evasion="2583" run_speed_fight="7"/>
     <equipment>
       <item>100001977</item>
@@ -65364,11 +65364,11 @@
     </equipment>
     <bound_radius side="1.287" upper="1.77" front="1.883"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_28" attack_range="2" npc_type="ATTACKABLE" race="UNDEAD" level="74" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326371" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247242" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_28" rank="SEASONED" height="2.18">
+<npc_template name_desc="IDInfinity_Named_28" attack_range="2" npc_type="ATTACKABLE" race="UNDEAD" level="74" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326371" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247242" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_28" rank="SEASONED" height="2.18">
     <stats hp_regen="153876" maxHp="307752" pdef="1403" walk_speed="1.86" mresist="2003" mboost_resist="310" run_speed="4.5" accuracy="2370" main_hand_attack="1450" main_hand_crit_rate="66" mdef="560" mboost="0" parry="2911" crit_spell="48" maxXp="0" block="0" main_hand_accuracy="3263" power="1232" evasion="0" run_speed_fight="4.5"/>
     <bound_radius side="0.95" upper="2.18" front="2.75"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_32" attack_range="2" npc_type="ATTACKABLE" race="DRAKAN" level="75" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326372" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247243" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_32" rank="SEASONED" height="5.0">
+<npc_template name_desc="IDInfinity_Named_32" attack_range="2" npc_type="ATTACKABLE" race="DRAKAN" level="75" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326372" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247243" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_32" rank="SEASONED" height="5.0">
     <stats hp_regen="156484" maxHp="312968" pdef="1428" walk_speed="3.4" mresist="2037" mboost_resist="350" run_speed="8" accuracy="2370" main_hand_attack="1485" main_hand_crit_rate="67" mdef="567" mboost="0" parry="2954" crit_spell="48" maxXp="0" block="0" main_hand_accuracy="3311" power="1232" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100201039</item>
@@ -65376,11 +65376,11 @@
     </equipment>
     <bound_radius side="1.9" upper="5.0" front="2.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_36" attack_range="2" npc_type="ATTACKABLE" race="GOBLIN" level="75" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326373" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247244" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_36" rank="SEASONED" height="11.0">
+<npc_template name_desc="IDInfinity_Named_36" attack_range="2" npc_type="ATTACKABLE" race="GOBLIN" level="75" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2326373" attack_delay="1995" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247244" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_36" rank="SEASONED" height="11.0">
     <stats hp_regen="118074" maxHp="236148" pdef="972" walk_speed="2.5" mresist="2037" mboost_resist="350" run_speed="7" accuracy="2370" main_hand_attack="1964" main_hand_crit_rate="67" mdef="1337" mboost="0" parry="0" crit_spell="48" maxXp="0" block="0" main_hand_accuracy="3311" power="1232" evasion="2794" run_speed_fight="7"/>
     <bound_radius side="9.0" upper="11.0" front="8.0"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Named_40" attack_range="60" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="75" attack_rate="1000" ammo_speed="30" title_id="2306181" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2306109" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247245" sensory_range="10" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_40" rank="EXPERT" height="1.9">
+<npc_template name_desc="IDInfinity_Named_40" attack_range="60" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="75" attack_rate="1000" ammo_speed="30" title_id="2306181" rating="ELITE" ai="aggressive" hpgauge_level="10" type="MONSTER" name_id="2306109" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247245" sensory_range="0" tribe="IDINFINITY_NAMED" name="IDInfinity_Named_40" rank="EXPERT" height="1.9">
     <stats hp_regen="432939" maxHp="865877" pdef="504" walk_speed="0" mresist="2037" mboost_resist="350" run_speed="0" accuracy="2370" main_hand_attack="1383" main_hand_crit_rate="67" mdef="1592" mboost="0" parry="0" crit_spell="48" maxXp="0" block="0" main_hand_accuracy="3311" power="1232" evasion="2661" run_speed_fight="0"/>
     <equipment>
       <item>100101594</item>
@@ -65392,7 +65392,7 @@
     <stats hp_regen="4500000" maxHp="1500000" pdef="2955" walk_speed="0" mresist="2087" mboost_resist="2201" run_speed="0" accuracy="93" main_hand_attack="5250" main_hand_crit_rate="150" mdef="639" mboost="0" parry="3804" crit_spell="109" maxXp="120000000" block="0" main_hand_accuracy="4174" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="1.0" upper="1.0" front="1.0"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_01_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326375" attack_delay="2205" npc_id="247247" sensory_range="8" tribe="IDINFINITY" name="IDInfinity_Normal_01_01" rank="DISCIPLINED" height="3.3">
+<npc_template name_desc="IDInfinity_Normal_01_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326375" attack_delay="2205" npc_id="247247" sensory_range="18" tribe="IDINFINITY" name="IDInfinity_Normal_01_01" rank="DISCIPLINED" height="3.3">
     <stats hp_regen="23002" maxHp="46004" pdef="1014" walk_speed="1.6" mresist="1670" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="691" main_hand_crit_rate="29" mdef="500" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="7"/>
     <bound_radius side="1.3" upper="3.3" front="2.5"/>
   </npc_template>
@@ -65400,7 +65400,7 @@
     <stats hp_regen="17774" maxHp="35549" pdef="822" walk_speed="0" mresist="1670" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="849" main_hand_crit_rate="29" mdef="1178" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="0"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_02_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326377" attack_delay="2205" npc_id="247249" sensory_range="8" tribe="IDINFINITY" name="IDInfinity_Normal_02_01" rank="DISCIPLINED" height="3.3">
+<npc_template name_desc="IDInfinity_Normal_02_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326377" attack_delay="2205" npc_id="247249" sensory_range="18" tribe="IDINFINITY" name="IDInfinity_Normal_02_01" rank="DISCIPLINED" height="3.3">
     <stats hp_regen="23002" maxHp="46004" pdef="1014" walk_speed="1.6" mresist="1670" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="691" main_hand_crit_rate="29" mdef="500" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="7"/>
     <bound_radius side="1.3" upper="3.3" front="2.5"/>
   </npc_template>
@@ -65408,7 +65408,7 @@
     <stats hp_regen="17774" maxHp="35549" pdef="822" walk_speed="0" mresist="1670" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="849" main_hand_crit_rate="29" mdef="1178" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="0"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_03_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326379" attack_delay="2205" npc_id="247251" sensory_range="8" tribe="IDINFINITY" name="IDInfinity_Normal_03_01" rank="DISCIPLINED" height="3.3">
+<npc_template name_desc="IDInfinity_Normal_03_01" attack_range="2" npc_type="ATTACKABLE" race="DEMIHUMANOID" level="66" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326379" attack_delay="2205" npc_id="247251" sensory_range="18" tribe="IDINFINITY" name="IDInfinity_Normal_03_01" rank="DISCIPLINED" height="3.3">
     <stats hp_regen="23002" maxHp="46004" pdef="1014" walk_speed="1.6" mresist="1670" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="691" main_hand_crit_rate="29" mdef="500" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="7"/>
     <bound_radius side="1.3" upper="3.3" front="2.5"/>
   </npc_template>
@@ -65416,27 +65416,27 @@
     <stats hp_regen="17774" maxHp="35549" pdef="822" walk_speed="0" mresist="1670" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="849" main_hand_crit_rate="29" mdef="1178" mboost="0" parry="0" crit_spell="21" maxXp="0" block="0" main_hand_accuracy="2708" power="932" evasion="2165" run_speed_fight="0"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_05_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247253" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_01" rank="DISCIPLINED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_05_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247253" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_01" rank="DISCIPLINED" height="1.4">
     <stats hp_regen="23904" maxHp="47808" pdef="1054" walk_speed="1.8" mresist="1734" mboost_resist="0" run_speed="7.6" accuracy="2370" main_hand_attack="728" main_hand_crit_rate="30" mdef="514" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_05_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326382" attack_delay="1995" npc_id="247254" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_02" rank="DISCIPLINED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_05_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326382" attack_delay="1995" npc_id="247254" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_02" rank="DISCIPLINED" height="1.4">
     <stats hp_regen="18471" maxHp="36943" pdef="854" walk_speed="1.8" mresist="1734" mboost_resist="0" run_speed="7.6" accuracy="2370" main_hand_attack="894" main_hand_crit_rate="30" mdef="1213" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_06_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326383" attack_delay="2205" npc_id="247255" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_01" rank="DISCIPLINED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_06_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326383" attack_delay="2205" npc_id="247255" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_01" rank="DISCIPLINED" height="1.4">
     <stats hp_regen="23904" maxHp="47808" pdef="1054" walk_speed="1.8" mresist="1734" mboost_resist="0" run_speed="7.6" accuracy="2370" main_hand_attack="728" main_hand_crit_rate="30" mdef="514" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_06_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326384" attack_delay="1995" npc_id="247256" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_02" rank="DISCIPLINED" height="1.2">
+<npc_template name_desc="IDInfinity_Normal_06_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326384" attack_delay="1995" npc_id="247256" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_02" rank="DISCIPLINED" height="1.2">
     <stats hp_regen="18471" maxHp="36943" pdef="854" walk_speed="1.8" mresist="1734" mboost_resist="0" run_speed="7.6" accuracy="2370" main_hand_attack="894" main_hand_crit_rate="30" mdef="1213" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="7.6"/>
     <bound_radius side="2.15" upper="1.2" front="1.23"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_07_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" title_id="314368" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326385" attack_delay="2205" npc_id="247257" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_01" rank="DISCIPLINED" height="2.65">
+<npc_template name_desc="IDInfinity_Normal_07_01" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" title_id="314368" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326385" attack_delay="2205" npc_id="247257" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_01" rank="DISCIPLINED" height="2.65">
     <stats hp_regen="23904" maxHp="47808" pdef="1054" walk_speed="2.97" mresist="1734" mboost_resist="0" run_speed="9.5" accuracy="2370" main_hand_attack="728" main_hand_crit_rate="30" mdef="514" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_07_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326386" attack_delay="1995" npc_id="247258" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_02" rank="DISCIPLINED" height="2.65">
+<npc_template name_desc="IDInfinity_Normal_07_02" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326386" attack_delay="1995" npc_id="247258" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_02" rank="DISCIPLINED" height="2.65">
     <stats hp_regen="18471" maxHp="36943" pdef="854" walk_speed="2.97" mresist="1734" mboost_resist="0" run_speed="9.5" accuracy="2370" main_hand_attack="894" main_hand_crit_rate="30" mdef="1213" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="932" evasion="2241" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
@@ -66175,11 +66175,11 @@
     <stats hp_regen="42638" maxHp="85276" pdef="886" walk_speed="4.5" mresist="1798" mboost_resist="0" run_speed="4.5" accuracy="2370" main_hand_attack="1063" main_hand_crit_rate="31" mdef="1248" mboost="0" parry="0" crit_spell="23" maxXp="0" block="0" main_hand_accuracy="2895" power="1232" evasion="2431" run_speed_fight="4.5"/>
     <bound_radius side="2.5" upper="5.7" front="2.5"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Summon_Tog" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247401" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog" rank="DISCIPLINED" height="2.65">
+<npc_template name_desc="IDInfinity_Summon_Tog" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247401" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog" rank="DISCIPLINED" height="2.65">
     <stats hp_regen="23904" maxHp="47808" pdef="1054" walk_speed="2.97" mresist="1734" mboost_resist="0" run_speed="9.5" accuracy="2370" main_hand_attack="728" main_hand_crit_rate="30" mdef="514" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="1232" evasion="2241" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Summon_Tog_d" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326399" attack_delay="1995" npc_id="247402" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_d" rank="DISCIPLINED" height="2.1">
+<npc_template name_desc="IDInfinity_Summon_Tog_d" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="68" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326399" attack_delay="1995" npc_id="247402" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_d" rank="DISCIPLINED" height="2.1">
     <stats hp_regen="18471" maxHp="36943" pdef="854" walk_speed="1" mresist="1734" mboost_resist="0" run_speed="3.5" accuracy="2370" main_hand_attack="894" main_hand_crit_rate="30" mdef="1213" mboost="0" parry="0" crit_spell="22" maxXp="0" block="0" main_hand_accuracy="2802" power="1232" evasion="2241" run_speed_fight="4"/>
     <bound_radius side="2.7" upper="2.1" front="2.3"/>
   </npc_template>
@@ -66275,27 +66275,27 @@
     <stats hp_regen="7977" maxHp="15953" pdef="547" walk_speed="0" mresist="1075" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="442" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1161" power="2" evasion="940" run_speed_fight="0"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_05_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247424" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_01_SP" rank="SEASONED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_05_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247424" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_01_SP" rank="SEASONED" height="1.4">
     <stats hp_regen="11183" maxHp="22365" pdef="703" walk_speed="1.8" mresist="1113" mboost_resist="0" run_speed="7.6" accuracy="93" main_hand_attack="379" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_05_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326382" attack_delay="1995" npc_id="247425" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_02_SP" rank="SEASONED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_05_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326382" attack_delay="1995" npc_id="247425" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_05_02_SP" rank="SEASONED" height="1.4">
     <stats hp_regen="8641" maxHp="17282" pdef="568" walk_speed="1.8" mresist="1113" mboost_resist="0" run_speed="7.6" accuracy="93" main_hand_attack="466" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_06_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326383" attack_delay="2205" npc_id="247426" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_01_SP" rank="SEASONED" height="1.4">
+<npc_template name_desc="IDInfinity_Normal_06_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326383" attack_delay="2205" npc_id="247426" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_01_SP" rank="SEASONED" height="1.4">
     <stats hp_regen="11183" maxHp="22365" pdef="703" walk_speed="1.8" mresist="1113" mboost_resist="0" run_speed="7.6" accuracy="93" main_hand_attack="379" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="5.5"/>
     <bound_radius side="2.14" upper="1.4" front="1.3"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_06_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326384" attack_delay="1995" npc_id="247427" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_02_SP" rank="SEASONED" height="1.2">
+<npc_template name_desc="IDInfinity_Normal_06_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326384" attack_delay="1995" npc_id="247427" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_06_02_SP" rank="SEASONED" height="1.2">
     <stats hp_regen="8641" maxHp="17282" pdef="568" walk_speed="1.8" mresist="1113" mboost_resist="0" run_speed="7.6" accuracy="93" main_hand_attack="466" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="7.6"/>
     <bound_radius side="2.15" upper="1.2" front="1.23"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_07_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" title_id="314368" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326385" attack_delay="2205" npc_id="247428" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_01_SP" rank="SEASONED" height="2.65">
+<npc_template name_desc="IDInfinity_Normal_07_01_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" title_id="314368" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326385" attack_delay="2205" npc_id="247428" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_01_SP" rank="SEASONED" height="2.65">
     <stats hp_regen="11183" maxHp="22365" pdef="703" walk_speed="2.97" mresist="1113" mboost_resist="0" run_speed="9.5" accuracy="93" main_hand_attack="379" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Normal_07_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326386" attack_delay="1995" npc_id="247429" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_02_SP" rank="SEASONED" height="2.65">
+<npc_template name_desc="IDInfinity_Normal_07_02_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326386" attack_delay="1995" npc_id="247429" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Normal_07_02_SP" rank="SEASONED" height="2.65">
     <stats hp_regen="8641" maxHp="17282" pdef="568" walk_speed="2.97" mresist="1113" mboost_resist="0" run_speed="9.5" accuracy="93" main_hand_attack="466" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
@@ -66646,11 +66646,11 @@
     <stats hp_regen="9125" maxHp="18251" pdef="590" walk_speed="4.5" mresist="1164" mboost_resist="0" run_speed="4.5" accuracy="93" main_hand_attack="531" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1270" power="2" evasion="1067" run_speed_fight="4.5"/>
     <bound_radius side="2.5" upper="5.7" front="2.5"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Summon_Tog_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247501" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_SP" rank="SEASONED" height="2.65">
+<npc_template name_desc="IDInfinity_Summon_Tog_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326381" attack_delay="2205" npc_id="247501" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_SP" rank="SEASONED" height="2.65">
     <stats hp_regen="11183" maxHp="22365" pdef="703" walk_speed="2.97" mresist="1113" mboost_resist="0" run_speed="9.5" accuracy="93" main_hand_attack="379" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="6.5"/>
     <bound_radius side="2.72" upper="2.65" front="1.8"/>
   </npc_template>
-<npc_template name_desc="IDInfinity_Summon_Tog_d_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326399" attack_delay="1995" npc_id="247502" sensory_range="8" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_d_SP" rank="SEASONED" height="2.1">
+<npc_template name_desc="IDInfinity_Summon_Tog_d_SP" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="48" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="2326399" attack_delay="1995" npc_id="247502" sensory_range="18" tribe="IDINFINITY_TOG" name="IDInfinity_Summon_Tog_d_SP" rank="SEASONED" height="2.1">
     <stats hp_regen="8641" maxHp="17282" pdef="568" walk_speed="1" mresist="1113" mboost_resist="0" run_speed="3.5" accuracy="93" main_hand_attack="466" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="0" block="0" main_hand_accuracy="1204" power="2" evasion="975" run_speed_fight="4"/>
     <bound_radius side="2.7" upper="2.1" front="2.3"/>
   </npc_template>

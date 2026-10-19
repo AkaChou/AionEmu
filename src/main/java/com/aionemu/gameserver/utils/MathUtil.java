@@ -398,6 +398,18 @@ public class MathUtil {
 		if (object1.getWorldId() != object2.getWorldId() || object1.getInstanceId() != object2.getInstanceId()) {
 			return false;
 		}
+		return ((getDistance(object1, object2) - getAttackRangeOffset(object1, object2)) <= range);
+	}
+
+	/**
+	 * 返回攻击距离判定使用的碰撞与移动补偿量。
+	 * Returns the collision and movement compensation used by attack-range checks.
+	 *
+	 * @param object1 生物 1 / Creature 1
+	 * @param object2 生物 2 / Creature 2
+	 * @return 补偿距离（米） / compensation distance in metres
+	 */
+	public static float getAttackRangeOffset(Creature object1, Creature object2) {
 		float offset = object1.getObjectTemplate().getBoundRadius().getCollision()
 				+ object2.getObjectTemplate().getBoundRadius().getCollision();
 		// 修复：移动补偿应该累加，而不是覆盖碰撞半径
@@ -408,7 +420,7 @@ public class MathUtil {
 		if (object2.getMoveController().isInMove()) {
 			offset += 3f;
 		}
-		return ((getDistance(object1, object2) - offset) <= range);
+		return offset;
 	}
 
 	/**

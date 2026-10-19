@@ -7443,7 +7443,7 @@ public class AggressiveNpcAI2 extends GeneralNpcAI2
 		} if (currentTarget == null || !currentTarget.getObjectId().equals(mostHated.getObjectId())) {
 			onCreatureEvent(AIEventType.TARGET_CHANGED, mostHated);
 			return AttackIntention.SWITCH_TARGET;
-		} if (getOwner().getObjectTemplate().getAttackRange() == 0) {
+		} if (getOwner().getObjectTemplate().getMaxAttackRange() == 0) {
 			NpcSkillEntry skill = getOwner().getSkillList().getRandomSkill();
 			if (skill != null) {
 				skillId = skill.getSkillId();

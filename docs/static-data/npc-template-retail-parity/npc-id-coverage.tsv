@@ -1,0 +1,333 @@
+npc_id	side	name	name_desc	level	type_or_ui	tribe	ai	local_refs
+248965	retail_only	IDRUN_Spider_02	STR_NPC_NO_NAME	21	ui=-;unattackable=-	AggressiveSingleMonster	IDRUN_Spider_01_AI	ai,skills
+836075	retail_only	IDRUN_Ridebox_01	STR_NPC_NO_NAME	65	ui=craft;unattackable=1	useall	IDRUN_Ridebox_01_AI	ai,spawns
+836194	retail_only	IDRUN_FOBJ_Acting_L	STR_OBJ_IDRUN_FOBJ_Acting	1	ui=general;unattackable=1	Field_Object_All	NPC	ai
+836195	retail_only	IDRUN_FOBJ_Acting_D	STR_OBJ_IDRUN_FOBJ_Acting	1	ui=general;unattackable=1	Field_Object_All	NPC	ai
+836250	retail_only	IDRUN_NoShow_Gasfloor_Ctrl_01	STR_NPC_NO_NAME	71	ui=none;unattackable=1	useall	IDRUN_NoShow_Gasfloor_Ctrl_01_AI	ai,skills
+836336	retail_only	World_IDRUN_Soul_l_01	STR_WORLD_IDRUN_SOUL_L_01	1	ui=general;unattackable=1	useall	NPC	ai
+836337	retail_only	World_IDRUN_Soul_l_02	STR_WORLD_IDRUN_SOUL_L_02	1	ui=general;unattackable=1	useall	NPC	ai
+836338	retail_only	World_IDRUN_Soul_l_03	STR_WORLD_IDRUN_SOUL_L_03	1	ui=general;unattackable=1	useall	NPC	ai
+836339	retail_only	World_IDRUN_Soul_l_04	STR_WORLD_IDRUN_SOUL_L_04	1	ui=general;unattackable=1	useall	NPC	ai
+836340	retail_only	World_IDRUN_Soul_d_01	STR_WORLD_IDRUN_SOUL_D_01	1	ui=general;unattackable=1	useall	NPC	ai
+836341	retail_only	World_IDRUN_Soul_d_02	STR_WORLD_IDRUN_SOUL_D_02	1	ui=general;unattackable=1	useall	NPC	ai
+836342	retail_only	World_IDRUN_Soul_d_03	STR_WORLD_IDRUN_SOUL_D_03	1	ui=general;unattackable=1	useall	NPC	ai
+836343	retail_only	World_IDRUN_Soul_d_04	STR_WORLD_IDRUN_SOUL_D_04	1	ui=general;unattackable=1	useall	NPC	ai
+836469	retail_only	world_IDTransform_NPC_Entrance_PC	STR_IDTRANSFORM_NPC_ENTRANCE_PC	15	ui=general;unattackable=1	general	IDTransform_event_Entrance	ai
+836470	retail_only	world_IDTransform_NPC_Entrance_PC_D	STR_IDTRANSFORM_NPC_ENTRANCE_PC_D	15	ui=general;unattackable=1	general_dark	IDTransform_event_Entrance	ai
+836654	retail_only	world_abyss_80a_l	STR_WORLD_ABYSS_80A_l	56	ui=general;unattackable=1	general	Lfunction	ai
+836655	retail_only	world_abyss_80a_d	STR_WORLD_ABYSS_80A_D	56	ui=general;unattackable=1	general_dark	Dfunction	ai
+837155	retail_only	TIAMAT_DOWN_L_abyss_seller_China	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837156	retail_only	TIAMAT_DOWN_D_abyss_seller_China	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai
+837157	retail_only	TIAMAT_DOWN_L_abyss_seller_Europe	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837158	retail_only	TIAMAT_DOWN_D_abyss_seller_Europe	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai,spawns
+837159	retail_only	TIAMAT_DOWN_L_abyss_seller_Japan	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837160	retail_only	TIAMAT_DOWN_D_abyss_seller_Japan	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai
+837161	retail_only	TIAMAT_DOWN_L_abyss_seller_Russia	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837162	retail_only	TIAMAT_DOWN_D_abyss_seller_Russia	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai
+837163	retail_only	TIAMAT_DOWN_L_abyss_seller_Taiwan	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837164	retail_only	TIAMAT_DOWN_D_abyss_seller_Taiwan	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai
+837165	retail_only	TIAMAT_DOWN_L_abyss_seller_USA	STR_TIAMAT_DOWN_L_abyss_seller	60	ui=general;unattackable=1	general	NPC	ai
+837166	retail_only	TIAMAT_DOWN_D_abyss_seller_USA	STR_TIAMAT_DOWN_D_abyss_seller	60	ui=general;unattackable=1	general_dark	NPC	ai
+837213	retail_only	world_event_Bobarung_gf	STR_WORLD_EVENT_BOBARUNG_GF	65	ui=general;unattackable=1	useall	NPC	ai
+837214	retail_only	world_event_BobaShop_gf	STR_WORLD_EVENT_BOBASHOP_GF	65	ui=general;unattackable=1	useall	NPC	ai
+837328	retail_only	world_event_multisell_test_npc_01	STR_WORLD_EVENT_MULTISELL_TEST_NPC_01	60	ui=general;unattackable=1	general	NPC	ai
+837329	retail_only	world_event_multisell_test_npc_02	STR_WORLD_EVENT_MULTISELL_TEST_NPC_02	60	ui=general;unattackable=1	general	NPC	ai
+837441	retail_only	world_CN_LC1_event_npc_58teasing	STR_LC1_EVENT_NPC_58TEASING	1	ui=general;unattackable=1	general	NPC	ai
+837442	retail_only	world_CN_DC1_event_npc_58teasing	STR_DC1_EVENT_NPC_58TEASING	1	ui=general;unattackable=1	general_dark	NPC	ai
+837531	retail_only	world_event_multisell_npc_01	STR_WORLD_EVENT_MULTISELL_NPC_01	60	ui=general;unattackable=1	useall	NPC	ai
+837532	retail_only	world_event_multisell_npc_02	STR_WORLD_EVENT_MULTISELL_NPC_02	60	ui=general;unattackable=1	useall	NPC	ai
+837533	retail_only	world_event_multisell_npc_03	STR_WORLD_EVENT_MULTISELL_NPC_03	60	ui=general;unattackable=1	useall	NPC	ai
+837534	retail_only	world_event_multisell_npc_04	STR_WORLD_EVENT_MULTISELL_NPC_04	60	ui=general;unattackable=1	useall	NPC	ai
+837535	retail_only	world_event_multisell_npc_05	STR_WORLD_EVENT_MULTISELL_NPC_05	60	ui=general;unattackable=1	useall	NPC	ai
+837628	retail_only	world_bracelet_l_02_seller	STR_WORLD_BRACELET_L_02_SELLER	60	ui=general;unattackable=1	general	NPC	ai
+837629	retail_only	world_bracelet_d_02_seller	STR_WORLD_BRACELET_D_02_SELLER	60	ui=general;unattackable=1	general_dark	NPC	ai
+202735	local_only	halloween_2017_01_l	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202736	local_only	halloween_2017_01_d	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202737	local_only	halloween_2017_02_l	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202738	local_only	halloween_2017_02_d	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202739	local_only	halloween_2017_04_l	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202740	local_only	halloween_2017_04_d	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202741	local_only	halloween_2017_05_l	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+202742	local_only	halloween_2017_05_d	-	75	NON_ATTACKABLE	GENERAL	aggressive	-
+208001	local_only	 	C_NPC_AbPro_Guardian_M	1	NON_ATTACKABLE	MONSTER	general	-
+208002	local_only	 	C_NPC_AbPro_Guardian_F	1	NON_ATTACKABLE	MONSTER	general	-
+208003	local_only	 	C_NPC_AbPro_Air_Guardian_M	1	NON_ATTACKABLE	MONSTER	general	-
+208004	local_only	 	C_NPC_AbPro_Air_Guardian_F	1	NON_ATTACKABLE	MONSTER	general	-
+208005	local_only	 	C_NPC_AbPro_Air_Archon_M	1	NON_ATTACKABLE	MONSTER	general	-
+208006	local_only	 	C_NPC_AbPro_Air_Archon_F	1	NON_ATTACKABLE	MONSTER	general	-
+241331	local_only	IDEternity_02_Polymorph	-	55	NON_ATTACKABLE	USEALL	noaction	-
+248998	local_only	IDEvent_Def_Hard_ZombieMiddleage_65_An	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+248999	local_only	IDEvent_Def_Hard_ZombieMiddleageF_65_An	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249000	local_only	IDEvent_Def_Hard_ZombieSpider_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249001	local_only	IDEvent_Def_Hard_ZombieButcher_As_N_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249002	local_only	IDEvent_Def_Hard_YZombie_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249003	local_only	IDEvent_Def_Hard_YZombieF_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249004	local_only	IDEvent_Def_Hard_Orcshandura_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249005	local_only	IDEvent_Def_Hard_MZombie_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249006	local_only	IDEvent_Def_Hard_MutantBeast_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249007	local_only	IDEvent_Def_Hard_ZombieVampireD_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249008	local_only	IDEvent_Def_Hard_ZombieVampireFD_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249009	local_only	IDEvent_Def_Hard_Lucky_65_1st	-	80	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249010	local_only	IDEvent_Def_Hard_ZombieSpider_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249011	local_only	IDEvent_Def_Hard_ZombieButcher_As_N_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249012	local_only	IDEvent_Def_Hard_YZombie_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249013	local_only	IDEvent_Def_Hard_YZombieF_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249014	local_only	IDEvent_Def_Hard_Orcshandura_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249015	local_only	IDEvent_Def_Hard_MZombie_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249016	local_only	IDEvent_Def_Hard_MutantBeast_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249017	local_only	IDEvent_Def_Hard_ZombieVampireD_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249018	local_only	IDEvent_Def_Hard_ZombieVampireFD_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249019	local_only	IDEvent_Def_Hard_Lucky_65_2nd	-	80	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249020	local_only	IDEvent_Def_Hard_ZombieSpider_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249021	local_only	IDEvent_Def_Hard_ZombieButcher_As_N_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249022	local_only	IDEvent_Def_Hard_YZombie_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249023	local_only	IDEvent_Def_Hard_YZombieF_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	spawns
+249024	local_only	IDEvent_Def_Hard_Orcshandura_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249025	local_only	IDEvent_Def_Hard_MZombie_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249026	local_only	IDEvent_Def_Hard_MutantBeast_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249027	local_only	IDEvent_Def_Hard_ZombieVampireD_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249028	local_only	IDEvent_Def_Hard_ZombieVampireFD_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249029	local_only	IDEvent_Def_Hard_Lucky_65_3rd	-	80	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249030	local_only	IDEvent_Def_Hard_ZombieKing_65	-	80	ATTACKABLE	IDEVENT_MOB_BOSS	aggressive	-
+249031	local_only	IDEvent_Def_Hard_Ma_ZombieMiddleage_65_An	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249032	local_only	IDEvent_Def_Hard_Ma_ZombieMiddleageF_65_An	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249033	local_only	IDEvent_Def_Hard_Ma_ZombieSpider_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249034	local_only	IDEvent_Def_Hard_Ma_ZombieButcher_As_N_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249035	local_only	IDEvent_Def_Hard_Ma_YZombie_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249036	local_only	IDEvent_Def_Hard_Ma_YZombieF_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249037	local_only	IDEvent_Def_Hard_Ma_Orcshandura_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249038	local_only	IDEvent_Def_Hard_Ma_MZombie_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249039	local_only	IDEvent_Def_Hard_Ma_MutantBeast_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249040	local_only	IDEvent_Def_Hard_Ma_ZombieVampireD_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249041	local_only	IDEvent_Def_Hard_Ma_ZombieVampireFD_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249042	local_only	IDEvent_Def_Hard_Ma_Lucky_65_1st	-	50	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249043	local_only	IDEvent_Def_Hard_Ma_ZombieSpider_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249044	local_only	IDEvent_Def_Hard_Ma_ZombieButcher_As_N_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249045	local_only	IDEvent_Def_Hard_Ma_YZombie_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249046	local_only	IDEvent_Def_Hard_Ma_YZombieF_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249047	local_only	IDEvent_Def_Hard_Ma_Orcshandura_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249048	local_only	IDEvent_Def_Hard_Ma_MZombie_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249049	local_only	IDEvent_Def_Hard_Ma_MutantBeast_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249050	local_only	IDEvent_Def_Hard_Ma_ZombieVampireD_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249051	local_only	IDEvent_Def_Hard_Ma_ZombieVampireFD_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249052	local_only	IDEvent_Def_Hard_Ma_Lucky_65_2nd	-	50	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249053	local_only	IDEvent_Def_Hard_Ma_ZombieSpider_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249054	local_only	IDEvent_Def_Hard_Ma_ZombieButcher_As_N_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	ai,spawns
+249055	local_only	IDEvent_Def_Hard_Ma_YZombie_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249056	local_only	IDEvent_Def_Hard_Ma_YZombieF_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249057	local_only	IDEvent_Def_Hard_Ma_Orcshandura_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249058	local_only	IDEvent_Def_Hard_Ma_MZombie_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249059	local_only	IDEvent_Def_Hard_Ma_MutantBeast_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_ALL	aggressive	-
+249060	local_only	IDEvent_Def_Hard_Ma_ZombieVampireD_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249061	local_only	IDEvent_Def_Hard_Ma_ZombieVampireFD_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_PCGUARD	aggressive	-
+249062	local_only	IDEvent_Def_Hard_Ma_Lucky_65_3rd	-	50	ATTACKABLE	IDEVENT_MOB_WPBONUS	aggressive	-
+249063	local_only	IDEvent_Def_Hard_Ma_ZombieKing_65	-	50	ATTACKABLE	IDEVENT_MOB_BOSS	aggressive	-
+249064	local_only	IDInfinity_Summon_40_Summon_04	-	75	ATTACKABLE	IDINFINITY	general	-
+249065	local_only	IDInfinity_Summon_40_Summon_05	-	75	ATTACKABLE	IDINFINITY	general	-
+249066	local_only	IDInfinity_Summon_40_Summon_04_SP	-	55	ATTACKABLE	IDINFINITY	general	-
+249067	local_only	IDInfinity_Summon_40_Summon_05_SP	-	55	ATTACKABLE	IDINFINITY	general	-
+249068	local_only	Event_Moon_Fairy_Event_70_n	-	70	ATTACKABLE	MONSTER	aggressive	-
+249069	local_only	Event_Moon_Event_70_n	-	80	ATTACKABLE	MONSTER	aggressive	-
+249070	local_only	Event_Moon_Fairy_Event_50_n	-	50	ATTACKABLE	MONSTER	aggressive	-
+249071	local_only	Event_Moon_Event_50_n	-	50	ATTACKABLE	MONSTER	aggressive	-
+249072	local_only	IDInfinity_Named_40_Heal_01	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249073	local_only	IDInfinity_Named_40_Heal_02	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249074	local_only	IDInfinity_Named_40_Heal_03	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249075	local_only	IDInfinity_Named_40_Heal_04	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249076	local_only	IDInfinity_Named_40_Heal_05	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249077	local_only	IDInfinity_Named_40_Heal_06	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249078	local_only	IDInfinity_Named_40_Heal_07	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249079	local_only	IDInfinity_Named_40_Heal_08	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249080	local_only	IDInfinity_Named_40_Heal_09	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249081	local_only	IDInfinity_Named_40_Heal_10	-	55	ATTACKABLE	IDINFINITY_HEAL	general	-
+249082	local_only	Halloween_Event_12_Live_70_Al	-	70	ATTACKABLE	MONSTER	noaction	-
+249083	local_only	Halloween_Event_6_Live_70_Ah	-	70	ATTACKABLE	MONSTER	noaction	-
+249084	local_only	Halloween_Event_3_Live_70_Ae	-	70	ATTACKABLE	MONSTER	noaction	ai,spawns
+249085	local_only	Halloween_Event_1_Live_70_An	-	80	ATTACKABLE	MONSTER	noaction	-
+249086	local_only	Halloween_Event_6_Master_50_Ah	-	50	ATTACKABLE	MONSTER	noaction	-
+249087	local_only	Halloween_Event_1_Master_50_An	-	50	ATTACKABLE	MONSTER	noaction	-
+249146	local_only	Dev_Event_Debrie	-	75	ATTACKABLE	MONSTER	aggressive	ai,spawns
+249147	local_only	Dev_Event_Gumi	-	75	ATTACKABLE	MONSTER	aggressive	-
+249148	local_only	Dev_Event_Sprigg	-	75	ATTACKABLE	MONSTER	aggressive	-
+249149	local_only	Dev_Event_CherubimL	-	75	ATTACKABLE	MONSTER	aggressive	-
+249150	local_only	Dev_Event_ElementalAir4NamedD	-	75	ATTACKABLE	MONSTER	aggressive	-
+249151	local_only	Dev_Event_KrallWarriorHKBoss	-	75	ATTACKABLE	MONSTER	aggressive	-
+249152	local_only	Dev_Event_Fungyre	-	75	ATTACKABLE	MONSTER	aggressive	-
+249153	local_only	Dev_Event_Seiren_Queen	-	75	ATTACKABLE	MONSTER	aggressive	-
+249154	local_only	Dev_Event_AkanNamed	-	75	ATTACKABLE	MONSTER	aggressive	-
+249155	local_only	Dev_Event_Chimera_Boss	-	75	ATTACKABLE	MONSTER	aggressive	-
+249156	local_only	Dev_Event_Debrie_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249157	local_only	Dev_Event_Gumi_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249158	local_only	Dev_Event_Sprigg_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249159	local_only	Dev_Event_CherubimL_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249160	local_only	Dev_Event_ElementalAir4NamedD_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249161	local_only	Dev_Event_KrallWarriorHKBoss_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249162	local_only	Dev_Event_Fungyre_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249163	local_only	Dev_Event_Seiren_Queen_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249164	local_only	Dev_Event_AkanNamed_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249165	local_only	Dev_Event_Chimera_Boss_SP	-	55	ATTACKABLE	MONSTER	aggressive	-
+249166	local_only	Dev_Event_Ctrl_NPC	-	75	ATTACKABLE	None	general	-
+249167	local_only	Dev_Event_Ctrl_NPC_SP	-	75	ATTACKABLE	None	general	-
+298001	local_only	 	C_NPC_E3_Teraphant_120	1	NON_ATTACKABLE	MONSTER	general	-
+298002	local_only	 	C_NPC_E3_Teraphant_70	1	NON_ATTACKABLE	MONSTER	general	-
+298003	local_only	 	C_NPC_E3_Ray	1	NON_ATTACKABLE	MONSTER	general	spawns
+298004	local_only	 	C_NPC_E3_Parrote3_100	1	NON_ATTACKABLE	MONSTER	general	ai,spawns
+298005	local_only	 	C_NPC_E3_Parrote3_70	1	NON_ATTACKABLE	MONSTER	general	-
+298006	local_only	 	C_NPC_E3_Parrote3_50	1	NON_ATTACKABLE	MONSTER	general	-
+298007	local_only	 	C_NPC_E3_Rhabdodon_60	1	NON_ATTACKABLE	MONSTER	general	-
+298008	local_only	 	C_NPC_E3_Rhabdodon_40	1	NON_ATTACKABLE	MONSTER	general	-
+298009	local_only	shandura	C_NPC_E3_Shandurasit	1	NON_ATTACKABLE	MONSTER	general	-
+298010	local_only	 	C_NPC_OrcmageH	1	NON_ATTACKABLE	MONSTER	general	-
+298011	local_only	 	C_NPC_whistleboids	1	NON_ATTACKABLE	MONSTER	general	-
+298012	local_only	 	C_NPC_whistleboids_150	1	NON_ATTACKABLE	MONSTER	general	-
+298013	local_only	 	C_NPC_Teraphant_100	1	NON_ATTACKABLE	MONSTER	general	-
+298014	local_only	 	C_NPC_Teraphant_150	1	NON_ATTACKABLE	MONSTER	general	-
+298015	local_only	 	C_NPC_Teraphant_D_70	1	NON_ATTACKABLE	MONSTER	general	-
+298016	local_only	 	C_NPC_Teraphant_D_100	1	NON_ATTACKABLE	MONSTER	general	-
+298017	local_only	 	C_NPC_Teraphant_D_120	1	NON_ATTACKABLE	MONSTER	general	-
+298018	local_only	 	C_NPC_Brax_100	1	NON_ATTACKABLE	MONSTER	general	-
+298019	local_only	 	C_NPC_Qooqoo_100	1	NON_ATTACKABLE	MONSTER	general	-
+298020	local_only	 	C_NPC_Mepiguss_100	1	NON_ATTACKABLE	MONSTER	general	-
+298021	local_only	 	C_NPC_Porguss_100	1	NON_ATTACKABLE	MONSTER	general	-
+703483	local_only	IDEVENT_Def_Goal_01A_Hard	-	80	NON_ATTACKABLE	IDEVENT_PCMEAT	general	-
+703484	local_only	IDEVENT_Def_Goal_01A_ma_Hard	-	50	NON_ATTACKABLE	IDEVENT_PCMEAT	general	spawns
+831947	local_only	Elyos Ready Room 1 Teleporter	-	55	NON_ATTACKABLE	GENERAL_DARK	portal	-
+831948	local_only	Elyos Ready Room 2 Teleporter	-	55	NON_ATTACKABLE	GENERAL_DARK	portal	-
+831949	local_only	Elyos Ready Room 3 Teleporter	-	55	NON_ATTACKABLE	GENERAL_DARK	portal	-
+831950	local_only	Arena Stage 1 Teleporter	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+831951	local_only	Arena Stage 2 Teleporter	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+831952	local_only	Arena Stage 3 Teleporter	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+831953	local_only	1st Stage Elyos Resurrection NPC	-	55	NON_ATTACKABLE	USEALL	general	-
+831954	local_only	2nd Stage Elyos Resurrection NPC	-	55	NON_ATTACKABLE	USEALL	general	-
+831955	local_only	3rd Stage Elyos Resurrection NPC	-	55	NON_ATTACKABLE	USEALL	general	spawns
+831956	local_only	1st Stage Tag NPC	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+831957	local_only	2nd Stage Tag NPC	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+831958	local_only	3rd Stage Tag NPC	-	55	NON_ATTACKABLE	FIELD_OBJECT_LIGHT	general	-
+833497	local_only	Yellow Flower of Magic	-	65	NON_ATTACKABLE	GENERAL	general	-
+833498	local_only	Red Flower of Magic	-	65	NON_ATTACKABLE	GENERAL_DARK	general	-
+833499	local_only	Pure-white Flower of Magic	-	65	NON_ATTACKABLE	FIELD_OBJECT_ALL	general	-
+835145	local_only	world_CN_LC1_event_npc_58teasing	world_CN_LC1_event_npc_58teasing	1	NON_ATTACKABLE	GENERAL	general	-
+835146	local_only	world_CN_DC1_event_npc_58teasing	world_CN_DC1_event_npc_58teasing	1	NON_ATTACKABLE	GENERAL_DARK	general	-
+835147	local_only	Sorcerer Lilly	event_Lilly	55	NON_ATTACKABLE	USEALL	general	-
+835148	local_only	Cleric Polly	event_Polly	60	NON_ATTACKABLE	USEALL	general	-
+835149	local_only	Spiritmaster Lolly	event_Rolly	55	NON_ATTACKABLE	USEALL	general	-
+835150	local_only	Chanter Lollo	event_Rolo	60	NON_ATTACKABLE	USEALL	general	-
+835151	local_only	Bardic Master Lulu	event_Ruru	55	NON_ATTACKABLE	USEALL	general	-
+835152	local_only	Sorcerer Solly	event_Solly	55	NON_ATTACKABLE	USEALL	general	-
+835153	local_only	Spiritmaster Suri	event_Suri	65	NON_ATTACKABLE	USEALL	general	-
+835154	local_only	isda	event_isda	60	PEACE	GENERAL	general	-
+835155	local_only	TIAMAT_DOWN_L_abyss_seller_china	TIAMAT_DOWN_L_abyss_seller_china	60	NON_ATTACKABLE	GENERAL	general	-
+835156	local_only	TIAMAT_DOWN_D_abyss_seller_china	TIAMAT_DOWN_D_abyss_seller_china	60	NON_ATTACKABLE	GENERAL_DARK	general	-
+835157	local_only	world_Luna_Elly_obj_01	world_Luna_Elly_obj_01	1	NON_ATTACKABLE	USEALL	noaction	-
+835158	local_only	world_bracelet_l_02_seller	world_bracelet_l_02_seller	60	NON_ATTACKABLE	GENERAL	general	-
+835159	local_only	world_bracelet_d_02_seller	world_bracelet_d_02_seller	60	NON_ATTACKABLE	GENERAL_DARK	general	ai
+835969	local_only	world_event_halloween_01_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835970	local_only	world_event_halloween_01_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835971	local_only	world_event_halloween_02_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835972	local_only	world_event_halloween_02_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835973	local_only	world_event_halloween_03_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835974	local_only	world_event_halloween_03_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835975	local_only	world_event_halloween_04_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835976	local_only	world_event_halloween_04_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835977	local_only	world_event_halloween_05_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835978	local_only	world_event_halloween_05_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835979	local_only	world_event_halloween_06_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835980	local_only	world_event_halloween_06_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835981	local_only	world_event_halloween_07_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835982	local_only	world_event_halloween_07_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835983	local_only	world_event_halloween_08_l	-	1	NON_ATTACKABLE	USEALL	noaction	ai
+835984	local_only	world_event_halloween_08_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835985	local_only	world_event_halloween_09_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835986	local_only	world_event_halloween_09_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835987	local_only	world_event_halloween_10_l	-	1	NON_ATTACKABLE	USEALL	noaction	-
+835988	local_only	world_event_halloween_10_d	-	1	NON_ATTACKABLE	USEALL	noaction	-
+836344	local_only	LC1_event_npc_kina_seller	-	75	NON_ATTACKABLE	USEALL	general	-
+836345	local_only	DC1_event_npc_kina_seller	-	75	NON_ATTACKABLE	USEALL	general	-
+836349	local_only	LC1_Event_NPC_Shugo_chuseok_Suhoring	-	75	NON_ATTACKABLE	USEALL	general	-
+836350	local_only	DC1_Event_NPC_Shugo_chuseok_Suhoring	-	75	NON_ATTACKABLE	USEALL	general	-
+836351	local_only	IDEVENT_Def_HealPolTower_A_01_h	-	75	NON_ATTACKABLE	IDEVENT_PCGUARD	aggressive	-
+836352	local_only	IDEVENT_Def_HealPolTower_A_02_h	-	75	NON_ATTACKABLE	IDEVENT_PCGUARD	aggressive	-
+836353	local_only	IDEVENT_Def_HealPolTower_A_03_h	-	75	NON_ATTACKABLE	IDEVENT_PCGUARD	aggressive	-
+836354	local_only	IDEVENT_Def_HealPolTower_A_04_h	-	75	NON_ATTACKABLE	IDEVENT_PCGUARD	aggressive	-
+836355	local_only	IDEVENT_Def_HealPolTower_A_05_h	-	75	NON_ATTACKABLE	IDEVENT_PCGUARD	aggressive	-
+836356	local_only	LC1_event_npc_shugo_guardrung_1	-	75	NON_ATTACKABLE	USEALL	general	-
+836357	local_only	DC1_event_npc_shugo_guardrung_1	-	75	NON_ATTACKABLE	USEALL	general	-
+836358	local_only	IDEVENT_def_Con_Chk_21a	-	75	NON_ATTACKABLE	USEALL	general	-
+836359	local_only	IDEVENT_def_Con_Chk_22a	-	75	NON_ATTACKABLE	USEALL	general	-
+836360	local_only	IDEVENT_def_Con_Chk_23a	-	75	NON_ATTACKABLE	USEALL	general	-
+836361	local_only	IDEVENT_def_Con_Chk_24a	-	75	NON_ATTACKABLE	USEALL	general	-
+836362	local_only	IDEVENT_def_Con_Chk_25a	-	75	NON_ATTACKABLE	USEALL	general	-
+836363	local_only	IDEVENT_def_Con_Chk_26a	-	75	NON_ATTACKABLE	USEALL	general	-
+836364	local_only	IDEVENT_def_Con_Chk_27a	-	75	NON_ATTACKABLE	USEALL	general	-
+836365	local_only	IDEVENT_def_Con_Chk_28a	-	75	NON_ATTACKABLE	USEALL	general	ai,spawns
+836366	local_only	IDEVENT_def_Con_Chk_29a	-	75	NON_ATTACKABLE	USEALL	general	-
+836367	local_only	IDEVENT_def_Con_Chk_30a	-	75	NON_ATTACKABLE	USEALL	general	-
+836370	local_only	IDEvent_Def_In_Door_H	-	75	NON_ATTACKABLE	USEALL	noaction	-
+836371	local_only	LC1_event_npc_idsolo_s6_quest_sale	-	75	NON_ATTACKABLE	GENERAL	general	-
+836372	local_only	DC1_event_npc_idsolo_s6_quest_sale	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836373	local_only	LC1_event_npc_idsolo_s6_quest	-	75	NON_ATTACKABLE	GENERAL	general	-
+836374	local_only	DC1_event_npc_idsolo_s6_quest	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836375	local_only	LC1_event_npc_idsolo_s6_1	-	75	NON_ATTACKABLE	GENERAL	general	-
+836376	local_only	DC1_event_npc_idsolo_s6_1	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836377	local_only	LC1_event_npc_idsolo_s6_2	-	75	NON_ATTACKABLE	USEALL	general	-
+836378	local_only	DC1_event_npc_idsolo_s6_2	-	75	NON_ATTACKABLE	USEALL	general	-
+836432	local_only	event_Postbox_drop_buff_l	-	75	NON_ATTACKABLE	GENERAL	general	-
+836433	local_only	event_Postbox_drop_buff_d	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836448	local_only	Deva_Event_Door_LF6_DF6	-	75	NON_ATTACKABLE	GENERAL	general	-
+836449	local_only	Deva_Event_Door_DF6_LF6	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836450	local_only	Deva_Event_Door_LF4_DF4_m	-	75	NON_ATTACKABLE	GENERAL	general	-
+836451	local_only	Deva_Event_Door_DF4_LF4_m	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836471	local_only	LC1_Event_Redcarpet_W_1	-	75	NON_ATTACKABLE	GENERAL	general	-
+836472	local_only	LC1_Event_Redcarpet_W_2	-	75	NON_ATTACKABLE	GENERAL	general	ai
+836473	local_only	LC1_Event_Redcarpet_W_3	-	75	NON_ATTACKABLE	GENERAL	general	-
+836474	local_only	LC1_Event_Redcarpet_W_4	-	75	NON_ATTACKABLE	GENERAL	general	-
+836475	local_only	LC1_Event_Redcarpet_W_5	-	75	NON_ATTACKABLE	GENERAL	general	-
+836476	local_only	LC1_Event_Redcarpet_W_6	-	75	NON_ATTACKABLE	GENERAL	general	-
+836477	local_only	LC1_Event_Redcarpet_W_7	-	75	NON_ATTACKABLE	GENERAL	general	spawns
+836478	local_only	LC1_Event_Redcarpet_W_8	-	75	NON_ATTACKABLE	GENERAL	general	-
+836479	local_only	LC1_Event_Redcarpet_W_9	-	75	NON_ATTACKABLE	GENERAL	general	-
+836480	local_only	LC1_Event_Redcarpet_W_10	-	75	NON_ATTACKABLE	GENERAL	general	-
+836481	local_only	DC1_Event_Redcarpet_W_1	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836482	local_only	DC1_Event_Redcarpet_W_2	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836483	local_only	DC1_Event_Redcarpet_W_3	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836484	local_only	DC1_Event_Redcarpet_W_4	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836485	local_only	DC1_Event_Redcarpet_W_5	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836486	local_only	DC1_Event_Redcarpet_W_6	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836487	local_only	DC1_Event_Redcarpet_W_7	-	75	NON_ATTACKABLE	GENERAL_DARK	general	ai,spawns
+836488	local_only	DC1_Event_Redcarpet_W_8	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836489	local_only	DC1_Event_Redcarpet_W_9	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836490	local_only	DC1_Event_Redcarpet_W_10	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836491	local_only	LC1_Event_Redcarpet_M_1	-	75	NON_ATTACKABLE	GENERAL	general	-
+836492	local_only	LC1_Event_Redcarpet_M_2	-	75	NON_ATTACKABLE	GENERAL	general	-
+836493	local_only	LC1_Event_Redcarpet_M_3	-	75	NON_ATTACKABLE	GENERAL	general	-
+836494	local_only	LC1_Event_Redcarpet_M_4	-	75	NON_ATTACKABLE	GENERAL	general	-
+836495	local_only	LC1_Event_Redcarpet_M_5	-	75	NON_ATTACKABLE	GENERAL	general	-
+836496	local_only	LC1_Event_Redcarpet_M_6	-	75	NON_ATTACKABLE	GENERAL	general	-
+836497	local_only	LC1_Event_Redcarpet_M_7	-	75	NON_ATTACKABLE	GENERAL	general	-
+836498	local_only	LC1_Event_Redcarpet_M_8	-	75	NON_ATTACKABLE	GENERAL	general	-
+836499	local_only	LC1_Event_Redcarpet_M_9	-	75	NON_ATTACKABLE	GENERAL	general	-
+836500	local_only	LC1_Event_Redcarpet_M_10	-	75	NON_ATTACKABLE	GENERAL	general	-
+836501	local_only	DC1_Event_Redcarpet_M_1	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836502	local_only	DC1_Event_Redcarpet_M_2	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836503	local_only	DC1_Event_Redcarpet_M_3	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836504	local_only	DC1_Event_Redcarpet_M_4	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836505	local_only	DC1_Event_Redcarpet_M_5	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836506	local_only	DC1_Event_Redcarpet_M_6	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836507	local_only	DC1_Event_Redcarpet_M_7	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836508	local_only	DC1_Event_Redcarpet_M_8	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836509	local_only	DC1_Event_Redcarpet_M_9	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836510	local_only	DC1_Event_Redcarpet_M_10	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836511	local_only	LC1_Event_Redcarpet_Photo_1	-	75	NON_ATTACKABLE	GENERAL	general	-
+836512	local_only	LC1_Event_Redcarpet_Photo_2	-	75	NON_ATTACKABLE	GENERAL	general	-
+836513	local_only	LC1_Event_Redcarpet_Photo_3	-	75	NON_ATTACKABLE	GENERAL	general	-
+836514	local_only	LC1_Event_Redcarpet_Photo_4	-	75	NON_ATTACKABLE	GENERAL	general	-
+836515	local_only	LC1_Event_Redcarpet_Photo_5	-	75	NON_ATTACKABLE	GENERAL	general	-
+836516	local_only	LC1_Event_Redcarpet_Photo_6	-	75	NON_ATTACKABLE	GENERAL	general	-
+836517	local_only	DC1_Event_Redcarpet_Photo_1	-	75	NON_ATTACKABLE	GENERAL_DARK	general	ai
+836518	local_only	DC1_Event_Redcarpet_Photo_2	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836519	local_only	DC1_Event_Redcarpet_Photo_3	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836520	local_only	DC1_Event_Redcarpet_Photo_4	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836521	local_only	DC1_Event_Redcarpet_Photo_5	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836522	local_only	DC1_Event_Redcarpet_Photo_6	-	75	NON_ATTACKABLE	GENERAL_DARK	general	-
+836523	local_only	LC1_Weatha_Redcarpet	-	75	NON_ATTACKABLE	GENERAL	general	-
+836524	local_only	DC1_Feregran_Redcarpet	-	75	NON_ATTACKABLE	GENERAL	general	-

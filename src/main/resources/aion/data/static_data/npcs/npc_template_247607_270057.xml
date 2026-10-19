@@ -42695,70 +42695,70 @@
     </equipment>
     <bound_radius side="3.456" upper="3.0" front="1.2"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Li_1" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320072" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258215" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Li_1" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320072" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258215" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100500746</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Li_2" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320073" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258216" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Li_2" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320073" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258216" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100500746</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Li_3" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320074" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258217" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Li_3" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320074" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258217" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100500746</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Li_4" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320075" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258218" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Li_4" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320075" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258218" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100500746</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Li_5" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320076" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258219" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Li_5" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="314400" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320076" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258219" sensory_range="40" tribe="GUARD" name="enraged veille" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100500746</item>
     </equipment>
     <bound_radius side="1.75" upper="15.05" front="2.8"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Da_1" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320077" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258220" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Da_1" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320077" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258220" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100100726</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Da_2" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320078" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258221" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Da_2" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320078" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258221" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100100726</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Da_3" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320079" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258222" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Da_3" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320079" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258222" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100100726</item>
     </equipment>
     <bound_radius side="1.75" upper="15.05" front="2.8"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Da_4" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320080" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258223" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Da_4" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320080" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258223" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100100726</item>
     </equipment>
     <bound_radius side="5.0" upper="21.5" front="8.0"/>
   </npc_template>
-<npc_template name_desc="DF4_3111_Boss_Da_5" attack_range="40" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320081" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258224" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="DF4_3111_Boss_Da_5" attack_range="40" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="314401" rating="ELITE" ai="general" hpgauge_level="27" type="ABYSS_GUARD" name_id="320081" abyss_type="BOSS" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="258224" sensory_range="40" tribe="GUARD_DARK" name="enraged mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="20983491" maxHp="41966982" pdef="1690" walk_speed="0" mresist="2127" mboost_resist="1335" run_speed="0" accuracy="2370" main_hand_attack="1740" main_hand_crit_rate="131" mdef="502" mboost="0" parry="0" crit_spell="95" maxXp="35371057" block="3101" main_hand_accuracy="3745" power="1232" evasion="0" run_speed_fight="0"/>
     <equipment>
       <item>100100726</item>

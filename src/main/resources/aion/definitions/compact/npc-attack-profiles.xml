@@ -1,0 +1,1576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc_attack_profiles>
+  <npc id="200001">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="32" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204260">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="26" rate="1000" type="magical_Fire" attack_mod="100"/>
+  </npc>
+  <npc id="204394">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204395">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204396">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204397">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204398">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204791">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="204792">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="210199">
+    <attack range="37" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="219874">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="219887">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="219906">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="219913">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="219995">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="219998">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="219999">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="220001">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="220002">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="220705">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="220716">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="220717">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="220718">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221026">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="221037">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221038">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221039">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221557">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="221558">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221559">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="221560">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="230182">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="230195">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="230231">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="230247">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="230289">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="230467">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="230540">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="230541">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="231073">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="150"/>
+    <attack range="40" rate="1000" type="magical_Earth" attack_mod="450"/>
+  </npc>
+  <npc id="231130">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="231131">
+    <attack range="6" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="120"/>
+  </npc>
+  <npc id="231132">
+    <attack range="6" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="120"/>
+  </npc>
+  <npc id="231133">
+    <attack range="6" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="120"/>
+  </npc>
+  <npc id="231134">
+    <attack range="6" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="120"/>
+  </npc>
+  <npc id="231135">
+    <attack range="6" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="120"/>
+  </npc>
+  <npc id="233544">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="233633">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="233676">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="233719">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="233740">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234190">
+    <attack range="5" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="26" rate="1000" type="physical" attack_mod="150"/>
+  </npc>
+  <npc id="234560">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234561">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234564">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234565">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234567">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234569">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234570">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234572">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234573">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234575">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234576">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234577">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234579">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234581">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234582">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234584">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234585">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234587">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234588">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234595">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234598">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234599">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234604">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234606">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234610">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="234611">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="234612">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234613">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="234686">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="235768">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="235769">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="235770">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="235771">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="236022">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="236035">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="236048">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="236055">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="236723">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236724">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236727">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="236728">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="236730">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="236732">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="236733">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="236735">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236736">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="236738">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236739">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236740">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="236742">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="236744">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="236750">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="238955">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238956">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238957">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238958">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238959">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238960">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="238961">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239285">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239286">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239287">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239288">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239289">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239290">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239291">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239292">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239293">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239294">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239295">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239296">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239297">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239298">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239299">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239300">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239301">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239302">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239303">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239304">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239305">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239306">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239307">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239308">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239309">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239310">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239311">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239312">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239313">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239314">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239315">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239316">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239317">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239318">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239319">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239320">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239321">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239322">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239323">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239324">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239325">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="239326">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="240765">
+    <attack range="3" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="240767">
+    <attack range="3" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="240768">
+    <attack range="3" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="240770">
+    <attack range="3" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="242624">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242625">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242626">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242627">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242628">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242629">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242630">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242631">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242632">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242633">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242634">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242635">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242636">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242637">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242638">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242639">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242640">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242641">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242642">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="242643">
+    <attack range="16" rate="800" type="magical_Water" attack_mod="100"/>
+    <attack range="2" rate="800" type="magical_Water" attack_mod="100"/>
+  </npc>
+  <npc id="244482">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244483">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244484">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244523">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244524">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244525">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244564">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244565">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244566">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244605">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244606">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244607">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244646">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244647">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244648">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244687">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244688">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244689">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244728">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244729">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244730">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244769">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244770">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244771">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244810">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244811">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244812">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244851">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244852">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244853">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244892">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244893">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244894">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244923">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244924">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244925">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244954">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244955">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244956">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244985">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244986">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="244987">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245016">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245017">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245018">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245047">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245048">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245049">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245078">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245079">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245080">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245109">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245110">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245111">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245140">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245141">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245142">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245171">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245172">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="245173">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246440">
+    <attack range="4" rate="1000" type="Magical_Fire" attack_mod="100"/>
+    <attack range="50" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="246457">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246458">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246459">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246460">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246461">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246475">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246476">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246477">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246478">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="246479">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="247075">
+    <attack range="10" rate="1000" type="Magical_Fire" attack_mod="100"/>
+    <attack range="50" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="248025">
+    <attack range="2" rate="500" type="physical" attack_mod="100"/>
+    <attack range="2" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="251835">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="251836">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="251837">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="251838">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="251839">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263011">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263012">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263013">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263014">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263015">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263311">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263312">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263313">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263314">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="263315">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="264511">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="264512">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="264513">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="264514">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="264515">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="267811">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="267812">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="267813">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="267814">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="267815">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269011">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269012">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269013">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269014">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269015">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269911">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269912">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269913">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269914">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="269915">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="280035">
+    <attack range="37" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="280374">
+    <attack range="2" rate="100" type="physical" attack_mod="100"/>
+    <attack range="37" rate="1000" type="magical_Earth" attack_mod="50"/>
+  </npc>
+  <npc id="283719">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="283747">
+    <attack range="6" rate="800" type="magical_Air" attack_mod="120"/>
+    <attack range="20" rate="1000" type="Magical_Earth" attack_mod="100"/>
+  </npc>
+  <npc id="283766">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="284281">
+    <attack range="6" rate="1000" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Physical" attack_mod="120"/>
+  </npc>
+  <npc id="284282">
+    <attack range="6" rate="1000" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Physical" attack_mod="120"/>
+  </npc>
+  <npc id="284283">
+    <attack range="6" rate="1000" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Physical" attack_mod="120"/>
+  </npc>
+  <npc id="284284">
+    <attack range="6" rate="1000" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Physical" attack_mod="120"/>
+  </npc>
+  <npc id="284285">
+    <attack range="6" rate="1000" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Physical" attack_mod="120"/>
+  </npc>
+  <npc id="284572">
+    <attack range="6" rate="900" type="Physical" attack_mod="100"/>
+    <attack range="20" rate="900" type="Physical" attack_mod="80"/>
+  </npc>
+  <npc id="284807">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="284923">
+    <attack range="3" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285144">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="37" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285723">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285734">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285735">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285736">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285739">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="285740">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="16" rate="1000" type="magical_Fire" attack_mod="100"/>
+  </npc>
+  <npc id="285741">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="16" rate="1000" type="magical_Fire" attack_mod="100"/>
+  </npc>
+  <npc id="285742">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="16" rate="1000" type="magical_Fire" attack_mod="100"/>
+  </npc>
+  <npc id="285743">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="16" rate="1000" type="magical_Fire" attack_mod="100"/>
+  </npc>
+  <npc id="286138">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286139">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286140">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286141">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286142">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286143">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286144">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286145">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="286161">
+    <attack range="20" rate="100" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287111">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287112">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287113">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287114">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287115">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287116">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287117">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287118">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287119">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287120">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287121">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287122">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287123">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287124">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287125">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287126">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287127">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287128">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287129">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287130">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287131">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287132">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287133">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287134">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287176">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287177">
+    <attack range="2" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287249">
+    <attack range="3" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287255">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="287257">
+    <attack range="5" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="16" rate="1000" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="287258">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="287259">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="297686">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="297687">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="855152">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="855153">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="855154">
+    <attack range="4" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="20" rate="1000" type="Magical_fire" attack_mod="200"/>
+  </npc>
+  <npc id="855175">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="855176">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="100"/>
+  </npc>
+  <npc id="855177">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="855178">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="855179">
+    <attack range="8" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="855261">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="855843">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="855973">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="855980">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="883322">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="883659">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="883660">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="883661">
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+    <attack range="50" rate="1000" type="Magical_fire" attack_mod="150"/>
+  </npc>
+  <npc id="884057">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884058">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884059">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884060">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884061">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884062">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884063">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884064">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884065">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884066">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884067">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="884068">
+    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+    <attack range="30" rate="1000" type="magical_Earth" attack_mod="130"/>
+  </npc>
+  <npc id="885575">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885576">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885577">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885578">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885579">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885590">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885591">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885592">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885593">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885594">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885605">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885606">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885607">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885608">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+  <npc id="885609">
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+    <attack range="50" rate="500" type="physical" attack_mod="100"/>
+  </npc>
+</npc_attack_profiles>

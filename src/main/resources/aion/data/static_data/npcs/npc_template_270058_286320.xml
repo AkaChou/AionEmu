@@ -28344,22 +28344,22 @@
     <bound_radius side="9" upper="11" front="8"/>
     <massive_looting itemid="188053117" looting_num="100"/>
   </npc_template>
-<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_69_65_Ah" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331577" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277225" sensory_range="25" tribe="GAB1_SUB_DEST_69_AGGRESSIVE" name="Belus Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
+<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_69_65_Ah" npc_type="ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331577" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277225" sensory_range="25" tribe="GAB1_SUB_DEST_69_AGGRESSIVE" name="Belus Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
     <stats hp_regen="2369207" maxHp="4738415" pdef="1434" walk_speed="0" mresist="2371" mboost_resist="1865" run_speed="0" accuracy="1580" main_hand_attack="4582" main_hand_crit_rate="150" mdef="1471" mboost="0" parry="0" crit_spell="109" maxXp="34668496" block="0" main_hand_accuracy="4138" power="56" evasion="2815" run_speed_fight="0"/>
     <bound_radius side="5" upper="4" front="6"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_70_65_Ah" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331578" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277226" sensory_range="25" tribe="GAB1_SUB_DEST_70_AGGRESSIVE" name="Aspida Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
+<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_70_65_Ah" npc_type="ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331578" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277226" sensory_range="25" tribe="GAB1_SUB_DEST_70_AGGRESSIVE" name="Aspida Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
     <stats hp_regen="2369207" maxHp="4738415" pdef="1434" walk_speed="0" mresist="2371" mboost_resist="1865" run_speed="0" accuracy="1580" main_hand_attack="4582" main_hand_crit_rate="150" mdef="1471" mboost="0" parry="0" crit_spell="109" maxXp="34668496" block="0" main_hand_accuracy="4138" power="56" evasion="2815" run_speed_fight="0"/>
     <bound_radius side="5" upper="4" front="6"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_71_65_Ah" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331579" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277227" sensory_range="25" tribe="GAB1_SUB_DEST_71_AGGRESSIVE" name="Atanatos Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
+<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_71_65_Ah" npc_type="ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331579" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277227" sensory_range="25" tribe="GAB1_SUB_DEST_71_AGGRESSIVE" name="Atanatos Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
     <stats hp_regen="2369207" maxHp="4738415" pdef="1434" walk_speed="0" mresist="2371" mboost_resist="1865" run_speed="0" accuracy="1580" main_hand_attack="4582" main_hand_crit_rate="150" mdef="1471" mboost="0" parry="0" crit_spell="109" maxXp="34668496" block="0" main_hand_accuracy="4138" power="56" evasion="2815" run_speed_fight="0"/>
     <bound_radius side="5" upper="4" front="6"/>
     <talk_info delay="3" distance="5"/>
   </npc_template>
-<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_72_65_Ah" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331580" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277228" sensory_range="25" tribe="GAB1_SUB_DEST_72_AGGRESSIVE" name="Disilon Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
+<npc_template name_desc="GAb1_Sub_Rune_Howitzer_Dest_72_65_Ah" npc_type="ATTACKABLE" race="CONSTRUCT" level="75" rating="ELITE" ai="useitem" hpgauge_level="3" type="GENERAL" name_id="331580" attack_delay="2507" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="277228" sensory_range="25" tribe="GAB1_SUB_DEST_72_AGGRESSIVE" name="Disilon Camp Defense Cannon" rank="EXPERT" height="4" attack_range="25" attack_rate="0">
     <stats hp_regen="2369207" maxHp="4738415" pdef="1434" walk_speed="0" mresist="2371" mboost_resist="1865" run_speed="0" accuracy="1580" main_hand_attack="4582" main_hand_crit_rate="150" mdef="1471" mboost="0" parry="0" crit_spell="109" maxXp="34668496" block="0" main_hand_accuracy="4138" power="56" evasion="2815" run_speed_fight="0"/>
     <bound_radius side="5" upper="4" front="6"/>
     <talk_info delay="3" distance="5"/>

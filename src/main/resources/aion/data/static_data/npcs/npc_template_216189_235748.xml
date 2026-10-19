@@ -28050,7 +28050,7 @@
     <bound_radius side="8.5" upper="15.0" front="14.4"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="IDEternity_02_Event_Nepilim_03" attack_range="5" npc_type="NON_ATTACKABLE" race="MAGICALMONSTER" level="72" attack_rate="1000" title_id="339168" rating="NORMAL" ai="Fighting_Earth_Jotun" hpgauge_level="13" type="GENERAL" name_id="339141" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220588" sensory_range="8" tribe="NEPILIM_EARTH" name="Fighting Earth Jotun" rank="SEASONED" height="15.0">
+<npc_template name_desc="IDEternity_02_Event_Nepilim_03" attack_range="5" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="72" attack_rate="1000" title_id="339168" rating="NORMAL" ai="Fighting_Earth_Jotun" hpgauge_level="13" type="GENERAL" name_id="339141" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220588" sensory_range="8" tribe="NEPILIM_EARTH" name="Fighting Earth Jotun" rank="SEASONED" height="15.0">
     <stats hp_regen="1135170" maxHp="1929789" pdef="1352" walk_speed="2" mresist="1845" mboost_resist="991" run_speed="7" accuracy="2370" main_hand_attack="21" main_hand_crit_rate="112" mdef="1060" mboost="0" parry="0" crit_spell="81" maxXp="0" block="0" main_hand_accuracy="3642" power="1232" evasion="3191" run_speed_fight="7"/>
     <equipment>
       <item>100002118</item>
@@ -74935,14 +74935,14 @@
     <stats hp_regen="0" maxHp="50" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="1232" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.8" upper="0.64" front="0.8"/>
   </npc_template>
-<npc_template name_desc="LDF4_Advance_GodEliteLF" attack_range="5" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" rating="ELITE" ai="empowered_veille" hpgauge_level="27" type="ABYSS_GUARD" name_id="332476" abyss_type="GUARD" attack_delay="2100" abnormal_immunity="Pulled,Paralyze,Sleep,Blind,Deform,Fear,Confuse,Silence,Disease,Bind,Slow,root,Curse,Bleed,Poison,Stat_ArStunLike" npc_id="235064" sensory_range="10" tribe="LDF4_ADVANCE_GODELITELF" name="Empowered Veille" rank="EXPERT" height="15.05">
+<npc_template name_desc="LDF4_Advance_GodEliteLF" attack_range="5" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" rating="ELITE" ai="empowered_veille" hpgauge_level="27" type="ABYSS_GUARD" name_id="332476" abyss_type="GUARD" attack_delay="2100" abnormal_immunity="Pulled,Paralyze,Sleep,Blind,Deform,Fear,Confuse,Silence,Disease,Bind,Slow,root,Curse,Bleed,Poison,Stat_ArStunLike" npc_id="235064" sensory_range="10" tribe="LDF4_ADVANCE_GODELITELF" name="Empowered Veille" rank="EXPERT" height="15.05">
     <stats hp_regen="29870730" maxHp="59741460" pdef="1523" walk_speed="1.7" mresist="2063" mboost_resist="1335" run_speed="6" accuracy="2370" main_hand_attack="2838" main_hand_crit_rate="131" mdef="542" mboost="0" parry="0" crit_spell="95" maxXp="17951916" block="0" main_hand_accuracy="3595" power="1632" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>100500746</item>
     </equipment>
 	<bound_radius side="1.75" upper="15.05" front="2.8"/>
   </npc_template>
-<npc_template name_desc="LDF4_Advance_GodEliteDM" attack_range="5" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" rating="ELITE" ai="empowered_mastarius" hpgauge_level="27" type="ABYSS_GUARD" name_id="332477" abyss_type="GUARD" attack_delay="2100" abnormal_immunity="Pulled,Paralyze,Sleep,Blind,Deform,Fear,Confuse,Silence,Disease,Bind,Slow,root,Curse,Bleed,Poison,Stat_ArStunLike" npc_id="235065" sensory_range="10" tribe="LDF4_ADVANCE_GODELITEDM" name="Empowered Mastarius" rank="EXPERT" height="15.05">
+<npc_template name_desc="LDF4_Advance_GodEliteDM" attack_range="5" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" rating="ELITE" ai="empowered_mastarius" hpgauge_level="27" type="ABYSS_GUARD" name_id="332477" abyss_type="GUARD" attack_delay="2100" abnormal_immunity="Pulled,Paralyze,Sleep,Blind,Deform,Fear,Confuse,Silence,Disease,Bind,Slow,root,Curse,Bleed,Poison,Stat_ArStunLike" npc_id="235065" sensory_range="10" tribe="LDF4_ADVANCE_GODELITEDM" name="Empowered Mastarius" rank="EXPERT" height="15.05">
     <stats hp_regen="29870730" maxHp="59741460" pdef="1523" walk_speed="1.7" mresist="2063" mboost_resist="1335" run_speed="6" accuracy="2370" main_hand_attack="2838" main_hand_crit_rate="131" mdef="542" mboost="0" parry="0" crit_spell="95" maxXp="17951916" block="0" main_hand_accuracy="3595" power="1632" evasion="0" run_speed_fight="7"/>
     <equipment>
       <item>100001727</item>

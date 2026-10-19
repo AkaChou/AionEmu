@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.templates.npc;
 
+import java.util.List;
 import java.util.Locale;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -87,6 +88,8 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/** 返回攻击延迟 / Returns the attack delay*/
 	@XmlAttribute(name = "attack_delay")
 	private int attackDelay;
+	/** 多段攻击档案（真端 attacks/data），由紧凑定义覆盖层填充 / Multi-segment attack profiles from retail attacks/data */
+	private List<NpcAttackProfile> attackProfiles;
 	/** 返回 hp gauge level / Returns the hp gauge level */
 	@XmlAttribute(name = "hpgauge_level")
 	private int hpGaugeLevel;
@@ -316,6 +319,50 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/** 返回 aggro range / Returns the aggro range */
 	public int getAggroRange() {
 		return aggrorange;
+	}
+
+	/**
+	 * 返回最大攻击距离：多段攻击取各段最大值，否则回退模板单值。
+	 * Returns the maximum attack range: the largest segment for multi-attack NPCs, otherwise the template value.
+	 *
+	 * @return 最大攻击距离（米） / maximum attack range in metres
+	 */
+	public float getMaxAttackRange() {
+		float max = attackRange;
+		if (attackProfiles != null) {
+			for (NpcAttackProfile profile : attackProfiles) {
+				max = Math.max(max, profile.range());
+			}
+		}
+		return max;
+	}
+
+	/**
+	 * 按目标距离选择攻击段：优先覆盖目标的最小射程段，全部不覆盖时取最大射程段。
+	 * Selects the attack segment for the distance: the smallest covering segment, else the longest-range segment.
+	 *
+	 * @param distance 目标距离（米） / target distance in metres
+	 * @return 选中的攻击段；无多段数据时为 {@code null} / selected segment, or {@code null} without profiles
+	 */
+	public NpcAttackProfile selectAttackProfile(float distance) {
+		if (attackProfiles == null || attackProfiles.isEmpty()) {
+			return null;
+		}
+		NpcAttackProfile best = null;
+		for (NpcAttackProfile profile : attackProfiles) {
+			if (profile.covers(distance) && (best == null || profile.range() < best.range())) {
+				best = profile;
+			}
+		}
+		if (best != null) {
+			return best;
+		}
+		for (NpcAttackProfile profile : attackProfiles) {
+			if (best == null || profile.range() > best.range()) {
+				best = profile;
+			}
+		}
+		return best;
 	}
 
 	/** 返回 minimum shout range / Returns the minimum shout range */

@@ -35,7 +35,7 @@ public class SkillAttackManager {
 	public static void performAttack(NpcAI2 npcAI, int delay) {
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
 		// If the attack range is 0, use the attack range for checks (instead of aggro range)
-		if (npcAI.getOwner().getObjectTemplate().getAttackRange() == 0) {
+		if (npcAI.getOwner().getObjectTemplate().getMaxAttackRange() == 0) {
 			if (npcAI.getOwner().getTarget() != null && !MathUtil.isInRange(npcAI.getOwner(),
 					npcAI.getOwner().getTarget(), npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
 				npcAI.onGeneralEvent(AIEventType.TARGET_TOOFAR);
@@ -80,7 +80,7 @@ public class SkillAttackManager {
 		}
 		// 如果攻击范围为0，使用攻击范围进行检查（而不是仇恨范围）
 		// If the attack range is 0, use the attack range for checks (instead of aggro range)
-		if (npcAI.getOwner().getObjectTemplate().getAttackRange() == 0) {
+		if (npcAI.getOwner().getObjectTemplate().getMaxAttackRange() == 0) {
 			if (!MathUtil.isInRange(npcAI.getOwner(), target,
 					npcAI.getOwner().getGameStats().getAttackRange().getCurrent() / 1000f)) {
 				npcAI.onGeneralEvent(AIEventType.TARGET_TOOFAR);

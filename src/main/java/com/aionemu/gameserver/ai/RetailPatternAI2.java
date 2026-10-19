@@ -2541,8 +2541,8 @@ public class RetailPatternAI2 extends AggressiveNpcAI2 {
 		if (definition != null && definition.sensoryRange() > 0) {
 			return definition.sensoryRange();
 		}
-		return owner.getObjectTemplate() != null && owner.getObjectTemplate().getAttackRange() > 0
-			? owner.getObjectTemplate().getAttackRange() : 37f;
+		return owner.getObjectTemplate() != null && owner.getObjectTemplate().getMaxAttackRange() > 0
+			? owner.getObjectTemplate().getMaxAttackRange() : 37f;
 	}
 
 	private int activateSkillArea(Operation action, NpcSkillEntry skillEntry) {

@@ -19,6 +19,7 @@ import com.aionemu.gameserver.model.stats.container.NpcGameStats;
 import com.aionemu.gameserver.model.stats.container.NpcLifeStats;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
 import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
+import com.aionemu.gameserver.model.templates.npc.NpcAttackProfile;
 import com.aionemu.gameserver.model.templates.npc.NpcRank;
 import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
@@ -174,6 +175,20 @@ public class Npc extends Creature {
 	@Override
 	public ItemAttackType getAttackType() {
 		return this.ai2.modifyAttackType(attacktype);
+	}
+
+	/**
+	 * 按目标距离选择真端多段攻击档案；无多段数据时返回 {@code null}。
+	 * Selects the retail attack profile for the target distance; returns {@code null} without profile data.
+	 *
+	 * @param target 目标 / target
+	 * @return 选中的攻击段，无多段数据时为 {@code null} / selected profile, or {@code null} without profiles
+	 */
+	public NpcAttackProfile selectAttackProfile(Creature target) {
+		NpcTemplate template = getObjectTemplate();
+		float distance = target == null ? 0
+			: (float) (MathUtil.getDistance(this, target) - MathUtil.getAttackRangeOffset(this, target));
+		return template == null ? null : template.selectAttackProfile(Math.max(0f, distance));
 	}
 
 	/**

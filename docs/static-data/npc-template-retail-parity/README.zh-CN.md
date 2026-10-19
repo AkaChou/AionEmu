@@ -69,33 +69,39 @@
 
 真端还有 285 个元素（`appearance/*`、`scale`、`weapon_scale`、`max_enemy_count`、`elemental_defend_*`、`hit_count`、`dp_reduce`、`idle_name`、`abyss_point`、`concentration`、`can_see_polymorph`、全部商店/仓库/制造/掉落组/传送等）本地**无对应**，清单见 `retail-only-elements.tsv`。
 
+> 外观与 `stats@power` 的专项审计见 [`P4-appearance-power.zh-CN.md`](P4-appearance-power.zh-CN.md)；287 个真端独有元素的逐元素分类见 [`P4-retail-only-classification.tsv`](P4-retail-only-classification.tsv)。
+
 ## 三、已执行的对齐（2026-10-19）
 
 > 本目录的 TSV 是**对齐前**的审计快照；本节记录实际落地内容。
 
 | 步骤 | 落地 | 规模 |
 |---|---|---|
-| 1. 补伤害区间 | `definitions/compact/npc-combat.xml` 在既有 41,455 行后追加新行（原有行逐字节保留） | **+46,070 行**（41,455 → 87,525）；其中 1,265 行 `min=max=0`，这些 NPC 本地 `main_hand_attack` 也为 0，行为不变 |
+| 1. 补伤害区间 | `definitions/compact/npc-combat.xml` 在既有 41,455 行后追加新行（原有行逐字节保留） | **+46,070 行**（41,455 → 87,525）；其中 1,265 行 `min=max=0`，1,257 行本地 `main_hand_attack` 也为 0（行为不变）；另有 8 行（`201054`–`201059` 攻城器械、`246844`/`246845` 事件怪）本地 `main_hand_attack` 为 731/1704/1000，普攻伤害将归 0——均为 `NON_ATTACKABLE` + `siege_weapon` 或 `dummy` AI，预计无普攻行为，待实机抽查 |
 | 2. 攻击档位 | 8 个 `npc_template_*.xml` 分片写回 `attack_range` / `attack_rate` / `attack_delay` | **19,218 条模板**（attack_rate 11,817、attack_delay 7,295、attack_range 2,115）；属性缺失的 3,831 条按真端值插入 |
 | 3. `power` | 仅溯源，未改动 | 见第二节 C 组 |
-| 4. `race` / `npc_type` | 未改动（行为合同，逐域裁定） | 见 `../npc-type-retail-unattackable-audit.zh-CN.md` |
+| 4. `race` / `npc_type` | 原计划未动；P3 仅修 54 条实例 Boss（见第 9 行），`race` 仍未动 | 见 `../npc-type-retail-unattackable-audit.zh-CN.md` |
 | 5. 外观 | 未改动（单独立项） | — |
+| 6. 去重 | 删除 `npc_template_834290_885645.xml` 中重复的 `836025` 条目（`run_speede Bomb I`，level 55、tribe `IDLUNA_DEF_NPC2`，无任何引用；保留 `IDEVENT_Def_SWHOWITZER_01A`，level 66、tribe `IDEVENT_PCTANK`） | -1 条；模板元素 87,983 → 87,982，与唯一 id 数一致 |
+| 7. P1 多段攻击 | 新增 `definitions/compact/npc-attack-profiles.xml` + `NpcAttackDefinitionLoader`；运行时按目标距离选段，支持魔法自动攻击与 `attack_mod` | 393 个 NPC / 787 段；见 [`P1-multi-attack-and-id-coverage.zh-CN.md`](P1-multi-attack-and-id-coverage.zh-CN.md) |
+| 8. P2 数值尾巴 | 89 个模板的 59 个属性；LDF5_Under 经验、事件怪、任务 14026 守卫 `max_chase_time` 按决策保留 | 见 [`P2-numeric-tails.zh-CN.md`](P2-numeric-tails.zh-CN.md) |
+| 9. P3 行为合同 | `npc_type` 54 条实例 Boss/炮台改为 `ATTACKABLE`；`race` 暂不对齐 | 见 [`P3-behavior-contracts.zh-CN.md`](P3-behavior-contracts.zh-CN.md) |
+| 10. P1 id 覆盖 | 42 个仅真端、290 个仅本地，逐条清单 | 见 [`npc-id-coverage.tsv`](npc-id-coverage.tsv)；未补模板（缺 `name_id` 映射） |
 
 口径：
 
 - 伤害区间与 `stat_ratio` 取真端 `<min_damage>` / `<max_damage>` / `<stat_ratio>`；真端未声明 `stat_ratio` 时写 `1000`（与本地默认一致，不改变该轴）。
-- `attack_range`/`attack_rate`/`attack_delay` 取真端 `<attacks>` 的**首个** `<data>`；393 条多段攻击的 NPC 只取首段（这些 NPC 的后续段仍未被建模）。
+- 模板里的 `attack_range`/`attack_rate`/`attack_delay` 仍取真端 `<attacks>` 的**首个** `<data>`（单段值，供单段 NPC 与旧逻辑使用）；393 条多段 NPC 的完整段列已由 `npc-attack-profiles.xml` 建模，运行时按距离选段。
 - `attack_range` 的浮点值四舍五入为整数（本地 XSD 为 `xs:int`）。
 - `attack_rate` 目前**无运行时消费者**（`NpcTemplate.getAttackRate()` 无调用点），本次对齐属数据一致性，不影响战斗节奏；真正影响出手间隔的是 `attack_delay`。
 - 回归闸门：`NpcTemplateRetailAlignmentTest`（样例外加行数/单调性校验）与 `NpcCombatDefinitionLoaderTest`（行数与模板存在性）。
 
-## 四、建议的对齐顺序（原计划，供后续步骤参考）
+## 四、后续路线（P1/P2/P3 之后）
 
-1. **补 `npc-combat.xml` 的 46,070 条伤害范围**：真端有范围、本地没有的先补齐——这是唯一「照抄真端即正确」且影响战斗数值的批量缺口。
-2. **对齐 `attack_range` / `attack_rate` / `attack_delay`（约 17,000 条）**：注意真端 393 条 NPC 的 `<attacks>` 有多个 `<data>` 段（本审计只比对第一段，已在口径中说明）；落地前需确认本地 AI 的 `getAttackDistanceToTarget()` 是否另有覆盖。
-3. **溯源 `stats@power`**：在查清它由什么生成之前不要动（它当前参与物理普攻基值，改动等于改全服怪物伤害）。
-4. **`race` 与 `npc_type` 属行为合同**：先按 `../npc-type-retail-unattackable-audit.zh-CN.md` 的做法逐域裁定，不要批量照抄。
-5. **外观（bound_radius / scale / appearance）**：影响客户端体型与命中盒，建议单独立项，不与数值同批。
+1. **P1 多段攻击**已落地；剩余 P1 项是 42 个仅真端 NPC 的模板补齐，阻塞于客户端 `name_id` 映射。
+2. **P2 数值尾巴**已按决策处理；保留项（LDF5_Under 经验、事件怪、训练假人、浮点噪声）见 `P2-numeric-tails.zh-CN.md`。
+3. **P3** 只修了 54 条实例 Boss/炮台；PvP 守卫家族、`IDYun`/`IDF6`/静态 NPC 与 `race` 仍待逐域裁定，见 `P3-behavior-contracts.zh-CN.md`。
+4. **P4 外观与 `power`** 见 `P4-appearance-power.zh-CN.md`：`bound_radius` 因运行时“半径 vs 全长”契约冲突而 BLOCKED；`equipment` 网格映射可建立；`stats@power` 无真端上游，保持本地曲线。
 
 ## 五、口径与边界
 

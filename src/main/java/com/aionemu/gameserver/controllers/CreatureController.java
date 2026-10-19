@@ -34,6 +34,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ItemAttackType;
+import com.aionemu.gameserver.model.templates.npc.NpcAttackProfile;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
@@ -344,14 +345,23 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			return;
 		}
 
-		int attackType = 0;
+		// 多段攻击：按目标距离选定真端攻击段，攻击类型与 attack_mod 都取自该段。
+		// Multi-segment attack: select the retail segment by target distance; attack type and attack_mod come from it.
+		NpcAttackProfile attackProfile = getOwner() instanceof Npc npc ? npc.selectAttackProfile(target) : null;
+		ItemAttackType attackType = attackProfile != null ? attackProfile.type() : getOwner().getAttackType();
+		int attackTypeId = 0;
 		List<AttackResult> attackResult;
-		if (getOwner().getAttackType() == ItemAttackType.PHYSICAL) {
+		if (attackType == ItemAttackType.PHYSICAL) {
 			attackResult = AttackUtil.calculatePhysicalAttackResult(getOwner(), target);
 		} else {
-			attackResult = AttackUtil.calculateMagAttackResult(getOwner(), target,
-				getOwner().getAttackType().getMagicalElement());
-			attackType = 1;
+			attackResult = AttackUtil.calculateMagAttackResult(getOwner(), target, attackType.getMagicalElement());
+			attackTypeId = 1;
+		}
+		if (attackProfile != null && attackProfile.attackMod() != 100) {
+			float modifier = attackProfile.attackMod() / 100f;
+			for (AttackResult result : attackResult) {
+				result.setDamage(result.getExactDamage() * modifier);
+			}
 		}
 		int damage = 0;
 		AttackStatus attackStatus = attackResult.isEmpty() ? AttackStatus.NORMALHIT : attackResult.getFirst().getAttackStatus();
@@ -362,7 +372,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 			damage += result.getDamage();
 		}
 		PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_ATTACK(getOwner(), target,
-			getOwner().getGameStats().getAttackCounter(), time, attackType, attackResult));
+			getOwner().getGameStats().getAttackCounter(), time, attackTypeId, attackResult));
 
 		getOwner().getGameStats().increaseAttackCounter();
 		if (addAttackObservers) {
