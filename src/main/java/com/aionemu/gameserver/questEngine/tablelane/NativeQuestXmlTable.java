@@ -110,6 +110,16 @@ public final class NativeQuestXmlTable {
 		this.questIdByName = questIdByName;
 	}
 
+	/**
+	 * 以显式行表构造（测试注入合成表用；生产只经 {@link #instance()} 懒加载）。
+	 * Builds from explicit rows (for test-injected synthetic tables; production only through
+	 * {@link #instance()}).
+	 */
+	public static NativeQuestXmlTable ofRows(Map<Integer, QuestRow> rowsByQuestId,
+			Map<String, Integer> questIdByName) {
+		return new NativeQuestXmlTable(Map.copyOf(rowsByQuestId), Map.copyOf(questIdByName));
+	}
+
 	/** 已装载的表（未装载则先装载）。 / The loaded table; loads it first when absent. */
 	public static NativeQuestXmlTable instance() {
 		NativeQuestXmlTable local = instance;

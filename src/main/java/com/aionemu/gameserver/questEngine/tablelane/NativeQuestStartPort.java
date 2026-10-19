@@ -3,6 +3,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.boot.i18n.I18n;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.questEngine.QuestStartRefusal;
 import com.aionemu.gameserver.questEngine.retail.RetailQuestMetadataCompiler;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -103,6 +105,37 @@ public final class NativeQuestStartPort {
 		}
 	}
 
+	/**
+	 * 判定结果加上命中的等级轴细节：{@code LEVEL_BLOCKED} 同时覆盖「不足」与「超出」，拒绝提示
+	 * 需要区分两者。非等级条件下 {@code minLevel} 为 0、{@code levelTooLow} 为 false。
+	 * <p>
+	 * The verdict plus the details of a {@code LEVEL_BLOCKED} hit: that outcome covers both directions,
+	 * while the refusal message has to tell them apart.
+	 */
+	public record AcquireVerdict(StartResult result, int minLevel, boolean levelTooLow) {
+		public boolean started() {
+			return result.started();
+		}
+
+		static AcquireVerdict of(StartResult result) {
+			return new AcquireVerdict(Objects.requireNonNull(result, "result"), 0, false);
+		}
+
+		static AcquireVerdict of(Outcome outcome, String detail) {
+			return of(new StartResult(Objects.requireNonNull(outcome, "outcome"),
+				Objects.requireNonNull(detail, "detail")));
+		}
+
+		static AcquireVerdict of(Outcome outcome, String detail, int minLevel, boolean levelTooLow) {
+			return new AcquireVerdict(new StartResult(Objects.requireNonNull(outcome, "outcome"),
+				Objects.requireNonNull(detail, "detail")), minLevel, levelTooLow);
+		}
+
+		static AcquireVerdict missingRow(String detail) {
+			return of(Outcome.MISSING_ROW, detail);
+		}
+	}
+
 	/** 任务追踪日志出口，路由到 logback 的 quest logger。 / Quest trace sink for the quest logger. */
 	private static final Logger QUEST_TRACE_LOG = LoggerFactory.getLogger("quest");
 
@@ -135,6 +168,15 @@ public final class NativeQuestStartPort {
 	}
 
 	/**
+	 * 替换进程级单例（仅供测试注入合成表；生产由 {@link #instance()} 懒加载）。
+	 * Replaces the process-wide instance (test-only injection of a synthetic table; production lazily
+	 * loads through {@link #instance()}).
+	 */
+	public static void overrideInstanceForTest(NativeQuestStartPort port) {
+		instance = port;
+	}
+
+	/**
 	 * NPC 接取（原版 {@code Quest::CanAcquireQuest} 等价判定）→ 建档/复位到 START。
 	 * NPC acquisition: the {@code CanAcquireQuest}-equivalent adjudication, then create/reset the row.
 	 */
@@ -145,19 +187,24 @@ public final class NativeQuestStartPort {
 
 	/**
 	 * NPC 接取并打拒绝追踪（五个表车道接取面共用）：结论与 {@link #start(Player, int)} 完全一致，
-	 * 仅在拒绝时向 {@code quest} logger 输出结论轴 detail，消除「点了接受零反馈零日志」的静默面。
+	 * 仅在拒绝时向 {@code quest} logger 输出结论轴 detail 并给玩家下发原版拒绝提示，消除「点了接受
+	 * 零反馈零日志」的静默面。提示只覆盖玩家可补救且原版有对应字符串的轴（见
+	 * {@link com.aionemu.gameserver.questEngine.QuestStartRefusal}），其余轴保持原版零消息。
 	 * <p>
 	 * Acquire with a refusal trace shared by the five table-lane accept faces: the verdict is
-	 * identical to {@link #start(Player, int)}; only refusals are traced to the {@code quest} logger,
-	 * removing the silent accept face (no packet, no log).
+	 * identical to {@link #start(Player, int)}; refusals are traced to the {@code quest} logger and
+	 * answered with the retail refusal message for the axis (only axes the player can remedy and
+	 * retail has a string for; the rest stay silent exactly like retail).
 	 */
 	public StartResult startTraced(Player player, int questId, int dialogId) {
-		StartResult verdict = evaluateNpcAcquire(player, questId);
+		AcquireVerdict verdict = evaluateAcquire(player, questId);
 		if (!verdict.started()) {
+			StartResult result = verdict.result();
 			QUEST_TRACE_LOG.info(I18n.get("log.quest_trace.acquire_refused",
 				player == null ? "unknown" : player.getName(), questId, dialogId,
-				verdict.outcome() + ": " + verdict.detail()));
-			return verdict;
+				result.outcome() + ": " + result.detail()));
+			QuestStartRefusal.notifyIfRefused(player, questId, verdict);
+			return result;
 		}
 		return commit(player, questId);
 	}
@@ -184,26 +231,37 @@ public final class NativeQuestStartPort {
 
 	/** 原版 {@code CanAcquireQuest} 等价判定（不发状态、不改存档）。 / Retail acquisition adjudication, no writes. */
 	public StartResult evaluateNpcAcquire(Player player, int questId) {
+		return evaluateAcquire(player, questId).result();
+	}
+
+	/**
+	 * 与 {@link #evaluateNpcAcquire(Player, int)} 同一判定，额外返回命中的拒绝轴（供拒绝提示映射）。
+	 * The same adjudication as {@link #evaluateNpcAcquire(Player, int)}, also reporting the hit axis so
+	 * refusals can be mapped to their retail message.
+	 */
+	public AcquireVerdict evaluateAcquire(Player player, int questId) {
 		if (player == null || player.getQuestStateList() == null) {
-			return new StartResult(Outcome.MISSING_ROW, "player unavailable");
+			return AcquireVerdict.missingRow(player == null ? "player unavailable" : "quest state unavailable");
 		}
 		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
 		if (row == null) {
-			return new StartResult(Outcome.MISSING_ROW, "no retail quest.xml row");
+			return AcquireVerdict.missingRow("no retail quest.xml row");
 		}
 		QuestState state = player.getQuestStateList().getQuestState(questId);
 		if (state != null && (state.getStatus() == QuestStatus.START || state.getStatus() == QuestStatus.REWARD)) {
-			return new StartResult(Outcome.ALREADY_RUNNING, state.getStatus().name());
+			return AcquireVerdict.of(Outcome.ALREADY_RUNNING, state.getStatus().name());
 		}
 		StartResult levelVerdict = levelVerdict(player, row);
 		if (!levelVerdict.started()) {
-			return levelVerdict;
+			int minLevel = intOr(row, "minlevel_permitted", 0);
+			return AcquireVerdict.of(Outcome.LEVEL_BLOCKED, levelVerdict.detail(), minLevel,
+				player.getLevel() < minLevel);
 		}
 		StartResult eligibility = eligibilityVerdict(player, row);
 		if (!eligibility.started()) {
-			return eligibility;
+			return AcquireVerdict.of(eligibility.outcome(), eligibility.detail());
 		}
-		return repeatVerdict(state, row);
+		return AcquireVerdict.of(repeatVerdict(state, row));
 	}
 
 	/**
@@ -518,6 +576,17 @@ public final class NativeQuestStartPort {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, QuestStatus.START.value(), 0));
 		refreshVisibility(player);
 		return new StartResult(Outcome.STARTED, "START");
+	}
+
+	/** 该表内原始行的整数字段（供拒绝提示读取显示名/上限等展示轴）。 / A raw integer field of this table's row. */
+	public int displayInteger(int questId, String tag, int fallback) {
+		NativeQuestXmlTable.QuestRow row = questXml.find(questId).orElse(null);
+		return row == null ? fallback : intOr(row, tag, fallback);
+	}
+
+	/** 该表内原始行的首个文本字段（供拒绝提示读取任务名）。 / The first text field of this table's row. */
+	public String displayText(int questId, String tag) {
+		return questXml.find(questId).map(row -> row.text(tag)).orElse("");
 	}
 
 	private static int intOr(NativeQuestXmlTable.QuestRow row, String tag, int fallback) {

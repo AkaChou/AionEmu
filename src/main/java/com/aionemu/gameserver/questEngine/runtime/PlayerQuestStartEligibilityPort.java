@@ -5,7 +5,6 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
-import com.aionemu.gameserver.questEngine.definition.QuestItemRequirement;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStartCondition;
 import com.aionemu.gameserver.questEngine.definition.QuestStartConditionGroup;
@@ -129,9 +128,17 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 		if (!matchesCanonicalStartConditions(player, metadata)) {
 			return QuestStartEligibility.rejected("START_CONDITION_REJECTED");
 		}
-		if (!hasRequiredInventoryItems(player, metadata.inventoryItems())) {
-			return QuestStartEligibility.rejected("REQUIRED_INVENTORY_ITEM_MISSING");
-		}
+		// 接取面不设背包门（与 native 表车道同轴）：{@code inventory_item_name} 在 typed 车道曾作为
+		// 硬拒轴，而 native 车道（{@code NativeQuestStartPort#evaluateNpcAcquire}）从不读取它——同一条
+		// 真端行按 owner 分流会出现"native 可接、typed 不可接"的分歧（2026-10-19 实机 19679：缺
+		// 164000506 成长证物时 typed 静默关窗，同系列 19671/19672 的 native 车道照常可接）。
+		// 背包轴仍保留在 metadata 上供中段交付门消费（CollectItem/CheckItem 各族 handler），只是不再
+		// 参与接取资格判定。
+		// The accept face carries no inventory gate, matching the native table lane. The typed lane used
+		// {@code inventory_item_name} as a hard rejection axis while {@code NativeQuestStartPort} never
+		// reads it, so the same retail row accepted or refused by owner split (live 2026-10-19, quest
+		// 19679: a missing growth token closed the dialog silently while sibling 19671/19672 on the
+		// native lane stayed acceptable). The metadata axis remains for mid-quest delivery gates.
 		if (limitedQuestRequiresAcquisition.test(questId, metadata)) {
 			return QuestStartEligibility.rejected("LIMITED_QUEST_ACQUISITION_UNSUPPORTED");
 		}
@@ -202,14 +209,6 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 
 	private static boolean rewardMatches(QuestStartCondition condition, QuestState state) {
 		return condition.rewardMode() == state.getReward();
-	}
-
-	private static boolean hasRequiredInventoryItems(Player player, List<QuestItemRequirement> required) {
-		if (player.getInventory() == null) {
-			return required.isEmpty();
-		}
-		return required.stream().allMatch(item ->
-			player.getInventory().getItemCountByItemId(item.itemId()) >= item.count());
 	}
 
 	private static boolean hasCraftQualification(Player player, QuestMetadata metadata) {

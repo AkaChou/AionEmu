@@ -502,9 +502,13 @@ public final class QuestService {
 				return false;
 			}
 		}
-		if (warn && !inventoryItemCheck(env, true)) {
-			return false;
-		}
+		// 接取面不设背包门（与 native 表车道、typed 资格端口同轴）：{@code inventory_item_name} 的背包轴
+		// 保留给中段交付门（{@link #collectItemCheck}/{@link #inventoryItemCheck} 的其它调用点与各族
+		// handler），不再作为接取资格判定 —— 同一真端行按 owner 分流不得出现"一个车道可接、另一个被
+		// 静默关窗"的分歧（2026-10-19 实机 19679）。
+		// No inventory gate on the accept face, matching the native table lane and the typed eligibility
+		// port. The axis stays with the mid-quest delivery gates; an owner split must never make the same
+		// retail row acceptable on one lane and silently refused on another (live 2026-10-19, quest 19679).
 		if (!checkCombineSkill(player, template)) {
 			return false;
 		}
@@ -780,8 +784,20 @@ public final class QuestService {
 	}
 
 	/**
-	 * 检查背包是否持有任务要求的道具。
-	 * Checks whether the inventory holds required quest items.
+	 * 检查背包是否持有任务要求的道具（**提示面**，不是接取资格判定）。
+	 * Checks whether the inventory holds the quest's declared items (a hint surface, not an
+	 * acquisition-eligibility verdict).
+	 * <p>
+	 * 2026-10-19 起接取面不再调用本方法：{@code inventory_item_name} 不参与接取资格，与 native 表车道
+	 * （{@code NativeQuestStartPort#evaluateNpcAcquire} 从不读该轴）和 typed 资格端口保持同一口径。
+	 * 保留该入口仅供中段交付提示与运维诊断使用；任何新增的接取路径都不得把它重新接成硬门。
+	 * </p>
+	 * <p>
+	 * Since 2026-10-19 the accept face no longer calls this: {@code inventory_item_name} is not an
+	 * acquisition axis, matching the native table lane and the typed eligibility port. The entry point
+	 * remains for mid-quest delivery hints and operator diagnostics only; no accept path may wire it
+	 * back in as a hard gate.
+	 * </p>
 	 *
 	 * @param env         任务环境 / quest environment
 	 * @param showWarning 是否提示玩家 / whether to show a warning

@@ -15,12 +15,14 @@ import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 
@@ -160,6 +162,34 @@ public final class QuestProductionDispatcher implements QuestRuntimeDispatcher {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 返回玩家在该 owner 上的开始资格投影（只读，不开事务、不访问数据库连接）。
+	 * <p>接取被拒的提示面据此定位拒绝轴：typed 车道的拒绝就是 {@code StartEligible} 条件不成立，
+	 * 与快照上真正被拒绝的转换同源，而不是另起一套判定。
+	 * <p>
+	 * Returns the player's start-eligibility projection for this owner (read-only, no transaction, no
+	 * database connection). The refusal hint face locates its axis from here: a typed refusal is
+	 * exactly a false {@code StartEligible} condition, the same source the refused transition read.
+	 * @param playerId 玩家 / player
+	 * @param questId owner / owner
+	 * @return 资格投影；未持有该 owner 或端口缺失时为空 / the projection, empty without the owner
+	 */
+	public Optional<QuestStartEligibility> startEligibility(int playerId, int questId) {
+		CompiledQuestDefinition definition = playerId <= 0 || questId <= 0
+			? null : catalog.findExecutable(questId).orElse(null);
+		if (definition == null || eventPort == null) {
+			return Optional.empty();
+		}
+		try {
+			// 事件只为满足端口形状：资格投影与事件类型无关。
+			// The event only satisfies the port shape; the eligibility projection is event-independent.
+			QuestSnapshot snapshot = eventPort.snapshot(playerId, questId, new QuestEvent.LevelUp());
+			return snapshot == null ? Optional.empty() : Optional.ofNullable(snapshot.startEligibility());
+		} catch (SQLException | RuntimeException unavailable) {
+			return Optional.empty();
+		}
 	}
 
 	/** 返回排序后的正式 owner ID。 Return sorted production owner IDs. */

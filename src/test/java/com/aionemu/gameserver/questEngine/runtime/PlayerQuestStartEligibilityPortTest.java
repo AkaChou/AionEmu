@@ -374,7 +374,12 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	@Test
-	void missingRequiredInventoryItemFailsClosedWithoutLegacyTemplateAccess() throws Exception {
+	void declaredInventoryItemsDoNotGateAcquisition() throws Exception {
+		// 接取面不设背包门（2026-10-19）：{@code inventory_item_name} 只表达"行携带该道具"，接取资格
+		// 轴与 native 表车道同轴——{@code NativeQuestStartPort#evaluateNpcAcquire} 从不读它。旧行为在
+		// typed 车道硬拒（REQUIRED_INVENTORY_ITEM_MISSING）且不留任何日志，实机 19679 因此静默关窗。
+		// The accept face carries no inventory gate: the axis matches the native table lane, whose
+		// adjudication never reads it. The former typed hard rejection was silent (live 19679).
 		QuestMetadata metadata = metadataFromXml("""
 			<metadata name="inventory" display-name-id="1" min-level="1" max-level="99" category="TASK">
 			  <races><race id="ELYOS"/></races>
@@ -384,8 +389,8 @@ class PlayerQuestStartEligibilityPortTest {
 		QuestStartEligibility result = port(player(10), Map.of(987654, metadata))
 			.snapshot(PLAYER_ID, 987654, new QuestEvent.LevelUp());
 
-		assertFalse(result.eligible());
-		assertEquals("REQUIRED_INVENTORY_ITEM_MISSING", result.reason());
+		assertTrue(result.eligible(), () -> "declared inventory items must not gate acquisition: "
+			+ result.reason());
 	}
 
 	@Test
