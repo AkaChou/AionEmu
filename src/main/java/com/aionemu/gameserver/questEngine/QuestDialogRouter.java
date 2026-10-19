@@ -287,89 +287,46 @@ final class QuestDialogRouter {
 					// window aimed at a collect object makes the client fail to load it.
 					return true;
 				}
-				// 右键开门（TalkEventHandler.onTalk → dialogId=-1, questId=0）。客户端任务对话树把
-				// NPC 的入口分成两相：先「可接取任务」相（客户端页 1011 的入口按钮 → 页 4「领取」），
-				// 全部领完后才回落「进行中任务」相（页 4 上客户端本地切页）；原版对话平面
-				// （FUN_180c474b0）只在页 0/10 的事件里切阶段页，页 4/1011 上的动作由
-				// User::OnHyperlinkAction 按「领取中任务」与 NPC 可接清单受理。服务端开门因此按同一
-				// 结构编排：可交付（REWARD）任务 → 本 NPC 仍在发放的接取行 → 进行中（START）任务。
-				// 未接取的行原样重放进接取面（接取资格与入口页全在那个面里判定）；重放全落空才进
-				// 进行中、可交付任务的阶段页。
-				// The right-click open: the client dialog tree offers the npc's quests in two phases —
-				// acquirable rows first (client page 1011 → page 4), the live rows only after they are
-				// all taken. The retail dialog plane switches stage pages only on page 0/10 events, and
-				// accept-page acts are gated by the acquiring slot and the npc's acquirable list, so the
-				// server opens in the same structure: deliverable rows, then the rows this npc still
-				// offers, then live rows.
-				// 任务行（31）已由客户端选中具体任务、自带任务上下文，不属于开门动作；只把 -1/26 与
-				// 页内导航动作当开门相位处理。
-				// A row selection (31) carries its own quest context; only -1/26 and page acts are opens.
-				boolean npcQuestDraft = env.getDialogId() == -1 || env.getDialogId() == 26;
-				if (npcQuestDraft) {
-					String acquireKind = acquireFaceVerdict(player, npc, event, env.getDialogId());
-					if (acquireKind != null) {
-						log.debug(I18n.get("log.quest_engine.open_door_acquire_face", player.getName(), npcId,
-							env.getDialogId(), acquireKind));
-						return true;
+				// 领取中任务的接取页动作（页 4/1011，动作 id = 页 id）：原版 User::OnHyperlinkAction 先按
+				// 「questId == questIdAcquiring」受理，再做可接清单判定。用领取中槽位补上任务上下文后
+				// 按该任务重派发同一动作（入口页/接取窗由各族的接取面答页）。
+				// An accept-page act (page 4/1011, act id = page id) for the npc's acquiring slot: retail
+				// admits it through questIdAcquiring first, then re-checks the offered list.
+				if (requestedOwner == 0 && npc != null
+						&& QuestDialogAction.isSelectionContinuationAction(env.getDialogId())) {
+					int acquiringQuestId = player.getNpcQuestDialogAcquiringQuestId(npc.getObjectId());
+					if (acquiringQuestId > 0
+							&& engine.isQuestReceivableAt(player, npcId, acquiringQuestId)) {
+						if (engine.onDialog(new QuestEnv(npc, player, acquiringQuestId, env.getDialogId()))) {
+							env.setQuestId(acquiringQuestId);
+							return true;
+						}
 					}
 				}
-				List<QuestState> openDoorReplay = new ArrayList<>();
-				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
-					if (state.getStatus() == QuestStatus.REWARD) {
-						openDoorReplay.add(state);
-					}
-				}
-				boolean liveQuestOnNpc = false;
-				for (QuestState state : player.getQuestStateList().getAllQuestState()) {
-					if (state.getStatus() == QuestStatus.START) {
-						openDoorReplay.add(state);
-						liveQuestOnNpc |= ownsQuestAtNpc(state.getQuestId(), npcId);
-					}
-				}
-				if (npcQuestDraft && liveQuestOnNpc) {
-					// 进行中任务占着 NPC 对话 ⇒ 本 NPC 的可接取相已在客户端本地翻过后被再次请求：
-					// 这是原版「非领取中任务、也不在可接清单」的同一形态，只留日志不推进（客户端停留
-					// 在当前页，不会 load fail）。
-					// The npc's live quest already claimed the dialog tree: a second ask for the acquire
-					// phase on this npc is the retail "neither acquiring nor offered" shape.
-					log.debug(I18n.get("log.quest_engine.open_door_acquire_face", player.getName(), npcId,
-						env.getDialogId(), "ALREADY_CLAIMED"));
-					return true;
-				}
-				for (QuestState state : openDoorReplay) {
-					if (engine.onDialog(new QuestEnv(npc, player, state.getQuestId(), env.getDialogId()))) {
-						env.setQuestId(state.getQuestId());
-						return true;
-					}
-				}
-			// 领取中任务的接取页动作（页 4/1011，动作 id = 页 id）：原版 User::OnHyperlinkAction 先按
-			// 「questId == questIdAcquiring」受理，再做可接清单判定。用领取中槽位补上任务上下文后
-			// 按该任务重派发同一动作（入口页/接取窗由各族的接取面答页）。
-			// An accept-page act (page 4/1011, act id = page id) for the npc's acquiring slot: retail
-			// admits it through questIdAcquiring first, then re-checks the offered list.
-			if (requestedOwner == 0 && npc != null
-					&& QuestDialogAction.isSelectionContinuationAction(env.getDialogId())) {
-				int acquiringQuestId = player.getNpcQuestDialogAcquiringQuestId(npc.getObjectId());
-				if (acquiringQuestId > 0
-						&& engine.isQuestReceivableAt(player, npcId, acquiringQuestId)) {
-					if (engine.onDialog(new QuestEnv(npc, player, acquiringQuestId, env.getDialogId()))) {
-						env.setQuestId(acquiringQuestId);
-						return true;
-					}
-				}
-			}
-				// 客户端任务对话树：入口页的动作（1011，或全局页 4）是<b>页内导航</b>——客户端本地翻到
-				// 页 4「领取」/「正在领取」，服务端回发同页只会把客户端重新放到同一页。原版
-				// User::OnHyperlinkAction 对页 4/1011 的再接取页动作按「领取中任务」受理，「打开」页不是
-				// 接取页本身，因此这里只留日志不推进（未接取行出现第二支路时同样零发页）。上面已开过
-				// 接取入口页时，此支路即「关闭领取对话」的收尾。
-				// The client task dialog tree: the entry-page act (1011 or the global page 4) is page-local —
-				// the client turns to page 4 itself, and echoing the same page just re-renders it (the dead
-				// click on multi-quest npcs). Only a page-4 act with the acquiring slot is accepted.
+				// 客户端任务对话树的页内导航动作（页 4/1011 及其主线/子页）：客户端本地翻页，
+				// 服务端不回发同页（回发即把客户端重新放到同一页，多任务 NPC 上表现为「点了没反应」）。
+				// Page-local navigation acts (page 4/1011 and its line/sub-pages): the client turns the
+				// page itself; echoing it re-renders the same page (the dead click on multi-quest npcs).
 				if (QuestDialogAction.isSelectionContinuationAction(env.getDialogId())) {
 					log.debug(I18n.get("log.quest_engine.open_door_acquire_face", player.getName(), npcId,
 						env.getDialogId(), "PAGE_LOCAL"));
 					return true;
+				}
+				// 普通 NPC 的点选/打开（-1/26）打开「任务列表」：列表由客户端本地渲染（页 10），
+				// 服务端不认领、不发任何任务页——只有玩家点列表里的具体任务行（31）才带任务上下文
+				// 进入该任务的对话。旧实现在开门上做接取相/进行中相编排，导致点 NPC 直接进入某个
+				// 任务的对话、看不到列表。任务物件（quest_use_item 等）例外，走下面的物件重放。
+				// A plain npc click/open (-1/26) shows the client-rendered task list (page 10) and is
+				// not claimed: only a row selection (31) carries a quest context into that dialog. The
+				// old open-phase orchestration made the click jump into one quest. Quest objects are
+				// exempt and keep the object replay below.
+				if (env.getDialogId() == QuestDialogAction.USE_OBJECT.id()
+						|| env.getDialogId() == 26) {
+					boolean questObject = npc.getAi2() instanceof com.aionemu.gameserver.ai.QuestItemNpcAI2
+						|| npc.getAi2() instanceof com.aionemu.gameserver.ai.quests.QuestStartItemNpcAi2;
+					if (!questObject) {
+						return false;
+					}
 				}
 				// 无任务上下文的**物件**打开（-1 = USE_OBJECT / 1001 = QUEST_SELECT）：按物件反查
 				// SimpleTalk 接取行重放——原版物件接取 = USE_OBJECT 自环 → 携带 questId 的接取入口页。
@@ -446,54 +403,6 @@ final class QuestDialogRouter {
 			return false;
 		}
 		return false;
-	}
-
-	/**
-	 * 开门相位 1：NPC 的可接取相。本 NPC 上仍在发放（原版 {@code CanAcquireQuest == 2}，与附近任务
-	 * 列表同一判定）的接取行按客户端入口原样重放进接取面，由该面下发携带任务上下文的入口页
-	 * （页 1011 信页 / 页 4 接取窗），并在页 4 打开时登记「领取中任务」槽位。
-	 * <p>
-	 * 返回非 null 表示开门已由接取相处理（值为判定类型，供调试日志）；null = 该 NPC 没有可接取的
-	 * 路由行，开门交给后续相位（可交付 / 进行中任务）。
-	 * <p>
-	 * Open phase 1 (the npc's acquirable phase): rows this npc still offers (the same verdict as the
-	 * nearby list, retail {@code CanAcquireQuest == 2}) are replayed into their acquire faces, which
-	 * answer with the task-carrying entry page and record the acquiring slot on page 4.
-	 *
-	 * @return 判定类型，或 null（无接取行）/ a verdict label, or null when the npc offers nothing
-	 */
-	private String acquireFaceVerdict(Player player, Npc npc, QuestEvent event, int dialogId) {
-		List<Integer> candidates = new ArrayList<>(engine.receivableQuestIdsAtNpc(player, npc.getNpcId()));
-		for (int questId : candidates) {
-			// 各族接取面只认「本族接取 NPC」的问询动作（Hunt 族的 31/26 即入口页）；打开（-1）在
-			// Talk 族是物件自环，非物件 NPC 由路由在开门相位另行处理。
-			// Each family's acquire face serves the row's own acquire npc; the open (-1) belongs to the
-			// object self-loop and is handled by the open phase for plain npcs.
-			int faceAct = dialogId == -1 ? QuestDialogAction.QUEST_SELECT.id() : dialogId;
-			if (engine.onDialog(new QuestEnv(npc, player, questId, faceAct))) {
-				return "ACQUIRE_FACE:" + questId;
-			}
-		}
-		return candidates.isEmpty() ? null : "UNCLAIMED:" + candidates;
-	}
-
-	/**
-	 * 该任务是否以当前 NPC 为接取 / 交付 / 中继节点（开门相位里的「本 NPC 的任务」）。
-	 * Whether the quest is served at this npc as an acquire, hand-in or relay node.
-	 */
-	private static boolean ownsQuestAtNpc(int questId, int npcId) {
-		SimpleTalkHandler talk = SimpleTalkHandler.instance();
-		if (talk.routes(questId) && (talk.acquireNpcs(questId).contains(npcId)
-				|| talk.rewardNpcs(questId).contains(npcId))) {
-			return true;
-		}
-		SimpleHuntHandler hunt = SimpleHuntHandler.instance();
-		if (hunt.routes(questId) && (hunt.acquireNpcs(questId).contains(npcId)
-				|| hunt.rewardNpcs(questId).contains(npcId))) {
-			return true;
-		}
-		return talk.routes(questId) && talk.relaysForNpc(npcId).stream()
-			.anyMatch(relay -> relay.questId() == questId);
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.questEngine.tablelane;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
@@ -13,16 +14,15 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 
 /**
- * 打开（-1）重放顺序：可交付（REWARD）任务优先于进行中（START）任务。
- * <p>2026-10-06 实机 14111：NPC 203126（Abolos）上 1155（SimpleCollectItem，START，questId 较小）
- * 先认领开门、下发两参通用页 10（questId=0）并短路重放循环，遮挡 14111（SimpleHunt，REWARD）的
- * 奖励窗重放——客户端任务列表不渲染交付行（19683 教训），任务就此不可交。修复：引擎开门重放
- * 分两遍（QuestEngine.onDialog，先 REWARD 后 START）；本门禁锁定该顺序。</p>
- * <p>Open-door (-1) replay order: deliverable (REWARD) quests before live (START) quests.
- * Live 14111: 1155 — a live collect quest with a smaller id on the same npc — claimed the open
- * first, sent the generic page 10 and short-circuited the replay, shadowing 14111's reward window;
- * the client task list never renders a hand-in row, so the quest became undeliverable. The engine
- * now replays REWARD before START (QuestEngine.onDialog); this gate locks that order.</p>
+ * 交付可达性：同一 NPC 上另有进行中任务时，点 NPC 出任务列表（不认领、不发任务页），
+ * 点列表里的交付行仍能打开该任务的奖励窗。
+ * <p>2026-10-06 实机 14111：NPC 203126（Abolos）上 1155（SimpleCollectItem，START）与 14111
+ * （SimpleHunt，REWARD）并存，旧实现让开门被某个任务认领并直接弹出该任务对话（2026-10-19 实机：
+ * 点 NPC 看不到任务列表）。修复后开门交回客户端任务列表（页 10），交付行走任务行（31）打开
+ * 奖励窗——本门禁锁定「开门零发页 + 交付行可达」。</p>
+ * <p>Deliverability: with another live quest on the same npc, the npc click opens the client task
+ * list (unclaimed, no quest page) while the hand-in row still opens the reward window. The old shape
+ * made the open jump straight into one quest's dialog, so the list never appeared (live 2026-10-19).</p>
  */
 class QuestEngineOpenDoorReplayOrderTest {
 
@@ -44,21 +44,25 @@ class QuestEngineOpenDoorReplayOrderTest {
 
 	/**
 	 * 实机数据行：1155 与 14111 同为 NPC 203126（Abolos）的接取/交付任务（原版表
-	 * {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleHunt.xml}）。1155 为进行中且 questId
-	 * 较小，14111 可交付——开门必须命中 14111 的奖励窗（页 5 带 questId），而不是 1155 的通用页 10。
-	 * Live rows: 1155 and 14111 both acquire and hand in at npc 203126 (Abolos) per the retail table.
-	 * 1155 is live with the smaller id and 14111 is deliverable — the open must reach 14111's reward
-	 * window (page 5 with the quest context), not 1155's generic page 10.
+	 * {@code Quest_SimpleCollectItem.xml} / {@code Quest_SimpleHunt.xml}）。1155 进行中、14111 可交付。
+	 * Live rows: 1155 and 14111 both acquire and hand in at npc 203126 (Abolos); 1155 is live and
+	 * 14111 is deliverable.
 	 */
 	@Test
-	void openDoorReplaysTheDeliverableQuestBeforeAnEarlierLiveOne() {
+	void npcClickShowsTheTaskListAndTheHandInRowStillReachesTheRewardWindow() {
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.start(player, 1155);
 		NativeTalkFixture.add(player, 14111, QuestStatus.REWARD, 73);
 		QuestEngine engine = new QuestEngine();
 
-		assertTrue(engine.onDialog(NativeTalkFixture.dialog(player, 203126, 0, -1)),
-			"开门必须被可交付任务认领 / the open must be claimed by the deliverable quest");
+		NativeTalkFixture.clearPackets(player);
+		assertFalse(engine.onDialog(NativeTalkFixture.dialog(player, 203126, 0, -1)),
+			"点 NPC 不被任务引擎认领（客户端渲染任务列表） / the open stays unclaimed for the task list");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "点 NPC 零任务页");
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(engine.onDialog(NativeTalkFixture.dialog(player, 203126, 14111, 31)),
+			"交付行必须能打开奖励窗 / the hand-in row reaches the reward window");
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, 14111);
 	}
 }

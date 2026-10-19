@@ -40,20 +40,21 @@ class QuestOpenDoorAcquirePhaseTest {
 	private static final int FREE_HUNT_QUEST = 2354;
 
 	@Test
-	void liveTalkRowDoesNotHideTheNpcsAcquirePhase() {
-		// 1174 进行中（页 4 在客户端可见）：开门先给同 NPC 仍在发放的 1173 入口页。
-		// 1174 live (page 4 visible on the client): the open answers 1173's entry page first.
+	void npcClickOpensTheTaskListNotAQuestDialog() {
+		// 点 NPC（-1）打开客户端本地渲染的任务列表（页 10）：服务端不认领、不发任何任务页；
+		// 只有一个任务进行中也不能把单条任务对话直接弹出来（列表里同时有可接的 1173）。
+		// An npc click opens the client-rendered task list and is not claimed: a live quest must not
+		// make the click jump into that quest's dialog (the list also shows the acquirable 1173).
 		Player player = NativeTalkFixture.player();
 		NativeTalkFixture.start(player, TALK_QUEST);
 		Npc roseino = NativeTalkFixture.npc(ROSEINO);
 		QuestEngine engine = new QuestEngine();
 
 		NativeTalkFixture.clearPackets(player);
-		assertTrue(engine.onDialog(new QuestEnv(roseino, player, 0, -1)), "开门必须由接取相认领");
-		NativeTalkFixture.assertOnlyDialogPageWithQuest(player,
-			NativeTalkFixture.clientEntryPage(HUNT_QUEST), HUNT_QUEST);
+		assertFalse(engine.onDialog(new QuestEnv(roseino, player, 0, -1)), "点 NPC 不被任务引擎认领");
+		assertTrue(NativeTalkFixture.dialogPages(player).isEmpty(), "点 NPC 不得下发任何任务页");
 		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(TALK_QUEST).getStatus(),
-			"开门不得推进进行中的任务");
+			"点 NPC 不得推进进行中的任务");
 	}
 
 	@Test
