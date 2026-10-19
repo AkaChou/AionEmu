@@ -40,6 +40,26 @@ class QuestOpenDoorAcquirePhaseTest {
 	private static final int FREE_HUNT_QUEST = 2354;
 
 	@Test
+	void npcClickOpensTheHandInWindowWhenARowIsDeliverable() {
+		// 1173 可交付、1174 进行中（2026-10-19 实机复验）：点 NPC（-1）必须直接开 1173 的奖励窗
+		// （客户端任务列表不渲染待交付行，19683），且不得把进行中的 1174 推进/结算。
+		// 1173 is deliverable while 1174 is live (live-verified 2026-10-19): the click must open 1173's
+		// reward window (the client list never renders hand-in rows, 19683), never settling 1174.
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.start(player, TALK_QUEST);
+		QuestState ready = NativeTalkFixture.add(player, HUNT_QUEST, QuestStatus.REWARD, 0);
+		Npc roseino = NativeTalkFixture.npc(ROSEINO);
+		QuestEngine engine = new QuestEngine();
+
+		NativeTalkFixture.clearPackets(player);
+		assertTrue(engine.onDialog(new QuestEnv(roseino, player, 0, -1)), "可交付行必须由开门认领");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 5, HUNT_QUEST);
+		assertEquals(QuestStatus.REWARD, ready.getStatus(), "交付行走奖励窗（状态不变）");
+		assertEquals(QuestStatus.START, player.getQuestStateList().getQuestState(TALK_QUEST).getStatus(),
+			"进行中的任务不得被开门推进");
+	}
+
+	@Test
 	void npcClickOpensTheTaskListNotAQuestDialog() {
 		// 点 NPC（-1）打开客户端本地渲染的任务列表（页 10）：服务端不认领、不发任何任务页；
 		// 只有一个任务进行中也不能把单条任务对话直接弹出来（列表里同时有可接的 1173）。

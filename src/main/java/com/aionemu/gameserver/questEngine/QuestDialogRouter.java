@@ -312,19 +312,40 @@ final class QuestDialogRouter {
 						env.getDialogId(), "PAGE_LOCAL"));
 					return true;
 				}
-				// 普通 NPC 的点选/打开（-1/26）打开「任务列表」：列表由客户端本地渲染（页 10），
-				// 服务端不认领、不发任何任务页——只有玩家点列表里的具体任务行（31）才带任务上下文
-				// 进入该任务的对话。旧实现在开门上做接取相/进行中相编排，导致点 NPC 直接进入某个
-				// 任务的对话、看不到列表。任务物件（quest_use_item 等）例外，走下面的物件重放。
-				// A plain npc click/open (-1/26) shows the client-rendered task list (page 10) and is
-				// not claimed: only a row selection (31) carries a quest context into that dialog. The
-				// old open-phase orchestration made the click jump into one quest. Quest objects are
+				// 普通 NPC 的点选/打开（-1/26）：客户端任务列表不渲染待交付行（19683 教训），所以
+				// **可交付（REWARD）任务必须先被重放**——原版「和头上有交付标记的 NPC 对话 → 交付窗」；
+				// 没有可交付任务时交回客户端任务列表（页 10）。可接取/进行中的任务一律不参与开门：
+				// 它们只由玩家点列表里的任务行（31）进入（旧实现重放进行中行，点 NPC 就直接进了某个任务）。
+				// 任务物件（quest_use_item 等）例外，走下面的物件重放。
+				// A plain npc click/open (-1/26): the client task list never renders hand-in rows (the
+				// 19683 lesson), so deliverable (REWARD) quests must be replayed first — the retail
+				// "talk to the npc with the hand-in marker → completion window". With nothing to hand in
+				// the click falls back to the client-rendered list (page 10). Acquirable and live rows
+				// never claim the open; they are entered from the list row (31) only. Quest objects are
 				// exempt and keep the object replay below.
 				if (env.getDialogId() == QuestDialogAction.USE_OBJECT.id()
 						|| env.getDialogId() == 26) {
-					boolean questObject = npc.getAi2() instanceof com.aionemu.gameserver.ai.QuestItemNpcAI2
-						|| npc.getAi2() instanceof com.aionemu.gameserver.ai.quests.QuestStartItemNpcAi2;
+					// AI 引擎未装配（单测/早期启动）时按普通 NPC 处理：getAi2 会抛异常。
+					// Without an AI engine (unit tests, early boot) treat the npc as plain: getAi2 throws.
+					boolean questObject;
+					try {
+						questObject = npc.getAi2() instanceof com.aionemu.gameserver.ai.QuestItemNpcAI2
+							|| npc.getAi2() instanceof com.aionemu.gameserver.ai.quests.QuestStartItemNpcAi2;
+					} catch (RuntimeException noAiEngine) {
+						questObject = false;
+					}
 					if (!questObject) {
+						for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+							if (state.getStatus() != QuestStatus.REWARD
+									|| !ownsQuestAtNpc(state.getQuestId(), npcId)) {
+								continue;
+							}
+							if (engine.onDialog(new QuestEnv(npc, player, state.getQuestId(),
+									env.getDialogId()))) {
+								env.setQuestId(state.getQuestId());
+								return true;
+							}
+						}
 						return false;
 					}
 				}
@@ -403,6 +424,32 @@ final class QuestDialogRouter {
 			return false;
 		}
 		return false;
+	}
+
+	/**
+	 * 该任务是否以当前 NPC 为接取 / 交付 / 中继节点（开门相位里的「本 NPC 的任务」）。
+	 * Whether the quest is served at this npc as an acquire, hand-in or relay node.
+	 */
+	private static boolean ownsQuestAtNpc(int questId, int npcId) {
+		SimpleTalkHandler talk = SimpleTalkHandler.instance();
+		if (talk.routes(questId) && (talk.acquireNpcs(questId).contains(npcId)
+				|| talk.rewardNpcs(questId).contains(npcId))) {
+			return true;
+		}
+		SimpleHuntHandler hunt = SimpleHuntHandler.instance();
+		if (hunt.routes(questId) && (hunt.acquireNpcs(questId).contains(npcId)
+				|| hunt.rewardNpcs(questId).contains(npcId))) {
+			return true;
+		}
+		Integer serialAcquire = SimpleSerialHuntHandler.instance().acquireNpc(questId);
+		Integer serialReward = SimpleSerialHuntHandler.instance().rewardNpc(questId);
+		if (SimpleSerialHuntHandler.instance().routes(questId)
+				&& ((serialAcquire != null && serialAcquire == npcId)
+					|| (serialReward != null && serialReward == npcId))) {
+			return true;
+		}
+		return talk.routes(questId) && talk.relaysForNpc(npcId).stream()
+			.anyMatch(relay -> relay.questId() == questId);
 	}
 
 	/**
