@@ -13,6 +13,8 @@ import com.aionemu.gameserver.model.templates.item.actions.EnchantStigmaAction;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -98,6 +100,11 @@ public class CM_ENCHANMENT_STONES extends AionClientPacket {
 			} else {
 				// 强化石。 / Enchant Stone.
 				if (action.canAct(player, manastone, targetItem)) {
+					// 强化石在真端走 User__DoEnchantItem，同为物品使用事件（event 5）的派发点；
+					// 任务在强化窗口用石头时也必须推进（成长任务 19678/29678 的「强化 1 次」步）。
+					// Retail dispatches event 5 from User__DoEnchantItem too, so quests that count
+					// an enchant-stone use must advance from the enchant window as well.
+					QuestEngine.getInstance().onItemUseEvent(new QuestEnv(null, player, 0, 0), manastone);
 					Item supplement = player.getInventory().getFirstItemByItemId(supplementUniqueId);
 					if (supplement != null) {
 						if (supplement.getItemId() / 100000 != 1661) {

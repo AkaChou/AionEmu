@@ -65321,7 +65321,7 @@
     <stats hp_regen="4500000" maxHp="1500000" pdef="2955" walk_speed="0" mresist="2087" mboost_resist="2201" run_speed="0" accuracy="93" main_hand_attack="5250" main_hand_crit_rate="150" mdef="639" mboost="0" parry="3804" crit_spell="109" maxXp="120000000" block="0" main_hand_accuracy="4174" power="2" evasion="0" run_speed_fight="0"/>
     <bound_radius side="1.0" upper="1.0" front="1.0"/>
   </npc_template>
-<npc_template name_desc="World_event_egypt_kingmonster_01" attack_range="2" npc_type="ATTACKABLE" race="EVENT_YEAR" level="75" attack_rate="1000" rating="ELITE" ai="summoner" hpgauge_level="13" type="MONSTER" name_id="2326359" attack_delay="2205" npc_id="247233" sensory_range="18" tribe="MONSTER" name="Yanubis" rank="EXPERT" height="1.3">
+<npc_template name_desc="World_event_egypt_kingmonster_01" attack_range="2" npc_type="ATTACKABLE" race="EVENT_YEAR" level="75" attack_rate="1000" rating="ELITE" ai="summoner" hpgauge_level="20" type="MONSTER" name_id="2326359" attack_delay="2205" npc_id="247233" sensory_range="18" tribe="MONSTER" name="Yanubis" rank="EXPERT" height="1.3">
     <stats hp_regen="0" maxHp="1000000" pdef="1325" walk_speed="1.215" mresist="1978" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="600" main_hand_crit_rate="134" mdef="546" mboost="0" parry="0" crit_spell="97" maxXp="400000000" block="0" main_hand_accuracy="3452" power="1232" evasion="2709" run_speed_fight="8"/>
     <equipment>
       <item>101501688</item>

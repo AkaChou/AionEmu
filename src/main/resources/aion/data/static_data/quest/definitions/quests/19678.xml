@@ -39,7 +39,7 @@
     <dialog type="NPC_START" npc-id="806698" source="unaccepted" target="s0" selection-sources="unaccepted s0 s1" start-page="SELECT_NONE"/>
     <transition source="s0" target="s1">
       <event>
-        <get-item item-id="166020000"/>
+        <use-item item-id="166020000"/>
       </event>
       <actions>
         <set-variable field="var0" value="1"/>

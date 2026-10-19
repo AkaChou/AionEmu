@@ -4227,17 +4227,6 @@
 				        <spot h="60" z="565.8825" y="1511.643" x="1532.5812"/>
 				    </spawn>
 				</spawn_map>
-				<!-- Iluma -->
-				<spawn_map map_id="210100000">
-				    <!-- Yanubis -->
-				    <spawn npc_id="247233" respawn_time="900">
-				        <spot h="106" z="330.0848" y="1553.2382" x="1401.4049"/>
-				    </spawn>
-				    <!-- Yanubis Portal -->
-				    <spawn npc_id="835556">
-				        <spot h="106" z="330.0869" y="1553.9875" x="1400.6221"/>
-				    </spawn>
-				</spawn_map>
 				<!-- Pandaemonium -->
 				<spawn_map map_id="120010000">
 					<!-- Ramsus -->
@@ -4259,17 +4248,6 @@
 					<!-- Egypt Desert -->
 				    <spawn npc_id="835555">
 				        <spot h="92" z="204.5872" y="1356.1848" x="1275.4062"/>
-				    </spawn>
-				</spawn_map>
-				<!-- Norsvold -->
-				<spawn_map map_id="220110000">
-				    <!-- Yanubis -->
-				    <spawn npc_id="247233" respawn_time="900">
-				        <spot h="91" z="190.3894" y="2157.9856" x="1768.2303"/>
-				    </spawn>
-				    <!-- Yanubis Portal -->
-				    <spawn npc_id="835556">
-				        <spot h="92" z="190.37524" y="2159.1526" x="1768.0038"/>
 				    </spawn>
 				</spawn_map>
 			</spawns>
