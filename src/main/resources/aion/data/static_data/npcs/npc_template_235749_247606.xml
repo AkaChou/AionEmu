@@ -7415,7 +7415,7 @@
     </equipment>
     <bound_radius side="0.93" upper="1.375" front="1.33"/>
   </npc_template>
-<npc_template name_desc="IDLF1_F_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318538" attack_delay="1900" npc_id="236984" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
+<npc_template name_desc="IDLF1_F_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318538" attack_delay="1900" npc_id="236984" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
     <stats hp_regen="35430" maxHp="70860" pdef="755" walk_speed="0.82" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1763" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>101700008</item>
@@ -7423,14 +7423,14 @@
     </equipment>
     <bound_radius side="0.93" upper="1.375" front="1.33"/>
   </npc_template>
-<npc_template name_desc="IDLF1_F_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318539" attack_delay="2100" npc_id="236985" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
+<npc_template name_desc="IDLF1_F_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318539" attack_delay="2100" npc_id="236985" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
     <stats hp_regen="45851" maxHp="91701" pdef="934" walk_speed="2" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1435" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>100000021</item>
     </equipment>
     <bound_radius side="1.1" upper="1.1" front="1.6"/>
   </npc_template>
-<npc_template name_desc="IDLF1_F_DBrownieWSc_50_Ae_SP" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318540" attack_delay="1900" npc_id="236986" sensory_range="10" tribe="BROWNIE" name="IDLF1_F_DBrownieWSc_50_Ae_SP" rank="SEASONED" height="1.1">
+<npc_template name_desc="IDLF1_F_DBrownieWSc_50_Ae_SP" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318540" attack_delay="1900" npc_id="236986" sensory_range="10" tribe="BROWNIE" name="IDLF1_F_DBrownieWSc_50_Ae_SP" rank="SEASONED" height="1.1">
     <stats hp_regen="35430" maxHp="70860" pdef="755" walk_speed="2" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1763" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>101700009</item>
@@ -7483,7 +7483,7 @@
     </equipment>
     <bound_radius side="0.93" upper="1.375" front="1.33"/>
   </npc_template>
-<npc_template name_desc="IDLF1_H_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318548" attack_delay="1900" npc_id="236994" sensory_range="13" tribe="BROWNIE" name="IDLF1_H_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
+<npc_template name_desc="IDLF1_H_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318548" attack_delay="1900" npc_id="236994" sensory_range="13" tribe="BROWNIE" name="IDLF1_H_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
     <stats hp_regen="35430" maxHp="70860" pdef="755" walk_speed="0.82" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1763" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>101700008</item>
@@ -7491,14 +7491,14 @@
     </equipment>
     <bound_radius side="0.93" upper="1.375" front="1.33"/>
   </npc_template>
-<npc_template name_desc="IDLF1_H_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318549" attack_delay="2100" npc_id="236995" sensory_range="13" tribe="BROWNIE" name="IDLF1_H_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
+<npc_template name_desc="IDLF1_H_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318549" attack_delay="2100" npc_id="236995" sensory_range="13" tribe="BROWNIE" name="IDLF1_H_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
     <stats hp_regen="45851" maxHp="91701" pdef="934" walk_speed="2" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1435" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>100000021</item>
     </equipment>
     <bound_radius side="1.1" upper="1.1" front="1.6"/>
   </npc_template>
-<npc_template name_desc="IDLF1_H_DBrownieWSc_50_Ae_SP" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318550" attack_delay="1900" npc_id="236996" sensory_range="10" tribe="BROWNIE" name="IDLF1_H_DBrownieWSc_50_Ae_SP" rank="SEASONED" height="1.1">
+<npc_template name_desc="IDLF1_H_DBrownieWSc_50_Ae_SP" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="318550" attack_delay="1900" npc_id="236996" sensory_range="10" tribe="BROWNIE" name="IDLF1_H_DBrownieWSc_50_Ae_SP" rank="SEASONED" height="1.1">
     <stats hp_regen="35430" maxHp="70860" pdef="755" walk_speed="2" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1763" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="455786" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>101700009</item>
@@ -8003,7 +8003,7 @@
     <stats hp_regen="8213" maxHp="16426" pdef="528" walk_speed="0.75" mresist="1134" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="955" main_hand_crit_rate="39" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="58273" block="0" main_hand_accuracy="1470" power="1232" evasion="1129" run_speed_fight="4.5"/>
     <bound_radius side="1.4" upper="0.9" front="1.4"/>
   </npc_template>
-<npc_template name_desc="IDLF1_ShulackScientist_50_Ae_SP" attack_range="16" npc_type="NON_ATTACKABLE" race="SHULACK" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="MONSTER" name_id="318998" attack_delay="2300" npc_id="237074" sensory_range="13" tribe="XDRAKAN" name="IDLF1_ShulackScientist_50_Ae_SP" rank="SEASONED" height="2.0">
+<npc_template name_desc="IDLF1_ShulackScientist_50_Ae_SP" attack_range="16" npc_type="ATTACKABLE" race="SHULACK" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="MONSTER" name_id="318998" attack_delay="2300" npc_id="237074" sensory_range="13" tribe="XDRAKAN" name="IDLF1_ShulackScientist_50_Ae_SP" rank="SEASONED" height="2.0">
     <stats hp_regen="29107" maxHp="58214" pdef="346" walk_speed="1.037" mresist="1039" mboost_resist="0" run_speed="8" accuracy="2370" main_hand_attack="1280" main_hand_crit_rate="18" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="344918" block="0" main_hand_accuracy="1470" power="1232" evasion="1280" run_speed_fight="6"/>
     <equipment>
       <item>100000781</item>
@@ -8060,7 +8060,7 @@
     </equipment>
     <bound_radius side="0.6" upper="1.69" front="0.6"/>
   </npc_template>
-<npc_template name_desc="IDLF1_F_NM_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="319218" attack_delay="1900" npc_id="237083" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_NM_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
+<npc_template name_desc="IDLF1_F_NM_DBrownieMScCra_50_Ae_SP" attack_range="20" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="319218" attack_delay="1900" npc_id="237083" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_NM_DBrownieMScCra_50_Ae_SP" rank="SEASONED" height="1.375">
     <stats hp_regen="49208" maxHp="98417" pdef="854" walk_speed="0.82" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1990" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="607715" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>101700008</item>
@@ -8068,7 +8068,7 @@
     </equipment>
     <bound_radius side="0.93" upper="1.375" front="1.33"/>
   </npc_template>
-<npc_template name_desc="IDLF1_F_NM_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="319219" attack_delay="2100" npc_id="237084" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_NM_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
+<npc_template name_desc="IDLF1_F_NM_MBrownieFWaCra_50_Ae_SP" attack_range="2" npc_type="ATTACKABLE" race="BROWNIE" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="319219" attack_delay="2100" npc_id="237084" sensory_range="13" tribe="BROWNIE" name="IDLF1_F_NM_MBrownieFWaCra_50_Ae_SP" rank="SEASONED" height="1.1">
     <stats hp_regen="63682" maxHp="127363" pdef="1057" walk_speed="2" mresist="1159" mboost_resist="0" run_speed="7" accuracy="2370" main_hand_attack="1619" main_hand_crit_rate="62" mdef="0" mboost="0" parry="0" crit_spell="32" maxXp="607715" block="0" main_hand_accuracy="1570" power="1232" evasion="1004" run_speed_fight="5"/>
     <equipment>
       <item>100000021</item>
@@ -8982,7 +8982,7 @@
     <stats hp_regen="1600000" maxHp="3200000" pdef="380" walk_speed="0" mresist="1083" mboost_resist="1500" run_speed="0" accuracy="2370" main_hand_attack="2827" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="1574606" block="0" main_hand_accuracy="1870" power="1232" evasion="1255" run_speed_fight="0"/>
     <bound_radius side="1.5" upper="3.5" front="2.0"/>
   </npc_template>
-<npc_template name_desc="IDDF3_T_Messenger_Soul_50_Ae_SP" npc_type="NON_ATTACKABLE" race="BROWNIE" level="50" rating="NORMAL" ai="akhal_phantasm" hpgauge_level="12" type="RAID_MONSTER" name_id="337247" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="237276" sensory_range="50" tribe="IDDF3_DRAGON_T_BOSS" name="Akhal's Phantasm" rank="DISCIPLINED" height="3.5">
+<npc_template name_desc="IDDF3_T_Messenger_Soul_50_Ae_SP" npc_type="ATTACKABLE" race="BROWNIE" level="50" rating="NORMAL" ai="akhal_phantasm" hpgauge_level="12" type="RAID_MONSTER" name_id="337247" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="237276" sensory_range="50" tribe="IDDF3_DRAGON_T_BOSS" name="Akhal's Phantasm" rank="DISCIPLINED" height="3.5">
     <stats hp_regen="0" maxHp="180000" pdef="380" walk_speed="1.07" mresist="1039" mboost_resist="1500" run_speed="6" accuracy="679" main_hand_attack="2464" main_hand_crit_rate="18" mdef="0" mboost="0" parry="0" crit_spell="18" maxXp="0" block="0" main_hand_accuracy="1570" power="278" evasion="1255" run_speed_fight="8"/>
     <bound_radius side="1.5" upper="3.5" front="2.0"/>
   </npc_template>
@@ -59084,7 +59084,7 @@
     <stats hp_regen="55000" maxHp="55000" pdef="1245" walk_speed="0" mresist="1525" mboost_resist="0" run_speed="0" accuracy="1000" main_hand_attack="1254" main_hand_crit_rate="33" mdef="1135" mboost="0" parry="0" crit_spell="24" maxXp="2941922" block="0" main_hand_accuracy="2379" power="100" evasion="1241" run_speed_fight="0"/>
     <bound_radius side="1.0" upper="1.0" front="1.0"/>
   </npc_template>
-<npc_template name_desc="IDStation_SP_Hugen_NM_58An" attack_range="3" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="53" attack_rate="1000" title_id="323629" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="323274" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246131" sensory_range="15" tribe="DRAGON" name="IDStation_SP_Hugen_NM_58An" rank="SEASONED" height="25.47">
+<npc_template name_desc="IDStation_SP_Hugen_NM_58An" attack_range="3" npc_type="ATTACKABLE" race="CONSTRUCT" level="53" attack_rate="1000" title_id="323629" rating="NORMAL" ai="aggressive" hpgauge_level="5" type="MONSTER" name_id="323274" attack_delay="2415" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246131" sensory_range="15" tribe="DRAGON" name="IDStation_SP_Hugen_NM_58An" rank="SEASONED" height="25.47">
     <stats hp_regen="15442" maxHp="25737" pdef="1415" walk_speed="3" mresist="1230" mboost_resist="0" run_speed="3" accuracy="1000" main_hand_attack="982" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="147977" block="0" main_hand_accuracy="1636" power="100" evasion="1015" run_speed_fight="3"/>
     <bound_radius side="14.0" upper="25.47" front="18.0"/>
   </npc_template>
@@ -59750,7 +59750,7 @@
     <stats hp_regen="163436" maxHp="326872" pdef="402" walk_speed="0.6" mresist="1539" mboost_resist="0" run_speed="7" accuracy="1000" main_hand_attack="2105" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="2908815" block="0" main_hand_accuracy="2721" power="100" evasion="1982" run_speed_fight="5"/>
     <bound_radius side="2.96" upper="1.1" front="2.0"/>
   </npc_template>
-<npc_template name_desc="IDCatacombsH_SP_StDrakanFiNmd_55_Ah" attack_range="3" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="55" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="MONSTER" name_id="320452" attack_delay="1900" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246248" sensory_range="15" tribe="XDRAKAN" name="IDCatacombsH_SP_StDrakanFiNmd_55_Ah" rank="SEASONED" height="2.6">
+<npc_template name_desc="IDCatacombsH_SP_StDrakanFiNmd_55_Ah" attack_range="3" npc_type="ATTACKABLE" race="CONSTRUCT" level="55" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="MONSTER" name_id="320452" attack_delay="1900" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246248" sensory_range="15" tribe="XDRAKAN" name="IDCatacombsH_SP_StDrakanFiNmd_55_Ah" rank="SEASONED" height="2.6">
     <stats hp_regen="134056" maxHp="268112" pdef="937" walk_speed="2.23" mresist="1389" mboost_resist="0" run_speed="7" accuracy="1000" main_hand_attack="2188" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="3977863" block="0" main_hand_accuracy="3021" power="100" evasion="2312" run_speed_fight="9.2"/>
     <equipment>
       <item>100000998</item>
@@ -59802,7 +59802,7 @@
     <stats hp_regen="88723" maxHp="177445" pdef="402" walk_speed="0.6" mresist="1139" mboost_resist="0" run_speed="7" accuracy="1000" main_hand_attack="1915" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="2908815" block="0" main_hand_accuracy="2721" power="100" evasion="1784" run_speed_fight="5"/>
     <bound_radius side="2.96" upper="1.1" front="2.0"/>
   </npc_template>
-<npc_template name_desc="IDCatacombsN_SP_StDrakanFiNmd_55_Ah" attack_range="3" npc_type="NON_ATTACKABLE" race="CONSTRUCT" level="55" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="MONSTER" name_id="320533" attack_delay="1900" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246256" sensory_range="15" tribe="XDRAKAN" name="IDCatacombsN_SP_StDrakanFiNmd_55_Ah" rank="SEASONED" height="2.6">
+<npc_template name_desc="IDCatacombsN_SP_StDrakanFiNmd_55_Ah" attack_range="3" npc_type="ATTACKABLE" race="CONSTRUCT" level="55" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="MONSTER" name_id="320533" attack_delay="1900" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="246256" sensory_range="15" tribe="XDRAKAN" name="IDCatacombsN_SP_StDrakanFiNmd_55_Ah" rank="SEASONED" height="2.6">
     <stats hp_regen="72773" maxHp="145546" pdef="937" walk_speed="2.23" mresist="989" mboost_resist="0" run_speed="7" accuracy="1000" main_hand_attack="2321" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="3977863" block="0" main_hand_accuracy="3021" power="100" evasion="2081" run_speed_fight="9.2"/>
     <equipment>
       <item>100000998</item>
@@ -64480,7 +64480,7 @@
     <stats hp_regen="130" maxHp="2500" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="3.584" upper="2.485" front="1.935"/>
   </npc_template>
-<npc_template name_desc="Event_Christmas_Rudolph_King_Henchman_70_n" attack_range="2" npc_type="NON_ATTACKABLE" race="BEAST" level="70" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="2325999" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247079" sensory_range="8" tribe="AGGRESSIVESINGLEMONSTER" name="Event_Christmas_Rudolph_King_Henchman_70_n" rank="SEASONED" height="2.485">
+<npc_template name_desc="Event_Christmas_Rudolph_King_Henchman_70_n" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="70" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="2325999" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247079" sensory_range="8" tribe="AGGRESSIVESINGLEMONSTER" name="Event_Christmas_Rudolph_King_Henchman_70_n" rank="SEASONED" height="2.485">
     <stats hp_regen="0" maxHp="3" pdef="65000" walk_speed="1.03" mresist="0" mboost_resist="0" run_speed="5" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="5"/>
     <bound_radius side="3.584" upper="2.485" front="1.935"/>
   </npc_template>
@@ -64488,7 +64488,7 @@
     <stats hp_regen="130" maxHp="1500" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="0"/>
     <bound_radius side="3.584" upper="2.485" front="1.935"/>
   </npc_template>
-<npc_template name_desc="Event_Christmas_Rudolph_King_Henchman_50_n" attack_range="2" npc_type="NON_ATTACKABLE" race="BEAST" level="50" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="2326001" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247081" sensory_range="8" tribe="AGGRESSIVESINGLEMONSTER" name="Event_Christmas_Rudolph_King_Henchman_50_n" rank="SEASONED" height="2.485">
+<npc_template name_desc="Event_Christmas_Rudolph_King_Henchman_50_n" attack_range="2" npc_type="ATTACKABLE" race="BEAST" level="50" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="MONSTER" name_id="2326001" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="247081" sensory_range="8" tribe="AGGRESSIVESINGLEMONSTER" name="Event_Christmas_Rudolph_King_Henchman_50_n" rank="SEASONED" height="2.485">
     <stats hp_regen="0" maxHp="3" pdef="65000" walk_speed="1.03" mresist="0" mboost_resist="0" run_speed="5" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="5"/>
     <bound_radius side="3.584" upper="2.485" front="1.935"/>
   </npc_template>

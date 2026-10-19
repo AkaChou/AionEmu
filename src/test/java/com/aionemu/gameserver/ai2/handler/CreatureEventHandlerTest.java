@@ -99,6 +99,9 @@ class CreatureEventHandlerTest {
 
 		assertEquals(2, boundOffset);
 		assertEquals(0.2f, CreatureEventHandler.sensoryBoundOffset(new BoundRadius(2, 4, 3), 10));
+		// 全长约定已预缩放：忽略 model_scale，直接取 max*0.5。
+		// Full-length convention is pre-scaled: ignore model_scale and use max*0.5.
+		assertEquals(2f, CreatureEventHandler.sensoryBoundOffset(new BoundRadius(2, 4, 3, true), 10));
 		assertEquals(12, CreatureEventHandler.effectiveSensoryRange(10, boundOffset));
 		assertEquals(100, CreatureEventHandler.effectiveSensoryRange(99, boundOffset));
 		assertEquals(0, CreatureEventHandler.effectiveSensoryRange(0, boundOffset));

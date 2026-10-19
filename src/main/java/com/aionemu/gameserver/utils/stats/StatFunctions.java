@@ -369,6 +369,10 @@ public class StatFunctions {
 
 	public static int calculateMagicalOverTimeSkillDamage(Creature speller, Creature target, int baseDamage,
 														  SkillElement element, boolean useMagicBoost, boolean useMagicalDefense) {
+		if (element != null && element != SkillElement.NONE && target instanceof Npc npc
+			&& npc.getObjectTemplate() != null && npc.getObjectTemplate().isElementallyImmune(element)) {
+			return 0;
+		}
 		CreatureGameStats<?> sgs = speller.getGameStats();
 		CreatureGameStats<?> tgs = target.getGameStats();
 		float damage = baseDamage;
@@ -435,6 +439,12 @@ public class StatFunctions {
 
 	public static float applyMagicalDefenseModifiers(Creature attacker, Creature target, float damage,
 													 SkillElement element, boolean useMagicalDefense) {
+		// 真端 elemental_immunity_list：命中时直接免疫该元素伤害。
+		// Retail elemental_immunity_list: the element's damage is nullified.
+		if (element != null && element != SkillElement.NONE && target instanceof Npc npc
+			&& npc.getObjectTemplate() != null && npc.getObjectTemplate().isElementallyImmune(element)) {
+			return 0f;
+		}
 		float magicalDefense = 0;
 		if (useMagicalDefense) {
 			magicalDefense = target.getGameStats().getMDef().getBonus()
@@ -655,7 +665,12 @@ public class StatFunctions {
 			|| npc.getObjectTemplate() == null || npc.getObjectTemplate().getStatsTemplate() == null) {
 			return finalDamage;
 		}
-		StatEnum limitAttribute = getPveAttackRatioStat(npc.getRace());
+		// 真端 limit_attribute 是显式字段；无覆盖层时回退到按 race 推导。
+		// Retail limit_attribute is explicit; fall back to the race-derived stat without an overlay.
+		StatEnum limitAttribute = npc.getObjectTemplate().getLimitAttributeStat();
+		if (limitAttribute == null) {
+			limitAttribute = getPveAttackRatioStat(npc.getRace());
+		}
 		if (limitAttribute == null) {
 			return finalDamage;
 		}

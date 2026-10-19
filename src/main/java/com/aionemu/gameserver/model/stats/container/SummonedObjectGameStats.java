@@ -2,6 +2,7 @@ package com.aionemu.gameserver.model.stats.container;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 
 /**
  * 召唤物（如陷阱、追踪弹）的游戏属性：按比例继承主人的属性加成。
@@ -20,6 +21,10 @@ public class SummonedObjectGameStats extends NpcGameStats {
 		Stat2 stat = super.getStat(statEnum, base);
 		if (owner.getMaster() == null)
 			return stat;
+		NpcTemplate template = owner.getObjectTemplate();
+		if (template != null && template.getMasterItemBonus() != null) {
+			return MasterItemBonusApplier.apply(owner, template, statEnum, stat);
+		}
 		switch (statEnum) {
 		case BOOST_MAGICAL_SKILL:
 		case MAGICAL_ATTACK:

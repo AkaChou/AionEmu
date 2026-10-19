@@ -20469,7 +20469,7 @@
     </equipment>
     <bound_radius side="1.4" upper="2.05" front="2.7"/>
   </npc_template>
-<npc_template name_desc="IDTiamat_GodKaisinel_Avatar1" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="370536" rating="NORMAL" ai="aggressive" hpgauge_level="27" name_id="356083" attack_delay="1610" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="219488" sensory_range="60" tribe="GOD_KAISINEL" name="Kaisinel" rank="DISCIPLINED" height="14" attack_range="11">
+<npc_template name_desc="IDTiamat_GodKaisinel_Avatar1" npc_type="ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="370536" rating="NORMAL" ai="aggressive" hpgauge_level="27" name_id="356083" attack_delay="1610" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="219488" sensory_range="60" tribe="GOD_KAISINEL" name="Kaisinel" rank="DISCIPLINED" height="14" attack_range="11">
     <stats hp_regen="0" maxHp="1908218" pdef="1107" walk_speed="2" mresist="1524" mboost_resist="261" run_speed="10" accuracy="2370" main_hand_attack="238" main_hand_crit_rate="86" mdef="0" mboost="0" parry="0" crit_spell="68" maxXp="0" block="100" main_hand_accuracy="2797" power="932" evasion="0" run_speed_fight="5.5"/>
     <equipment>
       <item>101501103</item>
@@ -20490,7 +20490,7 @@
     </equipment>
     <bound_radius side="8" upper="14" front="10"/>
   </npc_template>
-<npc_template name_desc="IDTiamat_GodMarkutan_Avatar1" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="370536" rating="NORMAL" ai="aggressive" hpgauge_level="27" name_id="356084" attack_delay="1400" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="219491" sensory_range="60" tribe="GOD_MARCHUTAN" name="Marchutan" rank="DISCIPLINED" height="13" attack_range="11">
+<npc_template name_desc="IDTiamat_GodMarkutan_Avatar1" npc_type="ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="370536" rating="NORMAL" ai="aggressive" hpgauge_level="27" name_id="356084" attack_delay="1400" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="219491" sensory_range="60" tribe="GOD_MARCHUTAN" name="Marchutan" rank="DISCIPLINED" height="13" attack_range="11">
     <stats hp_regen="0" maxHp="1908218" pdef="1107" walk_speed="2" mresist="1524" mboost_resist="261" run_speed="10" accuracy="2370" main_hand_attack="238" main_hand_crit_rate="86" mdef="0" mboost="0" parry="0" crit_spell="68" maxXp="0" block="100" main_hand_accuracy="2797" power="932" evasion="0" run_speed_fight="5.5"/>
     <equipment>
       <item>101501104</item>
@@ -20906,7 +20906,7 @@
     <stats hp_regen="1310" maxHp="2620" pdef="718" walk_speed="0" mresist="844" mboost_resist="0" run_speed="12" accuracy="2370" main_hand_attack="145" main_hand_crit_rate="10" mdef="0" mboost="0" parry="0" crit_spell="8" maxXp="0" block="0" main_hand_accuracy="2110" power="932" evasion="1151" run_speed_fight="12"/>
     <bound_radius side="1.12" upper="1.02" front="0.9"/>
   </npc_template>
-<npc_template name_desc="idabre_core_02_Sum_WormF" attack_range="2" npc_type="NON_ATTACKABLE" race="MAGICALMONSTER" level="60" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="2" type="MONSTER" name_id="342831" attack_delay="1995" npc_id="219566" sensory_range="15" tribe="CRYSTAL_SUM" name="Summoned Unstable Lapilima" rank="DISCIPLINED" height="3">
+<npc_template name_desc="idabre_core_02_Sum_WormF" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="60" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="2" type="MONSTER" name_id="342831" attack_delay="1995" npc_id="219566" sensory_range="15" tribe="CRYSTAL_SUM" name="Summoned Unstable Lapilima" rank="DISCIPLINED" height="3">
     <stats hp_regen="892" maxHp="1784" pdef="701" walk_speed="1.5" mresist="844" mboost_resist="0" run_speed="3" accuracy="2370" main_hand_attack="141" main_hand_crit_rate="10" mdef="0" mboost="0" parry="0" crit_spell="8" maxXp="0" block="0" main_hand_accuracy="2110" power="932" evasion="880" run_speed_fight="3"/>
     <bound_radius side="6" upper="3" front="4"/>
   </npc_template>
@@ -27402,7 +27402,7 @@
     <stats hp_regen="377660" maxHp="755321" pdef="632" walk_speed="0" mresist="2012" mboost_resist="1352" run_speed="0" accuracy="2370" main_hand_attack="374" main_hand_crit_rate="142" mdef="1743" mboost="0" parry="0" crit_spell="103" maxXp="909519276" block="0" main_hand_accuracy="4067" power="1232" evasion="3307" run_speed_fight="0"/>
     <bound_radius side="1.5" upper="3.5" front="2.0"/>
   </npc_template>
-<npc_template name_desc="IDF6_Dragon_Messenger_Soul_69_Ae" npc_type="NON_ATTACKABLE" race="BROWNIE" level="72" rating="NORMAL" ai="aggressive" hpgauge_level="12" type="RAID_MONSTER" name_id="339104" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220451" sensory_range="50" tribe="IDDF3_DRAGON_T_BOSS" name="IDF6_Dragon_Messenger_Soul_69_Ae" rank="DISCIPLINED" height="3.5">
+<npc_template name_desc="IDF6_Dragon_Messenger_Soul_69_Ae" npc_type="ATTACKABLE" race="BROWNIE" level="72" rating="NORMAL" ai="aggressive" hpgauge_level="12" type="RAID_MONSTER" name_id="339104" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220451" sensory_range="50" tribe="IDDF3_DRAGON_T_BOSS" name="IDF6_Dragon_Messenger_Soul_69_Ae" rank="DISCIPLINED" height="3.5">
     <stats hp_regen="23604" maxHp="47208" pdef="632" walk_speed="1.07" mresist="2012" mboost_resist="1352" run_speed="6" accuracy="679" main_hand_attack="374" main_hand_crit_rate="142" mdef="1743" mboost="0" parry="0" crit_spell="103" maxXp="0" block="0" main_hand_accuracy="4067" power="278" evasion="3307" run_speed_fight="8"/>
     <bound_radius side="1.5" upper="3.5" front="2.0"/>
   </npc_template>
@@ -28058,7 +28058,7 @@
     <bound_radius side="8.5" upper="15.0" front="14.4"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="IDEternity_02_Event_Nepilim_04" attack_range="5" npc_type="NON_ATTACKABLE" race="MAGICALMONSTER" level="72" attack_rate="1000" title_id="339167" rating="NORMAL" ai="general" hpgauge_level="13" type="GENERAL" name_id="339142" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220589" sensory_range="8" tribe="NEPILIM_SUN" name="Fighting Earth Jotun" rank="SEASONED" height="15.0">
+<npc_template name_desc="IDEternity_02_Event_Nepilim_04" attack_range="5" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="72" attack_rate="1000" title_id="339167" rating="NORMAL" ai="general" hpgauge_level="13" type="GENERAL" name_id="339142" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="220589" sensory_range="8" tribe="NEPILIM_SUN" name="Fighting Earth Jotun" rank="SEASONED" height="15.0">
     <stats hp_regen="1135170" maxHp="1929789" pdef="1352" walk_speed="2" mresist="1845" mboost_resist="991" run_speed="7" accuracy="2370" main_hand_attack="21" main_hand_crit_rate="112" mdef="1060" mboost="0" parry="0" crit_spell="81" maxXp="0" block="0" main_hand_accuracy="3642" power="1232" evasion="3191" run_speed_fight="7"/>
     <equipment>
       <item>100002117</item>

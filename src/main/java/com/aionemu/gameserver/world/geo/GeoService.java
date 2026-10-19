@@ -444,13 +444,13 @@ public class GeoService {
 		float targetY = target.getY();
 		if (object instanceof Npc && ((Npc) object).getAi2().ask(AIQuestion.CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKING).isPositive()) {
 			double rad = Math.toRadians(MathUtil.calculateAngleFrom(object, target));
-			float bound = Math.max(object.getObjectTemplate().getBoundRadius().getFront(), object.getObjectTemplate().getBoundRadius().getSide());
+			float bound = object.getObjectTemplate().getBoundRadius().getHalfMaxHorizontal();
 			x += (float) (Math.cos(rad) * bound);
 			y += (float) (Math.sin(rad) * bound);
 		}
 		if (target instanceof Npc && ((Npc) target).getAi2().ask(AIQuestion.CONSIDER_BOUNDS_IN_CAN_SEE_CHECK_WHEN_ATTACKED).isPositive()) {
 			double rad = Math.toRadians(MathUtil.calculateAngleFrom(target, object));
-			float bound = Math.max(target.getObjectTemplate().getBoundRadius().getFront(), target.getObjectTemplate().getBoundRadius().getSide());
+			float bound = target.getObjectTemplate().getBoundRadius().getHalfMaxHorizontal();
 			targetX += (float) (Math.cos(rad) * bound);
 			targetY += (float) (Math.sin(rad) * bound);
 		}

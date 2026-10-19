@@ -8,10 +8,12 @@
 
 | 项 | 决策 |
 |---|---|
-| `npc_type` | 只修实例 Boss / 炮台等明确敌对项（54 条） |
+| `npc_type` | 第一批修实例 Boss / 炮台 54 条；第二批把非守卫 848 条全部改为 `ATTACKABLE`（含 `PEACE` / `INVULNERABLE` 与已知友军）；守卫家族待 SDJ-007 |
 | `race` | 暂不对齐，仅保留映射分析 |
 
-## 一、`npc_type`：已落地 54 条
+## 一、`npc_type`：非守卫 848 条已全部改为 ATTACKABLE
+
+### 第一批：实例 Boss / 炮台 54 条
 
 筛选规则：`../npc-type-retail-unattackable-audit.zh-CN.md` 的 106 条高价值清单中，名称含 `Boss` / `Howitzer`，或为 `LDF4_Advance_GodElite*` / `IDRUN_Spider_01` / `IDEternity_02_Event_Nepilim_03` 的条目。全部由 `NON_ATTACKABLE` 改为 `ATTACKABLE`。
 
@@ -28,15 +30,24 @@
 
 验证：54 个模板当前均为 `ATTACKABLE`；8 个分片 XML 解析通过。
 
-### 未改动的部分（全库 9,278 条中）
+### 第二批：非守卫 848 条
 
-- **已刷出的其余 1,275 条**：绝大多数是 PvP 守卫家族（`GUARD` / `GUARD_DARK` / `PROTECTGUARD_*` / `F4GUARD_*` / `LDF5_*GUARD` 等）。真端按阵营相对可攻击，本地 `npc_type` 是绝对量；改成 `ATTACKABLE` 会改变 PvP 守卫行为，须按 SDJ-007 逐域裁定。
-- **高价值清单中排除的 52 条**：
-  - `IDLUNA_SIEGE_Soldier_*` 5 条：已知友军，保持 `NON_ATTACKABLE`。
-  - `IDYun_Soldier_*` / `IDYUN_Hard_Soldier_*` 22 条：`IDYUN_ANCIENT` 阵营，可能是友军；需实例内实测。
-  - `IDF6_LF1_NPC_Ra_*` 6 条：`IDF6_LF1_PROTECT`，保护者阵营，需确认敌对关系。
-  - `NPC_*` 静态 NPC 7 条、`DF2_NPC_*` / `DGuard_LycanFighter_*` 5 条、`IDLF1_*_Brownie_*` 2 条、`IDF5_TD_*` / `IDLDF5_*` PEACE 4 条：均需逐条确认是否友军/脚本对象。
-- **未刷出的其余条目**：没有 spawn 证据，暂不处理。
+按决策，把审计 TSV 中 `retail_unattackable=0` 且 `local_tribe` 不含 `GUARD` 的 848 条全部改为 `ATTACKABLE`：
+
+| 原 `npc_type` | 条数 | 处置 |
+|---|---:|---|
+| `NON_ATTACKABLE` | 724 | 改为 `ATTACKABLE` |
+| `PEACE` | 114 | 改为 `ATTACKABLE` |
+| `INVULNERABLE` | 2 | 改为 `ATTACKABLE` |
+| `ATTACKABLE`（第一批已修） | 8 | 保持 |
+
+实际写回 **840 条**；8 个分片 XML 解析通过，模板总数 88,002。其中 56 条为 `IDYUN` / `IDF6` / `IDLUNA` 已知友军（已刷出 33 条），按决策一并改为 `ATTACKABLE`；这会改变和平、无敌与友军语义，后续需按任务/守卫脚本实测。
+
+### 未改动：守卫家族 8,430 条
+
+- `local_tribe` 含 `GUARD` 的 8,430 条（其中 1,131 条已刷出）保持原 `npc_type`。
+- 真端按阵营相对可攻击，本地 `npc_type` 是绝对量；批量改成 `ATTACKABLE` 会改变 PvP 守卫行为，仍须按 SDJ-007 建立判定层。
+- `race` 仍未对齐，见第二节。
 
 ## 二、`race`：未对齐
 
@@ -62,5 +73,5 @@
 ## 三、后续可执行项
 
 1. PvP 守卫家族：按 SDJ-007 建立「阵营相对可攻击」判定层，而不是逐条改 `npc_type`。
-2. `IDYun_*` / `IDF6_*` / `NPC_*`：实例内实测其实际敌对关系，再决定是否改 `ATTACKABLE`。
+2. `IDYun_*` / `IDF6_*` / `IDLUNA_*`：已按第二批决策改为 `ATTACKABLE`，需在实例内实测友军/任务脚本是否受影响。
 3. `race`：以副本/世界为域，产出「真端 `race_type` → 本地 `Race`」映射表；不要全库照抄。

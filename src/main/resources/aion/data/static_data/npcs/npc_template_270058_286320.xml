@@ -450,7 +450,7 @@
     </equipment>
     <bound_radius side="0.49875" upper="2.415" front="0.7875"/>
   </npc_template>
-<npc_template name_desc="Ab1_1241_defender_Li_b" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="302520" abyss_type="GUARD" attack_delay="1900" npc_id="270099" sensory_range="20" tribe="GENERAL_ADADR" name="fortress sniper" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1241_defender_Li_b" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="302520" abyss_type="GUARD" attack_delay="1900" npc_id="270099" sensory_range="20" tribe="GENERAL_ADADR" name="fortress sniper" rank="SEASONED" height="2.1">
     <stats hp_regen="31779" maxHp="63558" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="984" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -463,7 +463,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1241_defender_Da_b" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="302521" abyss_type="GUARD" attack_delay="1900" npc_id="270100" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress sniper" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1241_defender_Da_b" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="302521" abyss_type="GUARD" attack_delay="1900" npc_id="270100" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress sniper" rank="SEASONED" height="2.1">
     <stats hp_regen="31779" maxHp="63558" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="984" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -483,7 +483,7 @@
     </equipment>
     <bound_radius side="1.68" upper="2.3625" front="1.05"/>
   </npc_template>
-<npc_template name_desc="Ab1_1241_defender_Li_wi" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307337" abyss_type="DEFENDER" attack_delay="2000" npc_id="270102" sensory_range="20" tribe="GENERAL_ADADR" name="fortress mage" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1241_defender_Li_wi" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307337" abyss_type="DEFENDER" attack_delay="2000" npc_id="270102" sensory_range="20" tribe="GENERAL_ADADR" name="fortress mage" rank="SEASONED" height="2.1">
     <stats hp_regen="28985" maxHp="57970" pdef="313" walk_speed="0" mresist="926" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1060" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -496,7 +496,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1241_defender_Da_wi" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307338" abyss_type="DEFENDER" attack_delay="2000" npc_id="270103" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress mage" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1241_defender_Da_wi" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314330" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307338" abyss_type="DEFENDER" attack_delay="2000" npc_id="270103" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress mage" rank="SEASONED" height="2.1">
     <stats hp_regen="28985" maxHp="57970" pdef="313" walk_speed="0" mresist="926" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1060" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -3275,7 +3275,7 @@
     </equipment>
     <bound_radius side="0.49875" upper="2.415" front="0.7875"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Li_b_1" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304644" abyss_type="GUARD" attack_delay="1900" npc_id="270831" sensory_range="20" tribe="GENERAL_ADADR" name="cadet strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Li_b_1" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304644" abyss_type="GUARD" attack_delay="1900" npc_id="270831" sensory_range="20" tribe="GENERAL_ADADR" name="cadet strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="15606" maxHp="31211" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="869" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="89455" block="0" main_hand_accuracy="1140" power="1232" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113301276</item>
@@ -3288,7 +3288,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Li_b_2" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304645" abyss_type="GUARD" attack_delay="1900" npc_id="270832" sensory_range="20" tribe="GENERAL_ADADR" name="cadet strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Li_b_2" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304645" abyss_type="GUARD" attack_delay="1900" npc_id="270832" sensory_range="20" tribe="GENERAL_ADADR" name="cadet strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="15606" maxHp="31211" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="869" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="89455" block="0" main_hand_accuracy="1140" power="42" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3301,7 +3301,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Li_b_3" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="11" type="ABYSS_GUARD" name_id="304646" abyss_type="GUARD" attack_delay="1900" npc_id="270833" sensory_range="20" tribe="GENERAL_ADADR" name="seasoned strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Li_b_3" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="11" type="ABYSS_GUARD" name_id="304646" abyss_type="GUARD" attack_delay="1900" npc_id="270833" sensory_range="20" tribe="GENERAL_ADADR" name="seasoned strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="23409" maxHp="46817" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="882" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="140447" block="0" main_hand_accuracy="1140" power="420" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3314,7 +3314,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Li_b_4" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304647" abyss_type="GUARD" attack_delay="1900" npc_id="270834" sensory_range="20" tribe="GENERAL_ADADR" name="veteran strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Li_b_4" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304647" abyss_type="GUARD" attack_delay="1900" npc_id="270834" sensory_range="20" tribe="GENERAL_ADADR" name="veteran strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="26483" maxHp="52965" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1033" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3327,7 +3327,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Li_b_5" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304648" abyss_type="GUARD" attack_delay="1900" npc_id="270835" sensory_range="20" tribe="GENERAL_ADADR" name="veteran strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Li_b_5" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304648" abyss_type="GUARD" attack_delay="1900" npc_id="270835" sensory_range="20" tribe="GENERAL_ADADR" name="veteran strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="26483" maxHp="52965" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1033" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3340,7 +3340,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Da_b_1" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304649" abyss_type="GUARD" attack_delay="1900" npc_id="270836" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Da_b_1" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304649" abyss_type="GUARD" attack_delay="1900" npc_id="270836" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="15606" maxHp="31211" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="869" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="89455" block="0" main_hand_accuracy="1140" power="1232" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113301276</item>
@@ -3353,7 +3353,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Da_b_2" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304650" abyss_type="GUARD" attack_delay="1900" npc_id="270837" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Da_b_2" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="10" type="ABYSS_GUARD" name_id="304650" abyss_type="GUARD" attack_delay="1900" npc_id="270837" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="15606" maxHp="31211" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="869" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="89455" block="0" main_hand_accuracy="1140" power="42" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -3366,7 +3366,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Da_b_3" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="11" type="ABYSS_GUARD" name_id="304651" abyss_type="GUARD" attack_delay="1900" npc_id="270838" sensory_range="20" tribe="GENERALDA_ALIDR" name="seasoned strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Da_b_3" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="11" type="ABYSS_GUARD" name_id="304651" abyss_type="GUARD" attack_delay="1900" npc_id="270838" sensory_range="20" tribe="GENERALDA_ALIDR" name="seasoned strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="23409" maxHp="46817" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="882" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="140447" block="0" main_hand_accuracy="1140" power="420" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -3379,7 +3379,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Da_b_4" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304652" abyss_type="GUARD" attack_delay="1900" npc_id="270839" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Da_b_4" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304652" abyss_type="GUARD" attack_delay="1900" npc_id="270839" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="26483" maxHp="52965" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1033" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -3392,7 +3392,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guard_Da_b_5" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304653" abyss_type="GUARD" attack_delay="1900" npc_id="270840" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran strongbow" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_guard_Da_b_5" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="ranger" hpgauge_level="12" type="ABYSS_GUARD" name_id="304653" abyss_type="GUARD" attack_delay="1900" npc_id="270840" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran strongbow" rank="SEASONED" height="2.1">
     <stats hp_regen="26483" maxHp="52965" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1033" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -3961,7 +3961,7 @@
     </equipment>
     <bound_radius side="0.57" upper="2.76" front="0.9"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Li_b_1" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311100" abyss_type="GUARD" attack_delay="1900" npc_id="270891" sensory_range="20" tribe="GENERAL_ADADR" name="cadet lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Li_b_1" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311100" abyss_type="GUARD" attack_delay="1900" npc_id="270891" sensory_range="20" tribe="GENERAL_ADADR" name="cadet lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="111" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="41" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3974,7 +3974,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Li_b_2" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311101" abyss_type="GUARD" attack_delay="1900" npc_id="270892" sensory_range="20" tribe="GENERAL_ADADR" name="cadet lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Li_b_2" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311101" abyss_type="GUARD" attack_delay="1900" npc_id="270892" sensory_range="20" tribe="GENERAL_ADADR" name="cadet lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="755" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -3987,7 +3987,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Li_b_3" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311102" abyss_type="GUARD" attack_delay="1900" npc_id="270893" sensory_range="20" tribe="GENERAL_ADADR" name="seasoned lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Li_b_3" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311102" abyss_type="GUARD" attack_delay="1900" npc_id="270893" sensory_range="20" tribe="GENERAL_ADADR" name="seasoned lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="755" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -4000,7 +4000,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Li_b_4" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311103" abyss_type="GUARD" attack_delay="1900" npc_id="270894" sensory_range="20" tribe="GENERAL_ADADR" name="veteran lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Li_b_4" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311103" abyss_type="GUARD" attack_delay="1900" npc_id="270894" sensory_range="20" tribe="GENERAL_ADADR" name="veteran lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="43980" maxHp="87960" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1049" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="384628" block="0" main_hand_accuracy="1140" power="924" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -4013,7 +4013,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Li_b_5" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311104" abyss_type="GUARD" attack_delay="1900" npc_id="270895" sensory_range="20" tribe="GENERAL_ADADR" name="veteran lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Li_b_5" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311104" abyss_type="GUARD" attack_delay="1900" npc_id="270895" sensory_range="20" tribe="GENERAL_ADADR" name="veteran lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="43980" maxHp="87960" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1049" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="384628" block="0" main_hand_accuracy="1140" power="924" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -4026,7 +4026,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Da_b_1" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311105" abyss_type="GUARD" attack_delay="1900" npc_id="270896" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Da_b_1" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311105" abyss_type="GUARD" attack_delay="1900" npc_id="270896" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="111" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="41" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -4039,7 +4039,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Da_b_2" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311106" abyss_type="GUARD" attack_delay="1900" npc_id="270897" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Da_b_2" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311106" abyss_type="GUARD" attack_delay="1900" npc_id="270897" sensory_range="20" tribe="GENERALDA_ALIDR" name="cadet lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="755" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -4052,7 +4052,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Da_b_3" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311107" abyss_type="GUARD" attack_delay="1900" npc_id="270898" sensory_range="20" tribe="GENERALDA_ALIDR" name="seasoned lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Da_b_3" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="13" type="ABYSS_GUARD" name_id="311107" abyss_type="GUARD" attack_delay="1900" npc_id="270898" sensory_range="20" tribe="GENERALDA_ALIDR" name="seasoned lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="34995" maxHp="69990" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1036" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="306537" block="0" main_hand_accuracy="1140" power="755" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -4065,7 +4065,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Da_b_4" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311108" abyss_type="GUARD" attack_delay="1900" npc_id="270899" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Da_b_4" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311108" abyss_type="GUARD" attack_delay="1900" npc_id="270899" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="43980" maxHp="87960" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1049" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="384628" block="0" main_hand_accuracy="1140" power="924" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -4078,7 +4078,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_guardH_Da_b_5" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311109" abyss_type="GUARD" attack_delay="1900" npc_id="270900" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran lead scout" rank="SEASONED" height="2.4">
+<npc_template name_desc="Ab1_1251_guardH_Da_b_5" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="311109" abyss_type="GUARD" attack_delay="1900" npc_id="270900" sensory_range="20" tribe="GENERALDA_ALIDR" name="veteran lead scout" rank="SEASONED" height="2.4">
     <stats hp_regen="43980" maxHp="87960" pdef="595" walk_speed="0" mresist="886" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1049" main_hand_crit_rate="32" mdef="0" mboost="0" parry="634" crit_spell="32" maxXp="384628" block="0" main_hand_accuracy="1140" power="924" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -5187,7 +5187,7 @@
     </equipment>
     <bound_radius side="0.49875" upper="2.415" front="0.7875"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_defender_Li_b" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="304662" abyss_type="GUARD" attack_delay="1900" npc_id="270999" sensory_range="20" tribe="GENERAL_ADADR" name="fortress sniper" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_defender_Li_b" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="304662" abyss_type="GUARD" attack_delay="1900" npc_id="270999" sensory_range="20" tribe="GENERAL_ADADR" name="fortress sniper" rank="SEASONED" height="2.1">
     <stats hp_regen="31779" maxHp="63558" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="984" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -5200,7 +5200,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_defender_Da_b" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="304663" abyss_type="GUARD" attack_delay="1900" npc_id="271000" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress sniper" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_defender_Da_b" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="304663" abyss_type="GUARD" attack_delay="1900" npc_id="271000" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress sniper" rank="SEASONED" height="2.1">
     <stats hp_regen="31779" maxHp="63558" pdef="595" walk_speed="0" mresist="876" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="984" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -5220,7 +5220,7 @@
     </equipment>
     <bound_radius side="1.68" upper="2.3625" front="1.05"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_defender_Li_wi" attack_range="37" npc_type="NON_ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307373" abyss_type="DEFENDER" attack_delay="2000" npc_id="271002" sensory_range="20" tribe="GENERAL_ADADR" name="fortress mage" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_defender_Li_wi" attack_range="37" npc_type="ATTACKABLE" race="ELYOS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307373" abyss_type="DEFENDER" attack_delay="2000" npc_id="271002" sensory_range="20" tribe="GENERAL_ADADR" name="fortress mage" rank="SEASONED" height="2.1">
     <stats hp_regen="28985" maxHp="57970" pdef="313" walk_speed="0" mresist="926" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1060" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600515</item>
@@ -5233,7 +5233,7 @@
     </equipment>
     <bound_radius side="0.3675" upper="2.1" front="0.2625"/>
   </npc_template>
-<npc_template name_desc="Ab1_1251_defender_Da_wi" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307374" abyss_type="DEFENDER" attack_delay="2000" npc_id="271003" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress mage" rank="SEASONED" height="2.1">
+<npc_template name_desc="Ab1_1251_defender_Da_wi" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="314327" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="307374" abyss_type="DEFENDER" attack_delay="2000" npc_id="271003" sensory_range="20" tribe="GENERALDA_ALIDR" name="fortress mage" rank="SEASONED" height="2.1">
     <stats hp_regen="28985" maxHp="57970" pdef="313" walk_speed="0" mresist="926" mboost_resist="0" run_speed="0" accuracy="1230" main_hand_attack="1060" main_hand_crit_rate="18" mdef="0" mboost="0" parry="634" crit_spell="18" maxXp="213876" block="0" main_hand_accuracy="1140" power="545" evasion="570" run_speed_fight="0"/>
     <equipment>
       <item>113600517</item>
@@ -61611,7 +61611,7 @@
     <stats hp_regen="15376" maxHp="30752" pdef="1447" walk_speed="0" mresist="1629" mboost_resist="0" run_speed="0" accuracy="1580" main_hand_attack="1082" main_hand_crit_rate="18" mdef="1095" mboost="0" parry="0" crit_spell="13" maxXp="0" block="0" main_hand_accuracy="2539" power="560" evasion="1743" run_speed_fight="0"/>
     <bound_radius side="1.95" upper="2.665" front="0.78"/>
   </npc_template>
-<npc_template name_desc="IDYun_4Nmd_Bomb" npc_type="NON_ATTACKABLE" level="60" rating="NORMAL" ai="kuhara_bomb" hpgauge_level="3" type="MONSTER" name_id="323648" attack_delay="2000" npc_id="282396" sensory_range="90" tribe="IDYUN_ANCIENT" name="kuhara bomb" rank="DISCIPLINED" height="1.775">
+<npc_template name_desc="IDYun_4Nmd_Bomb" npc_type="ATTACKABLE" level="60" rating="NORMAL" ai="kuhara_bomb" hpgauge_level="3" type="MONSTER" name_id="323648" attack_delay="2000" npc_id="282396" sensory_range="90" tribe="IDYUN_ANCIENT" name="kuhara bomb" rank="DISCIPLINED" height="1.775">
     <stats hp_regen="0" maxHp="4082" pdef="977" walk_speed="3" mresist="1100" mboost_resist="0" run_speed="4" accuracy="1580" main_hand_attack="133" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="0" block="1923" main_hand_accuracy="1812" power="560" evasion="0" run_speed_fight="4"/>
     <bound_radius side="0.876" upper="2.775" front="1.22"/>
   </npc_template>
@@ -65494,7 +65494,7 @@
     </equipment>
     <bound_radius side="1.5" upper="3.5" front="2"/>
   </npc_template>
-<npc_template name_desc="bidabre_core_02_Decoration_Fi_Lizard" attack_range="2" npc_type="INVULNERABLE" level="60" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="2" type="MONSTER" name_id="322487" attack_delay="2100" npc_id="283219" sensory_range="30" tribe="ANTI_CRYSTAL" name="ranx ironfist" rank="DISCIPLINED" height="1">
+<npc_template name_desc="bidabre_core_02_Decoration_Fi_Lizard" attack_range="2" npc_type="ATTACKABLE" level="60" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="2" type="MONSTER" name_id="322487" attack_delay="2100" npc_id="283219" sensory_range="30" tribe="ANTI_CRYSTAL" name="ranx ironfist" rank="DISCIPLINED" height="1">
     <stats hp_regen="2364" maxHp="4727" pdef="1260" walk_speed="2" mresist="1194" mboost_resist="0" run_speed="5" accuracy="1000" mcrit="120" main_hand_attack="5" main_hand_crit_rate="10" mdef="0" mboost="0" parry="0" crit_spell="8" maxXp="0" block="0" main_hand_accuracy="2135" power="1000" evasion="0" run_speed_fight="5.5"/>
     <equipment>
       <item>100000018</item>
@@ -65529,7 +65529,7 @@
     <stats hp_regen="69420" maxHp="1" pdef="0" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="1000" mcrit="120" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="1000" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.64" upper="0.64" front="0.64"/>
   </npc_template>
-<npc_template name_desc="bidabre_core_02_Sum_SpiderBig2" attack_range="2" npc_type="INVULNERABLE" level="1" attack_rate="1000" rating="NORMAL" ai="general" type="MONSTER" name_id="322746" npc_id="283227" sensory_range="50" tribe="CRYSTAL" name="kaluva's underling" rank="DISCIPLINED" height="2">
+<npc_template name_desc="bidabre_core_02_Sum_SpiderBig2" attack_range="2" npc_type="ATTACKABLE" level="1" attack_rate="1000" rating="NORMAL" ai="general" type="MONSTER" name_id="322746" npc_id="283227" sensory_range="50" tribe="CRYSTAL" name="kaluva's underling" rank="DISCIPLINED" height="2">
     <stats hp_regen="69420" maxHp="1" pdef="0" walk_speed="2.1" mresist="0" mboost_resist="0" run_speed="7.2" accuracy="1000" mcrit="120" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="1000" evasion="0" run_speed_fight="5.2"/>
     <bound_radius side="3.56" upper="2.94" front="3.6"/>
   </npc_template>
@@ -70920,7 +70920,7 @@
     <stats hp_regen="27842" maxHp="55684" pdef="1520" walk_speed="0" mresist="1938" mboost_resist="0" run_speed="0" accuracy="100" mcrit="120" main_hand_attack="1331" main_hand_crit_rate="59" mdef="1231" mboost="0" parry="0" crit_spell="39" maxXp="0" block="0" main_hand_accuracy="3163" power="90" evasion="2881" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2" front="0.5"/>
   </npc_template>
-<npc_template name_desc="IDVritra_Base_HakcAndSlash_Bonus" npc_type="NON_ATTACKABLE" level="65" rating="NORMAL" ai="general" hpgauge_level="2" type="MONSTER" name_id="343518" attack_delay="1995" npc_id="284457" sensory_range="20" tribe="AGRRESSIVEFRIENDLYVRITRA" name="Sheban Mystical Tyrhund" rank="DISCIPLINED" height="1" attack_range="2" attack_rate="1000">
+<npc_template name_desc="IDVritra_Base_HakcAndSlash_Bonus" npc_type="ATTACKABLE" level="65" rating="NORMAL" ai="general" hpgauge_level="2" type="MONSTER" name_id="343518" attack_delay="1995" npc_id="284457" sensory_range="20" tribe="AGRRESSIVEFRIENDLYVRITRA" name="Sheban Mystical Tyrhund" rank="DISCIPLINED" height="1" attack_range="2" attack_rate="1000">
     <stats hp_regen="2945" maxHp="5890" pdef="805" walk_speed="0.9" mresist="1448" mboost_resist="0" run_speed="4" accuracy="100" mcrit="120" main_hand_attack="952" main_hand_crit_rate="15" mdef="1160" mboost="0" parry="0" crit_spell="11" maxXp="0" block="1439" main_hand_accuracy="2059" power="90" evasion="0" run_speed_fight="4"/>
     <bound_radius side="3" upper="2.05" front="1.2"/>
   </npc_template>
@@ -72388,14 +72388,14 @@
     <stats hp_regen="9350" maxHp="18699" pdef="984" walk_speed="2.8" mresist="1298" mboost_resist="0" run_speed="7" accuracy="93" main_hand_attack="953" main_hand_crit_rate="15" mdef="1049" mboost="0" parry="1588" crit_spell="11" maxXp="87598" block="0" main_hand_accuracy="2059" power="23" evasion="0" run_speed_fight="6"/>
     <bound_radius side="0.42" upper="3.4925" front="1.555"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFi_Vil_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326113" attack_delay="2100" npc_id="284713" sensory_range="10" tribe="XDRAKAN" name="terath warmonger" rank="SEASONED" height="4.05">
+<npc_template name_desc="BIDDreadgion_04_DrakanFi_Vil_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326113" attack_delay="2100" npc_id="284713" sensory_range="10" tribe="XDRAKAN" name="terath warmonger" rank="SEASONED" height="4.05">
     <stats hp_regen="74670" maxHp="149339" pdef="1494" walk_speed="1.07" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="1839" main_hand_crit_rate="58" mdef="532" mboost="0" parry="0" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="2680" run_speed_fight="8"/>
     <equipment>
       <item>100000997</item>
     </equipment>
     <bound_radius side="1.0125" upper="4.05" front="1.35"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanAs_Vil_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326114" attack_delay="1900" npc_id="284714" sensory_range="10" tribe="XDRAKAN" name="terath executioner" rank="SEASONED" height="4.38">
+<npc_template name_desc="BIDDreadgion_04_DrakanAs_Vil_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326114" attack_delay="1900" npc_id="284714" sensory_range="10" tribe="XDRAKAN" name="terath executioner" rank="SEASONED" height="4.38">
     <stats hp_regen="56342" maxHp="112683" pdef="1016" walk_speed="1.07" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2433" main_hand_crit_rate="58" mdef="1255" mboost="0" parry="2914" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100200886</item>
@@ -72403,63 +72403,63 @@
     </equipment>
     <bound_radius side="1.68" upper="4.38" front="1.32"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanRa_Vil_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326115" attack_delay="2260" npc_id="284715" sensory_range="10" tribe="XDRAKAN" name="terath sentinel" rank="SEASONED" height="4.38">
+<npc_template name_desc="BIDDreadgion_04_DrakanRa_Vil_65_Ae" attack_range="20" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326115" attack_delay="2260" npc_id="284715" sensory_range="10" tribe="XDRAKAN" name="terath sentinel" rank="SEASONED" height="4.38">
     <stats hp_regen="59057" maxHp="118113" pdef="1016" walk_speed="1.07" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2166" main_hand_crit_rate="58" mdef="1255" mboost="0" parry="2860" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101700864</item>
     </equipment>
     <bound_radius side="1.68" upper="4.38" front="1.32"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanWi_Vil_65_Ae" attack_range="16" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326116" attack_delay="2300" npc_id="284716" sensory_range="10" tribe="XDRAKAN" name="terath magician" rank="SEASONED" height="3.85">
+<npc_template name_desc="BIDDreadgion_04_DrakanWi_Vil_65_Ae" attack_range="16" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326116" attack_delay="2300" npc_id="284716" sensory_range="10" tribe="XDRAKAN" name="terath magician" rank="SEASONED" height="3.85">
     <stats hp_regen="56342" maxHp="112683" pdef="532" walk_speed="1.07" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2518" main_hand_crit_rate="58" mdef="1494" mboost="0" parry="2780" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100501195</item>
     </equipment>
     <bound_radius side="0.825" upper="3.85" front="1.1"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanPr_Vil_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326117" attack_delay="2040" npc_id="284717" sensory_range="10" tribe="XDRAKAN_PRIEST" name="terath fleshmender" rank="SEASONED" height="4.2">
+<npc_template name_desc="BIDDreadgion_04_DrakanPr_Vil_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326117" attack_delay="2040" npc_id="284717" sensory_range="10" tribe="XDRAKAN_PRIEST" name="terath fleshmender" rank="SEASONED" height="4.2">
     <stats hp_regen="67881" maxHp="135762" pdef="1255" walk_speed="1.07" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="1667" main_hand_crit_rate="58" mdef="1016" mboost="0" parry="2512" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101500782</item>
     </equipment>
     <bound_radius side="0.9" upper="4.2" front="1.2"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFi_Noble_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326119" attack_delay="2100" npc_id="284718" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath vanquisher" rank="SEASONED" height="3.92">
+<npc_template name_desc="BIDDreadgion_04_DrakanFi_Noble_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326119" attack_delay="2100" npc_id="284718" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath vanquisher" rank="SEASONED" height="3.92">
     <stats hp_regen="74670" maxHp="149339" pdef="1494" walk_speed="1.38" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="1839" main_hand_crit_rate="58" mdef="532" mboost="0" parry="0" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="2680" run_speed_fight="8"/>
     <equipment>
       <item>100001354</item>
     </equipment>
     <bound_radius side="0.56" upper="3.92" front="0.56"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanSc_Noble_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326120" attack_delay="1900" npc_id="284719" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath prowler" rank="SEASONED" height="4.5625">
+<npc_template name_desc="BIDDreadgion_04_DrakanSc_Noble_65_Ae" attack_range="20" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326120" attack_delay="1900" npc_id="284719" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath prowler" rank="SEASONED" height="4.5625">
     <stats hp_regen="57699" maxHp="115398" pdef="1016" walk_speed="1.38" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2261" main_hand_crit_rate="58" mdef="1255" mboost="0" parry="2780" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101701071</item>
     </equipment>
     <bound_radius side="1.75" upper="4.5625" front="1.375"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanWi_Noble_65_Ae" attack_range="5" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326121" attack_delay="2300" npc_id="284720" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath thaumaturge" rank="SEASONED" height="4.2">
+<npc_template name_desc="BIDDreadgion_04_DrakanWi_Noble_65_Ae" attack_range="5" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326121" attack_delay="2300" npc_id="284720" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath thaumaturge" rank="SEASONED" height="4.2">
     <stats hp_regen="56342" maxHp="112683" pdef="532" walk_speed="1.38" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2518" main_hand_crit_rate="58" mdef="1494" mboost="0" parry="2780" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100501195</item>
     </equipment>
     <bound_radius side="0.9" upper="4.2" front="1.2"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanCl_Noble_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326122" attack_delay="2040" npc_id="284721" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath physician" rank="SEASONED" height="4.55">
+<npc_template name_desc="BIDDreadgion_04_DrakanCl_Noble_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="12" type="ABYSS_GUARD" name_id="326122" attack_delay="2040" npc_id="284721" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath physician" rank="SEASONED" height="4.55">
     <stats hp_regen="67881" maxHp="135762" pdef="1016" walk_speed="1.38" mresist="1646" mboost_resist="151" run_speed="6" accuracy="93" main_hand_attack="2042" main_hand_crit_rate="58" mdef="1016" mboost="0" parry="2512" crit_spell="42" maxXp="903645" block="0" main_hand_accuracy="3263" power="29" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101501062</item>
     </equipment>
     <bound_radius side="0.975" upper="4.55" front="1.3"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFi_Tiamat_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326123" attack_delay="2100" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284722" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath bloodletter" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanFi_Tiamat_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326123" attack_delay="2100" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284722" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath bloodletter" rank="EXPERT" height="3.24">
     <stats hp_regen="129647" maxHp="259293" pdef="1551" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2059" main_hand_crit_rate="102" mdef="553" mboost="0" parry="0" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="2815" run_speed_fight="8"/>
     <equipment>
       <item>100901035</item>
     </equipment>
     <bound_radius side="0.495" upper="3.24" front="0.585"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanSc_Tiamat_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326124" attack_delay="1900" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284723" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath stalker" rank="EXPERT" height="2.88">
+<npc_template name_desc="BIDDreadgion_04_DrakanSc_Tiamat_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326124" attack_delay="1900" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284723" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath stalker" rank="EXPERT" height="2.88">
     <stats hp_regen="100181" maxHp="200362" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2530" main_hand_crit_rate="102" mdef="1303" mboost="0" parry="2915" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100201034</item>
@@ -72467,14 +72467,14 @@
     </equipment>
     <bound_radius side="0.44" upper="2.88" front="0.52"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanWi_Tiamat_65_Ae" attack_range="4" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326125" attack_delay="2300" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284724" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath worldwarper" rank="EXPERT" height="3.04">
+<npc_template name_desc="BIDDreadgion_04_DrakanWi_Tiamat_65_Ae" attack_range="4" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326125" attack_delay="2300" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284724" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath worldwarper" rank="EXPERT" height="3.04">
     <stats hp_regen="97824" maxHp="195648" pdef="553" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2699" main_hand_crit_rate="102" mdef="1551" mboost="0" parry="2915" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100501195</item>
     </equipment>
     <bound_radius side="0.44" upper="3.04" front="0.52"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanCl_Tiamat_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326126" attack_delay="2040" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284725" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath medic" rank="EXPERT" height="2.96">
+<npc_template name_desc="BIDDreadgion_04_DrakanCl_Tiamat_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326126" attack_delay="2040" abnormal_immunity="Stat_ArStunLike,paralyze,Silence" npc_id="284725" sensory_range="10" tribe="TDOWN_DRAKAN" name="terath medic" rank="EXPERT" height="2.96">
     <stats hp_regen="117861" maxHp="235721" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2187" main_hand_crit_rate="102" mdef="1055" mboost="0" parry="2634" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100101023</item>
@@ -72482,21 +72482,21 @@
     </equipment>
     <bound_radius side="0.44" upper="2.96" front="0.52"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanBroadA_Vil_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="ABYSS_GUARD" name_id="326127" attack_delay="1900" npc_id="284726" sensory_range="10" tribe="XDRAKAN" name="terath archer" rank="NOVICE" height="4.38">
+<npc_template name_desc="BIDDreadgion_04_DrakanBroadA_Vil_65_Ae" attack_range="20" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="ABYSS_GUARD" name_id="326127" attack_delay="1900" npc_id="284726" sensory_range="10" tribe="XDRAKAN" name="terath archer" rank="NOVICE" height="4.38">
     <stats hp_regen="33238" maxHp="66476" pdef="986" walk_speed="1.07" mresist="1592" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="1892" main_hand_crit_rate="58" mdef="1218" mboost="0" parry="2622" crit_spell="42" maxXp="348346" block="0" main_hand_accuracy="3127" power="2" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101700864</item>
     </equipment>
     <bound_radius side="1.68" upper="4.38" front="1.32"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanBroadB_Vil_65_Ae" attack_range="20" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="ABYSS_GUARD" name_id="326128" attack_delay="1900" npc_id="284727" sensory_range="10" tribe="XDRAKAN" name="terath archer" rank="NOVICE" height="4.38">
+<npc_template name_desc="BIDDreadgion_04_DrakanBroadB_Vil_65_Ae" attack_range="20" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="10" type="ABYSS_GUARD" name_id="326128" attack_delay="1900" npc_id="284727" sensory_range="10" tribe="XDRAKAN" name="terath archer" rank="NOVICE" height="4.38">
     <stats hp_regen="33238" maxHp="66476" pdef="986" walk_speed="1.07" mresist="1592" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="1892" main_hand_crit_rate="58" mdef="1218" mboost="0" parry="2622" crit_spell="42" maxXp="348346" block="0" main_hand_accuracy="3127" power="2" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>101700864</item>
     </equipment>
     <bound_radius side="1.68" upper="4.38" front="1.32"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanRa_QuestNamed_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326129" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284728" sensory_range="10" tribe="TDOWN_DRAKAN" name="supervisor chitan" rank="EXPERT" height="2.88">
+<npc_template name_desc="BIDDreadgion_04_DrakanRa_QuestNamed_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326129" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284728" sensory_range="10" tribe="TDOWN_DRAKAN" name="supervisor chitan" rank="EXPERT" height="2.88">
     <stats hp_regen="102539" maxHp="205077" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2423" main_hand_crit_rate="102" mdef="1303" mboost="0" parry="2999" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100201034</item>
@@ -72504,21 +72504,21 @@
     </equipment>
     <bound_radius side="0.2" upper="2.88" front="0.4"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedAA_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326130" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284729" sensory_range="10" tribe="TDOWN_DRAKAN" name="chief navigator adhari" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedAA_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326130" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284729" sensory_range="10" tribe="TDOWN_DRAKAN" name="chief navigator adhari" rank="EXPERT" height="3.24">
     <stats hp_regen="129647" maxHp="259293" pdef="1551" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2059" main_hand_crit_rate="102" mdef="553" mboost="0" parry="0" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="2815" run_speed_fight="8"/>
     <equipment>
       <item>100901036</item>
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedAB_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326131" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284730" sensory_range="10" tribe="TDOWN_DRAKAN" name="assistant navigator kurta" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedAB_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326131" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284730" sensory_range="10" tribe="TDOWN_DRAKAN" name="assistant navigator kurta" rank="EXPERT" height="3.24">
     <stats hp_regen="129647" maxHp="259293" pdef="1551" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2059" main_hand_crit_rate="102" mdef="553" mboost="0" parry="0" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="2815" run_speed_fight="8"/>
     <equipment>
       <item>100901036</item>
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanRaNamedBA_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326132" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284731" sensory_range="10" tribe="TDOWN_DRAKAN" name="vice gun captain faniran" rank="EXPERT" height="2.88">
+<npc_template name_desc="BIDDreadgion_04_DrakanRaNamedBA_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326132" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284731" sensory_range="10" tribe="TDOWN_DRAKAN" name="vice gun captain faniran" rank="EXPERT" height="2.88">
     <stats hp_regen="102539" maxHp="205077" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2423" main_hand_crit_rate="102" mdef="1303" mboost="0" parry="2999" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100201034</item>
@@ -72526,7 +72526,7 @@
     </equipment>
     <bound_radius side="0.2" upper="2.88" front="0.4"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanRaNamedBB_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326133" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284732" sensory_range="10" tribe="TDOWN_DRAKAN" name="gun captain pahala" rank="EXPERT" height="2.88">
+<npc_template name_desc="BIDDreadgion_04_DrakanRaNamedBB_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326133" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284732" sensory_range="10" tribe="TDOWN_DRAKAN" name="gun captain pahala" rank="EXPERT" height="2.88">
     <stats hp_regen="102539" maxHp="205077" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2423" main_hand_crit_rate="102" mdef="1303" mboost="0" parry="2999" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100201034</item>
@@ -72534,7 +72534,7 @@
     </equipment>
     <bound_radius side="0.2" upper="2.88" front="0.4"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedCA_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326134" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284733" sensory_range="10" tribe="TDOWN_DRAKAN" name="vice air captain lukar" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedCA_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326134" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284733" sensory_range="10" tribe="TDOWN_DRAKAN" name="vice air captain lukar" rank="EXPERT" height="3.24">
     <stats hp_regen="117861" maxHp="235721" pdef="1303" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="1866" main_hand_crit_rate="102" mdef="1055" mboost="0" parry="2634" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100101023</item>
@@ -72542,7 +72542,7 @@
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedCB_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326135" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284734" sensory_range="10" tribe="TDOWN_DRAKAN" name="air captain misalus" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedCB_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326135" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284734" sensory_range="10" tribe="TDOWN_DRAKAN" name="air captain misalus" rank="EXPERT" height="3.24">
     <stats hp_regen="117861" maxHp="235721" pdef="1303" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="1866" main_hand_crit_rate="102" mdef="1055" mboost="0" parry="2634" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100101023</item>
@@ -72550,7 +72550,7 @@
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedD_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326136" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284735" sensory_range="10" tribe="TDOWN_DRAKAN" name="engineer tapisha" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanPrNamedD_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326136" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284735" sensory_range="10" tribe="TDOWN_DRAKAN" name="engineer tapisha" rank="EXPERT" height="3.24">
     <stats hp_regen="117861" maxHp="235721" pdef="1055" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2187" main_hand_crit_rate="102" mdef="1055" mboost="0" parry="2634" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100101023</item>
@@ -72558,7 +72558,7 @@
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanCl_Semiboss_Ah" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326137" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284736" sensory_range="10" tribe="TDOWN_DRAKAN" name="first mate kamital" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanCl_Semiboss_Ah" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326137" attack_delay="2040" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284736" sensory_range="10" tribe="TDOWN_DRAKAN" name="first mate kamital" rank="EXPERT" height="3.24">
     <stats hp_regen="222424" maxHp="444847" pdef="1060" walk_speed="1.38" mresist="1803" mboost_resist="957" run_speed="6" accuracy="111" main_hand_attack="2312" main_hand_crit_rate="131" mdef="1060" mboost="0" parry="2715" crit_spell="95" maxXp="2136748" block="0" main_hand_accuracy="3651" power="41" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100101023</item>
@@ -72566,14 +72566,14 @@
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanWi_Boss_Ah" attack_range="4" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="21" type="ABYSS_GUARD" name_id="326138" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284737" sensory_range="10" tribe="TDOWN_DRAKAN" name="captain anusa" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanWi_Boss_Ah" attack_range="4" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="21" type="ABYSS_GUARD" name_id="326138" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284737" sensory_range="10" tribe="TDOWN_DRAKAN" name="captain anusa" rank="EXPERT" height="3.24">
     <stats hp_regen="688822" maxHp="1377644" pdef="570" walk_speed="1.38" mresist="1853" mboost_resist="1002" run_speed="6" accuracy="139" main_hand_attack="2901" main_hand_crit_rate="131" mdef="1599" mboost="0" parry="3073" crit_spell="95" maxXp="4636627" block="0" main_hand_accuracy="3741" power="50" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100501195</item>
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanSc_ItemNamed_65_Ah" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326139" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284738" sensory_range="10" tribe="TDOWN_DRAKAN" name="bosun kuchuran" rank="EXPERT" height="5.11">
+<npc_template name_desc="BIDDreadgion_04_DrakanSc_ItemNamed_65_Ah" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326139" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284738" sensory_range="10" tribe="TDOWN_DRAKAN" name="bosun kuchuran" rank="EXPERT" height="5.11">
     <stats hp_regen="184612" maxHp="369223" pdef="555" walk_speed="1.38" mresist="1803" mboost_resist="957" run_speed="6" accuracy="111" main_hand_attack="2852" main_hand_crit_rate="131" mdef="1559" mboost="0" parry="3005" crit_spell="95" maxXp="2136748" block="0" main_hand_accuracy="3651" power="41" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100200886</item>
@@ -72581,21 +72581,21 @@
     </equipment>
     <bound_radius side="1.96" upper="5.11" front="1.54"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanWi_ItemNamed_65_Ah" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326140" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284739" sensory_range="10" tribe="TDOWN_DRAKAN" name="archivist davorkar" rank="EXPERT" height="4.55">
+<npc_template name_desc="BIDDreadgion_04_DrakanWi_ItemNamed_65_Ah" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="326140" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="284739" sensory_range="10" tribe="TDOWN_DRAKAN" name="archivist davorkar" rank="EXPERT" height="4.55">
     <stats hp_regen="244666" maxHp="489332" pdef="1559" walk_speed="1.38" mresist="1803" mboost_resist="957" run_speed="6" accuracy="111" main_hand_attack="2183" main_hand_crit_rate="131" mdef="555" mboost="0" parry="0" crit_spell="95" maxXp="2136748" block="0" main_hand_accuracy="3651" power="41" evasion="2905" run_speed_fight="8"/>
     <equipment>
       <item>101501062</item>
     </equipment>
     <bound_radius side="0.975" upper="4.55" front="1.3"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedFA_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326141" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284740" sensory_range="10" tribe="TDOWN_DRAKAN" name="supply captain marahane" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedFA_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326141" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284740" sensory_range="10" tribe="TDOWN_DRAKAN" name="supply captain marahane" rank="EXPERT" height="3.24">
     <stats hp_regen="129647" maxHp="259293" pdef="1551" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2059" main_hand_crit_rate="102" mdef="553" mboost="0" parry="0" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="2815" run_speed_fight="8"/>
     <equipment>
       <item>100901036</item>
     </equipment>
     <bound_radius side="0.225" upper="3.24" front="0.45"/>
   </npc_template>
-<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedFB_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326142" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284741" sensory_range="10" tribe="TDOWN_DRAKAN" name="quartermaster gashar" rank="EXPERT" height="3.24">
+<npc_template name_desc="BIDDreadgion_04_DrakanFiNamedFB_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="326142" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stun,Stumble,Stagger,Spin,OpenAerial" npc_id="284741" sensory_range="10" tribe="TDOWN_DRAKAN" name="quartermaster gashar" rank="EXPERT" height="3.24">
     <stats hp_regen="135540" maxHp="271079" pdef="1551" walk_speed="1.38" mresist="1646" mboost_resist="817" run_speed="6" accuracy="139" main_hand_attack="2037" main_hand_crit_rate="102" mdef="553" mboost="0" parry="0" crit_spell="74" maxXp="1870344" block="0" main_hand_accuracy="3576" power="50" evasion="2815" run_speed_fight="8"/>
     <equipment>
       <item>100901036</item>
@@ -78726,7 +78726,7 @@
     </equipment>
     <bound_radius side="0.61" upper="2.05" front="0.891"/>
   </npc_template>
-<npc_template name_desc="AI_test9" attack_range="2" npc_type="NON_ATTACKABLE" level="9" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="4" name_id="300177" attack_delay="2100" npc_id="285755" sensory_range="8" tribe="MONSTER" name="level 10 krall shaman" rank="SEASONED" height="2.05">
+<npc_template name_desc="AI_test9" attack_range="2" npc_type="ATTACKABLE" level="9" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="4" name_id="300177" attack_delay="2100" npc_id="285755" sensory_range="8" tribe="MONSTER" name="level 10 krall shaman" rank="SEASONED" height="2.05">
     <stats hp_regen="754" maxHp="1508" pdef="183" walk_speed="2" mresist="236" mboost_resist="0" run_speed="7.6" accuracy="93" main_hand_attack="68" main_hand_crit_rate="9" mdef="0" mboost="0" parry="0" crit_spell="9" maxXp="1200" block="0" main_hand_accuracy="377" power="29" evasion="256" run_speed_fight="5.5"/>
     <equipment>
       <item>100000003</item>

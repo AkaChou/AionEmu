@@ -43,6 +43,29 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 		super(owner);
 	}
 
+	/**
+	 * 注入真端战斗元素提供的属性基础值。
+	 * Injects stat bases supplied by the retail combat-element overlay.
+	 * <p>仅在调用方未提供基础值（{@code base == 0}）时替换，避免覆盖模板已有来源
+	 * （例如 {@code stats@mboost_resist}、{@code npc-combat.xml} 的数值）。
+	 * Replaces the base only when the caller supplied none ({@code base == 0}), so
+	 * existing template sources are never overwritten.
+	 *
+	 * @param statEnum 属性 / stat
+	 * @param base     调用方基础值 / caller-supplied base
+	 * @return 属性 / stat
+	 */
+	@Override
+	public Stat2 getStat(StatEnum statEnum, int base) {
+		if (base == 0 && owner.getObjectTemplate() != null) {
+			Integer overlayBase = owner.getObjectTemplate().getCombatStatBase(statEnum);
+			if (overlayBase != null) {
+				base = overlayBase;
+			}
+		}
+		return super.getStat(statEnum, base);
+	}
+
 	@Override
 	protected void onStatsChange() {
 		super.onStatsChange();
@@ -296,6 +319,13 @@ public class NpcGameStats extends CreatureGameStats<Npc> {
 	/** 返回 m accuracy / Returns the m accuracy */
 	@Override
 	public Stat2 getMAccuracy() {
+		// 真端为 NPC 单独保存 magical_hit_accuracy；覆盖层存在时以它为准。
+		// Retail stores a dedicated magical_hit_accuracy for NPCs; the overlay wins when present.
+		Integer overlayAccuracy = owner.getObjectTemplate() == null ? null
+			: owner.getObjectTemplate().getCombatStatBase(StatEnum.MAGICAL_ACCURACY);
+		if (overlayAccuracy != null && overlayAccuracy > 0) {
+			return getStat(StatEnum.MAGICAL_ACCURACY, overlayAccuracy);
+		}
 		if (pAccuracy == 0)
 			calcStats();
 		// 陷阱魔法命中计入 TrapGameStats，并与 / Trap's MAccuracy is being calculated into TrapGameStats and is related to

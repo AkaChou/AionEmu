@@ -5175,7 +5175,7 @@
     <bound_radius side="0.35" upper="2" front="0.25"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="Hippolyta_Q2484" attack_range="4" npc_type="NON_ATTACKABLE" race="ELYOS" level="34" attack_rate="1000" title_id="350662" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="351793" attack_delay="1900" npc_id="203331" sensory_range="10" tribe="USEALL" name="hippolytus" rank="DISCIPLINED" height="2">
+<npc_template name_desc="Hippolyta_Q2484" attack_range="4" npc_type="ATTACKABLE" race="ELYOS" level="34" attack_rate="1000" title_id="350662" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="351793" attack_delay="1900" npc_id="203331" sensory_range="10" tribe="USEALL" name="hippolytus" rank="DISCIPLINED" height="2">
     <stats hp_regen="2926" maxHp="5851" pdef="460" walk_speed="1.5" mresist="666" mboost_resist="0" run_speed="6" accuracy="726" main_hand_attack="288" main_hand_crit_rate="5" mdef="0" mboost="0" parry="417" crit_spell="5" maxXp="12377" block="0" main_hand_accuracy="907" power="224" evasion="317" run_speed_fight="4.2"/>
     <equipment>
       <item>113100276</item>
@@ -16365,7 +16365,7 @@
     <bound_radius side="0.492" upper="1.68" front="0.624"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="DF2_NPC_Ananta" attack_range="16" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="40" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353103" attack_delay="2300" npc_id="204387" sensory_range="7" tribe="GENERAL_DARK" name="ananta" rank="SEASONED" height="2.4">
+<npc_template name_desc="DF2_NPC_Ananta" attack_range="16" npc_type="ATTACKABLE" race="ASMODIANS" level="40" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353103" attack_delay="2300" npc_id="204387" sensory_range="7" tribe="GENERAL_DARK" name="ananta" rank="SEASONED" height="2.4">
     <stats hp_regen="22822" maxHp="45643" pdef="279" walk_speed="1.037" mresist="833" mboost_resist="0" run_speed="8" accuracy="920" main_hand_attack="899" main_hand_crit_rate="18" mdef="0" mboost="0" parry="617" crit_spell="18" maxXp="164728" block="0" main_hand_accuracy="1034" power="389" evasion="517" run_speed_fight="6.5"/>
     <equipment>
       <item>101500011</item>
@@ -16373,7 +16373,7 @@
     <bound_radius side="0.48" upper="2.4" front="0.738"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="DF2_NPC_Chaikata" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="43" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353104" attack_delay="2100" npc_id="204388" sensory_range="7" tribe="GENERAL_DARK" name="chieftain chaikata" rank="EXPERT" height="2.38">
+<npc_template name_desc="DF2_NPC_Chaikata" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="43" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353104" attack_delay="2100" npc_id="204388" sensory_range="7" tribe="GENERAL_DARK" name="chieftain chaikata" rank="EXPERT" height="2.38">
     <stats hp_regen="34737" maxHp="69473" pdef="843" walk_speed="0.6" mresist="892" mboost_resist="0" run_speed="7" accuracy="983" main_hand_attack="748" main_hand_crit_rate="18" mdef="0" mboost="0" parry="375" crit_spell="18" maxXp="56674" block="649" main_hand_accuracy="1098" power="417" evasion="275" run_speed_fight="3.6"/>
     <equipment>
       <item>100000010</item>
@@ -16491,7 +16491,7 @@
     <bound_radius side="0.35" upper="1.8" front="0.25"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="DF2_NPC_Kuriuta" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="40" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353123" attack_delay="2100" npc_id="204400" sensory_range="8" tribe="GENERAL_DARK" name="kuriuta" rank="SEASONED" height="1.68">
+<npc_template name_desc="DF2_NPC_Kuriuta" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="40" attack_rate="1000" title_id="350623" rating="ELITE" ai="general" hpgauge_level="12" type="GENERAL" name_id="353123" attack_delay="2100" npc_id="204400" sensory_range="8" tribe="GENERAL_DARK" name="kuriuta" rank="SEASONED" height="1.68">
     <stats hp_regen="30246" maxHp="60491" pdef="790" walk_speed="0.6" mresist="833" mboost_resist="0" run_speed="7" accuracy="920" main_hand_attack="678" main_hand_crit_rate="18" mdef="0" mboost="0" parry="359" crit_spell="18" maxXp="47065" block="617" main_hand_accuracy="1034" power="389" evasion="259" run_speed_fight="3.6"/>
     <equipment>
       <item>100000012</item>
@@ -19871,7 +19871,7 @@
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="NPC_Vanargand" attack_range="2" npc_type="NON_ATTACKABLE" race="MAGICALMONSTER" level="43" attack_rate="1000" rating="ELITE" ai="general" hpgauge_level="22" type="GENERAL" name_id="353320" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="204805" sensory_range="7" tribe="GENERAL_DARK" name="vanargand" rank="EXPERT" height="2.485">
+<npc_template name_desc="NPC_Vanargand" attack_range="2" npc_type="ATTACKABLE" race="MAGICALMONSTER" level="43" attack_rate="1000" rating="ELITE" ai="general" hpgauge_level="22" type="GENERAL" name_id="353320" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="204805" sensory_range="7" tribe="GENERAL_DARK" name="vanargand" rank="EXPERT" height="2.485">
     <stats hp_regen="723892" maxHp="1447783" pdef="707" walk_speed="1.03" mresist="917" mboost_resist="0" run_speed="7" accuracy="1720" main_hand_attack="986" main_hand_crit_rate="41" mdef="0" mboost="0" parry="0" crit_spell="41" maxXp="407999" block="0" main_hand_accuracy="1398" power="963" evasion="1098" run_speed_fight="5.5"/>
     <bound_radius side="1.792" upper="2.485" front="0.9675"/>
     <talk_info distance="5" is_dialog="true"/>
@@ -19913,7 +19913,7 @@
     </equipment>
     <bound_radius side="0.35" upper="2" front="0.25"/>
   </npc_template>
-<npc_template name_desc="NPC_Gark" attack_range="2" npc_type="NON_ATTACKABLE" level="37" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="353327" attack_delay="2000" npc_id="204811" sensory_range="8" tribe="GENERAL_DARK" name="gark" rank="DISCIPLINED" height="1.68">
+<npc_template name_desc="NPC_Gark" attack_range="2" npc_type="ATTACKABLE" level="37" attack_rate="1000" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="353327" attack_delay="2000" npc_id="204811" sensory_range="8" tribe="GENERAL_DARK" name="gark" rank="DISCIPLINED" height="1.68">
     <stats hp_regen="4045" maxHp="8090" pdef="617" walk_speed="0.6" mresist="725" mboost_resist="0" run_speed="7" accuracy="820" main_hand_attack="290" main_hand_crit_rate="5" mdef="0" mboost="0" parry="0" crit_spell="5" maxXp="5080" block="0" main_hand_accuracy="970" power="242" evasion="679" run_speed_fight="3.6"/>
     <bound_radius side="0.492" upper="1.68" front="0.624"/>
     <talk_info distance="5" is_dialog="true"/>
@@ -22038,7 +22038,7 @@
     <bound_radius side="0.35" upper="2" front="0.25"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="Carmen" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="53" attack_rate="1000" title_id="370238" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="352662" attack_delay="2260" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="205239" sensory_range="25" tribe="GENERALDA_ALIDR" name="jennen" rank="EXPERT" height="2.2">
+<npc_template name_desc="Carmen" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="53" attack_rate="1000" title_id="370238" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="352662" attack_delay="2260" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="205239" sensory_range="25" tribe="GENERALDA_ALIDR" name="jennen" rank="EXPERT" height="2.2">
     <stats hp_regen="118947" maxHp="237893" pdef="713" walk_speed="0" mresist="1309" mboost_resist="0" run_speed="0" accuracy="111" main_hand_attack="1469" main_hand_crit_rate="41" mdef="0" mboost="0" parry="1088" crit_spell="41" maxXp="802350" block="0" main_hand_accuracy="2485" power="41" evasion="988" run_speed_fight="0"/>
     <equipment>
       <item>113600825</item>
@@ -27491,7 +27491,7 @@
     <bound_radius side="0.4375" upper="2.5" front="0.3125"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="Ileniel" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="370474" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="GUARD" name_id="355635" attack_delay="3150" npc_id="205812" sensory_range="5" tribe="GENERAL_IDLDF4A_INTRO" name="liniel" rank="DISCIPLINED" height="2.7">
+<npc_template name_desc="Ileniel" attack_range="2" npc_type="ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="370474" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="GUARD" name_id="355635" attack_delay="3150" npc_id="205812" sensory_range="5" tribe="GENERAL_IDLDF4A_INTRO" name="liniel" rank="DISCIPLINED" height="2.7">
     <stats hp_regen="3029112" maxHp="3029112" pdef="1276" walk_speed="1.457" mresist="1454" mboost_resist="307" run_speed="6" accuracy="2370" main_hand_attack="514" main_hand_crit_rate="86" mdef="0" mboost="0" parry="0" crit_spell="68" maxXp="0" block="2471" main_hand_accuracy="3018" power="1232" evasion="0" run_speed_fight="4.2"/>
     <equipment>
       <item>113600817</item>
@@ -27570,7 +27570,7 @@
     <bound_radius side="0.4375" upper="2.5" front="0.3125"/>
     <talk_info distance="5" is_dialog="true"/>
   </npc_template>
-<npc_template name_desc="Querion" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="370474" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="GUARD" name_id="355641" attack_delay="3150" npc_id="205818" sensory_range="5" tribe="GENERAL_DARK_IDLDF4A_INTRO" name="querion" rank="DISCIPLINED" height="2.7">
+<npc_template name_desc="Querion" attack_range="2" npc_type="ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="370474" rating="NORMAL" ai="aggressive" hpgauge_level="21" type="GUARD" name_id="355641" attack_delay="3150" npc_id="205818" sensory_range="5" tribe="GENERAL_DARK_IDLDF4A_INTRO" name="querion" rank="DISCIPLINED" height="2.7">
     <stats hp_regen="3029112" maxHp="3029112" pdef="1276" walk_speed="1.457" mresist="1454" mboost_resist="307" run_speed="6" accuracy="2370" main_hand_attack="514" main_hand_crit_rate="86" mdef="0" mboost="0" parry="0" crit_spell="68" maxXp="0" block="2471" main_hand_accuracy="3018" power="1232" evasion="0" run_speed_fight="4.2"/>
     <equipment>
       <item>113600649</item>
@@ -31548,7 +31548,7 @@
     <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="0.5" mresist="28" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="1232" evasion="144" run_speed_fight="6"/>
     <bound_radius side="0.5" upper="2" front="2"/>
   </npc_template>
-<npc_template name_desc="hippolyta_Q14123" attack_range="4" npc_type="NON_ATTACKABLE" race="ELYOS" level="34" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="GENERAL" name_id="356849" attack_delay="1900" npc_id="206360" sensory_range="10" tribe="AGGRESSIVESINGLEMONSTER" name="Peddler Hippola" rank="DISCIPLINED" height="2">
+<npc_template name_desc="hippolyta_Q14123" attack_range="4" npc_type="ATTACKABLE" race="ELYOS" level="34" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="3" type="GENERAL" name_id="356849" attack_delay="1900" npc_id="206360" sensory_range="10" tribe="AGGRESSIVESINGLEMONSTER" name="Peddler Hippola" rank="DISCIPLINED" height="2">
     <stats hp_regen="2926" maxHp="5851" pdef="460" walk_speed="1.5" mresist="666" mboost_resist="0" run_speed="6" accuracy="1185" main_hand_attack="288" main_hand_crit_rate="5" mdef="0" mboost="0" parry="417" crit_spell="5" maxXp="12377" block="0" main_hand_accuracy="907" power="932" evasion="317" run_speed_fight="4.2"/>
     <equipment>
       <item>114100294</item>
@@ -39427,7 +39427,7 @@
     </equipment>
     <bound_radius side="0.42" upper="2.4" front="0.3"/>
   </npc_template>
-<npc_template name_desc="PvP_DF3_Sd_Dguard_Ranger_Ae2_lv50" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="389849" attack_delay="2260" abyss_type="GUARD" npc_id="207875" sensory_range="25" tribe="GENERALDA_ALIDR" name="research sentinel" rank="EXPERT" height="2.2">
+<npc_template name_desc="PvP_DF3_Sd_Dguard_Ranger_Ae2_lv50" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="389849" attack_delay="2260" abyss_type="GUARD" npc_id="207875" sensory_range="25" tribe="GENERALDA_ALIDR" name="research sentinel" rank="EXPERT" height="2.2">
     <stats hp_regen="60711" maxHp="121421" pdef="656" walk_speed="0" mresist="1065" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1133" main_hand_crit_rate="32" mdef="0" mboost="0" parry="745" crit_spell="32" maxXp="108423" block="0" main_hand_accuracy="1370" power="924" evasion="645" run_speed_fight="0"/>
     <equipment>
       <item>114301724</item>
@@ -39439,7 +39439,7 @@
     </equipment>
     <bound_radius side="0.385" upper="2.2" front="0.275"/>
   </npc_template>
-<npc_template name_desc="PvP_DF3_Sd_Dguard_Ranger_Ah1_lv50" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="389849" attack_delay="2260" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="207876" sensory_range="25" tribe="GENERALDA_ALIDR" name="research sentinel" rank="EXPERT" height="2.2">
+<npc_template name_desc="PvP_DF3_Sd_Dguard_Ranger_Ah1_lv50" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="389849" attack_delay="2260" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="207876" sensory_range="25" tribe="GENERALDA_ALIDR" name="research sentinel" rank="EXPERT" height="2.2">
     <stats hp_regen="114067" maxHp="228134" pdef="656" walk_speed="0" mresist="1065" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1197" main_hand_crit_rate="41" mdef="0" mboost="0" parry="745" crit_spell="41" maxXp="122058" block="0" main_hand_accuracy="1470" power="755" evasion="645" run_speed_fight="0"/>
     <equipment>
       <item>114301724</item>
@@ -39451,7 +39451,7 @@
     </equipment>
     <bound_radius side="0.385" upper="2.2" front="0.275"/>
   </npc_template>
-<npc_template name_desc="PvP_DF3_Sd_Dguard_Wizard_Ae2_lv50" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="389850" attack_delay="2300" abyss_type="GUARD" npc_id="207877" sensory_range="25" tribe="GENERALDA_ALIDR" name="research supervisor" rank="EXPERT" height="2.2">
+<npc_template name_desc="PvP_DF3_Sd_Dguard_Wizard_Ae2_lv50" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="14" type="ABYSS_GUARD" name_id="389850" attack_delay="2300" abyss_type="GUARD" npc_id="207877" sensory_range="25" tribe="GENERALDA_ALIDR" name="research supervisor" rank="EXPERT" height="2.2">
     <stats hp_regen="57920" maxHp="115839" pdef="346" walk_speed="0" mresist="1065" mboost_resist="0" run_speed="0" accuracy="1845" main_hand_attack="1272" main_hand_crit_rate="32" mdef="0" mboost="0" parry="745" crit_spell="32" maxXp="108423" block="0" main_hand_accuracy="1370" power="924" evasion="645" run_speed_fight="0"/>
     <equipment>
       <item>114101592</item>
@@ -39463,7 +39463,7 @@
     </equipment>
     <bound_radius side="0.385" upper="2.2" front="0.275"/>
   </npc_template>
-<npc_template name_desc="PvP_DF3_Sd_Dguard_Wizard_Ah1_lv50" attack_range="37" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="389850" attack_delay="2300" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="207878" sensory_range="25" tribe="GENERALDA_ALIDR" name="research supervisor" rank="EXPERT" height="2.2">
+<npc_template name_desc="PvP_DF3_Sd_Dguard_Wizard_Ah1_lv50" attack_range="37" npc_type="ATTACKABLE" race="ASMODIANS" level="50" attack_rate="1000" title_id="370313" rating="ELITE" ai="aggressive" hpgauge_level="20" type="ABYSS_GUARD" name_id="389850" attack_delay="2300" abyss_type="GUARD" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="207878" sensory_range="25" tribe="GENERALDA_ALIDR" name="research supervisor" rank="EXPERT" height="2.2">
     <stats hp_regen="108823" maxHp="217645" pdef="346" walk_speed="0" mresist="1065" mboost_resist="0" run_speed="0" accuracy="1476" main_hand_attack="1344" main_hand_crit_rate="41" mdef="0" mboost="0" parry="745" crit_spell="41" maxXp="122058" block="0" main_hand_accuracy="1470" power="755" evasion="645" run_speed_fight="0"/>
     <equipment>
       <item>114101592</item>

@@ -131,7 +131,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 		if (gear == null) {
 			writeH(0x00);
 			writeH(0x00);
-			writeF(boundRadius.getFront());
+			writeF(boundRadius.getHalfFront());
 		} else {
 			writeD(gear.getItemsMask());
 			for (Entry<ItemSlot, ItemTemplate> item : gear) {
@@ -144,7 +144,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 				writeH(0x00);
 				writeH(0x00);
 			}
-			writeF(boundRadius.getFront() + 0.125f + (hasWeapon ? 0.1f : 0f));
+			writeF(boundRadius.getHalfFront() + 0.125f + (hasWeapon ? 0.1f : 0f));
 		}
 		writeF(npcTemplate.getHeight());
 		writeF(_npc.getGameStats().getMovementSpeedFloat());

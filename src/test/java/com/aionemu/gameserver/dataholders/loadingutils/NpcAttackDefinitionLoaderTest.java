@@ -70,6 +70,40 @@ class NpcAttackDefinitionLoaderTest {
 	}
 
 	@Test
+	void selectsFirstCoveringSegmentInRetailOrder() throws Exception {
+		NpcData npcData = (NpcData) JAXBContext.newInstance(NpcData.class).createUnmarshaller().unmarshal(new StringReader("""
+				<npc_templates>
+				  <npc_template npc_id="231073" level="75" name_id="3" npc_type="ATTACKABLE" attack_range="10">
+				    <stats/>
+				  </npc_template>
+				</npc_templates>
+				"""));
+		Path file = tempDir.resolve("npc-attack-profiles-order.xml");
+		Files.writeString(file, """
+				<npc_attack_profiles>
+				  <npc id="231073">
+				    <attack range="50" rate="1000" type="magical_Fire" attack_mod="100"/>
+				    <attack range="10" rate="1000" type="physical" attack_mod="100"/>
+				    <attack range="20" rate="1000" type="magical_Earth" attack_mod="150"/>
+				  </npc>
+				</npc_attack_profiles>
+				""");
+
+		assertEquals(1, NpcAttackDefinitionLoader.apply(file.toFile(), npcData));
+		NpcTemplate template = npcData.getNpcTemplate(231073);
+
+		// 50m 段在 retail 顺序中排第一，覆盖 5m/15m 时优先于更近的段。
+		// The 50m segment is first in retail order and wins over closer segments at 5m and 15m.
+		assertEquals(new NpcAttackProfile(50f, 1000, ItemAttackType.MAGICAL_FIRE, 100),
+			template.selectAttackProfile(5f));
+		assertEquals(new NpcAttackProfile(50f, 1000, ItemAttackType.MAGICAL_FIRE, 100),
+			template.selectAttackProfile(15f));
+		// 全部不覆盖时回退到最大射程段。 / Fall back to the longest-range segment when none covers.
+		assertEquals(new NpcAttackProfile(50f, 1000, ItemAttackType.MAGICAL_FIRE, 100),
+			template.selectAttackProfile(60f));
+	}
+
+	@Test
 	void retailAttackProfilesCoverMultiAttackNpcs() throws Exception {
 		int npcs = 0;
 		int segments = 0;

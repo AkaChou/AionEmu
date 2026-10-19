@@ -148,6 +148,11 @@ public class CreatureEventHandler {
 	}
 
 	static float sensoryBoundOffset(BoundRadius bound, int modelScalePercent) {
+		// 真端投影覆盖层已把 front/side 预缩放为全长，不能再乘 model_scale。
+		// Retail-projected overlays store pre-scaled full lengths, so model_scale must not be applied again.
+		if (bound.isFullLength()) {
+			return bound.getHalfMaxHorizontal();
+		}
 		return Math.max(bound.getFront(), bound.getSide()) * Math.max(0, modelScalePercent) / 200f;
 	}
 }

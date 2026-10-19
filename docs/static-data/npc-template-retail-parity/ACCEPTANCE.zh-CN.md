@@ -81,13 +81,53 @@
 | 13 | `258220` | 可被玩家选中并攻击（实例 Boss） |
 | 14 | `884355` | 同上 |
 | 15 | `277225` | 炮台可被攻击 |
-| 16 | `833826` | 露娜友军仍不可攻击（回归对照） |
+| 16 | `833826` | 原露娜友军，第二批后应为 `ATTACKABLE`；重点回归露娜副本脚本/友军逻辑 |
 
 - [ ] 13–15 可正常进入战斗、掉血、死亡
-- [ ] 16 保持 `NON_ATTACKABLE`
+- [ ] 16 已为 `ATTACKABLE`，露娜副本入场/友军行为无异常
+- [ ] 另抽 2 个原 `PEACE` NPC（如 `835609`）与 1 个原 `INVULNERABLE` NPC，确认任务对话/无敌逻辑未受影响
 
 ### 数值尾巴
 
 - [ ] `836785` / `836786`（事件入口）等级 40、maxHp 9426、hp_regen 4713，能被正常击杀
 - [ ] `213576`–`213579` 等级 35；`max_chase_time` 保持 0（任务 14026 防守期间无限追击）
 - [ ] 抽 3 个 `IDInfinity_*` 怪，`sensory_range` 为真端值且仇恨范围无明显异常
+
+## 七、P4 bound_radius 验收
+
+| # | NPC id | 目标 (front/side/upper) | 预期 |
+|---|---|---|---|
+| 17 | `201003` | 0.5 / 0.5 / 1.3 | 碰撞半径 0.25；贴墙距离较改动前更近 |
+| 18 | `202514` | 1.8 / 1.08 / 1.32 | 碰撞半径 0.9（scale 120） |
+| 19 | `833817` | 0.5 / 0.7 / 2.0 | 碰撞半径 0.35（原值组，数据不变） |
+| 20 | `200000` | 0.12 / 0.3456 / 0.3 | SkillZone scale 10，仅数据核对 |
+
+- [ ] 17–19 刷怪、移动、贴墙无卡住/抽搐；碰撞半径与 `max(front,side)*0.5` 一致
+- [ ] 视线/感知范围正常；不再出现感知偏移被重复乘 `scale`
+- [ ] 编队间距正常（`WalkerGroup` 使用半值 `side`）
+- [ ] 客户端 NPC 边界显示正常（`SM_NPC_INFO` 使用半值 `front`）
+- [ ] 寻路/跟随 Z 偏移正常（`upper` 已按 `scale` 缩放）
+
+## 八、P4 战斗元素与主人物品继承验收
+
+> 数据：`definitions/compact/npc-combat-elements.xml`（87,169 行）与 `npc-master-item-bonus.xml`（342 行）。
+> 覆盖层经 `NpcGameStats.getStat` 注入；`disk_type` 复核为客户端字段，不在本清单。
+
+| # | NPC id | 字段 | 真端值 | 预期 |
+|---|---|---|---|---|
+| 21 | `200000` | `elemental_defend_*` | 120（六元素） | 火/水/风/地/光/暗魔法伤害按 120 元素防御减免 |
+| 22 | `200000` | `abnormal_resist` | sleep 100、bleed 50 | 睡眠/流血抗性分别 +100 / +50 |
+| 23 | `283021` | `hit_count` | 2 | NPC 普攻出现两段伤害（第二段为总伤害的 10%） |
+| 24 | `220305` | `limit_attribute` | `Type_A` | 玩家 Type_A PvE 攻击比率参与伤害追加 |
+| 25 | `201056` | `abnormal_penetration` | `Stat_ArAll,Stat_ArStunLike` 600 | 睡眠/眩晕类异常命中穿透 600 |
+| 26 | `248006` | `npc_pve_*` | 攻/防 100 | PvE 攻防比率 +100‰ |
+| 27 | `201005` / `201007` | `elemental_immunity` | `erearth` / `erair` | 地/风元素技能伤害归零 |
+| 28 | `201000` | `master_item_physical_attack` | ratio 50 / limit 85 | 召唤物继承主人装备物攻，封顶 85 |
+
+- [ ] 21–22：对样本 NPC 施加对应元素/异常技能，减免与抗性符合预期
+- [ ] 23：`283021` 普攻日志出现两段伤害，且总伤害不显著翻倍
+- [ ] 24–26：PvE 伤害与异常命中穿透有可观测变化
+- [ ] 27：地对 `201005`、风对 `201007` 的元素伤害为 0 或仅保留最小伤害
+- [ ] 28：召唤 `201000` 时，主人更换高物攻装备后召唤物继承值封顶 85；卸装后回落
+- [ ] `dp_reduce` / `cancel_level` / `physical_damage_trim` / `magical_damage_trim` / `noreducespell_immune` 为数据-only，本期无运行时预期
+- [ ] 启动日志无 `NpcCombatElementsDefinitionLoader` / `NpcMasterItemBonusDefinitionLoader` 相关 WARN/ERROR

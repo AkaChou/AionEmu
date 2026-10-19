@@ -71,6 +71,9 @@ public class XmlDataLoader {
 	private static final String NPC_DROP_DEFINITIONS_DIR = "./definitions/compact/npc_drops";
 	private static final String NPC_COMBAT_DEFINITIONS_FILE = "./definitions/compact/npc-combat.xml";
 	private static final String NPC_ATTACK_DEFINITIONS_FILE = "./definitions/compact/npc-attack-profiles.xml";
+	private static final String NPC_BOUND_RADIUS_DEFINITIONS_FILE = "./definitions/compact/npc-bound-radius.xml";
+	private static final String NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE = "./definitions/compact/npc-combat-elements.xml";
+	private static final String NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE = "./definitions/compact/npc-master-item-bonus.xml";
 	private static final String HOTSPOT_LOCATION_DEFINITIONS_FILE = "./definitions/compact/hotspot_location/hotspot_location.xml";
 	private static final String SKILL_DEFINITIONS_DIR = "./definitions/compact/skills";
 	private static final String NPC_SKILL_DEFINITIONS_FILE = SKILL_DEFINITIONS_DIR + "/npc-skills.xml";
@@ -292,6 +295,9 @@ public class XmlDataLoader {
 			NpcData data = loadNpcDataSharded();
 			NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data);
 			NpcAttackDefinitionLoader.apply(Config.definitionFile(NPC_ATTACK_DEFINITIONS_FILE), data);
+			NpcBoundRadiusDefinitionLoader.apply(Config.definitionFile(NPC_BOUND_RADIUS_DEFINITIONS_FILE), data);
+			NpcCombatElementsDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE), data);
+			NpcMasterItemBonusDefinitionLoader.apply(Config.definitionFile(NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE), data);
 			return data;
 		}, phaseTimings);
 		List<CompletableFuture<?>> definitionFutures = List.of(petDefinitionsFuture, npcDropDataFuture,

@@ -16,6 +16,7 @@ import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.items.NpcEquippedGear;
@@ -125,6 +126,10 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	/** 返回 massive looting / Returns the massive looting */
 	@XmlElement(name = "massive_looting")
 	private MassiveLooting massiveLooting;
+	/** 真端战斗元素覆盖层（由紧凑定义加载）。 / Retail combat-element overlay (loaded from compact definitions). */
+	private NpcCombatElements combatElements;
+	/** 真端主人物品加成配置（由紧凑定义加载）。 / Retail master-item bonus configuration. */
+	private NpcMasterItemBonus masterItemBonus;
 
 	/** 返回模板 ID / Returns the template id */
 	@Override
@@ -338,8 +343,9 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	}
 
 	/**
-	 * 按目标距离选择攻击段：优先覆盖目标的最小射程段，全部不覆盖时取最大射程段。
-	 * Selects the attack segment for the distance: the smallest covering segment, else the longest-range segment.
+	 * 按目标距离选择攻击段：按 retail 段顺序取第一个覆盖目标的段，全部不覆盖时取最大射程段。
+	 * Selects the attack segment for the distance: the first retail-ordered segment that covers the target,
+	 * otherwise the longest-range segment.
 	 *
 	 * @param distance 目标距离（米） / target distance in metres
 	 * @return 选中的攻击段；无多段数据时为 {@code null} / selected segment, or {@code null} without profiles
@@ -348,21 +354,60 @@ public class NpcTemplate extends VisibleObjectTemplate {
 		if (attackProfiles == null || attackProfiles.isEmpty()) {
 			return null;
 		}
-		NpcAttackProfile best = null;
 		for (NpcAttackProfile profile : attackProfiles) {
-			if (profile.covers(distance) && (best == null || profile.range() < best.range())) {
-				best = profile;
+			if (profile.covers(distance)) {
+				return profile;
 			}
 		}
-		if (best != null) {
-			return best;
-		}
+		NpcAttackProfile farthest = null;
 		for (NpcAttackProfile profile : attackProfiles) {
-			if (best == null || profile.range() > best.range()) {
-				best = profile;
+			if (farthest == null || profile.range() > farthest.range()) {
+				farthest = profile;
 			}
 		}
-		return best;
+		return farthest;
+	}
+
+	/**
+	 * 返回真端普攻命中段数；无覆盖层时为 1。
+	 * Returns the retail auto-attack hit count, or 1 without an overlay.
+	 *
+	 * @return 命中段数 / hit count
+	 */
+	public int getHitCount() {
+		return combatElements == null ? 1 : combatElements.getHitCount();
+	}
+
+	/**
+	 * 返回战斗元素提供的属性基础值。
+	 * Returns a stat base supplied by the combat-element overlay.
+	 *
+	 * @param stat 属性 / stat
+	 * @return 基础值；未建模时为 {@code null} / base value, or {@code null}
+	 */
+	public Integer getCombatStatBase(StatEnum stat) {
+		return combatElements == null ? null : combatElements.getStatBase(stat);
+	}
+
+	/**
+	 * 判断是否免疫指定元素。
+	 * Returns whether the NPC is immune to the given element.
+	 *
+	 * @param element 元素 / element
+	 * @return 是否免疫 / whether immune
+	 */
+	public boolean isElementallyImmune(SkillElement element) {
+		return combatElements != null && combatElements.isElementallyImmune(element);
+	}
+
+	/**
+	 * 返回真端 limit_attribute 对应的 PvE 攻击比率属性。
+	 * Returns the PvE attack-ratio stat for the retail limit_attribute.
+	 *
+	 * @return PvE 属性；无配置时为 {@code null} / PvE stat, or {@code null}
+	 */
+	public StatEnum getLimitAttributeStat() {
+		return combatElements == null ? null : combatElements.getLimitAttributeStat();
 	}
 
 	/** 返回 minimum shout range / Returns the minimum shout range */
@@ -383,6 +428,16 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	@Override
 	public BoundRadius getBoundRadius() {
 		return boundRadius != null ? boundRadius : super.getBoundRadius();
+	}
+
+	/**
+	 * 设置边界半径（供紧凑定义覆盖层使用）。
+	 * Sets the bound radius (used by compact definition overlays).
+	 *
+	 * @param boundRadius 边界半径 / bound radius
+	 */
+	public void setBoundRadius(BoundRadius boundRadius) {
+		this.boundRadius = boundRadius;
 	}
 
 	/** 返回 npc template type / Returns the npc template type */

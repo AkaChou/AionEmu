@@ -21,6 +21,12 @@ public class HomingGameStats extends SummonedObjectGameStats {
 		if (owner.getMaster() == null) {
 			return stat;
 		}
+		// 模板带真端主人物品配置时，父类已按配置完成继承，不能再叠加旧的固定比例。
+		// When the template carries retail master-item config, the superclass already applied it;
+		// do not stack the legacy fixed ratio on top.
+		if (owner.getObjectTemplate() != null && owner.getObjectTemplate().getMasterItemBonus() != null) {
+			return stat;
+		}
 		return switch (statEnum) {
 			case MAGICAL_ATTACK -> {
 				stat.setBonusRate(0.2f);

@@ -1,0 +1,2178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<npc_master_item_bonuses>
+  <npc id="201000">
+    <stat name="hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+  </npc>
+  <npc id="201001">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="201010">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="251"/>
+    <stat name="hit_accuracy" ratio="50" limit="251"/>
+    <stat name="magical_attack" ratio="50" limit="42"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="145"/>
+    <stat name="magical_resist" ratio="50" limit="170"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="787"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="42"/>
+    <stat name="physical_defend" ratio="50" limit="287"/>
+  </npc>
+  <npc id="201011">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="251"/>
+    <stat name="hit_accuracy" ratio="50" limit="251"/>
+    <stat name="magical_attack" ratio="50" limit="42"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="145"/>
+    <stat name="magical_resist" ratio="50" limit="170"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="787"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="42"/>
+    <stat name="physical_defend" ratio="50" limit="287"/>
+  </npc>
+  <npc id="201012">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="231"/>
+    <stat name="hit_accuracy" ratio="50" limit="242"/>
+    <stat name="magical_attack" ratio="50" limit="46"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="119"/>
+    <stat name="magical_resist" ratio="50" limit="144"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="348"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="46"/>
+    <stat name="physical_defend" ratio="50" limit="92"/>
+  </npc>
+  <npc id="201013">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="231"/>
+    <stat name="hit_accuracy" ratio="50" limit="242"/>
+    <stat name="magical_attack" ratio="50" limit="46"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="119"/>
+    <stat name="magical_resist" ratio="50" limit="144"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="348"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="46"/>
+    <stat name="physical_defend" ratio="50" limit="92"/>
+  </npc>
+  <npc id="201014">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="379"/>
+    <stat name="hit_accuracy" ratio="50" limit="379"/>
+    <stat name="magical_attack" ratio="50" limit="68"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="250"/>
+    <stat name="magical_resist" ratio="50" limit="275"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1805"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="68"/>
+    <stat name="physical_defend" ratio="50" limit="465"/>
+  </npc>
+  <npc id="201015">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="379"/>
+    <stat name="hit_accuracy" ratio="50" limit="379"/>
+    <stat name="magical_attack" ratio="50" limit="68"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="250"/>
+    <stat name="magical_resist" ratio="50" limit="275"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1805"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="68"/>
+    <stat name="physical_defend" ratio="50" limit="465"/>
+  </npc>
+  <npc id="201016">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="364"/>
+    <stat name="hit_accuracy" ratio="50" limit="382"/>
+    <stat name="magical_attack" ratio="50" limit="78"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="224"/>
+    <stat name="magical_resist" ratio="50" limit="249"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="792"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="78"/>
+    <stat name="physical_defend" ratio="50" limit="159"/>
+  </npc>
+  <npc id="201017">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="364"/>
+    <stat name="hit_accuracy" ratio="50" limit="382"/>
+    <stat name="magical_attack" ratio="50" limit="78"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="224"/>
+    <stat name="magical_resist" ratio="50" limit="249"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="792"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="78"/>
+    <stat name="physical_defend" ratio="50" limit="159"/>
+  </npc>
+  <npc id="201018">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="506"/>
+    <stat name="hit_accuracy" ratio="50" limit="506"/>
+    <stat name="magical_attack" ratio="50" limit="96"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="355"/>
+    <stat name="magical_resist" ratio="50" limit="380"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3193"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="96"/>
+    <stat name="physical_defend" ratio="50" limit="642"/>
+  </npc>
+  <npc id="201019">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="506"/>
+    <stat name="hit_accuracy" ratio="50" limit="506"/>
+    <stat name="magical_attack" ratio="50" limit="96"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="355"/>
+    <stat name="magical_resist" ratio="50" limit="380"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3193"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="96"/>
+    <stat name="physical_defend" ratio="50" limit="642"/>
+  </npc>
+  <npc id="201020">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="498"/>
+    <stat name="hit_accuracy" ratio="50" limit="521"/>
+    <stat name="magical_attack" ratio="50" limit="108"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="329"/>
+    <stat name="magical_resist" ratio="50" limit="354"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1510"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="108"/>
+    <stat name="physical_defend" ratio="50" limit="226"/>
+  </npc>
+  <npc id="201021">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="498"/>
+    <stat name="hit_accuracy" ratio="50" limit="521"/>
+    <stat name="magical_attack" ratio="50" limit="108"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="329"/>
+    <stat name="magical_resist" ratio="50" limit="354"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1510"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="108"/>
+    <stat name="physical_defend" ratio="50" limit="226"/>
+  </npc>
+  <npc id="201022">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="201023">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="201024">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="201025">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="201026">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="410"/>
+    <stat name="hit_accuracy" ratio="50" limit="410"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="276"/>
+    <stat name="magical_resist" ratio="50" limit="301"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="796"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+    <stat name="physical_defend" ratio="50" limit="96"/>
+  </npc>
+  <npc id="201027">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="410"/>
+    <stat name="hit_accuracy" ratio="50" limit="410"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="276"/>
+    <stat name="magical_resist" ratio="50" limit="301"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="796"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+    <stat name="physical_defend" ratio="50" limit="96"/>
+  </npc>
+  <npc id="201028">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="67"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="198"/>
+    <stat name="magical_resist" ratio="50" limit="222"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="854"/>
+    <stat name="parry" ratio="50" limit="283"/>
+    <stat name="physical_attack" ratio="50" limit="67"/>
+    <stat name="physical_defend" ratio="50" limit="251"/>
+  </npc>
+  <npc id="201029">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="67"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="198"/>
+    <stat name="magical_resist" ratio="50" limit="222"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="854"/>
+    <stat name="parry" ratio="50" limit="283"/>
+    <stat name="physical_attack" ratio="50" limit="67"/>
+    <stat name="physical_defend" ratio="50" limit="251"/>
+  </npc>
+  <npc id="201030">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="398"/>
+    <stat name="magical_attack" ratio="50" limit="100"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="303"/>
+    <stat name="magical_resist" ratio="50" limit="327"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1708"/>
+    <stat name="parry" ratio="50" limit="398"/>
+    <stat name="physical_attack" ratio="50" limit="100"/>
+    <stat name="physical_defend" ratio="50" limit="369"/>
+  </npc>
+  <npc id="201031">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="398"/>
+    <stat name="magical_attack" ratio="50" limit="100"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="303"/>
+    <stat name="magical_resist" ratio="50" limit="327"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1708"/>
+    <stat name="parry" ratio="50" limit="398"/>
+    <stat name="physical_attack" ratio="50" limit="100"/>
+    <stat name="physical_defend" ratio="50" limit="369"/>
+  </npc>
+  <npc id="201032">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="516"/>
+    <stat name="hit_accuracy" ratio="50" limit="516"/>
+    <stat name="magical_attack" ratio="50" limit="112"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="364"/>
+    <stat name="magical_resist" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1193"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="112"/>
+    <stat name="physical_defend" ratio="50" limit="124"/>
+  </npc>
+  <npc id="201033">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="516"/>
+    <stat name="hit_accuracy" ratio="50" limit="516"/>
+    <stat name="magical_attack" ratio="50" limit="112"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="364"/>
+    <stat name="magical_resist" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1193"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="112"/>
+    <stat name="physical_defend" ratio="50" limit="124"/>
+  </npc>
+  <npc id="201034">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="494"/>
+    <stat name="magical_attack" ratio="50" limit="130"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="390"/>
+    <stat name="magical_resist" ratio="50" limit="415"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2471"/>
+    <stat name="parry" ratio="50" limit="494"/>
+    <stat name="physical_attack" ratio="50" limit="130"/>
+    <stat name="physical_defend" ratio="50" limit="467"/>
+  </npc>
+  <npc id="201035">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="494"/>
+    <stat name="magical_attack" ratio="50" limit="130"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="390"/>
+    <stat name="magical_resist" ratio="50" limit="415"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2471"/>
+    <stat name="parry" ratio="50" limit="494"/>
+    <stat name="physical_attack" ratio="50" limit="130"/>
+    <stat name="physical_defend" ratio="50" limit="467"/>
+  </npc>
+  <npc id="201036">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="609"/>
+    <stat name="hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_attack" ratio="50" limit="138"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="416"/>
+    <stat name="magical_resist" ratio="50" limit="441"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2153"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="138"/>
+    <stat name="physical_defend" ratio="50" limit="282"/>
+  </npc>
+  <npc id="201037">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="609"/>
+    <stat name="hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_attack" ratio="50" limit="138"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="416"/>
+    <stat name="magical_resist" ratio="50" limit="441"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2153"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="138"/>
+    <stat name="physical_defend" ratio="50" limit="282"/>
+  </npc>
+  <npc id="201038">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="622"/>
+    <stat name="hit_accuracy" ratio="50" limit="622"/>
+    <stat name="magical_attack" ratio="50" limit="119"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="451"/>
+    <stat name="magical_resist" ratio="50" limit="476"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="4592"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="119"/>
+    <stat name="physical_defend" ratio="50" limit="805"/>
+  </npc>
+  <npc id="201039">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="622"/>
+    <stat name="hit_accuracy" ratio="50" limit="622"/>
+    <stat name="magical_attack" ratio="50" limit="119"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="451"/>
+    <stat name="magical_resist" ratio="50" limit="476"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="4592"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="119"/>
+    <stat name="physical_defend" ratio="50" limit="805"/>
+  </npc>
+  <npc id="201040">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="771"/>
+    <stat name="hit_accuracy" ratio="50" limit="771"/>
+    <stat name="magical_attack" ratio="50" limit="170"/>
+    <stat name="magical_critical" ratio="50" limit="4"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="493"/>
+    <stat name="magical_resist" ratio="50" limit="517"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="4298"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="170"/>
+    <stat name="physical_defend" ratio="50" limit="658"/>
+  </npc>
+  <npc id="201041">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="551"/>
+    <stat name="magical_attack" ratio="50" limit="176"/>
+    <stat name="magical_critical" ratio="50" limit="4"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="493"/>
+    <stat name="magical_resist" ratio="50" limit="517"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="4605"/>
+    <stat name="parry" ratio="50" limit="551"/>
+    <stat name="physical_attack" ratio="50" limit="176"/>
+    <stat name="physical_defend" ratio="50" limit="790"/>
+  </npc>
+  <npc id="201049">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="201050">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="201051">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="201052">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="201053">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="201060">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="644"/>
+    <stat name="hit_accuracy" ratio="50" limit="644"/>
+    <stat name="magical_attack" ratio="50" limit="141"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="469"/>
+    <stat name="magical_resist" ratio="50" limit="494"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1768"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="141"/>
+    <stat name="physical_defend" ratio="50" limit="158"/>
+  </npc>
+  <npc id="201061">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="644"/>
+    <stat name="hit_accuracy" ratio="50" limit="644"/>
+    <stat name="magical_attack" ratio="50" limit="141"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="469"/>
+    <stat name="magical_resist" ratio="50" limit="494"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="1768"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="141"/>
+    <stat name="physical_defend" ratio="50" limit="158"/>
+  </npc>
+  <npc id="201062">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="608"/>
+    <stat name="magical_attack" ratio="50" limit="161"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="520"/>
+    <stat name="magical_resist" ratio="50" limit="520"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3564"/>
+    <stat name="parry" ratio="50" limit="608"/>
+    <stat name="physical_attack" ratio="50" limit="161"/>
+    <stat name="physical_defend" ratio="50" limit="586"/>
+  </npc>
+  <npc id="201063">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="608"/>
+    <stat name="magical_attack" ratio="50" limit="161"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="520"/>
+    <stat name="magical_resist" ratio="50" limit="520"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3564"/>
+    <stat name="parry" ratio="50" limit="608"/>
+    <stat name="physical_attack" ratio="50" limit="161"/>
+    <stat name="physical_defend" ratio="50" limit="586"/>
+  </npc>
+  <npc id="201064">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="743"/>
+    <stat name="hit_accuracy" ratio="50" limit="778"/>
+    <stat name="magical_attack" ratio="50" limit="169"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="547"/>
+    <stat name="magical_resist" ratio="50" limit="547"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3066"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="169"/>
+    <stat name="physical_defend" ratio="50" limit="349"/>
+  </npc>
+  <npc id="201065">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="743"/>
+    <stat name="hit_accuracy" ratio="50" limit="778"/>
+    <stat name="magical_attack" ratio="50" limit="169"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="547"/>
+    <stat name="magical_resist" ratio="50" limit="547"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="3066"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="169"/>
+    <stat name="physical_defend" ratio="50" limit="349"/>
+  </npc>
+  <npc id="201066">
+    <stat name="critical" ratio="50" limit="40"/>
+    <stat name="dodge" ratio="50" limit="905"/>
+    <stat name="hit_accuracy" ratio="50" limit="905"/>
+    <stat name="magical_attack" ratio="50" limit="201"/>
+    <stat name="magical_critical" ratio="50" limit="40"/>
+    <stat name="magical_defend" ratio="50" limit="40"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="613"/>
+    <stat name="magical_resist" ratio="50" limit="613"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="5703"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="201"/>
+    <stat name="physical_defend" ratio="50" limit="782"/>
+  </npc>
+  <npc id="201067">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="646"/>
+    <stat name="magical_attack" ratio="50" limit="208"/>
+    <stat name="magical_critical" ratio="50" limit="25"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="613"/>
+    <stat name="magical_resist" ratio="50" limit="613"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="6111"/>
+    <stat name="parry" ratio="50" limit="646"/>
+    <stat name="physical_attack" ratio="50" limit="208"/>
+    <stat name="physical_defend" ratio="50" limit="938"/>
+  </npc>
+  <npc id="201070">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="817"/>
+    <stat name="hit_accuracy" ratio="50" limit="817"/>
+    <stat name="magical_attack" ratio="50" limit="178"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="672"/>
+    <stat name="magical_resist" ratio="50" limit="672"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="6233"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="156"/>
+    <stat name="physical_defend" ratio="50" limit="967"/>
+  </npc>
+  <npc id="201071">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="817"/>
+    <stat name="hit_accuracy" ratio="50" limit="817"/>
+    <stat name="magical_attack" ratio="50" limit="178"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="672"/>
+    <stat name="magical_resist" ratio="50" limit="672"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="6233"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="156"/>
+    <stat name="physical_defend" ratio="50" limit="967"/>
+  </npc>
+  <npc id="201072">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="841"/>
+    <stat name="hit_accuracy" ratio="50" limit="841"/>
+    <stat name="magical_attack" ratio="50" limit="184"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="590"/>
+    <stat name="magical_resist" ratio="50" limit="590"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2888"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="186"/>
+    <stat name="physical_defend" ratio="50" limit="188"/>
+  </npc>
+  <npc id="201073">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="841"/>
+    <stat name="hit_accuracy" ratio="50" limit="841"/>
+    <stat name="magical_attack" ratio="50" limit="184"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="590"/>
+    <stat name="magical_resist" ratio="50" limit="590"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="2888"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="186"/>
+    <stat name="physical_defend" ratio="50" limit="188"/>
+  </npc>
+  <npc id="294998">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="295000">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749018">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749019">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749020">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749021">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749032">
+    <stat name="magical_hit_accuracy" ratio="50" limit="513"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749033">
+    <stat name="magical_hit_accuracy" ratio="50" limit="573"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749034">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749035">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749036">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749037">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749038">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749039">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749040">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749041">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749046">
+    <stat name="hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+  </npc>
+  <npc id="749047">
+    <stat name="hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_attack" ratio="50" limit="118"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="118"/>
+  </npc>
+  <npc id="749048">
+    <stat name="hit_accuracy" ratio="50" limit="344"/>
+    <stat name="magical_attack" ratio="50" limit="67"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="344"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="67"/>
+  </npc>
+  <npc id="749049">
+    <stat name="hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_attack" ratio="50" limit="103"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="103"/>
+  </npc>
+  <npc id="749050">
+    <stat name="hit_accuracy" ratio="50" limit="588"/>
+    <stat name="magical_attack" ratio="50" limit="133"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="588"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="133"/>
+  </npc>
+  <npc id="749055">
+    <stat name="hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+  </npc>
+  <npc id="749056">
+    <stat name="hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_attack" ratio="50" limit="118"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="118"/>
+  </npc>
+  <npc id="749057">
+    <stat name="hit_accuracy" ratio="50" limit="344"/>
+    <stat name="magical_attack" ratio="50" limit="67"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="344"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="67"/>
+  </npc>
+  <npc id="749058">
+    <stat name="hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_attack" ratio="50" limit="103"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="103"/>
+  </npc>
+  <npc id="749059">
+    <stat name="hit_accuracy" ratio="50" limit="588"/>
+    <stat name="magical_attack" ratio="50" limit="133"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="588"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="133"/>
+  </npc>
+  <npc id="749060">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749061">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749062">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749063">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749064">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749065">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749066">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749067">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749070">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749071">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749072">
+    <stat name="magical_hit_accuracy" ratio="50" limit="254"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749073">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749074">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749075">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749076">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749077">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749078">
+    <stat name="magical_hit_accuracy" ratio="50" limit="254"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749079">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749080">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749081">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749084">
+    <stat name="magical_hit_accuracy" ratio="100" limit="448"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749085">
+    <stat name="magical_hit_accuracy" ratio="100" limit="448"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749086">
+    <stat name="magical_hit_accuracy" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749087">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749088">
+    <stat name="magical_hit_accuracy" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749089">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749090">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749091">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749092">
+    <stat name="magical_hit_accuracy" ratio="50" limit="565"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749093">
+    <stat name="magical_hit_accuracy" ratio="50" limit="565"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749094">
+    <stat name="magical_hit_accuracy" ratio="50" limit="573"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749095">
+    <stat name="magical_hit_accuracy" ratio="50" limit="573"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749096">
+    <stat name="magical_hit_accuracy" ratio="50" limit="583"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749097">
+    <stat name="magical_hit_accuracy" ratio="50" limit="583"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749098">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749099">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749100">
+    <stat name="magical_hit_accuracy" ratio="100" limit="658"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749101">
+    <stat name="magical_hit_accuracy" ratio="100" limit="658"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749104">
+    <stat name="hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_attack" ratio="50" limit="171"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="171"/>
+  </npc>
+  <npc id="749105">
+    <stat name="hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_attack" ratio="50" limit="171"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="638"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="171"/>
+  </npc>
+  <npc id="749116">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749118">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="749119">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="749120">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749121">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="749122">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="749123">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="749133">
+    <stat name="hit_accuracy" ratio="50" limit="281"/>
+    <stat name="magical_attack" ratio="50" limit="58"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="281"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="58"/>
+  </npc>
+  <npc id="749134">
+    <stat name="hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+  </npc>
+  <npc id="749135">
+    <stat name="hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_attack" ratio="50" limit="118"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="118"/>
+  </npc>
+  <npc id="749136">
+    <stat name="hit_accuracy" ratio="50" limit="281"/>
+    <stat name="magical_attack" ratio="50" limit="58"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="281"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="58"/>
+  </npc>
+  <npc id="749137">
+    <stat name="hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_attack" ratio="50" limit="85"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="408"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="85"/>
+  </npc>
+  <npc id="749138">
+    <stat name="hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_attack" ratio="50" limit="118"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="535"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="118"/>
+  </npc>
+  <npc id="749139">
+    <stat name="hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_attack" ratio="50" limit="103"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="103"/>
+  </npc>
+  <npc id="749140">
+    <stat name="hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_attack" ratio="50" limit="103"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="471"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="103"/>
+  </npc>
+  <npc id="749141">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749142">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749143">
+    <stat name="magical_hit_accuracy" ratio="50" limit="27"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749144">
+    <stat name="magical_hit_accuracy" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749145">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749146">
+    <stat name="magical_hit_accuracy" ratio="50" limit="27"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749147">
+    <stat name="magical_hit_accuracy" ratio="50" limit="389"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749148">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749149">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749150">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749151">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="149"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="149"/>
+  </npc>
+  <npc id="749152">
+    <stat name="hit_accuracy" ratio="50" limit="662"/>
+    <stat name="magical_attack" ratio="50" limit="151"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="662"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="151"/>
+  </npc>
+  <npc id="749153">
+    <stat name="hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_attack" ratio="50" limit="136"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="136"/>
+  </npc>
+  <npc id="749154">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="149"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="149"/>
+  </npc>
+  <npc id="749155">
+    <stat name="hit_accuracy" ratio="50" limit="662"/>
+    <stat name="magical_attack" ratio="50" limit="151"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="662"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="151"/>
+  </npc>
+  <npc id="749156">
+    <stat name="hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_attack" ratio="50" limit="136"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="136"/>
+  </npc>
+  <npc id="749157">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749158">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749159">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749160">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749161">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749162">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749163">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749164">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749165">
+    <stat name="critical" ratio="50" limit="25"/>
+    <stat name="dodge" ratio="50" limit="0"/>
+    <stat name="hit_accuracy" ratio="50" limit="169"/>
+    <stat name="magical_attack" ratio="50" limit="39"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="25"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="93"/>
+    <stat name="magical_resist" ratio="50" limit="117"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="322"/>
+    <stat name="parry" ratio="50" limit="169"/>
+    <stat name="physical_attack" ratio="50" limit="39"/>
+    <stat name="physical_defend" ratio="50" limit="132"/>
+  </npc>
+  <npc id="749166">
+    <stat name="critical" ratio="50" limit="15"/>
+    <stat name="dodge" ratio="50" limit="283"/>
+    <stat name="hit_accuracy" ratio="50" limit="283"/>
+    <stat name="magical_attack" ratio="50" limit="55"/>
+    <stat name="magical_critical" ratio="50" limit="9"/>
+    <stat name="magical_defend" ratio="50" limit="15"/>
+    <stat name="magical_hit_accuracy" ratio="80" limit="171"/>
+    <stat name="magical_resist" ratio="50" limit="196"/>
+    <stat name="magical_skill_boost" ratio="80" limit="2000"/>
+    <stat name="magical_skill_boost_resist" ratio="50" limit="1450"/>
+    <stat name="max_hp" ratio="50" limit="341"/>
+    <stat name="parry" ratio="50" limit="0"/>
+    <stat name="physical_attack" ratio="50" limit="55"/>
+    <stat name="physical_defend" ratio="50" limit="63"/>
+  </npc>
+  <npc id="749167">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749168">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749169">
+    <stat name="magical_hit_accuracy" ratio="50" limit="583"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749170">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749171">
+    <stat name="magical_hit_accuracy" ratio="50" limit="446"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749172">
+    <stat name="magical_hit_accuracy" ratio="50" limit="583"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749173">
+    <stat name="magical_hit_accuracy" ratio="30" limit="750"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749174">
+    <stat name="magical_hit_accuracy" ratio="30" limit="750"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749175">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="411"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="411"/>
+  </npc>
+  <npc id="749176">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="411"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="411"/>
+  </npc>
+  <npc id="749177">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="131"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="131"/>
+  </npc>
+  <npc id="749178">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="131"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="131"/>
+  </npc>
+  <npc id="749179">
+    <stat name="magical_hit_accuracy" ratio="50" limit="676"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749180">
+    <stat name="magical_hit_accuracy" ratio="50" limit="676"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749181">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749182">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749183">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749184">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749185">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="300"/>
+  </npc>
+  <npc id="749186">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="400"/>
+  </npc>
+  <npc id="749187">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="300"/>
+  </npc>
+  <npc id="749188">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="400"/>
+  </npc>
+  <npc id="749190">
+    <stat name="magical_hit_accuracy" ratio="50" limit="676"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749191">
+    <stat name="magical_hit_accuracy" ratio="50" limit="676"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749192">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749193">
+    <stat name="magical_hit_accuracy" ratio="50" limit="696"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749194">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749195">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749196">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749197">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749198">
+    <stat name="magical_hit_accuracy" ratio="30" limit="900"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749199">
+    <stat name="magical_hit_accuracy" ratio="30" limit="900"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749200">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749201">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749202">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="427"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1280"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="427"/>
+  </npc>
+  <npc id="749203">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="427"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1280"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="427"/>
+  </npc>
+  <npc id="749204">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="452"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1310"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="452"/>
+  </npc>
+  <npc id="749205">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="452"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1310"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="452"/>
+  </npc>
+  <npc id="749206">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="493"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1340"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="493"/>
+  </npc>
+  <npc id="749207">
+    <stat name="hit_accuracy" ratio="50" limit="1250"/>
+    <stat name="magical_attack" ratio="50" limit="493"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1340"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="493"/>
+  </npc>
+  <npc id="749208">
+    <stat name="hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_attack" ratio="50" limit="174"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="648"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="174"/>
+  </npc>
+  <npc id="749209">
+    <stat name="hit_accuracy" ratio="50" limit="599"/>
+    <stat name="magical_attack" ratio="50" limit="174"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="648"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="174"/>
+  </npc>
+  <npc id="749211">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749212">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749213">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749214">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749215">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749216">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749217">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749218">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749219">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749220">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749221">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749222">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749223">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749224">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749225">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749226">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749227">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749228">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749229">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749230">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749231">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749232">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="749233">
+    <stat name="magical_hit_accuracy" ratio="50" limit="750"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="749258">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="749302">
+    <stat name="magical_hit_accuracy" ratio="100" limit="448"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="830230">
+    <stat name="magical_hit_accuracy" ratio="30" limit="975"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="830231">
+    <stat name="magical_hit_accuracy" ratio="30" limit="975"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="830232">
+    <stat name="magical_hit_accuracy" ratio="30" limit="1050"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="830233">
+    <stat name="magical_hit_accuracy" ratio="30" limit="1050"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="830234">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="400"/>
+  </npc>
+  <npc id="830235">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="400"/>
+  </npc>
+  <npc id="830236">
+    <stat name="hit_accuracy" ratio="50" limit="1370"/>
+    <stat name="magical_attack" ratio="50" limit="530"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1370"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="530"/>
+  </npc>
+  <npc id="830237">
+    <stat name="hit_accuracy" ratio="50" limit="1370"/>
+    <stat name="magical_attack" ratio="50" limit="530"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1370"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="530"/>
+  </npc>
+  <npc id="830238">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="190"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="190"/>
+  </npc>
+  <npc id="830239">
+    <stat name="hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_attack" ratio="50" limit="190"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="652"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="190"/>
+  </npc>
+  <npc id="830240">
+    <stat name="hit_accuracy" ratio="50" limit="1400"/>
+    <stat name="magical_attack" ratio="50" limit="566"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1400"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="566"/>
+  </npc>
+  <npc id="830241">
+    <stat name="hit_accuracy" ratio="50" limit="1400"/>
+    <stat name="magical_attack" ratio="50" limit="566"/>
+    <stat name="magical_hit_accuracy" ratio="50" limit="1400"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+    <stat name="physical_attack" ratio="50" limit="566"/>
+  </npc>
+  <npc id="831083">
+    <stat name="heal_skill_boost" ratio="50" limit="500"/>
+    <stat name="max_hp" ratio="20" limit="400"/>
+  </npc>
+  <npc id="833061">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833062">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833063">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833064">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833065">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833066">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833067">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833068">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833069">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833070">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833071">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833072">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833073">
+    <stat name="magical_hit_accuracy" ratio="30" limit="87"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833074">
+    <stat name="magical_hit_accuracy" ratio="30" limit="150"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833075">
+    <stat name="magical_hit_accuracy" ratio="30" limit="213"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833076">
+    <stat name="magical_hit_accuracy" ratio="30" limit="303"/>
+    <stat name="magical_skill_boost" ratio="30" limit="870"/>
+  </npc>
+  <npc id="833079">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833080">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833081">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833082">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833083">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833084">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833085">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833090">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833091">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833092">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833093">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833094">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833095">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833096">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833101">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833102">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833103">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833104">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833109">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833110">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833111">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833112">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833117">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833118">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833119">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833120">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833125">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833126">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833127">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833128">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833133">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833134">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833135">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833136">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833137">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833138">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833143">
+    <stat name="magical_hit_accuracy" ratio="50" limit="305"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833144">
+    <stat name="magical_hit_accuracy" ratio="50" limit="363"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833145">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833146">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833147">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833148">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833153">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833154">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833155">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833160">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833161">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833162">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833173">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833174">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833179">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833180">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833191">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833192">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833193">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833194">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833199">
+    <stat name="magical_hit_accuracy" ratio="50" limit="420"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833200">
+    <stat name="magical_hit_accuracy" ratio="50" limit="475"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833201">
+    <stat name="magical_hit_accuracy" ratio="50" limit="500"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833202">
+    <stat name="magical_hit_accuracy" ratio="50" limit="557"/>
+    <stat name="magical_skill_boost" ratio="50" limit="1450"/>
+  </npc>
+  <npc id="833209">
+    <stat name="magical_hit_accuracy" ratio="100" limit="448"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833210">
+    <stat name="magical_hit_accuracy" ratio="100" limit="658"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833211">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833212">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833213">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833214">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833217">
+    <stat name="magical_hit_accuracy" ratio="100" limit="448"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833218">
+    <stat name="magical_hit_accuracy" ratio="100" limit="658"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833219">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833220">
+    <stat name="magical_hit_accuracy" ratio="100" limit="868"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833221">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833222">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1368"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833232">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833233">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833234">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833235">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833236">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833237">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833238">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833239">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833240">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833241">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833242">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833243">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1063"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833244">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833245">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833246">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+  <npc id="833247">
+    <stat name="magical_hit_accuracy" ratio="100" limit="1501"/>
+    <stat name="magical_skill_boost" ratio="100" limit="2900"/>
+  </npc>
+</npc_master_item_bonuses>

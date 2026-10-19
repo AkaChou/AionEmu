@@ -1,21 +1,22 @@
 # P4：外观（bound_radius / appearance / scale / weapon_scale）与 stats@power 溯源
 
-> 本文件是只读审计与方案建议，**未修改任何运行时数据**。
+> 本文件包含审计结论与已落地的运行时改动：`bound_radius`（第二节）与战斗元素/主人物品继承（第九节）。
+> The document records both the audit and the implemented runtime changes: `bound_radius` and the combat-element/master-item inheritance work.
 > 上游：工作区同级真端目录 `58Server/Map/XML/npcs.xml`（UTF-16，87,734 个 `<npc>`）；
-> 本地：`src/main/resources/aion/data/static_data/npcs/npc_template_*.xml`（8 个分片，87,982 条）。
-> 交叉规模：87,692 个 id 两侧都有；真端独有 42 个，本地独有 290 个。
+> 本地：`src/main/resources/aion/data/static_data/npcs/npc_template_*.xml`（8 个分片，审计快照 87,982 条；补入 20 条后 88,002 条）。
+> 交叉规模：审计快照 87,692 个 id 两侧都有（补入 20 条后 87,712）；真端独有 42 个（补入后 22 个），本地独有 290 个。
 > 配套分类表：[`P4-retail-only-classification.tsv`](P4-retail-only-classification.tsv)（287 行，逐元素分类）。
 
 ---
 
 ## 结论摘要
 
-1. **`bound_radius` 可以做统一规则对齐，但当前不建议直接落盘。** 本地数据实际混合了两套约定：
+1. **`bound_radius` 已按「全长」约定落地。** 本地分片实际混合了两套约定：
    - **原始值约定**：`local = raw`，48,653 个 NPC；
    - **半值约定**：`local.front = raw.front × scale / 200`、`local.side = raw.side × scale / 200`、`local.upper = raw.upper × scale / 100`，30,904 个 NPC；
    - 其余 8,097 个为第三套历史快照，无法由当前真端值解析得到。
 
-   真端服务端在加载时会把 `bound_radius` 三轴乘以 `scale / 100`，并用 `max(front, side) * 0.5` 作为内部碰撞半径（`58Server/server58-source/NPCServer_NPCSvr64/classes/Misc/ObjectClass.cpp:741-761`）。本地 `BoundRadius.collision = sqrt(front × side)`，且 `GeoService`/`PositionUtil` 把 front/side 当作半径使用；但 `CreatureEventHandler.sensoryBoundOffset` 又按“原始全长 + scale/200”计算。**两套运行时消费者对数据约定的假设互相冲突**，先冻结约定再批量写值，否则会同时改变碰撞、视线、感知与寻路行为。
+   真端服务端在加载时会把 `bound_radius` 三轴乘以 `scale / 100`，并用 `max(front, side) * 0.5` 作为内部碰撞半径（`58Server/server58-source/NPCServer_NPCSvr64/classes/Misc/ObjectClass.cpp:741-761`）。本地已新增 `definitions/compact/npc-bound-radius.xml` 覆盖层（覆盖 87,705 个模板），按 `raw × scale / 100` 生成三轴全长值；`BoundRadius` 增加 `fullLength` 标记，NPC 覆盖层的 `collision = max(front, side) * 0.5`。玩家/坐骑/机甲仍使用半径约定。消费者已统一到 `getHalfFront()` / `getHalfSide()` / `getHalfMaxHorizontal()`，`bound_radius` 不再 BLOCKED。
 
 2. **`equipment` 可以建立映射，映射键是 `ItemTemplate.name_desc`。** 真端 `visible_equipments/<slot>` 的网格名与本地物品模板的 `name_desc` 同源：main/sub/torso/glove/foot/leg/shoulder 的网格名可解析率 99.17%–99.96%，head 96.4%，wing_mesh 0%（`.cgf` 路径，不是物品）。按 NPC 逐槽位比较，同名率 75.5%–84.8%；剔除箭矢与翅膀后，装备网格集合完全相等的 NPC 为 **40,509 / 49,644 = 81.6%**。差异主要来自版本变体（`_01`/`_02`、`guard`/`lodge`、vritra/gabsub 等）和投射物，不是映射体系不可行。**不建议用网格名替换本地 `<item>`**，因为物品 id 参与 NPC 攻击类型与装备属性计算。
 
@@ -24,7 +25,8 @@
 4. **287 个真端独有元素**（含 3 条审计伪元素，实际字段 284 个）分类为：
    - 已由其他子系统承载 **129** 个（掉落 19、商店/仓库/服务 68、传送/副本 11、任务/对话 15、技能/战斗覆盖层 13、AI 投影 3）；
    - 纯外观/客户端 **40** 个（模型/外观 36、客户端 UI/本地化 4）；
-   - 尚未建模 **118** 个（战斗数值 87，其中 56 个是 `master_item_*`；AI 感知/威胁 20；PvP/深渊奖励 4；服务开关 3；其他 4）。
+   - **战斗数值 87 个已落地数据层**（第九节）：87 = 56 个 `master_item_*`（由 `npc-master-item-bonus.xml` 承载）+ 31 个其他元素（其中 30 个由 `npc-combat-elements.xml` 承载；`disk_type` 复核为客户端分类字段，不属战斗数值）；5 个（`dp_reduce`、`cancel_level`、两种 damage trim、`noreducespell_immune`）为数据-only，其余均接入现有战斗/抗性公式；
+   - 仍未建模 **31** 个（AI 感知/威胁 20；PvP/深渊奖励 4；服务开关 3；其他 4）。
 
 ---
 
@@ -134,7 +136,9 @@ target.upper = raw.upper * scale / 100
 
 按 id 段看，235–247k 与 834–885k 几乎全部会改动（分别 11,315/11,386、10,631/10,668），而 200–216k 大部分保持不变（2,727/11,142）。这正是“混合数据源”的指纹。
 
-### 2.7 风险：运行时契约冲突（当前阻塞项）
+> 实际落地（2026-10-19）：新增 `definitions/compact/npc-bound-radius.xml` 覆盖 **87,705** 个模板；相对本地分片，front/side/upper 分别改动 **66,361 / 66,586 / 35,570** 条。差异高于上表估算，因为覆盖层按每个 NPC 的 `scale` 逐条计算，且包含 20 条新补模板。
+
+### 2.7 风险与处置（已落地）
 
 | 消费者 | 隐含假设 | 若数据为半值组 | 若数据为原始值组 |
 |---|---|---|---|
@@ -149,7 +153,7 @@ target.upper = raw.upper * scale / 100
    - 选“全长”约定：把 `BoundRadius.collision` 改为 `max(front,side) * 0.5`，并复核 `GeoService` 的偏移；
 3. 再按对应公式批量生成 `bound_radius`，并做刷怪、碰撞、视线、感知、寻路回归。
 
-在契约裁定前，`bound_radius` 对齐状态为 **BLOCKED**，不建议直接写 52k 行数据。
+**落地结果（2026-10-19）**：已选「全长」约定。`BoundRadius` 增加 `fullLength` 标记与 `getHalfFront()` / `getHalfSide()` / `getHalfMaxHorizontal()`；`NpcTemplate` 增加 `setBoundRadius()`；新增 `NpcBoundRadiusDefinitionLoader` 与 `definitions/compact/npc-bound-radius.xml`。`GeoService`、`PositionUtil`、`WalkerGroup`、`SM_NPC_INFO` 与 `CreatureEventHandler` 已改用半值/`getHalfMaxHorizontal()`；玩家、坐骑、机甲保持半径约定。`bound_radius` 不再 BLOCKED，剩余项是实机回归（见第六节 #4）。
 
 ---
 
@@ -270,8 +274,8 @@ target.upper = raw.upper * scale / 100
 | | AI 投影 | 3 | `sensory_range_short`、`move_speed_return`、`decrease_sensory_range_return` | `compact/ai/npc-ai-parts`（`RetailAiData`） |
 | 纯外观/客户端（40） | 模型/外观 | 36 | `scale`、`weapon_scale`、`mesh`、`appearance/*`、`visible_equipments/*` | 客户端 `npc_client` 数据/物品网格；服务端无需复制 |
 | | 客户端 UI/本地化 | 4 | `deadbody_name_id`、`display_msg_attacked`、`display_msg_die`、`omit_system_msg` | 纯客户端 |
-| 尚未建模（118） | 战斗数值 | 87 | `elemental_defend_*`、`hit_count`、`dp_reduce`、`concentration`、`master_item_*`（56 个） | 无；需先定战斗公式 |
-| | AI 感知/威胁 | 20 | `max_enemy_count`、`can_see_invisible`、`can_see_polymorph`、`hate_decrease_*`、`chase_flying` | 无；可与真端 AI 感知项目合并 |
+| 已落地（本期，87） | 战斗数值 | 87 | `elemental_defend_*`、`hit_count`、`dp_reduce`、`concentration`、`master_item_*`（56 个） | `npc-combat-elements.xml` 87,169 行 + `npc-master-item-bonus.xml` 342 行；详见第九节 |
+| 尚未建模（31） | AI 感知/威胁 | 20 | `max_enemy_count`、`can_see_invisible`、`can_see_polymorph`、`hate_decrease_*`、`chase_flying` | 无；可与真端 AI 感知项目合并 |
 | | PvP/深渊/奖励 | 4 | `abyss_point`、`abyss_rank`、`glory_point`、`warpoint` | 玩家侧系统存在，NPC 模板字段未接 |
 | | 服务开关/功能入口 | 3 | `no_penalty`、`siege_involve`、`ignore_contribution` | 无数据化入口 |
 | | 其他/元数据 | 4 | `mobile_event`、3 个审计伪元素 | 无/忽略 |
@@ -280,7 +284,7 @@ target.upper = raw.upper * scale / 100
 
 ### 5.3 值得单独立项
 
-1. **战斗数值（87 个，优先度最高）**：`elemental_defend_*`（6）、伤害 trim/暴击减免（6）、`hit_count`/`dp_reduce`/`concentration`/`dp`、`master_item_*`（56，召唤/宠物继承主人属性）。这些字段直接参与命中、减伤与宠物缩放，需先有战斗公式设计，不能照抄。
+1. **战斗数值（87 个）— 本期已落地**：`elemental_defend_*`（6）、伤害 trim/暴击减免（6）、`hit_count`/`dp_reduce`/`concentration`/`dp`、`master_item_*`（56，召唤/宠物继承主人属性）。数据层、属性注入与主要消费者见第九节；`disk_type` 复核为客户端分类字段（`D1`–`D7`/`guard`/`merchant`/`e_earth` 等），不计入战斗数值。
 2. **AI 感知/威胁（20 个）**：`can_see_invisible`、`can_see_polymorph`、`undetectable`、`max_enemy_count`、`hate_decrease_*`、`chase_flying`、`chase_range_fromsp`。与已完成的 retail AI 感知迁移同一域，建议合并。
 3. **PvP/深渊奖励（4 个）**：`abyss_point`、`abyss_rank`、`glory_point`、`warpoint`。需要奖励设计，不建议从模板直接照抄。
 4. **外观补充（scale/weapon_scale/wing_mesh）**：`scale` 已可从 AI 投影获得；`weapon_scale` 与 `wing_mesh` 本地无字段，若做客户端外观逐 NPC 对齐需补数据通道。
@@ -292,18 +296,21 @@ target.upper = raw.upper * scale / 100
 
 | # | 任务 | 前置 | 验收 |
 |---|---|---|---|
-| 1 | 裁定本地 `bound_radius` 语义（半径 vs 全长），写入 `BoundRadius` 类注释 | 战斗/移动域决策 | 文档 + 单测 |
-| 2 | 修正与裁定冲突的消费者（`sensoryBoundOffset` 或 `BoundRadius.collision`/`GeoService`） | #1 | 单测：感知偏移/碰撞与真端公式一致 |
-| 3 | 按裁定公式生成 `bound_radius`；先 dry-run 统计，再写 8 个分片 | #1、#2 | 52k front/side 与 35k upper 变更；`NpcTemplateRetailAlignmentTest` 扩展三轴校验 |
+| 1 | **已完成**：裁定本地 `bound_radius` 为「全长」语义，写入 `BoundRadius` 类注释 | 战斗/移动域决策 | 文档 + 单测 |
+| 2 | **已完成**：修正消费者（`sensoryBoundOffset`、`GeoService`、`PositionUtil`、`WalkerGroup`、`SM_NPC_INFO`） | #1 | 单测：感知偏移/碰撞与真端公式一致 |
+| 3 | **已完成**：新增 `npc-bound-radius.xml` 覆盖层，按 `raw × scale / 100` 生成三轴 | #1、#2 | 87,705 行；`NpcBoundRadiusDefinitionLoaderTest` |
 | 4 | 实机回归：刷怪、贴墙、视线、感知、寻路、副本 | #3 | 抽样 + 全库冒烟；无卡怪/抽搐/超远感知 |
 | 5 | 建立 `mesh_alias` 表，处理 `visible_equipments` ↔ `name_desc` 的 18% 变体；排除 `arrow`/`wing_mesh` | 无 | 逐槽位同名率提升到 >95%（目标） |
 | 6 | 若需要视觉翅膀，新增 `wing_mesh` 字段/数据通道 | #5 | 客户端显示与真端一致 |
 | 7 | `power` 保持现状并记录为 Encom 本地曲线；若要战斗对齐，单独立项映射 `magical_attack` | 战斗设计 | 伤害回归通过 |
 | 8 | 战斗数值与 AI 感知/威胁两个专项 | 各自设计 | 见第五节 |
+| 9 | **已完成**：战斗元素覆盖层 `npc-combat-elements.xml`（87,169 行）+ `NpcCombatElementsDefinitionLoader` | 战斗公式评估 | `NpcCombatElementsDefinitionLoaderTest` |
+| 10 | **已完成**：属性注入 `NpcGameStats.getStat` / `getMAccuracy`、`hit_count`、`limit_attribute`、元素免疫 | #9 | 单测 + 公式路径核对 |
+| 11 | **已完成**：主人物品继承 `npc-master-item-bonus.xml`（342 行）+ `MasterItemBonusApplier` | #9 | `NpcMasterItemBonusDefinitionLoaderTest`、`MasterItemBonusApplierTest` |
+| 12 | 实机回归：战斗元素对伤害/抗性/召唤继承的影响 | #9–#11 | 见 `ACCEPTANCE.zh-CN.md` 第八节 |
 
 **当前阻塞项**：
 
-- `bound_radius`：运行时契约冲突（#1/#2 未决），批量写值 BLOCKED。
 - `power`：无真端上游，且替换会改变战斗行为，BLOCKED（建议保持）。
 - 翅膀：`wing_mesh` 无本地物品通道，视觉逐 NPC 对齐 BLOCKED。
 - `visible_equipments` 的 18% 变体需要 alias 表，非阻塞但需额外工作。
@@ -326,20 +333,33 @@ target.upper = raw.upper * scale / 100
 - 本地模型/运行时：
   - `src/main/java/com/aionemu/gameserver/model/templates/BoundRadius.java`
   - `src/main/java/com/aionemu/gameserver/model/templates/npc/NpcTemplate.java`
+  - `src/main/java/com/aionemu/gameserver/model/templates/npc/NpcCombatElements.java`
+  - `src/main/java/com/aionemu/gameserver/model/templates/npc/NpcMasterItemBonus.java`
   - `src/main/java/com/aionemu/gameserver/model/templates/stats/NpcStatsTemplate.java`
   - `src/main/java/com/aionemu/gameserver/model/stats/container/NpcGameStats.java`
+  - `src/main/java/com/aionemu/gameserver/model/stats/container/MasterItemBonusApplier.java`
+  - `src/main/java/com/aionemu/gameserver/model/stats/container/SummonGameStats.java`
+  - `src/main/java/com/aionemu/gameserver/model/stats/container/SummonedObjectGameStats.java`
+  - `src/main/java/com/aionemu/gameserver/model/stats/container/HomingGameStats.java`
+  - `src/main/java/com/aionemu/gameserver/model/stats/container/TrapGameStats.java`
   - `src/main/java/com/aionemu/gameserver/world/geo/GeoService.java`
   - `src/main/java/com/aionemu/gameserver/ai2/handler/CreatureEventHandler.java`
   - `src/main/java/com/aionemu/gameserver/controllers/attack/AttackUtil.java`
   - `src/main/java/com/aionemu/gameserver/utils/stats/StatFunctions.java`
   - `src/main/java/com/aionemu/gameserver/model/items/NpcEquippedGear.java`
   - `src/main/java/com/aionemu/gameserver/dataholders/loadingutils/NpcCombatDefinitionLoader.java`
+  - `src/main/java/com/aionemu/gameserver/dataholders/loadingutils/NpcBoundRadiusDefinitionLoader.java`
+  - `src/main/java/com/aionemu/gameserver/dataholders/loadingutils/NpcCombatElementsDefinitionLoader.java`
+  - `src/main/java/com/aionemu/gameserver/dataholders/loadingutils/NpcMasterItemBonusDefinitionLoader.java`
   - `src/main/java/com/aionemu/gameserver/spawnengine/VisibleObjectSpawner.java`
 - 本地数据：
   - `src/main/resources/aion/data/static_data/npcs/npc_template_*.xml`
   - `src/main/resources/aion/data/static_data/items/item/item_template_*.xml`
   - `src/main/resources/aion/definitions/compact/ai/npc-ai-parts/*.xml`
   - `src/main/resources/aion/definitions/compact/npc-combat.xml`
+  - `src/main/resources/aion/definitions/compact/npc-bound-radius.xml`
+  - `src/main/resources/aion/definitions/compact/npc-combat-elements.xml`
+  - `src/main/resources/aion/definitions/compact/npc-master-item-bonus.xml`
 - 真端（工作区同级，不纳入仓库）：
   - `58Server/Map/XML/npcs.xml`
   - `58Server/server58-source/NPCServer_NPCSvr64/classes/Misc/ObjectClass.cpp`
@@ -348,3 +368,93 @@ target.upper = raw.upper * scale / 100
   - `docs/static-data/npc-template-retail-parity/field-diff-summary.tsv`
   - `docs/static-data/npc-template-retail-parity/retail-only-elements.tsv`
   - `docs/static-data/npc-template-retail-parity/P4-retail-only-classification.tsv`
+
+---
+
+## 九、P4 战斗元素与主人物品继承（2026-10-19 落地）
+
+### 9.1 数据层
+
+| 覆盖层 | 行数 | 内容 |
+|---|---:|---|
+| `definitions/compact/npc-combat-elements.xml` | 87,169 | 30 个标量/列表战斗元素：`hit_count`、`dp`、`dp_reduce`、`concentration`、`magical_hit_accuracy`、`cancel_level`、物理/魔法暴击减免与暴击伤害减免、`proc_reduce_rate`、`noreducespell_immune`、4 个 `npc_pve_*`、6 个 `elemental_defend_*`、`limit_attribute`、`elemental_immunity`、`abnormal_resist` / `abnormal_penetration` |
+| `definitions/compact/npc-master-item-bonus.xml` | 342 | 28 组 `master_item_*_ratio/limit`，仅写 ratio/limit 非零项 |
+
+口径：
+
+- 只对本地与真端共有的 87,692 个 id 建行；真端独有 42 个不写入。
+- 标量元素为 0（`hit_count` 为 1）时省略；子元素仅在非零时写入。
+- `disk_type` 复核为客户端分类字段（`D1`–`D7`、`guard`、`merchant`、`e_earth` 等），不属于战斗数值，未进入覆盖层。
+- `abnormal_immunity_list` 已由 `NpcTemplate.abnormal_immunity` 位图承载，不重复写入。
+- `elemental_immunity` 归一化为 `SkillElement` 集合：`erfire/erwater/erair/erearth/erlight/erdark` 分别映射到火/水/风/地/光/暗。
+- `abnormal_penetration_name` 中的 `Stat_ArAll` / `Stat_ArStunLike` 是组标记，本地没有组穿透属性，加载时展开为具体 `*_RESISTANCE_PENETRATION` 集合并去重。
+
+### 9.2 属性映射与消费者
+
+| 真端元素 | 本地属性 | 消费者 |
+|---|---|---|
+| `elemental_defend_fire/water/air/earth` | `FIRE/WATER/WIND/EARTH_RESISTANCE` | `CreatureGameStats.getMagicalDefenseFor` → `StatFunctions.applyMagicalDefenseModifiers` |
+| `elemental_defend_light/dark` | `ELEMENTAL_RESISTANCE_LIGHT/DARK` | 同上（与 `SkillElement.getResistanceForElement` 对齐） |
+| `hit_count` | `NpcTemplate.getHitCount()` | `AttackUtil.getPhysicalHitCount`（NPC 普攻分段） |
+| `dp` | `MAXDP` | NPC 侧无战斗消费者（`MAXDP` 仅在玩家 `PlayerGameStats` 中读取）；保留数据 |
+| `concentration` | `CONCENTRATION` | 施法专注/打断判定（既有） |
+| `magical_hit_accuracy` | `MAGICAL_ACCURACY` | `NpcGameStats.getMAccuracy` → 法术命中/穿透 |
+| `physical/magical_critical_reduce_rate` | `PHYSICAL/MAGICAL_CRITICAL_REDUCE_RATE` | `StatFunctions.calculateEffectiveCritical` |
+| `physical/magical_critical_damage_reduce` | `PHYSICAL/MAGICAL_CRITICAL_DAMAGE_REDUCE` | `AttackUtil.calculateWeaponCritical` |
+| `proc_reduce_rate` | `PROC_REDUCE_RATE` | 神石触发减伤（`GodStone`） |
+| `npc_pve_attack_ratio_*` / `npc_pve_defend_ratio_*` | `PVE_ATTACK/DEFEND_RATIO_PHYSICAL/MAGICAL` | `StatFunctions.adjustDamages` |
+| `limit_attribute` | `PVE_ATTACK_RATIO_TYPE_A..E` | `StatFunctions.applyLimitAttributeBonus`（显式优先，`race` 回退） |
+| `elemental_immunity` | `Set<SkillElement>` | `applyMagicalDefenseModifiers` / `calculateMagicalOverTimeSkillDamage` 直接归零 |
+| `abnormal_resist_name/value` | `*_RESISTANCE`；`Stat_ArAll`→`ABNORMAL_RESISTANCE_ALL`，`Stat_ArStunLike`→`STUNLIKE_RESISTANCE` | `EffectTemplate.calculateEffectResistRate` |
+| `abnormal_penetration_name/value` | `*_RESISTANCE_PENETRATION` | 同上 |
+| `dp_reduce` / `cancel_level` / `physical_damage_trim` / `magical_damage_trim` / `noreducespell_immune` | 数据字段 | 暂无消费者；保留供后续机制 |
+
+注入方式：`NpcGameStats.getStat(StatEnum, 0)` 在调用方未提供基础值时替换为覆盖层值；这样 `getStrikeResist`、`getSpellResist`、`getConcentration`、`getMagicalDefenseFor`、PvE 比率与异常抗性等既有公式无需改动即可消费。`SummonGameStats` 单独做同样的注入。
+
+### 9.3 主人物品继承
+
+真端链路：`Npc_SetAttrBonus_ByMasterItemBonus` → `FUN_140b14730` 读取主人 `BonusAttrSum_MasterItem` → `Npc__SetAttrBonus_ByMasterItemBonus` → `FUN_140b1ae30` 按模板 `master_item_*_ratio/limit` 逐属性计算 → 结果以 limit 封顶后并入召唤物属性。
+
+本地实现：
+
+- `npc-master-item-bonus.xml` 只为 342 个召唤物模板建行；
+- `MasterItemBonusApplier` 在 `SummonGameStats`、`SummonedObjectGameStats`、`HomingGameStats`、`TrapGameStats` 的 `getStat` 中生效；
+- 主人侧映射：命中/暴击/物攻读主手属性（`MAIN_HAND_ACCURACY` / `MAIN_HAND_CRITICAL` / `MAIN_HAND_POWER`），其余属性同名读取；
+- 计算公式：`min(masterItemBonus × ratio / 100, limit)`；`masterItemBonus` 由 `getItemStatBoost` 汇总主人装备与魔石加成；
+- 模板无配置时保留原有固定比例回退，未被真端覆盖的召唤物行为不变。
+
+近似与边界：
+
+- 真端算式还包含 `base × ratio% × masterPercent%` 与 `first_level_attr` 项；本地以主人装备加成总额近似，`limit` 在绝大多数模板上起主导作用。
+- `master_item_*` 的 342 个模板均为召唤/陷阱/追踪弹类；未对普通 NPC 生效。
+- `npc-master-item-bonus.xml` 的 ratio/limit 与真端逐值一致；运行时只做封顶，不写回模板。
+
+### 9.4 回归闸门
+
+- `NpcCombatElementsDefinitionLoaderTest`：临时覆盖层断言 + 真实数据 87,169 行与样本 200000/201000。
+- `NpcMasterItemBonusDefinitionLoaderTest`：临时覆盖层断言 + 真实数据 342 行与样本 201000/201001。
+- `MasterItemBonusApplierTest`：主人侧主手属性映射。
+- 既有 `NpcTemplateRetailAlignmentTest` / `NpcAttackDefinitionLoaderTest` / `NpcBoundRadiusDefinitionLoaderTest` 继续通过。
+
+### 9.5 覆盖计数（逐元素）
+
+`npc-combat-elements.xml` 共 87,169 行，逐元素非默认值计数如下（0 值省略）：
+
+| 元素 | 行数 | 元素 | 行数 |
+|---|---:|---|---:|
+| `abnormal_resist`（子元素） | 171,460 | `abnormal_penetration`（子元素） | 23,747 |
+| `magical_hit_accuracy` | 85,831 | `dp` | 80,265 |
+| `cancel_level` | 72,721 | `physical_critical_reduce_rate` | 60,167 |
+| `magical_critical_reduce_rate` | 52,460 | `elemental_defend_earth` | 40,174 |
+| `elemental_defend_fire` | 40,041 | `elemental_defend_air` | 40,006 |
+| `elemental_defend_water` | 40,026 | `elemental_defend_light` | 38,471 |
+| `elemental_defend_dark` | 38,469 | `dp_reduce` | 32,726 |
+| `proc_reduce_rate` | 29,765 | `noreducespell_immune` | 6,239 |
+| `physical_damage_trim` | 1,229 | `magical_damage_trim` | 1,227 |
+| `limit_attribute` | 7,600 | `npc_pve_attack_ratio_physical` | 115 |
+| `npc_pve_attack_ratio_magical` | 62 | `npc_pve_defend_ratio_physical` | 62 |
+| `npc_pve_defend_ratio_magical` | 62 | `elemental_immunity` | 167 |
+| `physical_critical_damage_reduce` | 21 | `magical_critical_damage_reduce` | 9 |
+| `concentration` | 6 | `hit_count` | 1（`283021`，值 2） |
+
+> `elemental_defend_*` 存在 2,675 行负值（真端允许负元素防御，表现为元素弱点）；加载器按有符号整数保留，伤害公式直接按负值放大元素伤害。

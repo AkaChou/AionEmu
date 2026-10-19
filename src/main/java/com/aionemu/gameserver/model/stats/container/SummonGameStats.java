@@ -5,6 +5,7 @@ import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
@@ -59,9 +60,19 @@ public class SummonGameStats extends CreatureGameStats<Summon> {
 	/** 获取属性。 / Returns the stat. */
 	@Override
 	public Stat2 getStat(StatEnum statEnum, int base) {
+		NpcTemplate template = owner.getObjectTemplate();
+		if (base == 0 && template != null) {
+			Integer overlayBase = template.getCombatStatBase(statEnum);
+			if (overlayBase != null) {
+				base = overlayBase;
+			}
+		}
 		Stat2 stat = super.getStat(statEnum, base);
 		if (owner.getMaster() == null)
 			return stat;
+		if (template != null && template.getMasterItemBonus() != null) {
+			return MasterItemBonusApplier.apply(owner, template, statEnum, stat);
+		}
 		switch (statEnum) {
 		case MAXHP:
 			stat.setBonusRate(0.5f);
@@ -317,7 +328,10 @@ public class SummonGameStats extends CreatureGameStats<Summon> {
 	/** 返回 m accuracy / Returns the m accuracy */
 	@Override
 	public Stat2 getMAccuracy() {
-		return getStat(StatEnum.MAGICAL_ACCURACY, statsTemplate.getMagicAccuracy());
+		Integer overlayAccuracy = owner.getObjectTemplate() == null ? null
+			: owner.getObjectTemplate().getCombatStatBase(StatEnum.MAGICAL_ACCURACY);
+		int base = overlayAccuracy != null && overlayAccuracy > 0 ? overlayAccuracy : statsTemplate.getMagicAccuracy();
+		return getStat(StatEnum.MAGICAL_ACCURACY, base);
 	}
 
 	/** 返回 m critical / Returns the m critical */

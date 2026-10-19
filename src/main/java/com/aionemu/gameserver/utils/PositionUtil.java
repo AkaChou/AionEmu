@@ -108,13 +108,13 @@ public class PositionUtil {
 		}
 		double radians = Math.toRadians(angle);
 		float x1 = (float) (object1.getX()
-				+ object1.getObjectTemplate().getBoundRadius().getSide() * Math.cos(radians));
+				+ object1.getObjectTemplate().getBoundRadius().getHalfSide() * Math.cos(radians));
 		float y1 = (float) (object1.getY()
-				+ object1.getObjectTemplate().getBoundRadius().getFront() * Math.sin(radians));
+				+ object1.getObjectTemplate().getBoundRadius().getHalfFront() * Math.sin(radians));
 		float x2 = (float) (object2.getX()
-				+ object2.getObjectTemplate().getBoundRadius().getSide() * Math.cos(Math.PI + radians));
+				+ object2.getObjectTemplate().getBoundRadius().getHalfSide() * Math.cos(Math.PI + radians));
 		float y2 = (float) (object2.getY()
-				+ object2.getObjectTemplate().getBoundRadius().getFront() * Math.sin(Math.PI + radians));
+				+ object2.getObjectTemplate().getBoundRadius().getHalfFront() * Math.sin(Math.PI + radians));
 		float bound1 = (float) MathUtil.getDistance(object1.getX(), object1.getY(), x1, y1);
 		float bound2 = (float) MathUtil.getDistance(object2.getX(), object2.getY(), x2, y2);
 		return bound1 - bound2;

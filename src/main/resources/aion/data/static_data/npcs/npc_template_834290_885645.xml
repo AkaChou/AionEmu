@@ -12221,6 +12221,10 @@
     <stats hp_regen="0" maxHp="3" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="1000" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="100" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
+<npc_template name_desc="IDRUN_NoShow_Gasfloor_Ctrl_01" npc_type="NON_ATTACKABLE" level="71" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="836250" sensory_range="6" tribe="USEALL" name="IDRUN_NoShow_Gasfloor_Ctrl_01" rank="SEASONED" state="1" height="2.0">
+    <stats hp_regen="0" maxHp="3" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="93" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="23" evasion="0" run_speed_fight="0"/>
+    <bound_radius side="0.7" upper="2.0" front="0.5"/>
+  </npc_template>
 <npc_template name_desc="LC1_Event_NPC_Shugo_2stenchant_Jaku" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="1" attack_rate="1000" title_id="470167" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470165" attack_delay="2000" npc_id="836251" sensory_range="15" tribe="USEALL" name="LC1_Event_NPC_Shugo_2stenchant_Jaku" rank="SEASONED" height="1.375">
     <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.5" mresist="28" mboost_resist="0" run_speed="4.23" accuracy="2370" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="1232" evasion="144" run_speed_fight="4.23"/>
     <bound_radius side="0.888" upper="1.375" front="1.4"/>
@@ -13691,6 +13695,16 @@
     <stats hp_regen="9378" maxHp="18756" pdef="887" walk_speed="0" mresist="1089" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="416" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1684" power="1232" evasion="1124" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
   </npc_template>
+<npc_template name_desc="world_IDTransform_NPC_Entrance_PC" npc_type="PEACE" level="15" title_id="469471" rating="NORMAL" ai="portal_dialog" hpgauge_level="3" type="GENERAL" name_id="469470" attack_delay="2000" npc_id="836469" sensory_range="20" tribe="GENERAL" name="world_IDTransform_NPC_Entrance_PC" rank="DISCIPLINED" height="1.375" attack_range="2" attack_rate="1000">
+    <stats hp_regen="1128" maxHp="2256" pdef="287" walk_speed="1.5" mresist="299" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="77" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="504" power="23" evasion="352" run_speed_fight="7"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_IDTransform_NPC_Entrance_PC_D" attack_range="2" npc_type="PEACE" level="15" attack_rate="1000" title_id="469471" rating="NORMAL" ai="portal_dialog" hpgauge_level="3" type="GENERAL" name_id="470085" attack_delay="2000" npc_id="836470" sensory_range="20" tribe="GENERAL_DARK" name="world_IDTransform_NPC_Entrance_PC_D" rank="DISCIPLINED" height="1.375">
+    <stats hp_regen="1128" maxHp="2256" pdef="287" walk_speed="1.5" mresist="299" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="77" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="504" power="23" evasion="352" run_speed_fight="7"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
 <npc_template attack_range="37" npc_type="NON_ATTACKABLE" level="75" attack_rate="1000" ammo_speed="50" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="350000" attack_delay="2000" npc_id="836471" tribe="GENERAL" name="LC1_Event_Redcarpet_W_1" rank="SEASONED" height="2.0">
     <stats maxHp="98335" maxXp="9001" pdef="1280" walk_speed="1" mresist="1308" run_speed="6" accuracy="2370" main_hand_attack="1620" main_hand_accuracy="1308" power="1232" evasion="1308" run_speed_fight="8"/>
     <equipment>
@@ -14156,6 +14170,190 @@
     <stats hp_regen="0" maxHp="3" pdef="65000" walk_speed="0" mresist="0" mboost_resist="0" run_speed="0" accuracy="1000" main_hand_attack="0" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="0" power="100" evasion="0" run_speed_fight="0"/>
     <bound_radius side="0.7" upper="2.0" front="0.5"/>
     <talk_info distance="15"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_China" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837155" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_China" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_China" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837156" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_China" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_Europe" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837157" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_Europe" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_Europe" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837158" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_Europe" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_Japan" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837159" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_Japan" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_Japan" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837160" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_Japan" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_Russia" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837161" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_Russia" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_Russia" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837162" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_Russia" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_Taiwan" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837163" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_Taiwan" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_Taiwan" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837164" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_Taiwan" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_L_abyss_seller_USA" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470520" attack_delay="2000" npc_id="837165" sensory_range="20" tribe="GENERAL" name="TIAMAT_DOWN_L_abyss_seller_USA" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102283</item>
+      <item>113102083</item>
+      <item>114102128</item>
+      <item>112102025</item>
+      <item>111102087</item>
+      <item>163000003</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="TIAMAT_DOWN_D_abyss_seller_USA" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="470524" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470521" attack_delay="2000" npc_id="837166" sensory_range="20" tribe="GENERAL_DARK" name="TIAMAT_DOWN_D_abyss_seller_USA" rank="SEASONED" height="1.8">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="6" accuracy="2370" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="1232" evasion="1215" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110102286</item>
+      <item>113102086</item>
+      <item>114102131</item>
+      <item>112102028</item>
+      <item>111102090</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_CN_LC1_event_npc_58teasing" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="1" attack_rate="1000" title_id="470084" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470082" attack_delay="2000" npc_id="837441" sensory_range="20" tribe="GENERAL" name="world_CN_LC1_event_npc_58teasing" rank="SEASONED" height="1.8">
+    <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.5" mresist="28" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110101578</item>
+      <item>113101440</item>
+      <item>114101469</item>
+      <item>112101376</item>
+      <item>111101422</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_CN_DC1_event_npc_58teasing" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="1" attack_rate="1000" title_id="470084" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="470083" attack_delay="2000" npc_id="837442" sensory_range="20" tribe="GENERAL_DARK" name="world_CN_DC1_event_npc_58teasing" rank="SEASONED" height="1.8">
+    <stats hp_regen="86" maxHp="172" pdef="57" walk_speed="1.5" mresist="28" mboost_resist="0" run_speed="6" accuracy="93" main_hand_attack="23" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="207" power="23" evasion="144" run_speed_fight="4.2"/>
+    <equipment>
+      <item>110101579</item>
+      <item>113101441</item>
+      <item>114101470</item>
+      <item>112101377</item>
+      <item>111101423</item>
+    </equipment>
+    <bound_radius side="0.7" upper="1.8" front="0.5"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_bracelet_l_02_seller" attack_range="2" npc_type="NON_ATTACKABLE" race="ELYOS" level="60" attack_rate="1000" title_id="466920" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466919" attack_delay="2000" npc_id="837628" sensory_range="20" tribe="GENERAL" name="world_bracelet_l_02_seller" rank="DISCIPLINED" height="1.375">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.23"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
+  </npc_template>
+<npc_template name_desc="world_bracelet_d_02_seller" attack_range="2" npc_type="NON_ATTACKABLE" race="ASMODIANS" level="60" attack_rate="1000" title_id="466920" rating="NORMAL" ai="general" hpgauge_level="3" type="GENERAL" name_id="466919" attack_delay="2000" npc_id="837629" sensory_range="20" tribe="GENERAL_DARK" name="world_bracelet_d_02_seller" rank="DISCIPLINED" height="1.375">
+    <stats hp_regen="11846" maxHp="23691" pdef="962" walk_speed="1.5" mresist="1186" mboost_resist="0" run_speed="4.23" accuracy="93" main_hand_attack="507" main_hand_crit_rate="0" mdef="0" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1812" power="23" evasion="1215" run_speed_fight="4.23"/>
+    <bound_radius side="0.888" upper="1.375" front="1.4"/>
+    <talk_info distance="5" is_dialog="true"/>
   </npc_template>
 <npc_template name_desc="BIDRuneWP_NoShowNPC_Protection_Die" npc_type="NON_ATTACKABLE" level="80" rating="NORMAL" ai="noaction" hpgauge_level="5" type="GENERAL" name_id="350000" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="855000" sensory_range="5" tribe="USEALL" name="" rank="DISCIPLINED" height="1">
     <stats hp_regen="27842" maxHp="55684" pdef="1520" walk_speed="0" mresist="1938" mboost_resist="0" run_speed="0" accuracy="2370" main_hand_attack="1331" main_hand_crit_rate="59" mdef="1231" mboost="0" parry="0" crit_spell="39" maxXp="0" block="0" main_hand_accuracy="3163" power="1232" evasion="2881" run_speed_fight="0"/>
@@ -19903,14 +20101,14 @@
     </equipment>
     <bound_radius side="0.8" upper="1.66" front="1.8"/>
   </npc_template>
-<npc_template name_desc="IDYun_Nmd_PortalFi_65_Ae" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314425" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="323815" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856019" sensory_range="50" tribe="IDYUN_XDRAKAN" name="IDYun_Nmd_PortalFi_65_Ae" rank="DISCIPLINED" height="2.8">
+<npc_template name_desc="IDYun_Nmd_PortalFi_65_Ae" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314425" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="323815" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856019" sensory_range="50" tribe="IDYUN_XDRAKAN" name="IDYun_Nmd_PortalFi_65_Ae" rank="DISCIPLINED" height="2.8">
     <stats hp_regen="0" maxHp="185148" pdef="1552" walk_speed="1.5" mresist="1646" mboost_resist="621" run_speed="8" accuracy="1000" main_hand_attack="2432" main_hand_crit_rate="102" mdef="553" mboost="0" parry="2815" crit_spell="74" maxXp="1490608" block="0" main_hand_accuracy="3576" power="100" evasion="0" run_speed_fight="8"/>
     <equipment>
       <item>100900753</item>
     </equipment>
     <bound_radius side="0.8" upper="2.8" front="0.8"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_GodKaisinel_Avatar1_Hard" attack_range="11" npc_type="NON_ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="370536" rating="ELITE" ai="aggressive" hpgauge_level="27" type="ABYSS_GUARD" name_id="356083" abyss_type="GUARD" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856020" sensory_range="60" tribe="GOD_KAISINEL" name="Kaisinel" rank="EXPERT" height="14">
+<npc_template name_desc="BIDTiamat_GodKaisinel_Avatar1_Hard" attack_range="11" npc_type="ATTACKABLE" race="GCHIEF_LIGHT" level="65" attack_rate="1000" title_id="370536" rating="ELITE" ai="aggressive" hpgauge_level="27" type="ABYSS_GUARD" name_id="356083" abyss_type="GUARD" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856020" sensory_range="60" tribe="GOD_KAISINEL" name="Kaisinel" rank="EXPERT" height="14">
     <stats hp_regen="0" maxHp="2202126" pdef="1205" walk_speed="2" mresist="1668" mboost_resist="361" run_speed="10" accuracy="2370" main_hand_attack="265" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="100" main_hand_accuracy="3012" power="1632" evasion="0" run_speed_fight="5.5"/>
     <equipment>
       <item>101501103</item>
@@ -19931,7 +20129,7 @@
     </equipment>
 	<bound_radius side="4" upper="14" front="5"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_GodMarkutan_Avatar1_Hard" attack_range="11" npc_type="NON_ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="370536" rating="ELITE" ai="aggressive" hpgauge_level="27" type="ABYSS_GUARD" name_id="356084" abyss_type="GUARD" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856023" sensory_range="60" tribe="GOD_MARCHUTAN" name="Marchutan" rank="EXPERT" height="13">
+<npc_template name_desc="BIDTiamat_GodMarkutan_Avatar1_Hard" attack_range="11" npc_type="ATTACKABLE" race="GCHIEF_DARK" level="65" attack_rate="1000" title_id="370536" rating="ELITE" ai="aggressive" hpgauge_level="27" type="ABYSS_GUARD" name_id="356084" abyss_type="GUARD" attack_delay="2000" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856023" sensory_range="60" tribe="GOD_MARCHUTAN" name="Marchutan" rank="EXPERT" height="13">
     <stats hp_regen="0" maxHp="2202126" pdef="1205" walk_speed="2" mresist="1668" mboost_resist="361" run_speed="10" accuracy="2370" main_hand_attack="265" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="100" main_hand_accuracy="3012" power="1632" evasion="0" run_speed_fight="5.5"/>
     <equipment>
       <item>101501104</item>
@@ -19952,7 +20150,7 @@
     </equipment>
 	<bound_radius side="3.75" upper="13" front="5.5"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_Kalrindy_Named_65_Al" attack_range="6" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314471" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="MONSTER" name_id="326349" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856026" sensory_range="12" tribe="XDRAKAN" name="BIDTiamat_Kalrindy_Named_65_Al" rank="DISCIPLINED" height="13">
+<npc_template name_desc="BIDTiamat_Kalrindy_Named_65_Al" attack_range="6" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314471" rating="NORMAL" ai="aggressive" hpgauge_level="22" type="MONSTER" name_id="326349" attack_delay="2100" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856026" sensory_range="12" tribe="XDRAKAN" name="BIDTiamat_Kalrindy_Named_65_Al" rank="DISCIPLINED" height="13">
     <stats hp_regen="2045406" maxHp="4090811" pdef="1527" walk_speed="6.75" mresist="1621" mboost_resist="361" run_speed="6.75" accuracy="1000" main_hand_attack="2622" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="7647560" block="0" main_hand_accuracy="3250" power="100" evasion="2621" run_speed_fight="13"/>
 	<bound_radius side="3.25" upper="13" front="2.6"/>
   </npc_template>
@@ -19971,19 +20169,19 @@
     <stats hp_regen="5612167" maxHp="11224334" pdef="1194" walk_speed="0" mresist="2063" mboost_resist="1335" run_speed="0" accuracy="1000" main_hand_attack="3544" main_hand_crit_rate="131" mdef="3627" mboost="0" parry="0" crit_spell="95" maxXp="20052672" block="3101" main_hand_accuracy="3895" power="100" evasion="0" run_speed_fight="0"/>
 	<bound_radius side="14" upper="11" front="11.5"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_T1_Crack_Key_Named_65_Al" attack_range="8" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326355" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856030" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Crack_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
+<npc_template name_desc="BIDTiamat_T1_Crack_Key_Named_65_Al" attack_range="8" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326355" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856030" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Crack_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
     <stats hp_regen="258456" maxHp="516912" pdef="555" walk_speed="7.5" mresist="1803" mboost_resist="957" run_speed="7.5" accuracy="1000" main_hand_attack="2599" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3651" power="100" evasion="2905" run_speed_fight="7.5"/>
 	<bound_radius side="2.463" upper="12.24" front="2.463"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_T1_Gravity_Key_Named_65_Al" attack_range="8" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326356" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856031" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Gravity_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
+<npc_template name_desc="BIDTiamat_T1_Gravity_Key_Named_65_Al" attack_range="8" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326356" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856031" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Gravity_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
     <stats hp_regen="267687" maxHp="535373" pdef="555" walk_speed="7.5" mresist="1803" mboost_resist="957" run_speed="7.5" accuracy="1000" main_hand_attack="2599" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3651" power="100" evasion="2905" run_speed_fight="7.5"/>
 	<bound_radius side="2.463" upper="12.24" front="2.463"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_T1_Rage_Key_Named_65_Al" attack_range="8" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326357" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856032" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Rage_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
+<npc_template name_desc="BIDTiamat_T1_Rage_Key_Named_65_Al" attack_range="8" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326357" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856032" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Rage_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
     <stats hp_regen="258456" maxHp="516912" pdef="555" walk_speed="7.5" mresist="1803" mboost_resist="957" run_speed="7.5" accuracy="1000" main_hand_attack="2599" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3651" power="100" evasion="2905" run_speed_fight="7.5"/>
 	<bound_radius side="2.463" upper="12.24" front="2.463"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_T1_Crystal_Key_Named_65_Al" attack_range="8" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326358" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856033" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Crystal_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
+<npc_template name_desc="BIDTiamat_T1_Crystal_Key_Named_65_Al" attack_range="8" npc_type="ATTACKABLE" level="65" attack_rate="1000" title_id="314466" rating="NORMAL" ai="aggressive" hpgauge_level="20" type="MONSTER" name_id="326358" attack_delay="2300" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856033" sensory_range="20" tribe="XDRAKAN" name="BIDTiamat_T1_Crystal_Key_Named_65_Al" rank="DISCIPLINED" height="12.24">
     <stats hp_regen="295378" maxHp="590757" pdef="555" walk_speed="7.5" mresist="1803" mboost_resist="957" run_speed="7.5" accuracy="1000" main_hand_attack="2599" main_hand_crit_rate="131" mdef="0" mboost="0" parry="0" crit_spell="95" maxXp="0" block="0" main_hand_accuracy="3651" power="100" evasion="2905" run_speed_fight="7.5"/>
 	<bound_radius side="2.463" upper="12.24" front="2.463"/>
   </npc_template>
@@ -20019,7 +20217,7 @@
     <stats hp_regen="13058" maxHp="26116" pdef="1077" walk_speed="0" mresist="1306" mboost_resist="0" run_speed="0" accuracy="1000" main_hand_attack="554" main_hand_crit_rate="0" mdef="872" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1976" power="100" evasion="1347" run_speed_fight="0"/>
     <bound_radius side="3.0" upper="2.05" front="1.2"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_Tiamat_CyclopsCrack_Hard" attack_range="2" npc_type="NON_ATTACKABLE" level="65" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="326675" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856042" sensory_range="15" tribe="XDRAKAN" name="BIDTiamat_Tiamat_CyclopsCrack_Hard" rank="DISCIPLINED" height="2.05">
+<npc_template name_desc="BIDTiamat_Tiamat_CyclopsCrack_Hard" attack_range="2" npc_type="ATTACKABLE" level="65" attack_rate="1000" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="326675" attack_delay="2205" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="856042" sensory_range="15" tribe="XDRAKAN" name="BIDTiamat_Tiamat_CyclopsCrack_Hard" rank="DISCIPLINED" height="2.05">
     <stats hp_regen="53856" maxHp="119680" pdef="2449" walk_speed="1.07" mresist="1249" mboost_resist="307" run_speed="9" accuracy="1000" main_hand_attack="1652" main_hand_crit_rate="102" mdef="0" mboost="0" parry="0" crit_spell="74" maxXp="0" block="100" main_hand_accuracy="2919" power="100" evasion="0" run_speed_fight="12"/>
     <bound_radius side="3.0" upper="2.05" front="1.2"/>
   </npc_template>
@@ -20168,7 +20366,7 @@
     <stats hp_regen="13058" maxHp="26116" pdef="1077" walk_speed="0" mresist="1306" mboost_resist="0" run_speed="0" accuracy="1000" main_hand_attack="554" main_hand_crit_rate="0" mdef="872" mboost="0" parry="0" crit_spell="0" maxXp="0" block="0" main_hand_accuracy="1976" power="100" evasion="1347" run_speed_fight="0"/>
     <bound_radius side="3.0" upper="2.05" front="1.2"/>
   </npc_template>
-<npc_template name_desc="BIDTiamat_Gravity_Lball" npc_type="NON_ATTACKABLE" level="65" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="325584" attack_delay="2100" npc_id="856076" sensory_range="10" tribe="XDRAKAN" name="BIDTiamat_Gravity_Lball" rank="DISCIPLINED" height="6.0">
+<npc_template name_desc="BIDTiamat_Gravity_Lball" npc_type="ATTACKABLE" level="65" rating="NORMAL" ai="aggressive" hpgauge_level="13" type="MONSTER" name_id="325584" attack_delay="2100" npc_id="856076" sensory_range="10" tribe="XDRAKAN" name="BIDTiamat_Gravity_Lball" rank="DISCIPLINED" height="6.0">
     <stats hp_regen="0" maxHp="178113" pdef="1600" walk_speed="3" mresist="1796" mboost_resist="621" run_speed="5" accuracy="1000" main_hand_attack="2530" main_hand_crit_rate="222" mdef="1007" mboost="0" parry="0" crit_spell="74" maxXp="0" block="0" main_hand_accuracy="3416" power="100" evasion="2534" run_speed_fight="5"/>
     <bound_radius side="5.0" upper="6.0" front="2.6"/>
   </npc_template>
@@ -55427,7 +55625,7 @@
     </equipment>
     <bound_radius side="3.25" upper="2.25" front="1.45"/>
   </npc_template>
-<npc_template name_desc="Ab1_1231_Commander_G_R_65_new2" attack_range="37" npc_type="NON_ATTACKABLE" race="DRAKAN" level="75" attack_rate="1000" title_id="337457" rating="ELITE" ai="aggressive" hpgauge_level="21" type="ABYSS_GUARD" name_id="335850" abyss_type="GUARD" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="882822" sensory_range="25" tribe="ERESUKIGAL" name="Ab1_1231_Commander_G_R_65_new2" rank="SEASONED" height="2.25">
+<npc_template name_desc="Ab1_1231_Commander_G_R_65_new2" attack_range="37" npc_type="ATTACKABLE" race="DRAKAN" level="75" attack_rate="1000" title_id="337457" rating="ELITE" ai="aggressive" hpgauge_level="21" type="ABYSS_GUARD" name_id="335850" abyss_type="GUARD" attack_delay="2260" abnormal_immunity="Stat_ArAll,Stat_ArStunLike" npc_id="882822" sensory_range="25" tribe="ERESUKIGAL" name="Ab1_1231_Commander_G_R_65_new2" rank="SEASONED" height="2.25">
     <stats hp_regen="706894" maxHp="1413789" pdef="1310" walk_speed="1.38" mresist="2143" mboost_resist="1512" run_speed="0" accuracy="2370" main_hand_attack="3196" main_hand_crit_rate="150" mdef="1545" mboost="0" parry="0" crit_spell="109" maxXp="10292123" block="0" main_hand_accuracy="4272" power="1232" evasion="3607" run_speed_fight="0"/>
     <equipment>
       <item>101701449</item>

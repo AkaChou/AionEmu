@@ -1,0 +1,30 @@
+field	severity	local_source	retail_source	comparable	same	diff	local_missing	retail_missing	samples
+name_desc vs retail name	A_TEXT	npc_template@name_desc	npc/name	87712	87712	0	0	0	
+type vs retail npc_type	A_ENUM	npc_template@type	npc/npc_type	74741	68136	6605	6820	6151	201077:SUMMON_PET|MONSTER; 201078:SUMMON_PET|MONSTER; 201079:SUMMON_PET|MONSTER
+tribe vs retail tribe	A_ENUM	npc_template@tribe	npc/tribe	87697	87235	462	0	15	201001:ASIST_D|GENERAL; 202688:PC|IDRUN_POLYMORPH_L; 202689:PC|IDRUN_POLYMORPH_L
+hpgauge_level	A_NUMERIC	npc_template@hpgauge_level	npc/hpgauge_level	87334	77869	9465	284	94	201042:2|1; 201043:2|1; 201044:2|1
+height vs local bound_radius@upper	X_LOCAL_PROJECTION	npc_template@height	npc_template/bound_radius@upper	87671	81399	6272	31	10	203536:0.464|2.764; 204027:0.576|1.376; 204408:3.05|3.55
+height vs bound_radius.upper*scale/100	A_DERIVED	npc_template@height	npc/bound_radius/upper * npc/scale / 100	87675	52703	34972	31	6	200000:3|0.3000; 200001:3|0.3000; 201040:2|2.4000
+ammo_speed	A_NUMERIC	npc_template@ammo_speed	npc/ammo_speed	2344	2336	8	85329	39	216952:50|55; 216960:50|55; 217590:25|50
+talk_info@distance vs talking_distance	A_NUMERIC	npc_template/talk_info@distance	npc/talking_distance	17499	13243	4256	69929	284	201077:5|0.000000; 201078:5|0.000000; 201079:5|0.000000
+talk_info@delay vs talk_delay_time	A_NUMERIC	npc_template/talk_info@delay	npc/talk_delay_time	3124	1596	1528	82488	2100	207102:3|2; 207188:3|7; 207199:3|2
+abnormal_immunity vs abnormal_immunity_list	A_SET	npc_template@abnormal_immunity	npc/abnormal_immunity_list	21932	21932	0	65779	1	
+name_id vs retail desc	X_MAPPING_REQUIRED	npc_template@name_id	npc/desc	87712			0	0	200000:350000|STR_NPC_NO_NAME; 200001:350000|STR_NPC_NO_NAME; 201000:350051|STR_SUMMONHOMING_TEST
+title_id vs retail npc_title	X_MAPPING_REQUIRED	npc_template@title_id	npc/npc_title	33217			53973	52107	201068:466226|STR_NPCTITLE_stigma_Lab; 201069:466226|STR_NPCTITLE_stigma_Lab; 202512:350453|STR_NPCTITLE_Lehpar_Unknown
+name (client display text)	X_NO_RETAIL	npc_template@name	(none)				266	87712	
+rank	X_NO_RETAIL	npc_template@rank	(none)				0	87712	
+rating	X_NO_RETAIL	npc_template@rating	(none)				1	87712	
+abyss_type	X_NO_RETAIL	npc_template@abyss_type	(none)				65100	87712	
+state	X_NO_RETAIL	npc_template@state	(none)				84906	87712	
+floatcorpse	X_NO_RETAIL	npc_template@floatcorpse	(none)				86437	87712	
+on_mist	X_NO_RETAIL	npc_template@on_mist	(none)				87647	87712	
+npc_type vs unattackable (behavioral)	X_REFERENCE	npc_template@npc_type	npc/unattackable						见 npc-type-retail-unattackable-audit.zh-CN.md
+equipment vs visible_equipments	X_REFERENCE	npc_template/equipment	npc/visible_equipments						见 P4-appearance-power.zh-CN.md 第三节：集合全等 40,509/49,644 = 81.6%
+stats combat values	X_ALREADY_AUDITED	npc_template/stats	npc/(numerical elements)						见 field-diff-summary.tsv
+attack_range/rate/delay	X_ALREADY_AUDITED	npc_template@attack_*	npc/attacks/data						见 field-diff-summary.tsv 与 P1 文档
+sensory_range/angle/chase	X_ALREADY_AUDITED	npc_template@sensory_range	npc/sensory_*						见 field-diff-summary.tsv C_PROJECTED 与 ai 分片
+race vs race_type	X_ALREADY_AUDITED	npc_template@race	npc/race_type						见 field-diff-summary.tsv D_BEHAVIOR
+bound_radius	X_MODELED_THIS_ROUND	npc_template/bound_radius	npc/bound_radius						npc-bound-radius.xml 87,705 行；见 P4 文档
+combat elements (87)	X_MODELED_THIS_ROUND	NpcTemplate.combatElements	npc/* combat elements						npc-combat-elements.xml 87,169 行 + npc-master-item-bonus.xml 342 行；见 P4 文档第九节
+massive_looting	X_CARRIED	npc_template/massive_looting	npc/massive_looting_*						本地 93 条；分类表标为已承载
+kisk_stats	X_CARRIED	npc_template/kisk_stats	npc/kisk_*						本地 88 条；分类表标为已承载

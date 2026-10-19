@@ -1,11 +1,12 @@
 # 真端 npcs.xml × 本地 npc 模板：全字段差异审计
 
-**本目录为只读审计产物，本期不修改任何运行时数据。**
+**本目录的 TSV 与逐字段表格是审计快照；第三、四节与各 P 文档记录其后实际落地的对齐改动。**
 
 - 真端来源：`58Server/Map/XML/npcs.xml`（UTF-16，含 `<!DOCTYPE strings [...]>` 实体表，87,734 个 `<npc>` / 360 种元素）
-- 本地来源：`src/main/resources/aion/data/static_data/npcs/npc_template_*.xml`（8 个分片，87,982 条）
-- 交叉规模：**87,692** 个 id 两侧都有
+- 本地来源：`src/main/resources/aion/data/static_data/npcs/npc_template_*.xml`（8 个分片，审计快照 87,982 条；补入 20 条同族模板后 **88,002** 条）
+- 交叉规模：审计快照 **87,692** 个 id 两侧都有；补入 20 条后 **87,712**
 - 产出：`field-diff-summary.tsv`（逐字段）、`field-diff-details.tsv`（逐条不一致，26,675 行）、`retail-only-elements.tsv`（真端元素与本地对应关系）、`skills-parity.tsv`（技能缺口，本期为空）
+- 剩余字段专项审计：`full-field-audit.tsv` 与 [`full-field-audit.zh-CN.md`](full-field-audit.zh-CN.md)（`name_desc`、`type`、`tribe`、`hpgauge_level`、`height`、`ammo_speed`、`talk_info`、`name_id`/`title_id` 等）
 
 ## 一、先看清形状：本地模板不是真端投影
 
@@ -85,8 +86,10 @@
 | 6. 去重 | 删除 `npc_template_834290_885645.xml` 中重复的 `836025` 条目（`run_speede Bomb I`，level 55、tribe `IDLUNA_DEF_NPC2`，无任何引用；保留 `IDEVENT_Def_SWHOWITZER_01A`，level 66、tribe `IDEVENT_PCTANK`） | -1 条；模板元素 87,983 → 87,982，与唯一 id 数一致 |
 | 7. P1 多段攻击 | 新增 `definitions/compact/npc-attack-profiles.xml` + `NpcAttackDefinitionLoader`；运行时按目标距离选段，支持魔法自动攻击与 `attack_mod` | 393 个 NPC / 787 段；见 [`P1-multi-attack-and-id-coverage.zh-CN.md`](P1-multi-attack-and-id-coverage.zh-CN.md) |
 | 8. P2 数值尾巴 | 89 个模板的 59 个属性；LDF5_Under 经验、事件怪、任务 14026 守卫 `max_chase_time` 按决策保留 | 见 [`P2-numeric-tails.zh-CN.md`](P2-numeric-tails.zh-CN.md) |
-| 9. P3 行为合同 | `npc_type` 54 条实例 Boss/炮台改为 `ATTACKABLE`；`race` 暂不对齐 | 见 [`P3-behavior-contracts.zh-CN.md`](P3-behavior-contracts.zh-CN.md) |
-| 10. P1 id 覆盖 | 42 个仅真端、290 个仅本地，逐条清单 | 见 [`npc-id-coverage.tsv`](npc-id-coverage.tsv)；未补模板（缺 `name_id` 映射） |
+| 9. P3 行为合同 | `npc_type` 第一批 54 条实例 Boss/炮台 + 第二批 848 条非守卫全部改为 `ATTACKABLE`（含 `PEACE` / `INVULNERABLE` 与已知友军）；守卫家族待 SDJ-007；`race` 暂不对齐 | 见 [`P3-behavior-contracts.zh-CN.md`](P3-behavior-contracts.zh-CN.md) |
+| 10. P1 id 覆盖 | 42 个仅真端、290 个仅本地，逐条清单；已补 20 条同族模板，剩余 22 条 | 见 [`npc-id-coverage.tsv`](npc-id-coverage.tsv) 与 P1 文档 |
+| 11. P4 `bound_radius` | 新增 `definitions/compact/npc-bound-radius.xml` + `NpcBoundRadiusDefinitionLoader`；`BoundRadius` 增加全长标记，消费者改用半值 | **87,705 条**；front/side/upper 分别改动 66,361 / 66,586 / 35,570 |
+| 12. P4 战斗元素 | 新增 `definitions/compact/npc-combat-elements.xml` + `npc-master-item-bonus.xml` 与两个加载器；属性经 `NpcGameStats.getStat` 注入，`hit_count`/`limit_attribute`/元素免疫/主人物品继承接线 | **87,169 + 342 行**；`disk_type` 复核为客户端字段；详见 [`P4-appearance-power.zh-CN.md`](P4-appearance-power.zh-CN.md) 第九节 |
 
 口径：
 
@@ -100,8 +103,8 @@
 
 1. **P1 多段攻击**已落地；剩余 P1 项是 42 个仅真端 NPC 的模板补齐，阻塞于客户端 `name_id` 映射。
 2. **P2 数值尾巴**已按决策处理；保留项（LDF5_Under 经验、事件怪、训练假人、浮点噪声）见 `P2-numeric-tails.zh-CN.md`。
-3. **P3** 只修了 54 条实例 Boss/炮台；PvP 守卫家族、`IDYun`/`IDF6`/静态 NPC 与 `race` 仍待逐域裁定，见 `P3-behavior-contracts.zh-CN.md`。
-4. **P4 外观与 `power`** 见 `P4-appearance-power.zh-CN.md`：`bound_radius` 因运行时“半径 vs 全长”契约冲突而 BLOCKED；`equipment` 网格映射可建立；`stats@power` 无真端上游，保持本地曲线。
+3. **P3** 已修 54 条实例 Boss/炮台与 848 条非守卫（含 `PEACE` / `INVULNERABLE` 与已知友军）；PvP 守卫家族与 `race` 仍待逐域裁定，`IDYun`/`IDF6`/`IDLUNA` 需实测，见 `P3-behavior-contracts.zh-CN.md`。
+4. **P4 外观、战斗元素与 `power`** 见 `P4-appearance-power.zh-CN.md`：`bound_radius` 已按「全长」约定落地（`npc-bound-radius.xml` 覆盖 87,705 条 + 消费者半值修正）；87 个战斗元素已建模（`npc-combat-elements.xml` 87,169 行 + `npc-master-item-bonus.xml` 342 行），`hit_count`/`limit_attribute`/元素免疫/主人物品继承已接线；`equipment` 网格映射可建立；`stats@power` 无真端上游，保持本地曲线。
 
 ## 五、口径与边界
 

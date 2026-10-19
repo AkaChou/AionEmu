@@ -96,6 +96,9 @@ public class AttackUtil {
 	 * @return 命中段数 / hit count
 	 */
 	private static int getPhysicalHitCount(Creature attacker, boolean mainHand) {
+		if (attacker instanceof Npc npc) {
+			return npc.getObjectTemplate() == null ? 1 : npc.getObjectTemplate().getHitCount();
+		}
 		if (!(attacker instanceof Player)) {
 			return 1;
 		}

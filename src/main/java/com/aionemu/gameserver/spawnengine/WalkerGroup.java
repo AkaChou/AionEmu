@@ -192,7 +192,7 @@ public class WalkerGroup {
 	private float sumMemberBoundSides() {
 		float sum = 0;
 		for (ClusteredNpc member : members) {
-			sum += member.getNpc().getObjectTemplate().getBoundRadius().getSide();
+			sum += member.getNpc().getObjectTemplate().getBoundRadius().getHalfSide();
 		}
 		return sum;
 	}
