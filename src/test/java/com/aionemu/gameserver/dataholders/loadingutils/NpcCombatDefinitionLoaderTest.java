@@ -75,7 +75,7 @@ class NpcCombatDefinitionLoaderTest {
 		Set<Integer> combatIds = readUniqueIds(
 				Path.of("src/main/resources/aion/definitions/compact/npc-combat.xml"), "npc", "id");
 
-		assertEquals(41_455, combatIds.size());
+		assertEquals(87_525, combatIds.size());
 		Set<Integer> missingIds = new HashSet<>(combatIds);
 		missingIds.removeAll(templateIds);
 		assertTrue(missingIds.isEmpty(), () -> "NPC combat data has no template: " + missingIds);
