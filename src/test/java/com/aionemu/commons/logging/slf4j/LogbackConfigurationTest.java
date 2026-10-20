@@ -125,7 +125,10 @@ class LogbackConfigurationTest {
 					PatternLayoutEncoder encoder = (PatternLayoutEncoder) appender.getEncoder();
 					String rendered = new String(encoder.encode(event), StandardCharsets.UTF_8)
 						.replaceAll("\u001B\\[[;\\d]*m", "");
-					assertTrue(rendered.contains("[shutdown-test-thread] " + logger.getName() + " - "));
+					String expectedLogger = name.equals("out_console")
+						? "c.a.g.n.loginserver.LoginServer"
+						: logger.getName();
+					assertTrue(rendered.contains("[shutdown-test-thread] " + expectedLogger + " - "));
 					assertTrue(rendered.contains("IllegalStateException: logging failure"));
 					assertTrue(rendered.contains("\tat "));
 					String date = name.equals("out_console") ? "\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}"

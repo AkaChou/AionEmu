@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 class LoggingPatternConfigurationTest {
 
 	private static final String FILE_CONSOLE_PATTERN = "%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger - %message%n";
-	private static final String COLORED_CONSOLE_PATTERN = "%date{MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger) - %message%n";
+	private static final String COLORED_CONSOLE_PATTERN = "%date{MM-dd HH:mm:ss} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %message%n";
 
 	@Test
 	void unifiedAppendersKeepFullLoggerThreadAndStackTrace() throws IOException {
