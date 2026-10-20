@@ -17,7 +17,7 @@
 
 <br/>
 
-[Quick Start](#quick-start) • [Features](#features) • [Client Patch](#client-companion-patch) • [Contributing](#contributing)
+[Quick Start](#quick-start) • [Features](#features) • [Client Patch](#client-companion-patch) • [Contributing](#contributing) • [Team](#team)
 
 </div>
 
@@ -105,6 +105,31 @@ Configure your database credentials in `src/main/resources/aion/config/network/n
 - Run automated tests before submitting: `mvn test`
 - Public APIs and core domain logic should include bilingual (EN/ZH) comments.
 - Adhere to data-driven design; avoid hardcoding specific IDs or exceptions in Java code.
+
+---
+
+## Team
+
+Core team members:
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/AkaChou">
+        <img src="https://github.com/AkaChou.png?size=160" width="120" height="120" alt="AkaChou" />
+      </a>
+      <br />
+      <a href="https://github.com/AkaChou">AkaChou</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/sunbsn">
+        <img src="https://github.com/sunbsn.png?size=160" width="120" height="120" alt="sunbsn" />
+      </a>
+      <br />
+      <a href="https://github.com/sunbsn">sunbsn</a>
+    </td>
+  </tr>
+</table>
 
 ---
 

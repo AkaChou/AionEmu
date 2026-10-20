@@ -17,7 +17,7 @@
 
 <br/>
 
-[快速开始](#快速开始) • [核心特性](#核心特性) • [客户端补丁](#客户端补丁) • [参与贡献](#参与贡献)
+[快速开始](#快速开始) • [核心特性](#核心特性) • [客户端补丁](#客户端补丁) • [参与贡献](#参与贡献) • [团队](#团队)
 
 </div>
 
@@ -105,6 +105,31 @@ cd AionEmu
 - 提交 PR 前请确保全量测试通过：`mvn test`
 - 核心领域逻辑与对外接口请保留中英双语注释。
 - 坚持数据驱动设计，不引入硬编码特例。
+
+---
+
+## 团队
+
+主要成员：
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/AkaChou">
+        <img src="https://github.com/AkaChou.png?size=160" width="120" height="120" alt="AkaChou" />
+      </a>
+      <br />
+      <a href="https://github.com/AkaChou">AkaChou</a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/sunbsn">
+        <img src="https://github.com/sunbsn.png?size=160" width="120" height="120" alt="sunbsn" />
+      </a>
+      <br />
+      <a href="https://github.com/sunbsn">Sunbsn</a>
+    </td>
+  </tr>
+</table>
 
 ---
 
