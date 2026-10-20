@@ -50,7 +50,8 @@ class EnchantItemActionTest {
 
 	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
 		"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_ITEM_KINAH", "ENCHANT_ESTIMA",
-		"ESTIMA_ENCHANT_SPEED", "ENCHANT_SPEED", "AUTHORIZE_SPEED", "ENCHANT_STIGMA");
+		"ESTIMA_ENCHANT_SPEED", "ENCHANT_SPEED", "AUTHORIZE_SPEED", "ENCHANT_STIGMA",
+		"MAX_STIGMA_ENCHANT_LEVEL", "STIGMA_ENCHANT_SPEED");
 	private final EnchantItemAction action = new EnchantItemAction();
 
 	@AfterEach
@@ -218,6 +219,40 @@ class EnchantItemActionTest {
 		assertTrue(action.canAct(player, material, target));
 		target.setEnchantLevel(10);
 		assertFalse(action.canAct(player, material, target));
+	}
+
+	@Test
+	void refusesStigmaAtConfiguredCapAndCapsItAtOneHundred() throws Exception {
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 15;
+		TestPlayer player = player(100_000);
+		Item material = item(166060001, ItemCategory.ENCHANTMENT_STIGMA, 0);
+		Item target = item(140000001, ItemCategory.STIGMA, 15);
+
+		assertFalse(new EnchantStigmaAction().canAct(player, material, target));
+
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 500;
+
+		assertEquals(100, EnchantService.getMaxStigmaEnchantLevel());
+		target.setEnchantLevel(100);
+		assertFalse(new EnchantStigmaAction().canAct(player, material, target));
+		target.setEnchantLevel(99);
+		assertTrue(new EnchantStigmaAction().canAct(player, material, target));
+	}
+
+	@Test
+	void stigmaUsesConfiguredCastTime() throws Exception {
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 15;
+		EnchantsConfig.STIGMA_ENCHANT_SPEED = 1800;
+		EnchantsConfig.ENCHANT_STIGMA = 100;
+		TestPlayer player = player(100_000);
+		Item material = item(166060001, ItemCategory.ENCHANTMENT_STIGMA, 0);
+		Item target = item(140000001, ItemCategory.STIGMA, 14);
+
+		new EnchantStigmaAction().act(player, material, target);
+
+		assertEquals(1800, player.controller.delay);
+		player.controller.complete();
+		assertEquals(15, target.getEnchantLevel());
 	}
 
 	@Test

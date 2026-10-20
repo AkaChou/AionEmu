@@ -122,6 +122,20 @@ public class EnchantService {
 	}
 
 	/**
+	 * 获取烙印之石强化等级上限（配置优先，缺省 10，上限 100）。
+	 * Returns the stigma enchant cap (configured, default 10, hard-capped at 100).
+	 *
+	 * @return 烙印之石最大强化等级 / stigma max enchant level
+	 */
+	public static int getMaxStigmaEnchantLevel() {
+		int configured = EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL;
+		if (configured <= 0) {
+			configured = 10;
+		}
+		return Math.min(configured, 100);
+	}
+
+	/**
 	 * 获取天烙之石（埃斯蒂玛）强化等级上限；沿用物品模板的原始上限。
 	 * Returns the Estima (CP stone) enchant cap from the item template's original limit.
 	 *

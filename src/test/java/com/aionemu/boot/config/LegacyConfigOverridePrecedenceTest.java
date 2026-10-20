@@ -178,6 +178,8 @@ class LegacyConfigOverridePrecedenceTest {
 			gameserver.enchant.bracelet.success.rate=75
 			gameserver.enchant.accessory.success.rate=76
 			gameserver.enchant.stigma.success.rate=77
+			gameserver.enchant.stigma.max.level=35
+			gameserver.enchant.stigma.cast.time=640
 			gameserver.enchant.cast.time=620
 			gameserver.enchant.authorize.cast.time=630
 			""");
@@ -194,7 +196,8 @@ class LegacyConfigOverridePrecedenceTest {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
 			"ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED",
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_PLUME", "ENCHANT_BRACELET", "ENCHANT_ACCESSORY",
-			"ENCHANT_STIGMA", "ENCHANT_SPEED", "AUTHORIZE_SPEED");
+			"ENCHANT_STIGMA", "MAX_STIGMA_ENCHANT_LEVEL", "STIGMA_ENCHANT_SPEED",
+			"ENCHANT_SPEED", "AUTHORIZE_SPEED");
 		try {
 			ConfigurableProcessor.process(EnchantsConfig.class, new java.util.Properties());
 
@@ -206,6 +209,8 @@ class LegacyConfigOverridePrecedenceTest {
 			assertEquals(75f, EnchantsConfig.ENCHANT_BRACELET);
 			assertEquals(76f, EnchantsConfig.ENCHANT_ACCESSORY);
 			assertEquals(77f, EnchantsConfig.ENCHANT_STIGMA);
+			assertEquals(35, EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL);
+			assertEquals(640, EnchantsConfig.STIGMA_ENCHANT_SPEED);
 			assertEquals(620, EnchantsConfig.ENCHANT_SPEED);
 			assertEquals(630, EnchantsConfig.AUTHORIZE_SPEED);
 		} finally {

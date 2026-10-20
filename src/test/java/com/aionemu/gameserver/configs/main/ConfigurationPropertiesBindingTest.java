@@ -289,7 +289,8 @@ class ConfigurationPropertiesBindingTest {
 			"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED",
 			"MAX_AUTHORIZE_ACCESSORY_LEVEL",
 			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
-			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
+			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "MAX_STIGMA_ENCHANT_LEVEL", "STIGMA_ENCHANT_SPEED",
+			"CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
 			"ENABLE_ARCHDAEVA_ITEM_BROKE");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
@@ -308,6 +309,8 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.enchant.bracelet.success.rate", "70.0"),
 				Map.entry("gameserver.enchant.accessory.success.rate", "60.0"),
 				Map.entry("gameserver.enchant.stigma.success.rate", "55.0"),
+				Map.entry("gameserver.enchant.stigma.max.level", "35"),
+				Map.entry("gameserver.enchant.stigma.cast.time", "1800"),
 				Map.entry("gameserver.manastone.clean", "true"),
 				Map.entry("gameserver.enchant.cast.time", "2500"),
 				Map.entry("gameserver.enchant.authorize.cast.time", "1200")
@@ -330,6 +333,8 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(70.0f, EnchantsConfig.ENCHANT_BRACELET);
 			assertEquals(60.0f, EnchantsConfig.ENCHANT_ACCESSORY);
 			assertEquals(55.0f, EnchantsConfig.ENCHANT_STIGMA);
+			assertEquals(35, EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL);
+			assertEquals(1800, EnchantsConfig.STIGMA_ENCHANT_SPEED);
 			assertTrue(EnchantsConfig.CLEAN_STONE);
 			assertEquals(2500, EnchantsConfig.ENCHANT_SPEED);
 			assertEquals(1200, EnchantsConfig.AUTHORIZE_SPEED);

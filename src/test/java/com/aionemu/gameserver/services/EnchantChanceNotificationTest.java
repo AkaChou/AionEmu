@@ -52,7 +52,7 @@ class EnchantChanceNotificationTest {
 
 	private final ConfigSnapshot enchantConfig = ConfigSnapshot.of(EnchantsConfig.class,
 		"ENCHANT_ITEM", "ENCHANT_ESTIMA", "ENCHANT_STIGMA", "ENCHANT_BRACELET", "ENCHANT_PLUME",
-		"ENCHANT_ACCESSORY", "SOCKET_MANASTONE");
+		"ENCHANT_ACCESSORY", "SOCKET_MANASTONE", "MAX_STIGMA_ENCHANT_LEVEL");
 	private final ConfigSnapshot adminConfig = ConfigSnapshot.of(AdminConfig.class, "GM_LEVEL");
 
 	@BeforeEach
@@ -193,6 +193,7 @@ class EnchantChanceNotificationTest {
 		Item estima = item(187300002, ItemCategory.ESTIMA);
 		estima.setEnchantLevel(10);
 		Item stigma = item(140000001, ItemCategory.STIGMA);
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 10;
 		stigma.setEnchantLevel(10);
 
 		EnchantService.estimaEnchant(player, item(166040001, ItemCategory.ENCHANTMENT), estima);

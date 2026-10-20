@@ -27,8 +27,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EnchantStigmaAction")
 public class EnchantStigmaAction extends AbstractItemAction {
-	private static final int ENCHANT_CAST_TIME = 3000;
-
 	@XmlAttribute(name = "count")
 	private int count;
 
@@ -54,7 +52,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ITEM_COLOR_ERROR);
 			return false;
 		}
-		if (targetItem.getEnchantLevel() >= 10) {
+		if (targetItem.getEnchantLevel() >= EnchantService.getMaxStigmaEnchantLevel()) {
 			// 你无法再强化 %0。 / You cannot enchant %0 any further.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_ENCHANT_ITEM_IT_CAN_NOT_BE_ENCHANTED_MORE_TIME(targetItem.getNameId()));
 			return false;
@@ -85,7 +83,8 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		final int parentItemId = parentItem.getItemId();
 		final int parentObjectId = parentItem.getObjectId();
 		final int parentNameId = parentItem.getNameId();
-		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, ENCHANT_CAST_TIME, 0, 0), true);
+		final int castTime = EnchantsConfig.STIGMA_ENCHANT_SPEED;
+		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, castTime, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
 			@Override
@@ -123,7 +122,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			ItemPacketService.sendEnchantResult(player, parentItem, targetItem, isSuccess);
 			PacketSendUtility.sendPacket(player, resultMessage);
-		}, ENCHANT_CAST_TIME);
+		}, castTime);
 	}
 
 	/** 按 quality 返回 stigma / Returns the stigma by quality */

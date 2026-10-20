@@ -23,7 +23,8 @@ class EnchantServiceTest {
 
 	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
 		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL",
-		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL");
+		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL",
+		"MAX_STIGMA_ENCHANT_LEVEL");
 
 	@AfterEach
 	void restoreConfig() {
@@ -86,6 +87,39 @@ class EnchantServiceTest {
 
 		assertEquals(200, EnchantService.getMaxEquipmentEnchantLevel());
 		assertEquals(200, EnchantService.capEquipmentEnchantLevel(250));
+	}
+
+	@Test
+	void declaresStigmaMaximumWithTenAsBuiltInDefault() throws Exception {
+		Property property = EnchantsConfig.class.getDeclaredField("MAX_STIGMA_ENCHANT_LEVEL")
+			.getAnnotation(Property.class);
+
+		assertEquals("gameserver.enchant.stigma.max.level", property.key());
+		assertEquals("10", property.defaultValue());
+	}
+
+	@Test
+	void fallsBackToTenAndCapsStigmaMaximumAtOneHundred() {
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 0;
+		assertEquals(10, EnchantService.getMaxStigmaEnchantLevel());
+
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 15;
+		assertEquals(15, EnchantService.getMaxStigmaEnchantLevel());
+
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 100;
+		assertEquals(100, EnchantService.getMaxStigmaEnchantLevel());
+
+		EnchantsConfig.MAX_STIGMA_ENCHANT_LEVEL = 500;
+		assertEquals(100, EnchantService.getMaxStigmaEnchantLevel());
+	}
+
+	@Test
+	void declaresStigmaCastTimeWithThreeThousandMillisAsDefault() throws Exception {
+		Property property = EnchantsConfig.class.getDeclaredField("STIGMA_ENCHANT_SPEED")
+			.getAnnotation(Property.class);
+
+		assertEquals("gameserver.enchant.stigma.cast.time", property.key());
+		assertEquals("3000", property.defaultValue());
 	}
 
 	@Test

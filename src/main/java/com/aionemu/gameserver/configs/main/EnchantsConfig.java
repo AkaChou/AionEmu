@@ -93,6 +93,18 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.stigma.success.rate", defaultValue = "100")
 	public static float ENCHANT_STIGMA;
 	/**
+	 * 烙印之石最大强化等级，内置默认 10，硬上限 100；生产配置显式设为 15。
+	 * Maximum stigma enchant level, built-in default 10, hard-capped at 100; production config sets 15.
+	 */
+	@Property(key = "gameserver.enchant.stigma.max.level", defaultValue = "10")
+	public static int MAX_STIGMA_ENCHANT_LEVEL;
+	/**
+	 * 烙印之石强化施法速度（毫秒）。
+	 * Stigma enchant cast time in milliseconds.
+	 */
+	@Property(key = "gameserver.enchant.stigma.cast.time", defaultValue = "3000")
+	public static int STIGMA_ENCHANT_SPEED;
+	/**
 	 * 是否在失败时清理魔石。
 	 * Whether manastones are cleaned on failure.
 	 */
@@ -219,6 +231,8 @@ public class EnchantsConfig {
 		@Getter
 		public static class StigmaProperties {
 			private final RateProperties success = new RateProperties();
+			private final MaxProperties max = new MaxProperties();
+			private final CastProperties cast = new CastProperties();
 
 			public static class RateProperties {
 				public float getRate() {
@@ -227,6 +241,26 @@ public class EnchantsConfig {
 
 				public void setRate(float rate) {
 					ENCHANT_STIGMA = rate;
+				}
+			}
+
+			public static class MaxProperties {
+				public int getLevel() {
+					return MAX_STIGMA_ENCHANT_LEVEL;
+				}
+
+				public void setLevel(int level) {
+					MAX_STIGMA_ENCHANT_LEVEL = level;
+				}
+			}
+
+			public static class CastProperties {
+				public int getTime() {
+					return STIGMA_ENCHANT_SPEED;
+				}
+
+				public void setTime(int time) {
+					STIGMA_ENCHANT_SPEED = time;
 				}
 			}
 		}
