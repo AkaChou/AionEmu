@@ -218,6 +218,11 @@ public class QuestEngine implements GameEngine {
 		return dialogRouter.npcDialogDispatchOwners(player, npc, event);
 	}
 
+	/** 对话路由（包内测试入口）。 / The dialog router (package-visible test entry). */
+	QuestDialogRouter dialogRouterForTest() {
+		return dialogRouter;
+	}
+
 	/**
 	 * 分发已接取的服务端任务共享（不虚构 NPC 交互对象）。
 	 * Dispatches an accepted server-issued quest share without inventing an NPC interaction object.
@@ -1646,7 +1651,7 @@ public class QuestEngine implements GameEngine {
 	 */
 	public void shutdown() {
 		clear();
-		log.info(I18n.get("log.dd61afc44888"));
+		log.debug(I18n.get("log.dd61afc44888"));
 	}
 
 	/**

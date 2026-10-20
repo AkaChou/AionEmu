@@ -517,6 +517,15 @@ public final class DataDrivenNativeRuntime {
 	 */
 	private final Map<Integer, List<StepHit>> collectObjectsByNpcId;
 	/**
+	 * 原版 DD 表里存在行的全部任务 id（不限路由集）。客户端 {@code data_driven_quest.xml} 是本表的
+	 * 子集，因此「不在本表」= 客户端任务列表永远渲染不出该行（19678/19679 的交付入口缺口）。
+	 * <p>
+	 * Every quest id present in the retail DD table, independent of the routing set. The client's
+	 * {@code data_driven_quest.xml} is a subset of this table, so "absent here" means the client list
+	 * can never render that row (the hand-in gap on 19678/19679).
+	 */
+	private final Set<Integer> tableQuestIds;
+	/**
 	 * case 9 行的离场恢复表（进世界事件把"副本内失配阶段"写回进入步；见 {@link LeaveRollback}）。
 	 * 生产 = 10034 / 20034 两行（20032 冻结不路由）。
 	 * <p>
@@ -548,7 +557,7 @@ public final class DataDrivenNativeRuntime {
 									List<ChainAcquireEdges.Edge> chainAcquireEdges,
 									Map<Integer, List<ChainAcquireEdges.Edge>> chainAcquireByPredecessor,
 									Map<Integer, List<QuestCatalogDrop>> dropsByNpcId, List<LeaveRollback> instanceLeaveRollbacks,
-									Map<Integer, List<StepHit>> collectObjectsByNpcId) {
+									Map<Integer, List<StepHit>> collectObjectsByNpcId, Set<Integer> tableQuestIds) {
 		this.plansByQuestId = plansByQuestId;
 		this.killsByNpcId = killsByNpcId;
 		this.talksByNpcId = talksByNpcId;
@@ -584,6 +593,7 @@ public final class DataDrivenNativeRuntime {
 		this.dropsByNpcId = dropsByNpcId;
 		this.collectObjectsByNpcId = collectObjectsByNpcId;
 		this.instanceLeaveRollbacks = instanceLeaveRollbacks;
+		this.tableQuestIds = tableQuestIds;
 	}
 
 	/**
@@ -737,6 +747,37 @@ public final class DataDrivenNativeRuntime {
 	 *                          {@link ChainAcquireEdges#instance()}）/ the chain-acquire edge table (the
 	 *                          auto-grant face of acquire=none successors; production = instance())
 	 */
+	/**
+	 * 替换进程级单例并返回原值（仅供测试注入合成表；生产由 {@link #instance()} 懒加载）。
+	 * Replaces the process-wide instance and returns the previous one (test-only injection of a
+	 * synthetic table; production lazily loads through {@link #instance()}).
+	 */
+	public static DataDrivenNativeRuntime swapInstanceForTest(DataDrivenNativeRuntime replacement) {
+		DataDrivenNativeRuntime previous = instance;
+		instance = replacement;
+		return previous;
+	}
+
+	/**
+	 * 仅带原版表全集的空路由运行时：只回答 {@link #inRetailTable(int)}，不接管任何行。
+	 * 供「客户端任务列表能否列出该行」的判定使用（测试与早期装配无需装载整套路由）。
+	 * <p>
+	 * An empty-routing runtime holding the full retail table: it only answers
+	 * {@link #inRetailTable(int)} and owns no row, so the client-visibility test needs no routing
+	 * composition.
+	 */
+	public static DataDrivenNativeRuntime tableOnly(Set<Integer> tableQuestIds) {
+		Objects.requireNonNull(tableQuestIds, "tableQuestIds");
+		return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
+			Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
+			Map.of(), Set.of(), Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null, null,
+			List.of(), Map.of(), Map.of(), List.of(), Map.of(), Set.copyOf(tableQuestIds));
+	}
+
+	/**
+	 * 解析的入参契约（见上方各参数说明）。
+	 * The parsed-argument contract (see the parameter docs above).
+	 */
 	public static DataDrivenNativeRuntime create(DataDrivenQuestTable table, Set<Integer> routedQuestIds,
 												 NativeNpcNameResolver nameResolver, NativeEnterAreaPort enterAreaPort, RetailItemNameIndex itemIndex,
 												 NativeInventoryPort inventoryPort, NativeMoviePort moviePort, NativeTeleportPort teleportPort,
@@ -749,7 +790,7 @@ public final class DataDrivenNativeRuntime {
 			return new DataDrivenNativeRuntime(Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(), Map.of(),
 				Map.of(), Set.of(), Set.of(), Map.of(), Set.of(), null, null, null, null, null, null, null, null,
-				List.of(), Map.of(), Map.of(), List.of(), Map.of());
+				List.of(), Map.of(), Map.of(), List.of(), Map.of(), table.questIds());
 		}
 		Objects.requireNonNull(nameResolver, "DATA_DRIVEN_NAME_RESOLVER_MISSING");
 		Objects.requireNonNull(enterAreaPort, "DATA_DRIVEN_ENTER_AREA_PORT_MISSING");
@@ -929,7 +970,7 @@ public final class DataDrivenNativeRuntime {
 			Set.copyOf(owned), Set.copyOf(routed), Map.copyOf(frozen), Set.copyOf(unresolved), inventoryPort,
 			moviePort, teleportPort, spawnPort, sayPort, timerPort, rewardFlow, itemIndex,
 			List.copyOf(chainEdges), Map.copyOf(immutableChainByPredecessor), Map.copyOf(dropsByNpc),
-			List.copyOf(instanceLeaveRollbacks), Map.copyOf(collectObjects));
+			List.copyOf(instanceLeaveRollbacks), Map.copyOf(collectObjects), table.questIds());
 	}
 
 	/**
@@ -3084,6 +3125,19 @@ public final class DataDrivenNativeRuntime {
 	 */
 	public boolean routes(int questId) {
 		return routedQuestIds.contains(questId);
+	}
+
+	/**
+	 * 该行是否出现在原版 DD 表里（不论是否被本车道接管）。客户端 DD 表是本表的子集，所以返回
+	 * {@code false} 意味着**客户端任务列表永远渲染不出该行**——这正是 19678/19679 交付入口
+	 * 缺口（2026-10-19 实机 806698）的判据。
+	 * <p>
+	 * Whether the retail DD table carries the row (routed here or not). The client's DD table is a
+	 * subset of this one, so {@code false} means the client quest list can never render the row —
+	 * the hand-in gap of 19678/19679 (live 2026-10-19, npc 806698).
+	 */
+	public boolean inRetailTable(int questId) {
+		return tableQuestIds.contains(questId);
 	}
 
 	/**

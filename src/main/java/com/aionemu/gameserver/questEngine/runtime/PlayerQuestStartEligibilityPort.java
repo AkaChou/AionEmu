@@ -168,7 +168,13 @@ public final class PlayerQuestStartEligibilityPort implements QuestStartEligibil
 			.filter(state -> state.getStatus().isClientQuestListVisible())
 			.filter(state -> {
 				QuestMetadata metadata = metadataByQuest.apply(state.getQuestId());
-				return metadata == null || "QUEST".equals(metadata.category());
+				// 与 legacy 车道同源：只有目录里 category="QUEST" 的行占普通任务栏位。目录外行是迁移后的
+				// native/DD owner，旧写法「无元数据 = 普通任务」把整栏 native 任务都算进 50 上限，导致
+				// 19679 误判 QUEST_LIST_FULL 并被静默拒绝（2026-10-19 实机：89 个进行中任务中 75 个目录外）。
+				// Same rule as the legacy lane: only catalog rows with category "QUEST" occupy a normal
+				// journal slot. Rows outside the catalog are native/DD owners; counting them (the old
+				// "no metadata = normal quest" rule) misfired QUEST_LIST_FULL on live quest 19679.
+				return metadata != null && "QUEST".equals(metadata.category());
 			})
 			.count();
 	}

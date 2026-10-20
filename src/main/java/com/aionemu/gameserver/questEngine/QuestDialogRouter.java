@@ -1,7 +1,9 @@
 package com.aionemu.gameserver.questEngine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +13,14 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
+import com.aionemu.gameserver.questEngine.definition.QuestNode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
 import com.aionemu.gameserver.questEngine.model.QuestActionType;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
@@ -204,13 +209,17 @@ final class QuestDialogRouter {
 				// refused START transition is reported; turn-in and page refusals keep their retail silence.
 				if (result.owners().stream().anyMatch(owner -> owner.result() == QuestRouteResult.UNKNOWN
 						&& isAcceptAction(player, owner.questId(), env.getDialogId()))) {
-					log.info(I18n.get("log.quest_trace.typed_accept_refused", player.getName(),
-						requestedOwner, env.getDialogId()));
 					// 资格投影只在生产 dispatcher 上可得；测试替身没有投影时退回 native 判定。
 					// The projection exists only on the production dispatcher; test doubles fall back.
 					QuestStartEligibility eligibility = typed instanceof QuestProductionDispatcher production
 						? production.startEligibility(player.getObjectId(), requestedOwner).orElse(null)
 						: null;
+					// 拒绝轴进 trace：只记「被拒」无法区分等级/种族/前置/重复冷却，排查时只能猜。
+					// The rejection axis goes into the trace; "refused" alone cannot tell level, race,
+					// prerequisite or repeat-cooldown apart.
+					log.info(I18n.get("log.quest_trace.typed_accept_refused", player.getName(),
+						requestedOwner, env.getDialogId(),
+						eligibility == null ? "native" : eligibility.reason()));
 					try {
 						QuestStartRefusal.notifyTypedRefused(player, requestedOwner, eligibility);
 					} catch (RuntimeException hintFailure) {
@@ -335,16 +344,70 @@ final class QuestDialogRouter {
 						questObject = false;
 					}
 					if (!questObject) {
+						boolean replayed = false;
 						for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+							// 可交付行＝native 行，或 typed owner 自带到本 NPC 的开门路由（npc-complete 的
+							// preview 被编译成 REWARD 自环 USE_OBJECT → 奖励窗）。旧写法只认 native，typed
+							// 任务进入 REWARD 后没有交付入口（19678/19679 实机 806698）。
+							// Deliverable = a native row, or a typed owner carrying an open route at this npc
+							// (npc-complete's preview compiles to a REWARD USE_OBJECT self-loop showing the
+							// reward window). Native-only matching left typed REWARD rows with no entry.
 							if (state.getStatus() != QuestStatus.REWARD
-									|| !ownsQuestAtNpc(state.getQuestId(), npcId)) {
+									|| (!ownsQuestAtNpc(state.getQuestId(), npcId)
+										&& !typed.hasMatchingRoutes(event, state.getQuestId()))) {
 								continue;
 							}
+							replayed = true;
 							if (engine.onDialog(new QuestEnv(npc, player, state.getQuestId(),
 									env.getDialogId()))) {
 								env.setQuestId(state.getQuestId());
 								return true;
 							}
+						}
+						if (replayed) {
+							return false;
+						}
+						// 客户端任务列表只会渲染**客户端 data_driven_quest.xml 里挂在该 NPC 名下的行**；
+						// 少数任务（19678/19679 这对外服成长行）原版客户端数据里根本没有 DD 行，列表
+						// 永远列不出来，玩家既看不到行、也没有可点的确认按钮（SET_SUCCEED 只能由阶段页发出）。
+						// 于是这类行的交付条件一旦满足就永远停在 START：头顶没有可交付标记、没有奖励窗
+						// （2026-10-20 实机：19679 推了页 1011 但无标记）。兜底＝在开门时替玩家走完那条
+						// 「本 NPC 的 TALK 转换 → REWARD」，把任务送进可交付态；此后开门由上面的 REWARD
+						// 重放（npc-complete 的 preview）打开奖励窗。
+						// 门：①不在原版 DD 表 ⇒ 客户端清单必然列不出（客户端表 ⊂ 服务端表，已实测
+						// 2155/2510）；②该转换的目标节点投影为 REWARD、且玩家当前节点投影正好是它的来源
+						// （按状态 + 打包变量逐位比对，与规划器同口径），兄弟任务互不遮挡；③一次开门只推进
+						// 一条，取 id 最小者。扣物/给物等动作由引擎按真实快照复核，不满足即零副作用。
+						// The client task list only renders rows the client's data_driven_quest.xml binds to
+						// this npc; a few rows (the 19678/19679 field-growth pair) have no DD row at all, so
+						// they can never be listed and the player also has no confirm button to press
+						// (SET_SUCCEED only comes from the stage page). Such a row therefore sits in START
+						// forever once its delivery condition is met: no hand-in marker and no reward window
+						// (live 2026-10-20: page 1011 was pushed but no marker appeared). The fallback walks
+						// the npc's TALK transition into REWARD on the npc open, putting the quest into the
+						// deliverable state; the REWARD replay above (npc-complete's preview) then opens the
+						// reward window. Gates: the row must be absent from the retail DD table (the client
+						// table is a subset, measured 2155/2510), the transition must project to REWARD with
+						// the player's current node projecting exactly onto its source (status plus packed
+						// variables, the planner's own rule, so siblings never block each other), and one open
+						// advances one row (lowest id). Item actions are revalidated by the engine against the
+						// real snapshot, so an unmet one has zero side effects.
+						UnlistedDelivery delivery = unlistedDeliveryTransition(player, npcId);
+						if (delivery != null
+								&& engine.onDialog(new QuestEnv(npc, player, delivery.questId(),
+									((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId()))) {
+							env.setQuestId(delivery.questId());
+							// 推进成功后直接重放开门：REWARD 的 preview 路由会开出奖励窗，玩家一次点击
+							// 就到达交付面（2026-10-20 实机：只推进会 close-dialog，要再点一次才见奖励窗）。
+							// 重放失败不影响已提交的推进，交回调用方走常规链路。
+							// Replay the open right after the advance: the REWARD preview route opens the
+							// reward window, so one click reaches the hand-in face (live 2026-10-20: advancing
+							// alone closes the dialog and needs a second click). A failed replay leaves the
+							// committed advance intact and falls back to the regular path.
+							if (engine.onDialog(new QuestEnv(npc, player, delivery.questId(), env.getDialogId()))) {
+								return true;
+							}
+							return false;
 						}
 						return false;
 					}
@@ -424,6 +487,83 @@ final class QuestDialogRouter {
 			return false;
 		}
 		return false;
+	}
+
+	/**
+	 * 一条「替玩家推进到交付态」的候选：owner + 它的交付转换。
+	 * One delivery candidate: the owner plus its transition into the deliverable state.
+	 */
+	record UnlistedDelivery(int questId, QuestTransition transition) {
+	}
+
+	/**
+	 * 返回需要在开门时替玩家推进到交付态的候选：本 NPC 上「不在原版 DD 表、且当前节点的本 NPC TALK
+	 * 转换目标投影为 REWARD」的进行中任务里 id 最小的一条；没有则返回 null。
+	 * <p>
+	 * 一次开门只推进一条（取 id 最小者）；下一条由玩家下一次交互推进，避免同一下点击连开多个奖励窗。
+	 * <p>
+	 * The delivery candidate the open should walk for the player: the lowest-id live typed quest on this npc
+	 * that is absent from the retail DD table and whose current node carries a TALK transition on this npc
+	 * targeting a REWARD projection; null when there is none. One open advances one row (lowest id); the next
+	 * one is advanced by the player's next interaction.
+	 */
+	UnlistedDelivery unlistedDeliveryTransition(Player player, int npcId) {
+		QuestRuntimeDispatcher typed = engine.productionDispatcher();
+		UnlistedDelivery best = null;
+		for (QuestState state : player.getQuestStateList().getAllQuestState()) {
+			int questId = state.getQuestId();
+			if (state.getStatus() != QuestStatus.START || !typed.owns(questId)
+					|| DataDrivenNativeRuntime.instance().inRetailTable(questId)
+					|| (best != null && questId >= best.questId())) {
+				continue;
+			}
+			QuestTransition delivery = deliveryTransitionOf(typed, player, questId, npcId);
+			if (delivery != null) {
+				best = new UnlistedDelivery(questId, delivery);
+			}
+		}
+		return best;
+	}
+
+	/**
+	 * 本 NPC 上「来源节点等于玩家当前节点、目标节点投影为 REWARD」的 TALK 转换；没有则返回 null。
+	 * 节点匹配用状态 + 打包变量逐位比对（与 {@code QuestMutationPlanner.matchesSourceNode} 同口径），
+	 * 所以同在栏的兄弟任务不会互相挡住。
+	 * <p>
+	 * The TALK transition on this npc whose source node projects exactly onto the player's current state and
+	 * whose target projects to REWARD; null when there is none. The node check compares status and packed
+	 * variables exactly like {@code QuestMutationPlanner.matchesSourceNode}, so siblings never block.
+	 */
+	private QuestTransition deliveryTransitionOf(QuestRuntimeDispatcher typed, Player player, int questId,
+			int npcId) {
+		CompiledQuestDefinition definition = typed.catalogRegistry().findExecutable(questId).orElse(null);
+		QuestState state = player == null ? null : player.getQuestStateList().getQuestState(questId);
+		if (definition == null || state == null) {
+			return null;
+		}
+		Map<String, Integer> current = definition.definition().progressLayout()
+			.unpack(state.getQuestVars().getQuestVars());
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.definition().nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		for (QuestTransition transition : definition.transitionsFor("TALK_TO_NPC")) {
+			if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+					|| talk.npcId() != npcId || talk.dialogId() == null
+					|| transition.sourceNode() == null
+					|| statuses.get(transition.targetNode()) != QuestStatus.REWARD) {
+				continue;
+			}
+			QuestNode source = definition.definition().nodes().stream()
+				.filter(node -> node.label().equals(transition.sourceNode()))
+				.findFirst().orElse(null);
+			if (source != null && source.projection().status() == state.getStatus()
+					&& source.projection().variables().entrySet().stream()
+						.allMatch(entry -> entry.getValue().equals(current.get(entry.getKey())))) {
+				return transition;
+			}
+		}
+		return null;
 	}
 
 	/**

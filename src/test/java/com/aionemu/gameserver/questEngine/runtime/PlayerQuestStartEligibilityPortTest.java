@@ -394,6 +394,39 @@ class PlayerQuestStartEligibilityPortTest {
 	}
 
 	@Test
+	void foreignLaneRowsDoNotConsumeNormalQuestJournalSlots() throws Exception {
+		// 目录外的行是 native/DD owner，不占普通任务栏位；旧规则「无元数据 = 普通任务」会把整栏
+		// native 任务算进上限（实机 2026-10-19：玩家 89 个进行中任务中 75 个目录外，19679 因此被
+		// 误判 QUEST_LIST_FULL 并静默拒绝）。
+		// Rows outside the catalog are native/DD owners and take no normal journal slot. The old
+		// "no metadata = normal quest" rule counted them (live 2026-10-19: 75 of a player's 89 live
+		// quests, so 19679 was misfired as QUEST_LIST_FULL and refused silently).
+		CustomConfig.BASIC_QUEST_SIZE_LIMIT = 2;
+		QuestMetadata target = metadataFromXml("""
+			<metadata name="target" display-name-id="1" min-level="1" max-level="99" category="IMPORTANT">
+			  <races><race id="ELYOS"/></races>
+			</metadata>
+			""");
+		QuestMetadata occupying = metadataFromXml("""
+			<metadata name="occupying" display-name-id="1" min-level="1" max-level="99" category="QUEST">
+			  <races><race id="ELYOS"/></races>
+			</metadata>
+			""");
+		Player player = player(10);
+		for (int questId = 90001; questId <= 90050; questId++) {
+			player.getQuestStateList().addQuest(questId,
+				new QuestState(questId, QuestStatus.START, 0, 0, null, 0, null));
+		}
+		player.getQuestStateList().addQuest(990010,
+			new QuestState(990010, QuestStatus.START, 0, 0, null, 0, null));
+
+		QuestStartEligibility result = port(player, Map.of(990002, target, 990010, occupying))
+			.snapshot(PLAYER_ID, 990002, new QuestEvent.LevelUp());
+
+		assertTrue(result.eligible(), () -> "foreign-lane rows must not fill the journal: " + result.reason());
+	}
+
+	@Test
 	void npcFactionQuestStillRequiresTheActiveRotatedQuest() throws Exception {
 		QuestMetadata metadata = metadata(35015);
 		Player player = player(65);

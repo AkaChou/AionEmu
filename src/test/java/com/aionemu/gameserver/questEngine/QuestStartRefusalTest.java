@@ -76,12 +76,22 @@ class QuestStartRefusalTest {
 	@Test
 	void serverStateAxesStaySilentLikeRetail() {
 		Player player = player(Race.ELYOS, 60);
-		for (String reason : List.of("QUEST_LIST_FULL", "LIMITED_QUEST_ACQUISITION_UNSUPPORTED",
+		for (String reason : List.of("LIMITED_QUEST_ACQUISITION_UNSUPPORTED",
 				"QUEST_ALREADY_ACTIVE", "NPC_FACTION_QUEST_COOLDOWN", "NPC_FACTION_MISMATCH",
 				"QUEST_METADATA_MISSING", "SENTINEL_LEVEL_REQUIRES_NPC_FACTION")) {
 			assertNull(QuestStartRefusal.messageFor(reason, player, SYNTHETIC),
 				"轴 " + reason + " 在原版不按单个接取动作报错");
 		}
+	}
+
+	@Test
+	void fullQuestJournalReportsTheRetailMaxNormalLine() {
+		// 任务栏满有专属原版句（1300622），legacy 车道同样下发；typed 车道不能静默。
+		// A full journal has its own retail line (1300622), which the legacy lane already sends;
+		// the typed lane must not stay silent.
+		SM_SYSTEM_MESSAGE message =
+			QuestStartRefusal.messageFor("QUEST_LIST_FULL", player(Race.ELYOS, 60), SYNTHETIC);
+		assertEquals(1300622, code(message));
 	}
 
 	@Test

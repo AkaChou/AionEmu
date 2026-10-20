@@ -149,8 +149,13 @@ public final class QuestStartRefusal {
 					Integer.toString(titleNameId(metadata.titleId())));
 			case "START_CONDITION_REJECTED" -> SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_FINISHED_QUEST(
 				unmetPrerequisiteName(metadata, player));
-			// 任务栏已满 / 限次来源耗尽 / 势力轮换 / 进行中 / 缺元数据：服务端状态，原版不在此面报错。
-			// Capacity, limited supply, faction rotation, in progress, missing metadata: silent.
+			// 任务栏满：原版有专属句（1300622，legacy 车道同样下发）；玩家可自行清理任务后重试，
+			// 不属于「服务端状态」静默面。
+			// Full journal: retail has its own line (1300622, the legacy lane sends it too); the player
+			// can clear a slot and retry, so it is not a silent server-state axis.
+			case "QUEST_LIST_FULL" -> SM_SYSTEM_MESSAGE.STR_QUEST_ACQUIRE_ERROR_MAX_NORMAL;
+			// 限次来源耗尽 / 势力轮换 / 进行中 / 缺元数据：服务端状态，原版不在此面报错。
+			// Limited supply, faction rotation, in progress, missing metadata: silent.
 			default -> null;
 		};
 	}
