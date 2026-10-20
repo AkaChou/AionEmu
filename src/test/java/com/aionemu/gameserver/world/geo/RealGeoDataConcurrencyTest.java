@@ -23,6 +23,22 @@ class RealGeoDataConcurrencyTest {
 	}
 
 	@Test
+	void collisionWarmUpIsDeferredUntilExplicitLifecycleTrigger() throws IOException {
+		String loadSource = sourceMethod("loadGeoMaps");
+
+		assertFalse(loadSource.contains("warmCollisionDataAsync"));
+		assertFalse(loadSource.contains("submitLongRunning"));
+	}
+
+	@Test
+	void collisionWarmUpLeavesCpuHeadroomAfterStartup() {
+		int expected = Math.min(7, Math.max(2, Runtime.getRuntime().availableProcessors() / 2));
+
+		assertEquals(expected, RealGeoData.collisionWarmUpPartitionCount(7));
+		assertEquals(0, RealGeoData.collisionWarmUpPartitionCount(0));
+	}
+
+	@Test
 	void worldMapLoadingUsesLifecyclePoolInsteadOfDedicatedExecutor() throws IOException {
 		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
 
@@ -68,5 +84,21 @@ class RealGeoDataConcurrencyTest {
 	@Test
 	void roundRobinPartitionRejectsNonPositiveCount() {
 		assertThrows(IllegalArgumentException.class, () -> RealGeoData.partitionRoundRobin(List.of("a"), 0));
+	}
+
+	/**
+	 * 提取指定生产方法的源码片段，供结构闸门断言。
+	 * Extracts a production method's source fragment for structural-gate assertions.
+	 * @param methodName 方法名 / method name
+	 * @return 方法源码 / method source
+	 * @throws IOException 读取失败 / on read failure
+	 */
+	private String sourceMethod(String methodName) throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
+		int method = source.indexOf("public void " + methodName + "()");
+		assertTrue(method >= 0);
+		int end = source.indexOf("\n\t}", method);
+		assertTrue(end > method);
+		return source.substring(method, end);
 	}
 }

@@ -117,6 +117,18 @@ public class GeoService {
 	}
 
 	/**
+	 * 在后台预热地理碰撞树；地理数据尚未初始化时静默跳过。
+	 * Warms geo collision trees in the background; silently skips when geo data is not
+	 * initialized.
+	 */
+	public void warmCollisionDataAsync() {
+		GeoData active = this.geoData;
+		if (active != null) {
+			active.warmCollisionDataAsync();
+		}
+	}
+
+	/**
 	 * 设置指定实例中门的开合状态。
 	 * Sets the open/closed state of a door in the given instance.
 	 *

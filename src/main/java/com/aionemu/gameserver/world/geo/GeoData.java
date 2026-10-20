@@ -22,4 +22,11 @@ public interface GeoData {
 	 * @return 对应的地理地图 / the matching geo map
 	 */
 	GeoMap getMap(int worldId);
+
+	/**
+	 * 在后台预热碰撞树；实现可按配置决定是否执行。
+	 * Warms collision trees in the background; implementations may decide whether to run this.
+	 */
+	default void warmCollisionDataAsync() {
+	}
 }

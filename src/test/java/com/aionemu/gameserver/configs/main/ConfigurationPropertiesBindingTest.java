@@ -1716,7 +1716,8 @@ class ConfigurationPropertiesBindingTest {
 	void bindsGeoDataConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(GeoDataConfig.class,
 			"GEO_ENABLE", "CANSEE_ENABLE", "FEAR_ENABLE", "GEO_NPC_MOVE", "GEO_MATERIALS_ENABLE",
-			"GEO_SHIELDS_ENABLE", "GEO_PATH_ENABLE", "GEO_PATH_DISTANCE_TIERS_ENABLE",
+			"GEO_SHIELDS_ENABLE", "GEO_COLLISION_PREBUILD_ENABLE", "GEO_COLLISION_PREBUILD_DELAY_MS",
+			"GEO_PATH_ENABLE", "GEO_PATH_DISTANCE_TIERS_ENABLE",
 			"GEO_PATH_RECOVERY_ENABLE", "GEO_PATH_HIERARCHICAL_ENABLE", "GEO_PATH_WAYPOINT_LOOKAHEAD",
 			"GEO_PATH_CACHE_SIZE", "GEO_PATH_MAX_NODES", "GEO_PATH_TIMEOUT_MS", "GEO_PATH_SPATIAL_STEP",
 			"GEO_PATH_WORKERS", "GEO_PATH_QUEUE_CAPACITY", "GEO_NPC_WALK_PATH_MODE",
@@ -1731,6 +1732,8 @@ class ConfigurationPropertiesBindingTest {
 				Map.entry("gameserver.geo.npc.move", "true"),
 				Map.entry("gameserver.geo.materials.enable", "true"),
 				Map.entry("gameserver.geo.shields.enable", "true"),
+				Map.entry("gameserver.geo.collision.prebuild.enable", "false"),
+				Map.entry("gameserver.geo.collision.prebuild.delay.ms", "25000"),
 				Map.entry("gameserver.geo.path.enable", "true"),
 				Map.entry("gameserver.geo.path.distance.tiers.enable", "true"),
 				Map.entry("gameserver.geo.path.recovery.enable", "false"),
@@ -1757,6 +1760,8 @@ class ConfigurationPropertiesBindingTest {
 			assertTrue(GeoDataConfig.GEO_NPC_MOVE);
 			assertTrue(GeoDataConfig.GEO_MATERIALS_ENABLE);
 			assertTrue(GeoDataConfig.GEO_SHIELDS_ENABLE);
+			assertFalse(GeoDataConfig.GEO_COLLISION_PREBUILD_ENABLE);
+			assertEquals(25000, GeoDataConfig.GEO_COLLISION_PREBUILD_DELAY_MS);
 			assertTrue(GeoDataConfig.GEO_PATH_ENABLE);
 			assertTrue(GeoDataConfig.GEO_PATH_DISTANCE_TIERS_ENABLE);
 			assertFalse(GeoDataConfig.GEO_PATH_RECOVERY_ENABLE);

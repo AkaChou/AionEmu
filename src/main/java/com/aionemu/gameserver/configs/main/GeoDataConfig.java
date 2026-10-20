@@ -58,6 +58,20 @@ public class GeoDataConfig {
 	public static boolean GEO_SHIELDS_ENABLE;
 
 	/**
+	 * 是否在刷怪完成后后台预热地理碰撞树。
+	 * Whether geo collision trees are warmed in the background after spawning.
+	 */
+	@Property(key = "gameserver.geo.collision.prebuild.enable", defaultValue = "true")
+	public static boolean GEO_COLLISION_PREBUILD_ENABLE;
+
+	/**
+	 * 碰撞树预热延迟毫秒数。
+	 * Delay in milliseconds before collision-tree warm-up.
+	 */
+	@Property(key = "gameserver.geo.collision.prebuild.delay.ms", defaultValue = "15000")
+	public static int GEO_COLLISION_PREBUILD_DELAY_MS;
+
+	/**
 	 * 是否启用地理寻路（PATH block 导航）。
 	 * Whether geodata pathfinding (PATH block navigation) is enabled.
 	 */
@@ -209,6 +223,7 @@ public class GeoDataConfig {
 	public static class GeoProperties {
 		private final MaterialsProperties materials = new MaterialsProperties();
 		private final ShieldsProperties shields = new ShieldsProperties();
+		private final CollisionProperties collision = new CollisionProperties();
 		private final PathProperties path = new PathProperties();
 		private final NpcProperties npc = new NpcProperties();
 	}
@@ -232,6 +247,75 @@ public class GeoDataConfig {
 
 		public void setEnable(boolean enable) {
 			GEO_SHIELDS_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 碰撞节点：绑定 gameserver.geo.collision.*。
+	 * Collision node binding gameserver.geo.collision.*.
+	 */
+	@Getter
+	public static class CollisionProperties {
+		/**
+		 * 预热子节点。
+		 * Prebuild child node.
+		 */
+		private final PrebuildProperties prebuild = new PrebuildProperties();
+	}
+
+	/**
+	 * 碰撞预热节点：绑定 gameserver.geo.collision.prebuild.*。
+	 * Collision-warm-up node binding gameserver.geo.collision.prebuild.*.
+	 */
+	@Getter
+	public static class PrebuildProperties {
+		/**
+		 * 延迟子节点。
+		 * Delay child node.
+		 */
+		private final DelayProperties delay = new DelayProperties();
+
+		/**
+		 * 返回是否启用碰撞预热。
+		 * Returns whether collision warm-up is enabled.
+		 * @return 启用时为 true / {@code true} when enabled
+		 */
+		public boolean isEnable() {
+			return GEO_COLLISION_PREBUILD_ENABLE;
+		}
+
+		/**
+		 * 设置是否启用碰撞预热。
+		 * Sets whether collision warm-up is enabled.
+		 * @param enable 是否启用 / whether enabled
+		 */
+		public void setEnable(boolean enable) {
+			GEO_COLLISION_PREBUILD_ENABLE = enable;
+		}
+	}
+
+	/**
+	 * 碰撞预热延迟节点：绑定 gameserver.geo.collision.prebuild.delay.*。
+	 * Collision-warm-up delay node binding gameserver.geo.collision.prebuild.delay.*.
+	 */
+	@Getter
+	public static class DelayProperties {
+		/**
+		 * 返回预热延迟毫秒数。
+		 * Returns the warm-up delay in milliseconds.
+		 * @return 延迟毫秒 / delay in milliseconds
+		 */
+		public int getMs() {
+			return GEO_COLLISION_PREBUILD_DELAY_MS;
+		}
+
+		/**
+		 * 设置预热延迟毫秒数。
+		 * Sets the warm-up delay in milliseconds.
+		 * @param ms 延迟毫秒 / delay in milliseconds
+		 */
+		public void setMs(int ms) {
+			GEO_COLLISION_PREBUILD_DELAY_MS = ms;
 		}
 	}
 

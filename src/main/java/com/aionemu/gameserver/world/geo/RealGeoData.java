@@ -13,6 +13,7 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Geometry;
@@ -25,11 +26,19 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
- * 真实地理数据实现：并行加载地形与世界物体，并异步预构建碰撞树。
- * Real geo-data implementation that parallel-loads terrain and world objects and pre-builds collision trees asynchronously.
+ * 真实地理数据实现：并行加载地形与世界物体，并在启动后异步预热碰撞树。
+ * Real geo-data implementation that parallel-loads terrain and world objects and warms
+ * collision trees asynchronously after startup.
  */
 @Slf4j
 public class RealGeoData implements GeoData {
+
+	/**
+	 * 碰撞预热使用的后台分片数：最多占用一半 CPU，并保留至少两个分片。
+	 * Background partition count for collision warm-up: uses at most half the CPUs and keeps
+	 * at least two.
+	 */
+	private static final int COLLISION_WARM_UP_MIN_PARTITIONS = 2;
 
 	/** 世界 ID → 地理地图。 / World id → geo map. */
 	private final IntObjectHashMap<GeoMap> geoMaps = new IntObjectHashMap<>();
@@ -43,14 +52,32 @@ public class RealGeoData implements GeoData {
 	private volatile WorldMapLookup lookup = WorldMapLookup.EMPTY;
 
 	/**
-	 * 加载网格、世界地图，并异步预构建碰撞数据。
-	 * Loads meshes and world maps, then pre-builds collision data asynchronously.
+	 * 待预热碰撞树的唯一网格快照；加载后不再变更。
+	 * Snapshot of unique meshes waiting for collision warm-up; immutable after loading
+	 * completes.
+	 */
+	private List<Mesh> collisionMeshes = List.of();
+
+	/**
+	 * 加载网格与世界地图，并保存碰撞树预热所需的网格快照。
+	 * Loads meshes and world maps, then keeps the mesh snapshot needed for collision
+	 * warm-up.
 	 */
 	@Override
 	public void loadGeoMaps() {
 		final Map<String, Spatial> models = loadMeshes();
 		loadWorldMaps(models);
-		prebuildCollisionDataAsync(models);
+		List<Mesh> meshesToWarm = List.of();
+		if (GeoDataConfig.GEO_COLLISION_PREBUILD_ENABLE) {
+			Set<Mesh> meshes = new HashSet<>();
+			for (Spatial spatial : models.values()) {
+				collectMeshes(spatial, meshes);
+			}
+			meshesToWarm = List.copyOf(meshes);
+		}
+		synchronized (this) {
+			collisionMeshes = meshesToWarm;
+		}
 		models.clear();
 		log.info(I18n.get("log.dbf54601a186", geoMaps.size()));
 	}
@@ -134,24 +161,31 @@ public class RealGeoData implements GeoData {
 	}
 
 	/**
-	 * 碰撞树后台预构建；Mesh.collideWith 有懒加载兜底，此步仅为降低运行时首次碰撞卡顿。
-	 * Background pre-build of collision trees; Mesh.collideWith has a lazy fallback — this only reduces first-hit hitching at runtime.
-	 * @param models 网格模型表 / mesh model table
+	 * 在后台预热碰撞树；Mesh.collideWith 有懒加载兜底，此步仅在启动完成后降低首次碰撞
+	 * 卡顿。
+	 * Warms collision trees in the background after startup; Mesh.collideWith has a lazy fallback —
+	 * this only reduces first-hit hitching at runtime.
 	 */
-	private void prebuildCollisionDataAsync(Map<String, Spatial> models) {
-		Set<Mesh> meshes = new HashSet<>();
-		for (Spatial s : models.values()) {
-			collectMeshes(s, meshes);
+	@Override
+	public void warmCollisionDataAsync() {
+		if (!GeoDataConfig.GEO_COLLISION_PREBUILD_ENABLE) {
+			return;
 		}
-		List<Mesh> meshSnapshot = new ArrayList<>(meshes);
+		List<Mesh> meshSnapshot;
+		synchronized (this) {
+			meshSnapshot = collisionMeshes;
+			collisionMeshes = List.of();
+		}
 		if (meshSnapshot.isEmpty()) {
 			return;
 		}
-		// 碰撞树只读取各自 Mesh 的只读缓冲，按长任务池容量轮转切片并行构建；仍走生命周期线程池，
-		// 避免在既有加载任务里嵌套 ForkJoin 池。
+		// 碰撞树只读取各自 Mesh 的只读缓冲，按长任务池容量轮转切片并行构建；仍走生命周期
+		// 线程池，避免在既有加载任务里嵌套 ForkJoin 池。启动后只使用一半 CPU 份额，
+		// 避免后台预热与玩法争抢。
 		// Collision trees only read each mesh's own read-only buffers; distribute them round-robin
 		// across long-running pool slots instead of serializing the whole prebuild on one thread.
-		int partitionCount = Math.clamp(Runtime.getRuntime().availableProcessors(), 2, meshSnapshot.size());
+		// After startup, use only half of the available CPU slots so gameplay remains responsive.
+		int partitionCount = collisionWarmUpPartitionCount(meshSnapshot.size());
 		List<List<Mesh>> partitions = partitionRoundRobin(meshSnapshot, partitionCount);
 		for (List<Mesh> partition : partitions) {
 			ThreadPoolManager.getInstance().submitLongRunning(() -> {
@@ -160,6 +194,19 @@ public class RealGeoData implements GeoData {
 				}
 			});
 		}
+	}
+
+	/**
+	 * 计算碰撞预热分片数：启动后最多使用一半 CPU，且不超过网格总数。
+	 * Computes the collision warm-up partition count: at most half the CPUs after startup,
+	 * never more than the number of meshes.
+	 * @param meshCount 网格数量 / mesh count
+	 * @return 分片数量 / partition count
+	 */
+	static int collisionWarmUpPartitionCount(int meshCount) {
+		int cpuPartitions = Math.max(COLLISION_WARM_UP_MIN_PARTITIONS,
+			Runtime.getRuntime().availableProcessors() / 2);
+		return Math.min(meshCount, cpuPartitions);
 	}
 
 	/**
