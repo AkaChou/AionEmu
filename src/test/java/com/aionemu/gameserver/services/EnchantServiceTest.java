@@ -16,13 +16,13 @@ import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 /**
- * 验证强化费用、独立等级上限与天烙成功率，并在各测试后恢复静态配置。
- * Verifies enchant costs, independent caps and Estima success rates, restoring static settings after each test.
+ * 验证强化费用、独立等级上限与成功率，并在各测试后恢复静态配置。
+ * Verifies enchant costs, independent caps and success rates, restoring static settings after each test.
  */
 class EnchantServiceTest {
 
 	private final ConfigSnapshot enchantConfigSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
-		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_ESTIMA_ENCHANT_LEVEL",
+		"ENCHANT_ITEM_KINAH", "MAX_EQUIPMENT_ENCHANT_LEVEL",
 		"MAX_AUTHORIZE_ACCESSORY_LEVEL", "MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL");
 
 	@AfterEach
@@ -89,59 +89,23 @@ class EnchantServiceTest {
 	}
 
 	@Test
-	void declaresEstimaCapWithFifteenAsDefault() throws Exception {
-		Property property = EnchantsConfig.class.getDeclaredField("MAX_ESTIMA_ENCHANT_LEVEL")
-				.getAnnotation(Property.class);
-
-		assertEquals("gameserver.enchant.estima.max.level", property.key());
-		assertEquals("15", property.defaultValue());
-		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
-	}
-
-	@Test
-	void allowsEstimaEnchantUpToOneHundred() {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
-
-		assertEquals(11, EnchantService.capEstimaEnchantLevel(11));
-		assertEquals(50, EnchantService.capEstimaEnchantLevel(50));
-		assertEquals(99, EnchantService.capEstimaEnchantLevel(99));
-		assertEquals(100, EnchantService.capEstimaEnchantLevel(100));
-		assertEquals(100, EnchantService.capEstimaEnchantLevel(101));
-	}
-
-	@Test
-	void capsEstimaEnchantLevelAtOneHundredWhenConfiguredHigher() {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 150;
-
-		assertEquals(100, EnchantService.getMaxEstimaEnchantLevel());
-		assertEquals(100, EnchantService.capEstimaEnchantLevel(120));
-	}
-
-	@Test
-	void honorsEstimaCapsBetweenFiftyAndOneHundred() {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 80;
-
-		assertEquals(80, EnchantService.getMaxEstimaEnchantLevel());
-		assertEquals(80, EnchantService.capEstimaEnchantLevel(81));
-	}
-
-	@Test
-	void fallsBackToFifteenWhenEstimaCapIsNotPositive() {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 0;
-
-		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
-
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = -1;
-		assertEquals(15, EnchantService.getMaxEstimaEnchantLevel());
-	}
-
-	@Test
-	void declaresIndependentEstimaCastSpeedWithFiveSecondsAsDefault() throws Exception {
+	void declaresIndependentEstimaCastSpeedWithFiveHundredMillisAsDefault() throws Exception {
 		Property property = EnchantsConfig.class.getDeclaredField("ESTIMA_ENCHANT_SPEED")
 			.getAnnotation(Property.class);
 
-		assertEquals("gameserver.enchant.estima.speed", property.key());
-		assertEquals("5000", property.defaultValue());
+		assertEquals("gameserver.enchant.estima.cast.time", property.key());
+		assertEquals("500", property.defaultValue());
+	}
+
+	@Test
+	void declaresFiveHundredMillisCastTimeForEveryUpgradePath() throws Exception {
+		Property enchant = EnchantsConfig.class.getDeclaredField("ENCHANT_SPEED").getAnnotation(Property.class);
+		Property authorize = EnchantsConfig.class.getDeclaredField("AUTHORIZE_SPEED").getAnnotation(Property.class);
+
+		assertEquals("gameserver.enchant.cast.time", enchant.key());
+		assertEquals("500", enchant.defaultValue());
+		assertEquals("gameserver.enchant.authorize.cast.time", authorize.key());
+		assertEquals("500", authorize.defaultValue());
 	}
 
 	@Test

@@ -286,7 +286,7 @@ class ConfigurationPropertiesBindingTest {
 	void bindsEnchantsConfigProperties() {
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
 			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_ITEM_KINAH",
-			"MAX_EQUIPMENT_ENCHANT_LEVEL", "MAX_ESTIMA_ENCHANT_LEVEL", "ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED",
+			"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED",
 			"MAX_AUTHORIZE_ACCESSORY_LEVEL",
 			"MAX_AUTHORIZE_PLUME_LEVEL", "MAX_AUTHORIZE_BRACELET_LEVEL", "ENCHANT_PLUME", "ENCHANT_BRACELET",
 			"ENCHANT_ACCESSORY", "ENCHANT_STIGMA", "CLEAN_STONE", "ENCHANT_SPEED", "AUTHORIZE_SPEED",
@@ -294,24 +294,23 @@ class ConfigurationPropertiesBindingTest {
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
 			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.ofEntries(
-				Map.entry("gameserver.socket.manastone", "75.5"),
-				Map.entry("gameserver.enchant.item.value", "65.0"),
+				Map.entry("gameserver.socket.manastone.success.rate", "75.5"),
+				Map.entry("gameserver.enchant.item.success.rate", "65.0"),
 				Map.entry("gameserver.enchant.item.kinah", "50000"),
 				Map.entry("gameserver.enchant.item.broke", "false"),
 				Map.entry("gameserver.enchant.equipment.max.level", "50"),
-				Map.entry("gameserver.enchant.estima.max.level", "100"),
-				Map.entry("gameserver.enchant.estima.value", "85.0"),
-				Map.entry("gameserver.enchant.estima.speed", "1500"),
+				Map.entry("gameserver.enchant.estima.success.rate", "85.0"),
+				Map.entry("gameserver.enchant.estima.cast.time", "1500"),
 				Map.entry("gameserver.enchant.authorize.accessory.max.level", "42"),
 				Map.entry("gameserver.enchant.authorize.plume.max.level", "48"),
 				Map.entry("gameserver.enchant.authorize.bracelet.max.level", "52"),
-				Map.entry("gameserver.enchant.plume", "80.0"),
-				Map.entry("gameserver.enchant.bracelet", "70.0"),
-				Map.entry("gameserver.enchant.accessory", "60.0"),
-				Map.entry("gameserver.enchant.stigma", "55.0"),
+				Map.entry("gameserver.enchant.plume.success.rate", "80.0"),
+				Map.entry("gameserver.enchant.bracelet.success.rate", "70.0"),
+				Map.entry("gameserver.enchant.accessory.success.rate", "60.0"),
+				Map.entry("gameserver.enchant.stigma.success.rate", "55.0"),
 				Map.entry("gameserver.manastone.clean", "true"),
-				Map.entry("gameserver.enchant.cast.speed", "2500"),
-				Map.entry("gameserver.enchant.authorize.speed", "1200")
+				Map.entry("gameserver.enchant.cast.time", "2500"),
+				Map.entry("gameserver.enchant.authorize.cast.time", "1200")
 			)));
 
 			EnchantsConfig config = new EnchantsConfig();
@@ -322,7 +321,6 @@ class ConfigurationPropertiesBindingTest {
 			assertEquals(50000, EnchantsConfig.ENCHANT_ITEM_KINAH);
 			assertFalse(EnchantsConfig.ENABLE_ARCHDAEVA_ITEM_BROKE);
 			assertEquals(50, EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL);
-			assertEquals(100, EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL);
 			assertEquals(85.0f, EnchantsConfig.ENCHANT_ESTIMA);
 			assertEquals(1500, EnchantsConfig.ESTIMA_ENCHANT_SPEED);
 			assertEquals(42, EnchantsConfig.MAX_AUTHORIZE_ACCESSORY_LEVEL);
@@ -359,18 +357,21 @@ class ConfigurationPropertiesBindingTest {
 	}
 
 	@Test
-	void bindsEnchantsConfigLegacyScalarEstimaProperty() {
-		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ESTIMA");
+	void bindsEstimaRateAndCastTimeSubtrees() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
+			"ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED");
 		try {
 			StandardEnvironment environment = new StandardEnvironment();
 			environment.getPropertySources().addFirst(new MapPropertySource("test", Map.of(
-				"gameserver.enchant.estima", "77.5"
+				"gameserver.enchant.estima.success.rate", "77.5",
+				"gameserver.enchant.estima.cast.time", "1750"
 			)));
 
 			EnchantsConfig config = new EnchantsConfig();
 			Binder.get(environment).bind("gameserver", Bindable.ofInstance(config));
 
 			assertEquals(77.5f, EnchantsConfig.ENCHANT_ESTIMA);
+			assertEquals(1750, EnchantsConfig.ESTIMA_ENCHANT_SPEED);
 		} finally {
 			snapshot.restore();
 		}

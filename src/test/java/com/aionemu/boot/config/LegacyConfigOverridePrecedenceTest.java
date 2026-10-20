@@ -105,17 +105,17 @@ class LegacyConfigOverridePrecedenceTest {
 	}
 
 	/**
-	 * 文件键被规范化为 `.value` 子键后，遗留装配必须沿该子键取值，
+	 * 文件键采用 `success.rate` 子键后，遗留装配必须沿该子键取值，
 	 * 不得让 @Property 的 defaultValue 覆盖 Binder 已绑定的文件值。
-	 * After a file key is normalized into a `.value` sub-key, the legacy assembly must read through
+	 * When the file uses the `success.rate` sub-key, the legacy assembly must read through
 	 * that sub-key instead of letting the @Property defaultValue overwrite the bound file value.
 	 */
 	@Test
-	void legacyAssemblyReadsNormalizedValueSubKey() throws Exception {
+	void legacyAssemblyReadsSuccessRateSubKey() throws Exception {
 		Path configDir = tempDir.resolve("config");
 		Files.createDirectories(configDir.resolve("main"));
 		Files.writeString(configDir.resolve("main/enchant.properties"), """
-			gameserver.enchant.item.value=90
+			gameserver.enchant.item.success.rate=90
 			""");
 
 		StandardEnvironment environment = new StandardEnvironment();
@@ -129,13 +129,85 @@ class LegacyConfigOverridePrecedenceTest {
 
 		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ITEM");
 		try {
-			// 生产形态：文件只带 `.value` 规范化键，裸键在 Environment 与遗留 Properties 中均缺失。
-			// Production shape: the file only carries the normalized `.value` key, so the bare key is
+			// 生产形态：文件只带 `success.rate` 键，裸键在 Environment 与遗留 Properties 中均缺失。
+			// Production shape: the file only carries the `success.rate` key, so the bare key is
 			// missing from both the Environment and the legacy Properties.
 			ConfigurableProcessor.process(EnchantsConfig.class, new java.util.Properties());
 
 			assertEquals(90f, EnchantsConfig.ENCHANT_ITEM,
-				"legacy assembly must read the normalized .value sub-key instead of falling back to the default");
+				"legacy assembly must read success.rate instead of falling back to the default");
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	/**
+	 * 旧 `.value` 子键仍须生效，避免现有部署在升级后被静默重置为默认值。
+	 * The legacy `.value` sub-key must still work so existing deployments are not silently reset to defaults.
+	 */
+	@Test
+	void legacyAssemblyKeepsValueSubKeyCompatibility() {
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class, "ENCHANT_ITEM");
+		try {
+			ConfigSourceResolverHolder.publish(null);
+			ConfigurableProcessor.process(EnchantsConfig.class,
+				propertiesOf("gameserver.enchant.item.success.rate.value", "91"));
+
+			assertEquals(91f, EnchantsConfig.ENCHANT_ITEM,
+				"a legacy .value suffix below the new success.rate key must remain readable");
+		} finally {
+			snapshot.restore();
+		}
+	}
+
+	/**
+	 * 配置键迁移后，生产配置文件中的每个强化键都必须能被遗留装配读到，不能静默退回默认值。
+	 * After the key migration, every enchant key in the production file must be readable by the
+	 * legacy assembly instead of silently falling back to defaults.
+	 */
+	@Test
+	void productionEnchantKeysReachTheStaticFacade() throws Exception {
+		Path configDir = tempDir.resolve("config");
+		Files.createDirectories(configDir.resolve("main"));
+		Files.writeString(configDir.resolve("main/enchants.properties"), """
+			gameserver.enchant.estima.success.rate=71
+			gameserver.enchant.estima.cast.time=610
+			gameserver.socket.manastone.success.rate=72
+			gameserver.enchant.item.success.rate=73
+			gameserver.enchant.plume.success.rate=74
+			gameserver.enchant.bracelet.success.rate=75
+			gameserver.enchant.accessory.success.rate=76
+			gameserver.enchant.stigma.success.rate=77
+			gameserver.enchant.cast.time=620
+			gameserver.enchant.authorize.cast.time=630
+			""");
+
+		StandardEnvironment environment = new StandardEnvironment();
+		environment.getPropertySources().addFirst(new MapPropertySource(
+			"commandLine",
+			Map.of("aion.config.dir", configDir.toString())
+		));
+		new AionLegacyPropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
+		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
+
+		ConfigSnapshot snapshot = ConfigSnapshot.of(EnchantsConfig.class,
+			"ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED",
+			"SOCKET_MANASTONE", "ENCHANT_ITEM", "ENCHANT_PLUME", "ENCHANT_BRACELET", "ENCHANT_ACCESSORY",
+			"ENCHANT_STIGMA", "ENCHANT_SPEED", "AUTHORIZE_SPEED");
+		try {
+			ConfigurableProcessor.process(EnchantsConfig.class, new java.util.Properties());
+
+			assertEquals(71f, EnchantsConfig.ENCHANT_ESTIMA);
+			assertEquals(610, EnchantsConfig.ESTIMA_ENCHANT_SPEED);
+			assertEquals(72f, EnchantsConfig.SOCKET_MANASTONE);
+			assertEquals(73f, EnchantsConfig.ENCHANT_ITEM);
+			assertEquals(74f, EnchantsConfig.ENCHANT_PLUME);
+			assertEquals(75f, EnchantsConfig.ENCHANT_BRACELET);
+			assertEquals(76f, EnchantsConfig.ENCHANT_ACCESSORY);
+			assertEquals(77f, EnchantsConfig.ENCHANT_STIGMA);
+			assertEquals(620, EnchantsConfig.ENCHANT_SPEED);
+			assertEquals(630, EnchantsConfig.AUTHORIZE_SPEED);
 		} finally {
 			snapshot.restore();
 		}

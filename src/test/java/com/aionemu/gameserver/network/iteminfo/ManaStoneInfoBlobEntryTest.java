@@ -19,6 +19,19 @@ class ManaStoneInfoBlobEntryTest {
 	private static final int INHERENT_SKILL_FLAG_OFFSET = 173;
 	private static final int SKILL_BOOST_SKILL_ID_OFFSET = 174;
 	private static final int SKILL_BOOST_LEVEL_OFFSET = 178;
+	private static final int ENCHANT_LEVEL_OFFSET = 1;
+
+	@Test
+	void writesStoredEnchantLevelWithoutWireOffset() {
+		Item item = new TestItem(1, new TestItemTemplate(114101846));
+		item.setEnchantLevel(3);
+		ItemBlobEntry entry = ItemInfoBlob.newBlobEntry(ItemBlobType.MANA_SOCKETS, null, item);
+		ByteBuffer buffer = ByteBuffer.allocate(entry.getSize()).order(ByteOrder.LITTLE_ENDIAN);
+
+		entry.writeThisBlob(buffer);
+
+		assertEquals(3, buffer.get(ENCHANT_LEVEL_OFFSET));
+	}
 
 	@Test
 	void writesSkillBoostFieldsWithoutEnablingInherentSkillDisplay() {

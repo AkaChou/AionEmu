@@ -122,52 +122,26 @@ public class EnchantService {
 	}
 
 	/**
-	 * 获取天烙之石（埃斯蒂玛）强化等级上限（配置优先，默认 15，上限 100）。
-	 * Returns the Estima (CP stone) enchant cap (config first, default 15, capped at 100).
+	 * 获取天烙之石（埃斯蒂玛）强化等级上限；沿用物品模板的原始上限。
+	 * Returns the Estima (CP stone) enchant cap from the item template's original limit.
 	 *
+	 * @param item 天烙之石 / Estima item
 	 * @return 天烙之石最大强化等级 / Estima max enchant level
 	 */
-	public static int getMaxEstimaEnchantLevel() {
-		int configured = EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL;
-		if (configured <= 0) {
-			configured = 15;
-		}
-		return Math.min(configured, 100);
+	public static int getMaxEstimaEnchantLevel(Item item) {
+		return Math.max(0, item.getItemTemplate().getMaxEnchantLevel());
 	}
 
 	/**
-	 * 将运行时天烙之石模板的强化上限同步为配置值，避免模板中的 max_enchant 继续把上限固定在 10。
-	 * Synchronizes the runtime Estima template cap with configuration so max_enchant no longer stays at 10.
+	 * 将天烙之石的强化等级限制在物品模板上限内。
+	 * Caps an Estima enchant level to the item template's limit.
 	 *
-	 * @param template 物品模板 / item template
-	 */
-	public static void applyEstimaEnchantCap(ItemTemplate template) {
-		if (template != null && template.isEstima()) {
-			template.setMaxEnchant(getMaxEstimaEnchantLevel());
-		}
-	}
-
-	/**
-	 * 应用配置中的天烙之石强化上限；热更新后旧实例仍保留原上限时也可显式刷新。
-	 * Applies the configured Estima cap, including explicit refreshes of existing instances after a config change.
-	 *
-	 * @param templates 待刷新的物品模板 / item templates to refresh
-	 */
-	public static void applyEstimaEnchantCap(Iterable<ItemTemplate> templates) {
-		for (ItemTemplate template : templates) {
-			applyEstimaEnchantCap(template);
-		}
-	}
-
-	/**
-	 * 将天烙之石的强化等级限制在配置上限内。
-	 * Caps an Estima enchant level to the configured maximum.
-	 *
+	 * @param item 天烙之石 / Estima item
 	 * @param enchantLevel 原始强化等级 / raw enchant level
 	 * @return 限制后的等级 / capped level
 	 */
-	public static int capEstimaEnchantLevel(int enchantLevel) {
-		return Math.min(enchantLevel, getMaxEstimaEnchantLevel());
+	public static int capEstimaEnchantLevel(Item item, int enchantLevel) {
+		return Math.min(enchantLevel, getMaxEstimaEnchantLevel(item));
 	}
 
 	/**
@@ -305,7 +279,7 @@ public class EnchantService {
 		if (!targetItem.getItemTemplate().isEstima()) {
 			return false;
 		}
-		if (targetItem.getEnchantLevel() >= getMaxEstimaEnchantLevel()) {
+		if (targetItem.getEnchantLevel() >= getMaxEstimaEnchantLevel(targetItem)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GIVE_CP_ENCHANT_CANNOT);
 			return false;
 		}
@@ -318,6 +292,17 @@ public class EnchantService {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 判断物品是否为天烙之石强化材料，材料 ID 统一位于 166 段。
+	 * Checks whether an item is an Estima enchant material; the material IDs share the 166 prefix.
+	 *
+	 * @param item 强化材料 / enchant material
+	 * @return 是否为天烙之石强化材料 / whether the item is an Estima enchant material
+	 */
+	public static boolean isEstimaEnchantMaterial(Item item) {
+		return item != null && item.getItemId() / 1000000 == 166;
 	}
 
 	/**
@@ -358,9 +343,13 @@ public class EnchantService {
 		};
 		player.getObserveController().attach(observer);
 		player.getController().scheduleTask(TaskId.ITEM_USE, () -> {
-			player.getInventory().decreaseByObjectId(parentObjectId, 1);
+			if (!player.getInventory().decreaseByObjectId(parentObjectId, 1)) {
+				AuditLogger.info(player, "Possible Estima enchant hack, material could not be consumed.");
+				player.getObserveController().removeObserver(observer);
+				return;
+			}
 			if (isEstimaSuccess) {
-				targetItem.setEnchantLevel(capEstimaEnchantLevel(targetEnchantLvl + 1));
+				targetItem.setEnchantLevel(capEstimaEnchantLevel(targetItem, targetEnchantLvl + 1));
 			} else {
 				targetItem.setEnchantLevel(0);
 			}

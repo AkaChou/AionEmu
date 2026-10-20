@@ -49,8 +49,8 @@ import com.aionemu.testutil.ConfigSnapshot;
 class EnchantItemActionTest {
 
 	private final ConfigSnapshot configSnapshot = ConfigSnapshot.of(EnchantsConfig.class,
-		"MAX_ESTIMA_ENCHANT_LEVEL", "MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_ITEM_KINAH",
-		"ENCHANT_ESTIMA", "ESTIMA_ENCHANT_SPEED", "ENCHANT_SPEED", "AUTHORIZE_SPEED", "ENCHANT_STIGMA");
+		"MAX_EQUIPMENT_ENCHANT_LEVEL", "ENCHANT_ITEM_KINAH", "ENCHANT_ESTIMA",
+		"ESTIMA_ENCHANT_SPEED", "ENCHANT_SPEED", "AUTHORIZE_SPEED", "ENCHANT_STIGMA");
 	private final EnchantItemAction action = new EnchantItemAction();
 
 	@AfterEach
@@ -60,96 +60,82 @@ class EnchantItemActionTest {
 
 	@ParameterizedTest
 	@ValueSource(ints = {187300002, 187300004, 187300005})
-	void allowsEstimaPastTenWithoutEquipmentCapOrPriceChecks(int itemId) throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
+	void refusesEstimaAtTemplateCapWithoutEquipmentCapOrPriceChecks(int itemId) throws Exception {
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 10;
 		EnchantsConfig.ENCHANT_ITEM_KINAH = 1_000_000;
 		TestPlayer player = player(34323);
 		Item material = material(166040001);
-		Item target = estima(itemId, 10);
+		Item target = estima(itemId, 9);
 
 		assertEquals(10, target.getItemTemplate().getMaxEnchantLevel());
 		assertTrue(action.canAct(player, material, target));
-		target.setEnchantLevel(14);
-		assertTrue(action.canAct(player, material, target));
-		target.setEnchantLevel(15);
+		target.setEnchantLevel(10);
 		assertFalse(action.canAct(player, material, target));
 	}
 
 	@Test
-	void allowsLevelNinetyNineButRefusesOneHundred() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
+	void usesTemplateCapInsteadOfEquipmentCap() throws Exception {
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 50;
 		TestPlayer player = player(100_000);
 		Item material = material(166040001);
-		Item target = estima(187300002, 99);
+		Item target = estima(187300002, 9);
 
 		assertTrue(action.canAct(player, material, target));
-		target.setEnchantLevel(100);
+		target.setEnchantLevel(10);
 		assertFalse(action.canAct(player, material, target));
 	}
 
-	@ParameterizedTest
-	@ValueSource(ints = {15, 30, 100})
-	void usesConfiguredCapInsteadOfTemplateMaxEnchant(int configuredCap) throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = configuredCap;
+	@Test
+	void rejectsNonEstimaMaterialForEstimaTarget() throws Exception {
 		TestPlayer player = player(100_000);
-		Item material = material(166040001);
-		Item target = estima(187300002, 10);
+		Item target = estima(187300002, 9);
 
-		assertEquals(10, target.getItemTemplate().getMaxEnchantLevel());
-		assertTrue(action.canAct(player, material, target));
-		target.setEnchantLevel(configuredCap - 1);
-		assertTrue(action.canAct(player, material, target));
-		target.setEnchantLevel(configuredCap);
-		assertFalse(action.canAct(player, material, target));
+		assertFalse(action.canAct(player, item(167000001, ItemCategory.MANASTONE, 0), target));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = {166040001, 166040002, 166040003, 166040004, 166040005, 166040006, 166040007})
 	void routesEveryWaterVariantDirectlyToEstimaEnchant(int materialId) throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 10;
 		EnchantsConfig.ENCHANT_ITEM_KINAH = 1_000_000;
 		EnchantsConfig.ENCHANT_ESTIMA = 100;
 		EnchantsConfig.ESTIMA_ENCHANT_SPEED = 5000;
 		TestPlayer player = player(100_000);
 		Item material = material(materialId);
-		Item target = estima(187300002, 10);
+		Item target = estima(187300002, 9);
 
 		action.act(player, material, target, null, 1);
 
 		assertEquals(1, player.controller.scheduledCount);
 		assertEquals(5000, player.controller.delay);
 		assertEquals(100_000 - 34323, player.inventory.getKinah());
+		assertEquals(0, player.inventory.consumedStones);
 		player.controller.complete();
-		assertEquals(11, target.getEnchantLevel());
+		assertEquals(10, target.getEnchantLevel());
 		assertFalse(target.isAmplified());
 		assertEquals(1, player.inventory.consumedStones);
 	}
 
 	@Test
-	void successfullyEnchantsFromNinetyNineToOneHundred() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
+	void successfullyEnchantsToTemplateCapAndThenRefuses() throws Exception {
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 50;
 		EnchantsConfig.ENCHANT_ESTIMA = 100;
 		TestPlayer player = player(100_000);
 		Item material = material(166040001);
-		Item target = estima(187300002, 99);
+		Item target = estima(187300002, 9);
 
 		action.act(player, material, target);
 		player.controller.complete();
 
-		assertEquals(100, target.getEnchantLevel());
+		assertEquals(10, target.getEnchantLevel());
 		assertEquals(1, player.inventory.consumedStones);
 		assertFalse(action.canAct(player, material, target));
 	}
 
 	@ParameterizedTest
-	@CsvSource({"100, 0, 1", "100, 10, 11", "100, 99, 100", "0, 0, 0", "0, 10, 0", "0, 99, 0"})
+	@CsvSource({"100, 0, 1", "100, 9, 10", "0, 0, 0", "0, 9, 0"})
 	void usesConfiguredEstimaSuccessRateWithoutLevelAdjustment(float rate, int oldLevel, int expectedLevel)
 		throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
 		EnchantsConfig.ENCHANT_ESTIMA = rate;
 		TestPlayer player = player(100_000);
 		Item target = estima(187300002, oldLevel);
@@ -164,7 +150,6 @@ class EnchantItemActionTest {
 	@ParameterizedTest
 	@ValueSource(ints = {0, 750, 2400})
 	void usesIndependentEstimaSpeedForAnimationAndCompletion(int castTime) throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		EnchantsConfig.ENCHANT_ESTIMA = 100;
 		EnchantsConfig.ESTIMA_ENCHANT_SPEED = castTime;
 		EnchantsConfig.ENCHANT_SPEED = 777;
@@ -187,11 +172,10 @@ class EnchantItemActionTest {
 
 	@Test
 	void refusesAtOrAboveCapWithoutChargingOrDowngrading() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		TestPlayer player = player(100_000);
 		Item material = material(166040001);
 
-		for (int level : new int[] {15, 20}) {
+		for (int level : new int[] {10, 20}) {
 			Item target = estima(187300002, level);
 			action.act(player, material, target);
 			EnchantService.estimaEnchant(player, material, target);
@@ -205,10 +189,9 @@ class EnchantItemActionTest {
 
 	@Test
 	void refusesEquippedEstimaAndInsufficientKinahWithoutCharging() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		TestPlayer player = player(100_000);
 		Item material = material(166040001);
-		Item target = estima(187300002, 10);
+		Item target = estima(187300002, 9);
 		target.setEquipped(true);
 
 		assertFalse(action.canAct(player, material, target));
@@ -226,7 +209,6 @@ class EnchantItemActionTest {
 
 	@Test
 	void leavesOrdinaryEquipmentSubjectToItsOwnCap() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
 		EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL = 10;
 		EnchantsConfig.ENCHANT_ITEM_KINAH = 0;
 		TestPlayer player = player(100_000);
@@ -250,7 +232,6 @@ class EnchantItemActionTest {
 		"true, false, 3", "false, false, 3"})
 	void refreshesEnchantAttributesBeforeOneCompletionEvent(boolean estima, boolean success, int oldLevel)
 		throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		EnchantsConfig.ENCHANT_ESTIMA = success ? 100 : 0;
 		EnchantsConfig.ENCHANT_STIGMA = success ? 100 : -1;
 		TestPlayer player = player(100_000);

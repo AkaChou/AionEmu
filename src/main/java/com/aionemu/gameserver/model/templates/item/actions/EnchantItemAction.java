@@ -71,7 +71,8 @@ public class EnchantItemAction extends AbstractItemAction {
 			return false;
 		}
 		if (targetItem.getItemTemplate().isEstima()) {
-			return parentItem.getItemId() / 1000000 == 166 && EnchantService.canEnchantEstima(player, targetItem);
+			return EnchantService.isEstimaEnchantMaterial(parentItem)
+				&& EnchantService.canEnchantEstima(player, targetItem);
 		}
 		int EnchantKinah = EnchantService.EnchantKinah(targetItem);
 		// 鉴定门禁：未鉴定的装备不可强化（魔石/神石走各自专用消息）。

@@ -18,13 +18,13 @@ public class EnchantsConfig {
 	 * 魔石镶嵌基础成功率（%），与其他加成累加后判定。
 	 * Manastone socketing base success rate (%), bonuses are added on top.
 	 */
-	@Property(key = "gameserver.socket.manastone", defaultValue = "100")
+	@Property(key = "gameserver.socket.manastone.success.rate", defaultValue = "100")
 	public static float SOCKET_MANASTONE;
 	/**
 	 * 物品强化基础成功率（%）。
 	 * Item enchant base success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.item", defaultValue = "100")
+	@Property(key = "gameserver.enchant.item.success.rate", defaultValue = "100")
 	public static float ENCHANT_ITEM;
 	/**
 	 * 装备强化消耗基纳（-1 为默认）。
@@ -39,22 +39,16 @@ public class EnchantsConfig {
 	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "50")
 	public static int MAX_EQUIPMENT_ENCHANT_LEVEL;
 	/**
-	 * 天烙之石（埃斯蒂玛）最大强化等级，默认 15，最高 100。
-	 * Maximum Estima (CP stone) enchant level, defaulting to 15 and capped at 100.
+	 * 天烙之石（埃斯蒂玛）强化基础成功率（%），包含普通成功判定与客户端结果展示。
+	 * Estima (CP stone) base success rate (%), used for both the roll and the client result.
 	 */
-	@Property(key = "gameserver.enchant.estima.max.level", defaultValue = "15")
-	public static int MAX_ESTIMA_ENCHANT_LEVEL;
-	/**
-	 * 天烙之石（埃斯蒂玛）强化基础成功率（%），不随强化等级变化。
-	 * Estima (CP stone) enchant base success rate (%), independent of enchant level.
-	 */
-	@Property(key = "gameserver.enchant.estima", defaultValue = "100")
+	@Property(key = "gameserver.enchant.estima.success.rate", defaultValue = "100")
 	public static float ENCHANT_ESTIMA;
 	/**
 	 * 天烙之石强化施法速度（毫秒）。
 	 * Estima enchant cast speed in milliseconds.
 	 */
-	@Property(key = "gameserver.enchant.estima.speed", defaultValue = "5000")
+	@Property(key = "gameserver.enchant.estima.cast.time", defaultValue = "500")
 	public static int ESTIMA_ENCHANT_SPEED;
 	/**
 	 * 首饰（耳环/戒指/项链/头盔/腰带）最大觉醒等级。
@@ -78,25 +72,25 @@ public class EnchantsConfig {
 	 * 羽饰淬炼成功率（%）。
 	 * Plume tempering success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.plume", defaultValue = "100")
+	@Property(key = "gameserver.enchant.plume.success.rate", defaultValue = "100")
 	public static float ENCHANT_PLUME;
 	/**
 	 * 手镯淬炼成功率（%）。
 	 * Bracelet tempering success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.bracelet", defaultValue = "100")
+	@Property(key = "gameserver.enchant.bracelet.success.rate", defaultValue = "100")
 	public static float ENCHANT_BRACELET;
 	/**
 	 * 饰品（耳环/戒指/项链/头盔/腰带）淬炼成功率（%）。
 	 * Accessory (earrings/rings/necklace/helmet/belt) tempering success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.accessory", defaultValue = "100")
+	@Property(key = "gameserver.enchant.accessory.success.rate", defaultValue = "100")
 	public static float ENCHANT_ACCESSORY;
 	/**
 	 * 烙印之石强化成功率（%）。
 	 * Stigma enchant success rate (%).
 	 */
-	@Property(key = "gameserver.enchant.stigma", defaultValue = "100")
+	@Property(key = "gameserver.enchant.stigma.success.rate", defaultValue = "100")
 	public static float ENCHANT_STIGMA;
 	/**
 	 * 是否在失败时清理魔石。
@@ -108,13 +102,13 @@ public class EnchantsConfig {
 	 * 强化施法速度（毫秒）。
 	 * Enchant cast speed in milliseconds.
 	 */
-	@Property(key = "gameserver.enchant.cast.speed", defaultValue = "4000")
+	@Property(key = "gameserver.enchant.cast.time", defaultValue = "500")
 	public static int ENCHANT_SPEED;
 	/**
 	 * 觉醒（淬炼）施法速度（毫秒），觉醒加速生效时取一半。
 	 * Authorize (tempering) cast speed in milliseconds, halved while authorize boost is active.
 	 */
-	@Property(key = "gameserver.enchant.authorize.speed", defaultValue = "3000")
+	@Property(key = "gameserver.enchant.authorize.cast.time", defaultValue = "500")
 	public static int AUTHORIZE_SPEED;
 	/**
 	 * 是否启用大天使物品强化失败损毁。
@@ -127,13 +121,23 @@ public class EnchantsConfig {
 	private final ManastoneProperties manastone = new ManastoneProperties();
 	private final EnchantProperties enchant = new EnchantProperties();
 
+	@Getter
 	public static class SocketProperties {
-		public float getManastone() {
-			return SOCKET_MANASTONE;
-		}
+		private final SocketManastoneProperties manastone = new SocketManastoneProperties();
 
-		public void setManastone(float manastone) {
-			SOCKET_MANASTONE = manastone;
+		@Getter
+		public static class SocketManastoneProperties {
+			private final SuccessProperties success = new SuccessProperties();
+
+			public static class SuccessProperties {
+				public float getRate() {
+					return SOCKET_MANASTONE;
+				}
+
+				public void setRate(float rate) {
+					SOCKET_MANASTONE = rate;
+				}
+			}
 		}
 	}
 
@@ -154,48 +158,77 @@ public class EnchantsConfig {
 		private final EstimaProperties estima = new EstimaProperties();
 		private final AuthorizeProperties authorize = new AuthorizeProperties();
 		private final CastProperties cast = new CastProperties();
+		private final PlumeProperties plume = new PlumeProperties();
+		private final BraceletProperties bracelet = new BraceletProperties();
+		private final AccessoryProperties accessory = new AccessoryProperties();
+		private final StigmaProperties stigma = new StigmaProperties();
 
+		/**
+		 * 裸标量键存在时由 Binder 忽略；保留以兼容 {@code gameserver.enchant.item=100}。
+		 * Ignored by the Binder when the bare scalar key is present; kept for
+		 * {@code gameserver.enchant.item=100} compatibility.
+		 */
 		public void setItem(ItemProperties item) {
 		}
 
-		/**
-		 * 裸标量键存在时由 Binder 忽略；保留以兼容 {@code gameserver.enchant.estima=100}。
-		 * Ignored by the Binder when the bare scalar key is present; kept for
-		 * {@code gameserver.enchant.estima=100} compatibility.
-		 */
-		public void setEstima(EstimaProperties estima) {
+		@Getter
+		public static class PlumeProperties {
+			private final RateProperties success = new RateProperties();
+
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_PLUME;
+				}
+
+				public void setRate(float rate) {
+					ENCHANT_PLUME = rate;
+				}
+			}
 		}
 
-		public float getPlume() {
-			return ENCHANT_PLUME;
+		@Getter
+		public static class BraceletProperties {
+			private final RateProperties success = new RateProperties();
+
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_BRACELET;
+				}
+
+				public void setRate(float rate) {
+					ENCHANT_BRACELET = rate;
+				}
+			}
 		}
 
-		public void setPlume(float plume) {
-			ENCHANT_PLUME = plume;
+		@Getter
+		public static class AccessoryProperties {
+			private final RateProperties success = new RateProperties();
+
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_ACCESSORY;
+				}
+
+				public void setRate(float rate) {
+					ENCHANT_ACCESSORY = rate;
+				}
+			}
 		}
 
-		public float getBracelet() {
-			return ENCHANT_BRACELET;
-		}
+		@Getter
+		public static class StigmaProperties {
+			private final RateProperties success = new RateProperties();
 
-		public void setBracelet(float bracelet) {
-			ENCHANT_BRACELET = bracelet;
-		}
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_STIGMA;
+				}
 
-		public float getAccessory() {
-			return ENCHANT_ACCESSORY;
-		}
-
-		public void setAccessory(float accessory) {
-			ENCHANT_ACCESSORY = accessory;
-		}
-
-		public float getStigma() {
-			return ENCHANT_STIGMA;
-		}
-
-		public void setStigma(float stigma) {
-			ENCHANT_STIGMA = stigma;
+				public void setRate(float rate) {
+					ENCHANT_STIGMA = rate;
+				}
+			}
 		}
 
 		/**
@@ -204,11 +237,12 @@ public class EnchantsConfig {
 		 */
 		@Getter
 		public static class EstimaProperties {
-			private final MaxProperties max = new MaxProperties();
+			private final RateProperties success = new RateProperties();
+			private final CastProperties cast = new CastProperties();
 
 			/**
-			 * 支持裸标量形式 {@code gameserver.enchant.estima=100}。
-			 * Supports the bare scalar form {@code gameserver.enchant.estima=100}.
+			 * 兼容旧的裸标量形式 {@code gameserver.enchant.estima=100}，新配置使用 success.rate。
+			 * Supports the legacy bare scalar form {@code gameserver.enchant.estima=100}; new config uses success.rate.
 			 */
 			public static EstimaProperties valueOf(String value) {
 				EstimaProperties props = new EstimaProperties();
@@ -219,38 +253,36 @@ public class EnchantsConfig {
 				return props;
 			}
 
-			public float getValue() {
-				return ENCHANT_ESTIMA;
-			}
-
-			public void setValue(float value) {
-				ENCHANT_ESTIMA = value;
-			}
-
-			public int getSpeed() {
-				return ESTIMA_ENCHANT_SPEED;
-			}
-
-			public void setSpeed(int speed) {
-				ESTIMA_ENCHANT_SPEED = speed;
-			}
-
-			public static class MaxProperties {
-				public int getLevel() {
-					return MAX_ESTIMA_ENCHANT_LEVEL;
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_ESTIMA;
 				}
 
-				public void setLevel(int level) {
-					MAX_ESTIMA_ENCHANT_LEVEL = level;
+				public void setRate(float rate) {
+					ENCHANT_ESTIMA = rate;
 				}
 			}
+
+			public static class CastProperties {
+				public int getTime() {
+					return ESTIMA_ENCHANT_SPEED;
+				}
+
+				public void setTime(int time) {
+					ESTIMA_ENCHANT_SPEED = time;
+				}
+			}
+
 		}
 
 		@Getter
 		public static class ItemProperties {
-			public ItemProperties() {
-			}
+			private final RateProperties success = new RateProperties();
 
+			/**
+			 * 兼容旧的裸标量形式 {@code gameserver.enchant.item=100}。
+			 * Supports the legacy bare scalar form {@code gameserver.enchant.item=100}.
+			 */
 			public static ItemProperties valueOf(String value) {
 				ItemProperties props = new ItemProperties();
 				try {
@@ -258,14 +290,6 @@ public class EnchantsConfig {
 				} catch (NumberFormatException ignored) {
 				}
 				return props;
-			}
-
-			public float getValue() {
-				return ENCHANT_ITEM;
-			}
-
-			public void setValue(float value) {
-				ENCHANT_ITEM = value;
 			}
 
 			public int getKinah() {
@@ -282,6 +306,16 @@ public class EnchantsConfig {
 
 			public void setBroke(boolean broke) {
 				ENABLE_ARCHDAEVA_ITEM_BROKE = broke;
+			}
+
+			public static class RateProperties {
+				public float getRate() {
+					return ENCHANT_ITEM;
+				}
+
+				public void setRate(float rate) {
+					ENCHANT_ITEM = rate;
+				}
 			}
 		}
 
@@ -309,13 +343,10 @@ public class EnchantsConfig {
 			private final AccessoryProperties accessory = new AccessoryProperties();
 			private final PlumeProperties plume = new PlumeProperties();
 			private final BraceletProperties bracelet = new BraceletProperties();
+			private final CastProperties cast = new CastProperties();
 
-			public int getSpeed() {
-				return AUTHORIZE_SPEED;
-			}
-
-			public void setSpeed(int speed) {
-				AUTHORIZE_SPEED = speed;
+			public CastProperties getCast() {
+				return cast;
 			}
 
 			@Getter
@@ -362,15 +393,25 @@ public class EnchantsConfig {
 					}
 				}
 			}
+
+			public static class CastProperties {
+				public int getTime() {
+					return AUTHORIZE_SPEED;
+				}
+
+				public void setTime(int time) {
+					AUTHORIZE_SPEED = time;
+				}
+			}
 		}
 
 		public static class CastProperties {
-			public int getSpeed() {
+			public int getTime() {
 				return ENCHANT_SPEED;
 			}
 
-			public void setSpeed(int speed) {
-				ENCHANT_SPEED = speed;
+			public void setTime(int time) {
+				ENCHANT_SPEED = time;
 			}
 		}
 	}

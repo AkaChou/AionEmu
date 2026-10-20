@@ -186,7 +186,8 @@ public class ItemPacketService {
 	 * @param success 是否强化成功 / whether enchanting succeeded
 	 */
 	public static void sendEnchantResult(Player player, Item material, Item target, boolean success) {
-		updateItemAfterInfoChange(player, target, ItemUpdateType.STATS_CHANGE);
+		PacketSendUtility.sendPacket(player,
+			new SM_INVENTORY_UPDATE_ITEM(player, target, ItemUpdateType.STATS_CHANGE, true));
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
 			material.getObjectId(), material.getItemId(), 0, success ? 1 : 2, 1));
 	}

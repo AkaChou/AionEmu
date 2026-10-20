@@ -27,6 +27,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EnchantStigmaAction")
 public class EnchantStigmaAction extends AbstractItemAction {
+	private static final int ENCHANT_CAST_TIME = 3000;
+
 	@XmlAttribute(name = "count")
 	private int count;
 
@@ -83,7 +85,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 		final int parentItemId = parentItem.getItemId();
 		final int parentObjectId = parentItem.getObjectId();
 		final int parentNameId = parentItem.getNameId();
-		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, 3000, 0, 0), true);
+		PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItemId, ENCHANT_CAST_TIME, 0, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			/** 中止 / abort. */
 			@Override
@@ -121,7 +123,7 @@ public class EnchantStigmaAction extends AbstractItemAction {
 			player.getInventory().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			ItemPacketService.sendEnchantResult(player, parentItem, targetItem, isSuccess);
 			PacketSendUtility.sendPacket(player, resultMessage);
-		}, 3000);
+		}, ENCHANT_CAST_TIME);
 	}
 
 	/** 按 quality 返回 stigma / Returns the stigma by quality */

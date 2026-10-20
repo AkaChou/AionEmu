@@ -16,6 +16,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
+import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -49,12 +50,15 @@ public class TemperingAction extends AbstractItemAction {
 		}
 
 		int maxAuthorize = EnchantService.getMaxAuthorizeLevel(targetItem);
-		if (maxAuthorize > 0 && targetItem.getAuthorize() >= maxAuthorize) {
+		if (maxAuthorize <= 0) {
+			maxAuthorize = targetItem.getItemTemplate().getMaxAuthorize();
+		}
+		if (targetItem.getAuthorize() >= maxAuthorize) {
 			// %0 无法再淬炼。 / %0 cannot be tempered anymore.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANT_MORE_AUTHORIZE(new DescriptionId(targetItem.getNameId())));
 			return false;
 		}
-		return targetItem.getAuthorize() < targetItem.getItemTemplate().getMaxAuthorize();
+		return true;
 	}
 
 	/** 执行 / act. */
@@ -75,7 +79,7 @@ public class TemperingAction extends AbstractItemAction {
 				}
 				player.getObserveController().removeObserver(this);
 				PacketSendUtility.sendPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 3, 0));
-				ItemPacketService.updateItemAfterInfoChange(player, targetItem);
+				ItemPacketService.updateItemAfterInfoChange(player, targetItem, ItemUpdateType.STATS_CHANGE);
 				// 你已取消 %0 的淬炼。 / You have canceled the tempering of %0.
                 PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_CANCEL(targetItem.getNameId()));
 			}
@@ -88,6 +92,7 @@ public class TemperingAction extends AbstractItemAction {
 			@Override
 			public void run() {
 				if (player.getInventory().decreaseByItemId(parentItem.getItemId(), 1)) {
+					SM_SYSTEM_MESSAGE resultMessage;
 					if (!isTemperingSuccess) {
 						boolean hasTemperingProtection = false;
 						if (player.getEffectController() != null) {
@@ -97,19 +102,19 @@ public class TemperingAction extends AbstractItemAction {
 						if (targetItem.getItemTemplate().isBracelet()) {
 							targetItem.setAuthorize(0);
 							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
-	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
+							resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId());
 
 						} else if (targetItem.getItemTemplate().isPlume()) {
 							targetItem.setAuthorize(targetItem.getAuthorize()); // 羽饰淬炼失败不掉级 / plume doesn't decrease
 							// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
-	                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
+							resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId());
 
 						}
 						// 新淬炼 5.8 / New Tempering 5.8
 						else if (parentItem.getItemId() == 166032001 || parentItem.getItemId() == 166032002) {
 							targetItem.setAuthorize(targetItem.getAuthorize() - 1);
 							// 你淬炼 %0 失败。 / You failed to temper %0.
-                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId()));
+							resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED_NO_PENALTY(targetItem.getNameId());
 
 						} else {
 							if (targetItem.getItemTemplate().isAccessory() && hasTemperingProtection) {
@@ -117,12 +122,12 @@ public class TemperingAction extends AbstractItemAction {
 								int newLevel = Math.max(0, currentLevel - 1);
 								targetItem.setAuthorize(newLevel);
 
-	                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
+								resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId());
 
 							} else {
 								targetItem.setAuthorize(0);
 								// %0 的淬炼失败，淬炼等级降至 0。 / Tempering of %0 has failed and the temperance level has decreased to 0.
-	                            PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId()));
+								resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_FAILED(targetItem.getNameId());
 							}
 						}
 
@@ -134,7 +139,7 @@ public class TemperingAction extends AbstractItemAction {
 						}
 
 						// 你成功淬炼了 %0。达到 +%num1 淬炼等级。 / You have successfully tempered %0. +%num1 temperance level achieved.
-                        PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_SUCCEEDED(targetItem.getNameId(), targetItem.getAuthorize()));
+						resultMessage = SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_SUCCEEDED(targetItem.getNameId(), targetItem.getAuthorize());
 					}
 
 					player.getObserveController().removeObserver(observer);
@@ -143,10 +148,11 @@ public class TemperingAction extends AbstractItemAction {
 						player.getGameStats().updateStatsVisually();
 					}
 
-					ItemPacketService.updateItemAfterInfoChange(player, targetItem);
+					ItemPacketService.updateItemAfterInfoChange(player, targetItem, ItemUpdateType.STATS_CHANGE);
 					PacketSendUtility.broadcastPacketAndReceive(player,
 						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0,
 							isTemperingSuccess ? 1 : 2, 0));
+					PacketSendUtility.sendPacket(player, resultMessage);
 
 					if (targetItem.isEquipped()) {
 						player.getEquipment().setPersistentState(PersistentState.UPDATE_REQUIRED);

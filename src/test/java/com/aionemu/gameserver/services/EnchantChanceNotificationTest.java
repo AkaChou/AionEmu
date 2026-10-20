@@ -51,8 +51,8 @@ import com.aionemu.testutil.ConfigSnapshot;
 class EnchantChanceNotificationTest {
 
 	private final ConfigSnapshot enchantConfig = ConfigSnapshot.of(EnchantsConfig.class,
-		"ENCHANT_ITEM", "ENCHANT_ESTIMA", "MAX_ESTIMA_ENCHANT_LEVEL",
-		"ENCHANT_STIGMA", "ENCHANT_BRACELET", "ENCHANT_PLUME", "ENCHANT_ACCESSORY", "SOCKET_MANASTONE");
+		"ENCHANT_ITEM", "ENCHANT_ESTIMA", "ENCHANT_STIGMA", "ENCHANT_BRACELET", "ENCHANT_PLUME",
+		"ENCHANT_ACCESSORY", "SOCKET_MANASTONE");
 	private final ConfigSnapshot adminConfig = ConfigSnapshot.of(AdminConfig.class, "GM_LEVEL");
 
 	@BeforeEach
@@ -158,9 +158,8 @@ class EnchantChanceNotificationTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({"true, 0", "true, 7", "true, 99", "false, 7"})
+	@CsvSource({"true, 0", "true, 7", "true, 9", "false, 7"})
 	void reportsConfiguredEstimaChanceAtEveryLevelOnlyToGms(boolean gm, int level) throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 100;
 		EnchantsConfig.ENCHANT_ESTIMA = 80;
 		TestPlayer player = player(gm);
 		Item target = item(187300002, ItemCategory.ESTIMA);
@@ -190,10 +189,9 @@ class EnchantChanceNotificationTest {
 
 	@Test
 	void doesNotReportChanceWhenEstimaOrStigmaEnchantIsRefused() throws Exception {
-		EnchantsConfig.MAX_ESTIMA_ENCHANT_LEVEL = 15;
 		TestPlayer player = player(true);
 		Item estima = item(187300002, ItemCategory.ESTIMA);
-		estima.setEnchantLevel(15);
+		estima.setEnchantLevel(10);
 		Item stigma = item(140000001, ItemCategory.STIGMA);
 		stigma.setEnchantLevel(10);
 
@@ -277,6 +275,7 @@ class EnchantChanceNotificationTest {
 		template.setCategory(category);
 		template.setItemQuality(ItemQuality.UNIQUE);
 		template.setLevel(50);
+		template.setMaxEnchant(10);
 		template.setManastoneSlots(6);
 		template.setEquipmentType(category == ItemCategory.SWORD ? EquipType.WEAPON : EquipType.NONE);
 		return new Item(id, template);
@@ -370,6 +369,11 @@ class EnchantChanceNotificationTest {
 		@Override
 		public long getItemCountByItemId(int itemId) {
 			return 1000;
+		}
+
+		@Override
+		public boolean decreaseByObjectId(int itemObjId, long count) {
+			return true;
 		}
 	}
 
