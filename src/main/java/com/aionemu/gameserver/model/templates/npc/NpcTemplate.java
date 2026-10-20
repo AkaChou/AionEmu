@@ -2,12 +2,13 @@ package com.aionemu.gameserver.model.templates.npc;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlID;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
@@ -40,6 +41,11 @@ import lombok.Setter;
 public class NpcTemplate extends VisibleObjectTemplate {
 	private static final int STUN_LIKE_ABNORMALS = 0x9D040;
 	private static final int ALL_OTHER_ABNORMALS = 0x1FFFFFF & ~STUN_LIKE_ABNORMALS;
+	/**
+	 * 异常免疫位缓存：大量 NPC 复用同一组免疫名称。
+	 * Abnormal-immunity bit cache: many NPCs reuse the same immunity names.
+	 */
+	private static final ConcurrentMap<String, Integer> ABNORMAL_IMMUNITY_CACHE = new ConcurrentHashMap<>();
 
 	private int npcId;
 	// JAXB 的 String 写入属性不能配对 int getter，否则免疫字符串不会被解析。
@@ -167,7 +173,6 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	}
 
 	@SuppressWarnings("unused")
-	@XmlID
 	@XmlAttribute(name = "npc_id", required = true)
 	private void setXmlUid(String uid) {
 		npcId = Integer.parseInt(uid);
@@ -175,104 +180,115 @@ public class NpcTemplate extends VisibleObjectTemplate {
 
 	@XmlAttribute(name = "abnormal_immunity")
 	private void setAbnormalImmunity(String value) {
+		abnormalImmunity |= ABNORMAL_IMMUNITY_CACHE.computeIfAbsent(value, NpcTemplate::parseAbnormalImmunity);
+	}
+
+	/**
+	 * 将异常免疫名称列表解析为位掩码。
+	 * Parses abnormal-immunity names into a bit mask.
+	 * @param value 免疫名称列表 / immunity name list
+	 * @return 位掩码 / bit mask
+	 */
+	private static int parseAbnormalImmunity(String value) {
+		int immunity = 0;
 		for (String name : value.split(",")) {
 			switch (name.trim().toLowerCase(Locale.ROOT)) {
 				case "":
 				case "0":
-					abnormalImmunity |= 0;
 					break;
 				case "stat_arall":
-					abnormalImmunity |= ALL_OTHER_ABNORMALS;
+					immunity |= ALL_OTHER_ABNORMALS;
 					break;
 				case "stat_arstunlike":
-					abnormalImmunity |= STUN_LIKE_ABNORMALS;
+					immunity |= STUN_LIKE_ABNORMALS;
 					break;
 				case "stat_arphysicalab":
-					abnormalImmunity |= 0x1620B7;
+					immunity |= 0x1620B7;
 					break;
 				case "stat_armentalab":
-					abnormalImmunity |= 0x800F48;
+					immunity |= 0x800F48;
 					break;
 				case "poison":
-					abnormalImmunity |= 1 << 0;
+					immunity |= 1 << 0;
 					break;
 				case "bleed":
-					abnormalImmunity |= 1 << 1;
+					immunity |= 1 << 1;
 					break;
 				case "paralyze":
-					abnormalImmunity |= 1 << 2;
+					immunity |= 1 << 2;
 					break;
 				case "sleep":
-					abnormalImmunity |= 1 << 3;
+					immunity |= 1 << 3;
 					break;
 				case "root":
-					abnormalImmunity |= 1 << 4;
+					immunity |= 1 << 4;
 					break;
 				case "blind":
-					abnormalImmunity |= 1 << 5;
+					immunity |= 1 << 5;
 					break;
 				case "charm":
-					abnormalImmunity |= 1 << 6;
+					immunity |= 1 << 6;
 					break;
 				case "disease":
-					abnormalImmunity |= 1 << 7;
+					immunity |= 1 << 7;
 					break;
 				case "silence":
-					abnormalImmunity |= 1 << 8;
+					immunity |= 1 << 8;
 					break;
 				case "fear":
-					abnormalImmunity |= 1 << 9;
+					immunity |= 1 << 9;
 					break;
 				case "curse":
-					abnormalImmunity |= 1 << 10;
+					immunity |= 1 << 10;
 					break;
 				case "confuse":
-					abnormalImmunity |= 1 << 11;
+					immunity |= 1 << 11;
 					break;
 				case "stun":
-					abnormalImmunity |= 1 << 12;
+					immunity |= 1 << 12;
 					break;
 				case "petrification":
 				case "perification":
-					abnormalImmunity |= 1 << 13;
+					immunity |= 1 << 13;
 					break;
 				case "stumble":
-					abnormalImmunity |= 1 << 14;
+					immunity |= 1 << 14;
 					break;
 				case "stagger":
-					abnormalImmunity |= 1 << 15;
+					immunity |= 1 << 15;
 					break;
 				case "openaerial":
-					abnormalImmunity |= 1 << 16;
+					immunity |= 1 << 16;
 					break;
 				case "snare":
-					abnormalImmunity |= 1 << 17;
+					immunity |= 1 << 17;
 					break;
 				case "slow":
-					abnormalImmunity |= 1 << 18;
+					immunity |= 1 << 18;
 					break;
 				case "spin":
-					abnormalImmunity |= 1 << 19;
+					immunity |= 1 << 19;
 					break;
 				case "bind":
-					abnormalImmunity |= 1 << 20;
+					immunity |= 1 << 20;
 					break;
 				case "deform":
-					abnormalImmunity |= 1 << 21;
+					immunity |= 1 << 21;
 					break;
 				case "pulled":
-					abnormalImmunity |= 1 << 22;
+					immunity |= 1 << 22;
 					break;
 				case "nofly":
-					abnormalImmunity |= 1 << 23;
+					immunity |= 1 << 23;
 					break;
 				case "simpleroot":
-					abnormalImmunity |= 1 << 24;
+					immunity |= 1 << 24;
 					break;
 				default:
 					throw new IllegalArgumentException("Unknown NPC abnormal immunity: " + name);
 			}
 		}
+		return immunity;
 	}
 
 	/**

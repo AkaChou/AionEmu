@@ -10,9 +10,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +53,8 @@ public class NpcDropData {
 	@XmlTransient
 	private Map<String, DropGroup> commonDropGroups;
 	@XmlTransient
+	private Map<CommonDropKey, DropGroup> expandedCommonDropGroups;
+	@XmlTransient
 	private Map<Integer, NpcDrop> dropsByNpcId = Collections.emptyMap();
 
 	public NpcDropData() {
@@ -68,24 +71,20 @@ public class NpcDropData {
 			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
 		}
 		NpcDropData data = new NpcDropData();
-		data.npcDropContext = createNpcDropContext();
+		data.npcDropContext = createJaxbContext(NpcDropShard.class);
 		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
+		data.expandedCommonDropGroups = new ConcurrentHashMap<>();
 		List<File> partFiles = listXmlFiles(npcDropsDirectory.toPath()).stream()
 			.filter(file -> file.getName().startsWith("npc_drops_part_"))
 			.toList();
-		// 分片解析互不依赖，提交静态数据专用线程池并行执行；mergeDrops/rebuildDropIndex
+		// 分片解析互不依赖，提交分片专用解析池并行执行；mergeDrops/rebuildDropIndex
 		// 依赖全部分片结果，保持 join 后在调用线程串行。
-		// Shard parses are independent; submit them to the dedicated static-data pool. mergeDrops and
+		// Shard parses are independent; submit them to the dedicated shard parse pool. mergeDrops and
 		// rebuildDropIndex depend on all shard results and stay serial after joining.
-		java.util.concurrent.Executor executor = XmlDataLoader.staticDataExecutor();
-		List<java.util.concurrent.CompletableFuture<List<NpcDrop>>> futures = new ArrayList<>(partFiles.size());
-		for (File file : partFiles) {
-			futures.add(java.util.concurrent.CompletableFuture
-				.supplyAsync(() -> data.loadDropsFromFile(file), executor));
-		}
+		List<List<NpcDrop>> loadedParts = XmlDataLoader.submitLargestFirst(partFiles, data::loadDropsFromFile);
 		List<NpcDrop> allDrops = new ArrayList<>();
-		for (java.util.concurrent.CompletableFuture<List<NpcDrop>> future : futures) {
-			allDrops.addAll(future.join());
+		for (List<NpcDrop> loadedPart : loadedParts) {
+			allDrops.addAll(loadedPart);
 		}
 		data.npcDrop = mergeDrops(allDrops);
 		data.rebuildDropIndex();
@@ -151,8 +150,12 @@ public class NpcDropData {
 
 	private List<NpcDrop> loadDropsFromFile(File file) {
 		try (FileInputStream stream = new FileInputStream(file)) {
-			NpcDropData data = (NpcDropData) npcDropContext.createUnmarshaller().unmarshal(stream);
-			List<NpcDrop> drops = data.getNpcDrop();
+			// 分片只绑定根下的 npc_drop，避免 NpcDropData.afterUnmarshal 对每个分片重复
+			// mergeDrops/rebuildDropIndex；最终索引由 loadEager 在全部分片合并后建立一次。
+			// Bind only the npc_drop entries from each shard so NpcDropData.afterUnmarshal does not run
+			// per shard; loadEager builds the final merged index exactly once.
+			NpcDropShard shard = (NpcDropShard) npcDropContext.createUnmarshaller().unmarshal(stream);
+			List<NpcDrop> drops = shard.getDrops();
 			for (NpcDrop drop : drops) {
 				expandCommonDropGroups(drop);
 			}
@@ -172,17 +175,28 @@ public class NpcDropData {
 
 	private void expandCommonDropGroups(NpcDrop drop) {
 		List<DropGroup> groups = drop.getCommonDropGroups().stream()
-			.map(reference -> {
-				DropGroup group = commonDropGroups.get(reference.getName());
-				if (group == null) {
-					throw new IllegalStateException("Unknown common_drop_group: " + reference.getName());
-				}
-				DropGroup copy = group.copy();
-				copy.setChanceMultiplier(reference.getCommonDropAdjustment() / 100f);
-				return copy;
-			})
+			.map(this::expandedCommonDropGroup)
 			.toList();
 		drop.addDropGroups(groups);
+	}
+
+	private DropGroup expandedCommonDropGroup(NpcDrop.CommonDropGroup reference) {
+		DropGroup group = commonDropGroups.get(reference.getName());
+		if (group == null) {
+			throw new IllegalStateException("Unknown common_drop_group: " + reference.getName());
+		}
+		CommonDropKey key = new CommonDropKey(reference.getName(), reference.getCommonDropAdjustment());
+		if (expandedCommonDropGroups == null) {
+			return copyWithMultiplier(group, reference.getCommonDropAdjustment());
+		}
+		return expandedCommonDropGroups.computeIfAbsent(key,
+			ignored -> copyWithMultiplier(group, reference.getCommonDropAdjustment()));
+	}
+
+	private static DropGroup copyWithMultiplier(DropGroup group, int commonDropAdjustment) {
+		DropGroup copy = group.copy();
+		copy.setChanceMultiplier(commonDropAdjustment / 100f);
+		return copy;
 	}
 
 	private static NpcDrop mergeDrop(NpcDrop currentDrop, NpcDrop drop) {
@@ -194,9 +208,17 @@ public class NpcDropData {
 		if (currentGroups.isEmpty() && !newGroups.isEmpty()) {
 			return drop;
 		}
+		// 公共掉落组按 (名称, 倍率) 在多个 NPC 间共享；合并重复 NPC 前先复制当前组，
+		// 否则 removeIf/addAll 会改动其他 NPC 引用的组，甚至对同一列表 addAll 自身。
+		// Common groups are shared by (name, multiplier) across NPCs. Copy current groups before
+		// merging duplicate NPCs; otherwise removeIf/addAll mutates groups owned by other NPCs,
+		// or even adds a list to itself.
+		List<DropGroup> mergedGroups = new ArrayList<>(currentGroups.size());
 		Map<String, DropGroup> currentGroupsByName = new HashMap<>();
 		for (DropGroup currentGroup : currentGroups) {
-			currentGroupsByName.put(currentGroup.getGroupName(), currentGroup);
+			DropGroup detachedGroup = currentGroup.copy();
+			mergedGroups.add(detachedGroup);
+			currentGroupsByName.put(detachedGroup.getGroupName(), detachedGroup);
 		}
 		Set<Integer> newItemIds = newGroups.stream()
 			.map(DropGroup::getDrop)
@@ -204,17 +226,16 @@ public class NpcDropData {
 			.flatMap(List::stream)
 			.map(Drop::getItemId)
 			.collect(Collectors.toSet());
-		for (DropGroup currentGroup : currentGroups) {
+		for (DropGroup currentGroup : mergedGroups) {
 			List<Drop> currentDrops = currentGroup.getDrop();
 			if (currentDrops != null) {
 				currentDrops.removeIf(existingDrop -> newItemIds.contains(existingDrop.getItemId()));
 			}
 		}
-		List<DropGroup> groupsToAdd = new ArrayList<>();
 		for (DropGroup newGroup : newGroups) {
 			DropGroup currentGroup = currentGroupsByName.get(newGroup.getGroupName());
 			if (currentGroup == null) {
-				groupsToAdd.add(newGroup);
+				mergedGroups.add(newGroup.copy());
 				continue;
 			}
 			List<Drop> currentDrops = currentGroup.getDrop();
@@ -223,8 +244,8 @@ public class NpcDropData {
 				currentDrops.addAll(newDrops);
 			}
 		}
-		if (!groupsToAdd.isEmpty()) {
-			currentGroups.addAll(groupsToAdd);
+		if (!mergedGroups.isEmpty()) {
+			currentDrop.replaceDropGroups(mergedGroups);
 		}
 		return currentDrop;
 	}
@@ -263,11 +284,11 @@ public class NpcDropData {
 		}
 	}
 
-	private static JAXBContext createNpcDropContext() {
+	private static JAXBContext createJaxbContext(Class<?> type) {
 		try {
-			return XmlDataLoader.createJaxbContext(NpcDropData.class);
+			return XmlDataLoader.createJaxbContext(type);
 		} catch (JAXBException e) {
-			throw new IllegalStateException("Failed to create NPC drop JAXB context", e);
+			throw new IllegalStateException("Failed to create NPC drop JAXB context for " + type.getName(), e);
 		}
 	}
 
@@ -309,5 +330,25 @@ public class NpcDropData {
 		private List<DropGroup> getGroups() {
 			return groups == null ? Collections.emptyList() : groups;
 		}
+	}
+
+	/**
+	 * 单个掉落分片的 JAXB 包装：只收集根下的 {@code npc_drop}，不参与局部合并与索引。
+	 * JAXB wrapper for one drop shard: collects only root-level {@code npc_drop} entries without
+	 * per-shard merge or indexing.
+	 */
+	@XmlRootElement(name = "npc_drops")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	private static class NpcDropShard {
+
+		@XmlElement(name = "npc_drop")
+		private List<NpcDrop> drops;
+
+		private List<NpcDrop> getDrops() {
+			return drops == null ? Collections.emptyList() : drops;
+		}
+	}
+
+	private record CommonDropKey(String name, int adjustment) {
 	}
 }

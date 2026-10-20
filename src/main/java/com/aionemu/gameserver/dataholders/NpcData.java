@@ -33,17 +33,35 @@ public class NpcData {
 	private List<NpcTemplate> npcs;
 
 	/** 全部 NPC 模板映射 / map containing all npc templates */
-	private final IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<>();
+	private IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<>();
 
 	/**
-	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放列表。
-	 * After JAXB unmarshalling, indexes templates by id and clears the list.
+	 * 以预期模板数量创建容器，避免合并分片时反复扩容。
+	 * Creates the container with the expected template count to avoid repeated growth while
+	 * merging shards.
+	 * @param expectedSize 预期模板数量 / expected template count
+	 */
+	public NpcData(int expectedSize) {
+		npcData = new IntObjectHashMap<>(expectedSize);
+	}
+
+	/**
+	 * 创建默认容量容器。
+	 * Creates a container with the default capacity.
+	 */
+	public NpcData() {
+	}
+
+	/**
+	 * JAXB 反序列化完成后，按模板 ID 建立索引并释放列表引用。
+	 * After JAXB unmarshalling, indexes templates by id and releases the list reference.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		for (NpcTemplate npc : npcs) {
+		List<NpcTemplate> templates = npcs == null ? List.of() : npcs;
+		npcData = new IntObjectHashMap<>(templates.size());
+		for (NpcTemplate npc : templates) {
 			npcData.put(npc.getTemplateId(), npc);
 		}
-		npcs.clear();
 		npcs = null;
 	}
 

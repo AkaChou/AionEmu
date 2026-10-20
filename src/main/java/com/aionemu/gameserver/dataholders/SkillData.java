@@ -49,10 +49,10 @@ public class SkillData {
 	 * 技能数据映射 / skill data map
 	 */
 	@XmlTransient
-	private final IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<>();
+	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<>();
 
 	@XmlTransient
-	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<>();
+	private Map<String, SkillTemplate> skillGroup = new LinkedHashMap<>();
 	@XmlTransient
 	private Map<Integer, Set<String>> itemExclusiveAttributes = Map.of();
 	@XmlTransient
@@ -63,8 +63,12 @@ public class SkillData {
 	 * After JAXB unmarshalling, rebuilds the skill-id and skill-group indexes.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		skillData.clear();
-		skillGroup.clear();
+		int expectedSize = skillTemplates == null ? 0 : skillTemplates.size();
+		skillData = new IntObjectHashMap<>(expectedSize);
+		skillGroup = new LinkedHashMap<>(Math.max(16, expectedSize));
+		if (skillTemplates == null) {
+			return;
+		}
 		for (SkillTemplate st : skillTemplates) {
 			skillData.put(st.getSkillId(), st);
 			skillGroup.put(st.getStack().replace("SKILL_", ""), st);

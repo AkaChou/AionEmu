@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -33,6 +32,10 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
 
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 从拆分包中的分卷 XML 加载技能定义，并展开技能组与字段引用。
@@ -72,18 +75,13 @@ final class SkillDefinitionLoader {
 			// concatenate in part order on the calling thread for deterministic output. Unmarshaller is
 			// not thread-safe, so each task creates its own from the shared JAXBContext.
 			long jaxbStart = System.nanoTime();
-			JAXBContext jaxbContext = XmlDataLoader.createJaxbContext(SkillData.class);
+			JAXBContext jaxbContext = XmlDataLoader.createJaxbContext(SkillPart.class);
 			phaseTimings.put("SkillJaxbContextWall", elapsedMillis(System.nanoTime() - jaxbStart));
-			List<CompletableFuture<LoadedSkillPart>> futures = new ArrayList<>(partFiles.size());
-			for (File partFile : partFiles) {
-				futures.add(CompletableFuture.supplyAsync(() -> loadPart(partFile, groups, fieldNames, jaxbContext),
-					XmlDataLoader.staticDataExecutor()));
-			}
-
+			List<LoadedSkillPart> loadedParts = XmlDataLoader.submitLargestFirst(partFiles,
+				partFile -> loadPart(partFile, groups, fieldNames, jaxbContext));
 			List<SkillTemplate> templates = new ArrayList<>(expectedTemplates);
 			long streamJaxbNanos = 0;
-			for (CompletableFuture<LoadedSkillPart> future : futures) {
-				LoadedSkillPart part = future.join();
+			for (LoadedSkillPart part : loadedParts) {
 				templates.addAll(part.templates());
 				streamJaxbNanos += part.streamJaxbNanos();
 			}
@@ -121,8 +119,8 @@ final class SkillDefinitionLoader {
 			SkillExpansionFilter filter = new SkillExpansionFilter(createPartReader(), groups, fieldNames);
 			InputSource input = new InputSource(stream);
 			input.setSystemId(partFile.toURI().toString());
-			SkillData data = (SkillData) jaxbContext.createUnmarshaller().unmarshal(new SAXSource(filter, input));
-			return new LoadedSkillPart(data.getSkillTemplates(), System.nanoTime() - start);
+			SkillPart data = (SkillPart) jaxbContext.createUnmarshaller().unmarshal(new SAXSource(filter, input));
+			return new LoadedSkillPart(data.getTemplates(), System.nanoTime() - start);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load skill part " + partFile.getPath(), e);
 		}
@@ -236,6 +234,23 @@ final class SkillDefinitionLoader {
 	 * Holds one parallel skill part result and its streaming parse work.
 	 */
 	private record LoadedSkillPart(List<SkillTemplate> templates, long streamJaxbNanos) {
+	}
+
+	/**
+	 * 技能分片的 JAXB 包装：只绑定模板列表，跳过 SkillData 的分片级索引。
+	 * JAXB wrapper for a skill part: binds only the template list and skips SkillData's
+	 * per-part indexing.
+	 */
+	@XmlRootElement(name = "skill_data")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	private static final class SkillPart {
+
+		@XmlElement(name = "skill_template")
+		private List<SkillTemplate> templates;
+
+		private List<SkillTemplate> getTemplates() {
+			return templates == null ? List.of() : templates;
+		}
 	}
 
 	/**

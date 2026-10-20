@@ -276,6 +276,48 @@ class NpcDropDataTest {
 		assertEquals(90, replacement.getChance());
 	}
 
+	@Test
+	void duplicateNpcMergeDoesNotMutateSharedCommonDropGroups() throws Exception {
+		writeDrops("common_drop_groups.xml", """
+			<common_drop_groups>
+				<group name="COMMON_A">
+					<drop item_id="222" min_amount="1" max_amount="1" chance="10"/>
+				</group>
+			</common_drop_groups>
+			""");
+		writeDrops("npc_drops_part_001.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="1" max_amount="1" chance="10"/>
+					</drop_group>
+					<common_drop_group name="COMMON_A"/>
+				</npc_drop>
+				<npc_drop npc_id="200">
+					<drop_group name="base">
+						<drop item_id="333" min_amount="1" max_amount="1" chance="10"/>
+					</drop_group>
+					<common_drop_group name="COMMON_A"/>
+				</npc_drop>
+			</npc_drops>
+			""");
+		writeDrops("npc_drops_part_002.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="444" min_amount="1" max_amount="1" chance="20"/>
+					</drop_group>
+					<common_drop_group name="COMMON_A"/>
+				</npc_drop>
+			</npc_drops>
+			""");
+
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
+
+		assertEquals(List.of(111, 444, 222), itemIds(data.getDrop(100)));
+		assertEquals(List.of(333, 222), itemIds(data.getDrop(200)));
+	}
+
 	private Path writeDrops(String fileName, String xml) throws Exception {
 		Path file = tempDir.resolve(fileName);
 		Files.writeString(file, xml, StandardCharsets.UTF_8);

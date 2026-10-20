@@ -4,6 +4,7 @@ package com.aionemu.gameserver.dataholders;
 import com.aionemu.boot.i18n.I18n;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -69,49 +70,57 @@ public class ItemData extends ReloadableData {
 	 * After JAXB unmarshalling, indexes templates by id and clears the raw list.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		items = new IntObjectHashMap<>();
-		itemsByName = new HashMap<>();
-		allItems = new HashMap<>();
-		if (its != null) {
-			for (ItemTemplate it : its) {
-				items.put(it.getTemplateId(), it);
-				if (it.getNamedesc() != null && !it.getNamedesc().isBlank()) {
-					itemsByName.putIfAbsent(it.getNamedesc().toLowerCase(Locale.ROOT), it);
-				}
-				if (!it.getName().isBlank()) {
-					itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
-				}
-				allItems.put(it.getTemplateId(), it);
-			}
-		}
+		indexTemplates(its == null ? List.of() : its);
 		its = null;
 	}
 
 	/**
-	 * 以已合并的分片映射装配物品数据：自定义模板按 ID 覆盖或新增，最后一次性重建全部索引。
-	 * 调用方可在分片完成时增量 {@code putAll} 到同一映射，避免同时持有全部分片的索引（峰值内存）。
-	 * Assembles item data from an already merged shard mapping: custom templates override or append by id,
-	 * then all indexes are rebuilt in one pass. Callers may {@code putAll} incrementally as shards complete,
-	 * avoiding the need to hold every shard index at once (peak memory).
-	 *
+	 * 以已合并的分片映射和轻量覆盖模板列表装配物品数据，最后一次性重建全部索引。
+	 * Assembles item data from a merged shard mapping and a lightweight override list, then rebuilds
+	 * all indexes in one pass.
 	 * @param merged          已按顺序合并的分片映射 / shard mappings merged in order
 	 * @param customOverrides 自定义覆盖模板，可为 null / custom override templates, may be {@code null}
 	 */
-	public void assembleFromMerged(Map<Integer, ItemTemplate> merged, ItemData customOverrides) {
+	public void assembleFromMerged(Map<Integer, ItemTemplate> merged, Collection<ItemTemplate> customOverrides) {
 		int replaced = 0;
 		int added = 0;
 		if (customOverrides != null) {
-			for (Map.Entry<Integer, ItemTemplate> override : customOverrides.getItemData().entrySet()) {
-				if (merged.containsKey(override.getKey())) {
+			for (ItemTemplate override : customOverrides) {
+				int templateId = override.getTemplateId();
+				if (merged.containsKey(templateId)) {
 					replaced++;
 				} else {
 					added++;
 				}
-				merged.put(override.getKey(), override.getValue());
+				merged.put(templateId, override);
 			}
 			log.info(I18n.get("log.static_data.item_custom_overrides", replaced + added, replaced, added));
 		}
-		setData(new ArrayList<>(merged.values()));
+		indexTemplates(merged.values());
+	}
+
+	/**
+	 * 按模板 ID 建立物品与名称索引；{@code allItems} 复用同一索引，避免再复制一份大映射。
+	 * Builds item and name indexes by template id; {@code allItems} reuses the same index instead
+	 * of duplicating a large map.
+	 * @param templates 物品模板 / item templates
+	 */
+	private void indexTemplates(Collection<ItemTemplate> templates) {
+		items = new IntObjectHashMap<>(templates.size());
+		int nameCapacity = templates.size() > Integer.MAX_VALUE / 2
+			? Integer.MAX_VALUE
+			: Math.max(16, templates.size() * 2);
+		itemsByName = new HashMap<>(nameCapacity);
+		for (ItemTemplate it : templates) {
+			items.put(it.getTemplateId(), it);
+			if (it.getNamedesc() != null && !it.getNamedesc().isBlank()) {
+				itemsByName.putIfAbsent(it.getNamedesc().toLowerCase(Locale.ROOT), it);
+			}
+			if (!it.getName().isBlank()) {
+				itemsByName.putIfAbsent(it.getName().toLowerCase(Locale.ROOT), it);
+			}
+		}
+		allItems = items;
 	}
 
 	/**

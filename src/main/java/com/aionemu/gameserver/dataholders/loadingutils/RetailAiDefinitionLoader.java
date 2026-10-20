@@ -412,7 +412,7 @@ final class RetailAiDefinitionLoader {
 						Float.parseFloat(attribute(reader, "dir"))));
 				} else if (event == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals("alias")) {
 					List<LocationAliasPoint> previous = aliases.computeIfAbsent(worldId, ignored -> new HashMap<>())
-						.put(name.toLowerCase(), List.copyOf(points));
+						.put(name.toLowerCase(Locale.ROOT), List.copyOf(points));
 					if (previous != null) {
 						throw new IllegalStateException("Duplicate retail AI location alias: " + worldId + "/" + name);
 					}
@@ -476,12 +476,12 @@ final class RetailAiDefinitionLoader {
 					switch (reader.getLocalName()) {
 						case "world":
 							worldId = Integer.parseInt(attribute(reader, "id"));
-							worldIdsByName.put(attribute(reader, "name").toLowerCase(), worldId);
+							worldIdsByName.put(attribute(reader, "name").toLowerCase(Locale.ROOT), worldId);
 							worldSpawns = new ArrayList<>();
 							variables.put(worldId, new HashSet<>());
 							break;
 						case "variable":
-							variables.get(worldId).add(attribute(reader, "name").toLowerCase());
+							variables.get(worldId).add(attribute(reader, "name").toLowerCase(Locale.ROOT));
 							break;
 						case "condition":
 							conditionId = Integer.parseInt(attribute(reader, "id"));
@@ -590,18 +590,15 @@ final class RetailAiDefinitionLoader {
 		// tail of RetailAiData assembly; parse each file in parallel and merge in file-name order to shorten the
 		// critical chain while keeping the output deterministic (each task builds its own StAX factory and
 		// compile() is a stateless static method, so there is no shared mutable state).
-		List<java.util.concurrent.CompletableFuture<Map<String, Pattern>>> futures =
-			new ArrayList<>(files.length);
-		for (File file : files) {
-			futures.add(java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+		List<Map<String, Pattern>> loadedPatternSources = XmlDataLoader.submitLargestFirst(
+			java.util.Arrays.asList(files), file -> {
 				Map<String, Pattern> parsed = new HashMap<>();
 				loadPatterns(file, xmlFactory(), parsed);
 				return parsed;
-			}, XmlDataLoader.staticDataExecutor()));
-		}
+			});
 		Map<String, Pattern> patterns = new HashMap<>();
-		for (java.util.concurrent.CompletableFuture<Map<String, Pattern>> future : futures) {
-			patterns.putAll(future.join());
+		for (Map<String, Pattern> loadedPatternSource : loadedPatternSources) {
+			patterns.putAll(loadedPatternSource);
 		}
 		return patterns;
 	}
@@ -631,7 +628,7 @@ final class RetailAiDefinitionLoader {
 					Node node = stack.pop();
 					if (stack.isEmpty()) {
 						Pattern pattern = compile(node);
-						patterns.put(pattern.name().toLowerCase(), pattern);
+						patterns.put(pattern.name().toLowerCase(Locale.ROOT), pattern);
 					}
 				}
 			}
@@ -661,16 +658,12 @@ final class RetailAiDefinitionLoader {
 		// 分片目录：并行扫描各分片，再按文件名顺序合并；两个产出（NPC 映射、寻路行为）语义与单体文件一致。
 		// Shard directory: scan shards in parallel, then merge in file-name order; both outputs (NPC mappings,
 		// path behaviors) match the monolithic file exactly.
-		List<java.util.concurrent.CompletableFuture<NpcMappings>> futures = new ArrayList<>(shards.length);
-		for (File shard : shards) {
-			futures.add(java.util.concurrent.CompletableFuture.supplyAsync(() -> scanMappings(shard),
-				XmlDataLoader.staticDataExecutor()));
-		}
+		List<NpcMappings> loadedShards = XmlDataLoader.submitLargestFirst(
+			java.util.Arrays.asList(shards), RetailAiDefinitionLoader::scanMappings);
 		Map<Integer, Npc> mergedNpcs = new HashMap<>();
 		Map<Integer, com.aionemu.gameserver.dataholders.NpcPathBehaviorData.Behavior> mergedBehaviors =
 			new HashMap<>();
-		for (java.util.concurrent.CompletableFuture<NpcMappings> future : futures) {
-			NpcMappings part = future.join();
+		for (NpcMappings part : loadedShards) {
 			mergedNpcs.putAll(part.npcs());
 			mergedBehaviors.putAll(part.pathBehaviors());
 		}
@@ -764,7 +757,8 @@ final class RetailAiDefinitionLoader {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
 			while (reader.hasNext()) {
 				if (reader.next() == XMLStreamConstants.START_ELEMENT && reader.getLocalName().equals("string")) {
-					strings.put(attribute(reader, "name").toLowerCase(), Integer.parseInt(attribute(reader, "id")));
+					strings.put(attribute(reader, "name").toLowerCase(Locale.ROOT),
+						Integer.parseInt(attribute(reader, "id")));
 				}
 			}
 			reader.close();
@@ -865,7 +859,8 @@ final class RetailAiDefinitionLoader {
 								.add(new GroupControlArea(name, area));
 							break;
 						default:
-							Area previous = areas.computeIfAbsent(worldId, ignored -> new HashMap<>()).put(name.toLowerCase(), area);
+							Area previous = areas.computeIfAbsent(worldId, ignored -> new HashMap<>())
+								.put(name.toLowerCase(Locale.ROOT), area);
 							if (previous != null) {
 								throw new IllegalStateException("Duplicate retail AI area: " + worldId + "/" + name);
 							}

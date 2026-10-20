@@ -1,17 +1,27 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
-import com.aionemu.gameserver.services.MotionLoggingService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.*;
 import com.aionemu.gameserver.lifecycle.TestServiceProviders;
+import com.aionemu.gameserver.services.MotionLoggingService;
+import com.aionemu.testutil.ConfigSnapshot;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlElement;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -24,37 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
-
-import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.dataholders.AIData;
-import com.aionemu.gameserver.dataholders.BindPointData;
-import com.aionemu.gameserver.dataholders.ChargeSkillData;
-import com.aionemu.gameserver.dataholders.HouseBuildingData;
-import com.aionemu.gameserver.dataholders.ItemData;
-import com.aionemu.gameserver.dataholders.ItemRestrictionCleanupData;
-import com.aionemu.gameserver.dataholders.MotionData;
-import com.aionemu.gameserver.dataholders.NpcData;
-import com.aionemu.gameserver.dataholders.PetDopingData;
-import com.aionemu.gameserver.dataholders.PetMerchandData;
-import com.aionemu.gameserver.dataholders.StaticData;
-import com.aionemu.testutil.ConfigSnapshot;
-import jakarta.xml.bind.annotation.XmlElement;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.slf4j.LoggerFactory;
+import static org.junit.jupiter.api.Assertions.*;
 
 class XmlDataLoaderTest {
 
@@ -94,6 +74,31 @@ class XmlDataLoaderTest {
 
 		assertEquals(100000001L, XmlDataLoader.templateShardStartId(
 			new File("missing/item_template_100000001_100601382.xml"), pattern, "item"));
+	}
+
+	@Test
+	void largestFirstShardDispatchPreservesInputOrderAndPropagatesShardIdentity() throws Exception {
+		Path first = tempDir.resolve("first.xml");
+		Path second = tempDir.resolve("second.xml");
+		Path third = tempDir.resolve("third.xml");
+		Files.writeString(first, "<first/>");
+		Files.writeString(second, "<second>".repeat(32));
+		Files.writeString(third, "<third/>");
+		List<File> files = List.of(first.toFile(), second.toFile(), third.toFile());
+
+		List<String> loaded = XmlDataLoader.submitLargestFirst(files, File::getName);
+
+		assertEquals(List.of("first.xml", "second.xml", "third.xml"), loaded);
+		IllegalStateException error = assertThrows(IllegalStateException.class,
+			() -> XmlDataLoader.submitLargestFirst(files, file -> {
+				if (file.getName().equals("second.xml")) {
+					throw new IllegalArgumentException("broken second");
+				}
+				return file.getName();
+			}));
+		assertTrue(error.getMessage().contains("second.xml"));
+		assertTrue(error.getCause() instanceof IllegalArgumentException);
+		assertEquals("broken second", error.getCause().getMessage());
 	}
 
 	@Test
@@ -423,6 +428,41 @@ class XmlDataLoaderTest {
 		assertNotNull(data.getNpcTemplate(250001));
 		assertNotNull(data.getNpcTemplate(250002));
 		assertFalse(Files.exists(tempDir.resolve("cache")), "direct shard loading must not create a cache directory");
+	}
+
+	/**
+	 * 锁定分片解析只绑定模板列表：容器级索引必须仅在合并完成后建立一次。
+	 * Locks shard parsing to template lists only: container indexes must be built once after merging.
+	 * @throws Exception 读取失败 / on read failure
+	 */
+	@Test
+	void templateShardsDeferContainerIndexesUntilMergeCompletes() throws Exception {
+		String source = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/dataholders/loadingutils/XmlDataLoader.java"));
+		String itemLoader = source.substring(source.indexOf("ItemData loadItemData(File itemShardDir"),
+			source.indexOf("\t/**\n\t * 直接从源分片并行加载 NPC 模板", source.indexOf("ItemData loadItemData(File itemShardDir")));
+		String npcLoader = source.substring(source.indexOf("NpcData loadNpcDataSharded(File shardDir)"),
+			source.indexOf("\t/**\n\t * 枚举已提交的源分片", source.indexOf("NpcData loadNpcDataSharded(File shardDir)")));
+
+		assertFalse(itemLoader.contains("unmarshalShard(shard, ItemData.class"));
+		assertFalse(npcLoader.contains("unmarshalShard(shard, NpcData.class"));
+		assertTrue(itemLoader.contains("ItemTemplateShard.class"));
+		assertTrue(npcLoader.contains("NpcTemplateShard.class"));
+	}
+
+	/**
+	 * 锁定技能分片使用轻量包装，而不是为每个分片构造完整 SkillData 索引。
+	 * Locks skill parts to the lightweight wrapper instead of full SkillData indexes per part.
+	 * @throws Exception 读取失败 / on read failure
+	 */
+	@Test
+	void skillPartsUseLightweightWrapperInsteadOfFullSkillData() throws Exception {
+		String source = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/dataholders/loadingutils/SkillDefinitionLoader.java"));
+
+		assertTrue(source.contains("createJaxbContext(SkillPart.class)"));
+		assertFalse(source.contains("createJaxbContext(SkillData.class)"));
+		assertTrue(source.contains("SkillPart data = (SkillPart)"));
 	}
 
 	@Test

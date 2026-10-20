@@ -1,13 +1,14 @@
 package com.aionemu.gameserver.model.templates.item;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlID;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
@@ -39,8 +40,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ItemTemplate extends VisibleObjectTemplate {
+	private static final int RESTRICT_SLOT_COUNT = 17;
+	/**
+	 * 解析后的职业等级限制缓存：生产物品大量复用同一限制串。
+	 * Parsed class-level restriction cache: production items heavily reuse the same restriction strings.
+	 */
+	private static final ConcurrentMap<String, int[]> RESTRICT_CACHE = new ConcurrentHashMap<>();
+	/**
+	 * 解析后的最高等级限制缓存。
+	 * Parsed max-level restriction cache.
+	 */
+	private static final ConcurrentMap<String, byte[]> RESTRICT_MAX_CACHE = new ConcurrentHashMap<>();
+
 	@XmlAttribute(name = "id", required = true)
-	@XmlID
 	private String id;
 	/** 设置物品 ID / Sets the item id */
 	private int itemId;
@@ -286,21 +298,43 @@ public class ItemTemplate extends VisibleObjectTemplate {
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		setItemId(Integer.parseInt(id));
-		String[] parts = restrict.split(",");
-		restricts = new int[17]; // 4.3/4.5 Restriction.
-		for (int i = 0; i < parts.length; i++) {
-			restricts[i] = Integer.parseInt(parts[i]);
-		}
+		restricts = RESTRICT_CACHE.computeIfAbsent(restrict, ItemTemplate::parseRestrict).clone();
 		if (restrictMax != null) {
-			String[] partsMax = restrictMax.split(",");
-			restrictsMax = new byte[17]; // 4.3/4.5 Restriction.
-			for (int i = 0; i < partsMax.length; i++) {
-				restrictsMax[i] = Byte.parseByte(partsMax[i]);
-			}
+			restrictsMax = RESTRICT_MAX_CACHE.computeIfAbsent(restrictMax, ItemTemplate::parseRestrictMax).clone();
 		}
 		if (weaponStats == null) {
 			weaponStats = emptyWeaponStats;
 		}
+	}
+
+	/**
+	 * 将逗号分隔的职业等级限制解析为固定槽位数组。
+	 * Parses comma-separated class-level restrictions into a fixed-slot array.
+	 * @param value 限制串 / restriction string
+	 * @return 解析后的限制数组 / parsed restriction array
+	 */
+	private static int[] parseRestrict(String value) {
+		String[] parts = value.split(",");
+		int[] parsed = new int[RESTRICT_SLOT_COUNT];
+		for (int i = 0; i < parts.length; i++) {
+			parsed[i] = Integer.parseInt(parts[i]);
+		}
+		return parsed;
+	}
+
+	/**
+	 * 将逗号分隔的最高等级限制解析为固定槽位数组。
+	 * Parses comma-separated max-level restrictions into a fixed-slot array.
+	 * @param value 限制串 / restriction string
+	 * @return 解析后的最高等级限制数组 / parsed max-level restriction array
+	 */
+	private static byte[] parseRestrictMax(String value) {
+		String[] parts = value.split(",");
+		byte[] parsed = new byte[RESTRICT_SLOT_COUNT];
+		for (int i = 0; i < parts.length; i++) {
+			parsed[i] = Byte.parseByte(parts[i]);
+		}
+		return parsed;
 	}
 
 	public byte getMaxLevelRestrict(Player player) {

@@ -75,6 +75,15 @@ public class NpcDrop implements DropCalculator {
 	}
 
 	/**
+	 * 替换全部掉落组，供合并重复 NPC 时隔离共享组。
+	 * Replaces all drop groups so merges of duplicate NPCs can detach shared groups.
+	 * @param groups 新的掉落组列表 / new drop-group list
+	 */
+	public void replaceDropGroups(List<DropGroup> groups) {
+		dropGroup = groups.isEmpty() ? null : new ArrayList<>(groups);
+	}
+
+	/**
 	 * 掉落计算器：按种族筛选掉落组后依次执行各组计算。
 	 * Drop calculator: filters drop groups by race, then runs each matching group.
 	 * @param result 掉落物结果集 / drop-item result set

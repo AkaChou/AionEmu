@@ -20,9 +20,13 @@ import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -191,6 +195,29 @@ public class XmlDataLoader {
 			});
 
 	/**
+	 * 大型文件并行解析池：与父任务池隔离，避免分片解析任务在父任务 join 时排队。
+	 * Large-file parse pool isolated from the parent pool so shard parses do not queue behind
+	 * parent tasks waiting in {@code join}.
+	 */
+	private static final java.util.concurrent.ExecutorService SHARD_PARSE_POOL =
+		java.util.concurrent.Executors.newFixedThreadPool(
+			Math.max(2, Runtime.getRuntime().availableProcessors() / 2), runnable -> {
+				Thread thread = new Thread(runnable, "static-data-shard");
+				thread.setDaemon(true);
+				return thread;
+			});
+
+	/**
+	 * 大型分片调度窗口：只保留适量任务在队列中，完成一个再下发下一个，避免小文件过早占满
+	 * 队列而让大文件尾延迟拉长关键路径。
+	 * Large-shard dispatch window: keep only a bounded number of tasks queued and submit the next
+	 * one as soon as a task completes, preventing small files from blocking large tail tasks.
+	 */
+	private static final int SHARD_DISPATCH_WINDOW =
+		Integer.getInteger("aion.staticData.shardWindow",
+			Math.max(4, Math.max(2, Runtime.getRuntime().availableProcessors() / 2) * 2));
+
+	/**
 	 * 返回静态数据加载专用线程池（DataManager 的物品/技能并行路径同样使用）。
 	 * Returns the dedicated static-data pool (also used by DataManager's parallel item/skill paths).
 	 *
@@ -198,6 +225,99 @@ public class XmlDataLoader {
 	 */
 	public static java.util.concurrent.Executor staticDataExecutor() {
 		return STATIC_DATA_POOL;
+	}
+
+	/**
+	 * 返回大型分片专用解析池。
+	 * Returns the dedicated large-shard parse pool.
+	 * @return 分片解析池 / shard parse executor
+	 */
+	public static java.util.concurrent.Executor shardParseExecutor() {
+		return SHARD_PARSE_POOL;
+	}
+
+	/**
+	 * 按文件大小从大到小、完成即补位的顺序执行分片任务，并保持结果与输入顺序一致。
+	 * Runs shard tasks largest-first with completion-driven refill while preserving result order.
+	 * @param files 待处理文件 / files to process
+	 * @param task  单文件任务 / per-file task
+	 * @param <T>   结果类型 / result type
+	 * @return 与输入文件顺序一致的结果 / results in the same order as the input files
+	 */
+	public static <T> List<T> submitLargestFirst(java.util.List<File> files,
+			java.util.function.Function<File, T> task) {
+		if (files == null) {
+			throw new IllegalArgumentException("files must not be null");
+		}
+		if (task == null) {
+			throw new IllegalArgumentException("task must not be null");
+		}
+		if (files.isEmpty()) {
+			return List.of();
+		}
+		List<Integer> order = new ArrayList<>(files.size());
+		for (int i = 0; i < files.size(); i++) {
+			order.add(i);
+		}
+		order.sort((left, right) -> {
+			int bySize = Long.compare(files.get(right).length(), files.get(left).length());
+			return bySize != 0 ? bySize : Integer.compare(left, right);
+		});
+		T[] results = (T[]) new Object[files.size()];
+		java.util.Iterator<Integer> pending = order.iterator();
+		java.util.Map<CompletableFuture<T>, Integer> inFlight = new java.util.LinkedHashMap<>();
+		int initialSize = Math.min(SHARD_DISPATCH_WINDOW, order.size());
+		for (int i = 0; i < initialSize; i++) {
+			submitShard(files, task, pending.next(), inFlight);
+		}
+		while (!inFlight.isEmpty()) {
+			// Wait for any completion; exceptions are rethrown below through joinDefinition so
+			// the original shard context is preserved.
+			CompletableFuture.anyOf(inFlight.keySet().toArray(CompletableFuture[]::new))
+				.handle((ignored, error) -> null)
+				.join();
+			CompletableFuture<T> finished = null;
+			for (CompletableFuture<T> candidate : inFlight.keySet()) {
+				if (candidate.isCompletedExceptionally()) {
+					finished = candidate;
+					break;
+				}
+				if (finished == null && candidate.isDone()) {
+					finished = candidate;
+				}
+			}
+			if (finished == null) {
+				throw new IllegalStateException("Completed shard result was not tracked");
+			}
+			int index = inFlight.remove(finished);
+			results[index] = joinDefinition(finished);
+			if (pending.hasNext()) {
+				submitShard(files, task, pending.next(), inFlight);
+			}
+		}
+		return java.util.Arrays.asList(results);
+	}
+
+	private static <T> void submitShard(List<File> files, java.util.function.Function<File, T> task, int index,
+			java.util.Map<CompletableFuture<T>, Integer> inFlight) {
+		File file = files.get(index);
+		CompletableFuture<T> future = CompletableFuture.supplyAsync(() -> {
+			try {
+				return task.apply(file);
+			} catch (RuntimeException | Error e) {
+				throw new ShardLoadException(file, e);
+			}
+		}, SHARD_PARSE_POOL);
+		inFlight.put(future, index);
+	}
+
+	private static final class ShardLoadException extends IllegalStateException {
+		@java.io.Serial
+		private static final long serialVersionUID = 1L;
+
+		private ShardLoadException(File file, Throwable cause) {
+			super("Failed to load shard " + file.getPath(), cause);
+		}
 	}
 
 	/**
@@ -293,11 +413,7 @@ public class XmlDataLoader {
 		// NPC templates load directly from source shards under data/static_data/npcs (see loadNpcDataSharded).
 		CompletableFuture<NpcData> npcDataFuture = timedAsync("NpcData", () -> {
 			NpcData data = loadNpcDataSharded();
-			NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data);
-			NpcAttackDefinitionLoader.apply(Config.definitionFile(NPC_ATTACK_DEFINITIONS_FILE), data);
-			NpcBoundRadiusDefinitionLoader.apply(Config.definitionFile(NPC_BOUND_RADIUS_DEFINITIONS_FILE), data);
-			NpcCombatElementsDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE), data);
-			NpcMasterItemBonusDefinitionLoader.apply(Config.definitionFile(NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE), data);
+			applyNpcDefinitionOverlays(data);
 			return data;
 		}, phaseTimings);
 		List<CompletableFuture<?>> definitionFutures = List.of(petDefinitionsFuture, npcDropDataFuture,
@@ -633,15 +749,19 @@ public class XmlDataLoader {
 		try {
 			return future.join();
 		} catch (CompletionException e) {
-			Throwable cause = e.getCause() == null ? e : e.getCause();
-			if (cause instanceof RuntimeException runtimeException) {
-				throw runtimeException;
-			}
-			if (cause instanceof Error error) {
-				throw error;
-			}
-			throw new IllegalStateException(cause);
+			throw unwrapCompletionCause(e);
 		}
+	}
+
+	private static RuntimeException unwrapCompletionCause(CompletionException failure) {
+		Throwable cause = failure.getCause() == null ? failure : failure.getCause();
+		if (cause instanceof RuntimeException runtimeException) {
+			return runtimeException;
+		}
+		if (cause instanceof Error error) {
+			throw error;
+		}
+		return new IllegalStateException(cause);
 	}
 
 	/**
@@ -867,18 +987,18 @@ public class XmlDataLoader {
 	ItemData loadItemData(File itemShardDir, File customOverrideFile) {
 		long start = System.currentTimeMillis();
 		List<File> shards = listTemplateShards(itemShardDir, ITEM_SHARD_PATTERN, "item");
-		ItemData custom = customOverrideFile != null && customOverrideFile.isFile()
-			? unmarshalShard(customOverrideFile, ItemData.class) : null;
-		List<CompletableFuture<ItemData>> futures = new ArrayList<>(shards.size());
-		for (File shard : shards) {
-			futures.add(CompletableFuture.supplyAsync(() -> unmarshalShard(shard, ItemData.class), STATIC_DATA_POOL));
-		}
-		// 分片完成即增量并入同一映射，避免同时持有全部分片的索引（峰值内存/GC 压力）。
-		// Merge each shard into one mapping as it completes instead of holding every shard index at once
-		// (peak memory / GC pressure).
+		List<ItemTemplate> custom = customOverrideFile != null && customOverrideFile.isFile()
+			? unmarshalTemplateShard(customOverrideFile, ItemTemplateShard.class) : null;
+		List<List<ItemTemplate>> loadedShards = submitLargestFirst(shards,
+			shard -> unmarshalTemplateShard(shard, ItemTemplateShard.class));
+		// 分片只绑定模板列表，不执行容器级索引；完成即并入同一映射，避免同时持有全部分片索引。
+		// Shards bind only template lists and skip container indexing; merge each completed list into
+		// one mapping so no per-shard indexes are retained.
 		Map<Integer, ItemTemplate> merged = new LinkedHashMap<>();
-		for (CompletableFuture<ItemData> future : futures) {
-			merged.putAll(joinDefinition(future).getItemData());
+		for (List<ItemTemplate> loadedShard : loadedShards) {
+			for (ItemTemplate template : loadedShard) {
+				merged.put(template.getTemplateId(), template);
+			}
 		}
 		ItemData combined = new ItemData();
 		combined.assembleFromMerged(merged, custom);
@@ -907,17 +1027,53 @@ public class XmlDataLoader {
 	NpcData loadNpcDataSharded(File shardDir) {
 		long start = System.currentTimeMillis();
 		List<File> shards = listTemplateShards(shardDir, NPC_SHARD_PATTERN, "NPC");
-		List<CompletableFuture<NpcData>> futures = new ArrayList<>(shards.size());
-		for (File shard : shards) {
-			futures.add(CompletableFuture.supplyAsync(() -> unmarshalShard(shard, NpcData.class), STATIC_DATA_POOL));
-		}
-		NpcData combined = new NpcData();
-		for (CompletableFuture<NpcData> future : futures) {
-			combined.getNpcData().putAll(joinDefinition(future).getNpcData());
+		List<List<NpcTemplate>> loadedShards = submitLargestFirst(shards,
+			shard -> unmarshalTemplateShard(shard, NpcTemplateShard.class));
+		int expectedSize = loadedShards.stream().mapToInt(List::size).sum();
+		NpcData combined = new NpcData(expectedSize);
+		for (List<NpcTemplate> loadedShard : loadedShards) {
+			for (NpcTemplate template : loadedShard) {
+				combined.getNpcData().put(template.getTemplateId(), template);
+			}
 		}
 		log.info(I18n.get("log.static_data.npc_shards_loaded", combined.size(), shards.size(),
 			System.currentTimeMillis() - start));
 		return combined;
+	}
+
+	/**
+	 * 并行应用 NPC 覆盖层；各层写入不同模板字段，分片解析完成后由各 Future 的 join
+	 * 建立可见性。Combat-elements 最大，优先提交以缩短尾部延迟。
+	 * Applies NPC overlays in parallel. Each overlay writes different template fields; joining each
+	 * future provides visibility. The largest combat-elements layer is submitted first to reduce
+	 * tail latency.
+	 * @param data 已合并的 NPC 数据 / merged NPC data
+	 */
+	private void applyNpcDefinitionOverlays(NpcData data) {
+		List<CompletableFuture<Integer>> overlays = new ArrayList<>(5);
+		overlays.add(CompletableFuture.supplyAsync(
+			() -> NpcCombatElementsDefinitionLoader.apply(
+				Config.definitionFile(NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE), data), SHARD_PARSE_POOL));
+		overlays.add(CompletableFuture.supplyAsync(
+			() -> NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data),
+			SHARD_PARSE_POOL));
+		overlays.add(CompletableFuture.supplyAsync(
+			() -> NpcBoundRadiusDefinitionLoader.apply(Config.definitionFile(NPC_BOUND_RADIUS_DEFINITIONS_FILE), data),
+			SHARD_PARSE_POOL));
+		overlays.add(CompletableFuture.supplyAsync(
+			() -> NpcAttackDefinitionLoader.apply(Config.definitionFile(NPC_ATTACK_DEFINITIONS_FILE), data),
+			SHARD_PARSE_POOL));
+		overlays.add(CompletableFuture.supplyAsync(
+			() -> NpcMasterItemBonusDefinitionLoader.apply(
+				Config.definitionFile(NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE), data), SHARD_PARSE_POOL));
+		try {
+			for (CompletableFuture<Integer> overlay : overlays) {
+				joinDefinition(overlay);
+			}
+		} catch (RuntimeException | Error e) {
+			overlays.forEach(overlay -> overlay.cancel(true));
+			throw e;
+		}
 	}
 
 	/**
@@ -990,20 +1146,63 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * 反序列化单个分片文件（字节流直读）。
-	 * Unmarshals one shard file (raw byte stream).
-	 *
+	 * 反序列化轻量模板分片，只绑定模板列表并跳过容器级索引。
+	 * Unmarshals a lightweight template shard, binding only its template list and skipping
+	 * container-level indexing.
 	 * @param shardFile 分片文件 / shard file
-	 * @param type      目标类型 / target type
-	 * @return 分片数据 / shard data
+	 * @param type      分片包装类型 / shard wrapper type
+	 * @param <T>       模板类型 / template type
+	 * @param <W>       分片包装类型 / shard wrapper type
+	 * @return 分片模板列表 / shard template list
 	 */
-	private static <T> T unmarshalShard(File shardFile, Class<T> type) {
+	private static <T, W extends TemplateShard<T>> List<T> unmarshalTemplateShard(File shardFile, Class<W> type) {
 		try (InputStream input = new BufferedInputStream(new FileInputStream(shardFile))) {
 			Unmarshaller un = sharedJaxbContext(type).createUnmarshaller();
 			un.setEventHandler(new XmlValidationHandler());
-			return type.cast(un.unmarshal(input));
+			return type.cast(un.unmarshal(input)).templates();
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load template shard: " + shardFile.getPath(), e);
+		}
+	}
+
+	/**
+	 * 分片包装的公共只读视图。
+	 * Common read-only view for shard wrappers.
+	 * @param <T> 模板类型 / template type
+	 */
+	private interface TemplateShard<T> {
+		List<T> templates();
+	}
+
+	/**
+	 * 物品模板分片的 JAXB 包装，避免每个分片构建 ItemData 索引。
+	 * JAXB wrapper for an item-template shard, avoiding ItemData index construction per shard.
+	 */
+	@XmlRootElement(name = "item_templates")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	private static final class ItemTemplateShard implements TemplateShard<ItemTemplate> {
+		@XmlElement(name = "item_template")
+		private List<ItemTemplate> templates;
+
+		@Override
+		public List<ItemTemplate> templates() {
+			return templates == null ? List.of() : templates;
+		}
+	}
+
+	/**
+	 * NPC 模板分片的 JAXB 包装，避免每个分片构建 NpcData 索引。
+	 * JAXB wrapper for an NPC-template shard, avoiding NpcData index construction per shard.
+	 */
+	@XmlRootElement(name = "npc_templates")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	private static final class NpcTemplateShard implements TemplateShard<NpcTemplate> {
+		@XmlElement(name = "npc_template")
+		private List<NpcTemplate> templates;
+
+		@Override
+		public List<NpcTemplate> templates() {
+			return templates == null ? List.of() : templates;
 		}
 	}
 
