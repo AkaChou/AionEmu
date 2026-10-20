@@ -24,6 +24,7 @@ import com.aionemu.gameserver.lifecycle.MovementLoopServiceBindings;
 import com.aionemu.gameserver.lifecycle.ThreadPoolServiceBindings;
 import com.aionemu.gameserver.lifecycle.WorldBootstrapServiceBindings;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
+import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -688,11 +689,61 @@ class NpcMoveControllerPathTest {
 		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 8));
 		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 2, true));
 		assertTrue(NpcMoveController.shouldUseAttackSlot(false, 2, false));
+		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 2, false, 1.5f),
+				"目标已到攻击面内：不再绕行寻找站位");
+		assertFalse(NpcMoveController.shouldUseAttackSlot(false, 2, false, 0f),
+				"AI 同点刷怪：目标距离为零时不得生成环绕站位");
+		assertTrue(NpcMoveController.shouldUseAttackSlot(false, 2, false, 2.01f),
+				"目标尚未进入攻击面：保留追击站位");
 		assertNotEquals(NpcMoveController.attackSlotOffsetDegrees(10, 20), NpcMoveController.attackSlotOffsetDegrees(11, 20));
 
-		float[] slot = NpcMoveController.attackSlotCandidate(10, 0, 0, 0, 5, 1.5f, 0);
-		assertEquals(1.5f, Math.hypot(slot[0], slot[1]), 0.001f);
+		float[] slot = NpcMoveController.attackSlotCandidate(0, 0, 5, 1.5f, 0);
+		assertEquals(1.5f, slot[0], 0.001f);
+		assertEquals(0f, slot[1], 0.001f);
 		assertEquals(5, slot[2]);
+		float[] rotated = NpcMoveController.attackSlotCandidate(0, 0, 5, 1.5f, 20);
+		assertEquals(1.5f * Math.cos(Math.toRadians(20)), rotated[0], 0.001f);
+		assertEquals(1.5f * Math.sin(Math.toRadians(20)), rotated[1], 0.001f);
+	}
+
+	@Test
+	void attackSlotRecoveryDoesNotRotateAnInRangeTarget() throws Exception {
+		String source = Files.readString(Path.of(
+				"src/main/java/com/aionemu/gameserver/controllers/movement/NpcMoveController.java"));
+		String method = source.substring(source.indexOf("private void refreshAttackSlotForRecovery"),
+				source.indexOf("private void tryNearestPathRecovery"));
+
+		assertTrue(method.contains("shouldUseAttackSlot(false, attackDistance, false, owner.getDistanceToTarget())"),
+				"卡死恢复必须先确认目标仍在攻击面外，否则贴身怪会被恢复逻辑重新推向环绕站位");
+		assertTrue(method.indexOf("shouldUseAttackSlot") < method.indexOf("chaseSlotAdjustment"),
+				"攻击面判定必须在轮换站位角之前执行");
+	}
+
+	@Test
+	void overlappingTargetDoesNotReceiveAnOrbitingDestination() throws Exception {
+		Npc owner = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition ownerPosition = new WorldPosition(210010000);
+		ownerPosition.setXYZH(10f, 20f, 30f, (byte) 0);
+		owner.setPosition(ownerPosition);
+		Npc target = new ObjenesisStd().newInstance(Npc.class);
+		WorldPosition targetPosition = new WorldPosition(210010000);
+		targetPosition.setXYZH(10f, 20f, 30f, (byte) 0);
+		target.setPosition(targetPosition);
+		NpcTemplate template = new NpcTemplate();
+		owner.setObjectTemplate(template);
+		target.setObjectTemplate(template);
+		owner.setAi2(new NpcAI2());
+
+		NpcMoveController controller = new NpcMoveController(owner);
+		var update = NpcMoveController.class.getDeclaredMethod("updateTargetDestination", Creature.class,
+				boolean.class, float.class, float.class);
+		update.setAccessible(true);
+		update.invoke(controller, target, false, 30f, 2f);
+
+		assertEquals(target.getX(), floatField(controller, "pointX"), 0.001f,
+				"同点目标不得被分配环绕站位");
+		assertEquals(target.getY(), floatField(controller, "pointY"), 0.001f,
+				"同点目标不得被分配环绕站位");
 	}
 
 	@Test

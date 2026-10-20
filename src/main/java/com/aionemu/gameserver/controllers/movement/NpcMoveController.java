@@ -126,6 +126,9 @@ public class NpcMoveController
     private static final int STUCK_REPLAN_MAX_ATTEMPTS = 2;
     private static final float TARGET_SLOT_RECALC_DISTANCE = 1;
     private static final float TARGET_SLOT_MAX_ATTACK_RANGE = 4;
+    /** 低于该攻击距离的近身目标不分配环绕站位（米）。
+     * No orbiting slot is assigned below this attack distance (m). */
+    private static final float TARGET_SLOT_MIN_ARC_DISTANCE = 0.75f;
     private static final float NEAREST_PATH_RECOVERY_RADIUS = 2;
     private static final float NEAREST_PATH_RECOVERY_VERTICAL = 0.7f;
     private static final float LOCAL_AVOIDANCE_HEIGHT_TOLERANCE = 0.25f;
@@ -530,25 +533,36 @@ public class NpcMoveController
     }
 
     static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance) {
-        return shouldUseAttackSlot(spatialPath, attackDistance, false);
+        return shouldUseAttackSlot(spatialPath, attackDistance, false, Float.POSITIVE_INFINITY);
     }
 
     static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance, boolean following) {
-        return !following && !spatialPath && attackDistance > 0.75f && attackDistance <= TARGET_SLOT_MAX_ATTACK_RANGE;
+        return shouldUseAttackSlot(spatialPath, attackDistance, following, Float.POSITIVE_INFINITY);
+    }
+
+    /**
+     * 是否分配环绕攻击站位：目标尚未进入攻击范围且属于近距离地面普攻。
+     * Whether to assign an orbiting attack slot: the target is still outside attack range and the NPC is a
+     * short-range ground melee attacker.
+     * @param spatialPath 是否使用空间寻路 / whether spatial pathing is used
+     * @param attackDistance 攻击距离 / attack distance
+     * @param following 是否跟随状态 / whether following
+     * @param targetDistance 到目标攻击面的距离 / distance to the target attack surface
+     * @return 需要站位时为 true / true when an attack slot is needed
+     */
+    static boolean shouldUseAttackSlot(boolean spatialPath, float attackDistance, boolean following,
+            float targetDistance) {
+        return !following && !spatialPath && attackDistance > TARGET_SLOT_MIN_ARC_DISTANCE
+                && attackDistance <= TARGET_SLOT_MAX_ATTACK_RANGE && targetDistance > attackDistance;
     }
 
     static int attackSlotOffsetDegrees(int ownerId, int targetId) {
         return (Math.floorMod(ownerId * 31 ^ targetId, 7) - 3) * 20;
     }
 
-    static float[] attackSlotCandidate(float ownerX, float ownerY, float targetX, float targetY, float targetZ,
-            float radius, int offsetDegrees) {
-        double angle = Math.atan2(ownerY - targetY, ownerX - targetX);
-        if (ownerX == targetX && ownerY == targetY) {
-            angle = Math.toRadians(offsetDegrees * 3);
-        } else {
-            angle += Math.toRadians(offsetDegrees);
-        }
+    static float[] attackSlotCandidate(float targetX, float targetY, float targetZ, float radius,
+            int offsetDegrees) {
+        double angle = Math.toRadians(offsetDegrees);
         return new float[] {targetX + (float) Math.cos(angle) * radius,
                 targetY + (float) Math.sin(angle) * radius, targetZ};
     }
@@ -1070,7 +1084,8 @@ public class NpcMoveController
     private void updateTargetDestination(Creature target, boolean spatialPath, float targetZ, float attackDistance) {
         boolean following = owner != null && owner.getAi2() != null
                 && owner.getAi2().getState() == AIState.FOLLOWING;
-        if (shouldUseAttackSlot(spatialPath, attackDistance, following)) {
+        float targetDistance = owner.getDistanceToTarget();
+        if (shouldUseAttackSlot(spatialPath, attackDistance, following, targetDistance)) {
             boolean refresh = chaseSlotTargetId != target.getObjectId()
                     || MathUtil.getDistance(chaseSlotAnchorX, chaseSlotAnchorY, target.getX(), target.getY())
                             >= TARGET_SLOT_RECALC_DISTANCE;
@@ -1086,7 +1101,12 @@ public class NpcMoveController
                     chaseSlotZ = slot[2];
                 }
             }
-            if (chaseSlotTargetId == target.getObjectId() && chaseSlotValid) {
+            boolean slotReached = chaseSlotTargetId == target.getObjectId() && chaseSlotValid
+                    && reachedWaypoint(usesSpatialArrival(), chaseSlotX, chaseSlotY, chaseSlotZ,
+                            owner.getX(), owner.getY(), owner.getZ());
+            boolean targetInAttackRange = targetDistance <= attackDistance;
+            if (chaseSlotTargetId == target.getObjectId() && chaseSlotValid
+                    && !targetInAttackRange && !slotReached) {
                 pointX = chaseSlotX;
                 pointY = chaseSlotY;
                 pointZ = chaseSlotZ;
@@ -1117,8 +1137,8 @@ public class NpcMoveController
         for (int attempt = 0; attempt < TARGET_SLOT_ADJUSTMENTS.length; attempt++) {
             int index = (chaseSlotAdjustment + attempt) % TARGET_SLOT_ADJUSTMENTS.length;
             int adjustment = TARGET_SLOT_ADJUSTMENTS[index];
-            float[] candidate = attackSlotCandidate(owner.getX(), owner.getY(), target.getX(), target.getY(), targetZ,
-                    radius, baseOffset + adjustment);
+            float[] candidate = attackSlotCandidate(target.getX(), target.getY(), targetZ, radius,
+                    baseOffset + adjustment);
             float[] projected = PathService.getInstance().projectGroundPoint(owner, candidate[0], candidate[1],
                     candidate[2]);
             if (projected != null) {
@@ -1976,9 +1996,12 @@ public class NpcMoveController
     }
 
     private void refreshAttackSlotForRecovery(Creature target) {
+        float attackDistance = owner.getController().getAttackDistanceToTarget();
+        if (!shouldUseAttackSlot(false, attackDistance, false, owner.getDistanceToTarget())) {
+            return;
+        }
         int previousAdjustment = chaseSlotAdjustment;
         chaseSlotAdjustment = (chaseSlotAdjustment + 1) % TARGET_SLOT_ADJUSTMENTS.length;
-        float attackDistance = owner.getController().getAttackDistanceToTarget();
         float[] slot = findAttackSlot(target, getTargetZ(false, target), attackDistance);
         if (slot == null) {
             chaseSlotAdjustment = previousAdjustment;
