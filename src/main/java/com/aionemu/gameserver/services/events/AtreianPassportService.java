@@ -19,11 +19,13 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 import com.aionemu.gameserver.model.templates.event.AtreianPassportRewards;
+import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATREIAN_PASSPORT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.persistence.dao.PlayerPassportDao;
 import com.aionemu.gameserver.persistence.entity.PlayerPassportPo;
 import com.aionemu.gameserver.services.item.ItemService;
+import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -63,15 +65,16 @@ public class AtreianPassportService {
 		if (player == null) {
 			return;
 		}
+		ZonedDateTime now = DateTimeUtil.now();
 		int accountId = player.getPlayerAccount().getId();
 		Map<Integer, PlayerPassportPo> progress = playerPassportsDAO.getPassportProgress(accountId);
 		List<SM_ATREIAN_PASSPORT.Record> records = new ArrayList<>();
 		boolean newDay = false;
 		for (AtreianPassport template : activePassports()) {
-			newDay |= syncPassport(accountId, template, progress, records);
+			newDay |= syncPassport(accountId, template, progress, records, now);
 		}
 		if (!records.isEmpty()) {
-			LocalDate today = LocalDate.now();
+			LocalDate today = now.toLocalDate();
 			PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(records, today.getDayOfMonth(),
 				today.getMonthValue(), today.getYear()));
 			if (newDay) {
@@ -92,12 +95,16 @@ public class AtreianPassportService {
 	}
 
 	/**
-	 * 同步单个签到（插入新行、跨自然日解锁、追加下发记录）。
-	 * Syncs a single passport (insert row, unlock on a new calendar day, append the outgoing record).
-	 * @return 本次是否跨自然日解锁 / whether the passport unlocked on a new calendar day
+	 * 同步单个签到（插入新行、跨签到周期解锁、追加下发记录）。
+	 * Syncs a single passport (insert row, unlock in a new attendance period, append the outgoing record).
+	 * @return 本次是否跨签到周期解锁 / whether the passport unlocked in a new attendance period
 	 */
 	private boolean syncPassport(int accountId, AtreianPassport template,
-			Map<Integer, PlayerPassportPo> progress, List<SM_ATREIAN_PASSPORT.Record> records) {
+			Map<Integer, PlayerPassportPo> progress, List<SM_ATREIAN_PASSPORT.Record> records,
+			ZonedDateTime now) {
+		if (template.getAtreianPassportRewards().isEmpty()) {
+			return false;
+		}
 		int atreianId = template.getId();
 		// 真端下发的是签到类型枚举（0=anniversary, 1=basic, 2=pc_basic），由 eventId 选择期数。
 		// 历史实测（旧实现留下的结论，尚未用本轮数据复核）：客户端 BASIC 路径按服务器年月取本地月历数据，
@@ -116,19 +123,29 @@ public class AtreianPassportService {
 		int maxStamps = template.getAtreianPassportRewards().size();
 		PlayerPassportPo row = progress.get(atreianId);
 		int stamps = row == null || row.getStamps() == null ? 0 : row.getStamps();
-		if (maxStamps > 1 && stamps >= maxStamps) {
-			playerPassportsDAO.updatePassport(accountId, atreianId, 0, true, new Timestamp(System.currentTimeMillis() - 86400000L));
+		Timestamp lastStamp = row == null ? null : row.getLastStamp();
+		Timestamp previousPeriod = previousPeriodStamp(now);
+		boolean completed = isCompleted(template, stamps);
+		if (maxStamps > 1 && completed) {
+			playerPassportsDAO.updatePassport(accountId, atreianId, 0, true,
+				previousPeriod);
 			stamps = 0;
+			lastStamp = previousPeriod;
+			completed = false;
 		}
 
 		if (row == null) {
-			final Timestamp now = new Timestamp(System.currentTimeMillis() - 86400000L);
-			playerPassportsDAO.insertPassport(accountId, atreianId, 0, now);
+			playerPassportsDAO.insertPassport(accountId, atreianId, 0, previousPeriod);
 			records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, 0, attendTypeId, false));
 			return false;
 		}
-		if (isNewDay(row.getLastStamp())) {
-			playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false, row.getLastStamp());
+		if (completed) {
+			records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, stamps, attendTypeId, true));
+			return false;
+		}
+		if (!isClaimedInPeriod(lastStamp, now)) {
+			playerPassportsDAO.updatePassport(accountId, atreianId, stamps, false,
+				lastStamp == null ? previousPeriod : lastStamp);
 			records.add(new SM_ATREIAN_PASSPORT.Record(atreianId, stamps, attendTypeId, false));
 			return true;
 		}
@@ -137,11 +154,58 @@ public class AtreianPassportService {
 	}
 
 	/**
-	 * 判定上次盖章是否落在今天之前的自然日（本地时区），即今日是否可再领一次。
-	 * Whether the last stamp falls on a previous calendar day (local zone), i.e. another claim is allowed today.
+	 * 返回签到周期所属日期：本地时间 09:00 前归入前一天，09:00 起归入当天。
+	 * Returns the date owning the attendance period: before 09:00 local time it belongs to the previous day.
 	 */
-	private static boolean isNewDay(Timestamp lastStamp) {
-		return lastStamp == null || !LocalDate.now().equals(lastStamp.toLocalDateTime().toLocalDate());
+	static LocalDate attendancePeriodDate(ZonedDateTime now) {
+		return now.getHour() < 9 ? now.toLocalDate().minusDays(1) : now.toLocalDate();
+	}
+
+	/**
+	 * 返回当前签到周期开始前的哨兵时间，确保首次插入或满额重置后仍有领取资格。
+	 * Returns a sentinel just before the current attendance period, so a fresh row or a reset remains claimable.
+	 */
+	static Timestamp previousPeriodStamp(ZonedDateTime now) {
+		ZonedDateTime periodStart = attendancePeriodDate(now).atTime(9, 0).atZone(now.getZone());
+		return Timestamp.from(periodStart.minusSeconds(1).toInstant());
+	}
+
+	/**
+	 * 判定上次盖章是否仍属于当前签到周期。
+	 * Whether the last stamp still belongs to the current attendance period.
+	 */
+	static boolean isClaimedInPeriod(Timestamp lastStamp, ZonedDateTime now) {
+		if (lastStamp == null) {
+			return false;
+		}
+		return attendancePeriodDate(lastStamp.toInstant().atZone(now.getZone()))
+			.equals(attendancePeriodDate(now));
+	}
+
+	/**
+	 * 判定该签到的全部奖励格是否已完成。
+	 * Whether every reward slot of the passport has been completed.
+	 */
+	static boolean isCompleted(AtreianPassport template, int stamps) {
+		int rewardCount = template.getAtreianPassportRewards().size();
+		return rewardCount > 0 && stamps >= rewardCount;
+	}
+
+	/**
+	 * 返回下一个应领取的奖励格；已全部完成或配置缺失时返回 null。
+	 * Returns the next reward slot, or null when complete or no matching slot exists.
+	 */
+	static AtreianPassportRewards nextReward(AtreianPassport template, int stamps) {
+		if (isCompleted(template, stamps)) {
+			return null;
+		}
+		int nextSlot = stamps + 1;
+		for (AtreianPassportRewards reward : template.getAtreianPassportRewards()) {
+			if (reward.getRewardItemNum() == nextSlot) {
+				return reward;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -159,36 +223,68 @@ public class AtreianPassportService {
 	}
 
 	public void getReward(Player player, int atreianId) {
+		if (player == null) {
+			return;
+		}
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);
-		ZonedDateTime currentTime = ZonedDateTime.now();
+		ZonedDateTime currentTime = DateTimeUtil.now();
 		if (loginRewardTemplate == null || loginRewardTemplate.getActive() != 1
-			|| currentTime.isBefore(loginRewardTemplate.getPeriodStart()) || currentTime.isAfter(loginRewardTemplate.getPeriodEnd())) {
+			|| currentTime.isBefore(loginRewardTemplate.getPeriodStart())
+			|| currentTime.isAfter(loginRewardTemplate.getPeriodEnd())) {
 			return;
 		}
 		int accountId = player.getPlayerAccount().getId();
 		Map<Integer, PlayerPassportPo> progress = playerPassportsDAO.getPassportProgress(accountId);
 		PlayerPassportPo row = progress.get(atreianId);
-		if (row == null) {
+		if (row == null || isCompleted(loginRewardTemplate, row.getStamps() == null ? 0 : row.getStamps())) {
+			sendRecords(player, accountId, currentTime);
 			return;
 		}
-		// 真端下发的是服务器当前日期，客户端据此渲染当月月历
-		// Retail sends the current server date; the client renders the current month from it
-		LocalDate today = LocalDate.now();
 		int stamps = row.getStamps() == null ? 0 : row.getStamps();
-		if (!isNewDay(row.getLastStamp())) {
+		if (isClaimedInPeriod(row.getLastStamp(), currentTime)) {
+			sendRecords(player, accountId, currentTime);
 			return;
 		}
-		for (AtreianPassportRewards component : loginRewardTemplate.getAtreianPassportRewards()) {
-			// 至多一个格子的序号等于 stamps+1，命中即发 / at most one slot equals stamps+1
-			if (component.getRewardItemNum() == stamps + 1) {
-				ItemService.addItem(player, component.getRewardItem(), component.getRewardItemCount());
-				playerPassportsDAO.updatePassport(accountId, atreianId, stamps + 1, true, new Timestamp(System.currentTimeMillis()));
-			}
+		AtreianPassportRewards reward = nextReward(loginRewardTemplate, stamps);
+		if (reward == null) {
+			sendRecords(player, accountId, currentTime);
+			return;
 		}
-		// 真端领奖后一次性回发全部签到状态（S_LOGIN_EVENT_LIST），客户端据此刷新整个面板
-		// Retail replies with the whole attendance list after a claim, so the client can refresh the panel
+		if (reward.getRewardPermitLevel() > 0 && player.getLevel() < reward.getRewardPermitLevel()) {
+			ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(reward.getRewardItem());
+			int itemNameId = itemTemplate == null ? 0 : itemTemplate.getNameId();
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ATTEND_REWARD_INVALID_LEVEL(
+				reward.getRewardPermitLevel(), itemNameId));
+			sendRecords(player, accountId, currentTime);
+			return;
+		}
+		if (reward.getRewardItemCount() <= 0) {
+			sendRecords(player, accountId, currentTime);
+			return;
+		}
+		if (!ItemService.canAddItem(player, reward.getRewardItem(), reward.getRewardItemCount())) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+			sendRecords(player, accountId, currentTime);
+			return;
+		}
+		if (ItemService.addItem(player, reward.getRewardItem(), reward.getRewardItemCount()) != 0) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
+			sendRecords(player, accountId, currentTime);
+			return;
+		}
+		playerPassportsDAO.updatePassport(accountId, atreianId, stamps + 1, true,
+			Timestamp.from(currentTime.toInstant()));
+		sendRecords(player, accountId, currentTime);
+	}
+
+	/**
+	 * 一次性回发全部签到状态（S_LOGIN_EVENT_LIST）。
+	 * Sends the whole attendance list (S_LOGIN_EVENT_LIST) in one packet.
+	 */
+	private void sendRecords(Player player, int accountId, ZonedDateTime now) {
 		List<SM_ATREIAN_PASSPORT.Record> records =
-			buildRecords(activePassports(), playerPassportsDAO.getPassportProgress(accountId));
+			buildRecords(activePassports(), playerPassportsDAO.getPassportProgress(accountId), now);
+		LocalDate today = now.toLocalDate();
 		PacketSendUtility.sendPacket(player, new SM_ATREIAN_PASSPORT(records, today.getDayOfMonth(),
 			today.getMonthValue(), today.getYear()));
 	}
@@ -202,12 +298,22 @@ public class AtreianPassportService {
 	 */
 	static List<SM_ATREIAN_PASSPORT.Record> buildRecords(List<AtreianPassport> templates,
 			Map<Integer, PlayerPassportPo> progress) {
+		return buildRecords(templates, progress, DateTimeUtil.now());
+	}
+
+	/**
+	 * 按指定时间构建下发记录；单格签到完成后即使跨周期也不可再领。
+	 * Builds records at the given time; completed single-slot passports stay unavailable across periods.
+	 */
+	static List<SM_ATREIAN_PASSPORT.Record> buildRecords(List<AtreianPassport> templates,
+			Map<Integer, PlayerPassportPo> progress, ZonedDateTime now) {
 		List<SM_ATREIAN_PASSPORT.Record> records = new ArrayList<>(templates.size());
 		for (AtreianPassport template : templates) {
 			int id = template.getId();
 			PlayerPassportPo row = progress.get(id);
 			int count = row == null || row.getStamps() == null ? 0 : row.getStamps();
-			boolean claimed = row != null && !isNewDay(row.getLastStamp());
+			boolean claimed = row != null && (isCompleted(template, count)
+				|| isClaimedInPeriod(row.getLastStamp(), now));
 			records.add(new SM_ATREIAN_PASSPORT.Record(id, count, template.getAttendType().getId(), claimed));
 		}
 		return records;

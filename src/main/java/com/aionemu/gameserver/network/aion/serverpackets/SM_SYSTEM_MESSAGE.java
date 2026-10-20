@@ -23427,6 +23427,13 @@ public class SM_SYSTEM_MESSAGE extends AionServerPacket {
 	public static final SM_SYSTEM_MESSAGE STR_REGISTER_ITEM_MSG_UPGRADE_CANNOT_NEED_QINA = new SM_SYSTEM_MESSAGE(
 			1402572);
 
+	/**
+	 * 达到 %0 级后才能领取 %1。 / Reach level %0 to receive %1.
+	 */
+	public static SM_SYSTEM_MESSAGE STR_MSG_ATTEND_REWARD_INVALID_LEVEL(int level, int itemNameId) {
+		return new SM_SYSTEM_MESSAGE(1402573, level, new DescriptionId(itemNameId));
+	}
+
 	public static SM_SYSTEM_MESSAGE STR_ITEM_UPGRADE_MSG_UPGRADE_SUCCESS(DescriptionId nameId, DescriptionId nameId2) {
 		return new SM_SYSTEM_MESSAGE(1402579, nameId, nameId2);
 	}
