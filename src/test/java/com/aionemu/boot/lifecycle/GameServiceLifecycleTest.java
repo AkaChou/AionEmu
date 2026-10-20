@@ -105,6 +105,22 @@ class GameServiceLifecycleTest {
         assertEquals(List.of("threadPool:start", "stop", "threadPool:stop"), events);
     }
 
+    @Test
+    void startupCompletionPrintsTheBannerAfterServicesAreReady() {
+        List<String> events = new ArrayList<>();
+        GameServiceLifecycle lifecycle = new GameServiceLifecycle(
+            new AionServicesProperties(),
+            new RecordingLegacyConfigOverrides(events),
+            new RecordingGameStartupSequenceLifecycle(events),
+            new RecordingGameServerNetworkLifecycle(events),
+            new RecordingGameThreadPoolLifecycle(events)
+        );
+
+        lifecycle.onStartupComplete();
+
+        assertEquals(List.of("banner"), events);
+    }
+
     private static final class RecordingLegacyConfigOverrides extends LegacyConfigOverrides {
 
         private final List<String> events;
@@ -169,6 +185,11 @@ class GameServiceLifecycleTest {
         @Override
         public void start(Boolean chatServerEnabledOverride) {
             events.add("start:" + chatServerEnabledOverride);
+        }
+
+        @Override
+        public void printStartupBanner() {
+            events.add("banner");
         }
     }
 

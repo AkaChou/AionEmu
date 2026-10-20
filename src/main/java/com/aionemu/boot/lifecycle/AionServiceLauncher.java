@@ -139,6 +139,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
                     log.info(I18n.get("boot.startup.service_disabled", serviceLifecycle.getName()));
                 }
             }
+            notifyStartupComplete();
         } catch (Exception | Error e) {
             log.error(I18n.get("boot.startup.failed"), e);
             destroy();
@@ -174,6 +175,19 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, S
             serviceLifecycle.start(args);
         }
         log.info(I18n.get("boot.startup.service_ready", name, System.currentTimeMillis() - start));
+    }
+
+    /**
+     * 在全部服务就绪日志输出后，按启动顺序通知各服务执行启动完成回调。
+     * After all service-ready logs are emitted, notify started services in startup order that
+     * startup has completed.
+     */
+    private void notifyStartupComplete() {
+        for (AionServiceLifecycle serviceLifecycle : startedServices) {
+            try (ServiceContext.Scope ignored = ServiceContext.use(serviceLifecycle.getName())) {
+                serviceLifecycle.onStartupComplete();
+            }
+        }
     }
 
     /**

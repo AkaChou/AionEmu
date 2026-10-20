@@ -78,6 +78,26 @@ class AionServiceLauncherTest {
     }
 
     @Test
+    void notifiesStartupCompletionAfterAllServicesStarted() throws Exception {
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new RecordingTransportBoundary(events),
+            List.of(
+                new CompletingLifecycle("game", 300, events),
+                new CompletingLifecycle("login", 100, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+
+        assertEquals(
+            List.of("prepare", "start:login", "start:game", "complete:login", "complete:game"),
+            events
+        );
+    }
+
+    @Test
     void stopsAServiceWhoseStartupFailed() {
         List<String> events = new ArrayList<>();
         AionServiceLauncher launcher = new AionServiceLauncher(
@@ -359,6 +379,21 @@ class AionServiceLauncherTest {
         @Override
         public void stop() {
             events.add("stop:" + name);
+        }
+    }
+
+    private static final class CompletingLifecycle extends RecordingLifecycle {
+
+        private final List<String> events;
+
+        private CompletingLifecycle(String name, int phase, List<String> events) {
+            super(name, phase, true, events);
+            this.events = events;
+        }
+
+        @Override
+        public void onStartupComplete() {
+            events.add("complete:" + getName());
         }
     }
 

@@ -37,6 +37,13 @@ public interface AionServiceLifecycle {
     void start(ApplicationArguments args);
 
     /**
+     * 全部服务启动完成后的回调；默认空实现。
+     * Callback invoked after all enabled services have started; the default is a no-op.
+     */
+    default void onStartupComplete() {
+    }
+
+    /**
      * 停止服务；默认空实现。
      * Stops the service; default is a no-op.
      */

@@ -90,9 +90,12 @@ class GameStartupSequenceLifecycleTest {
             "serverNetwork:start",
             "ratioLimit:start",
             "startupHooks:start",
-            "startupCompletion:start:2",
-            "system:printBanner"
+            "startupCompletion:start:2"
         ), events);
+
+        lifecycle.printStartupBanner();
+
+        assertEquals("system:printBanner", events.getLast());
     }
 
     private static final class RecordingGameThreadPoolLifecycle extends GameThreadPoolLifecycle {

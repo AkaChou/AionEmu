@@ -307,6 +307,14 @@ public class GameStartupSequenceLifecycle {
         startupHooksLifecycle.start();
         startupCompletionLifecycle.start(startupTime);
         logStartupPhaseTimings();
+    }
+
+    /**
+     * 委托系统生命周期输出启动横幅；由服务启动器在全部服务就绪后调用。
+     * Delegate startup-banner output to the system lifecycle; invoked by the service launcher
+     * after every service is ready.
+     */
+    public void printStartupBanner() {
         systemLifecycle.printStartupBanner();
     }
 

@@ -60,6 +60,15 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     }
 
     /**
+     * 在服务启动器输出 game 就绪日志后打印启动横幅。
+     * Print the startup banner after the service launcher emits the game-ready log.
+     */
+    @Override
+    public void onStartupComplete() {
+        startupSequenceLifecycle.printStartupBanner();
+    }
+
+    /**
      * 先停网络再停线程池。
      * Stops the network first, then the thread pool.
      */
