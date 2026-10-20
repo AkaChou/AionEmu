@@ -2,6 +2,7 @@ package com.aionemu.gameserver.questEngine.tablelane;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
@@ -14,11 +15,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import com.aionemu.gameserver.dataholders.NpcData;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.questEngine.QuestDataResources;
 import com.aionemu.gameserver.questEngine.retail.RetailLedgerXml;
 /**
@@ -78,8 +85,12 @@ public final class NativeNpcNameResolver {
 			"aion/data/static_data/quest/retail/retail-quest-ai-name-groups.xml"};
 	/** 与生产 XmlDataLoader 相同的分片命名约定。 / Same shard naming convention as XmlDataLoader. */
 	private static final Pattern SHARD_PATTERN = Pattern.compile("npc_template_(\\d+)_(\\d+)\\.xml");
-	private static final Pattern NPC_TAG = Pattern.compile("<npc_template\\b([^>]*)>");
-	private static final Pattern ATTR = Pattern.compile("\\b(npc_id|name|name_desc)=\"([^\"]*)\"");
+	private static final ThreadLocal<XMLInputFactory> INPUT_FACTORY = ThreadLocal.withInitial(() -> {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		return factory;
+	});
 
 	private static volatile NativeNpcNameResolver instance;
 
@@ -162,48 +173,45 @@ public final class NativeNpcNameResolver {
 		Map<Integer, String> monsterFamilyKeyByNpcId = new LinkedHashMap<>();
 		int templateCount = 0;
 		for (File shard : ordered) {
-			String raw;
-			try {
-				raw = Files.readString(shard.toPath());
-			} catch (IOException e) {
-				throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot read " + shard.getName(), e);
-			}
-			Matcher tag = NPC_TAG.matcher(raw);
-			while (tag.find()) {
-				templateCount++;
-				String npcId = null;
-				String name = null;
-				String nameDesc = null;
-				Matcher attr = ATTR.matcher(tag.group(1));
-				while (attr.find()) {
-					switch (attr.group(1)) {
-						case "npc_id" -> npcId = attr.group(2);
-						case "name" -> name = attr.group(2);
-						case "name_desc" -> nameDesc = attr.group(2);
-						default -> {
-						}
-					}
-				}
-				if (npcId == null) {
-					throw new IllegalStateException(
-							"NATIVE_TABLE_PARSE_FAILED: <npc_template> without npc_id in " + shard.getName());
-				}
-				int id = Integer.parseInt(npcId);
-				// 重复定义的模板 id（现网 836025，同分片两处）：两个定义的名字都入索引；
-				// index() 内按名去重 id，重复定义不会制造假多义。
-				// Duplicate template ids (836025 today, twice in one shard): both definitions' names
-				// are indexed; index() dedupes ids per name so no phantom ambiguity arises.
-				index(idsByName, name, id);
-				index(idsByNameDesc, nameDesc, id);
-				index(idsByAll, name, id);
-				index(idsByAll, nameDesc, id);
-				// 变体族索引只挂权威 name_desc（QE-048：DD hunt 名单写 base 代表名而世界实刷
-				// T_/等级变体族，击杀路由必须覆盖同族全部实存模板）。
-				// The variant-family index keys on the authoritative name_desc only (QE-048: DD hunt
-				// payloads name the base representative while the world spawns the T_/level variants).
-				indexFamily(idsByMonsterFamily, monsterFamilyKeyByNpcId, nameDesc, id);
-			}
+			templateCount += scan(shard, idsByName, idsByNameDesc, idsByAll, idsByMonsterFamily,
+				monsterFamilyKeyByNpcId);
 		}
+		return assemble(loader, idsByNameDesc, idsByName, idsByAll, idsByMonsterFamily,
+			monsterFamilyKeyByNpcId, templateCount);
+	}
+
+	/**
+	 * 复用已加载的 NPC 模板安装解析器，避免启动期再次扫描全部 NPC XML。
+	 * Installs the resolver from loaded NPC templates, avoiding a second scan of every NPC XML at startup.
+	 *
+	 * @param data 已加载 NPC 数据 / loaded NPC data
+	 */
+	public static synchronized void install(NpcData data) {
+		Map<String, List<Integer>> idsByNameDesc = new LinkedHashMap<>();
+		Map<String, List<Integer>> idsByName = new LinkedHashMap<>();
+		Map<String, List<Integer>> idsByAll = new LinkedHashMap<>();
+		Map<String, List<Integer>> idsByMonsterFamily = new LinkedHashMap<>();
+		Map<Integer, String> monsterFamilyKeyByNpcId = new LinkedHashMap<>();
+		int templateCount = 0;
+		for (NpcTemplate template : data.getTemplates()) {
+			templateCount++;
+			int id = template.getTemplateId();
+			String name = template.getName();
+			String nameDesc = template.getNamedesc();
+			index(idsByName, name, id);
+			index(idsByNameDesc, nameDesc, id);
+			index(idsByAll, name, id);
+			index(idsByAll, nameDesc, id);
+			indexFamily(idsByMonsterFamily, monsterFamilyKeyByNpcId, nameDesc, id);
+		}
+		instance = assemble(NativeNpcNameResolver.class.getClassLoader(), idsByNameDesc, idsByName, idsByAll,
+			idsByMonsterFamily, monsterFamilyKeyByNpcId, templateCount);
+	}
+
+	private static NativeNpcNameResolver assemble(ClassLoader loader,
+			Map<String, List<Integer>> idsByNameDesc, Map<String, List<Integer>> idsByName,
+			Map<String, List<Integer>> idsByAll, Map<String, List<Integer>> idsByMonsterFamily,
+			Map<Integer, String> monsterFamilyKeyByNpcId, int templateCount) {
 		if (idsByAll.isEmpty()) {
 			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: no npc template names indexed");
 		}
@@ -284,6 +292,43 @@ public final class NativeNpcNameResolver {
 				Collections.unmodifiableMap(monsterFamilyKeyByNpcId), templateCount);
 	}
 
+	private static int scan(File shard, Map<String, List<Integer>> idsByName,
+			Map<String, List<Integer>> idsByNameDesc, Map<String, List<Integer>> idsByAll,
+			Map<String, List<Integer>> idsByMonsterFamily, Map<Integer, String> monsterFamilyKeyByNpcId) {
+		int templateCount = 0;
+		try (InputStream input = Files.newInputStream(shard.toPath())) {
+			XMLStreamReader reader = INPUT_FACTORY.get().createXMLStreamReader(input);
+			while (reader.hasNext()) {
+				if (reader.next() != XMLStreamConstants.START_ELEMENT
+					|| !"npc_template".equals(reader.getLocalName())) {
+					continue;
+				}
+				templateCount++;
+				String npcId = reader.getAttributeValue(null, "npc_id");
+				String name = reader.getAttributeValue(null, "name");
+				String nameDesc = reader.getAttributeValue(null, "name_desc");
+				if (npcId == null) {
+					throw new IllegalStateException(
+						"NATIVE_TABLE_PARSE_FAILED: <npc_template> without npc_id in " + shard.getName());
+				}
+				int id = Integer.parseInt(npcId);
+				// 重复定义的模板 id（现网 836025，同分片两处）：两个定义的名字都入索引；
+				// index() 内按名去重 id，重复定义不会制造假多义。
+				// Duplicate template ids (836025 today, twice in one shard): both definitions' names
+				// are indexed; index() dedupes ids per name so no phantom ambiguity arises.
+				index(idsByName, name, id);
+				index(idsByNameDesc, nameDesc, id);
+				index(idsByAll, name, id);
+				index(idsByAll, nameDesc, id);
+				indexFamily(idsByMonsterFamily, monsterFamilyKeyByNpcId, nameDesc, id);
+			}
+			reader.close();
+			return templateCount;
+		} catch (IOException | XMLStreamException e) {
+			throw new IllegalStateException("NATIVE_TABLE_PARSE_FAILED: cannot parse " + shard.getName(), e);
+		}
+	}
+
 	/** 变体族索引（族键 → 成员 id，按名去重、保插入序；name_desc 缺失的模板不进族）。 / Family index entry. */
 	private static void indexFamily(Map<String, List<Integer>> idsByMonsterFamily,
 			Map<Integer, String> familyKeyByNpcId, String rawNameDesc, int npcId) {
@@ -318,9 +363,9 @@ public final class NativeNpcNameResolver {
 		int end = parts.length;
 		// 先判「tag + 等级」组合尾（66_n / 66_An），再退化为纯等级尾（room_66）。
 		// Try the "tag + level" tail first (66_n / 66_An), then fall back to a bare level tail (room_66).
-		if (end > 2 && parts[end - 1].matches("[a-z]{1,2}") && parts[end - 2].matches("\\d{1,2}")) {
+		if (end > 2 && isVariantTag(parts[end - 1]) && isShortNumber(parts[end - 2])) {
 			end -= 2;
-		} else if (end > 1 && parts[end - 1].matches("\\d{1,2}")) {
+		} else if (end > 1 && isShortNumber(parts[end - 1])) {
 			end--;
 		}
 		StringBuilder family = new StringBuilder();
@@ -334,6 +379,32 @@ public final class NativeNpcNameResolver {
 			family.append(parts[i]);
 		}
 		return family.isEmpty() ? null : family.toString();
+	}
+
+	private static boolean isVariantTag(String value) {
+		if (value.isEmpty() || value.length() > 2) {
+			return false;
+		}
+		for (int index = 0; index < value.length(); index++) {
+			char character = value.charAt(index);
+			if (character < 'a' || character > 'z') {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean isShortNumber(String value) {
+		if (value.isEmpty() || value.length() > 2) {
+			return false;
+		}
+		for (int index = 0; index < value.length(); index++) {
+			char character = value.charAt(index);
+			if (character < '0' || character > '9') {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static void index(Map<String, List<Integer>> idsByName, String rawName, int npcId) {

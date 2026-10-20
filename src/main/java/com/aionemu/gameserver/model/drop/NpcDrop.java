@@ -48,6 +48,11 @@ public class NpcDrop implements DropCalculator {
 		return this.dropGroup;
 	}
 
+	/** 设置 NPC ID（供流式绑定器使用）。 / Sets the NPC id for the streaming binder. */
+	public void setNpcId(int npcId) {
+		this.npcId = npcId;
+	}
+
 	/** 返回公共掉落组名称列表 / Returns the common drop group names */
 	public List<String> getCommonDropGroupNames() {
 		if (commonDropGroup == null) {

@@ -284,8 +284,11 @@ public final class RetailQuestDriver {
 		// 原版对话名组表（守备队同组共用 ScriptDLL 对话名）：接取/交付字段可写组名的唯一展开通道。
 		// The retail dialog-name group table: the only expansion channel for group names written in
 		// the acquire/hand-in fields (one guard squad shares a ScriptDLL dialog name).
-		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES),
-			RetailQuestAiNameGroups.streams(), RetailNpcNameAliases.streams());
+		RetailNpcNameIndex npcIndex = RetailNpcNameIndex.installed();
+		if (npcIndex == null) {
+			npcIndex = RetailNpcNameIndex.build(openAll(NPC_DIR, NPC_FILES),
+				RetailQuestAiNameGroups.streams(), RetailNpcNameAliases.streams());
+		}
 		RetailItemNameIndex itemIndex = RetailItemNameIndex.loadItemTemplates();
 		return new RetailQuestDriver(retailTable, npcIndex, itemIndex, randomRewardIds(), nameIds());
 	}

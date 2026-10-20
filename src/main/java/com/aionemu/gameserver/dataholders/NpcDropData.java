@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dataholders;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,8 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -27,10 +26,15 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlTransient;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
+
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
 import com.aionemu.gameserver.model.drop.NpcDrop;
+import com.aionemu.gameserver.model.Race;
 
 /**
  * NPC 掉落数据容器，支持公共掉落组展开、分片合并与按 NPC ID 索引。
@@ -48,8 +52,6 @@ public class NpcDropData {
 	protected List<DropGroup> commonDropGroupDefinitions;
 	@XmlElement(name = "npc_drop")
 	protected List<NpcDrop> npcDrop;
-	@XmlTransient
-	private JAXBContext npcDropContext;
 	@XmlTransient
 	private Map<String, DropGroup> commonDropGroups;
 	@XmlTransient
@@ -71,7 +73,6 @@ public class NpcDropData {
 			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
 		}
 		NpcDropData data = new NpcDropData();
-		data.npcDropContext = createJaxbContext(NpcDropShard.class);
 		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
 		data.expandedCommonDropGroups = new ConcurrentHashMap<>();
 		List<File> partFiles = listXmlFiles(npcDropsDirectory.toPath()).stream()
@@ -149,16 +150,73 @@ public class NpcDropData {
 	}
 
 	private List<NpcDrop> loadDropsFromFile(File file) {
-		try (FileInputStream stream = new FileInputStream(file)) {
-			// 分片只绑定根下的 npc_drop，避免 NpcDropData.afterUnmarshal 对每个分片重复
-			// mergeDrops/rebuildDropIndex；最终索引由 loadEager 在全部分片合并后建立一次。
-			// Bind only the npc_drop entries from each shard so NpcDropData.afterUnmarshal does not run
-			// per shard; loadEager builds the final merged index exactly once.
-			NpcDropShard shard = (NpcDropShard) npcDropContext.createUnmarshaller().unmarshal(stream);
-			List<NpcDrop> drops = shard.getDrops();
-			for (NpcDrop drop : drops) {
-				expandCommonDropGroups(drop);
+		XMLInputFactory factory = createXmlInputFactory();
+		try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
+			XMLStreamReader reader = factory.createXMLStreamReader(stream);
+			List<NpcDrop> drops = new ArrayList<>();
+			NpcDrop currentDrop = null;
+			DropGroup currentGroup = null;
+			List<Drop> currentGroupDrops = null;
+			List<DropGroup> currentCommonGroups = null;
+			while (reader.hasNext()) {
+				int event = reader.next();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					switch (reader.getLocalName()) {
+						case "npc_drop" -> {
+							currentDrop = new NpcDrop();
+							currentDrop.setNpcId(requiredInt(reader, "npc_id", "npc_drop"));
+							currentCommonGroups = new ArrayList<>();
+							drops.add(currentDrop);
+						}
+						case "drop_group" -> {
+							if (currentDrop == null) {
+								throw new IllegalStateException("drop_group outside npc_drop: " + reader.getLocation());
+							}
+							currentGroup = new DropGroup();
+							applyDropGroupAttributes(reader, currentGroup);
+							currentGroupDrops = new ArrayList<>();
+						}
+						case "drop" -> {
+							if (currentGroup == null) {
+								throw new IllegalStateException("drop outside drop_group: " + reader.getLocation());
+							}
+							currentGroupDrops.add(parseDrop(reader));
+						}
+						case "common_drop_group" -> {
+							if (currentDrop == null) {
+								throw new IllegalStateException("common_drop_group outside npc_drop: "
+									+ reader.getLocation());
+							}
+							currentCommonGroups.add(expandedCommonDropGroup(
+								requiredAttribute(reader, "name", "common_drop_group"),
+								attributeInt(reader, "common_drop_adjustment", 100)));
+						}
+						default -> {
+						}
+					}
+				} else if (event == XMLStreamConstants.END_ELEMENT) {
+					switch (reader.getLocalName()) {
+						case "drop_group" -> {
+							if (currentDrop != null && currentGroup != null) {
+								currentGroup.setDrop(currentGroupDrops.isEmpty() ? null : currentGroupDrops);
+								currentDrop.addDropGroups(List.of(currentGroup));
+							}
+							currentGroup = null;
+							currentGroupDrops = null;
+						}
+						case "npc_drop" -> {
+							if (currentDrop != null && currentCommonGroups != null) {
+								currentDrop.addDropGroups(currentCommonGroups);
+							}
+							currentDrop = null;
+							currentCommonGroups = null;
+						}
+						default -> {
+						}
+					}
+				}
 			}
+			reader.close();
 			return drops;
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to eager load npc_drops from " + file.getPath(), e);
@@ -181,16 +239,20 @@ public class NpcDropData {
 	}
 
 	private DropGroup expandedCommonDropGroup(NpcDrop.CommonDropGroup reference) {
-		DropGroup group = commonDropGroups.get(reference.getName());
+		return expandedCommonDropGroup(reference.getName(), reference.getCommonDropAdjustment());
+	}
+
+	private DropGroup expandedCommonDropGroup(String name, int adjustment) {
+		DropGroup group = commonDropGroups.get(name);
 		if (group == null) {
-			throw new IllegalStateException("Unknown common_drop_group: " + reference.getName());
+			throw new IllegalStateException("Unknown common_drop_group: " + name);
 		}
-		CommonDropKey key = new CommonDropKey(reference.getName(), reference.getCommonDropAdjustment());
+		CommonDropKey key = new CommonDropKey(name, adjustment);
 		if (expandedCommonDropGroups == null) {
-			return copyWithMultiplier(group, reference.getCommonDropAdjustment());
+			return copyWithMultiplier(group, adjustment);
 		}
 		return expandedCommonDropGroups.computeIfAbsent(key,
-			ignored -> copyWithMultiplier(group, reference.getCommonDropAdjustment()));
+			ignored -> copyWithMultiplier(group, adjustment));
 	}
 
 	private static DropGroup copyWithMultiplier(DropGroup group, int commonDropAdjustment) {
@@ -284,27 +346,46 @@ public class NpcDropData {
 		}
 	}
 
-	private static JAXBContext createJaxbContext(Class<?> type) {
-		try {
-			return XmlDataLoader.createJaxbContext(type);
-		} catch (JAXBException e) {
-			throw new IllegalStateException("Failed to create NPC drop JAXB context for " + type.getName(), e);
-		}
-	}
-
 	private static Map<String, DropGroup> loadCommonDropGroups(File npcDropsDirectory) {
 		File file = new File(npcDropsDirectory, COMMON_DROP_GROUPS_FILE);
 		if (!file.isFile()) {
 			return Collections.emptyMap();
 		}
-		try (FileInputStream stream = new FileInputStream(file)) {
-			// 必须经由 createJaxbContext：本方法可能运行在 commonPool 线程，裸调用会因线程上下文
-			// 类加载器找不到 JAXB runtime 而失败。Must go through createJaxbContext: this can run on
-			// commonPool threads where a raw call fails because the thread CCL cannot see the JAXB runtime.
-			CommonDropGroups data = (CommonDropGroups) XmlDataLoader.createJaxbContext(CommonDropGroups.class)
-				.createUnmarshaller()
-				.unmarshal(stream);
-			return commonDropGroups(data.getGroups());
+		XMLInputFactory factory = createXmlInputFactory();
+		try (BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file))) {
+			XMLStreamReader reader = factory.createXMLStreamReader(stream);
+			Map<String, DropGroup> groups = new HashMap<>();
+			DropGroup currentGroup = null;
+			List<Drop> currentDrops = null;
+			while (reader.hasNext()) {
+				int event = reader.next();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					switch (reader.getLocalName()) {
+						case "group" -> {
+							currentGroup = new DropGroup();
+							applyDropGroupAttributes(reader, currentGroup);
+							currentDrops = new ArrayList<>();
+						}
+						case "drop" -> {
+							if (currentGroup == null) {
+								throw new IllegalStateException("drop outside group: " + reader.getLocation());
+							}
+							currentDrops.add(parseDrop(reader));
+						}
+						default -> {
+						}
+					}
+				} else if (event == XMLStreamConstants.END_ELEMENT && "group".equals(reader.getLocalName())) {
+					if (currentGroup != null && currentDrops != null) {
+						currentGroup.setDrop(currentDrops.isEmpty() ? null : currentDrops);
+						groups.put(currentGroup.getGroupName(), currentGroup);
+					}
+					currentGroup = null;
+					currentDrops = null;
+				}
+			}
+			reader.close();
+			return groups;
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load common drop groups from " + file.getPath(), e);
 		}
@@ -321,34 +402,90 @@ public class NpcDropData {
 		return groups;
 	}
 
-	@XmlRootElement(name = "common_drop_groups")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	private static class CommonDropGroups {
-		@XmlElement(name = "group")
-		private List<DropGroup> groups;
-
-		private List<DropGroup> getGroups() {
-			return groups == null ? Collections.emptyList() : groups;
-		}
-	}
-
-	/**
-	 * 单个掉落分片的 JAXB 包装：只收集根下的 {@code npc_drop}，不参与局部合并与索引。
-	 * JAXB wrapper for one drop shard: collects only root-level {@code npc_drop} entries without
-	 * per-shard merge or indexing.
-	 */
-	@XmlRootElement(name = "npc_drops")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	private static class NpcDropShard {
-
-		@XmlElement(name = "npc_drop")
-		private List<NpcDrop> drops;
-
-		private List<NpcDrop> getDrops() {
-			return drops == null ? Collections.emptyList() : drops;
-		}
-	}
-
 	private record CommonDropKey(String name, int adjustment) {
+	}
+
+	private static XMLInputFactory createXmlInputFactory() {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		return factory;
+	}
+
+	private static void applyDropGroupAttributes(XMLStreamReader reader, DropGroup group) {
+		String name = reader.getAttributeValue(null, "name");
+		if (name != null) {
+			group.setGroup_name(name);
+		}
+		String race = reader.getAttributeValue(null, "race");
+		if (race != null) {
+			group.setRace(Race.valueOf(race));
+		}
+		String useCategory = reader.getAttributeValue(null, "use_category");
+		if (useCategory != null) {
+			group.setLegacyUseCategory(Boolean.valueOf(useCategory));
+		}
+		String levelBased = reader.getAttributeValue(null, "level_based_chance_reduction");
+		if (levelBased != null) {
+			group.setUseLevelBasedChanceReduction(Boolean.valueOf(levelBased));
+		}
+		String maxItems = reader.getAttributeValue(null, "max_items");
+		if (maxItems != null) {
+			group.setMaxItems(Integer.parseInt(maxItems));
+		}
+		String adjustment = reader.getAttributeValue(null, "drop_group_adjustment");
+		if (adjustment != null) {
+			group.setDropGroupAdjustment(Integer.parseInt(adjustment));
+		}
+	}
+
+	private static Drop parseDrop(XMLStreamReader reader) {
+		int itemId = requiredInt(reader, "item_id", "drop");
+		int minAmount = attributeInt(reader, "min_amount", 1);
+		int maxAmount = attributeInt(reader, "max_amount", 0);
+		Drop drop = new Drop();
+		drop.setItemId(itemId);
+		drop.setMinAmount(minAmount);
+		drop.setMaxAmount(maxAmount == 0 ? minAmount : maxAmount);
+		drop.setChance(attributeFloat(reader, "chance", 100));
+		drop.setNoReduce(attributeBoolean(reader, "no_reduce", false));
+		drop.setEachMember(attributeBoolean(reader, "eachmember", false));
+		String eachMember = reader.getAttributeValue(null, "each_member");
+		if (eachMember != null) {
+			drop.setAionServerEachMember(Boolean.valueOf(eachMember));
+		}
+		return drop;
+	}
+
+	private static int requiredInt(XMLStreamReader reader, String name, String element) {
+		String value = requiredAttribute(reader, name, element);
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			throw new IllegalStateException("Invalid " + name + " on " + element + ": " + value, e);
+		}
+	}
+
+	private static String requiredAttribute(XMLStreamReader reader, String name, String element) {
+		String value = reader.getAttributeValue(null, name);
+		if (value == null || value.isEmpty()) {
+			throw new IllegalStateException("Missing " + name + " on " + element + ": " + reader.getLocation());
+		}
+		return value;
+	}
+
+	private static int attributeInt(XMLStreamReader reader, String name, int defaultValue) {
+		String value = reader.getAttributeValue(null, name);
+		return value == null || value.isEmpty() ? defaultValue : Integer.parseInt(value);
+	}
+
+	private static float attributeFloat(XMLStreamReader reader, String name, float defaultValue) {
+		String value = reader.getAttributeValue(null, name);
+		return value == null || value.isEmpty() ? defaultValue : Float.parseFloat(value);
+	}
+
+	private static boolean attributeBoolean(XMLStreamReader reader, String name, boolean defaultValue) {
+		String value = reader.getAttributeValue(null, name);
+		return value == null || value.isEmpty() ? defaultValue : Boolean.parseBoolean(value);
 	}
 }

@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.dataholders.NpcData;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -11,8 +13,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Element;
 
@@ -34,11 +39,12 @@ import org.w3c.dom.Element;
  */
 public final class RetailNpcNameIndex {
 
-	private static final Pattern TEMPLATE = Pattern.compile("<npc_template\\b[^>]*>");
-	private static final Pattern NAME_DESC = Pattern.compile("name_desc=\"([^\"]*)\"");
-	private static final Pattern NPC_ID = Pattern.compile("npc_id=\"(\\d+)\"");
-	private static final Pattern NAME_ID = Pattern.compile("name_id=\"([^\"]*)\"");
-	private static final Pattern AI = Pattern.compile("ai=\"([^\"]*)\"");
+	private static final ThreadLocal<XMLInputFactory> INPUT_FACTORY = ThreadLocal.withInitial(() -> {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		return factory;
+	});
 
 	/** 同名族展开上限：家族成员数超过此值视为占位名，不展开。 / Family size cap; larger families are placeholder names. */
 	public static final int DISPLAY_NAME_FAMILY_LIMIT = 16;
@@ -50,6 +56,7 @@ public final class RetailNpcNameIndex {
 	 * The retail quest table drops the {@code NPC_} prefix, so the index registers the stripped name as an alias.
 	 */
 	private static final String NPC_PREFIX = "npc_";
+	private static volatile RetailNpcNameIndex installed;
 
 	private final Map<String, Set<Integer>> byName;
 	private final Map<Integer, Set<Integer>> byDisplayNameFamily;
@@ -247,29 +254,53 @@ public final class RetailNpcNameIndex {
 		Map<Integer, String> nameIdByNpc = new LinkedHashMap<>();
 		Set<Integer> questUseItemNpcIds = new LinkedHashSet<>();
 		for (InputStream input : templates) {
-			String text = new String(input.readAllBytes(), StandardCharsets.UTF_8);
-			Matcher template = TEMPLATE.matcher(text);
-			while (template.find()) {
-				String tag = template.group();
-				Matcher name = NAME_DESC.matcher(tag);
-				Matcher npcId = NPC_ID.matcher(tag);
-				if (!name.find() || !npcId.find()) {
-					continue;
-				}
-				int id = Integer.parseInt(npcId.group(1));
-				Matcher ai = AI.matcher(tag);
-				if (ai.find() && "quest_use_item".equals(ai.group(1))) {
-					questUseItemNpcIds.add(id);
-				}
-				byName.computeIfAbsent(name.group(1).toLowerCase(Locale.ROOT), key -> new LinkedHashSet<>()).add(id);
-				Matcher nameId = NAME_ID.matcher(tag);
-				if (!nameId.find() || nameId.group(1).isBlank()) {
-					continue;
-				}
-				nameIdByNpc.put(id, nameId.group(1));
-				byNameId.computeIfAbsent(nameId.group(1), key -> new LinkedHashSet<>()).add(id);
-			}
+			scan(input, byName, byNameId, nameIdByNpc, questUseItemNpcIds);
 		}
+		return assemble(byName, byNameId, nameIdByNpc, questUseItemNpcIds, questAiNameGroupTables,
+			npcIdAliasTables);
+	}
+
+	/**
+	 * 复用已加载的 NPC 模板安装索引，避免启动期再次扫描全部 NPC XML。
+	 * Installs the index from loaded NPC templates, avoiding a second scan of every NPC XML at startup.
+	 *
+	 * @param data 已加载 NPC 数据 / loaded NPC data
+	 */
+	public static void install(NpcData data) {
+		Map<String, Set<Integer>> byName = new LinkedHashMap<>();
+		Map<String, Set<Integer>> byNameId = new LinkedHashMap<>();
+		Map<Integer, String> nameIdByNpc = new LinkedHashMap<>();
+		Set<Integer> questUseItemNpcIds = new LinkedHashSet<>();
+		for (NpcTemplate template : data.getTemplates()) {
+			String name = template.getNamedesc();
+			if (name == null) {
+				continue;
+			}
+			int id = template.getTemplateId();
+			if ("quest_use_item".equals(template.getConfiguredAi())) {
+				questUseItemNpcIds.add(id);
+			}
+			byName.computeIfAbsent(name.toLowerCase(Locale.ROOT), key -> new LinkedHashSet<>()).add(id);
+			String nameId = Integer.toString(template.getNameId());
+			nameIdByNpc.put(id, nameId);
+			byNameId.computeIfAbsent(nameId, key -> new LinkedHashSet<>()).add(id);
+		}
+		try {
+			installed = assemble(byName, byNameId, nameIdByNpc, questUseItemNpcIds,
+				RetailQuestAiNameGroups.streams(), RetailNpcNameAliases.streams());
+		} catch (IOException e) {
+			throw new IllegalStateException("failed to install NPC name index", e);
+		}
+	}
+
+	/** 返回启动期从已加载模板安装的索引；未安装时为 null。 / Installed startup index, or null. */
+	public static RetailNpcNameIndex installed() {
+		return installed;
+	}
+
+	private static RetailNpcNameIndex assemble(Map<String, Set<Integer>> byName,
+		Map<String, Set<Integer>> byNameId, Map<Integer, String> nameIdByNpc, Set<Integer> questUseItemNpcIds,
+		Collection<InputStream> questAiNameGroupTables, Collection<InputStream> npcIdAliasTables) throws IOException {
 		Map<Integer, Set<Integer>> families = new LinkedHashMap<>();
 		nameIdByNpc.forEach((npcId, nameId) -> {
 			Set<Integer> members = byNameId.get(nameId);
@@ -311,6 +342,40 @@ public final class RetailNpcNameIndex {
 			}
 		}
 		return new RetailNpcNameIndex(byName, families, groupMembers, groups, questUseItemNpcIds);
+	}
+
+	private static void scan(InputStream input, Map<String, Set<Integer>> byName,
+		Map<String, Set<Integer>> byNameId, Map<Integer, String> nameIdByNpc, Set<Integer> questUseItemNpcIds)
+		throws IOException {
+		try {
+			XMLStreamReader reader = INPUT_FACTORY.get().createXMLStreamReader(input);
+			while (reader.hasNext()) {
+				if (reader.next() != XMLStreamConstants.START_ELEMENT
+					|| !"npc_template".equals(reader.getLocalName())) {
+					continue;
+				}
+				String name = reader.getAttributeValue(null, "name_desc");
+				String npcId = reader.getAttributeValue(null, "npc_id");
+				if (name == null || npcId == null || npcId.isEmpty()
+					|| !npcId.chars().allMatch(Character::isDigit)) {
+					continue;
+				}
+				int id = Integer.parseInt(npcId);
+				if ("quest_use_item".equals(reader.getAttributeValue(null, "ai"))) {
+					questUseItemNpcIds.add(id);
+				}
+				byName.computeIfAbsent(name.toLowerCase(Locale.ROOT), key -> new LinkedHashSet<>()).add(id);
+				String nameId = reader.getAttributeValue(null, "name_id");
+				if (nameId == null || nameId.isBlank()) {
+					continue;
+				}
+				nameIdByNpc.put(id, nameId);
+				byNameId.computeIfAbsent(nameId, key -> new LinkedHashSet<>()).add(id);
+			}
+			reader.close();
+		} catch (XMLStreamException e) {
+			throw new IOException("malformed NPC template stream", e);
+		}
 	}
 
 	/**

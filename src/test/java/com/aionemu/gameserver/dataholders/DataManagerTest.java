@@ -29,9 +29,10 @@ class DataManagerTest {
 		XmlDataLoader loader = new XmlDataLoader() {
 			@Override
 			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier,
-				ConcurrentMap<String, Long> phaseTimings) {
+				ConcurrentMap<String, Long> phaseTimings, Supplier<ItemData> itemDataSupplier) {
 				assertTrue(await(itemStarted), "item data loading should start while main static data is still loading");
 				assertTrue(await(skillStarted), "skill data loading should start while main static data is still loading");
+				assertSame(itemData, itemDataSupplier.get());
 				staticData.skillData = skillDataSupplier.get();
 				return staticData;
 			}
@@ -44,7 +45,7 @@ class DataManagerTest {
 
 			@Override
 			public SkillData loadSkillData(ConcurrentMap<String, Long> phaseTimings) {
-				phaseTimings.put("SkillStreamJaxbWork", 0L);
+				phaseTimings.put("SkillStreamWork", 0L);
 				skillStarted.countDown();
 				return skillData;
 			}
@@ -63,7 +64,7 @@ class DataManagerTest {
 		assertNotNull(loaded);
 		assertTrue(capturedTimings.containsKey("ItemData"));
 		assertTrue(capturedTimings.containsKey("SkillData"));
-		assertTrue(capturedTimings.containsKey("SkillStreamJaxbWork"));
+		assertTrue(capturedTimings.containsKey("SkillStreamWork"));
 	}
 
 	@Test
@@ -72,7 +73,7 @@ class DataManagerTest {
 		XmlDataLoader loader = new XmlDataLoader() {
 			@Override
 			public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier,
-				ConcurrentMap<String, Long> phaseTimings) {
+				ConcurrentMap<String, Long> phaseTimings, Supplier<ItemData> itemDataSupplier) {
 				throw expected;
 			}
 

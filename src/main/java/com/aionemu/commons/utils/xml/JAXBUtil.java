@@ -1,12 +1,10 @@
 package com.aionemu.commons.utils.xml;
 
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import lombok.experimental.UtilityClass;
 import org.w3c.dom.Document;
@@ -51,8 +49,8 @@ public class JAXBUtil {
     }
 
     /**
-     * 反序列化 XML 字符串（无 Schema）。
-     * Deserialize an XML string without schema.
+     * 流式绑定 XML 字符串。
+     * Streams and binds an XML string.
      * @param s     XML 字符串 / XML string
      * @param clazz 目标类型 / Target type
      * @param <T>   类型参数 / Type parameter
@@ -63,8 +61,8 @@ public class JAXBUtil {
     }
 
     /**
-     * 使用 URL Schema 校验并反序列化。
-     * Deserialize with schema validation from a URL.
+     * 使用 URL Schema 入口并流式绑定；结构由绑定器直接校验。
+     * Resolves a schema URL and streams the XML; structure is validated directly by the binder.
      * @param s         XML 字符串 / XML string
      * @param clazz     目标类型 / Target type
      * @param schemaURL 校验 Schema 的 URL / Schema URL
@@ -77,8 +75,8 @@ public class JAXBUtil {
     }
 
     /**
-     * 使用字符串 Schema 校验并反序列化。
-     * Deserialize with schema validation from a schema string.
+     * 使用字符串 Schema 入口并流式绑定；结构由绑定器直接校验。
+     * Resolves a schema string and streams the XML; structure is validated directly by the binder.
      * @param s            XML 字符串 / XML string
      * @param clazz        目标类型 / Target type
      * @param schemaString Schema 定义 / Schema definition
@@ -114,15 +112,11 @@ public class JAXBUtil {
      * @return 反序列化对象 / Deserialized object
      * @throws RuntimeException 反序列化失败 / On unmarshal failure
      */
-    @SuppressWarnings("unchecked")
     public <T> T deserialize(String s, Class<T> clazz, Schema schema) {
         try {
-            JAXBContext jc = JAXBContext.newInstance(clazz);
-            Unmarshaller u = jc.createUnmarshaller();
-            u.setSchema(schema);
-            return (T) u.unmarshal(new StringReader(s));
+            return StreamingXmlBinder.unmarshal(new java.io.StringReader(s), clazz);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to unmarshall class " + clazz.getName() + " from xml:\n " + s, e);
+            throw new RuntimeException("Failed to stream-bind class " + clazz.getName() + " from xml:\n " + s, e);
         }
     }
 

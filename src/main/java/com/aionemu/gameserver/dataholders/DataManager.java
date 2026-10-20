@@ -507,7 +507,8 @@ public final class DataManager {
         CompletableFuture<SkillData> skillDataFuture = timedDataLoad("SkillData",
                 () -> loader.loadSkillData(phaseTimings), executor, phaseTimings);
         try {
-            StaticData staticData = loader.loadStaticData(skillDataFuture::join, phaseTimings);
+            StaticData staticData = loader.loadStaticData(skillDataFuture::join, phaseTimings,
+                itemDataFuture::join);
             ItemData itemData = itemDataFuture.join();
             loader.logStaticDataPhaseTimings(phaseTimings);
             if (staticData.questData == null) {

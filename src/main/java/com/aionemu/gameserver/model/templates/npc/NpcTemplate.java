@@ -166,6 +166,11 @@ public class NpcTemplate extends VisibleObjectTemplate {
 				: ai;
 	}
 
+	/** 返回 XML 中声明的原始 ai，不应用运行时派生规则。 / Returns the XML-declared AI without runtime derivation. */
+	public String getConfiguredAi() {
+		return ai;
+	}
+
 	/** 返回字符串表示。 / Returns string representation. */
 	@Override
 	public String toString() {

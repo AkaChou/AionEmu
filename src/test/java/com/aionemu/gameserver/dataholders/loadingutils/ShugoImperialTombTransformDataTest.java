@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.dataholders.TribeRelationsData;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.skillengine.effect.PolymorphEffect;
@@ -225,9 +226,9 @@ class ShugoImperialTombTransformDataTest {
 
 	private static TribeRelationsData loadTribeRelations() {
 		try {
-			var context = XmlDataLoader.createJaxbContext(TribeRelationsData.class);
-			return (TribeRelationsData) context.createUnmarshaller().unmarshal(
-				Path.of("src/main/resources/aion/data/static_data/tribe/tribe_relations.xml").toFile());
+			return StreamingXmlBinder.unmarshal(
+				Path.of("src/main/resources/aion/data/static_data/tribe/tribe_relations.xml").toFile(),
+				TribeRelationsData.class);
 		} catch (Exception e) {
 			throw new AssertionError("Cannot load tribe relations", e);
 		}

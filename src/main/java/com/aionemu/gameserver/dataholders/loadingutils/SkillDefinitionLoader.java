@@ -14,28 +14,20 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXSource;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.util.StreamReaderDelegate;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.helpers.XMLFilterImpl;
 
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.ExclusiveAttribute;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  * 从拆分包中的分卷 XML 加载技能定义，并展开技能组与字段引用。
@@ -69,26 +61,18 @@ final class SkillDefinitionLoader {
 			}
 			phaseTimings.put("SkillIndexGroupsWall", elapsedMillis(System.nanoTime() - indexGroupsStart));
 			// 各 part 互不依赖，groups/fieldNames 只读共享；并行解析后在调用线程按 part
-			// 顺序拼接，保证模板列表确定性。Unmarshaller 非线程安全，每个任务经共享
-			// JAXBContext 自行创建。
+			// 顺序拼接，保证模板列表确定性。
 			// Parts are independent and groups/fieldNames are read-only shared; parse in parallel and
-			// concatenate in part order on the calling thread for deterministic output. Unmarshaller is
-			// not thread-safe, so each task creates its own from the shared JAXBContext.
-			long jaxbStart = System.nanoTime();
-			JAXBContext jaxbContext = XmlDataLoader.createJaxbContext(SkillPart.class);
-			phaseTimings.put("SkillJaxbContextWall", elapsedMillis(System.nanoTime() - jaxbStart));
+			// concatenate in part order on the calling thread for deterministic output.
 			List<LoadedSkillPart> loadedParts = XmlDataLoader.submitLargestFirst(partFiles,
-				partFile -> loadPart(partFile, groups, fieldNames, jaxbContext));
+				partFile -> loadPart(partFile, groups, fieldNames));
 			List<SkillTemplate> templates = new ArrayList<>(expectedTemplates);
-			long streamJaxbNanos = 0;
+			long streamNanos = 0;
 			for (LoadedSkillPart part : loadedParts) {
 				templates.addAll(part.templates());
-				streamJaxbNanos += part.streamJaxbNanos();
+				streamNanos += part.streamNanos();
 			}
-			// 流解析与 JAXB 同步消费，无法无干扰地拆开计时；这里记录全部并行分片的总工作量。
-			// Streaming parse and JAXB consume synchronously and cannot be timed separately without interference;
-			// this records the total work across all parallel parts.
-			phaseTimings.put("SkillStreamJaxbWork", elapsedMillis(streamJaxbNanos));
+			phaseTimings.put("SkillStreamWork", elapsedMillis(streamNanos));
 			if (templates.size() != expectedTemplates) {
 				throw new IllegalStateException("Expected " + expectedTemplates + " skill templates, loaded " + templates.size());
 			}
@@ -108,32 +92,40 @@ final class SkillDefinitionLoader {
 	}
 
 	/**
-	 * 单遍解析技能分卷：SAX 在流中展开组与字段引用，并把事件直接交给 JAXB。
-	 * Parses one skill part in one pass: SAX expands group/field references and feeds events directly to JAXB.
+	 * 单遍解析技能分卷：StAX 在流中展开组与字段引用，并直接绑定技能模板。
+	 * Parses one skill part in one pass: StAX expands group/field references and binds templates directly.
 	 */
 	private static LoadedSkillPart loadPart(File partFile, Map<String, ExpansionElement> groups,
-			Map<String, String> fieldNames,
-			JAXBContext jaxbContext) {
+			Map<String, String> fieldNames) {
 		try (FileInputStream stream = new FileInputStream(partFile)) {
 			long start = System.nanoTime();
-			SkillExpansionFilter filter = new SkillExpansionFilter(createPartReader(), groups, fieldNames);
-			InputSource input = new InputSource(stream);
-			input.setSystemId(partFile.toURI().toString());
-			SkillPart data = (SkillPart) jaxbContext.createUnmarshaller().unmarshal(new SAXSource(filter, input));
-			return new LoadedSkillPart(data.getTemplates(), System.nanoTime() - start);
+			XMLInputFactory factory = createPartInputFactory();
+			XMLStreamReader delegate = factory.createXMLStreamReader(stream);
+			SkillExpansionReader reader = new SkillExpansionReader(delegate, groups, fieldNames);
+			List<SkillTemplate> templates = new ArrayList<>();
+			try {
+				while (reader.hasNext()) {
+					int event = reader.next();
+					if (event == XMLStreamConstants.START_ELEMENT
+						&& "skill_template".equals(localName(reader))) {
+						templates.add(StreamingXmlBinder.unmarshal(reader, SkillTemplate.class));
+					}
+				}
+			} finally {
+				reader.close();
+			}
+			return new LoadedSkillPart(templates, System.nanoTime() - start);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load skill part " + partFile.getPath(), e);
 		}
 	}
 
-	private static XMLReader createPartReader() throws Exception {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		factory.setNamespaceAware(true);
-		factory.setXIncludeAware(false);
-		factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-		factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
-		factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
-		return factory.newSAXParser().getXMLReader();
+	private static XMLInputFactory createPartInputFactory() throws XMLStreamException {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		factory.setProperty(XMLInputFactory.IS_COALESCING, true);
+		return factory;
 	}
 
 	private static Map<String, ExclusiveAttribute> readExclusiveDefinitions(Document document) {
@@ -183,7 +175,8 @@ final class SkillDefinitionLoader {
 			for (Element group : childElements(groupsElement, "group")) {
 				Element fragment = firstChildElement(group);
 				if (fragment == null) {
-					throw new IllegalStateException("Empty skill group: " + requiredAttribute(group, "id"));
+					throw new IllegalStateException("Empty skill group: " + requiredAttribute(group, "id")
+						+ " (children=" + group.getChildNodes().getLength() + ")");
 				}
 				groups.put(requiredAttribute(group, "id"), toExpansionElement(fragment));
 			}
@@ -233,40 +226,24 @@ final class SkillDefinitionLoader {
 	 * 保存一个并行技能分片的结果及流解析工作量。
 	 * Holds one parallel skill part result and its streaming parse work.
 	 */
-	private record LoadedSkillPart(List<SkillTemplate> templates, long streamJaxbNanos) {
+	private record LoadedSkillPart(List<SkillTemplate> templates, long streamNanos) {
 	}
 
 	/**
-	 * 技能分片的 JAXB 包装：只绑定模板列表，跳过 SkillData 的分片级索引。
-	 * JAXB wrapper for a skill part: binds only the template list and skips SkillData's
-	 * per-part indexing.
-	 */
-	@XmlRootElement(name = "skill_data")
-	@XmlAccessorType(XmlAccessType.FIELD)
-	private static final class SkillPart {
-
-		@XmlElement(name = "skill_template")
-		private List<SkillTemplate> templates;
-
-		private List<SkillTemplate> getTemplates() {
-			return templates == null ? List.of() : templates;
-		}
-	}
-
-	/**
-	 * 把紧凑技能节点转换为完整 JAXB 事件流；组展开数据在并行任务之间以不可变树共享。
-	 * Converts compact skill nodes into the complete JAXB event stream; immutable expansion trees are shared
+	 * 把紧凑技能节点转换为完整 StAX 事件流；组展开数据在并行任务之间以不可变树共享。
+	 * Converts compact skill nodes into a complete StAX event stream; immutable expansion trees are shared
 	 * between parallel tasks.
 	 */
-	private static final class SkillExpansionFilter extends XMLFilterImpl {
+	private static final class SkillExpansionReader extends StreamReaderDelegate {
 
 		private final Map<String, ExpansionElement> groups;
 		private final Map<String, String> fieldNames;
 		private final Deque<String> elements = new ArrayDeque<>();
-		private int suppressedGroupDepth;
-		private int retailDepth;
+		private final Deque<SyntheticEvent> pending = new ArrayDeque<>();
+		private SyntheticEvent synthetic;
+		private boolean insideRetail;
 
-		private SkillExpansionFilter(XMLReader parent, Map<String, ExpansionElement> groups,
+		private SkillExpansionReader(XMLStreamReader parent, Map<String, ExpansionElement> groups,
 			Map<String, String> fieldNames) {
 			super(parent);
 			this.groups = groups;
@@ -274,117 +251,202 @@ final class SkillDefinitionLoader {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-			if (suppressedGroupDepth > 0) {
-				suppressedGroupDepth++;
-				return;
+		public boolean hasNext() {
+			try {
+				return !pending.isEmpty() || super.hasNext();
+			} catch (XMLStreamException e) {
+				throw new IllegalStateException("Failed to inspect skill part stream", e);
 			}
-			if (retailDepth > 0) {
-				emitRetailField(localName, qName, attributes);
-				retailDepth++;
-				return;
-			}
-
-			String name = elementName(localName, qName);
-			String parent = elements.peek();
-			if ("skill_template".equals(parent) && "group_ref".equals(name)) {
-				String id = requiredAttribute(attributes, "id", name);
-				ExpansionElement group = groups.get(id);
-				if (group == null) {
-					throw new SAXException("Unknown skill group: " + id);
-				}
-				emitElement(group);
-				suppressedGroupDepth = 1;
-				return;
-			}
-			if ("skill_template".equals(parent) && "retail".equals(name)) {
-				super.startElement("", "retail_fields", "retail_fields", new AttributesImpl());
-				retailDepth = 1;
-				return;
-			}
-
-			super.startElement(uri, localName, qName, attributes);
-			elements.push(name);
 		}
 
 		@Override
-		public void endElement(String uri, String localName, String qName) throws SAXException {
-			if (suppressedGroupDepth > 0) {
-				suppressedGroupDepth--;
-				return;
+		public int next() throws XMLStreamException {
+			if (nextPending()) {
+				return synthetic.type();
 			}
-			if (retailDepth > 0) {
-				retailDepth--;
-				if (retailDepth == 0) {
-					super.endElement("", "retail_fields", "retail_fields");
+			while (super.hasNext()) {
+				int event = super.next();
+				synthetic = null;
+				if (insideRetail) {
+					if (event == XMLStreamConstants.START_ELEMENT) {
+						consumeElement();
+						continue;
+					}
+					if (event == XMLStreamConstants.END_ELEMENT) {
+						insideRetail = false;
+						queue(new SyntheticEvent(XMLStreamConstants.END_ELEMENT, "retail_fields", List.of(), null));
+						nextPending();
+						return synthetic.type();
+					}
+					continue;
 				}
-				return;
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					String name = localName(this);
+					String parent = elements.peek();
+					if ("skill_template".equals(parent) && "group_ref".equals(name)) {
+						expandGroupReference();
+						if (nextPending()) {
+							return synthetic.type();
+						}
+						continue;
+					}
+					if ("skill_template".equals(parent) && "retail".equals(name)) {
+						insideRetail = true;
+						queue(new SyntheticEvent(XMLStreamConstants.START_ELEMENT, "retail_fields", List.of(), null));
+						nextPending();
+						return synthetic.type();
+					}
+					elements.push(name);
+					return event;
+				}
+				if (event == XMLStreamConstants.END_ELEMENT) {
+					elements.poll();
+				}
+				return event;
 			}
-
-			super.endElement(uri, localName, qName);
-			elements.pop();
+			throw new XMLStreamException("Unexpected end of skill part");
 		}
 
 		@Override
-		public void characters(char[] ch, int start, int length) throws SAXException {
-			if (suppressedGroupDepth == 0 && retailDepth == 0) {
-				super.characters(ch, start, length);
-			}
+		public int getEventType() {
+			return synthetic == null ? super.getEventType() : synthetic.type();
 		}
 
-		private void emitRetailField(String localName, String qName, Attributes attributes) throws SAXException {
-			if (retailDepth != 1 || !"f".equals(elementName(localName, qName))) {
-				return;
-			}
-			String id = requiredAttribute(attributes, "i", "f");
-			String name = fieldNames.get(id);
-			if (name == null) {
-				throw new SAXException("Unknown retail skill field: " + id);
-			}
-			AttributesImpl expanded = new AttributesImpl();
-			addAttribute(expanded, "name", name);
-			String occurrence = attributes.getValue("o");
-			if (occurrence != null) {
-				addAttribute(expanded, "occurrence", occurrence);
-			}
-			addAttribute(expanded, "value", attributes.getValue("v"));
-			super.startElement("", "field", "field", expanded);
-			super.endElement("", "field", "field");
+		@Override
+		public String getLocalName() {
+			return synthetic == null ? super.getLocalName() : synthetic.name();
 		}
 
-		private void emitElement(ExpansionElement element) throws SAXException {
-			AttributesImpl attributes = new AttributesImpl();
-			for (ExpansionAttribute attribute : element.attributes()) {
-				addAttribute(attributes, attribute.name(), attribute.value());
+		@Override
+		public int getAttributeCount() {
+			return synthetic == null ? super.getAttributeCount() : synthetic.attributes().size();
+		}
+
+		@Override
+		public String getAttributeLocalName(int index) {
+			return synthetic == null ? super.getAttributeLocalName(index)
+				: synthetic.attributes().get(index).name();
+		}
+
+		@Override
+		public String getAttributeValue(int index) {
+			return synthetic == null ? super.getAttributeValue(index)
+				: synthetic.attributes().get(index).value();
+		}
+
+		@Override
+		public String getText() {
+			return synthetic == null ? super.getText() : synthetic.text();
+		}
+
+		private boolean nextPending() {
+			if (pending.isEmpty()) {
+				synthetic = null;
+				return false;
 			}
-			String name = element.name();
-			super.startElement("", name, name, attributes);
+			synthetic = pending.removeFirst();
+			return true;
+		}
+
+		private void expandGroupReference() throws XMLStreamException {
+			String id = requiredAttribute(this, "id", "group_ref");
+			ExpansionElement group = groups.get(id);
+			if (group == null) {
+				throw new XMLStreamException("Unknown skill group: " + id);
+			}
+			consumeElement();
+			queueExpansion(group);
+		}
+
+		private ExpansionElement readExpansionElement() throws XMLStreamException {
+			String name = localName(this);
+			List<ExpansionAttribute> attributes = new ArrayList<>(getAttributeCount());
+			for (int index = 0; index < getAttributeCount(); index++) {
+				attributes.add(new ExpansionAttribute(getAttributeLocalName(index), getAttributeValue(index)));
+			}
+			List<ExpansionNode> children = new ArrayList<>();
+			StringBuilder text = new StringBuilder();
+			while (super.hasNext()) {
+				int event = super.next();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					flushText(children, text);
+					children.add(readExpansionElement());
+				} else if (event == XMLStreamConstants.CHARACTERS || event == XMLStreamConstants.CDATA) {
+					text.append(super.getText());
+				} else if (event == XMLStreamConstants.END_ELEMENT) {
+					flushText(children, text);
+					return new ExpansionElement(name, List.copyOf(attributes), List.copyOf(children));
+				}
+			}
+			throw new XMLStreamException("Unexpected end of skill group element " + name);
+		}
+
+		private void consumeElement() throws XMLStreamException {
+			if (insideRetail && "f".equals(localName(this))) {
+				String id = requiredAttribute(this, "i", "f");
+				String name = fieldNames.get(id);
+				if (name == null) {
+					throw new XMLStreamException("Unknown retail skill field: " + id);
+				}
+				List<ExpansionAttribute> attributes = new ArrayList<>();
+				attributes.add(new ExpansionAttribute("name", name));
+				String occurrence = getAttributeValue(null, "o");
+				if (occurrence != null) {
+					attributes.add(new ExpansionAttribute("occurrence", occurrence));
+				}
+				attributes.add(new ExpansionAttribute("value", getAttributeValue(null, "v")));
+				queue(new SyntheticEvent(XMLStreamConstants.START_ELEMENT, "field", attributes, null));
+				queue(new SyntheticEvent(XMLStreamConstants.END_ELEMENT, "field", List.of(), null));
+			}
+			int depth = 0;
+			while (super.hasNext()) {
+				int event = super.next();
+				if (event == XMLStreamConstants.START_ELEMENT) {
+					depth++;
+				} else if (event == XMLStreamConstants.END_ELEMENT) {
+					if (depth == 0) {
+						return;
+					}
+					depth--;
+				}
+			}
+			throw new XMLStreamException("Unexpected end of nested element");
+		}
+
+		private void queueExpansion(ExpansionElement element) {
+			queue(new SyntheticEvent(XMLStreamConstants.START_ELEMENT, element.name(), element.attributes(), null));
 			for (ExpansionNode child : element.children()) {
 				if (child instanceof ExpansionElement childElement) {
-					emitElement(childElement);
+					queueExpansion(childElement);
 				} else if (child instanceof ExpansionText(String value)) {
-					char[] text = value.toCharArray();
-					super.characters(text, 0, text.length);
+					queue(new SyntheticEvent(XMLStreamConstants.CHARACTERS, null, List.of(), value));
 				}
 			}
-			super.endElement("", name, name);
+			queue(new SyntheticEvent(XMLStreamConstants.END_ELEMENT, element.name(), List.of(), null));
 		}
 
-		private static void addAttribute(AttributesImpl attributes, String name, String value) {
-			attributes.addAttribute("", name, name, "CDATA", value == null ? "" : value);
+		private void queue(SyntheticEvent event) {
+			pending.addLast(event);
 		}
 
-		private static String requiredAttribute(Attributes attributes, String name, String element) throws SAXException {
-			String value = attributes.getValue(name);
+		private static void flushText(List<ExpansionNode> children, StringBuilder text) {
+			if (!text.toString().isBlank()) {
+				children.add(new ExpansionText(text.toString()));
+			}
+			text.setLength(0);
+		}
+
+		private static String requiredAttribute(XMLStreamReader reader, String name, String element)
+			throws XMLStreamException {
+			String value = reader.getAttributeValue(null, name);
 			if (value == null || value.isEmpty()) {
-				throw new SAXException("Missing " + name + " on " + element);
+				throw new XMLStreamException("Missing " + name + " on " + element);
 			}
 			return value;
 		}
+	}
 
-		private static String elementName(String localName, String qName) {
-			return localName == null || localName.isEmpty() ? qName : localName;
-		}
+	private record SyntheticEvent(int type, String name, List<ExpansionAttribute> attributes, String text) {
 	}
 
 	/**
@@ -441,5 +503,10 @@ final class SkillDefinitionLoader {
 			throw new IllegalStateException("Missing " + name + " on " + element.getTagName());
 		}
 		return value;
+	}
+
+	private static String localName(XMLStreamReader reader) {
+		String localName = reader.getLocalName();
+		return localName == null || localName.isEmpty() ? reader.getName().getLocalPart() : localName;
 	}
 }

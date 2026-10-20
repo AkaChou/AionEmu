@@ -71,6 +71,41 @@ public class Drop {
 		return template == null ? DataManager.ITEM_DATA.getItemTemplate(itemId) : template;
 	}
 
+	/** 设置物品 ID（供流式绑定器使用）。 / Sets the item id for the streaming binder. */
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	/** 设置最小数量。 / Sets the minimum amount. */
+	public void setMinAmount(int minAmount) {
+		this.minAmount = minAmount;
+	}
+
+	/** 设置最大数量。 / Sets the maximum amount. */
+	public void setMaxAmount(int maxAmount) {
+		this.maxAmount = maxAmount;
+	}
+
+	/** 设置概率。 / Sets the chance. */
+	public void setChance(float chance) {
+		this.chance = chance;
+	}
+
+	/** 设置是否不受等级衰减。 / Sets the no-reduction flag. */
+	public void setNoReduce(Boolean noReduce) {
+		this.noReduce = noReduce;
+	}
+
+	/** 设置是否每人一份。 / Sets the each-member flag. */
+	public void setEachMember(boolean eachMember) {
+		this.eachMember = eachMember;
+	}
+
+	/** 设置 Aion 服务端每人一份标记。 / Sets the Aion-server each-member marker. */
+	public void setAionServerEachMember(Boolean aionServerEachMember) {
+		this.aionServerEachMember = aionServerEachMember;
+	}
+
 	/**
 	 * 是否不受基于等级的掉率衰减影响。
 	 * Whether reduction is disabled for this drop.

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.GameServerError;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,8 +17,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.List;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -72,10 +71,10 @@ public class Reload extends AdminCommand {
 				break;
 			case "portal":
 				try {
-					JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-					Unmarshaller un = jc.createUnmarshaller();
-					PortalLocData portalLocData = (PortalLocData) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_loc.xml"));
-					Portal2Data portal2Data = (Portal2Data) un.unmarshal(Config.dataFile("./data/static_data/portals/portal_template2.xml"));
+					PortalLocData portalLocData = StreamingXmlBinder.unmarshal(
+						Config.dataFile("./data/static_data/portals/portal_loc.xml"), PortalLocData.class);
+					Portal2Data portal2Data = StreamingXmlBinder.unmarshal(
+						Config.dataFile("./data/static_data/portals/portal_template2.xml"), Portal2Data.class);
 					DataManager.PORTAL_LOC_DATA = portalLocData;
 					DataManager.PORTAL2_DATA = portal2Data;
 					PacketSendUtility.sendMessage(admin, "Portal reload Success!");
@@ -109,9 +108,7 @@ public class Reload extends AdminCommand {
 				File eventXml = Config.dataFile("./data/static_data/events_config/events_config.xml");
 				EventData data = null;
 				try {
-					JAXBContext jc = JAXBContext.newInstance(EventData.class);
-					Unmarshaller un = jc.createUnmarshaller();
-					data = (EventData) un.unmarshal(eventXml);
+					data = StreamingXmlBinder.unmarshal(eventXml, EventData.class);
 				} catch (Exception e) {
 					PacketSendUtility.sendMessage(admin, "Event reload failed! Keeping the last version ...");
 					log.error(I18n.get("log.e8459365ba32"), e);

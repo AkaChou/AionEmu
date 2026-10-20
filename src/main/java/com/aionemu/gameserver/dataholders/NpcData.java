@@ -32,6 +32,9 @@ public class NpcData {
 	@XmlElement(name = "npc_template")
 	private List<NpcTemplate> npcs;
 
+	/** 全部模板的稳定快照；保留名称重复定义供任务索引复用。 / Stable template snapshot; keeps duplicate ids for quest indexes. */
+	private List<NpcTemplate> templates = List.of();
+
 	/** 全部 NPC 模板映射 / map containing all npc templates */
 	private IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<>();
 
@@ -58,11 +61,22 @@ public class NpcData {
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		List<NpcTemplate> templates = npcs == null ? List.of() : npcs;
+		this.templates = List.copyOf(templates);
 		npcData = new IntObjectHashMap<>(templates.size());
 		for (NpcTemplate npc : templates) {
 			npcData.put(npc.getTemplateId(), npc);
 		}
 		npcs = null;
+	}
+
+	/**
+	 * 保留合并分片中的全部模板定义，供任务名称索引复用而不重复扫描 XML。
+	 * Retains every merged shard template so quest name indexes can reuse it without rescanning XML.
+	 *
+	 * @param templates 模板定义 / template definitions
+	 */
+	public void retainTemplates(List<NpcTemplate> templates) {
+		this.templates = List.copyOf(templates);
 	}
 
 	/**

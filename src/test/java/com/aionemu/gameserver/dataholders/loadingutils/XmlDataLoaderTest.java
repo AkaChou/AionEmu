@@ -11,7 +11,6 @@ import com.aionemu.gameserver.lifecycle.TestServiceProviders;
 import com.aionemu.gameserver.services.MotionLoggingService;
 import com.aionemu.testutil.ConfigSnapshot;
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -206,24 +205,13 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void staticDataUnmarshallerDoesNotInstallSynchronousSchemaValidation() throws Exception {
-		Unmarshaller unmarshaller = new XmlDataLoader()
-			.createStaticDataUnmarshaller(StaticDataProgressReporter.noop(), 0, Map.of());
+	void staticDataLoaderUsesStreamingBinderWithoutJaxbRuntime() throws Exception {
+		String source = Files.readString(Path.of(
+			"src/main/java/com/aionemu/gameserver/dataholders/loadingutils/XmlDataLoader.java"));
 
-		assertNull(unmarshaller.getSchema());
-	}
-
-	@Test
-	void staticDataUnmarshallerCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() {
-		Thread thread = Thread.currentThread();
-		ClassLoader originalClassLoader = thread.getContextClassLoader();
-		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
-		try {
-			assertDoesNotThrow(() -> new XmlDataLoader()
-				.createStaticDataUnmarshaller(StaticDataProgressReporter.noop(), 0, Map.of()));
-		} finally {
-			thread.setContextClassLoader(originalClassLoader);
-		}
+		assertTrue(source.contains("StreamingXmlBinder.unmarshal"));
+		assertFalse(source.contains("createUnmarshaller"));
+		assertFalse(source.contains("JAXBContext"));
 	}
 
 	@Test
@@ -460,9 +448,9 @@ class XmlDataLoaderTest {
 		String source = Files.readString(Path.of(
 			"src/main/java/com/aionemu/gameserver/dataholders/loadingutils/SkillDefinitionLoader.java"));
 
-		assertTrue(source.contains("createJaxbContext(SkillPart.class)"));
+		assertTrue(source.contains("StreamingXmlBinder.unmarshal(reader, SkillTemplate.class)"));
 		assertFalse(source.contains("createJaxbContext(SkillData.class)"));
-		assertTrue(source.contains("SkillPart data = (SkillPart)"));
+		assertFalse(source.contains("SkillPart data = (SkillPart)"));
 	}
 
 	@Test

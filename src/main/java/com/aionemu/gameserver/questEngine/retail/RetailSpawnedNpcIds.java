@@ -3,15 +3,18 @@ package com.aionemu.gameserver.questEngine.retail;
 import com.aionemu.gameserver.questEngine.QuestDataResources;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * 世界实刷 npc id 集（懒加载一次）：扫 {@code static_data/spawns/**} 与 {@code static_data/town_spawns/**}
@@ -27,7 +30,12 @@ public final class RetailSpawnedNpcIds {
 
 	private static final List<String> SPAWN_DIRS = List.of(
 		"/aion/data/static_data/spawns/", "/aion/data/static_data/town_spawns/");
-	private static final Pattern NPC_ID = Pattern.compile("\\bnpc_id=\"(\\d+)\"");
+	private static final ThreadLocal<XMLInputFactory> INPUT_FACTORY = ThreadLocal.withInitial(() -> {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		return factory;
+	});
 
 	private static volatile Set<Integer> loaded;
 
@@ -71,7 +79,9 @@ public final class RetailSpawnedNpcIds {
 			try (var paths = Files.walk(Path.of(URI.create(url.toExternalForm().replace(" ", "%20"))))) {
 				for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)
 						.filter(path -> path.getFileName().toString().endsWith(".xml"))::iterator) {
-					collect(Files.readString(path, StandardCharsets.UTF_8), ids);
+						try (InputStream input = Files.newInputStream(path)) {
+							collect(input, ids);
+						}
 				}
 			}
 			return;
@@ -88,7 +98,7 @@ public final class RetailSpawnedNpcIds {
 					String name = entries.nextElement().getName();
 					if (name.startsWith(prefix) && name.endsWith(".xml")) {
 						try (var input = jar.getInputStream(jar.getEntry(name))) {
-							collect(new String(input.readAllBytes(), StandardCharsets.UTF_8), ids);
+								collect(input, ids);
 						}
 					}
 				}
@@ -98,10 +108,21 @@ public final class RetailSpawnedNpcIds {
 		throw new IOException("unsupported resource protocol " + url.getProtocol());
 	}
 
-	private static void collect(String text, Set<Integer> ids) {
-		Matcher matcher = NPC_ID.matcher(text);
-		while (matcher.find()) {
-			ids.add(Integer.parseInt(matcher.group(1)));
+	private static void collect(InputStream input, Set<Integer> ids) throws IOException {
+		try {
+			XMLStreamReader reader = INPUT_FACTORY.get().createXMLStreamReader(input);
+			while (reader.hasNext()) {
+				if (reader.next() != XMLStreamConstants.START_ELEMENT) {
+					continue;
+				}
+				String npcId = reader.getAttributeValue(null, "npc_id");
+				if (npcId != null && !npcId.isEmpty() && npcId.chars().allMatch(Character::isDigit)) {
+					ids.add(Integer.parseInt(npcId));
+				}
+			}
+			reader.close();
+		} catch (XMLStreamException e) {
+			throw new IOException("malformed spawn stream", e);
 		}
 	}
 }

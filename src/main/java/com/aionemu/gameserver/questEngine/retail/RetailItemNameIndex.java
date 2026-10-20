@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.questEngine.retail;
 
+import com.aionemu.gameserver.dataholders.ItemData;
+import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.questEngine.QuestDataResources;
 
 import java.io.File;
@@ -7,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,8 +18,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * 物品 {@code name_desc} → item_id 索引。
@@ -29,9 +33,12 @@ import java.util.regex.Pattern;
  */
 public final class RetailItemNameIndex {
 
-	private static final Pattern TEMPLATE = Pattern.compile("<item_template\\b[^>]*>");
-	private static final Pattern NAME_DESC = Pattern.compile("name_desc=\"([^\"]*)\"");
-	private static final Pattern ITEM_ID = Pattern.compile("\\bid=\"(\\d+)\"");
+	private static final ThreadLocal<XMLInputFactory> INPUT_FACTORY = ThreadLocal.withInitial(() -> {
+		XMLInputFactory factory = XMLInputFactory.newFactory();
+		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
+		return factory;
+	});
 	private static final RetailItemNameIndex EMPTY = new RetailItemNameIndex(Map.of());
 
 	/** 进程内装载缓存（DCL）：见 {@link #loadItemTemplates()}。 / Process-wide load cache (DCL): see {@link #loadItemTemplates()}. */
@@ -73,13 +80,13 @@ public final class RetailItemNameIndex {
 	 * <p>
 	 * 装载结果按进程缓存（DCL）：overlay 构建期 {@code RetailQuestDriver.verifyProductionCoverage}
 	 * 逐个构造家族 handler，每个 handler 首次使用都要这份索引；若不缓存，每次调用都会重扫
-	 * 11 个分片（约 87MB 文本 + 正则匹配）。2026-10-04 JFR 实测：静态数据窗口 18.4s 中约 8.7s
+	 * 11 个分片（约 87MB XML + StAX 属性扫描）。2026-10-04 JFR 实测：静态数据窗口 18.4s 中约 8.7s
 	 * 消耗在 10 次以上重复全量扫描上，因此这里必须走缓存单例。
 	 * Loads the item-name index from the retail item template directory (both file and jar
 	 * resource protocols). The native lane and the legacy retail lane share this single load
 	 * path so no second item-name fact source exists. The result is process-cached (DCL):
 	 * the overlay build constructs family handlers one by one and each first use needs this
-	 * index; without the cache every call re-scans all 11 shards (~87MB of text plus regex
+	 * index; without the cache every call re-scans all 11 shards (~87MB of XML plus StAX
 	 * matching). The 2026-10-04 JFR showed ~8.7s of the 18.4s static-data window spent on
 	 * 10+ repeated full scans, so this path must be cached.
 	 */
@@ -95,6 +102,23 @@ public final class RetailItemNameIndex {
 			}
 		}
 		return local;
+	}
+
+	/**
+	 * 复用已加载的物品模板安装索引，避免启动期再次扫描全部物品 XML。
+	 * Installs the index from loaded item templates, avoiding a second scan of every item XML at startup.
+	 *
+	 * @param data 已加载物品数据 / loaded item data
+	 */
+	public static void install(ItemData data) {
+		Map<String, Integer> byName = new LinkedHashMap<>();
+		for (ItemTemplate template : data.getItemData().values()) {
+			String name = template.getNamedesc();
+			if (name != null) {
+				byName.putIfAbsent(name.toLowerCase(Locale.ROOT), template.getTemplateId());
+			}
+		}
+		loaded = new RetailItemNameIndex(byName);
 	}
 
 	/**
@@ -165,17 +189,7 @@ public final class RetailItemNameIndex {
 		Map<String, Integer> byName = new LinkedHashMap<>();
 		try {
 			for (InputStream input : templates) {
-				String text = new String(input.readAllBytes(), StandardCharsets.UTF_8);
-				Matcher template = TEMPLATE.matcher(text);
-				while (template.find()) {
-					String tag = template.group();
-					Matcher name = NAME_DESC.matcher(tag);
-					Matcher id = ITEM_ID.matcher(tag);
-					if (!name.find() || !id.find()) {
-						continue;
-					}
-					byName.putIfAbsent(name.group(1).toLowerCase(Locale.ROOT), Integer.valueOf(id.group(1)));
-				}
+				scan(input, byName);
 			}
 		} finally {
 			for (InputStream input : templates) {
@@ -183,6 +197,26 @@ public final class RetailItemNameIndex {
 			}
 		}
 		return new RetailItemNameIndex(byName);
+	}
+
+	private static void scan(InputStream input, Map<String, Integer> byName) throws IOException {
+		try {
+			XMLStreamReader reader = INPUT_FACTORY.get().createXMLStreamReader(input);
+			while (reader.hasNext()) {
+				if (reader.next() != XMLStreamConstants.START_ELEMENT
+					|| !"item_template".equals(reader.getLocalName())) {
+					continue;
+				}
+				String name = reader.getAttributeValue(null, "name_desc");
+				String id = reader.getAttributeValue(null, "id");
+				if (name != null && id != null && !id.isEmpty() && id.chars().allMatch(Character::isDigit)) {
+					byName.putIfAbsent(name.toLowerCase(Locale.ROOT), Integer.valueOf(id));
+				}
+			}
+			reader.close();
+		} catch (XMLStreamException e) {
+			throw new IOException("malformed item template stream", e);
+		}
 	}
 
 	/** 批量解析名字集合；未解析项原样返回。 / Resolves names, reporting unresolved ones verbatim. */

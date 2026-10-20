@@ -32,7 +32,7 @@ public final class StaticDataLoadRepro {
 		startWatchdog(45_000, 90_000);
 
 		long start = System.currentTimeMillis();
-		DataManager.LoadedStaticData loaded = DataManager.loadStaticData(XmlDataLoader.getInstance());
+		DataManager.LoadedStaticData loaded = DataManager.loadStaticData(new XmlDataLoader());
 		System.out.println("REPRO-COMPLETE static=" + (loaded.staticData() != null)
 			+ " items=" + loaded.itemData().size()
 			+ " npcs=" + loaded.staticData().npcData.size()
@@ -50,15 +50,41 @@ public final class StaticDataLoadRepro {
 	 */
 	private static void serverLike() {
 		startWatchdog(60_000, 120_000, 180_000);
+		com.sun.management.OperatingSystemMXBean os =
+			(com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+		long cpuStart = os.getProcessCpuTime();
 		java.util.concurrent.atomic.AtomicReference<Throwable> questFailure = new java.util.concurrent.atomic.AtomicReference<>();
+		java.util.concurrent.atomic.AtomicLong questElapsed = new java.util.concurrent.atomic.AtomicLong(-1);
+		long questStart = System.currentTimeMillis();
 		java.util.concurrent.CompletableFuture<Void> questPreload = java.util.concurrent.CompletableFuture.runAsync(
 			() -> com.aionemu.gameserver.questEngine.definition.QuestDefinitionCatalogManifest.compile(
 				com.aionemu.gameserver.configs.Config.dataFile("./data/static_data/quest/definitions").toPath()))
-			.whenComplete((v, t) -> questFailure.set(t));
+			.whenComplete((v, t) -> {
+				questFailure.set(t);
+				questElapsed.set(System.currentTimeMillis() - questStart);
+			});
 		long start = System.currentTimeMillis();
-		new DataManager();
-		System.out.println("REPRO-SERVER-COMPLETE ctor=" + (System.currentTimeMillis() - start)
-			+ "ms questPreloadDone=" + questPreload.isDone() + " questFailure=" + questFailure.get());
+		XmlDataLoader.setInstanceProvider(new org.springframework.beans.factory.ObjectProvider<>() {
+			private final XmlDataLoader loader = new XmlDataLoader();
+
+			@Override
+			public XmlDataLoader getObject() {
+				return loader;
+			}
+
+			@Override
+			public XmlDataLoader getIfAvailable() {
+				return loader;
+			}
+		});
+		new DataManager().load();
+		System.out.println("REPRO-SERVER-COMPLETE load=" + (System.currentTimeMillis() - start)
+			+ "ms cpu=" + ((os.getProcessCpuTime() - cpuStart) / 1_000_000)
+			+ "ms items=" + DataManager.ITEM_DATA.size()
+			+ " npcs=" + DataManager.NPC_DATA.size()
+			+ " skills=" + DataManager.SKILL_DATA.size()
+			+ " questPreloadDone=" + questPreload.isDone() + " questElapsed=" + questElapsed.get()
+			+ "ms questFailure=" + questFailure.get());
 		Runtime.getRuntime().halt(0);
 	}
 

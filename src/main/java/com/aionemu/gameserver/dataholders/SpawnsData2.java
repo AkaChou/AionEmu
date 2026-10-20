@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.dataholders;
 
 import lombok.extern.slf4j.Slf4j;
+import jakarta.xml.bind.JAXBContext;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import javax.xml.XMLConstants;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,9 +22,9 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import com.aionemu.gameserver.configs.Config;
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -643,37 +641,33 @@ public class SpawnsData2 {
 	}
 
 	/**
-	 * 从目录加载全部刷怪 XML（使用目录内 spawns.xsd）。
-	 * Loads all spawn XML files from a directory using its spawns.xsd schema.
+	 * 从目录流式加载全部刷怪 XML。
+	 * Streams all spawn XML files from a directory.
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @return 已索引的刷怪数据 / indexed spawn data
 	 * on load or validation failure。
 	 */
 	public static SpawnsData2 load(File directory) throws Exception {
-		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(new File(directory, "spawns.xsd"));
-		return load(directory, schema);
+		return load(directory, null);
 	}
 
 	/**
-	 * 使用指定 Schema 从目录加载刷怪 XML 并完成索引。
-	 * Loads spawn XML from a directory with the given schema and builds indexes.
+	 * 从目录流式加载刷怪 XML 并完成索引；保留旧 Schema 参数以兼容测试调用。
+	 * Streams spawn XML from a directory and builds indexes; the legacy schema argument remains for
+	 * test-call compatibility.
 	 * @param directory 刷怪数据目录 / spawn data directory
 	 * @param schema XSD Schema
 	 * @return 已索引的刷怪数据 / indexed spawn data
 	 * @throws Exception 加载失败 / on load failure
 	 */
 	static SpawnsData2 load(File directory, Schema schema) throws Exception {
-		JAXBContext context = JAXBContext.newInstance(SpawnsData2.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		unmarshaller.setSchema(schema);
 		List<SpawnMap> maps = new ArrayList<>();
 		try (Stream<Path> paths = Files.walk(directory.toPath())) {
 			for (Path path : paths.filter(Files::isRegularFile)
 					.filter(p -> p.getFileName().toString().endsWith(".xml"))
 					.filter(p -> !p.getFileName().toString().startsWith("new"))
 					.sorted().toList()) {
-				SpawnsData2 data = (SpawnsData2) unmarshaller.unmarshal(path.toFile());
+				SpawnsData2 data = StreamingXmlBinder.unmarshal(path.toFile(), SpawnsData2.class);
 				if (data.templates != null) {
 					maps.addAll(data.templates);
 				}
@@ -941,33 +935,14 @@ public class SpawnsData2 {
 
 		File xml = Config.dataFile("./data/static_data/spawns/" + getRelativePath(visibleObject));
 		SpawnsData2 data = null;
-		SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-		Schema schema = null;
-		JAXBContext jc = null;
 		boolean addGroup = false;
-
-		try {
-			schema = sf.newSchema(Config.dataFile("./data/static_data/spawns/spawns.xsd"));
-			jc = JAXBContext.newInstance(SpawnsData2.class);
-		} catch (Exception e) {
-			// 忽略；若 schema 错误，甚至无法调用该命令。 / ignore, if schemas are wrong then we even could not call the command;
-		}
-
-		FileInputStream fin = null;
 		if (xml.exists()) {
 			try {
-				fin = new FileInputStream(xml);
-				Unmarshaller unmarshaller = jc.createUnmarshaller();
-				unmarshaller.setSchema(schema);
-				data = (SpawnsData2) unmarshaller.unmarshal(fin);
+				data = StreamingXmlBinder.unmarshal(xml, SpawnsData2.class);
 			} catch (Exception e) {
 				log.error(e.getMessage());
 				PacketSendUtility.sendMessage(admin, "Could not load old XML file!");
 				return;
-			} finally {
-				if (fin != null) {
-					fin.close();
-				}
 			}
 		}
 
@@ -1051,8 +1026,7 @@ public class SpawnsData2 {
 		try {
 			Files.createDirectories(xml.getParentFile().toPath());
 			fos = new FileOutputStream(xml);
-			Marshaller marshaller = jc.createMarshaller();
-			marshaller.setSchema(schema);
+			Marshaller marshaller = JAXBContext.newInstance(SpawnsData2.class).createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(data, fos);
 			DataManager.SPAWNS_DATA2.templates = data.templates;

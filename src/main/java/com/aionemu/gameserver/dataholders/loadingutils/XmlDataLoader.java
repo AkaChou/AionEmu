@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.AIData;
@@ -21,8 +22,9 @@ import com.aionemu.gameserver.dataholders.WalkerData;
 import com.aionemu.gameserver.dataholders.WindstreamData;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
+import com.aionemu.gameserver.questEngine.retail.RetailItemNameIndex;
+import com.aionemu.gameserver.questEngine.retail.RetailNpcNameIndex;
+import com.aionemu.gameserver.questEngine.tablelane.NativeNpcNameResolver;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -30,11 +32,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -59,7 +58,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
- * 负责通过 JAXB 逐分区、逐源文件加载静态数据 XML，不生成或读取合并缓存。
+ * 负责通过直接 StAX 流式绑定逐分区、逐源文件加载静态数据 XML，不生成或读取合并缓存。
  * Loads static-data XML section by section and source file by source file without creating or reading a merged cache.
  *
  * @author Luno
@@ -335,7 +334,7 @@ public class XmlDataLoader {
 	 */
 	public StaticData loadStaticData() {
 		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole(), this::loadSkillData,
-			new ConcurrentHashMap<>(), true);
+			new ConcurrentHashMap<>(), true, null);
 	}
 
 	/**
@@ -344,7 +343,7 @@ public class XmlDataLoader {
 	 */
 	public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier) {
 		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole(), skillDataSupplier,
-			new ConcurrentHashMap<>(), true);
+			new ConcurrentHashMap<>(), true, null);
 	}
 
 	/**
@@ -359,12 +358,28 @@ public class XmlDataLoader {
 	 */
 	public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier, ConcurrentMap<String, Long> phaseTimings) {
 		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole(), skillDataSupplier,
-			phaseTimings, false);
+			phaseTimings, false, null);
 	}
 
 	/**
-	 * 带进度回调的静态数据加载：解析入口文件后逐分区、逐源文件 JAXB 反序列化。
-	 * Loads static data with a progress reporter by parsing the entry point and unmarshalling each source file separately.
+	 * 使用外部并行阶段计时和已启动的物品加载结果；任务名称索引直接复用物品模板，避免二次扫描 XML。
+	 * Uses externally parallel phase timings and item loading; quest name indexes reuse the item templates
+	 * instead of scanning the XML a second time.
+	 *
+	 * @param skillDataSupplier  技能数据提供器 / skill-data supplier
+	 * @param phaseTimings       线程安全的阶段计时表 / thread-safe phase timing map
+	 * @param itemDataSupplier   物品数据提供器 / item-data supplier
+	 * @return 静态数据 / static data
+	 */
+	public StaticData loadStaticData(Supplier<SkillData> skillDataSupplier,
+		ConcurrentMap<String, Long> phaseTimings, Supplier<ItemData> itemDataSupplier) {
+		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole(), skillDataSupplier,
+			phaseTimings, false, itemDataSupplier);
+	}
+
+	/**
+	 * 带进度回调的静态数据加载：解析入口文件后逐分区、逐源文件流式绑定。
+	 * Loads static data with a progress reporter by parsing the entry point and streaming each source file separately.
 	 *
 	 * @param progressReporter 进度报告器 / progress reporter
 	 * @return 静态数据 / loaded static data
@@ -372,11 +387,11 @@ public class XmlDataLoader {
 	 */
 	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
 		ConcurrentMap<String, Long> phaseTimings = new ConcurrentHashMap<>();
-		return loadStaticData(progressReporter, () -> loadSkillData(phaseTimings), phaseTimings, true);
+		return loadStaticData(progressReporter, () -> loadSkillData(phaseTimings), phaseTimings, true, null);
 	}
 
 	private StaticData loadStaticData(StaticDataProgressReporter progressReporter, Supplier<SkillData> skillDataSupplier,
-									  ConcurrentMap<String, Long> phaseTimings, boolean logPhaseTimings) {
+		ConcurrentMap<String, Long> phaseTimings, boolean logPhaseTimings, Supplier<ItemData> itemDataSupplier) {
 		if (phaseTimings == null) {
 			throw new IllegalArgumentException("phaseTimings must not be null");
 		}
@@ -441,6 +456,8 @@ public class XmlDataLoader {
 				loaded.assignTo(data);
 			}
 			data.npcData = joinDefinition(npcDataFuture);
+			RetailNpcNameIndex.install(data.npcData);
+			NativeNpcNameResolver.install(data.npcData);
 			PetDefinitionLoader.Result petDefinitions = joinDefinition(petDefinitionsFuture);
 			data.npcDropData = joinDefinition(npcDropDataFuture);
 			data.hotspotLocationData = joinDefinition(hotspotLocationDataFuture);
@@ -461,6 +478,9 @@ public class XmlDataLoader {
 			data.petMerchandData = petDefinitions.merchant();
 			data.windstreamsData = joinDefinition(windstreamDataFuture);
 			if (data.questData == null) {
+				if (itemDataSupplier != null) {
+					RetailItemNameIndex.install(itemDataSupplier.get());
+				}
 				data.questData = com.aionemu.gameserver.dataholders.QuestsData.fromCatalog(
 					com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
 			}
@@ -714,13 +734,7 @@ public class XmlDataLoader {
 	}
 
 	private static <T> T unmarshalSection(File sourceFile, Class<T> type) {
-		try (InputStream input = new BufferedInputStream(new FileInputStream(sourceFile))) {
-			Unmarshaller unmarshaller = sharedJaxbContext(type).createUnmarshaller();
-			unmarshaller.setEventHandler(new XmlValidationHandler());
-			return type.cast(unmarshaller.unmarshal(input));
-		} catch (Exception e) {
-			throw new IllegalStateException("Failed to load static-data source: " + sourceFile.getPath(), e);
-		}
+		return StreamingXmlBinder.unmarshal(sourceFile, type);
 	}
 
 	private record StaticDataSection(Field field, List<File> sources) {
@@ -872,11 +886,7 @@ public class XmlDataLoader {
 
 	private static <T> T loadDefinition(Class<T> type, String relativePath) {
 		File file = Config.definitionFile(relativePath);
-		try {
-			return type.cast(createJaxbContext(type).createUnmarshaller().unmarshal(file));
-		} catch (Exception e) {
-			throw new IllegalStateException("Failed to load " + file.getPath(), e);
-		}
+		return StreamingXmlBinder.unmarshal(file, type);
 	}
 
 	public AIData loadAiData() {
@@ -937,10 +947,7 @@ public class XmlDataLoader {
 
 	static WalkerData loadRetailAiWaypointData(File file, File schemaFile) {
 		try {
-			Unmarshaller unmarshaller = createJaxbContext(WalkerData.class).createUnmarshaller();
-			unmarshaller.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-				.newSchema(schemaFile));
-			WalkerData data = (WalkerData) unmarshaller.unmarshal(file);
+			WalkerData data = StreamingXmlBinder.unmarshal(file, WalkerData.class);
 			log.info(I18n.get("log.static_data.ai_waypoints_loaded", data.size()));
 			return data;
 		} catch (Exception e) {
@@ -1031,11 +1038,14 @@ public class XmlDataLoader {
 			shard -> unmarshalTemplateShard(shard, NpcTemplateShard.class));
 		int expectedSize = loadedShards.stream().mapToInt(List::size).sum();
 		NpcData combined = new NpcData(expectedSize);
+		List<NpcTemplate> templates = new ArrayList<>(expectedSize);
 		for (List<NpcTemplate> loadedShard : loadedShards) {
 			for (NpcTemplate template : loadedShard) {
 				combined.getNpcData().put(template.getTemplateId(), template);
+				templates.add(template);
 			}
 		}
+		combined.retainTemplates(templates);
 		log.info(I18n.get("log.static_data.npc_shards_loaded", combined.size(), shards.size(),
 			System.currentTimeMillis() - start));
 		return combined;
@@ -1123,31 +1133,8 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * 分片 JAXBContext 缓存，避免每个分片重复构建上下文 /
-	 * Caches shard JAXB contexts so shards reuse one context per type.
-	 */
-	private static final Map<Class<?>, JAXBContext> SHARD_CONTEXTS = new ConcurrentHashMap<>();
-
-	/**
-	 * 获取（或创建）指定类型的共享 JAXBContext。
-	 * Returns (or creates) the shared JAXBContext for the given type.
-	 *
-	 * @param type 绑定类型 / bound type
-	 * @return 共享上下文 / shared context
-	 */
-	private static JAXBContext sharedJaxbContext(Class<?> type) {
-		return SHARD_CONTEXTS.computeIfAbsent(type, t -> {
-			try {
-				return createJaxbContext(t);
-			} catch (jakarta.xml.bind.JAXBException e) {
-				throw new IllegalStateException("Failed to create JAXB context for " + t.getName(), e);
-			}
-		});
-	}
-
-	/**
-	 * 反序列化轻量模板分片，只绑定模板列表并跳过容器级索引。
-	 * Unmarshals a lightweight template shard, binding only its template list and skipping
+	 * 流式绑定轻量模板分片，只绑定模板列表并跳过容器级索引。
+	 * Streams a lightweight template shard, binding only its template list and skipping
 	 * container-level indexing.
 	 * @param shardFile 分片文件 / shard file
 	 * @param type      分片包装类型 / shard wrapper type
@@ -1156,13 +1143,7 @@ public class XmlDataLoader {
 	 * @return 分片模板列表 / shard template list
 	 */
 	private static <T, W extends TemplateShard<T>> List<T> unmarshalTemplateShard(File shardFile, Class<W> type) {
-		try (InputStream input = new BufferedInputStream(new FileInputStream(shardFile))) {
-			Unmarshaller un = sharedJaxbContext(type).createUnmarshaller();
-			un.setEventHandler(new XmlValidationHandler());
-			return type.cast(un.unmarshal(input)).templates();
-		} catch (Exception e) {
-			throw new IllegalStateException("Failed to load template shard: " + shardFile.getPath(), e);
-		}
+		return StreamingXmlBinder.unmarshal(shardFile, type).templates();
 	}
 
 	/**
@@ -1175,8 +1156,8 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * 物品模板分片的 JAXB 包装，避免每个分片构建 ItemData 索引。
-	 * JAXB wrapper for an item-template shard, avoiding ItemData index construction per shard.
+	 * 物品模板分片的流式包装，避免每个分片构建 ItemData 索引。
+	 * Streaming wrapper for an item-template shard, avoiding ItemData index construction per shard.
 	 */
 	@XmlRootElement(name = "item_templates")
 	@XmlAccessorType(XmlAccessType.FIELD)
@@ -1191,8 +1172,8 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * NPC 模板分片的 JAXB 包装，避免每个分片构建 NpcData 索引。
-	 * JAXB wrapper for an NPC-template shard, avoiding NpcData index construction per shard.
+	 * NPC 模板分片的流式包装，避免每个分片构建 NpcData 索引。
+	 * Streaming wrapper for an NPC-template shard, avoiding NpcData index construction per shard.
 	 */
 	@XmlRootElement(name = "npc_templates")
 	@XmlAccessorType(XmlAccessType.FIELD)
@@ -1205,51 +1186,6 @@ public class XmlDataLoader {
 			return templates == null ? List.of() : templates;
 		}
 	}
-
-	/**
-	 * 创建绑定进度监听的 StaticData Unmarshaller。
-	 * Creates a StaticData Unmarshaller wired with progress reporting.
-	 *
-	 * @param progressReporter   进度报告器 / progress reporter
-	 * @param totalSections      分段总数 / total section count
-	 * @param sectionEntryCounts 各分区条目数 / per-section entry counts
-	 * @return 配置的反序列化器 / configured unmarshaller
-	 */
-	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
-		throws Exception {
-		return createStaticDataUnmarshaller(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
-	}
-
-	private Unmarshaller createStaticDataUnmarshaller(StaticDataProgressListener progressListener) throws Exception {
-		JAXBContext jc = createJaxbContext(StaticData.class);
-		Unmarshaller un = jc.createUnmarshaller();
-		un.setEventHandler(new XmlValidationHandler());
-		// JAXB 源文件读取使用事件处理器报告问题；入口解析不再依赖合并文档校验。
-		// Source-file unmarshalling reports problems through the event handler and does not depend on a merged document.
-		un.setListener(progressListener);
-		return un;
-	}
-
-	/**
-	 * 创建指定绑定类型的 JAXBContext；线程上下文类加载器临时切换为绑定类型的加载器，
-	 * 保证在任意线程池线程（commonPool 等）上都能找到 JAXB runtime 实现。
-	 * Creates a JAXBContext for the bound type, temporarily switching the thread context classloader
-	 * to the bound type's loader so the JAXB runtime is found even on pool threads (e.g. commonPool).
-	 */
-	public static JAXBContext createJaxbContext(Class<?> boundType) throws jakarta.xml.bind.JAXBException {
-		Thread thread = Thread.currentThread();
-		ClassLoader originalClassLoader = thread.getContextClassLoader();
-		ClassLoader boundTypeClassLoader = boundType.getClassLoader();
-		try {
-			if (boundTypeClassLoader != null) {
-				thread.setContextClassLoader(boundTypeClassLoader);
-			}
-			return JAXBContext.newInstance(boundType);
-		} finally {
-			thread.setContextClassLoader(originalClassLoader);
-		}
-	}
-
 
 	static String staticDataSectionName(Object target, Object parent) {
 		if (target == null || !(parent instanceof StaticData)) {
@@ -1376,65 +1312,4 @@ public class XmlDataLoader {
 		}
 	}
 
-	private static final class StaticDataProgressListener extends Unmarshaller.Listener {
-
-		private final StaticDataProgressReporter progressReporter;
-		private final int totalSections;
-		private final Map<String, Integer> sectionEntryCounts;
-		private final Set<String> sectionNames;
-		private final Map<String, Integer> sectionEntriesLoaded = new HashMap<>();
-		private final Map<String, Long> sectionStartTimes = new HashMap<>();
-		private final Map<String, Long> sectionElapsedTimes = new HashMap<>();
-		private int sectionIndex;
-
-		private StaticDataProgressListener(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts) {
-			this.progressReporter = progressReporter;
-			this.totalSections = totalSections;
-			this.sectionEntryCounts = sectionEntryCounts;
-			this.sectionNames = sectionEntryCounts.keySet();
-		}
-
-		@Override
-		public void beforeUnmarshal(Object target, Object parent) {
-			String sectionName = staticDataSectionName(target, parent);
-			if (sectionName == null) {
-				return;
-			}
-			sectionEntriesLoaded.put(sectionName, 0);
-			sectionStartTimes.put(sectionName, System.currentTimeMillis());
-			progressReporter.sectionStarted(++sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
-		}
-
-		@Override
-		public void afterUnmarshal(Object target, Object parent) {
-			String sectionName = staticDataSectionName(target, parent);
-			if (sectionName != null) {
-				Long startTime = sectionStartTimes.remove(sectionName);
-				if (startTime != null) {
-					sectionElapsedTimes.put(sectionName, System.currentTimeMillis() - startTime);
-				}
-				progressReporter.sectionFinished(sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
-				return;
-			}
-			String parentSectionName = staticDataChildSectionName(parent, sectionNames);
-			if (parentSectionName == null) {
-				return;
-			}
-			int totalEntries = sectionEntryCounts.getOrDefault(parentSectionName, 1);
-			int currentEntries = Math.min(totalEntries, sectionEntriesLoaded.merge(parentSectionName, 1, Integer::sum));
-			progressReporter.sectionProgress(sectionIndex, totalSections, parentSectionName, currentEntries, totalEntries);
-		}
-
-		private Map<String, Long> sectionElapsedTimes() {
-			return sectionElapsedTimes;
-		}
-	}
-
-	private static String staticDataChildSectionName(Object parent, Set<String> sectionNames) {
-		if (parent == null) {
-			return null;
-		}
-		String sectionName = parent.getClass().getSimpleName();
-		return sectionNames.contains(sectionName) ? sectionName : null;
-	}
 }

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.boot.i18n.I18n;
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,9 +12,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET.Packet
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -31,19 +29,10 @@ public class Send extends AdminCommand {
 
 	public Send() {
 		super("send");
-		// 初始化反编组器一次。 / init unmrshaller once.
-		try {
-			unmarshaller = JAXBContext.newInstance(Packets.class, Packet.class, Part.class).createUnmarshaller();
-		}
-		catch (Exception e) {
-			throw new GameServerError("Failed to initialize unmarshaller.", e);
-		}
 	}
 
 
 	private static final File FOLDER = new File("./data/packets");
-
-	private final Unmarshaller unmarshaller;
 
 	/**
 	 * 执行该管理指令。
@@ -70,9 +59,9 @@ public class Send extends AdminCommand {
 		final Packets packetsTemplate;
 
 		try {
-			packetsTemplate = (Packets) unmarshaller.unmarshal(packetsData);
+			packetsTemplate = StreamingXmlBinder.unmarshal(packetsData, Packets.class);
 		}
-		catch (JAXBException e) {
+		catch (RuntimeException e) {
 			log.error(I18n.get("log.79e5f0e82fd8"), e);
 			return;
 		}

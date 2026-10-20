@@ -3,7 +3,6 @@ package com.aionemu.gameserver.dataholders;
 import java.io.File;
 import java.util.List;
 
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +10,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import com.aionemu.commons.utils.xml.StreamingXmlBinder;
 import com.aionemu.gameserver.model.templates.teleport.HotspotlocationTemplate;
 
 /**
@@ -36,10 +35,7 @@ public class HotspotLocationData {
 			throw new IllegalStateException("Hotspot location file not found: " + file);
 		}
 		try {
-			// 经由 createJaxbContext 以兼容 commonPool 线程（线程上下文类加载器问题）。
-			// Goes through createJaxbContext for commonPool compatibility (thread context classloader).
-			JAXBContext context = XmlDataLoader.createJaxbContext(HotspotLocationData.class);
-			return (HotspotLocationData) context.createUnmarshaller().unmarshal(file);
+			return StreamingXmlBinder.unmarshal(file, HotspotLocationData.class);
 		} catch (Exception e) {
 			throw new IllegalStateException("Failed to load hotspot locations from " + file.getPath(), e);
 		}

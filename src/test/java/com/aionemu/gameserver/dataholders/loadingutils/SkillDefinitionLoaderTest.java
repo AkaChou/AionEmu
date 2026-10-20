@@ -114,8 +114,8 @@ class SkillDefinitionLoaderTest {
 		var data = SkillDefinitionLoader.load(directory.toFile(), phaseTimings);
 
 		assertEquals(1, data.size());
-		assertEquals(Set.of("SkillIndexGroupsWall", "SkillJaxbContextWall", "SkillStreamJaxbWork",
-			"SkillCooldownWall"), phaseTimings.keySet());
+		assertEquals(Set.of("SkillIndexGroupsWall", "SkillStreamWork", "SkillCooldownWall"),
+			phaseTimings.keySet());
 		assertTrue(phaseTimings.values().stream().allMatch(duration -> duration >= 0));
 	}
 
