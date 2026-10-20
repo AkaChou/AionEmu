@@ -12,8 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * 系统级收尾生命周期：打印启动完成信息并记录启动耗时。
- * System-finalization lifecycle: prints startup completion and records startup time.
+ * 系统级收尾生命周期：打印系统信息与内存状态、记录启动耗时，
+ * 并在所有启动日志输出完成后打印启动横幅。
+ * System-finalization lifecycle: prints system information and memory status, records startup
+ * time, and prints the startup banner after all startup logs have been emitted.
  */
 @Component
 @Slf4j
@@ -99,8 +101,9 @@ public class GameSystemLifecycle {
     }
 
     /**
-     * 执行系统收尾：打印分区、信息、横幅与内存，返回启动耗时秒数。
-     * Run system finalization: print sections, info, banner and memory; return startup seconds.
+     * 执行系统收尾：打印系统分区、系统信息与内存状态，返回启动耗时秒数。
+     * Run system finalization: print the system section, system information, and memory status;
+     * return startup seconds.
      *
      * @param serverStartTimeMillis 服务器启动时间戳（毫秒） / Server start time millis
      * @return 启动耗时秒数 / Startup time in seconds
@@ -108,8 +111,6 @@ public class GameSystemLifecycle {
     protected long printSystemFinalization(long serverStartTimeMillis) {
         Util.printSection(I18n.get("console.section.system"));
         AEInfos.printAllInfos();
-        Util.printSection(I18n.get("console.section.gameserver"));
-        bannerLines().forEach(PrintUtils::printBannerLine);
 
         long totalMemory = Runtime.getRuntime().totalMemory() / BYTES_PER_MEGABYTE;
         long freeMemory = Runtime.getRuntime().freeMemory() / BYTES_PER_MEGABYTE;
@@ -121,6 +122,15 @@ public class GameSystemLifecycle {
         // 收尾耗时由 GameStartupCompletionLifecycle 统一输出，这里降为 DEBUG 以避免重复。 / Completion timing is owned by GameStartupCompletionLifecycle.
         log.debug(I18n.get("console.startup.completed", startupTimeSeconds));
         return startupTimeSeconds;
+    }
+
+    /**
+     * 输出游戏服务器分区标题与启动横幅。
+     * Print the game-server section header and startup banner.
+     */
+    void printStartupBanner() {
+        Util.printSection(I18n.get("console.section.gameserver"));
+        bannerLines().forEach(PrintUtils::printBannerLine);
     }
 
     /**
@@ -164,21 +174,22 @@ public class GameSystemLifecycle {
 	 * Build banner lines (art, successful-startup caption, then the open-source notice).
 	 *
 	 * <p>开源声明无配置开关、固定输出在启动成功横幅之后，便于用户在每次启动时确认本软件免费开源，
-	 * 避免从第三方渠道付费购买或被误导；输出经 {@code aion.console} 写入控制台与 console.log。
+	 * 避免从第三方渠道付费购买或被误导；横幅不输出仓库地址；输出经 {@code aion.console}
+	 * 写入控制台与 console.log。
 	 * The open-source notice has no config switch and always follows the startup caption so users can
 	 * confirm on every boot that the software is free and open source, guarding against paid resale or
-	 * misleading third-party channels; it is written through {@code aion.console} to the console and console.log.</p>
+	 * misleading third-party channels; the banner omits the repository URL and is written through
+	 * {@code aion.console} to the console and console.log.</p>
 	 *
 	 * @return 横幅行列表 / Banner line list
 	 */
-	private static List<String> bannerLines() {
-		List<String> lines = new ArrayList<>(BANNER_ART.size() + 6);
+	static List<String> bannerLines() {
+		List<String> lines = new ArrayList<>(BANNER_ART.size() + 4);
 		lines.addAll(BANNER_ART);
 		lines.add("  " + I18n.get("console.startup.successful"));
 		lines.add("");
 		lines.add("  " + I18n.get("console.startup.open_source_notice"));
 		lines.add("  " + I18n.get("console.startup.open_source_license"));
-		lines.add("  " + I18n.get("console.startup.open_source_project"));
 		return lines;
 	}
 }

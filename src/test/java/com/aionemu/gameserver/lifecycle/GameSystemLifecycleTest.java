@@ -2,7 +2,11 @@ package com.aionemu.gameserver.lifecycle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import com.aionemu.boot.i18n.I18n;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.support.StaticMessageSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +30,6 @@ class GameSystemLifecycleTest {
             "section:system",
             "versions",
             "infos",
-            "section:gameServer",
-            "banner:line1",
-            "banner:line2",
             "memory:512:128:384:1024",
             "startup:2"
         ), events);
@@ -44,7 +45,6 @@ class GameSystemLifecycleTest {
             List.of(
                 "section:system",
                 "versions",
-                "banner:line1",
                 "memory:512:128:384:1024",
                 "startup:2"
             ),
@@ -67,11 +67,38 @@ class GameSystemLifecycleTest {
             "versions",
             "section:system",
             "versions",
-            "banner:line1",
             "memory:512:128:384:1024",
             "startup:2"
         ), events);
 		assertNull(lifecycle.getLastFailure());
+    }
+
+    @Test
+    void startupBannerOmitsRepositoryUrl() {
+        StaticMessageSource source = new StaticMessageSource();
+        source.addMessage("console.startup.successful", Locale.ENGLISH, "Startup successful");
+        source.addMessage("console.startup.open_source_notice", Locale.ENGLISH, "Welcome to AionEmu.");
+        source.addMessage(
+            "console.startup.open_source_license",
+            Locale.ENGLISH,
+            "License: GNU GPL-3.0 (see the LICENSE file bundled with this project)"
+        );
+        I18n.setMessageSource(source);
+        I18n.applyCountryCode(1);
+        try {
+            List<String> lines = GameSystemLifecycle.bannerLines();
+
+            assertTrue(lines.contains("  Startup successful"));
+            assertTrue(lines.contains("  Welcome to AionEmu."));
+            assertTrue(lines.contains(
+                "  License: GNU GPL-3.0 (see the LICENSE file bundled with this project)"
+            ));
+            assertTrue(lines.stream().noneMatch(line -> line.contains("github.com/AionEmu/AionEmu")));
+            assertTrue(lines.stream().noneMatch(line -> line.contains("Project:")));
+        } finally {
+            I18n.setMessageSource(null);
+            I18n.applyCountryCode(1);
+        }
     }
 
     private static List<String> legacyEventNames() {
@@ -79,9 +106,6 @@ class GameSystemLifecycleTest {
             "section:system",
             "versions",
             "infos",
-            "section:gameServer",
-            "banner:line1",
-            "banner:line2",
             "memory:512:128:384:1024",
             "startup:2"
         );
@@ -119,4 +143,5 @@ class GameSystemLifecycleTest {
             return startupTimeSeconds;
         }
     }
+
 }

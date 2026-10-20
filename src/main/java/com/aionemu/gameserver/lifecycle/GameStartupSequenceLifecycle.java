@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * 游戏服启动总编排器：按固定阶段顺序驱动各 lifecycle（系统属性、日志、静态数据、
- * 世界/活动/引擎、刷怪、定时与功能服务、网络与启动钩子），最后汇总打印各阶段耗时。
+ * 世界/活动/引擎、刷怪、定时与功能服务、网络与启动钩子），
+ * 最后汇总打印各阶段耗时并输出启动横幅。
  * Master startup orchestrator: drives lifecycle phases in a fixed order (system properties,
  * logging, static data, world/event/engines, spawns, scheduled/feature services, network and
- * startup hooks), then prints aggregated phase timings.
+ * startup hooks), then prints aggregated phase timings followed by the startup banner.
  */
 @Slf4j
 @Component
@@ -247,9 +248,10 @@ public class GameStartupSequenceLifecycle {
 
     /**
 	 * 按阶段顺序执行完整启动：系统属性与日志、静态数据与世界、引擎/刷怪/功能服务、
-	 * 网络与钩子，最后汇总耗时。
+	 * 网络与钩子，最后汇总耗时并输出启动横幅。
 	 * Run the full startup in phase order: system properties and logging,
-     * static data and world, engines/spawns/feature services, network and hooks, then timing summary.
+     * static data and world, engines/spawns/feature services, network and hooks, then the timing
+     * summary followed by the startup banner.
      * @param chatServerEnabledOverride 聊天服启用覆盖（可为 null 表示沿用配置） /
      *                                  chat-server enable override (null keeps config)
      */
@@ -305,6 +307,7 @@ public class GameStartupSequenceLifecycle {
         startupHooksLifecycle.start();
         startupCompletionLifecycle.start(startupTime);
         logStartupPhaseTimings();
+        systemLifecycle.printStartupBanner();
     }
 
     // ponytail: 每个 lifecycle 已在自身记录 loadTimeMillis，这里反射汇总打印一次；新增 lifecycle 自动纳入，无需维护列表

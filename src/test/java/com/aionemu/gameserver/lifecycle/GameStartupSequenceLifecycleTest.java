@@ -90,7 +90,8 @@ class GameStartupSequenceLifecycleTest {
             "serverNetwork:start",
             "ratioLimit:start",
             "startupHooks:start",
-            "startupCompletion:start:2"
+            "startupCompletion:start:2",
+            "system:printBanner"
         ), events);
     }
 
@@ -445,6 +446,11 @@ class GameStartupSequenceLifecycleTest {
         public synchronized long start(long startTimeMillis) {
             events.add("system:start:" + startTimeMillis);
             return 2;
+        }
+
+        @Override
+        void printStartupBanner() {
+            events.add("system:printBanner");
         }
     }
 
