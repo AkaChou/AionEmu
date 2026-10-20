@@ -213,6 +213,15 @@ public final class NativeTalkFixture {
 	}
 
 	/**
+	 * 断言没有下发任何对话页：进行中的行不认领开门，由路由层重放同 NPC 其余行。
+	 * Asserts no dialog page was sent: an in-progress row claims nothing so the router can replay
+	 * the npc's other rows.
+	 */
+	public static void assertNoDialogPage(Player player) {
+		assertEquals(List.of(), dialogPages(player), "进行中的行不得下发对话页");
+	}
+
+	/**
 	 * 断言收到唯一一页且携带指定任务上下文（交付面/领奖窗断言用）。
 	 * Asserts exactly one dialog page carrying the given quest context (hand-in / reward-window gates).
 	 */

@@ -90,8 +90,8 @@ class Quest1347ClientDialogAlignmentTest {
 		assertNotNull(reportNpc, "原版行必须有可解析的交付 NPC");
 
 		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
-		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertNoDialogPage(player);
 
 		NativeTalkFixture.clearPackets(player);
 		player.getQuestStateList().getQuestState(QUEST_ID).setStatus(QuestStatus.REWARD);

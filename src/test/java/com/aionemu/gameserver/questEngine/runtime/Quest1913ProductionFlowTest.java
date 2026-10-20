@@ -100,11 +100,13 @@ class Quest1913ProductionFlowTest {
 		assertEquals(0, state.getQuestVars().getQuestVars(), "接取收尾必须清零变量");
 		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1003, QUEST_ID);
 
-		// 中继未满时报告面只有未完成提示页 10（两参，不带任务上下文）。
+		// 中继未满时任务行只开该行当前阶段页（入口页 1011），不带页 10、也不推进。
+		// Before the relay is full the row only reopens its current stage page (entry page 1011):
+		// no page 10, no advance.
 		NativeTalkFixture.clearPackets(player);
 		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)),
-			"中继未满时交付面必须兜底响应");
-		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+			"中继未满时任务行必须重开当前阶段页");
+		NativeTalkFixture.assertOnlyDialogPageWithQuest(player, 1011, QUEST_ID);
 
 		// 步 1（Polyidus）：任务行打开该步页（select2=1352）；推进（10000）= var0=1 + 关窗。
 		NativeTalkFixture.clearPackets(player);

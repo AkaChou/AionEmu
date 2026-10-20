@@ -93,12 +93,12 @@ class Quest1112ProductionFlowTest {
 		Integer rewardNpc = handler.rewardNpc(QUEST_ID);
 		assertNotNull(rewardNpc, "原版行必须有可解析的交付 NPC");
 
-		// START（未打满）：常规未完成提示页 10，两参下发（不带任务上下文）。
-		// START with an unfinished kill goal: the plain in-progress page 10 is a two-parameter dialog.
+		// START（未打满）：进行中的行不认领开门，由路由层重放同 NPC 其余行；不答页 10。
+		// In progress the row claims nothing so the router keeps replaying the npc's other rows.
 		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, QUEST_ID, 31)),
-			"START 态点任务行必须由 native 交付面服务");
-		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, rewardNpc, QUEST_ID, 31)),
+			"进行中的任务行不得认领开门");
+		NativeTalkFixture.assertNoDialogPage(player);
 
 		// REWARD：奖励选择窗口页 5，带任务上下文。
 		// REWARD: the reward-selection window (page 5) carries the quest context.

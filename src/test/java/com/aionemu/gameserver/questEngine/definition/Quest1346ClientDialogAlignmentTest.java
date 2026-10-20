@@ -89,10 +89,11 @@ class Quest1346ClientDialogAlignmentTest {
 		Integer reportNpc = handler.rewardNpc(QUEST_ID);
 		assertNotNull(reportNpc, "原版行必须有可解析的交付 NPC");
 
-		// START（未打满）：常规未完成提示页 10（两参，不带任务上下文）。
+		// START（未打满）：进行中的行不认领开门，由路由层继续重放同 NPC 其余行；不答页 10。
+		// In progress the row claims nothing so the router keeps replaying the npc's other rows.
 		NativeTalkFixture.add(player, QUEST_ID, QuestStatus.START, 0);
-		assertTrue(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
-		NativeTalkFixture.assertOnlyDialogPage(player, 10);
+		assertFalse(handler.onDialog(NativeTalkFixture.dialog(player, reportNpc, QUEST_ID, 31)));
+		NativeTalkFixture.assertNoDialogPage(player);
 
 		// REWARD：奖励选择窗口页 5，带任务上下文。
 		NativeTalkFixture.clearPackets(player);
