@@ -29,7 +29,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -98,6 +100,45 @@ class XmlDataLoaderTest {
 		assertTrue(error.getMessage().contains("second.xml"));
 		assertTrue(error.getCause() instanceof IllegalArgumentException);
 		assertEquals("broken second", error.getCause().getMessage());
+	}
+
+	@Test
+	void staticDataOrchestrationUsesVirtualThreadsWhileParsingUsesPlatformWorkers() throws Exception {
+		CompletableFuture<Boolean> orchestrationIsVirtual = CompletableFuture.supplyAsync(
+			() -> Thread.currentThread().isVirtual(), XmlDataLoader.staticDataExecutor());
+		CompletableFuture<Boolean> parsingIsVirtual = CompletableFuture.supplyAsync(
+			() -> Thread.currentThread().isVirtual(), XmlDataLoader.staticDataParseExecutor());
+		CompletableFuture<String> parseWorkerName = CompletableFuture.supplyAsync(
+			() -> Thread.currentThread().getName(), XmlDataLoader.staticDataParseExecutor());
+
+		assertTrue(orchestrationIsVirtual.get(2, TimeUnit.SECONDS));
+		assertFalse(parsingIsVirtual.get(2, TimeUnit.SECONDS));
+		assertTrue(parseWorkerName.get(2, TimeUnit.SECONDS).startsWith("static-data-parse-"));
+	}
+
+	@Test
+	void parseWorkersRejectNestedFanOutBeforeTheyCanDeadlock() throws Exception {
+		CompletableFuture<IllegalStateException> rejection = CompletableFuture.supplyAsync(() -> {
+			try {
+				XmlDataLoader.submitLargestFirst(List.of(), File::getName);
+				return null;
+			} catch (IllegalStateException e) {
+				return e;
+			}
+		}, XmlDataLoader.staticDataParseExecutor());
+
+		IllegalStateException error = rejection.get(2, TimeUnit.SECONDS);
+		assertNotNull(error);
+		assertTrue(error.getMessage().contains("cannot fan out"));
+	}
+
+	@Test
+	void parseWorkerCountScalesForCommonDeploymentSizes() {
+		assertEquals(2, XmlDataLoader.staticDataParseWorkerCount(1));
+		assertEquals(3, XmlDataLoader.staticDataParseWorkerCount(4));
+		assertEquals(6, XmlDataLoader.staticDataParseWorkerCount(8));
+		assertEquals(8, XmlDataLoader.staticDataParseWorkerCount(10));
+		assertEquals(8, XmlDataLoader.staticDataParseWorkerCount(32));
 	}
 
 	@Test

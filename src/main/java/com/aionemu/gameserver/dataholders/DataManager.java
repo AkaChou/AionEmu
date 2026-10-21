@@ -465,8 +465,8 @@ public final class DataManager {
     }
 
     /**
-     * 汇总加载线程、静态数据加载线程与 quest 目錄预加载线程的当前栈。
-     * Summarizes the current stacks of the loading, static-data loader, and quest preload threads.
+     * 汇总加载线程、静态数据解析/编排线程与 quest 目录预加载线程的当前栈。
+     * Summarizes the current stacks of the loading, static-data parse/orchestration, and quest preload threads.
      */
     private static String describeStaticDataThreads(Thread loadingThread) {
         ThreadMXBean threads = ManagementFactory.getThreadMXBean();
@@ -474,7 +474,8 @@ public final class DataManager {
         appendThreadDump(report, threads, loadingThread);
         for (Thread thread : Thread.getAllStackTraces().keySet()) {
             String name = thread.getName();
-            if (thread != loadingThread && (name.equals("static-data-loader") || name.equals("quest-catalog-preload")
+            if (thread != loadingThread && (name.startsWith("static-data-parse-")
+                    || name.startsWith("static-data-orchestrator-") || name.equals("quest-catalog-preload")
                     || name.startsWith("ForkJoinPool.commonPool"))) {
                 appendThreadDump(report, threads, thread);
             }
@@ -496,10 +497,8 @@ public final class DataManager {
      * @return 已加载的静态数据与物品数据 / loaded static data and item data
      */
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {
-        // 使用静态数据专用线程池：避免 commonPool 嵌套 join 的丢失唤醒竞态（见
-        // XmlDataLoader.STATIC_DATA_POOL）。
-        // Use the dedicated static-data pool: avoids the commonPool nested-join lost-wakeup race
-        // (see XmlDataLoader.STATIC_DATA_POOL).
+        // 物品/技能父任务由虚拟线程编排；其内部 XML 解析仍提交到固定平台池。
+        // Item/skill parent tasks run on virtual threads; their XML parsing remains on the fixed platform pool.
         java.util.concurrent.Executor executor = XmlDataLoader.staticDataExecutor();
         ConcurrentMap<String, Long> phaseTimings = new ConcurrentHashMap<>();
         CompletableFuture<ItemData> itemDataFuture = timedDataLoad("ItemData", loader::loadItemData, executor,

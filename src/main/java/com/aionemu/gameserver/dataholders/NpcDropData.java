@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -71,7 +72,10 @@ public class NpcDropData {
 			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
 		}
 		NpcDropData data = new NpcDropData();
-		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
+		// 公共组必须先于分片展开，但解析本身仍交给固定平台解析池。
+		// Common groups must load before shard expansion, while parsing remains on the fixed platform pool.
+		data.commonDropGroups = CompletableFuture.supplyAsync(
+			() -> loadCommonDropGroups(npcDropsDirectory), XmlDataLoader.staticDataParseExecutor()).join();
 		data.expandedCommonDropGroups = new ConcurrentHashMap<>();
 		List<File> partFiles = listXmlFiles(npcDropsDirectory.toPath()).stream()
 			.filter(file -> file.getName().startsWith("npc_drops_part_"))

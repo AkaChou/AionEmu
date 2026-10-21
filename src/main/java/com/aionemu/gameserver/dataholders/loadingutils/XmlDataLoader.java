@@ -53,6 +53,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -157,54 +160,43 @@ public class XmlDataLoader {
 	}
 
 	/**
-	 * 静态数据加载专用有界线程池。
-	 * Dedicated bounded pool for static-data loading.
-	 * <p>分片/紧凑定义加载存在"池任务内部再提交子任务并 join"的嵌套结构；放在 commonPool
-	 * 上会触发 managedBlock 补偿线程的丢失唤醒竞态（实测 JDK 26 下主线程 join 永久挂起、
-	 * 全部 worker 空闲），因此使用独立定长池。当前嵌套父任务共 5 个（物品、技能、NPC 模板、
-	 * NPC 掉落、零售 AI）；每个父任务在 join 子任务期间会占住一个线程不干活（停车线程），
-	 * 因此池大小 = CPU 数 + 嵌套父任务数：CPU 数保证实际并行解析能力，额外线程吸收停车
-	 * 父任务。新增嵌套父任务时必须同步上调此公式，否则停车线程挤占干活线程导致整体变慢。
-	 * Shard/compact loads nest "submit children and join them" inside pool tasks; on the commonPool this
-	 * exposed a managedBlock lost-wakeup race (observed on JDK 26: main joined forever while all workers
-	 * idled), so a dedicated fixed pool is used instead. There are currently 5 nested parent tasks
-	 * (items, skills, NPC templates, NPC drops, retail AI); each parent parks one thread while joining
-	 * its children, so pool size = CPU count + nested parent count: the CPU count preserves actual
-	 * parse parallelism and the extra threads absorb parked parents. Raise this formula whenever a new
-	 * nested parent is added, or parked parents will starve the working threads and slow everything down.
-	 * 可用 -Daion.staticData.extraLoaders=N 覆盖该值（默认 5），用于并行度/超订实验。
-	 * The value can be overridden with -Daion.staticData.extraLoaders=N (default 5) for
-	 * parallelism/oversubscription experiments.
-	 */
-	private static final int NESTED_PARENT_TASKS =
-		Integer.getInteger("aion.staticData.extraLoaders", 5);
-
-	/**
 	 * INFO 级别输出的耗时行数；其余行降为 DEBUG。
 	 * Number of timing rows printed at INFO; the rest are demoted to DEBUG.
 	 */
 	private static final int INFO_TIMING_ROWS = 5;
 
-	private static final java.util.concurrent.ExecutorService STATIC_DATA_POOL =
-		java.util.concurrent.Executors.newFixedThreadPool(
-			Runtime.getRuntime().availableProcessors() + NESTED_PARENT_TASKS, runnable -> {
-				Thread thread = new Thread(runnable, "static-data-loader");
-				thread.setDaemon(true);
-				return thread;
-			});
+	/**
+	 * 静态数据解析线程数：按可用 CPU 的 3/4 配置并封顶 8，避免 4/8 核部署时超订抢核。
+	 * Static-data parse worker count: 3/4 of available CPUs, capped at 8, to avoid
+	 * oversubscription on 4/8-core deployments.
+	 */
+	private static final int STATIC_DATA_PARSE_WORKERS = resolveStaticDataParseWorkers();
 
 	/**
-	 * 大型文件并行解析池：与父任务池隔离，避免分片解析任务在父任务 join 时排队。
-	 * Large-file parse pool isolated from the parent pool so shard parses do not queue behind
-	 * parent tasks waiting in {@code join}.
+	 * 静态数据编排器：只负责 fan-out、join 与轻量合并，等待子任务时卸载虚拟线程。
+	 * Static-data orchestrator: performs fan-out, join and lightweight merging only; virtual threads
+	 * unmount while waiting for children.
 	 */
-	private static final java.util.concurrent.ExecutorService SHARD_PARSE_POOL =
-		java.util.concurrent.Executors.newFixedThreadPool(
-			Math.max(2, Runtime.getRuntime().availableProcessors() / 2), runnable -> {
-				Thread thread = new Thread(runnable, "static-data-shard");
-				thread.setDaemon(true);
-				return thread;
-			});
+	private static final ExecutorService STATIC_DATA_ORCHESTRATOR =
+		Executors.newThreadPerTaskExecutor(
+			Thread.ofVirtual().name("static-data-orchestrator-", 0).factory());
+
+	/**
+	 * 标记固定解析线程，用于阻止编排任务误入解析池后因子任务排队而死锁。
+	 * Marks fixed parse workers so orchestration accidentally submitted to the parse pool fails fast
+	 * instead of deadlocking behind its own children.
+	 */
+	private static final ThreadLocal<Boolean> STATIC_DATA_PARSE_WORKER = new ThreadLocal<>();
+	private static final AtomicInteger PARSE_WORKER_INDEX = new AtomicInteger();
+
+	/**
+	 * 固定平台解析池：承担 XML 令牌化、绑定、数字转换等 CPU 密集工作。
+	 * Fixed platform parse pool for CPU-heavy XML tokenization, binding and numeric conversion.
+	 * 固定线程同时复用 {@link StreamingXmlBinder} 的 ThreadLocal XMLInputFactory。
+	 * Fixed threads also reuse {@link StreamingXmlBinder}'s ThreadLocal XMLInputFactory.
+	 */
+	private static final ExecutorService STATIC_DATA_PARSE_POOL =
+		Executors.newFixedThreadPool(STATIC_DATA_PARSE_WORKERS, XmlDataLoader::newParseWorker);
 
 	/**
 	 * 大型分片调度窗口：只保留适量任务在队列中，完成一个再下发下一个，避免小文件过早占满
@@ -214,25 +206,35 @@ public class XmlDataLoader {
 	 */
 	private static final int SHARD_DISPATCH_WINDOW =
 		Integer.getInteger("aion.staticData.shardWindow",
-			Math.max(4, Math.max(2, Runtime.getRuntime().availableProcessors() / 2) * 2));
+			Math.max(4, STATIC_DATA_PARSE_WORKERS * 2));
 
 	/**
-	 * 返回静态数据加载专用线程池（DataManager 的物品/技能并行路径同样使用）。
-	 * Returns the dedicated static-data pool (also used by DataManager's parallel item/skill paths).
+	 * 返回静态数据虚拟线程编排器（DataManager 的物品/技能父任务同样使用）。
+	 * Returns the virtual-thread static-data orchestrator (also used by DataManager's item/skill parent tasks).
 	 *
-	 * @return 专用线程池 / dedicated executor
+	 * @return 编排执行器 / orchestration executor
 	 */
-	public static java.util.concurrent.Executor staticDataExecutor() {
-		return STATIC_DATA_POOL;
+	public static Executor staticDataExecutor() {
+		return STATIC_DATA_ORCHESTRATOR;
 	}
 
 	/**
-	 * 返回大型分片专用解析池。
-	 * Returns the dedicated large-shard parse pool.
+	 * 返回固定平台解析池。
+	 * Returns the fixed platform parse pool.
+	 *
+	 * @return 解析执行器 / parse executor
+	 */
+	public static Executor staticDataParseExecutor() {
+		return STATIC_DATA_PARSE_POOL;
+	}
+
+	/**
+	 * 返回大型分片解析池；保留旧名称以兼容既有调用点。
+	 * Returns the large-shard parse pool; the legacy name is retained for existing call sites.
 	 * @return 分片解析池 / shard parse executor
 	 */
-	public static java.util.concurrent.Executor shardParseExecutor() {
-		return SHARD_PARSE_POOL;
+	public static Executor shardParseExecutor() {
+		return staticDataParseExecutor();
 	}
 
 	/**
@@ -245,6 +247,10 @@ public class XmlDataLoader {
 	 */
 	public static <T> List<T> submitLargestFirst(java.util.List<File> files,
 			java.util.function.Function<File, T> task) {
+		if (Boolean.TRUE.equals(STATIC_DATA_PARSE_WORKER.get())) {
+			throw new IllegalStateException(
+				"submitLargestFirst cannot fan out from a static-data parse worker; use staticDataExecutor()");
+		}
 		if (files == null) {
 			throw new IllegalArgumentException("files must not be null");
 		}
@@ -306,8 +312,31 @@ public class XmlDataLoader {
 			} catch (RuntimeException | Error e) {
 				throw new ShardLoadException(file, e);
 			}
-		}, SHARD_PARSE_POOL);
+		}, STATIC_DATA_PARSE_POOL);
 		inFlight.put(future, index);
+	}
+
+	static int staticDataParseWorkerCount(int availableProcessors) {
+		int processors = Math.max(1, availableProcessors);
+		return Math.min(8, Math.max(2, (processors * 3 + 3) / 4));
+	}
+
+	private static int resolveStaticDataParseWorkers() {
+		int workers = Integer.getInteger("aion.staticData.parseWorkers",
+			staticDataParseWorkerCount(Runtime.getRuntime().availableProcessors()));
+		if (workers < 1) {
+			throw new IllegalArgumentException("aion.staticData.parseWorkers must be positive");
+		}
+		return workers;
+	}
+
+	private static Thread newParseWorker(Runnable runnable) {
+		Thread thread = new Thread(() -> {
+			STATIC_DATA_PARSE_WORKER.set(Boolean.TRUE);
+			runnable.run();
+		}, "static-data-parse-" + PARSE_WORKER_INDEX.incrementAndGet());
+		thread.setDaemon(true);
+		return thread;
 	}
 
 	private static final class ShardLoadException extends IllegalStateException {
@@ -400,17 +429,18 @@ public class XmlDataLoader {
 		// 背后，与物品/技能并行路径同思路。
 		// Compact definition files are independent of the main document; start them concurrently so they hide behind
 		// section-by-section source loading (same idea as the parallel item/skill paths).
-		CompletableFuture<PetDefinitionLoader.Result> petDefinitionsFuture = timedAsync("PetDefinitions",
+		CompletableFuture<PetDefinitionLoader.Result> petDefinitionsFuture = timedParseAsync("PetDefinitions",
 			this::loadPetDefinitions, phaseTimings);
 		CompletableFuture<NpcDropData> npcDropDataFuture = timedAsync("NpcDropData", this::loadNpcDropData, phaseTimings);
-		CompletableFuture<HotspotLocationData> hotspotLocationDataFuture = timedAsync("HotspotLocationData",
+		CompletableFuture<HotspotLocationData> hotspotLocationDataFuture = timedParseAsync("HotspotLocationData",
 			this::loadHotspotLocationData, phaseTimings);
-		CompletableFuture<MotionData> motionDataFuture = timedAsync("MotionData", this::loadMotionData, phaseTimings);
-		CompletableFuture<ChargeSkillData> chargeSkillDataFuture = timedAsync("ChargeSkillData",
-			this::loadChargeSkillData, phaseTimings);
-		CompletableFuture<NpcSkillData> npcSkillDataFuture = timedAsync("NpcSkillData", this::loadNpcSkillData,
+		CompletableFuture<MotionData> motionDataFuture = timedParseAsync("MotionData", this::loadMotionData,
 			phaseTimings);
-		CompletableFuture<AIData> aiDataFuture = timedAsync("AIData", this::loadAiData, phaseTimings);
+		CompletableFuture<ChargeSkillData> chargeSkillDataFuture = timedParseAsync("ChargeSkillData",
+			this::loadChargeSkillData, phaseTimings);
+		CompletableFuture<NpcSkillData> npcSkillDataFuture = timedParseAsync("NpcSkillData", this::loadNpcSkillData,
+			phaseTimings);
+		CompletableFuture<AIData> aiDataFuture = timedParseAsync("AIData", this::loadAiData, phaseTimings);
 		// npc-ai.xml（27MB）只提交一次合并扫描；两个消费方持有同一个局部 Future，
 		// 消除成员字段跨线程发布竞态，并让寻路行为通过依赖阶段转换而不是占用线程等待。
 		// Submit the merged npc-ai.xml scan (27MB) once. Both consumers hold the same local future,
@@ -420,10 +450,10 @@ public class XmlDataLoader {
 		CompletableFuture<NpcPathBehaviorData> npcPathBehaviorDataFuture = npcMappingStages.pathBehaviors();
 		CompletableFuture<RetailAiData> retailAiDataFuture = timedAsync("RetailAiData",
 			() -> loadRetailAiData(npcMappingStages.source()), phaseTimings);
-		CompletableFuture<WalkerData> waypointDataFuture = timedAsync("RetailAiWaypoints", this::loadRetailAiWaypointData,
-			phaseTimings);
-		CompletableFuture<WindstreamData> windstreamDataFuture = timedAsync("WindstreamData", this::loadWindstreamData,
-			phaseTimings);
+		CompletableFuture<WalkerData> waypointDataFuture = timedParseAsync("RetailAiWaypoints",
+			this::loadRetailAiWaypointData, phaseTimings);
+		CompletableFuture<WindstreamData> windstreamDataFuture = timedParseAsync("WindstreamData",
+			this::loadWindstreamData, phaseTimings);
 		// NPC 模板直接从 data/static_data/npcs 下的源分片并行加载（见 loadNpcDataSharded）。
 		// NPC templates load directly from source shards under data/static_data/npcs (see loadNpcDataSharded).
 		CompletableFuture<NpcData> npcDataFuture = timedAsync("NpcData", () -> {
@@ -447,7 +477,7 @@ public class XmlDataLoader {
 			sectionFutures = new ArrayList<>(sections.size());
 			for (StaticDataSection section : sections) {
 				sectionFutures.add(CompletableFuture.supplyAsync(() -> loadStaticDataSection(section,
-					progressReporter, sectionIndex, totalSections, phaseTimings), STATIC_DATA_POOL));
+					progressReporter, sectionIndex, totalSections, phaseTimings), STATIC_DATA_PARSE_POOL));
 			}
 
 			StaticData data = new StaticData();
@@ -796,7 +826,28 @@ public class XmlDataLoader {
 			} finally {
 				phaseTimings.put(phaseName, elapsedMillis(start));
 			}
-		}, STATIC_DATA_POOL);
+		}, STATIC_DATA_ORCHESTRATOR);
+	}
+
+	/**
+	 * 在固定平台解析池中执行单文件或顺序多文件解析，并记录阶段耗时。
+	 * Runs single-file or sequential multi-file parsing on the fixed platform parse pool and records timing.
+	 *
+	 * @param phaseName    阶段名称 / phase name
+	 * @param supplier     解析任务 / parse task
+	 * @param phaseTimings 线程安全的阶段计时表 / thread-safe phase timing map
+	 * @return 带计时的 Future / timed future
+	 */
+	private static <T> CompletableFuture<T> timedParseAsync(String phaseName, Supplier<T> supplier,
+														 ConcurrentMap<String, Long> phaseTimings) {
+		return CompletableFuture.supplyAsync(() -> {
+			long start = System.nanoTime();
+			try {
+				return supplier.get();
+			} finally {
+				phaseTimings.put(phaseName, elapsedMillis(start));
+			}
+		}, STATIC_DATA_PARSE_POOL);
 	}
 
 	static NpcMappingStages startNpcMappingStages(
@@ -994,10 +1045,15 @@ public class XmlDataLoader {
 	ItemData loadItemData(File itemShardDir, File customOverrideFile) {
 		long start = System.currentTimeMillis();
 		List<File> shards = listTemplateShards(itemShardDir, ITEM_SHARD_PATTERN, "item");
-		List<ItemTemplate> custom = customOverrideFile != null && customOverrideFile.isFile()
-			? unmarshalTemplateShard(customOverrideFile, ItemTemplateShard.class) : null;
+		CompletableFuture<List<ItemTemplate>> customFuture =
+			customOverrideFile != null && customOverrideFile.isFile()
+				? CompletableFuture.supplyAsync(
+					() -> unmarshalTemplateShard(customOverrideFile, ItemTemplateShard.class),
+					STATIC_DATA_PARSE_POOL)
+				: CompletableFuture.completedFuture(null);
 		List<List<ItemTemplate>> loadedShards = submitLargestFirst(shards,
 			shard -> unmarshalTemplateShard(shard, ItemTemplateShard.class));
+		List<ItemTemplate> custom = joinDefinition(customFuture);
 		// 分片只绑定模板列表，不执行容器级索引；完成即并入同一映射，避免同时持有全部分片索引。
 		// Shards bind only template lists and skip container indexing; merge each completed list into
 		// one mapping so no per-shard indexes are retained.
@@ -1063,19 +1119,19 @@ public class XmlDataLoader {
 		List<CompletableFuture<Integer>> overlays = new ArrayList<>(5);
 		overlays.add(CompletableFuture.supplyAsync(
 			() -> NpcCombatElementsDefinitionLoader.apply(
-				Config.definitionFile(NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE), data), SHARD_PARSE_POOL));
+				Config.definitionFile(NPC_COMBAT_ELEMENTS_DEFINITIONS_FILE), data), STATIC_DATA_PARSE_POOL));
 		overlays.add(CompletableFuture.supplyAsync(
 			() -> NpcCombatDefinitionLoader.apply(Config.definitionFile(NPC_COMBAT_DEFINITIONS_FILE), data),
-			SHARD_PARSE_POOL));
+			STATIC_DATA_PARSE_POOL));
 		overlays.add(CompletableFuture.supplyAsync(
 			() -> NpcBoundRadiusDefinitionLoader.apply(Config.definitionFile(NPC_BOUND_RADIUS_DEFINITIONS_FILE), data),
-			SHARD_PARSE_POOL));
+			STATIC_DATA_PARSE_POOL));
 		overlays.add(CompletableFuture.supplyAsync(
 			() -> NpcAttackDefinitionLoader.apply(Config.definitionFile(NPC_ATTACK_DEFINITIONS_FILE), data),
-			SHARD_PARSE_POOL));
+			STATIC_DATA_PARSE_POOL));
 		overlays.add(CompletableFuture.supplyAsync(
 			() -> NpcMasterItemBonusDefinitionLoader.apply(
-				Config.definitionFile(NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE), data), SHARD_PARSE_POOL));
+				Config.definitionFile(NPC_MASTER_ITEM_BONUS_DEFINITIONS_FILE), data), STATIC_DATA_PARSE_POOL));
 		try {
 			for (CompletableFuture<Integer> overlay : overlays) {
 				joinDefinition(overlay);

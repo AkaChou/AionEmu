@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * 从零售客户端数据加载 AI 模式、区域、传送门等定义（含条件刷新与分组控制）。
@@ -107,54 +109,38 @@ final class RetailAiDefinitionLoader {
 			File conditionSpawnsFile, File skillCategoriesFile, File locationAliasesFile, File directPortalsFile,
 			File npcScoresFile, File groupControllersFile, File npcPartiesFile, File dynamicAreasFile,
 			java.util.concurrent.CompletableFuture<NpcMappings> npcMappingsSource) {
-		// 各源文件互不依赖，提交静态数据专用线程池并行加载；仅 NPC 队伍成员校验依赖
-		// mappings 结果，在全部 join 后执行。loadPatterns 内部按文件名排序后逐文件合并，
-		// 仍保持确定性输出。
-		// Source files are independent; load them in parallel on the dedicated static-data pool. Only
-		// the NPC-party member validation depends on the mappings result and runs after all joins.
-		// loadPatterns sorts files by name before merging, so output stays deterministic.
-		java.util.concurrent.CompletableFuture<ConditionSpawns> conditionSpawnsFuture =
-			conditionSpawnsFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadConditionSpawns(conditionSpawnsFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<String, Pattern>> patternsFuture =
-			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadPatterns(patternsDirectory),
-				XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, Npc>> mappingsFuture =
+		// 单文件解析进入固定平台池；模式与映射扇出由虚拟线程编排。仅 NPC 队伍成员校验
+		// 依赖 mappings 结果，在全部 join 后执行。
+		// Single files run on the fixed platform pool; pattern and mapping fan-out are orchestrated by
+		// virtual threads. Only NPC-party member validation depends on mappings and runs after joins.
+		CompletableFuture<ConditionSpawns> conditionSpawnsFuture =
+			conditionSpawnsFile == null ? null : parseAsync(() -> loadConditionSpawns(conditionSpawnsFile));
+		CompletableFuture<Map<String, Pattern>> patternsFuture =
+			orchestrateAsync(() -> loadPatterns(patternsDirectory));
+		CompletableFuture<Map<Integer, Npc>> mappingsFuture =
 			npcMappingsSource != null
 				// npc-ai.xml 已由外部合并扫描解析（同时产出寻路行为）；直接取 NPC 映射
 				// 部分，跳过对同一 27MB 文件的重复解析。
 				// npc-ai.xml was already parsed by the external merged scan (which also yields path
 				// behaviors); take the NPC-mapping half and skip re-parsing the same 27MB file.
 				? npcMappingsSource.thenApply(NpcMappings::npcs)
-				: java.util.concurrent.CompletableFuture.supplyAsync(
-					() -> loadMappings(mappingsFile).npcs(), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<String, Integer>> stringsFuture =
-			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadStrings(stringsFile),
-				XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Areas> areasFuture =
-			java.util.concurrent.CompletableFuture.supplyAsync(() -> loadAreas(areasFile),
-				XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, String>> skillCategoriesFuture =
-			skillCategoriesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadSkillCategories(skillCategoriesFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, NpcScore>> npcScoresFuture =
-			npcScoresFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadNpcScores(npcScoresFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, List<GroupController>>> groupControllersFuture =
-			groupControllersFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadGroupControllers(groupControllersFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, Map<String, List<LocationAliasPoint>>>> locationAliasesFuture =
-			locationAliasesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadLocationAliases(locationAliasesFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, DirectPortal>> directPortalsFuture =
-			directPortalsFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadDirectPortals(directPortalsFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, List<NpcParty>>> npcPartiesFuture =
-			npcPartiesFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadNpcParties(npcPartiesFile), XmlDataLoader.staticDataExecutor());
-		java.util.concurrent.CompletableFuture<Map<Integer, Map<String, Map<Integer, DynamicArea>>>> dynamicAreasFuture =
-			dynamicAreasFile == null ? null : java.util.concurrent.CompletableFuture.supplyAsync(
-				() -> loadDynamicAreas(dynamicAreasFile), XmlDataLoader.staticDataExecutor());
+				: orchestrateAsync(() -> loadMappings(mappingsFile).npcs());
+		CompletableFuture<Map<String, Integer>> stringsFuture = parseAsync(() -> loadStrings(stringsFile));
+		CompletableFuture<Areas> areasFuture = parseAsync(() -> loadAreas(areasFile));
+		CompletableFuture<Map<Integer, String>> skillCategoriesFuture =
+			skillCategoriesFile == null ? null : parseAsync(() -> loadSkillCategories(skillCategoriesFile));
+		CompletableFuture<Map<Integer, NpcScore>> npcScoresFuture =
+			npcScoresFile == null ? null : parseAsync(() -> loadNpcScores(npcScoresFile));
+		CompletableFuture<Map<Integer, List<GroupController>>> groupControllersFuture =
+			groupControllersFile == null ? null : parseAsync(() -> loadGroupControllers(groupControllersFile));
+		CompletableFuture<Map<Integer, Map<String, List<LocationAliasPoint>>>> locationAliasesFuture =
+			locationAliasesFile == null ? null : parseAsync(() -> loadLocationAliases(locationAliasesFile));
+		CompletableFuture<Map<Integer, DirectPortal>> directPortalsFuture =
+			directPortalsFile == null ? null : parseAsync(() -> loadDirectPortals(directPortalsFile));
+		CompletableFuture<Map<Integer, List<NpcParty>>> npcPartiesFuture =
+			npcPartiesFile == null ? null : parseAsync(() -> loadNpcParties(npcPartiesFile));
+		CompletableFuture<Map<Integer, Map<String, Map<Integer, DynamicArea>>>> dynamicAreasFuture =
+			dynamicAreasFile == null ? null : parseAsync(() -> loadDynamicAreas(dynamicAreasFile));
 
 		ConditionSpawns conditionSpawns = joinOrNull(conditionSpawnsFuture);
 		Map<Integer, Npc> npcs = mappingsFuture.join();
@@ -188,6 +174,14 @@ final class RetailAiDefinitionLoader {
 	 */
 	private static <T> T joinOrNull(java.util.concurrent.CompletableFuture<T> future) {
 		return future == null ? null : future.join();
+	}
+
+	private static <T> CompletableFuture<T> parseAsync(Supplier<T> task) {
+		return CompletableFuture.supplyAsync(task, XmlDataLoader.staticDataParseExecutor());
+	}
+
+	private static <T> CompletableFuture<T> orchestrateAsync(Supplier<T> task) {
+		return CompletableFuture.supplyAsync(task, XmlDataLoader.staticDataExecutor());
 	}
 
 	static Map<Integer, Map<String, Map<Integer, DynamicArea>>> loadDynamicAreas(File file) {
