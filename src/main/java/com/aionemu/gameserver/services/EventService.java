@@ -275,7 +275,7 @@ public class EventService {
 		List<EventTemplate> allEvents = DataManager.EVENT_DATA.getAllEvents();
 
 		for (EventTemplate et : allEvents) {
-			if (et.isActive()) {
+			if (DataManager.EVENT_DATA.isConfiguredActive(et.getName()) && et.isActive()) {
 				newEvents.add(et);
 				et.Start();
 			}
@@ -283,7 +283,7 @@ public class EventService {
 
 		synchronized (activeEvents) {
 			for (EventTemplate et : activeEvents) {
-				if (et.isExpired() || !DataManager.EVENT_DATA.Contains(et.getName())) {
+				if (et.isExpired() || !DataManager.EVENT_DATA.isConfiguredActive(et.getName())) {
 					et.Stop();
 				}
 			}

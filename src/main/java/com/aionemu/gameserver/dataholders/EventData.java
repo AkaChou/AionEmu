@@ -1,9 +1,10 @@
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -16,9 +17,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * 活动配置数据容器，维护全部与当前激活的活动模板。
@@ -43,6 +41,9 @@ public class EventData {
 	private final Map<String, EventTemplate> allEvents = new LinkedHashMap<>();
 
 	@XmlTransient
+	private volatile Set<String> configuredActiveEvents = Set.of();
+
+	@XmlTransient
 	private int counter = 0;
 
 	/**
@@ -50,18 +51,27 @@ public class EventData {
 	 * After JAXB unmarshalling, indexes active events from the active field; keeps active text for later queries.
 	 */
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		if (active == null || events == null) {
+		configuredActiveEvents = parseConfiguredActiveEvents(active);
+		if (events == null) {
+			counter = 0;
+			allEvents.clear();
+			activeEvents.clear();
 			return;
 		}
+		rebuildIndexes();
+	}
+
+	/**
+	 * 重建全部活动与当前激活活动索引。
+	 * Rebuilds the all-events and currently-active event indexes.
+	 */
+	private void rebuildIndexes() {
 		counter = 0;
 		allEvents.clear();
 		activeEvents.clear();
 
-		Set<String> ae = new HashSet<>();
-		Collections.addAll(ae, active.split(";"));
-
 		for (EventTemplate ev : events) {
-			if (ae.contains(ev.getName()) && ev.isActive()) {
+			if (configuredActiveEvents.contains(ev.getName()) && ev.isActive()) {
 				activeEvents.put(ev.getName(), ev);
 				counter++;
 			}
@@ -102,8 +112,9 @@ public class EventData {
 	}
 
 	/**
-	 * 替换全部活动列表并重新构建索引；若同名旧活动已启动则保留 started 状态。
-	 * Replaces the full event list and rebuilds indexes; preserves started state from same-named old events.
+	 * 替换全部活动列表并重建索引；仍处于激活名单的同名旧活动保留 started 状态。
+	 * Replaces the full event list and rebuilds indexes; preserves the started flag only for
+	 * same-named events that remain in the configured active list.
 	 * @param events 新的活动模板列表 / new event template list
 	 * @param active 激活活动名配置文本 / active event names configuration text
 	 */
@@ -113,16 +124,17 @@ public class EventData {
 		}
 		this.events = events;
 		this.active = active;
+		configuredActiveEvents = parseConfiguredActiveEvents(active);
 
 		for (EventTemplate et : this.events) {
 			if (allEvents.containsKey(et.getName())) {
 				EventTemplate oldEvent = allEvents.get(et.getName());
-				if (oldEvent.isActive() && oldEvent.isStarted()) {
+				if (isConfiguredActive(et.getName()) && oldEvent.isActive() && oldEvent.isStarted()) {
 					et.setStarted();
 				}
 			}
 		}
-		afterUnmarshal(null, null);
+		rebuildIndexes();
 	}
 
 	/**
@@ -137,12 +149,32 @@ public class EventData {
 	}
 
 	/**
-	 * 判断指定名称的活动是否处于激活状态。
-	 * Checks whether the named event is currently active.
+	 * 判断指定活动是否在 {@code <active>} 配置名单中（不判断日期窗口）。
+	 * Checks whether the named event is listed in {@code <active>}, regardless of its date window.
 	 * @param eventName 活动名称 / event name
-	 * @return 若激活返回 true / true if the event is active
+	 * @return 若配置为激活返回 true / true if configured as active
 	 */
-	public boolean Contains(String eventName) {
-		return activeEvents.containsKey(eventName);
+	public boolean isConfiguredActive(String eventName) {
+		return eventName != null && configuredActiveEvents.contains(eventName);
+	}
+
+	/**
+	 * 解析分号分隔的激活活动名单。
+	 * Parses the semicolon-separated configured active-event names.
+	 * @param active 激活活动名配置文本 / configured active-event names
+	 * @return 不可变活动名集合 / immutable event-name set
+	 */
+	private static Set<String> parseConfiguredActiveEvents(String active) {
+		if (active == null || active.isBlank()) {
+			return Set.of();
+		}
+		Set<String> configured = new HashSet<>();
+		for (String name : active.split(";")) {
+			String trimmed = name.trim();
+			if (!trimmed.isEmpty()) {
+				configured.add(trimmed);
+			}
+		}
+		return Set.copyOf(configured);
 	}
 }
