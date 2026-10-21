@@ -34,6 +34,7 @@ import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestNpcAttackFacts;
 import com.aionemu.gameserver.questEngine.definition.QuestPvpCreditSource;
+import com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
 import com.aionemu.gameserver.questEngine.tablelane.HtmlPagesRegistry;
 import com.aionemu.gameserver.questEngine.tablelane.CameraRegistry;
@@ -1541,20 +1542,46 @@ public class QuestEngine implements GameEngine {
 
 	/**
 	 * 在配置就绪后尽早编译 raw catalog，使其解析时间与静态数据加载重叠。
+	 * 编译结果进入生产目录的共享缓存，静态数据阶段与后续读取直接复用。
 	 * Compile the raw catalog as soon as configuration is ready so parsing overlaps static-data loading.
+	 * The result enters the shared production catalog cache and is reused by the static-data phase
+	 * and all later readers.
 	 */
 	public void preloadProductionCatalog() {
-		preloadProductionCatalog(this::loadProductionCatalog);
+		ProductionQuestDefinitions.preload(this::loadProductionCatalog);
 	}
 
-	/** 委托目录预装载状态机安排后台编译。 / Delegates to the catalog preload state machine. */
+	/**
+	 * 返回启动期生产目录：优先消费本引擎的后台预编译结果，未预编译时复用共享缓存。
+	 * Returns the startup production catalog: consumes this engine's preload when armed,
+	 * otherwise reuses the shared cache.
+	 *
+	 * @return 已编译并校验的生产目录 / compiled and verified production catalog
+	 */
+	QuestCatalog productionCatalogForStartup() {
+		if (catalogBoot.isArmed()) {
+			try {
+				return awaitProductionCatalogPreload();
+			} catch (Exception e) {
+				throw new IllegalStateException("quest catalog preload failed", e);
+			}
+		}
+		return ProductionQuestDefinitions.catalog(this::loadProductionCatalog);
+	}
+
+	/**
+	 * 可注入预编译入口，仅用于包内测试；生产启动走共享目录预编译。
+	 * Injectable preload entry used by package-level tests; production startup uses the shared
+	 * catalog preload.
+	 */
 	synchronized void preloadProductionCatalog(Supplier<QuestCatalog> catalogSupplier) {
 		catalogBoot.preload(catalogSupplier);
 	}
 
 	/**
 	 * 等待预编译结果；未启用预加载时保持原有同步编译路径。
-	 * Await the precompiled result; fall back to synchronous compilation when preload was not armed.
+	 * Await the package-level injectable preload result; production startup reads the shared
+	 * catalog instead.
 	 */
 	synchronized QuestCatalog awaitProductionCatalogPreload() throws Exception {
 		return catalogBoot.awaitPreload(this::loadProductionCatalog);
@@ -1633,7 +1660,7 @@ public class QuestEngine implements GameEngine {
 			// DataDriven native runtime: empty routing set in this batch, so no interests are installed.
 			DataDrivenNativeRuntime.instance().installInterest(this);
 			installProductionDefinitions(prepared == null
-					? prepareProductionDefinitions(awaitProductionCatalogPreload()) : prepared);
+					? prepareProductionDefinitions(productionCatalogForStartup()) : prepared);
 			log.info(I18n.get("log.quest_engine.typed_owners_loaded", productionDispatcher.owners().size()));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize typed quest engine.", e);

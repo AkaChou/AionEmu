@@ -52,7 +52,7 @@ public class Reload extends AdminCommand {
 				try {
 					QuestEngine questEngine = QuestEngine.getInstance();
 					QuestEngine.PreparedProductionDefinitions prepared = questEngine.prepareProductionDefinitions();
-					QuestsData newQuestData = QuestsData.fromCatalog(com.aionemu.gameserver.questEngine.definition.ProductionQuestDefinitions.catalog());
+					QuestsData newQuestData = QuestsData.fromCatalog(prepared.catalog());
 					reloadQuests(newQuestData.getQuestsData(), prepared);
 					PacketSendUtility.sendMessage(admin, "Quest reload Success!");
 				} catch (Exception | GameServerError e) {

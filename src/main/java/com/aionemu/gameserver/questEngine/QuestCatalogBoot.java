@@ -53,6 +53,16 @@ final class QuestCatalogBoot {
 	}
 
 	/**
+	 * 是否已安排后台预编译。
+	 * Whether a background preload has been armed.
+	 *
+	 * @return 已安排时为 {@code true} / {@code true} when armed
+	 */
+	synchronized boolean isArmed() {
+		return preload != null;
+	}
+
+	/**
 	 * 等待预编译结果；未安排预装载时在持锁状态下走调用方给定的同步编译回退。
 	 * Await the precompiled result; when preload was not armed, run the caller's synchronous fallback
 	 * while still holding the lock (matching the former engine semantics).
