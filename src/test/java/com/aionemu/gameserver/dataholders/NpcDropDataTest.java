@@ -318,6 +318,36 @@ class NpcDropDataTest {
 		assertEquals(List.of(333, 222), itemIds(data.getDrop(200)));
 	}
 
+	@Test
+	void duplicateNpcMergeReappendsWhenLaterItemsReplaceEveryOriginalItem() throws Exception {
+		writeDrops("npc_drops_part_001.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="1" max_amount="1" chance="10"/>
+					</drop_group>
+				</npc_drop>
+			</npc_drops>
+			""");
+		writeDrops("npc_drops_part_002.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="9" max_amount="9" chance="90"/>
+					</drop_group>
+				</npc_drop>
+			</npc_drops>
+			""");
+
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
+
+		List<Drop> drops = data.getDrop(100).getDropGroup().getFirst().getDrop();
+		assertEquals(1, drops.size());
+		assertEquals(111, drops.getFirst().getItemId());
+		assertEquals(9, drops.getFirst().getMinAmount());
+		assertEquals(90, drops.getFirst().getChance());
+	}
+
 	private Path writeDrops(String fileName, String xml) throws Exception {
 		Path file = tempDir.resolve(fileName);
 		Files.writeString(file, xml, StandardCharsets.UTF_8);

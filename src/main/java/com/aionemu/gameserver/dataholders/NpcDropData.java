@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,8 +29,8 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
-import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
+import com.aionemu.gameserver.model.drop.DropTable;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.Race;
 
@@ -156,7 +154,7 @@ public class NpcDropData {
 			List<NpcDrop> drops = new ArrayList<>();
 			NpcDrop currentDrop = null;
 			DropGroup currentGroup = null;
-			List<Drop> currentGroupDrops = null;
+			DropTable.Builder currentGroupDrops = null;
 			List<DropGroup> currentCommonGroups = null;
 			while (reader.hasNext()) {
 				int event = reader.next();
@@ -174,13 +172,13 @@ public class NpcDropData {
 							}
 							currentGroup = new DropGroup();
 							applyDropGroupAttributes(reader, currentGroup);
-							currentGroupDrops = new ArrayList<>();
+							currentGroupDrops = DropTable.builder();
 						}
 						case "drop" -> {
 							if (currentGroup == null) {
 								throw new IllegalStateException("drop outside drop_group: " + reader.getLocation());
 							}
-							currentGroupDrops.add(parseDrop(reader));
+							parseDrop(reader, currentGroupDrops);
 						}
 						case "common_drop_group" -> {
 							if (currentDrop == null) {
@@ -198,7 +196,7 @@ public class NpcDropData {
 					switch (reader.getLocalName()) {
 						case "drop_group" -> {
 							if (currentDrop != null && currentGroup != null) {
-								currentGroup.setDrop(currentGroupDrops.isEmpty() ? null : currentGroupDrops);
+								currentGroup.setDropTable(currentGroupDrops.build());
 								currentDrop.addDropGroups(List.of(currentGroup));
 							}
 							currentGroup = null;
@@ -282,16 +280,16 @@ public class NpcDropData {
 			mergedGroups.add(detachedGroup);
 			currentGroupsByName.put(detachedGroup.getGroupName(), detachedGroup);
 		}
-		Set<Integer> newItemIds = newGroups.stream()
-			.map(DropGroup::getDrop)
-			.filter(Objects::nonNull)
-			.flatMap(List::stream)
-			.map(Drop::getItemId)
-			.collect(Collectors.toSet());
+		DropTable.ItemIdSet newItemIds = new DropTable.ItemIdSet();
+		for (DropGroup newGroup : newGroups) {
+			DropTable table = newGroup.getDropTable();
+			for (int i = 0; i < table.size(); i++) {
+				newItemIds.add(table.itemId(i));
+			}
+		}
 		for (DropGroup currentGroup : mergedGroups) {
-			List<Drop> currentDrops = currentGroup.getDrop();
-			if (currentDrops != null) {
-				currentDrops.removeIf(existingDrop -> newItemIds.contains(existingDrop.getItemId()));
+			if (!newItemIds.isEmpty() && currentGroup.hasDropList()) {
+				currentGroup.replaceDropTable(currentGroup.getDropTable().withoutItemIds(newItemIds), true);
 			}
 		}
 		for (DropGroup newGroup : newGroups) {
@@ -300,10 +298,13 @@ public class NpcDropData {
 				mergedGroups.add(newGroup.copy());
 				continue;
 			}
-			List<Drop> currentDrops = currentGroup.getDrop();
-			List<Drop> newDrops = newGroup.getDrop();
-			if (currentDrops != null && newDrops != null) {
-				currentDrops.addAll(newDrops);
+			DropTable currentTable = currentGroup.getDropTable();
+			DropTable newTable = newGroup.getDropTable();
+			// 旧实现只对“两侧都有列表”的组执行 addAll；空列表仍算声明过列表。
+			// The previous implementation appended only when both sides declared a list; an
+			// empty declared list still counts as present.
+			if (currentGroup.hasDropList() && newGroup.hasDropList()) {
+				currentGroup.replaceDropTable(currentTable.append(newTable), true);
 			}
 		}
 		if (!mergedGroups.isEmpty()) {
@@ -356,7 +357,7 @@ public class NpcDropData {
 			XMLStreamReader reader = factory.createXMLStreamReader(stream);
 			Map<String, DropGroup> groups = new HashMap<>();
 			DropGroup currentGroup = null;
-			List<Drop> currentDrops = null;
+			DropTable.Builder currentDrops = null;
 			while (reader.hasNext()) {
 				int event = reader.next();
 				if (event == XMLStreamConstants.START_ELEMENT) {
@@ -364,20 +365,20 @@ public class NpcDropData {
 						case "group" -> {
 							currentGroup = new DropGroup();
 							applyDropGroupAttributes(reader, currentGroup);
-							currentDrops = new ArrayList<>();
+							currentDrops = DropTable.builder();
 						}
 						case "drop" -> {
 							if (currentGroup == null) {
 								throw new IllegalStateException("drop outside group: " + reader.getLocation());
 							}
-							currentDrops.add(parseDrop(reader));
+							parseDrop(reader, currentDrops);
 						}
 						default -> {
 						}
 					}
 				} else if (event == XMLStreamConstants.END_ELEMENT && "group".equals(reader.getLocalName())) {
 					if (currentGroup != null && currentDrops != null) {
-						currentGroup.setDrop(currentDrops.isEmpty() ? null : currentDrops);
+						currentGroup.setDropTable(currentDrops.build());
 						groups.put(currentGroup.getGroupName(), currentGroup);
 					}
 					currentGroup = null;
@@ -439,22 +440,15 @@ public class NpcDropData {
 		}
 	}
 
-	private static Drop parseDrop(XMLStreamReader reader) {
+	private static void parseDrop(XMLStreamReader reader, DropTable.Builder builder) {
 		int itemId = requiredInt(reader, "item_id", "drop");
 		int minAmount = attributeInt(reader, "min_amount", 1);
 		int maxAmount = attributeInt(reader, "max_amount", 0);
-		Drop drop = new Drop();
-		drop.setItemId(itemId);
-		drop.setMinAmount(minAmount);
-		drop.setMaxAmount(maxAmount == 0 ? minAmount : maxAmount);
-		drop.setChance(attributeFloat(reader, "chance", 100));
-		drop.setNoReduce(attributeBoolean(reader, "no_reduce", false));
-		drop.setEachMember(attributeBoolean(reader, "eachmember", false));
 		String eachMember = reader.getAttributeValue(null, "each_member");
-		if (eachMember != null) {
-			drop.setAionServerEachMember(Boolean.valueOf(eachMember));
-		}
-		return drop;
+		builder.add(itemId, minAmount, maxAmount == 0 ? minAmount : maxAmount,
+			attributeFloat(reader, "chance", 100), attributeBoolean(reader, "no_reduce", false),
+			attributeBoolean(reader, "eachmember", false),
+			eachMember == null ? null : Boolean.valueOf(eachMember));
 	}
 
 	private static int requiredInt(XMLStreamReader reader, String name, String element) {
