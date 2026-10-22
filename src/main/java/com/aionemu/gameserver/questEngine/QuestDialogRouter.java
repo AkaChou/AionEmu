@@ -13,6 +13,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogContract;
@@ -377,7 +378,9 @@ final class QuestDialogRouter {
 						// 门：①不在原版 DD 表 ⇒ 客户端清单必然列不出（客户端表 ⊂ 服务端表，已实测
 						// 2155/2510）；②该转换的目标节点投影为 REWARD、且玩家当前节点投影正好是它的来源
 						// （按状态 + 打包变量逐位比对，与规划器同口径），兄弟任务互不遮挡；③一次开门只推进
-						// 一条，取 id 最小者。扣物/给物等动作由引擎按真实快照复核，不满足即零副作用。
+						// 一条，取 id 最小者；④交付按钮在更后面一页上的步不走兜底（客户端页链：入口页 →
+						// 续页 → 交付按钮），那种步只能由玩家点完（实机 2026-10-22：点 Jucleas 无弹窗无影片，
+						// 任务直接落到 Reward 30）。扣物/给物等动作由引擎按真实快照复核，不满足即零副作用。
 						// The client task list only renders rows the client's data_driven_quest.xml binds to
 						// this npc; a few rows (the 19678/19679 field-growth pair) have no DD row at all, so
 						// they can never be listed and the player also has no confirm button to press
@@ -389,9 +392,12 @@ final class QuestDialogRouter {
 						// reward window. Gates: the row must be absent from the retail DD table (the client
 						// table is a subset, measured 2155/2510), the transition must project to REWARD with
 						// the player's current node projecting exactly onto its source (status plus packed
-						// variables, the planner's own rule, so siblings never block each other), and one open
-						// advances one row (lowest id). Item actions are revalidated by the engine against the
-						// real snapshot, so an unmet one has zero side effects.
+						// variables, the planner's own rule, so siblings never block each other), one open
+						// advances one row (lowest id), and a step whose delivery button sits on a later page
+						// (a client page chain: entry page → sub-page → delivery button) never takes the
+						// fallback — the player has to walk it (live 2026-10-22: no dialog window and no movie
+						// at Jucleas, the quest jumped straight to Reward 30). Item actions are revalidated by
+						// the engine against the real snapshot, so an unmet one has zero side effects.
 						UnlistedDelivery delivery = unlistedDeliveryTransition(player, npcId);
 						if (delivery != null
 								&& engine.onDialog(new QuestEnv(npc, player, delivery.questId(),
@@ -501,11 +507,15 @@ final class QuestDialogRouter {
 	 * 转换目标投影为 REWARD」的进行中任务里 id 最小的一条；没有则返回 null。
 	 * <p>
 	 * 一次开门只推进一条（取 id 最小者）；下一条由玩家下一次交互推进，避免同一下点击连开多个奖励窗。
+	 * 交付按钮在更后面一页上的步（客户端页链）不参与：那种步的交付按钮玩家还没看到，替按等于跳过
+	 * 整条对话（见 {@link #walksClientPageChain}）。
 	 * <p>
 	 * The delivery candidate the open should walk for the player: the lowest-id live typed quest on this npc
 	 * that is absent from the retail DD table and whose current node carries a TALK transition on this npc
 	 * targeting a REWARD projection; null when there is none. One open advances one row (lowest id); the next
-	 * one is advanced by the player's next interaction.
+	 * one is advanced by the player's next interaction. A step whose delivery button sits on a later page (a
+	 * client page chain) never qualifies — the player has not seen that button yet, so pressing it for them
+	 * skips the whole dialog (see {@link #walksClientPageChain}).
 	 */
 	UnlistedDelivery unlistedDeliveryTransition(Player player, int npcId) {
 		QuestRuntimeDispatcher typed = engine.productionDispatcher();
@@ -528,11 +538,14 @@ final class QuestDialogRouter {
 	/**
 	 * 本 NPC 上「来源节点等于玩家当前节点、目标节点投影为 REWARD」的 TALK 转换；没有则返回 null。
 	 * 节点匹配用状态 + 打包变量逐位比对（与 {@code QuestMutationPlanner.matchesSourceNode} 同口径），
-	 * 所以同在栏的兄弟任务不会互相挡住。
+	 * 所以同在栏的兄弟任务不会互相挡住。交付按钮在更后面一页上的步（客户端页链）不参与——
+	 * 那种步只能由玩家点行走完，见 {@link #walksClientPageChain}。
 	 * <p>
 	 * The TALK transition on this npc whose source node projects exactly onto the player's current state and
 	 * whose target projects to REWARD; null when there is none. The node check compares status and packed
-	 * variables exactly like {@code QuestMutationPlanner.matchesSourceNode}, so siblings never block.
+	 * variables exactly like {@code QuestMutationPlanner.matchesSourceNode}, so siblings never block. A step
+	 * whose delivery button sits on a later page (a client page chain) never qualifies — the player has to
+	 * walk it; see {@link #walksClientPageChain}.
 	 */
 	private QuestTransition deliveryTransitionOf(QuestRuntimeDispatcher typed, Player player, int questId,
 			int npcId) {
@@ -559,11 +572,44 @@ final class QuestDialogRouter {
 				.findFirst().orElse(null);
 			if (source != null && source.projection().status() == state.getStatus()
 					&& source.projection().variables().entrySet().stream()
-						.allMatch(entry -> entry.getValue().equals(current.get(entry.getKey())))) {
+						.allMatch(entry -> entry.getValue().equals(current.get(entry.getKey())))
+					&& !walksClientPageChain(definition, transition, npcId)) {
 				return transition;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 该步在客户端是否要走页链才能到交付按钮：同一来源节点、同一 NPC 上另有一条「子页续页」路由
+	 * （动作 id = 客户端续页动作，如 {@code SELECT3_1}，且回发该子页），说明交付按钮在更后面一页上
+	 * （1007 的 Jucleas：select3 → select3_1 → SETPRO3）。那种步必须由玩家点完对话页与影片，
+	 * 服务端替按最后的按钮等于替玩家跳过整条对话（实机 2026-10-22：点 Jucleas 无弹窗无影片，
+	 * 任务直接落到 Reward 30）。
+	 * <p>
+	 * Whether the step walks a client page chain before the delivery button: another route on the same source
+	 * node and npc carries a selection sub-page action (the client's "keep talking" act, e.g. {@code SELECT3_1})
+	 * and answers with that sub-page, so the delivery button sits on a later page (quest 1007 at Jucleas:
+	 * select3 → select3_1 → SETPRO3). Such a step must be walked by the player; pressing the final button for
+	 * them skips the whole dialog (live 2026-10-22: no dialog window and no movie at Jucleas, the quest jumped
+	 * straight to Reward 30).
+	 */
+	private boolean walksClientPageChain(CompiledQuestDefinition definition, QuestTransition delivery, int npcId) {
+		String source = delivery.sourceNode();
+		for (QuestTransition candidate : definition.transitionsFor("TALK_TO_NPC")) {
+			if (candidate == delivery || !source.equals(candidate.sourceNode())
+					|| !(candidate.event() instanceof QuestEvent.TalkToNpc talk)
+					|| talk.npcId() != npcId || talk.dialogId() == null
+					|| !QuestDialogPage.isSelectionSubPage(talk.dialogId())) {
+				continue;
+			}
+			boolean answersWithSubPage = candidate.afterCommit().stream()
+				.anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog);
+			if (answersWithSubPage) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

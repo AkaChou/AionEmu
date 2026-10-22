@@ -3,12 +3,14 @@ package com.aionemu.gameserver.questEngine;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.bitField;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.project;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.quest;
+import static com.aionemu.gameserver.questEngine.definition.QuestDsl.showQuestDialog;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +24,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
+import com.aionemu.gameserver.questEngine.definition.QuestDefinitionXmlCompiler;
 import com.aionemu.gameserver.questEngine.definition.QuestDialogAction;
+import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
@@ -43,6 +47,14 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
  * delivery condition being met therefore left it in START forever — no hand-in marker and no reward window
  * (live 2026-10-20, npc 806698: page 1011 was pushed with no marker). The fallback walks the REWARD transition
  * for the player on the npc open; the REWARD preview then opens the reward window.
+ * <p>
+ * 交付按钮在更后面一页上的步不走兜底：那种步（入口页 → 续页 → 交付按钮）必须由玩家点完，
+ * 替按等于跳过整条对话（实机 2026-10-22：点 Jucleas 无弹窗无影片，任务直接落到 Reward 30）。
+ * <p>
+ * A step whose delivery button sits on a later page never takes the fallback: such a step (entry page →
+ * sub-page → delivery button) must be walked by the player, and pressing the button for them skips the
+ * whole dialog (live 2026-10-22: no dialog window and no movie at Jucleas, the quest jumped straight to
+ * Reward 30).
  */
 class QuestDialogUnlistedRowEntryTest {
 
@@ -164,6 +176,42 @@ class QuestDialogUnlistedRowEntryTest {
 	}
 
 	/**
+	 * 交付按钮在更后面一页上的步（客户端页链）不得被开门替按：玩家还没看到那一页，替按等于跳过整条
+	 * 对话与影片（实机 2026-10-22：点 Jucleas 无弹窗无影片，任务直接落到 Reward 30）。
+	 * A step whose delivery button sits on a later page (a client page chain) must not be advanced by the
+	 * open: the player has not seen that page yet, so pressing the button for them skips the whole dialog
+	 * (live 2026-10-22: no dialog window and no movie at Jucleas, the quest jumped straight to Reward 30).
+	 */
+	@Test
+	void aStepWithAClientPageChainIsNotAdvanced() {
+		QuestEngine engine = engineWith(pageChainRow(UNLISTED_ROW));
+
+		assertNull(router(engine).unlistedDeliveryTransition(playerAt(UNLISTED_ROW, 1), RENA),
+			"交付按钮在续页上的步必须由玩家点完，兜底不得替按");
+	}
+
+	/**
+	 * 生产目录里的「典礼」两族（1007 天族 Jucleas / 2009 魔族 Kalsten）：这一步是
+	 * 「入口页 → 续页（影片）→ 交付按钮」，开门替按等于跳过整条对话——实机 2026-10-22：点 Jucleas
+	 * 无弹窗无影片，任务从 s2 直接落到 Reward 30。
+	 * The production "ceremony" pair (1007 Elyos at Jucleas / 2009 Asmodian at Kalsten): the step is
+	 * entry page → sub-page (movie) → delivery button, so pressing the delivery button on the open skips
+	 * the whole dialog (live 2026-10-22: no dialog window and no movie at Jucleas, the quest jumped from
+	 * s2 straight to Reward 30).
+	 */
+	@Test
+	void theProductionCeremonyStepsAreNotAdvancedByTheOpen() throws Exception {
+		for (int[] ceremony : new int[][] { { 1007, 203752 }, { 2009, 204075 } }) {
+			int questId = ceremony[0];
+			int npcId = ceremony[1];
+			QuestEngine engine = engineWith(productionDefinition(questId));
+
+			assertNull(router(engine).unlistedDeliveryTransition(playerAt(questId, 2), npcId),
+				"典礼任务的交付按钮在续页上，开门不得替按：" + questId);
+		}
+	}
+
+	/**
 	 * 合成的未列表行：s1 上一条 SET_SUCCEED → REWARD（与 19678/19679 的真实形状一致）。
 	 * A synthetic unlisted row: SET_SUCCEED → REWARD on s1, the real shape of 19678/19679.
 	 */
@@ -183,6 +231,44 @@ class QuestDialogUnlistedRowEntryTest {
 			.from("s1").goTo("reward")
 			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
 			.compile();
+	}
+
+	/**
+	 * 带客户端页链的行（1007 的 Jucleas 形状）：入口页 → 续页 → 交付按钮。
+	 * A row with a client page chain (the shape of quest 1007 at Jucleas): entry page → sub-page →
+	 * delivery button.
+	 */
+	private static CompiledQuestDefinition pageChainRow(int questId) {
+		return quest(questId)
+			.metadata(QuestMetadata.minimal("unlisted-chain-" + questId, 0, "SIGNIFICANT"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("s0", project(QuestStatus.START, vars("var0", 0)))
+			.node("s1", project(QuestStatus.START, vars("var0", 1)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 2)))
+			.on(new QuestEvent.UseItem(166_030_005))
+			.from("s0").goTo("s1")
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.QUEST_SELECT.id()))
+			.from("s1").goTo("s1")
+			.afterCommit(showQuestDialog(QuestDialogPage.SELECT3))
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.SELECT3_1.id()))
+			.from("s1").goTo("s1")
+			.afterCommit(showQuestDialog(QuestDialogPage.SELECT3_1))
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.SETPRO3.id()))
+			.from("s1").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
+			.compile();
+	}
+
+	/**
+	 * 生产目录里的任务定义（编译后的 IR）。
+	 * The production quest definition (compiled IR).
+	 */
+	private static CompiledQuestDefinition productionDefinition(int questId) throws Exception {
+		try (InputStream input = QuestDialogUnlistedRowEntryTest.class
+				.getResourceAsStream("/aion/data/static_data/quest/definitions/quests/" + questId + ".xml")) {
+			assertNotNull(input, "生产任务定义缺失 / production definition missing: " + questId);
+			return QuestDefinitionXmlCompiler.compile(input);
+		}
 	}
 
 	private static QuestEngine engineWith(CompiledQuestDefinition... definitions) {
