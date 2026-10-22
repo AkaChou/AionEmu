@@ -343,6 +343,31 @@ Aion 5.8 客户端是客户端页面、动作、字典和数据包的权威来�
 
 `failure-page` 省略时保持 `2716` 兼容行为；任务自己的 HTML 有明确失败页时可填写对应页面符号；没有客户端失败页时使用 `CLOSE`，只关闭失败分支，不伪造成功页或奖励窗口。批量修复必须同时检查任务 HTML 页面索引、编译后的 priority `0/1` 路由和 XSD，不能用全局替换掩盖页面语义。
 
+### 6.9 进行中步骤只挂在「结束对话」动作上：任务行点击进不去
+
+症状：`CM_DIALOG_SELECT ... 动作=31` 之后服务端回 `SM_DIALOG_WINDOW questId=0 下发页=10`（通用任务列表），任务停在原状态不动；或与任务 NPC 对话完全无反应。上个发版还好好的、本次发版才出现，是这一类的典型特征。
+
+按下列顺序判定，不要跳步：
+
+1. **客户端此刻发的是哪个动作**。任务列表行点击固定发 `QUEST_SELECT(31)`；`extra_category=coin_quest` 的行固定发 `EXCHANGE_COIN(59)`；`-1`（`USE_OBJECT`）只由交互物 AI 自己和「关闭对话」产生。先读原始包里的 action，再看服务端回了什么。
+2. **服务端有没有同 npcId + 同 action + 同 source 的路由**。`QuestEvent.matches` 要求 dialogId 精确相等（null 才是通配），`QuestMutationPlanner.matchesSourceNode` 要求 source 节点投影全等 —— 少一个条件就是死步骤。查 XML 时不要问「这个 NPC 有没有 TALK_TO_NPC」，要问「这个 NPC **这个 source** 上有没有 **这个 action**」。
+3. **该 NPC 上的 -1 是否可达**。可达的只有三种：交互物 AI（`quest_use_item`、`quest_start_use_item`、`scroll_q41/49/2498`、`npc_ai_box_q1559`、`npc_ai_fobj_*`；物件自己发 `AI2Actions.selectDialog`）、传送门 AI 自带开门页轴（`PortalDialogAI2`）、以及 `REWARD/COMPLETE` 态的 `npc-complete` 奖励预览。普通对话 NPC + `START` 态 = 不可达。
+4. **「开门不认领进行中任务」是现行合同**。`QuestDialogRouter` 的现行口径：开门（-1/26）只重放可交付（REWARD）任务，进行中任务只由玩家点任务行（31）进入。排查「上个发版还好好的」缺陷时，先用 `git log -S` 确认这条口径是哪次改动引入的，再决定修任务 XML 还是修引擎。
+
+**权威动作怎么定**（按可信度排序）：退役 handler 的分支 > 同族任务同 NPC 的兄弟路由 > 客户端任务表的 `extra_category`。退役 handler 取自 `git show <删除提交>^:src/main/java/com/aionemu/gameserver/quest/handlers/...`；旧引擎的 `QuestDialog.START_DIALOG` 就是 31（与现行 `QUEST_SELECT` 同号）、`USE_OBJECT` 就是 -1 —— 所以旧 handler 的 `case START_DIALOG:` 才是「任务行点击」的权威写照。
+
+**修复层**：只改任务 XML 的入口动作（31/59），并在路由旁写明入口来源；不改引擎、不改编译器。本类属任务 XML 契约失配而非引擎缺陷，引擎里加任务特例是明令禁止的。
+
+**收口与防复发**：同形问题必须全量扫生产目录，不许只改报障任务；改完建回归审计，把「live（source 投影 START）+ `USE_OBJECT(-1)` 且同 NPC 同 source 无 31/59 路由」锁成红灯，并显式列出已审计例外（每条带理由：传送门面、交互物件面、污名对话面、从未接线的任务页等）。
+
+**误区**（本次实际踩过）：
+
+- 不要因为「步骤挂在 -1 上」就批量把所有 -1 改成 31：交互物面、传送门面、`REWARD` 态奖励预览的 -1 都是对的。
+- 不要用任务 ID 或任务名猜客户端动作；判据是客户端任务表与退役 handler。
+- 不要只改报障任务就收工，也不要为了「看起来一致」把已审计的例外任务一起改掉。
+- 客户端任务 HTML 是加密的（data pak 里的 `QUEST_Q*.html`），别指望直接读它来判动作；用客户端 quest 表的 `extra_category`。
+- 通用心法：任何「点了没反应」的客户端对话问题，第一步永远是「客户端此刻发的 action」与「服务端同 npc + 同 source 的路由」的比对，而不是先看页面 ID。
+
 ## 7. 验证门禁
 
 以下 Maven、Javac、测试和脚本命令仅在用户明确授权后执行；未获授权时只记录待执行验收项，并保持“实现完成，待验收”，不得请用户进入客户端复测。不会触发构建的 `git diff --check`、状态和 diff 检查可直接执行。
