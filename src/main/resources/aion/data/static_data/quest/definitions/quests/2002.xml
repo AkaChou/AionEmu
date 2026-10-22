@@ -340,9 +340,10 @@
       </after-commit>
     </transition>
     <!-- 步骤 14:使用对象 (203538) 触发剧情。 -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="s14" target="s15">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203538" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203538" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <play-movie movie-id="256"/>

@@ -84,9 +84,10 @@
       </after-commit>
     </transition>
     <!-- 自宅管家对话：USE_OBJECT 展示提示，STEP_TO_1 推进到 var0=1。 Talk to own house butler: USE_OBJECT shows hint, STEP_TO_1 advances to var0=1. -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="810022" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="810022" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -112,7 +113,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="810023" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="810023" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -138,7 +139,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="810024" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="810024" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -164,7 +165,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="810025" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="810025" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -190,7 +191,7 @@
     </transition>
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="810026" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="810026" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -229,7 +230,7 @@
     <!-- 与 830651 对话：var0=0 时仅展示完成提示不推进；var0=1 时置 REWARD。 Talk to 830651: at var0=0 only shows hint without advancing; at var0=1 sets REWARD. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="830651" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="830651" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="0"/>
@@ -240,7 +241,7 @@
     </transition>
     <transition source="s1" target="reward">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="830651" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="830651" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="1"/>

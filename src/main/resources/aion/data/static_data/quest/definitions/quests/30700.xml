@@ -190,9 +190,10 @@
     </transition>
     <!-- 指挥官 (800338) 在步骤 5 对话;SET_REWARD 进入奖励状态。
          Commander (800338) dialog at step 5; SET_REWARD enters REWARD. -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="step5" target="step5">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800338" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="800338" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var0" value="5"/>

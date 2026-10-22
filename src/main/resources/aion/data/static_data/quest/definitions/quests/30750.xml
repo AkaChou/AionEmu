@@ -206,9 +206,10 @@
       </after-commit>
     </transition>
     <!-- 步骤 5：800338 使用对象显示 2716，SET_REWARD(10255) 进入 REWARD。 Step 5: use object at 800338 for dialog 2716, SET_REWARD enters REWARD. -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="step5" target="step5">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="800338" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="800338" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT6"/>

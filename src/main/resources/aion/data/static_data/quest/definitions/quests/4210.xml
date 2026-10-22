@@ -104,9 +104,10 @@
         <sync-quest-state mode="PACKET_ONLY"/>
       </after-commit>
     </transition>
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="s1" target="s1">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798331" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798331" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <variable-is field="var1" value="1"/>

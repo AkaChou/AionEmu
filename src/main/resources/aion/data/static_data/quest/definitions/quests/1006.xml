@@ -402,10 +402,13 @@
         <sync-quest-state mode="LEVEL_AND_VISIBILITY_REFRESH"/>
       </after-commit>
     </transition>
-    <!-- Belpartan (205000): flight teleport, then the 43-second invisible timer. -->
+    <!-- Belpartan (205000): flight teleport, then the 43-second invisible timer.
+         The row selection (QUEST_SELECT/31) is the entry: the client answers a quest-list
+         row click with 31, and the retired handler fired on START_DIALOG (31) too.
+         USE_OBJECT (-1) is the quest-object interaction and is never sent here. -->
     <transition source="s99" target="s50">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="205000" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="205000" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <flight-teleport flight-teleport-id="1001"/>

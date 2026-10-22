@@ -79,9 +79,10 @@
         <dialog type="SHOW_QUEST_PAGE" page="QUEST_REFUSE_1"/>
       </after-commit>
     </transition>
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203139" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203139" action="QUEST_SELECT"/>
       </event>
       <conditions>
         <has-item item-id="182200519" count="1"/>

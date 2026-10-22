@@ -79,9 +79,10 @@
     <!-- 未接取状态与 798318 对话接取，起始页 4762。 Pre-start dialog with 798318. -->
     <dialog type="NPC_START" npc-id="798318" source="unaccepted" target="started" selection-sources="unaccepted started" start-page="SELECT_NONE"/>
     <!-- 798332:var0=0,USE_OBJECT(-1) 显示 1011,SELECT_ACTION_1012 显示 1012,STEP_TO_1(10000) 推进 var0=1。 -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="798332" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="798332" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>

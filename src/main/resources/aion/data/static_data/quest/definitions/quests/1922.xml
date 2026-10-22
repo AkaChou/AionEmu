@@ -143,9 +143,10 @@
       </after-commit>
     </transition>
     <!-- Telemachus (203901)：USE_OBJECT var0==7 -> dialog 3739。 -->
+    <!-- 任务行点击（31）进入本步：开门不再认领进行中任务。 / The quest-row click (31) enters this step: the npc open no longer claims live quests. -->
     <transition source="s7" target="s7">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="203901" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="203901" action="QUEST_SELECT"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT9"/>

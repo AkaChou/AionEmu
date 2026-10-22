@@ -184,9 +184,10 @@
       </after-commit>
     </transition>
     <!-- 进行中:上交 10 个 relic 兑换奖励。NPC 831235。 -->
+    <!-- coin_quest 任务行固定发 EXCHANGE_COIN(59)：本步由该动作进入。 / A coin_quest row always sends EXCHANGE_COIN(59): that action enters this step. -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="831235" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="831235" action="EXCHANGE_COIN"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
@@ -291,7 +292,7 @@
     <!-- 进行中:同上,NPC 831414。 -->
     <transition source="started" target="started">
       <event>
-        <dialog type="TALK_TO_NPC" npc-id="831414" action="USE_OBJECT"/>
+        <dialog type="TALK_TO_NPC" npc-id="831414" action="EXCHANGE_COIN"/>
       </event>
       <after-commit>
         <dialog type="SHOW_QUEST_PAGE" page="SELECT1"/>
