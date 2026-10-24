@@ -5,6 +5,7 @@ import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.DialogAction;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -201,10 +202,17 @@ public class DialogService {
 		// 客户端任务列表/对话树的页内导航动作（页 0/10 上回发的「继续说话」等，原版对话平面在
 		// 页 0/10 事件里把它们切到阶段页）：未认领即由客户端本地翻页，**不得**回发同页
 		// （回发即把客户端重新放到同一页，多任务 NPC 上表现为「点了没反应」）。
+		// 动作 4 与接取窗页 4 共用编号：烙印窗口动作是真实的 NPC 选项，不能被该页内导航
+		// 豁免吞掉，否则点击「装备/去掉烙印之石」零下发。
 		// Page-local navigation acts on the task-list / dialog tree (retail dialog plane switches
 		// them to a stage page on a page 0/10 event): unclaimed, the client turns the page by
 		// itself — echoing the same page just re-renders it (a dead click on multi-quest npcs).
-		if (questId == 0 && QuestDialogAction.isSelectionContinuationAction(dialogId)) {
+		// Action 4 shares its id with the accept-window page 4: only a real stigma master owns the
+		// dialog action, so other npcs keep the original page-navigation behavior.
+		boolean stigmaWindowAction = dialogId == DialogAction.OPEN_STIGMA_WINDOW.id()
+			&& isStigmaMasterTitle(npc.getObjectTemplate().getTitleId(), false);
+		if (questId == 0 && !stigmaWindowAction
+			&& QuestDialogAction.isSelectionContinuationAction(dialogId)) {
 			return;
 		}
 		if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {

@@ -274,12 +274,20 @@ public enum QuestDialogAction {
 	 * these locally (a quest page's select1 carries one continuation button and nothing else), so an
 	 * echo of the same page is no visible step; the retail dialog plane answers with the main-line
 	 * stage page instead.
+	 * <p>
+	 * 注意：{@code 4} 同时是 {@code DialogAction.OPEN_STIGMA_WINDOW}。无任务上下文的 NPC 对话选项
+	 * 必须由 {@code DialogService} 按真实动作处理，不能一律当作页内导航吞掉。
+	 * Note: {@code 4} is also {@code DialogAction.OPEN_STIGMA_WINDOW}. A context-less npc dialog
+	 * option must be handled as the real action by {@code DialogService}, never swallowed as
+	 * page-local navigation.
 	 * @param actionId 对话动作 ID / dialog action id
 	 * @return 是否为续页动作 / whether it is a selection continuation act
 	 */
 	public static boolean isSelectionContinuationAction(int actionId) {
 		// 页 id 动作：页 4（接取）与主线页 SELECT⟨n⟩（1011=1、1352=2、…）及其子页。
+		// 4 也是 OPEN_STIGMA_WINDOW，调用方必须按上下文区分。
 		// Page-id acts: page 4 (accept) and the main-line pages SELECT<n> (1011=1, 1352=2, ...).
+		// 4 is also OPEN_STIGMA_WINDOW, so callers must disambiguate by context.
 		return actionId == QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW.id()
 			|| (actionId > 0 && actionId <= QuestDialogPage.SELECT1.id()
 				&& QuestDialogPage.mainLineSlot(actionId) > 0);

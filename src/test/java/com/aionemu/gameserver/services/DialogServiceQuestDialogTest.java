@@ -8,10 +8,13 @@ import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AITemplate;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.lifecycle.EngineServiceBindings;
+import com.aionemu.gameserver.model.DialogAction;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -144,6 +147,25 @@ class DialogServiceQuestDialogTest {
 	}
 
 	/**
+	 * 烙印窗口动作 4 与接取窗页 4 共用编号：无任务上下文的 NPC 选项必须进入
+	 * {@code OPEN_STIGMA_WINDOW} 分支并打开页 1，不能被页内导航豁免静默吞掉。
+	 * Stigma-window action 4 shares its id with accept-window page 4: a context-less NPC option
+	 * must reach the {@code OPEN_STIGMA_WINDOW} branch and open page 1 instead of being swallowed
+	 * by the page-navigation exemption.
+	 */
+	@Test
+	void stigmaWindowActionIsNotSwallowedAsPageFourNavigation() throws Exception {
+		Player player = playerWithCompletedQuest(1929, Race.ELYOS);
+		Npc npc = npc(new NamedAi("general"));
+		npc.getObjectTemplate().setTitleId(350410);
+
+		DialogService.onSimpleDialogSelect(DialogAction.OPEN_STIGMA_WINDOW.id(), player, npc, 0);
+
+		assertOnlyDialogTargetPage(player, NPC_OBJECT_ID, 1);
+		assertFalse(questEngine.dialogCalled);
+	}
+
+	/**
 	 * 门控拒绝未授权普通任务动作后回到任务列表页：动作 ID 不能当作页面回显。
 	 * After the quest-row gate refuses an unauthorized normal quest action the client must return to the
 	 * quest-list page; the refused action id must never be echoed as a page id.
@@ -164,6 +186,20 @@ class DialogServiceQuestDialogTest {
 		setField(Player.class, player, "playerAccount", new Account(1));
 		QuestStateList states = new QuestStateList();
 		states.addQuest(QUEST_ID, new QuestState(QUEST_ID, status, 0, 0, null, null, null));
+		setField(Player.class, player, "questStateList", states);
+		setField(Player.class, player, "clientConnection", packetConnection());
+		return player;
+	}
+
+	private static Player playerWithCompletedQuest(int questId, Race race) throws Exception {
+		Player player = new ObjenesisStd().newInstance(Player.class);
+		setField(AionObject.class, player, "objectId", PLAYER_ID);
+		setField(Player.class, player, "playerAccount", new Account(1));
+		PlayerCommonData commonData = new PlayerCommonData(PLAYER_ID);
+		commonData.setRace(race);
+		setField(Player.class, player, "playerCommonData", commonData);
+		QuestStateList states = new QuestStateList();
+		states.addQuest(questId, new QuestState(questId, QuestStatus.COMPLETE, 0, 0, null, null, null));
 		setField(Player.class, player, "questStateList", states);
 		setField(Player.class, player, "clientConnection", packetConnection());
 		return player;
@@ -191,6 +227,21 @@ class DialogServiceQuestDialogTest {
 		List<AionServerPacket> packets = packetQueue(player.getClientConnection());
 		assertEquals(1, packets.size());
 		SM_DIALOG_WINDOW dialog = assertInstanceOf(SM_DIALOG_WINDOW.class, packets.getFirst());
+		assertEquals(expectedTargetObjectId, intField(SM_DIALOG_WINDOW.class, dialog, "targetObjectId"));
+		assertEquals(expectedPage, intField(SM_DIALOG_WINDOW.class, dialog, "dialogID"));
+		assertEquals(0, intField(SM_DIALOG_WINDOW.class, dialog, "questId"));
+	}
+
+	private static void assertOnlyDialogTargetPage(Player player, int expectedTargetObjectId, int expectedPage)
+			throws Exception {
+		List<SM_DIALOG_WINDOW> dialogs = new ArrayList<>();
+		for (AionServerPacket packet : packetQueue(player.getClientConnection())) {
+			if (packet instanceof SM_DIALOG_WINDOW dialog) {
+				dialogs.add(dialog);
+			}
+		}
+		assertEquals(1, dialogs.size());
+		SM_DIALOG_WINDOW dialog = dialogs.getFirst();
 		assertEquals(expectedTargetObjectId, intField(SM_DIALOG_WINDOW.class, dialog, "targetObjectId"));
 		assertEquals(expectedPage, intField(SM_DIALOG_WINDOW.class, dialog, "dialogID"));
 		assertEquals(0, intField(SM_DIALOG_WINDOW.class, dialog, "questId"));
