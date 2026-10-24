@@ -50,7 +50,6 @@ class QuestLiveRowEntryAuditTest {
 	/**
 	 * 已审计的例外（{@code questId/npcId/sourceNode}）：
 	 * <ul>
-	 * <li>1929/205111/equipped96：污名对话平面，-1 是「结束对话」的反应，不是步骤入口。</li>
 	 * <li>2620/204787/s1：交付由 {@code SELECT_QUEST_REWARD(1009)} 承担，-1 只补默认页。</li>
 	 * <li>2919/204206/bookInserted、3200/700522/s2、18602/730308/s1、36506/206134/started、
 	 * 36510/700761/started、46511/700775/started、50019/701466/s1、50020/701466/s1、51019/701467/s1：
@@ -61,7 +60,6 @@ class QuestLiveRowEntryAuditTest {
 	 * The audited exceptions ({@code questId/npcId/sourceNode}).
 	 */
 	private static final Set<String> AUDITED_EXCEPTIONS = Set.of(
-		"1929/205111/equipped96",
 		"2620/204787/s1",
 		"2919/204206/bookInserted",
 		"3200/700522/s2",

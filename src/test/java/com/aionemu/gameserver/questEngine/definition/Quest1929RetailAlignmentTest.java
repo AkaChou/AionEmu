@@ -219,6 +219,26 @@ class Quest1929RetailAlignmentTest {
 	}
 
 	@Test
+	void rowClickAfterEquipOpensTheSelect6StagePage() throws Exception {
+		CompiledQuestDefinition compiled = load();
+		QuestEvent questSelect = new QuestEvent.TalkToNpc(205111, QuestDialogAction.QUEST_SELECT.id());
+		QuestTransition route = compiled.definition().transitions().stream()
+			.filter(t -> "equipped96".equals(t.sourceNode()))
+			.filter(t -> t.event().equals(questSelect))
+			.findFirst().orElseThrow();
+
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),
+			route.afterCommit());
+
+		int packed96 = compiled.definition().progressLayout().pack(Map.of("step", 96));
+		QuestSnapshot snapshot = new QuestSnapshot(7, 1929, QuestStatus.START, packed96, Map.of(), Map.of())
+			.withPlayerClass(PlayerClass.GUNSLINGER);
+		var plan = QuestMutationPlanner.plan(compiled, snapshot, questSelect, route).orElseThrow();
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT6.id())),
+			plan.afterCommit());
+	}
+
+	@Test
 	void removesTheClassSpecificStigmaOnDieAndEnterWorldFailure() throws Exception {
 		CompiledQuestDefinition compiled = load();
 		Map<PlayerClass, Integer> expected = Map.ofEntries(
