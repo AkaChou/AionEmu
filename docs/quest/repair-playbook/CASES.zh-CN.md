@@ -1075,3 +1075,18 @@
 - 验证命令和结果：IDEA MCP（2026-10-22 会话内，用户授权「聚焦测试 + 目录门禁」）——`QuestDialogUnlistedRowEntryTest` 8 例、`Quest1007MovieDialogTest`、`Quest2009MovieDialogTest`、`ProductionCatalogWhitelistVerificationTest`（生产 catalog 编译 OK=707、失败 0、白名单违规 0、交互对象合同失败 0）、`QuestProductionStartupGateTest`、`QuestLiveRowEntryAuditTest` 全部通过。客户端实机：用户 2026-10-22 确认「实机验证成功」；验收记录 `docs/quest/1007-2026-10-22-client-accepted.md`。
 - 复用边界：① 只约束「开门替按交付按钮」这一条兜底；行点击（31）入口、页本地导航、REWARD 奖励窗重放（8.50 `OPEN_DOOR_REPLAY_REWARD_FIRST`）与 8.67 的「live 步骤必须挂在任务行动作上」各属独立合同；② 门依赖子页续页路由的形状（动作 id 命中 `QuestDialogPage.isSelectionSubPage` 且 after-commit 回发该子页）；页链写成非子页动作的任务仍会被兜底替按，改前必须按该任务自身客户端证据重判；③ 失去兜底的 138 个页链步依据「客户端 `quest_q<id>.html` 存在」普查（全部命中）判定页链可渲染，未逐个实机；④ 单按钮交付步（415 处，含 19678/19679）兜底保留，仍等于替玩家按一次第一页按钮，属 2026-10-20 的既定救援路径。
 - commit：`e58a44a79`。
+
+## 8.69 烙印大师处点「装备/去掉烙印之石」无反应：动作 4 被页 4 的页内导航豁免吞掉
+
+- Pattern ID：`DIALOG_ACTION_PAGE_ID_COLLISION_STIGMA_WINDOW`。
+- 代表 NPC：203711（Orphe，天族，`title_id=350410`）。同族烙印大师 title（`314362/314365/314366/350410/357007/357019/357031/357043/358493/358523/370111/370112/370503`）同形；全库 `title_id=350410` 的 NPC 共 70 个。
+- 搜索症状：与烙印大师 NPC 对话，点「装备/去掉烙印之石」完全无反应；`log/quests.log` 里 `CM_DIALOG_SELECT 上一页=10 动作=4` 每秒重复一次，随后服务端只回 `SM_DIALOG_WINDOW targetObj=0 页=0` 与 `页=10`，从不出现页 1（烙印窗口）或页 27（未完成 1929/2900 的提示）。
+- 玩家可见症状：203711 对话后选「装备/去掉烙印之石」，窗口不切换、无提示、无系统消息；点「结束对话」后才退出。
+- 根因：动作编号与页面编号共用同一空间——`4` 既是 `DialogAction.OPEN_STIGMA_WINDOW`（真实 NPC 选项），也是 `QuestDialogPage.SHOW_ASK_QUEST_ACCEPT_WINDOW`（接取窗页 4）。`34774f570` 为修多任务 NPC 的「点了没反应」加了页内导航提前返回：`questId == 0 && QuestDialogAction.isSelectionContinuationAction(dialogId)` 直接 `return`；而 `isSelectionContinuationAction` 把页 4 计入续页动作 ⇒ 无任务上下文的动作 4 在进入 `switch` 前就被吞掉，`case 4 -> handleStigmaDialog(...)` 永远不执行。客户端收不到后续页，按重发节奏反复发同一动作，服务端的 `CM_DIALOG_SELECT` 重发死循环保护在第 4 次关闭窗口，日志因此呈「页 10 → 动作 4 → 页 0/页 10」的循环。
+- 第一检查点：① 该动作是否在 `DialogService` 的页内导航提前返回处被丢弃（`questId==0` + `isSelectionContinuationAction`）；② 该 NPC 的 `titleId` 是否属于 `isStigmaMasterTitle`；③ 页 4 接取窗是否仍只由页动作 1007 打开（`QuestDialogRouter` 的 acquiring slot / offered list 门不变）。
+- 修复层：`DialogService.onDialogSelect` 的页内导航豁免增加 NPC 上下文判定——仅当 `dialogId == DialogAction.OPEN_STIGMA_WINDOW.id()` 且 `isStigmaMasterTitle(npc.titleId, false)` 成立时跳过豁免，让动作 4 正常进入 `case 4`；非烙印大师 NPC 的动作 4 保持原有页内导航行为。`QuestDialogAction.isSelectionContinuationAction` 语义未改（接取窗页 4、1007 流程、`QuestDialogRouter` 路径不受影响），仅补 Javadoc 记录双重编号。
+- 修改文件：`src/main/java/com/aionemu/gameserver/services/DialogService.java`、`src/main/java/com/aionemu/gameserver/questEngine/definition/QuestDialogAction.java`（注释）、`src/test/java/com/aionemu/gameserver/services/DialogServiceQuestDialogTest.java`（新增回归）。
+- 代表测试：`DialogServiceQuestDialogTest#stigmaWindowActionIsNotSwallowedAsPageFourNavigation`（完成 1929 的天族玩家 + `title_id=350410` + 动作 4 ⇒ 唯一 `SM_DIALOG_WINDOW(target, 1)`，questId=0，且不进入任务派发）。
+- 验证命令和结果：本轮未运行 Maven 构建/测试（未获构建授权），仅做静态审查与代码路径推演。客户端实机：用户 2026-10-24 确认「实机运行成功」——203711 处「装备/去掉烙印之石」正常打开烙印窗口。
+- 复用边界：① 只处理「无任务上下文的动作 4 落在烙印大师 NPC 上」这一形态；带任务上下文的页 4（`questId != 0`）仍走原有任务路由与接取门，不在本修复面；② 非烙印大师 NPC 的动作 4 保持页内导航（不回发、不开窗），避免改变多任务 NPC 的既有行为；③ 未改 `isSelectionContinuationAction`，因此 1007/接取窗页 4 的既有合同与 QE-122 一致；④ 其他与页 id 冲突的动作（如 8 = 奖励窗动作与页 8）各有独立合同，不得套用本模式。
+- commit：`0afec802d`。
