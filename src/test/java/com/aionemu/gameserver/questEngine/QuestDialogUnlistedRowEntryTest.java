@@ -7,20 +7,28 @@ import static com.aionemu.gameserver.questEngine.definition.QuestDsl.showQuestDi
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.syncQuestState;
 import static com.aionemu.gameserver.questEngine.definition.QuestDsl.vars;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcData;
+import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+import com.aionemu.gameserver.questEngine.definition.AfterCommitAction;
 import com.aionemu.gameserver.questEngine.definition.CompiledQuestDefinition;
 import com.aionemu.gameserver.questEngine.definition.ImmutableQuestCatalog;
 import com.aionemu.gameserver.questEngine.definition.PersistenceMode;
@@ -30,6 +38,8 @@ import com.aionemu.gameserver.questEngine.definition.QuestDialogPage;
 import com.aionemu.gameserver.questEngine.definition.QuestEvent;
 import com.aionemu.gameserver.questEngine.definition.QuestMetadata;
 import com.aionemu.gameserver.questEngine.definition.QuestStateSyncMode;
+import com.aionemu.gameserver.questEngine.definition.QuestTransition;
+import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.questEngine.tablelane.DataDrivenNativeRuntime;
 import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
@@ -55,6 +65,11 @@ import com.aionemu.gameserver.questEngine.tablelane.NativeTalkFixture;
  * sub-page → delivery button) must be walked by the player, and pressing the button for them skips the
  * whole dialog (live 2026-10-22: no dialog window and no movie at Jucleas, the quest jumped straight to
  * Reward 30).
+ * <p>
+ * 交付兜底候选在同一 source 另有 {@code USE_OBJECT(-1)} 入口页时，开门先下发入口页，
+ * 玩家在页面上点交付按钮（2620/2919）。 / When the delivery candidate carries a
+ * {@code USE_OBJECT(-1)} entry page on the same source, the open shows that page first and
+ * the player presses delivery there (2620/2919).
  */
 class QuestDialogUnlistedRowEntryTest {
 
@@ -65,13 +80,27 @@ class QuestDialogUnlistedRowEntryTest {
 
 	private DataDrivenNativeRuntime originalRuntime;
 	private NpcData originalNpcData;
+	private ObjectProvider<QuestEngine> originalEngineProvider;
 
 	@BeforeEach
-	void setUp() {
-		// 安装门禁读 NPC 模板（can-act 注册）：测试环境喂空表即可。
-		// The installation gate reads npc templates (can-act registration): an empty table is enough here.
+	void setUp() throws ReflectiveOperationException {
+		// 安装门禁读 NPC 模板（can-act 注册）。
+		// The installation gate reads npc templates (can-act registration).
 		originalNpcData = DataManager.NPC_DATA;
 		DataManager.NPC_DATA = new NpcData();
+		// 生产定义的 can-act 安装会反向取引擎单例；测试必须先把 provider 指向被测引擎。
+		// Installing a production can-act route resolves the engine singleton in reverse, so the
+		// provider must point at the engine under test.
+		originalEngineProvider = engineProvider();
+		// 生产定义里的 ACTION_ITEM_USE 资格门需要模板 AI；这里只喂交互物模板。
+		// The ACTION_ITEM_USE gate of the production definitions needs template AIs; feed the
+		// interaction-object templates only.
+		for (int npcId : new int[] { 700_323, 700_212, 731_710, 703_317, 731_716, 703_325 }) {
+			NpcTemplate template = new NpcTemplate();
+			template.setNpcId(npcId);
+			template.setAi("quest_use_item");
+			DataManager.NPC_DATA.getNpcData().put(npcId, template);
+		}
 		// 原版表只含 LISTED_ROW：其余合成行都算「客户端清单永远列不出」。
 		// The retail table carries LISTED_ROW only, so every other synthetic row is unlistable client-side.
 		originalRuntime = DataDrivenNativeRuntime.swapInstanceForTest(
@@ -80,6 +109,7 @@ class QuestDialogUnlistedRowEntryTest {
 
 	@AfterEach
 	void tearDown() {
+		QuestEngine.setInstanceProvider(originalEngineProvider);
 		DataDrivenNativeRuntime.swapInstanceForTest(originalRuntime);
 		DataManager.NPC_DATA = originalNpcData;
 	}
@@ -212,6 +242,225 @@ class QuestDialogUnlistedRowEntryTest {
 	}
 
 	/**
+	 * 2620 的 s1 同时有 -1 入口页（{@code DEFAULT_SUCCESS}）与 1009 交付路由：开门必须先发
+	 * 入口页，不能替玩家直接按交付。 / Quest 2620's s1 carries both a -1 entry page
+	 * ({@code DEFAULT_SUCCESS}) and the 1009 delivery route: the open must show the entry page first,
+	 * never press delivery for the player.
+	 */
+	@Test
+	void theProductionQuest2620OpenShowsTheEntryPageBeforeDelivery() throws Exception {
+		int questId = 2620;
+		int npcId = 204787;
+		CompiledQuestDefinition definition = productionDefinition(questId);
+		QuestEngine engine = engineWith(definition);
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, questId, QuestStatus.START, 1 | (5 << 6) | (5 << 12));
+
+		QuestDialogRouter.UnlistedDelivery openPage =
+			router(engine).unlistedOpenPageTransition(player, npcId);
+
+		assertNotNull(openPage, "2620 的 -1 入口页必须被开门认领");
+		assertEquals(questId, openPage.questId());
+		assertEquals(QuestDialogAction.USE_OBJECT.id(),
+			((QuestEvent.TalkToNpc) openPage.transition().event()).dialogId(),
+			"开门下发的是原版入口动作");
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.DEFAULT_SUCCESS.id())),
+			openPage.transition().afterCommit(), "入口页必须是 DEFAULT_SUCCESS");
+		assertRowEntryPage(definition, "s1", npcId, QuestDialogPage.DEFAULT_SUCCESS);
+
+		QuestDialogRouter.UnlistedDelivery delivery =
+			router(engine).unlistedDeliveryTransition(player, npcId);
+		assertNotNull(delivery, "同一步仍保留 1009 交付兜底");
+		assertEquals(QuestDialogAction.SELECT_QUEST_REWARD.id(),
+			((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId());
+	}
+
+	/**
+	 * 2919 的 bookInserted 同形：-1 入口页是 {@code SELECT8}，1009 才是交付。
+	 * Quest 2919's bookInserted has the same shape: the -1 entry page is {@code SELECT8}; only
+	 * 1009 delivers.
+	 */
+	@Test
+	void theProductionQuest2919OpenShowsTheEntryPageBeforeDelivery() throws Exception {
+		int questId = 2919;
+		int npcId = 204206;
+		CompiledQuestDefinition definition = productionDefinition(questId);
+		QuestEngine engine = engineWith(definition);
+		Player player = playerAt(questId, 7);
+
+		QuestDialogRouter.UnlistedDelivery openPage =
+			router(engine).unlistedOpenPageTransition(player, npcId);
+
+		assertNotNull(openPage, "2919 的 -1 入口页必须被开门认领");
+		assertEquals(questId, openPage.questId());
+		assertEquals(QuestDialogAction.USE_OBJECT.id(),
+			((QuestEvent.TalkToNpc) openPage.transition().event()).dialogId());
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(QuestDialogPage.SELECT8.id())),
+			openPage.transition().afterCommit(), "入口页必须是 SELECT8");
+		assertRowEntryPage(definition, "bookInserted", npcId, QuestDialogPage.SELECT8);
+
+		QuestDialogRouter.UnlistedDelivery delivery =
+			router(engine).unlistedDeliveryTransition(player, npcId);
+		assertNotNull(delivery, "同一步仍保留 1009 交付兜底");
+		assertEquals(QuestDialogAction.SELECT_QUEST_REWARD.id(),
+			((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId());
+	}
+
+	/**
+	 * 19678/19679 没有 -1 入口页：开门仍直接走 {@code SET_SUCCEED} 交付兜底。
+	 * 19678/19679 carry no -1 entry page: the open still walks the {@code SET_SUCCEED} delivery
+	 * fallback directly.
+	 */
+	@Test
+	void singleButtonRowsKeepTheDeliveryFallbackWithoutAnEntryPage() throws Exception {
+		for (int[] row : new int[][] { { 19678, 806698 }, { 19679, 806698 } }) {
+			int questId = row[0];
+			int npcId = row[1];
+			QuestEngine engine = engineWith(productionDefinition(questId));
+			Player player = playerAt(questId, 1);
+
+			assertNull(router(engine).unlistedOpenPageTransition(player, npcId),
+				"没有 -1 入口页的行不得走入口页门：" + questId);
+			QuestDialogRouter.UnlistedDelivery delivery =
+				router(engine).unlistedDeliveryTransition(player, npcId);
+			assertNotNull(delivery, "单按钮行必须保留交付兜底：" + questId);
+			assertEquals(QuestDialogAction.SET_SUCCEED.id(),
+				((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId());
+		}
+	}
+
+	/**
+	 * 10529/20529 的交付按钮在 {@code SELECT11_1} 续页之后：页链保护必须继续压住交付兜底，
+	 * 入口页门也不得抢先接管。 / 10529/20529 put the delivery button after the {@code SELECT11_1}
+	 * sub-page: the page-chain guard must keep suppressing the delivery fallback, and the entry-page
+	 * gate must not claim the open either.
+	 */
+	@Test
+	void pageChainRowsNeverTakeTheEntryPageShortcut() throws Exception {
+		for (int[] row : new int[][] { { 10529, 806075 }, { 20529, 806079 } }) {
+			int questId = row[0];
+			int npcId = row[1];
+			QuestEngine engine = engineWith(productionDefinition(questId));
+			Player player = playerAt(questId, 10);
+
+			assertNull(router(engine).unlistedDeliveryTransition(player, npcId),
+				"交付按钮在续页上的行不得被替按：" + questId);
+			assertNull(router(engine).unlistedOpenPageTransition(player, npcId),
+				"页链行不得走入口页门：" + questId);
+		}
+	}
+
+	/**
+	 * 入口页路由存在但本次未受理（条件不满足等）时，必须直接放弃，不得退回到 1009
+	 * 交付兜底——否则仍会替玩家跳过入口页。 / When the entry-page route exists but is not
+	 * accepted this time (unmet conditions and the like), the open must give up instead of
+	 * falling back to the 1009 delivery, which would still skip the entry page.
+	 */
+	@Test
+	void anEntryPageThatFailsToOpenNeverFallsBackToDelivery() throws Exception {
+		int questId = 2620;
+		List<Integer> attempted = new ArrayList<>();
+		QuestEngine engine = new QuestEngine() {
+			@Override
+			public boolean onDialog(QuestEnv env) {
+				attempted.add(env.getDialogId());
+				return env.getDialogId() == QuestDialogAction.SELECT_QUEST_REWARD.id();
+			}
+		};
+		installEngineProvider(engine);
+		engine.installProductionDefinitions(new ImmutableQuestCatalog(List.of(productionDefinition(questId))));
+		Player player = NativeTalkFixture.player();
+		NativeTalkFixture.add(player, questId, QuestStatus.START, 1 | (5 << 6) | (5 << 12));
+		Npc npc = NativeTalkFixture.npc(204787);
+
+		assertFalse(router(engine).onDialog(new QuestEnv(npc, player, 0, QuestDialogAction.USE_OBJECT.id())),
+			"入口页未受理时开门必须放弃");
+		assertEquals(List.of(QuestDialogAction.USE_OBJECT.id()), attempted,
+			"入口页未受理时不得再尝试 1009 交付");
+	}
+
+	/**
+	 * 入口页只在交付候选自己的 source 上找：同一任务其它 source 的 `-1` 页路由不得被借来
+	 * 开门（否则会把玩家送进另一阶段的对话页）。 / The entry page is looked up on the delivery
+	 * candidate's own source only: a `-1` page route on another source of the same quest must
+	 * never be borrowed for the open (that would drop the player into another stage's page).
+	 */
+	@Test
+	void theEntryPageComesFromTheDeliveryCandidatesOwnSource() {
+		int questId = UNLISTED_ROW;
+		CompiledQuestDefinition twoStages = quest(questId)
+			.metadata(QuestMetadata.minimal("unlisted-two-stages", 0, "SIGNIFICANT"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("s0", project(QuestStatus.START, vars("var0", 0)))
+			.node("s1", project(QuestStatus.START, vars("var0", 1)))
+			.node("s2", project(QuestStatus.START, vars("var0", 2)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 3)))
+			.on(new QuestEvent.UseItem(166_030_005))
+			.from("s0").goTo("s1")
+			// s1 的 -1 页路由：当前阶段自己就有一个入口页。
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.USE_OBJECT.id()))
+			.from("s1").goTo("s1")
+			.afterCommit(showQuestDialog(QuestDialogPage.SELECT2))
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.SETPRO1.id()))
+			.from("s1").goTo("s2")
+			// s2 的 -1 页路由：另一个阶段，不能被 s2 的交付候选借来开 s1 的门。
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.USE_OBJECT.id()))
+			.from("s2").goTo("s2")
+			.afterCommit(showQuestDialog(QuestDialogPage.SELECT3))
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.SET_SUCCEED.id()))
+			.from("s2").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
+			.compile();
+		QuestEngine engine = engineWith(twoStages);
+
+		QuestDialogRouter.UnlistedDelivery openPage =
+			router(engine).unlistedOpenPageTransition(playerAt(questId, 2), RENA);
+
+		assertNotNull(openPage, "s2 自己的 -1 页路由必须被认领");
+		assertEquals(QuestDialogPage.SELECT3.id(),
+			((AfterCommitAction.ShowQuestDialog) openPage.transition().afterCommit().getFirst()).dialogId(),
+			"只允许取交付候选同 source 的入口页");
+	}
+
+	/**
+	 * 同一 source 上「-1 页面路由推进到下一阶段」不是入口页：重放它等于替玩家推任务，必须交回
+	 * 单按钮交付兜底。 / A -1 page route that advances to the next stage is not an entry page:
+	 * replaying it would advance the quest for the player, so the single-button delivery fallback
+	 * stays in charge.
+	 */
+	@Test
+	void anEntryPageThatAdvancesTheStageIsNotReplayedByTheOpen() {
+		int questId = UNLISTED_ROW;
+		CompiledQuestDefinition advancingPage = quest(questId)
+			.metadata(QuestMetadata.minimal("unlisted-advancing-page", 0, "SIGNIFICANT"))
+			.progress(bitField("var0", 0, 6, PersistenceMode.PERSISTENT))
+			.node("s0", project(QuestStatus.START, vars("var0", 0)))
+			.node("s1", project(QuestStatus.START, vars("var0", 1)))
+			.node("s2", project(QuestStatus.START, vars("var0", 2)))
+			.node("reward", project(QuestStatus.REWARD, vars("var0", 3)))
+			.on(new QuestEvent.UseItem(166_030_005))
+			.from("s0").goTo("s1")
+			// 页面路由把 s1 推进到 s2：不是入口页，开门不得重放。
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.USE_OBJECT.id()))
+			.from("s1").goTo("s2")
+			.afterCommit(showQuestDialog(QuestDialogPage.SELECT2))
+			.on(new QuestEvent.TalkToNpc(RENA, QuestDialogAction.SET_SUCCEED.id()))
+			.from("s1").goTo("reward")
+			.afterCommit(syncQuestState(QuestStateSyncMode.LEVEL_AND_VISIBILITY_REFRESH))
+			.compile();
+		QuestEngine engine = engineWith(advancingPage);
+		Player player = playerAt(questId, 1);
+
+		assertNull(router(engine).unlistedOpenPageTransition(player, RENA),
+			"推进阶段的 -1 路由不得被当作入口页");
+		QuestDialogRouter.UnlistedDelivery delivery =
+			router(engine).unlistedDeliveryTransition(player, RENA);
+		assertNotNull(delivery, "单按钮交付兜底必须保留");
+		assertEquals(QuestDialogAction.SET_SUCCEED.id(),
+			((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId());
+	}
+
+	/**
 	 * 合成的未列表行：s1 上一条 SET_SUCCEED → REWARD（与 19678/19679 的真实形状一致）。
 	 * A synthetic unlisted row: SET_SUCCEED → REWARD on s1, the real shape of 19678/19679.
 	 */
@@ -273,8 +522,44 @@ class QuestDialogUnlistedRowEntryTest {
 
 	private static QuestEngine engineWith(CompiledQuestDefinition... definitions) {
 		QuestEngine engine = new QuestEngine();
+		installEngineProvider(engine);
 		engine.installProductionDefinitions(new ImmutableQuestCatalog(List.of(definitions)));
 		return engine;
+	}
+
+	/**
+	 * 锁定报告行的任务行入口：同 source 上必须存在 {@code QUEST_SELECT(31)} 页面路由，
+	 * 否则客户端点任务行会落回通用页 10（与 1929 的 equipped96 同形）。
+	 * Locks the task-row entry of the report step: a {@code QUEST_SELECT(31)} page route must exist on the
+	 * same source, or the client row click falls back to page 10 (the shape of 1929's equipped96).
+	 */
+	private static void assertRowEntryPage(CompiledQuestDefinition definition, String sourceNode,
+			int npcId, QuestDialogPage page) {
+		QuestTransition rowRoute = definition.transitionsFor("TALK_TO_NPC").stream()
+			.filter(transition -> sourceNode.equals(transition.sourceNode()))
+			.filter(transition -> transition.event() instanceof QuestEvent.TalkToNpc talk
+				&& talk.npcId() == npcId
+				&& Integer.valueOf(QuestDialogAction.QUEST_SELECT.id()).equals(talk.dialogId()))
+			.findFirst().orElseThrow(() -> new AssertionError(
+				"缺少任务行入口 / missing task-row entry: " + definition.id() + " " + sourceNode));
+		assertEquals(List.of(new AfterCommitAction.ShowQuestDialog(page.id())), rowRoute.afterCommit(),
+			"任务行入口必须下发同一入口页 / the row entry must show the same page");
+	}
+
+	/** 把全局引擎单例指向被测引擎；tearDown 恢复原 provider。
+	 * Points the engine singleton at the engine under test; tearDown restores the original provider. */
+	private static void installEngineProvider(QuestEngine engine) {
+		DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+		beanFactory.registerSingleton(QuestDialogUnlistedRowEntryTest.class.getName() + ".engine", engine);
+		QuestEngine.setInstanceProvider(beanFactory.getBeanProvider(QuestEngine.class));
+	}
+
+	/** 读取当前全局引擎 provider。 / Reads the current global engine provider. */
+	@SuppressWarnings("unchecked")
+	private static ObjectProvider<QuestEngine> engineProvider() throws ReflectiveOperationException {
+		Field field = QuestEngine.class.getDeclaredField("instanceProvider");
+		field.setAccessible(true);
+		return (ObjectProvider<QuestEngine>) field.get(null);
 	}
 
 	private static QuestDialogRouter router(QuestEngine engine) {

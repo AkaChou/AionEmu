@@ -259,6 +259,19 @@
         <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
       </after-commit>
     </transition>
+    <!-- 报告行必须能由任务行点击（QUEST_SELECT=31）进入：点 NPC 只发 -1，客户端任务行只发 31；
+         缺这条路由时 31 会落空并反复回通用页 10（与 1929 的 equipped96 同形）。
+         The report row must be reachable from the task row (QUEST_SELECT=31): the npc open sends -1,
+         while the client task row sends 31; without this route the row click falls through to page 10
+         (the same shape as 1929's equipped96). -->
+    <transition source="bookInserted" target="bookInserted">
+      <event>
+        <dialog type="TALK_TO_NPC" npc-id="204206" action="QUEST_SELECT"/>
+      </event>
+      <after-commit>
+        <dialog type="SHOW_QUEST_PAGE" page="SELECT8"/>
+      </after-commit>
+    </transition>
     <transition source="bookInserted" target="reward">
       <event>
         <dialog type="TALK_TO_NPC" npc-id="204206" action="SELECT_QUEST_REWARD"/>

@@ -398,22 +398,41 @@ final class QuestDialogRouter {
 						// fallback — the player has to walk it (live 2026-10-22: no dialog window and no movie
 						// at Jucleas, the quest jumped straight to Reward 30). Item actions are revalidated by
 						// the engine against the real snapshot, so an unmet one has zero side effects.
+						// 交付兜底候选在同一 source 若另有 -1 入口页，先下发入口页；玩家在页面上点
+						// 交付按钮再进 REWARD。直接重放交付动作会跳过整页（2620/2919）。
+						// When the delivery candidate also carries a -1 entry page on the same source,
+						// show the entry page first; the player presses the delivery button there.
+						// Replaying the delivery action directly skips the page (2620/2919).
 						UnlistedDelivery delivery = unlistedDeliveryTransition(player, npcId);
-						if (delivery != null
-								&& engine.onDialog(new QuestEnv(npc, player, delivery.questId(),
-									((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId()))) {
-							env.setQuestId(delivery.questId());
-							// 推进成功后直接重放开门：REWARD 的 preview 路由会开出奖励窗，玩家一次点击
-							// 就到达交付面（2026-10-20 实机：只推进会 close-dialog，要再点一次才见奖励窗）。
-							// 重放失败不影响已提交的推进，交回调用方走常规链路。
-							// Replay the open right after the advance: the REWARD preview route opens the
-							// reward window, so one click reaches the hand-in face (live 2026-10-20: advancing
-							// alone closes the dialog and needs a second click). A failed replay leaves the
-							// committed advance intact and falls back to the regular path.
-							if (engine.onDialog(new QuestEnv(npc, player, delivery.questId(), env.getDialogId()))) {
-								return true;
+						if (delivery != null) {
+							UnlistedDelivery openPage = openPageOf(delivery, player, npcId);
+							if (openPage != null) {
+								if (engine.onDialog(new QuestEnv(npc, player, openPage.questId(),
+										((QuestEvent.TalkToNpc) openPage.transition().event()).dialogId()))) {
+									env.setQuestId(openPage.questId());
+									return true;
+								}
+								// 入口页路由存在但本次未受理（条件未满足等）：不得退回到交付兜底，
+								// 否则仍会替玩家跳过页面。 / The entry-page route exists but was not
+								// accepted (unmet conditions and the like): never fall through to the
+								// delivery fallback, which would still skip the page.
+								return false;
 							}
-							return false;
+							if (engine.onDialog(new QuestEnv(npc, player, delivery.questId(),
+									((QuestEvent.TalkToNpc) delivery.transition().event()).dialogId()))) {
+								env.setQuestId(delivery.questId());
+								// 推进成功后直接重放开门：REWARD 的 preview 路由会开出奖励窗，玩家一次点击
+								// 就到达交付面（2026-10-20 实机：只推进会 close-dialog，要再点一次才见奖励窗）。
+								// 重放失败不影响已提交的推进，交回调用方走常规链路。
+								// Replay the open right after the advance: the REWARD preview route opens the
+								// reward window, so one click reaches the hand-in face (live 2026-10-20: advancing
+								// alone closes the dialog and needs a second click). A failed replay leaves the
+								// committed advance intact and falls back to the regular path.
+								if (engine.onDialog(new QuestEnv(npc, player, delivery.questId(),
+										env.getDialogId()))) {
+									return true;
+								}
+							}
 						}
 						return false;
 					}
@@ -496,10 +515,43 @@ final class QuestDialogRouter {
 	}
 
 	/**
-	 * 一条「替玩家推进到交付态」的候选：owner + 它的交付转换。
-	 * One delivery candidate: the owner plus its transition into the deliverable state.
+	 * 一条未列表行候选：owner + 它的交付转换（开门入口页候选复用同一形状）。
+	 * An unlisted-row candidate: the owner plus its transition (the open entry-page candidate
+	 * reuses the same shape).
 	 */
 	record UnlistedDelivery(int questId, QuestTransition transition) {
+	}
+
+	/**
+	 * 返回开门应优先下发的「-1 入口页」候选：交付兜底选中的那条任务若在同一 source 另有
+	 * {@code USE_OBJECT(-1)} 页面路由，则返回该页面路由；没有则返回 null。
+	 * <p>
+	 * 这类步的 -1 是原版的入口页（2620 的 {@code DEFAULT_SUCCESS}、2919 的 {@code SELECT8}），
+	 * 交付按钮在页面之后。开门若直接重放交付动作（1009）会跳过入口页；因此先下发
+	 * -1 页面，玩家在页面上点交付按钮再进 REWARD。没有 -1 页面路由的单按钮步
+	 * （19678/19679）不受影响。
+	 * <p>
+	 * The open should first show the -1 entry page when the delivery fallback's own quest carries a
+	 * {@code USE_OBJECT(-1)} page route on the same source. The -1 act is the retail entry page (2620's
+	 * {@code DEFAULT_SUCCESS}, 2919's {@code SELECT8}); the delivery button sits after that page. Replaying
+	 * the delivery action (1009) on the open would skip the entry page, so the open shows the -1 page first
+	 * and the player presses the delivery button there. Single-button steps without a -1 page route
+	 * (19678/19679) are unaffected.
+	 */
+	UnlistedDelivery unlistedOpenPageTransition(Player player, int npcId) {
+		UnlistedDelivery delivery = unlistedDeliveryTransition(player, npcId);
+		return delivery == null ? null : openPageOf(delivery, player, npcId);
+	}
+
+	/**
+	 * 交付候选对应的 -1 入口页路由；没有则返回 null。与交付候选共用 questId，避免两条兜底
+	 * 各自选到不同任务。 / The -1 entry-page route of a delivery candidate, or null. It shares
+	 * the candidate's questId so the two fallbacks can never pick different quests.
+	 */
+	private UnlistedDelivery openPageOf(UnlistedDelivery delivery, Player player, int npcId) {
+		QuestTransition page = openPageTransitionOf(engine.productionDispatcher(), player,
+			delivery.questId(), npcId, delivery.transition().sourceNode());
+		return page == null ? null : new UnlistedDelivery(delivery.questId(), page);
 	}
 
 	/**
@@ -536,6 +588,59 @@ final class QuestDialogRouter {
 	}
 
 	/**
+	 * 本 NPC 上「来源节点等于交付转换的 source、动作为 {@code USE_OBJECT(-1)}、
+	 * after-commit 下发任务页」的 TALK 转换；没有则返回 null。只有同 source 自环且无状态动作的
+	 * -1 路由才算入口页；目标投影为 REWARD 的 -1 路由是交付动作本身，跨节点的 -1 路由会推进
+	 * 阶段，均不算入口页。
+	 * <p>
+	 * The TALK transition on this npc whose source is the delivery transition's source, whose action is
+	 * {@code USE_OBJECT(-1)}, and whose after-commit shows a quest page; null otherwise. Only a -1
+	 * self-loop on the same source with no state actions counts as an entry page; a -1 route targeting
+	 * REWARD is the delivery action itself, and a cross-node -1 route advances the stage.
+	 */
+	private QuestTransition openPageTransitionOf(QuestRuntimeDispatcher typed, Player player, int questId,
+			int npcId, String sourceNode) {
+		CompiledQuestDefinition definition = typed.catalogRegistry().findExecutable(questId).orElse(null);
+		QuestState state = player == null ? null : player.getQuestStateList().getQuestState(questId);
+		if (definition == null || state == null || sourceNode == null) {
+			return null;
+		}
+		Map<String, Integer> current = definition.definition().progressLayout()
+			.unpack(state.getQuestVars().getQuestVars());
+		Map<String, QuestStatus> statuses = new HashMap<>();
+		for (QuestNode node : definition.definition().nodes()) {
+			statuses.put(node.label(), node.projection().status());
+		}
+		for (QuestTransition transition : definition.transitionsFor("TALK_TO_NPC")) {
+			if (!(transition.event() instanceof QuestEvent.TalkToNpc talk)
+					|| talk.npcId() != npcId
+					|| !Integer.valueOf(QuestDialogAction.USE_OBJECT.id()).equals(talk.dialogId())
+					|| !sourceNode.equals(transition.sourceNode())
+					|| !sourceNode.equals(transition.targetNode())
+					|| !transition.actions().isEmpty()
+					|| statuses.get(transition.targetNode()) != QuestStatus.START
+					|| !showsQuestPage(transition)) {
+				continue;
+			}
+			if (sourceMatches(definition, state, current, transition)) {
+				return transition;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 该转换的 after-commit 是否下发带任务上下文的任务页；选择页不带任务上下文，
+	 * 不算入口页。
+	 * Whether the transition shows a quest page carrying the quest context after commit; a
+	 * selection page carries no quest context and is not an entry page.
+	 */
+	private static boolean showsQuestPage(QuestTransition transition) {
+		return transition.afterCommit().stream()
+			.anyMatch(action -> action instanceof AfterCommitAction.ShowQuestDialog);
+	}
+
+	/**
 	 * 本 NPC 上「来源节点等于玩家当前节点、目标节点投影为 REWARD」的 TALK 转换；没有则返回 null。
 	 * 节点匹配用状态 + 打包变量逐位比对（与 {@code QuestMutationPlanner.matchesSourceNode} 同口径），
 	 * 所以同在栏的兄弟任务不会互相挡住。交付按钮在更后面一页上的步（客户端页链）不参与——
@@ -567,17 +672,27 @@ final class QuestDialogRouter {
 					|| statuses.get(transition.targetNode()) != QuestStatus.REWARD) {
 				continue;
 			}
-			QuestNode source = definition.definition().nodes().stream()
-				.filter(node -> node.label().equals(transition.sourceNode()))
-				.findFirst().orElse(null);
-			if (source != null && source.projection().status() == state.getStatus()
-					&& source.projection().variables().entrySet().stream()
-						.allMatch(entry -> entry.getValue().equals(current.get(entry.getKey())))
+			if (sourceMatches(definition, state, current, transition)
 					&& !walksClientPageChain(definition, transition, npcId)) {
 				return transition;
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 转换的 source 节点投影是否与玩家当前状态（状态 + 打包变量逐位）全等。
+	 * Whether the transition's source node projects exactly onto the player's current state
+	 * (status plus packed variables, bit for bit).
+	 */
+	private static boolean sourceMatches(CompiledQuestDefinition definition, QuestState state,
+			Map<String, Integer> current, QuestTransition transition) {
+		QuestNode source = definition.definition().nodes().stream()
+			.filter(node -> node.label().equals(transition.sourceNode()))
+			.findFirst().orElse(null);
+		return source != null && source.projection().status() == state.getStatus()
+			&& source.projection().variables().entrySet().stream()
+				.allMatch(entry -> entry.getValue().equals(current.get(entry.getKey())));
 	}
 
 	/**
