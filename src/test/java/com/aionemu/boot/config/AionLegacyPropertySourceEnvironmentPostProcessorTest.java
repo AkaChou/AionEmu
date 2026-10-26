@@ -80,11 +80,13 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
         new AionLegacyPropertySourceEnvironmentPostProcessor()
             .postProcessEnvironment(environment, new SpringApplication());
+        new AionConfigFilePropertySourceEnvironmentPostProcessor()
+            .postProcessEnvironment(environment, new SpringApplication());
 
         assertEquals("from-command-line", environment.getProperty("gameserver.name"));
         assertEquals("3", environment.getProperty("gameserver.network.login.gsid"));
-        // 两个服务为同一原始键给出不同值时，扁平镜像不发布该键，各服务的前缀键保留自己的值。
-        // When two services disagree on one raw key the flat mirror publishes neither, and each
+        // 两个服务为同一原始键给出不同值时，扁平命名空间不发布该键，各服务的前缀键保留自己的值。
+        // When two services disagree on one raw key the flat namespace publishes neither, and each
         // prefixed key keeps its own value.
         assertNull(environment.getProperty("loginserver.network.client.port"));
         assertEquals("2", environment.getProperty("chatserver.chat.lang"));
@@ -139,9 +141,11 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         ));
         new AionLegacyPropertySourceEnvironmentPostProcessor()
             .postProcessEnvironment(environment, new SpringApplication());
+        new AionConfigFilePropertySourceEnvironmentPostProcessor()
+            .postProcessEnvironment(environment, new SpringApplication());
 
         assertNull(environment.getProperty("database.url"),
-            "a raw key with two different service values must not be mirrored");
+            "a raw key with two different service values must not be published");
         assertEquals("jdbc:mysql://127.0.0.1:3306/al_server_gs",
             environment.getProperty("aion.legacy.game.property.database.url"));
         assertEquals("jdbc:mysql://127.0.0.1:3306/al_server_ls",
@@ -247,6 +251,8 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
 
         new AionLegacyPropertySourceEnvironmentPostProcessor()
             .postProcessEnvironment(environment, new SpringApplication());
+        new AionConfigFilePropertySourceEnvironmentPostProcessor()
+            .postProcessEnvironment(environment, new SpringApplication());
 
         assertEquals("5", environment.getProperty("gameserver.country.code"));
     }
@@ -284,6 +290,8 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
                 Map.of("aion.config.dir", configDir.toString())
             ));
             new AionLegacyPropertySourceEnvironmentPostProcessor()
+                .postProcessEnvironment(environment, new SpringApplication());
+            new AionConfigFilePropertySourceEnvironmentPostProcessor()
                 .postProcessEnvironment(environment, new SpringApplication());
 
             ThreadConfig threadConfig = new ThreadConfig();

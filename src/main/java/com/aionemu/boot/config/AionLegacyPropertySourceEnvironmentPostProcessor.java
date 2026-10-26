@@ -5,12 +5,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
@@ -21,15 +18,20 @@ import org.springframework.core.env.MapPropertySource;
 /**
  * 将遗留 properties 文件映射进 Spring Environment，供 {@code aion.legacy.*} 绑定使用。
  * Maps legacy properties files into the Spring Environment for {@code aion.legacy.*} binding.
- * <p>镜像同时写入原始键，但同一原始键在不同服务取值不一致时不写入。扁平命名空间无法同时表达
- * 两个服务的值，保留其中任意一个都会让全局解析器把登录服的 {@code database.url} 回灌给游戏服。
- * 这类键交由各服务自己的遗留加载器读取本地文件，取值一致的键（如 {@code gameserver.thread.*}、
- * {@code svstats.*}）仍照常镜像。</p>
- * The mirror also publishes raw keys, except when two services define the same raw key with different
- * values. A flat namespace cannot express both, and keeping either one would make the global resolver
- * feed the login-server {@code database.url} back into the game server. Such keys are left to each
- * service's own legacy loader reading its own file, while keys every service agrees on (for example
- * {@code gameserver.thread.*} and {@code svstats.*}) keep being mirrored.
+ * <p><b>不再发布不带前缀的原始键</b>：裸键曾被遗留装配器优先查询，导致 {@code Config.reload()}
+ * 重读磁盘后的新值永远用不上（手改配置文件后执行 {@code //reload config} 对任何
+ * {@code gameserver.*} 键均无效）。裸键改由 {@link AionConfigFilePropertySourceEnvironmentPostProcessor}
+ * 提供的磁盘配置源承担，该源直接读取配置文件本身，因此改盘后立即可见。
+ * 带前缀的 {@code aion.legacy.*} 键保留：Spring Binder 依赖它们完成
+ * {@code @ConfigurationProperties} 绑定，{@code mygs.properties} 的运维覆盖链也走这条路径。</p>
+ * <p><b>Raw keys are no longer published</b>: the legacy assembler used to query them first, which made
+ * the values re-read from disk by {@code Config.reload()} unreachable (hand-editing a configuration file
+ * and then running {@code //reload config} had no effect on any {@code gameserver.*} key). Raw keys are
+ * now served by the disk-backed property source of
+ * {@link AionConfigFilePropertySourceEnvironmentPostProcessor}, which reads the configuration files
+ * themselves, so an on-disk change is visible immediately. The prefixed {@code aion.legacy.*} keys stay:
+ * the Spring Binder needs them for {@code @ConfigurationProperties} binding, and the
+ * {@code mygs.properties} operator-override chain runs through the same path.</p>
  * <p>同时把游戏服的 {@code network/database.properties} 翻译成 Boot 数据源键 {@code spring.datasource.*}。
  * <p>It also translates the game server's {@code network/database.properties} into Boot DataSource keys
  * ({@code spring.datasource.*}).
@@ -57,11 +59,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        LegacyPropertyCollector collector = new LegacyPropertyCollector();
-        loadGameProperties(environment, collector);
-        loadLoginProperties(environment, collector);
-        loadChatProperties(environment, collector);
-        Map<String, Object> properties = collector.published();
+        Map<String, Object> properties = collectLegacyEntries(configDir(environment));
         if (!properties.isEmpty()) {
             // 以最低优先级注册：命令行、系统属性、环境变量与 application.yml 仍是有效覆盖，
             // 文件值只在没有任何高优先级来源时生效。
@@ -85,6 +83,37 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     }
 
     /**
+     * 收集带前缀的遗留键值，供启动期注册与运行期刷新共用。
+     * <p>
+     * 收集结果只含 {@code aion.legacy.{game,login,chat}.property.*} 前缀键；裸键由
+     * {@link AionConfigFilePropertySource} 承担。
+     * <p>
+     * Collects the prefixed legacy entries, shared by the boot-time registration and the runtime refresh.
+     * <p>
+     * The result carries only {@code aion.legacy.{game,login,chat}.property.*} prefixed keys; the raw keys
+     * belong to {@link AionConfigFilePropertySource}.
+     * @param configDir 配置根目录 / configuration root directory
+     * @return 带前缀的键值表 / prefixed key to value map
+     */
+    public static Map<String, Object> collectLegacyEntries(Path configDir) {
+        LegacyPropertyCollector collector = new LegacyPropertyCollector();
+        String gamePrefix = "aion.legacy.game.property.";
+        loadDirectory(collector, configDir.resolve("administration"), gamePrefix);
+        loadDirectory(collector, configDir.resolve("main"), gamePrefix);
+        loadDirectory(collector, configDir.resolve("network"), gamePrefix);
+        loadFile(collector, configDir.resolve("mygs.properties"), gamePrefix);
+        String loginPrefix = "aion.legacy.login.property.";
+        loadDirectory(collector, configDir.resolve("login"), loginPrefix);
+        loadFile(collector, configDir.resolve("network/network.properties"), loginPrefix);
+        loadFile(collector, configDir.resolve("login/myls.properties"), loginPrefix);
+        String chatPrefix = "aion.legacy.chat.property.";
+        loadDirectory(collector, configDir.resolve("chat"), chatPrefix);
+        loadFile(collector, configDir.resolve("network/network.properties"), chatPrefix);
+        loadFile(collector, configDir.resolve("chat/mycs.properties"), chatPrefix);
+        return collector.published();
+    }
+
+    /**
      * 返回本处理器顺序：略高于最低优先级，确保在大部分默认源之后生效。
      * Returns this processor's order: slightly above lowest precedence so it applies after most defaults.
      * @return 处理器顺序值 / order value
@@ -92,53 +121,6 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     @Override
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE - 20;
-    }
-
-    /**
-     * 从游戏配置目录加载遗留属性。
-     * Loads legacy properties from the game config directory.
-     * @param environment 环境 / environment
-     * @param collector 遗留键收集器 / legacy key collector
-     */
-    private void loadGameProperties(ConfigurableEnvironment environment, LegacyPropertyCollector collector) {
-        Path configDir = configDir(environment);
-        String legacyPrefix = "aion.legacy.game.property.";
-        loadDirectory(collector, configDir.resolve("administration"), legacyPrefix);
-        loadDirectory(collector, configDir.resolve("main"), legacyPrefix);
-        loadDirectory(collector, configDir.resolve("network"), legacyPrefix);
-        loadFile(collector, configDir.resolve("mygs.properties"), legacyPrefix);
-    }
-
-    /**
-     * 从登录配置目录加载遗留属性。
-     * Loads legacy properties from the login config directory.
-     * @param environment 环境 / environment
-     * @param collector 遗留键收集器 / legacy key collector
-     */
-    private void loadLoginProperties(ConfigurableEnvironment environment, LegacyPropertyCollector collector) {
-        Path configDir = configDir(environment).resolve("login");
-        String legacyPrefix = "aion.legacy.login.property.";
-        loadDirectory(collector, configDir, legacyPrefix);
-        loadFile(collector, networkConfigFile(environment), legacyPrefix, false);
-        loadFile(collector, configDir.resolve("myls.properties"), legacyPrefix);
-    }
-
-    /**
-     * 从聊天配置目录加载遗留属性。
-     * Loads legacy properties from the chat config directory.
-     * @param environment 环境 / environment
-     * @param collector 遗留键收集器 / legacy key collector
-     */
-    private void loadChatProperties(ConfigurableEnvironment environment, LegacyPropertyCollector collector) {
-        Path configDir = configDir(environment).resolve("chat");
-        String legacyPrefix = "aion.legacy.chat.property.";
-        loadDirectory(collector, configDir, legacyPrefix);
-        loadFile(collector, networkConfigFile(environment), legacyPrefix, false);
-        loadFile(collector, configDir.resolve("mycs.properties"), legacyPrefix);
-    }
-
-    private Path networkConfigFile(ConfigurableEnvironment environment) {
-        return configDir(environment).resolve("network/network.properties");
     }
 
     /**
@@ -168,7 +150,7 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * @param directory 目录路径 / directory path
      * @param legacyPrefix 遗留键前缀 / legacy key prefix
      */
-    private void loadDirectory(LegacyPropertyCollector collector, Path directory, String legacyPrefix) {
+    private static void loadDirectory(LegacyPropertyCollector collector, Path directory, String legacyPrefix) {
         if (!Files.isDirectory(directory)) {
             return;
         }
@@ -190,22 +172,9 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
      * @param file 文件路径 / file path
      * @param legacyPrefix 遗留键前缀 / legacy key prefix
      */
-    private void loadFile(LegacyPropertyCollector collector, Path file, String legacyPrefix) {
-        loadFile(collector, file, legacyPrefix, true);
-    }
-
-    /**
-     * 读取单个 properties 文件，按是否允许镜像原始键写入收集器。
-     * Reads a single properties file into the collector, mirroring raw keys only when allowed.
-     * @param collector 遗留键收集器 / legacy key collector
-     * @param file 文件路径 / file path
-     * @param legacyPrefix 遗留键前缀 / legacy key prefix
-     * @param includeRawProperty 是否允许镜像原始键 / whether raw keys may be mirrored
-     */
-    private void loadFile(LegacyPropertyCollector collector, Path file, String legacyPrefix,
-        boolean includeRawProperty) {
+    private static void loadFile(LegacyPropertyCollector collector, Path file, String legacyPrefix) {
         readProperties(file).forEach((key, value) ->
-            collector.put(legacyPrefix, String.valueOf(key), value, includeRawProperty));
+            collector.put(legacyPrefix, String.valueOf(key), value));
     }
 
     /**
@@ -247,36 +216,21 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
     }
 
     /**
-     * 遗留键收集器：始终保存带前缀的键，原始键只在跨服务取值一致时才发布。
+     * 遗留键收集器：只保存带前缀的键，裸键一律不发布。
      * <p>服务身份取自遗留键前缀（{@code aion.legacy.game.property.} 等）。同一服务内后加载的文件
-     * 覆盖先前值；两个服务为同一原始键给出不同值时，该键被永久移出镜像，避免扁平命名空间里的
-     * “最后写入者”覆盖另一个服务的本地文件值。</p>
-     * Collector for legacy configuration: the prefixed key is always kept, and a raw key is published
-     * only while every service agrees on its value.
+     * 覆盖先前值。裸键由磁盘配置源承担，此处不再镜像，避免遮蔽配置文件本身。</p>
+     * Collector for legacy configuration: only prefixed keys are kept, raw keys are never published.
      * <p>The service identity is the legacy key prefix ({@code aion.legacy.game.property.} and so on).
-     * A later file of the same service overrides the earlier value; when two services give one raw key
-     * different values, that key is removed from the mirror for good, so a flat-namespace "last writer
-     * wins" can no longer shadow another service's own file value.</p>
+     * A later file of the same service overrides the earlier value. Raw keys are served by the disk-backed
+     * property source instead, so they are not mirrored here and never shadow the configuration files.</p>
      */
     private static final class LegacyPropertyCollector {
 
         /**
-         * 待注册的镜像键值：带前缀的键，外加可安全发布的原始键。
-         * Mirror entries to register: prefixed keys plus raw keys that are safe to publish.
+         * 待注册的镜像键值：带前缀的键。
+         * Mirror entries to register: prefixed keys.
          */
         private final Map<String, Object> published = new LinkedHashMap<>();
-
-        /**
-         * 原始键当前归属的遗留前缀。
-         * Legacy prefix currently owning each raw key.
-         */
-        private final Map<String, String> rawKeyOwners = new HashMap<>();
-
-        /**
-         * 已判定跨服务冲突、不再发布的原始键。
-         * Raw keys already judged conflicting across services and therefore never published.
-         */
-        private final Set<String> conflictingRawKeys = new HashSet<>();
 
         /**
          * 记录一个遗留键。
@@ -284,34 +238,9 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
          * @param legacyPrefix 遗留键前缀，也标识归属服务 / legacy prefix, also the owning service identity
          * @param key 原始键 / raw key
          * @param value 属性值 / property value
-         * @param includeRawKey 是否允许发布原始键 / whether the raw key may be published
          */
-        void put(String legacyPrefix, String key, Object value, boolean includeRawKey) {
+        void put(String legacyPrefix, String key, Object value) {
             published.put(legacyPrefix + key, value);
-            if (!includeRawKey || conflictingRawKeys.contains(key)) {
-                return;
-            }
-            String owner = rawKeyOwners.get(key);
-            if (owner == null) {
-                rawKeyOwners.put(key, legacyPrefix);
-                published.put(key, value);
-                return;
-            }
-            if (owner.equals(legacyPrefix)) {
-                // 同一服务内后加载的文件覆盖先前值。 / A later file of the same service wins.
-                published.put(key, value);
-                return;
-            }
-            if (value.equals(published.get(key))) {
-                // 跨服务取值一致，镜像无需改动。 / Services agree, so the mirrored value stays valid.
-                return;
-            }
-            // 不同服务为同一原始键给出不同值：扁平命名空间无法同时表达两者，故不发布该键。
-            // Two services disagree on one raw key: a flat namespace cannot express both, so the key is
-            // not published at all.
-            conflictingRawKeys.add(key);
-            rawKeyOwners.remove(key);
-            published.remove(key);
         }
 
         /**

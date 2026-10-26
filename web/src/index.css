@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/*
+ * AionEmu 管理控制台设计令牌。
+ *
+ * 设计读法：面向 GM/运维的密集型操作台，信任优先的 cockpit 语言。
+ * 暗色单主题贯穿全页，一个强调色（琥珀）锁定全局，等宽字承载全部数字与权限等级。
+ *
+ * 形状一致性：统一 6px 圆角刻度，卡片、输入框、按钮同源。
+ * 对比度：正文与强调色在 WCAG AA 以上（4.5:1），大字号在 3:1 以上。
+ */
+@theme {
+	--color-surface-0: #0b0d10;
+	--color-surface-1: #111419;
+	--color-surface-2: #171b21;
+	--color-surface-3: #1e232b;
+	--color-line: #262c35;
+	--color-line-strong: #333a45;
+
+	--color-text-primary: #e6e9ee;
+	--color-text-secondary: #9aa3b0;
+	--color-text-muted: #6b7482;
+
+	--color-accent: #f0a830;
+	--color-accent-hover: #f5b851;
+	--color-accent-muted: #4a3410;
+	--color-accent-contrast: #1a1204;
+
+	--color-danger: #e5484d;
+	--color-danger-muted: #3d1618;
+	--color-ok: #46a758;
+	--color-ok-muted: #12301c;
+	--color-info: #4a9de0;
+	--color-info-muted: #12293d;
+
+	--font-sans: "IBM Plex Sans", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "IBM Plex Mono", "Noto Sans Mono", ui-monospace, "SFMono-Regular", monospace;
+
+	--radius-console: 6px;
+	--radius-console-sm: 4px;
+}
+
+@layer base {
+	:root {
+		color-scheme: dark;
+	}
+
+	html,
+	body,
+	#root {
+		height: 100%;
+	}
+
+	body {
+		margin: 0;
+		background-color: var(--color-surface-0);
+		background-image:
+			radial-gradient(ellipse 80% 60% at 50% -10%, rgba(240, 168, 48, 0.06), transparent),
+			repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 32px);
+		color: var(--color-text-primary);
+		font-family: var(--font-sans);
+		font-size: 14px;
+		line-height: 1.5;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	/* 数字与权限等级一律等宽，保证列对齐。 */
+	.tabular {
+		font-family: var(--font-mono);
+		font-variant-numeric: tabular-nums;
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	::selection {
+		background: var(--color-accent-muted);
+		color: var(--color-text-primary);
+	}
+
+	::-webkit-scrollbar {
+		width: 10px;
+		height: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: var(--color-surface-1);
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: var(--color-line-strong);
+		border-radius: 999px;
+		border: 2px solid var(--color-surface-1);
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: #414957;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

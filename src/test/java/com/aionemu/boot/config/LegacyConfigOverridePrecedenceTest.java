@@ -60,6 +60,8 @@ class LegacyConfigOverridePrecedenceTest {
 		));
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
+		new AionConfigFilePropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
 		// 解析器由启动层单例发布（生产启动路径）。 / Published by the bootstrap singleton, as in production.
 		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
 
@@ -124,6 +126,8 @@ class LegacyConfigOverridePrecedenceTest {
 			Map.of("aion.config.dir", configDir.toString())
 		));
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
+		new AionConfigFilePropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
 		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
 
@@ -190,6 +194,8 @@ class LegacyConfigOverridePrecedenceTest {
 			Map.of("aion.config.dir", configDir.toString())
 		));
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
+		new AionConfigFilePropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
 		new BootConfigSourceResolver(environment).publishEnvironmentResolver();
 

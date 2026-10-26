@@ -12,6 +12,23 @@ if [ "$#" -eq 0 ]; then
   set -- -DskipTests -Daion.external-resources=true package
 fi
 
+# 管理控制台前端：先构建产物，再交给 Maven 的 <resources> 映射进 jar 的 static 目录。
+# Admin console frontend: build the output first, then let the Maven <resources> mapping place it into the jar's
+# static directory.
+WEB_DIR="$ROOT_DIR/web"
+if [ -d "$WEB_DIR" ]; then
+  echo "Building the admin console frontend..."
+  if ! command -v pnpm >/dev/null 2>&1; then
+    echo "Missing pnpm: the admin console frontend cannot be built." >&2
+    exit 1
+  fi
+  (cd "$WEB_DIR" && pnpm install --frozen-lockfile && pnpm build)
+  if [ ! -f "$WEB_DIR/dist/index.html" ]; then
+    echo "Missing $WEB_DIR/dist/index.html: the admin console frontend build produced no output." >&2
+    exit 1
+  fi
+fi
+
 echo "Maven build threads: $MAVEN_THREADS"
 mvn -T "$MAVEN_THREADS" clean "$@"
 

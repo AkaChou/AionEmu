@@ -120,6 +120,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
@@ -226,6 +230,31 @@
 
     <build>
         <finalName>AionEmu</finalName>
+        <!--
+            管理控制台前端产物：web/dist 映射到 target/classes/static，
+            使 Spring Boot 的静态资源处理直接服务控制台页面。
+            Admin console frontend assets: web/dist is mapped to target/classes/static so the Spring Boot
+            static resource handling serves the console pages directly.
+            目录缺失时跳过（纯后端构建不失败）；产物不入版本库，由 scripts/package.sh 先跑 pnpm build。
+            The directory is skipped when absent (a backend-only build does not fail); the output is not
+            version-controlled and scripts/package.sh runs pnpm build first.
+            注意：不得改用外部进程调用插件（AionBootApplicationTest 钉死了该约束），故用资源目录声明实现。
+            Note: no external-process invoking plugin may be used (AionBootApplicationTest pins that
+            constraint), hence the resource-directory declaration approach.
+        -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>aion/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/web/dist</directory>
+                <targetPath>static</targetPath>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

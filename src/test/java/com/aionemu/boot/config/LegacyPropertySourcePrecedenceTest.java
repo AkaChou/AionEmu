@@ -59,8 +59,14 @@ class LegacyPropertySourcePrecedenceTest {
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
 
-		assertEquals("7", environment.getProperty("gameserver.thread.basepoolsize"),
-			"the file value must still reach the environment");
+		assertEquals("7", environment.getPropertySources()
+				.get(AionLegacyPropertySourceEnvironmentPostProcessor.PROPERTY_SOURCE_NAME)
+				.getProperty("aion.legacy.game.property.gameserver.thread.basepoolsize"),
+			"the prefixed file value must still reach the environment");
+		assertNull(environment.getPropertySources()
+				.get(AionLegacyPropertySourceEnvironmentPostProcessor.PROPERTY_SOURCE_NAME)
+				.getProperty("gameserver.thread.basepoolsize"),
+			"the legacy mirror must not publish raw keys any more");
 		assertNull(ConfigSourceResolverHolder.resolve("gameserver.thread.basepoolsize"),
 			"the post-processor must not publish a global resolver");
 	}
@@ -85,8 +91,6 @@ class LegacyPropertySourcePrecedenceTest {
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
 
-		assertEquals("11", environment.getProperty("gameserver.thread.basepoolsize"),
-			"the environment variable must override the legacy file value");
 		assertEquals("11", environment.getProperty("aion.legacy.game.property.gameserver.thread.basepoolsize"),
 			"the low-precedence file source must not shadow the environment variable");
 	}
@@ -101,6 +105,8 @@ class LegacyPropertySourcePrecedenceTest {
 		StandardEnvironment environment = environmentWithConfigDir(configDir);
 
 		new AionLegacyPropertySourceEnvironmentPostProcessor()
+			.postProcessEnvironment(environment, new SpringApplication());
+		new AionConfigFilePropertySourceEnvironmentPostProcessor()
 			.postProcessEnvironment(environment, new SpringApplication());
 
 		assertEquals("7", environment.getProperty("gameserver.thread.basepoolsize"));

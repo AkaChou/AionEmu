@@ -1,2 +1,5 @@
 org.springframework.boot.EnvironmentPostProcessor=\
-com.aionemu.boot.config.AionLegacyPropertySourceEnvironmentPostProcessor
+com.aionemu.boot.config.AionLegacyPropertySourceEnvironmentPostProcessor,\
+com.aionemu.boot.config.AionConfigFilePropertySourceEnvironmentPostProcessor,\
+com.aionemu.boot.web.AdminConsoleEnvironmentPostProcessor,\
+com.aionemu.boot.web.AdminConsoleStaticAssetsEnvironmentPostProcessor
